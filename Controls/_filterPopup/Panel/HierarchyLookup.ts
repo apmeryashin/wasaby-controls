@@ -24,12 +24,14 @@ class HierarchyLookup extends Control {
     protected _selectedKeys: number[] | string[];
 
     protected _beforeMount(options): void {
-        this._selectedKeys = options.selectedKeys ? factory(options.selectedKeys).flatten().value() : options.selectedKeys;
+        this._selectedKeys = options.selectedKeys ?
+            factory(options.selectedKeys).flatten().value() : options.selectedKeys;
     }
 
     protected _beforeUpdate(newOptions): void {
         if (newOptions.selectedKeys && this._options.selectedKeys !== newOptions.selectedKeys) {
-            this._selectedKeys = newOptions.selectedKeys ? factory(newOptions.selectedKeys).flatten().value() : newOptions.selectedKeys;
+            this._selectedKeys = newOptions.selectedKeys ?
+                factory(newOptions.selectedKeys).flatten().value() : newOptions.selectedKeys;
         }
     }
 

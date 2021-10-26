@@ -72,7 +72,9 @@ class StickyHeaderController {
         this._options.resizeCallback = options.resizeCallback;
         this._headers = {};
         this._resizeHandlerDebounced = debounce(this.resizeHandler.bind(this), 50);
-        this._sizeObserver = new SizeAndVisibilityObserver(this._headersResizeHandler.bind(this), this.resizeHandler.bind(this), this._headers);
+        this._sizeObserver = new SizeAndVisibilityObserver(
+            this._headersResizeHandler.bind(this), this.resizeHandler.bind(this), this._headers
+        );
     }
 
     init(container: HTMLElement): Promise<void> {
@@ -149,7 +151,8 @@ class StickyHeaderController {
             let ignoreHeight: boolean = type !== TYPE_FIXED_HEADERS.allFixed &&
                 !this._fixedHeadersStack[position].includes(headerId);
 
-            // В режиме изначально зафиксированных заголовков не считаем заголовки которые не были изначально зафскированы
+            // В режиме изначально зафиксированных заголовков не считаем заголовки
+            // которые не были изначально зафскированы
             ignoreHeight = ignoreHeight || (type === TYPE_FIXED_HEADERS.initialFixed && !header.fixedInitially);
 
             // Если у заголовка задан offsetTop, то учитываем его во всех ражимах в любом случае.
@@ -189,7 +192,8 @@ class StickyHeaderController {
         return Promise.resolve();
     }
 
-    setShadowVisibility(topShadowVisibility: SCROLL_SHADOW_VISIBILITY, bottomShadowVisibility: SCROLL_SHADOW_VISIBILITY): void {
+    setShadowVisibility(topShadowVisibility: SCROLL_SHADOW_VISIBILITY,
+                        bottomShadowVisibility: SCROLL_SHADOW_VISIBILITY): void {
         this._shadowVisibility[POSITION.top] = topShadowVisibility;
         this._shadowVisibility[POSITION.bottom] = bottomShadowVisibility;
         this._updateShadowsVisibility();
@@ -237,7 +241,11 @@ class StickyHeaderController {
         }
     }
 
-    registerHandler(event, data: IRegisterEventData, register: boolean, syncUpdate: boolean = false, syncDomOptimization: boolean = true): Promise<void> {
+    registerHandler(event,
+                    data: IRegisterEventData,
+                    register: boolean,
+                    syncUpdate: boolean = false,
+                    syncDomOptimization: boolean = true): Promise<void> {
         if (!syncDomOptimization && register) {
             data.inst.setSyncDomOptimization(syncDomOptimization);
         }
@@ -308,8 +316,9 @@ class StickyHeaderController {
 
             positions.forEach((position) => {
                 const inHeadersStack = this._headersStack[position].some((headerId) => headerId === header.id);
-                // В operations panel при инициализации контент намеренно скрывают, вешая нулевую высоту. Из-за этого вначале заголовок
-                // во время обсчета оффсетов запишет себе height = 0, а после, когда он покажется, по ресайз обсёрверу будет опять добавление
+                // В operations panel при инициализации контент намеренно скрывают, вешая нулевую высоту.
+                // Из-за этого вначале заголовок во время обсчета оффсетов запишет себе height = 0,
+                // а после, когда он покажется, по ресайз обсёрверу будет опять добавление
                 // в headersStack, т.к предыдущая высота была равна 0.
                 if (!inHeadersStack) {
                     this._addToHeadersStack(header.id, headerPosition, true);
@@ -583,7 +592,9 @@ class StickyHeaderController {
         }
     }
 
-    private _addToHeadersStack(id: number, headerPosition: IPositionOrientation, needUpdateOffset: boolean = false): void {
+    private _addToHeadersStack(id: number,
+                               headerPosition: IPositionOrientation,
+                               needUpdateOffset: boolean = false): void {
         const positions = this._getDecomposedPosition(headerPosition);
         positions.forEach((position) => {
             const headersStack = this._headersStack[position];

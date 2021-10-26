@@ -92,10 +92,11 @@ export default class RemoveControllerDemo extends Control {
          selected: this._selectedKeys && this._selectedKeys.length ? this._selectedKeys : [item.getKey()],
          excluded: this._excludedKeys
       };
+      const list: IRemovableList = this._children.list as undefined as IRemovableList;
       const method: (selection: ISelectionObject) => Promise<void> =
           this._selectedKeys.length || (selection.selected[0] && selection.selected[0] === 5) ?
-             (this._children.list as undefined as IRemovableList).removeItemsWithConfirmation.bind(this._children.list) :
-             (this._children.list as undefined as IRemovableList).removeItems.bind(this._children.list);
+              list.removeItemsWithConfirmation.bind(this._children.list) :
+              list.removeItems.bind(this._children.list);
 
       method(selection).then(() => {
          this._children.list.reload();
@@ -112,10 +113,11 @@ export default class RemoveControllerDemo extends Control {
          selected: [item.getKey()],
          excluded: []
       };
+      const list: IRemovableList = this._children.list as undefined as IRemovableList;
       const method: (selection: ISelectionObject) => Promise<void> =
           selection.selected[0] && selection.selected[0] === 5 ?
-              (this._children.list as undefined as IRemovableList).removeItemsWithConfirmation.bind(this._children.list) :
-              (this._children.list as undefined as IRemovableList).removeItems.bind(this._children.list);
+              list.removeItemsWithConfirmation.bind(this._children.list) :
+              list.removeItems.bind(this._children.list);
       method(selection)
           .then(() => {
              this._children.list.reload();
@@ -127,5 +129,8 @@ export default class RemoveControllerDemo extends Control {
           });
    }
 
-   static _styles: string[] = ['Controls-demo/list_new/RemoveController/RemoveController', 'Controls-demo/Controls-demo'];
+   static _styles: string[] = [
+       'Controls-demo/list_new/RemoveController/RemoveController',
+       'Controls-demo/Controls-demo'
+   ];
 }

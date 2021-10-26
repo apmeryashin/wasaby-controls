@@ -13,7 +13,8 @@ function convertToFilterSource(detailPanelItems) {
                 }
             }
         }
-        filterSourceItem.name = detailPanelItems[index].id ? detailPanelItems[index].id : detailPanelItems[index].name; // items from history have a field 'name' instead of 'id'
+        // items from history have a field 'name' instead of 'id'
+        filterSourceItem.name = detailPanelItems[index].id ? detailPanelItems[index].id : detailPanelItems[index].name;
         if (detailPanelItems[index].visibility !== undefined) {
             filterSourceItem.visibility = detailPanelItems[index].visibility;
         }
@@ -32,7 +33,8 @@ function convertToDetailPanelItems(filterSource) {
             }
         }
         detailPanelItem.id = filterSource[index].name;
-        detailPanelItem.visibility = filterSource[index].viewMode === 'extended' ? filterSource[index].visibility : undefined;
+        detailPanelItem.visibility =
+            filterSource[index].viewMode === 'extended' ? filterSource[index].visibility : undefined;
     });
     return detailPanelItems;
 }

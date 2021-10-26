@@ -110,7 +110,9 @@ export default class BreadcrumbsItem<T extends Model = Model> extends Collection
     }
 
    protected _getMultiSelectAccessibility(): boolean|null {
-      const value = object.getPropertyValue<boolean|null>(this.getLast().getContents(), this._$multiSelectAccessibilityProperty);
+      const value = object.getPropertyValue<boolean|null>(
+          this.getLast().getContents(), this._$multiSelectAccessibilityProperty
+      );
       return value === undefined ? true : value;
    }
 

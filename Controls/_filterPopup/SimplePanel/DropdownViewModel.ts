@@ -52,12 +52,15 @@ const _private = {
          },
 
          needHideGroup(self, key) {
-            // FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
+            // FIXME временное решение, переделывается тут:
+             //  https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
 
-            // Get items from the same group. Hide the separator, if the group is empty or all list items from the same group
+            // Get items from the same group. Hide the separator, if
+             // the group is empty or all list items from the same group
             const itemsGroup = self._itemsModel._display.getGroupItems(key);
             // getCount of itemsModel returns count items includes groups
-            const numberItemsCurrentRoot = factory(self.getItems()).filter(_private.filterHierarchy.bind(self)).value().length;
+            const numberItemsCurrentRoot =
+                factory(self.getItems()).filter(_private.filterHierarchy.bind(self)).value().length;
             return itemsGroup.length === 0 || itemsGroup.length === numberItemsCurrentRoot;
          },
 
@@ -216,7 +219,8 @@ const DropdownViewModel = BaseViewModel.extend({
             // if we had group element we should return it without changes
             if (itemsModelCurrent.isGroup) {
 
-               // FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
+               // FIXME временное решение, переделывается тут:
+                //  https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
                if (_private.needHideGroup(this, itemsModelCurrent.key)) {
                   itemsModelCurrent.isHiddenGroup = true;
                }
@@ -235,7 +239,9 @@ const DropdownViewModel = BaseViewModel.extend({
             // Separator is needed only when list has both history and nohistory items
             // if the last item is in history then separator is unnecessary
             if (!this._itemsModel.isLast()) {
-               itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item, itemsModelCurrent.hasParent);
+               itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(
+                   itemsModelCurrent.item, this._itemsModel.getNext().item, itemsModelCurrent.hasParent
+               );
             }
             itemsModelCurrent.iconStyle = Utils.getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
@@ -244,7 +250,9 @@ const DropdownViewModel = BaseViewModel.extend({
             itemsModelCurrent.parentProperty = this._options.parentProperty;
             itemsModelCurrent.hasClose = this._options.hasClose;
             itemsModelCurrent.hasPinned = this._options.hasIconPin && itemsModelCurrent.item.has('pinned');
-            itemsModelCurrent.itemClassList = _private.getClassList(this._options, itemsModelCurrent, this.hasHierarchy());
+            itemsModelCurrent.itemClassList = _private.getClassList(
+                this._options, itemsModelCurrent, this.hasHierarchy()
+            );
 
             // Для совместимости с menu:Control
             itemsModelCurrent.treeItem = _private.getNewTreeItem(itemsModelCurrent);
@@ -317,7 +325,8 @@ const DropdownViewModel = BaseViewModel.extend({
                const emptyItem = {};
                const itemData = {};
                itemData[this._options.displayProperty] = this._options.emptyText;
-               itemData[this._options.keyProperty] = this._options.emptyKey !== undefined ? this._options.emptyKey : null;
+               itemData[this._options.keyProperty] =
+                   this._options.emptyKey !== undefined ? this._options.emptyKey : null;
                const item = new entity.Model({
                   rawData: itemData
                });

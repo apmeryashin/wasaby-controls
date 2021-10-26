@@ -33,7 +33,9 @@ export default class Move implements IAction {
         });
     }
 
-    private _getProvider(providerName: string = 'Controls/listCommands:MoveProviderWithDialog'): Promise<IMoveProvider> {
+    private _getProvider(
+        providerName: string = 'Controls/listCommands:MoveProviderWithDialog'
+    ): Promise<IMoveProvider> {
         return ModulesLoader.loadAsync(providerName).then((provider) => {
            return new provider();
         });

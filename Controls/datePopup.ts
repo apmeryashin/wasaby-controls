@@ -176,7 +176,8 @@ export default class DatePopup extends Control implements EventProxyMixin {
         this._monthRangeQuantum = {};
 
         if (options.mask === popupMask.auto) {
-            this._mask = options.minRange === IDateRangeSelectable.minRange.month ? popupMask.MM_YYYY : popupMask.DD_MM_YY;
+            this._mask = options.minRange === IDateRangeSelectable.minRange.month ?
+                popupMask.MM_YYYY : popupMask.DD_MM_YY;
         } else {
             this._mask = options.mask;
         }
@@ -584,12 +585,16 @@ export default class DatePopup extends Control implements EventProxyMixin {
 
     updateStartValueValidators(validators?: Function[]): void {
         const startValueValidators: Function[] = validators || this._options.startValueValidators;
-        this._startValueValidators = Range.getRangeValueValidators(startValueValidators, this._rangeModel, this._rangeModel.startValue);
+        this._startValueValidators = Range.getRangeValueValidators(
+            startValueValidators, this._rangeModel, this._rangeModel.startValue
+        );
     }
 
     updateEndValueValidators(validators?: Function[]): void {
         const endValueValidators: Function[] = validators || this._options.endValueValidators;
-        this._endValueValidators = Range.getRangeValueValidators(endValueValidators, this._rangeModel, this._rangeModel.endValue);
+        this._endValueValidators = Range.getRangeValueValidators(
+            endValueValidators, this._rangeModel, this._rangeModel.endValue
+        );
     }
 
     static getDefaultOptions(): object {

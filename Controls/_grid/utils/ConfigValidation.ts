@@ -114,7 +114,10 @@ const checkRequiredCellIndexes = (headerConfig: THeader, logType: TLogType): boo
     return true;
 };
 
-const _validateBaseColumnsIndexes = (columns: TColumns, partColumns: TFooter | TEmptyTemplateColumns, optionName?: string, logType: TLogType = 'error'): boolean => {
+const _validateBaseColumnsIndexes = (columns: TColumns,
+                                     partColumns: TFooter | TEmptyTemplateColumns,
+                                     optionName?: string,
+                                     logType: TLogType = 'error'): boolean => {
     const prefix = optionName ? `[${optionName}] ` : '';
     const maxGridColumnEndIndex = columns.length + 1;
 
@@ -228,7 +231,8 @@ const validateColumnsWidths = (columns: TColumns, logType: TLogType = 'error'): 
     }, true);
 };
 
-const validateGridParts = ({header, columns, footer, emptyTemplateColumns}: IGridParts, logType: TLogType = 'error'): boolean => {
+const validateGridParts = ({header, columns, footer, emptyTemplateColumns}: IGridParts,
+                           logType: TLogType = 'error'): boolean => {
     if (!(columns && columns.length)) {
         notify(ERROR_MSG.COLUMNS_ARE_REQUIRED, logType);
         return false;

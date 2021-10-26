@@ -127,9 +127,17 @@ export = simpleExtend.extend({
    _getFixedPosition() {
       let result = '';
 
-      if (this._position.vertical && this._position.vertical?.indexOf('top') !== -1 && !this._intersection.top && this._intersection.bottom) {
+      if (
+          this._position.vertical &&
+          this._position.vertical?.indexOf('top') !== -1 &&
+          !this._intersection.top && this._intersection.bottom
+      ) {
          result = 'top';
-      } else if (this._position.vertical && this._position.vertical?.toLowerCase().indexOf('bottom') !== -1 && !this._intersection.bottom && this._intersection.top) {
+      } else if (
+          this._position.vertical &&
+          this._position.vertical?.toLowerCase().indexOf('bottom') !== -1 &&
+          !this._intersection.bottom && this._intersection.top
+      ) {
          result = 'bottom';
       }
 

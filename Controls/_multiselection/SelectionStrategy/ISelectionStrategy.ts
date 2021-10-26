@@ -111,7 +111,11 @@ export default interface ISelectionStrategy {
     * @param {CrudEntityKey} rootId Корень, в котором считать признак isAllSelected.
     * @return {boolean}
     */
-   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number, byEveryItem?: boolean, rootId?: CrudEntityKey): boolean;
+   isAllSelected(selection: ISelection,
+                 hasMoreData: boolean,
+                 itemsCount: number,
+                 byEveryItem?: boolean,
+                 rootId?: CrudEntityKey): boolean;
 
    /**
     * Задает {@link /doc/platform/developmentapl/service-development/service-contract/logic/list/hierarch/calc-entry-path/ ENTRY_PATH} для стратегии.

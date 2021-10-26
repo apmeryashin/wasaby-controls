@@ -6,7 +6,9 @@ export const enum SCROLL_DIRECTION {
     HORIZONTAL = 'horizontal'
 }
 
-export function scrollTo(container: HTMLElement, position: number, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL): void {
+export function scrollTo(container: HTMLElement,
+                         position: number,
+                         direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL): void {
     if (direction === SCROLL_DIRECTION.VERTICAL) {
         container.scrollTop = position;
     } else if (direction === SCROLL_DIRECTION.HORIZONTAL) {
@@ -52,7 +54,9 @@ export const enum SCROLL_POSITION {
 
 const SCALE_ROUNDING_ERROR_FIX = 1.5;
 
-export function getScrollPositionType(scrollPosition: number, viewportSize: number, contentSize: number): SCROLL_POSITION {
+export function getScrollPositionType(scrollPosition: number,
+                                      viewportSize: number,
+                                      contentSize: number): SCROLL_POSITION {
     let curPosition: SCROLL_POSITION;
     if (scrollPosition <= 0) {
         curPosition = SCROLL_POSITION.START;

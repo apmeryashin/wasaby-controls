@@ -153,7 +153,9 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       }
    }
 
-   private _getAdditionalMenuItems({selectedKeys, selectionViewMode, isAllSelected, selectedKeysCount}: IMultiSelectorOptions): MultiSelectorMenuItems {
+   private _getAdditionalMenuItems(
+       {selectedKeys, selectionViewMode, isAllSelected, selectedKeysCount}: IMultiSelectorOptions
+   ): MultiSelectorMenuItems {
       const additionalItems = [];
       const hasSelected = !!selectedKeys.length;
 
@@ -186,7 +188,8 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       });
    }
 
-   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions, counterConfigChanged?: boolean): Promise<TCount> {
+   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions,
+                                       counterConfigChanged?: boolean): Promise<TCount> {
       const {selectedKeys, excludedKeys, selectedKeysCount, operationsController, selectedCountConfig} = options;
       const selection = this._getSelection(selectedKeys, excludedKeys);
       const count = (counterConfigChanged && selectedKeysCount !== 0) ? null : selectedKeysCount;
@@ -195,7 +198,8 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
          this._sizeChanged = true;
          operationsController?.setSelectedKeysCount(count);
       };
-      const needUpdateCount = !selectedCountConfig || !counterConfigChanged || this._isCorrectCount(count) || !options.isAllSelected;
+      const needUpdateCount = !selectedCountConfig || !counterConfigChanged ||
+          this._isCorrectCount(count) || !options.isAllSelected;
 
       if (needUpdateCount) {
          const getCountResult = this._getCount(selection, count, options);

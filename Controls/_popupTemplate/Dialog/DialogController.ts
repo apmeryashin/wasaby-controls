@@ -104,7 +104,8 @@ class DialogController extends BaseController {
     }
 
     popupDragStart(item: IDialogItem, container: HTMLElement, offset: IDragOffset, sizes: IPopupSizes = {}): void {
-        const horizontalProperty = item.position.left !== undefined ? HORIZONTAL_DIRECTION.LEFT : HORIZONTAL_DIRECTION.RIGHT;
+        const horizontalProperty =
+            item.position.left !== undefined ? HORIZONTAL_DIRECTION.LEFT : HORIZONTAL_DIRECTION.RIGHT;
         const verticalProperty = item.position.top !== undefined ? VERTICAL_DIRECTION.TOP : VERTICAL_DIRECTION.BOTTOM;
 
         const horizontalOffset = horizontalProperty === HORIZONTAL_DIRECTION.LEFT ? offset.x : -offset.x;

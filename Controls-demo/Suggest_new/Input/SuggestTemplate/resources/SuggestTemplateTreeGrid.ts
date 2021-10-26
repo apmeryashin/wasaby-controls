@@ -1,4 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
+// tslint:disable-next-line:max-line-length
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/resources/SuggestTemplateTreeGrid');
 
 class SuggestTemplateGrid extends Control {

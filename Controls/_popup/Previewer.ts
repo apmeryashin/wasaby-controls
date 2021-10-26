@@ -165,7 +165,10 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     }
 
     protected _contentMouseleaveHandler(event: SyntheticEvent<MouseEvent>): void {
-        if (!this._options.readOnly && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
+        if (
+            !this._options.readOnly &&
+            (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')
+        ) {
             this._calmTimer.stop();
             if (this._isPopupOpened()) {
                 this._debouncedAction('_close', [event]);
@@ -176,8 +179,12 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     }
 
     protected _contentMousemoveHandler(event: SyntheticEvent<MouseEvent>): void {
-        if (!this._options.readOnly && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
-            // Устанавливаем старое значение таймера, так при небольших значениях, окно может открыться когда этого не нужно
+        if (
+            !this._options.readOnly &&
+            (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')
+        ) {
+            // Устанавливаем старое значение таймера, так при небольших значениях,
+            // окно может открыться когда этого не нужно
             // https://online.sbis.ru/opendoc.html?guid=55ca4037-ae40-44f4-a10f-ac93ddf990b1
             this._calmTimer.start(CALM_DELAY, event);
         }

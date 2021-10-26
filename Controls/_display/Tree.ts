@@ -101,7 +101,11 @@ function onCollectionChange<T>(
     this.instance._finishUpdateSession(session, false);
     this.instance._checkItemsDiff(session, nodes, state);
 
-    if (action === IObservable.ACTION_RESET || action === IObservable.ACTION_ADD || action === IObservable.ACTION_REMOVE) {
+    if (
+        action === IObservable.ACTION_RESET ||
+        action === IObservable.ACTION_ADD ||
+        action === IObservable.ACTION_REMOVE
+    ) {
         if (this.instance.getExpanderVisibility() === 'hasChildren') {
             this.instance._recountHasNodeWithChildren();
             if (!this.instance.getHasChildrenProperty()) {
@@ -546,7 +550,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     setMoreFontColorStyle(moreFontColorStyle: string): void {
         if (this._$moreFontColorStyle !== moreFontColorStyle) {
             this._$moreFontColorStyle = moreFontColorStyle;
-            this._updateItemsProperty('setMoreFontColorStyle', moreFontColorStyle, '[Controls/tree:TreeNodeFooterItem]');
+            this._updateItemsProperty(
+                'setMoreFontColorStyle', moreFontColorStyle, '[Controls/tree:TreeNodeFooterItem]'
+            );
             this._nextVersion();
         }
     }
@@ -958,7 +964,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             options.displayExpanderPadding = this._displayExpanderPadding;
 
             const key = object.getPropertyValue<CrudEntityKey>(options.contents, this._$keyProperty);
-            options.expanded = this.getExpandedItems().includes(key) || this.getExpandedItems().includes(null) && !this.getCollapsedItems().includes(key);
+            options.expanded = this.getExpandedItems().includes(key) ||
+                this.getExpandedItems().includes(null) && !this.getCollapsedItems().includes(key);
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }

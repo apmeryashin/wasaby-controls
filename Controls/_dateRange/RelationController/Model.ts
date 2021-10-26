@@ -108,14 +108,20 @@ class ModuleClass {
 
         let capacityChanged = false;
         if (this._rangeIsNotEmpty(ranges[changedRangeIndex])) {
-            capacityChanged = updatedPeriodType !== getPeriodType(ranges[changedRangeIndex][0], ranges[changedRangeIndex][1]);
+            capacityChanged = updatedPeriodType !== getPeriodType(
+                ranges[changedRangeIndex][0], ranges[changedRangeIndex][1]
+            );
         }
 
         if (changedRangeIndex < ranges.length - 1) {
-            this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex + 1][0], capacityChanged);
+            this._updateRelation(
+                updatedPeriodType, updatedStartValue, ranges[changedRangeIndex + 1][0], capacityChanged
+            );
          }
         if (/* this._options.onlyByCapacity && */ changedRangeIndex > 0) {
-            this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex - 1][0], capacityChanged);
+            this._updateRelation(
+                updatedPeriodType, updatedStartValue, ranges[changedRangeIndex - 1][0], capacityChanged
+            );
          }
     }
 
@@ -133,7 +139,8 @@ class ModuleClass {
            this._relationMode = 'normal';
 
            // We update steps for calculation of the periods in other controls.
-           // If the digit capacity has changed, then adjacent periods are included and the step must be equal to this period.
+           // If the digit capacity has changed, then adjacent periods are
+           // included and the step must be equal to this period.
            if (capacityChanged) {
               step = getPeriodLengthInMonthByType(updatedPeriodType);
            } else {
@@ -171,7 +178,10 @@ class ModuleClass {
 
     protected _getChangedIndex(ranges: Date[]): number {
         for (const i in this.ranges) {
-            if (!dateUtils.isDatesEqual(this.ranges[i][0], ranges[i][0]) || !dateUtils.isDatesEqual(this.ranges[i][1], ranges[i][1])) {
+            if (
+                !dateUtils.isDatesEqual(this.ranges[i][0], ranges[i][0]) ||
+                !dateUtils.isDatesEqual(this.ranges[i][1], ranges[i][1])
+            ) {
                 return parseInt(i, 10);
             }
         }
@@ -345,7 +355,9 @@ class ModuleClass {
         if (selectionType === SLIDE_DATE_TYPE.days) {
             return new this._dateConstructor(date.getFullYear(), date.getMonth(), date.getDate() + delta);
         } else if (selectionType === SLIDE_DATE_TYPE.years) {
-            return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta, date.getDate() + periodLength - 1);
+            return new this._dateConstructor(
+                date.getFullYear(), date.getMonth() + delta, date.getDate() + periodLength - 1
+            );
         }
         return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta + 1, 0);
     }

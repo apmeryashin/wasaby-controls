@@ -8,7 +8,8 @@ import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {IResetValueOptions, ITooltip, ITooltipOptions, IContrastBackgroundOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
 
-export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IContrastBackgroundOptions, IResetValueOptions {
+export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions,
+    ITooltipOptions, IContrastBackgroundOptions, IResetValueOptions {
    captions?: string[];
    orientation?: string;
    size?: string;

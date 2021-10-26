@@ -37,7 +37,9 @@ export default class extends Control {
                         const filterValue = queryFilter[filterField];
                         const itemValue = item.get(filterField);
                         const itemValueIsNumber = typeof itemValue === 'number';
-                        addToData = ((itemValue >= filterValue[0] || !filterValue[0]) && (itemValue <= filterValue[1] || !filterValue[1])) && itemValueIsNumber || filterValue.includes(itemValue);
+                        addToData = ((itemValue >= filterValue[0] || !filterValue[0]) &&
+                            (itemValue <= filterValue[1] || !filterValue[1])) &&
+                            itemValueIsNumber || filterValue.includes(itemValue);
                         if (emptyFields && isEqual(filterValue, emptyFields[filterField])) {
                             addToData = true;
                         }

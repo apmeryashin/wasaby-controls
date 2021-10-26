@@ -695,12 +695,22 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                 popupItem.items = configs[item.name].popupItems || popupItem.items;
                 popupItem.selectorItems = configs[item.name].items;
                 if (item.editorOptions.source) {
-                    if (!configs[item.name].source && (!configs[item.name].loadDeferred || configs[item.name].loadDeferred.isReady())) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
-                        popupItem.loadDeferred = this._loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter, item.editorOptions.navigation);
+                    if (
+                        !configs[item.name].source &&
+                        (!configs[item.name].loadDeferred || configs[item.name].loadDeferred.isReady())
+                    ) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
+                        popupItem.loadDeferred = this._loadItemsFromSource(
+                            configs[item.name],
+                            item.editorOptions.source,
+                            popupItem.filter,
+                            item.editorOptions.navigation
+                        );
                         configs[item.name].loadDeferred = popupItem.loadDeferred;
                     }
                     if (!configs[item.name].sourceController) {
-                        const sourceController = this._getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
+                        const sourceController = this._getSourceController(
+                            configs[item.name], item.editorOptions.source, item.editorOptions.navigation
+                        );
                         sourceController.setItems(popupItem.items);
                     }
                     popupItem.hasMoreButton = configs[item.name].sourceController.hasMoreData('down');

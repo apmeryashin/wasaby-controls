@@ -28,12 +28,17 @@ function isEqual(obj1, obj2, fieldsOptions: Record<string, TComparator>) {
          }
       }
       for (const j of props) {
-         const shouldSkip = fieldsOptions[j] instanceof Function ? fieldsOptions[j](obj1[i][j], obj2[i][j]) === true : false;
-         if ((!shouldSkip || !(obj1[i][j] instanceof Object)) && (obj1[i].hasOwnProperty(j) || obj2[i].hasOwnProperty(j))) {
-            if (obj1[i][j] !== obj2[i][j]) {
-                return false;
-            }
-         }
+          const shouldSkip = fieldsOptions[j] instanceof Function
+              ? fieldsOptions[j](obj1[i][j], obj2[i][j]) === true
+              : false;
+          if (
+              (!shouldSkip || !(obj1[i][j] instanceof Object)) &&
+              (obj1[i].hasOwnProperty(j) || obj2[i].hasOwnProperty(j))
+          ) {
+              if (obj1[i][j] !== obj2[i][j]) {
+                  return false;
+              }
+          }
       }
    }
    return true;
@@ -45,7 +50,9 @@ function isEqual(obj1, obj2, fieldsOptions: Record<string, TComparator>) {
  * @param newTemplate
  * @param flatComparator
  */
-function isEqualTemplates(oldTemplate: TemplateFunction, newTemplate: TemplateFunction, flatComparator?: (oldValue, newValue) => boolean): boolean {
+function isEqualTemplates(oldTemplate: TemplateFunction,
+                          newTemplate: TemplateFunction,
+                          flatComparator?: (oldValue, newValue) => boolean): boolean {
    // @ts-ignore
    const isWasabyTemplate = (tmpl) => tmpl instanceof Array && tmpl.isWasabyTemplate;
 

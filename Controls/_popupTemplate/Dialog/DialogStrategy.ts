@@ -139,7 +139,8 @@ export class DialogStrategy {
         }
 
         const topOffset = (popupItem.sizes?.margins?.top || 0) + (popupItem.popupOptions.offset?.vertical || 0);
-        const horizontalOffset = (popupItem.sizes?.margins?.left || 0) + (popupItem.popupOptions.offset?.horizontal || 0);
+        const horizontalOffset =
+            (popupItem.sizes?.margins?.left || 0) + (popupItem.popupOptions.offset?.horizontal || 0);
         const top = (topCoordinate || 0) + topOffset;
         const horizontalPosition = (horizontalCoordinate || 0) + horizontalOffset;
 

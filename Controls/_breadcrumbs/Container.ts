@@ -83,7 +83,8 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
         if (this._options.itemsDragNDrop &&
             this._parentProperty &&
             cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
-            this._dragOnBreadCrumbs = dragObject.entity.dragControlId === this._sourceController.getState().dragControlId &&
+            this._dragOnBreadCrumbs =
+                dragObject.entity.dragControlId === this._sourceController.getState().dragControlId &&
                 !this._dragItemsFromRoot(dragObject.entity.getItems());
         }
     }

@@ -184,7 +184,9 @@ export default class View extends Control<IViewOptions> {
         swipeContainerHeight: number
     ): void {
         if (swipeEvent.nativeEvent.direction === 'left') {
-            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerWidth, swipeContainerHeight);
+            this._itemActionsController.activateSwipe(
+                item.getContents().getKey(), swipeContainerWidth, swipeContainerHeight
+            );
         }
         if (swipeEvent.nativeEvent.direction === 'right' && item.isSwiped()) {
             this._itemActionsController.startSwipeCloseAnimation();
@@ -465,7 +467,9 @@ export default class View extends Control<IViewOptions> {
             return undefined;
         }
 
-        const eventResult = this._notify('beforeMarkedKeyChanged', [newMarkedKey], { bubbling: true }) as Promise<CrudEntityKey>|CrudEntityKey;
+        const eventResult = this._notify(
+            'beforeMarkedKeyChanged', [newMarkedKey], {bubbling: true}
+        ) as Promise<CrudEntityKey> | CrudEntityKey;
 
         let result = eventResult;
         if (eventResult instanceof Promise) {

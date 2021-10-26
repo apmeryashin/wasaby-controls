@@ -32,7 +32,8 @@ export interface IIndicatorCategory {
     * @cfg {String} Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
     * @default ''
     */
-   /*Name of css class, that will be applied to sectors of this category. If not specified, default color will be used */
+   /*Name of css class, that will be applied to sectors of this category.
+   If not specified, default color will be used */
    className: string;
    /**
     * @name Controls/progress:IIndicatorCategory#title
@@ -194,7 +195,8 @@ class StateIndicator extends Control<IStateIndicatorOptions> {
       opts.data.forEach((item) => {
          sum += item.value;
       });
-      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то будем прибавлять сектор к такому элементу, у которого процентное отклонение больше остальных.
+      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то будем
+      // прибавлять сектор к такому элементу, у которого процентное отклонение больше остальных.
       if (totalSectorsUsed < _numSectors && sum === maxPercentValue) {
          while (totalSectorsUsed !== _numSectors) {
             const maxDeviationIndex = this._getMaxPercentageDeviationIndex();

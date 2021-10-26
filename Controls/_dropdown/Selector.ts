@@ -182,7 +182,9 @@ export default class Selector extends BaseDropdown {
          this._selectedItems = items;
          this._needInfobox = options.readOnly && this._selectedItems.length > 1;
          this._isEmptyItem = isSingleSelectionItem(items[0], options.emptyText, options.keyProperty, options.emptyKey);
-         this._isAllSelectedItem = isSingleSelectionItem(items[0], options.selectedAllText, options.keyProperty, options.selectedAllKey);
+         this._isAllSelectedItem = isSingleSelectionItem(
+             items[0], options.selectedAllText, options.keyProperty, options.selectedAllKey
+         );
          this._item = this._isAllSelectedItem || this._isEmptyItem ? null : items[0];
          this._icon = this._isEmptyItem || this._isAllSelectedItem ? null : getPropValue(this._item, 'icon');
          this._text = this._getText(items, options);
@@ -269,9 +271,13 @@ export default class Selector extends BaseDropdown {
 
    private _getSelectedKeys(items: Model[], keyProperty: string): TKey[] {
       const keys = [];
-      if (isSingleSelectionItem(items[0], this._options.selectedAllText, this._options.keyProperty, this._options.selectedAllKey)) {
+      if (isSingleSelectionItem(
+          items[0], this._options.selectedAllText, this._options.keyProperty, this._options.selectedAllKey
+      )) {
          keys.push(this._options.selectedAllKey);
-      } else if (isSingleSelectionItem(items[0], this._options.emptyText, this._options.keyProperty, this._options.emptyKey)) {
+      } else if (isSingleSelectionItem(
+          items[0], this._options.emptyText, this._options.keyProperty, this._options.emptyKey
+      )) {
          keys.push(this._options.emptyKey);
       } else {
          factory(items).each((item) => {

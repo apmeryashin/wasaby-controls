@@ -52,9 +52,14 @@ export default class ConfirmDialog extends Control<IControlOptions> {
       if (event.nativeEvent.keyCode === constants.key.esc) {
          this._isEscDown = true;
       }
-      if (!(event.nativeEvent.altKey || event.nativeEvent.shiftKey) && (event.nativeEvent.ctrlKey || event.nativeEvent.metaKey) && event.nativeEvent.keyCode === constants.key.enter) { // Ctrl+Enter, Cmd+Enter, Win+Enter
+      if (
+          !(event.nativeEvent.altKey || event.nativeEvent.shiftKey) &&
+          (event.nativeEvent.ctrlKey || event.nativeEvent.metaKey) &&
+          event.nativeEvent.keyCode === constants.key.enter
+      ) { // Ctrl+Enter, Cmd+Enter, Win+Enter
          // If "primary action" processed event, then event must be stopped.
-         // Otherwise, parental controls (including other primary action) can react to pressing ctrl+enter and call one more handler
+         // Otherwise, parental controls (including other primary action)
+         // can react to pressing ctrl+enter and call one more handler
          event.stopPropagation();
          this._onTriggerHandler();
       }

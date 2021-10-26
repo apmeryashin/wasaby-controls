@@ -312,7 +312,11 @@ const ListView = Control.extend(
         },
 
         _onItemContextMenu(event, itemData) {
-           if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.isEditing()) {
+           if (
+               this._options.contextMenuEnabled !== false &&
+               this._options.contextMenuVisibility !== false &&
+               !this._options.listModel.isEditing()
+           ) {
                 this._notify('itemContextMenu', [itemData, event, false]);
            }
         },
@@ -324,7 +328,11 @@ const ListView = Control.extend(
          * @private
          */
         _onItemLongTap(event, itemData): void {
-            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.isEditing()) {
+            if (
+                this._options.contextMenuEnabled !== false &&
+                this._options.contextMenuVisibility !== false &&
+                !this._options.listModel.isEditing()
+            ) {
                 this._notify('itemLongTap', [itemData, event]);
             }
         },
@@ -347,10 +355,12 @@ const ListView = Control.extend(
                 return;
             }
             if (itemData && itemData.isSwiped()) {
-               // TODO: Сейчас на itemMouseDown список переводит фокус на fakeFocusElement и срабатывает событие listDeactivated.
-               // Из-за этого события закрывается свайп, это неправильно, т.к. из-за этого становится невозможным открытие меню.
-               // Выпилить после решения задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
-               return;
+                // TODO: Сейчас на itemMouseDown список переводит фокус на fakeFocusElement
+                //  и срабатывает событие listDeactivated. Из-за этого события закрывается свайп,
+                //  это неправильно, т.к. из-за этого становится невозможным открытие меню.
+                //  Выпилить после решения задачи
+                //  https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
+                return;
             }
 
             // TODO: Убрать, preventItemEvent когда это больше не понадобится
@@ -374,7 +384,8 @@ const ListView = Control.extend(
         },
 
         // TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
-        // которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
+        // которые не нужны для ListView.
+        // Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
         _onItemMouseLeave(event, itemData) {
             this._notify('itemMouseLeave', [itemData, event]);
             this._debouncedSetHoveredItem(this, null);
@@ -425,7 +436,9 @@ const ListView = Control.extend(
             return this._listModel.getHoveredItem();
         },
 
-        _onFixedItemChanged(event: SyntheticEvent, item: CollectionItem<Model>, information: { fixedPosition: string }): void {
+        _onFixedItemChanged(event: SyntheticEvent,
+                            item: CollectionItem<Model>,
+                            information: { fixedPosition: string }): void {
             this._notify('fixedItemChanged', [item, information]);
         },
 

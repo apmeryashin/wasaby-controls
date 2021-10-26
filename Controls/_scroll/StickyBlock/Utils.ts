@@ -115,7 +115,8 @@ export function getOffset(parentElement: HTMLElement, element: HTMLElement, posi
    }
 }
 
-export function validateIntersectionEntries(entries: IntersectionObserverEntry[], rootContainer: HTMLElement): IntersectionObserverEntry[] {
+export function validateIntersectionEntries(entries: IntersectionObserverEntry[],
+                                            rootContainer: HTMLElement): IntersectionObserverEntry[] {
     const newEntries: IntersectionObserverEntry[] = [];
     for (const entry: IntersectionObserverEntry of entries) {
         // После создания элемента иногда приходит событие с неправильными нулевыми размерами.

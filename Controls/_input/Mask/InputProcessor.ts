@@ -42,11 +42,13 @@ const InputProcessor = {
         start = clearSplitValue.before.length;
         position = splitValue.before.length;
 
-        clearSplitValue.delete = clearData.value.substring(start, clearData.positions[position + splitValue.delete.length]);
+        clearSplitValue.delete =
+            clearData.value.substring(start, clearData.positions[position + splitValue.delete.length]);
         start += clearSplitValue.delete.length;
         position += splitValue.delete.length;
 
-        clearSplitValue.after = clearData.value.substring(start, clearData.positions[position + splitValue.after.length]);
+        clearSplitValue.after =
+            clearData.value.substring(start, clearData.positions[position + splitValue.after.length]);
 
         clearSplitValue.insert = splitValue.insert;
 

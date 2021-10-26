@@ -116,7 +116,13 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
         // - backgroundColorStyle
         // = backgroundStyle
         it('+backgroundStyle=default, +style=default, -backgroundColorStyle', () => {
-            cell = new GridFooterCell({ owner, column: { width: ''}, backgroundStyle: 'default', theme: 'default', style: 'default' });
+            cell = new GridFooterCell({
+                owner,
+                column: {width: ''},
+                backgroundStyle: 'default',
+                theme: 'default',
+                style: 'default'
+            });
             cAssert.include(cell.getWrapperClasses( undefined,  false),
                 'controls-background-default');
         });
@@ -126,7 +132,13 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
         // - backgroundColorStyle
         // = style
         it('+backgroundStyle=default, +style=!default, -backgroundColorStyle', () => {
-            cell = new GridFooterCell({ owner, column: { width: ''}, backgroundStyle: 'default', theme: 'default', style: 'master' });
+            cell = new GridFooterCell({
+                owner,
+                column: {width: ''},
+                backgroundStyle: 'default',
+                theme: 'default',
+                style: 'master'
+            });
             cAssert.include(cell.getWrapperClasses( undefined,  false),
                 'controls-background-master');
             cAssert.notInclude(cell.getWrapperClasses( undefined,  false),

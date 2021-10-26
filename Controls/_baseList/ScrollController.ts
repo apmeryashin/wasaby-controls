@@ -229,7 +229,10 @@ export default class ScrollController {
         firstItemIndex = Math.min(firstItemIndex, this._options.collection.getStopIndex());
 
         // TODO: Отрефакторить. Задача: https://online.sbis.ru/opendoc.html?guid=0c097079-0143-4b19-9f43-dc38c68ba3bc
-        if (this._options.collection.getStartIndex() && this._options.collection.at(0)['[Controls/_display/GroupItem]'] ) {
+        if (
+            this._options.collection.getStartIndex() &&
+            this._options.collection.at(0)['[Controls/_display/GroupItem]']
+        ) {
             firstItemIndex--;
         }
         return this._options.collection.at(firstItemIndex);
@@ -252,7 +255,8 @@ export default class ScrollController {
      * @private
      */
     private _getFirstVisibleItemIndex(items: HTMLElement[], verticalOffset: number): number {
-        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide' ? this._virtualScroll.getRange().start : 0;
+        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide'
+            ? this._virtualScroll.getRange().start : 0;
         const itemsCount = items.length;
         let itemsHeight = firstElementIndex;
         let i = 0;
@@ -267,7 +271,8 @@ export default class ScrollController {
     }
 
     private _getTopOffsetForItemsContainer(listViewContainer: HTMLElement, baseControlContainer: HTMLElement): number {
-        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide' ? this._virtualScroll.getRange().start : 0;
+        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide'
+            ? this._virtualScroll.getRange().start : 0;
         let offsetTop = uDimension(listViewContainer.children[firstElementIndex], true).top;
         const container = baseControlContainer[0] || baseControlContainer;
         offsetTop += container.offsetTop - uDimension(container).top;
@@ -630,7 +635,10 @@ export default class ScrollController {
 
             // Если элемент застикан, то пропускаем его, граничным будет элемент следующий за ним
             // https://online.sbis.ru/opendoc.html?guid=9a0d939d-a08b-478b-b981-ccd1577fb184
-            if (window.getComputedStyle(item).position === 'sticky' || (item.children[0] && window.getComputedStyle(item.children[0]).position === 'sticky')) {
+            if (
+                window.getComputedStyle(item).position === 'sticky' ||
+                (item.children[0] && window.getComputedStyle(item.children[0]).position === 'sticky')
+            ) {
                 return false;
             }
 
@@ -738,7 +746,11 @@ export default class ScrollController {
         return !!this._virtualScroll;
     }
 
-    handleMoveItems(addIndex: number, addedItems: object[], removeIndex: number, removedIitems: object[],  direction?: IDirection): IScrollControllerResult {
+    handleMoveItems(addIndex: number,
+                    addedItems: object[],
+                    removeIndex: number,
+                    removedIitems: object[],
+                    direction?: IDirection): IScrollControllerResult {
         let result = {};
         if (!this._virtualScroll) {
             result = this._initVirtualScroll(
@@ -773,7 +785,10 @@ export default class ScrollController {
      * @param shift автоматически сдвинуть диапазон в направлении direction
      * @private
      */
-    handleAddItems(addIndex: number, items: object[], direction?: IDirection, shift: boolean = false): IScrollControllerResult {
+    handleAddItems(addIndex: number,
+                   items: object[],
+                   direction?: IDirection,
+                   shift: boolean = false): IScrollControllerResult {
         let result = {};
         if (!this._virtualScroll) {
             result = this._initVirtualScroll(

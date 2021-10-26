@@ -217,7 +217,10 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _suggestStateChanged(event: SyntheticEvent, state: boolean): void {
-        if ((this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) && this._suggestState) {
+        if (
+            (this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) &&
+            this._suggestState
+        ) {
             this.closeSuggest();
         }
     }

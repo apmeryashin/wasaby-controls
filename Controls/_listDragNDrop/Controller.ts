@@ -29,7 +29,9 @@ export default class Controller<P> {
    private _dragPosition: P;
    private _entity: ItemsEntity;
 
-   constructor(model: IDraggableCollection<P>, draggableItem: IDraggableItem, strategyConstructor: StrategyConstructor<P>) {
+   constructor(model: IDraggableCollection<P>,
+               draggableItem: IDraggableItem,
+               strategyConstructor: StrategyConstructor<P>) {
       this._model = model;
       this._strategyConstructor = strategyConstructor;
       this._draggableItem = draggableItem;

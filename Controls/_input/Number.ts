@@ -6,7 +6,8 @@ import {INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
 import {IOnlyPositive, IOnlyPositiveOptions} from 'Controls/decorator';
 import {IFieldTemplateOptions} from 'Controls/_input/interface/IFieldTemplate';
 
-interface INumberInputOptions extends IBaseInputOptions, INumberLengthOptions, IOnlyPositiveOptions, IFieldTemplateOptions {
+interface INumberInputOptions extends IBaseInputOptions,
+    INumberLengthOptions, IOnlyPositiveOptions, IFieldTemplateOptions {
     value?: number | string | null;
     useGrouping?: boolean;
     showEmptyDecimals?: boolean;

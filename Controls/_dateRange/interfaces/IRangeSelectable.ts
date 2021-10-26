@@ -18,8 +18,10 @@ export default {
     getDefaultOptions() {
         return {
 
-            // TODO: имеет ли смысл оставлять опуию selectionType? selectionType: 'single', это частный случай quantum: {days: [1]}
-            // Возможно стоит оставить, но ввести selectionType: 'quantum' и сделать что бы опция quantum работала только в этом случае.
+            // TODO: имеет ли смысл оставлять опуию selectionType? selectionType: 'single',
+            //  это частный случай quantum: {days: [1]}
+            //  Возможно стоит оставить, но ввести selectionType: 'quantum' и
+            //  сделать что бы опция quantum работала только в этом случае.
             /**
              * @typedef {String} SelectionType
              * @description Режим выделения диапазона.

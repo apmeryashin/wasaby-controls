@@ -7,14 +7,14 @@ import {
     getOffset,
     IFixedEventData,
     IOffset,
+    IPositionOrientation,
     isHidden,
     isStickySupport,
     MODE,
     POSITION,
     SHADOW_VISIBILITY,
     SHADOW_VISIBILITY_BY_CONTROLLER,
-    validateIntersectionEntries,
-    IPositionOrientation
+    validateIntersectionEntries
 } from './StickyBlock/Utils';
 import fastUpdate from './StickyBlock/FastUpdate';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
@@ -22,10 +22,10 @@ import {IScrollState} from '../Utils/ScrollState';
 import {SCROLL_POSITION} from './Utils/Scroll';
 import {IntersectionObserver} from 'Controls/sizeUtils';
 import {EventUtils} from 'UI/Events';
-import Model = require('Controls/_scroll/StickyBlock/Model');
-import template = require('wml!Controls/_scroll/StickyBlock/StickyHeader');
 import Group from 'Controls/_scroll/StickyBlock/Group';
 import 'css!Controls/scroll';
+import Model = require('Controls/_scroll/StickyBlock/Model');
+import template = require('wml!Controls/_scroll/StickyBlock/StickyHeader');
 
 export enum BACKGROUND_STYLE {
     TRANSPARENT = 'transparent',
@@ -713,15 +713,23 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     private _updateStyle(position: POSITION, fixedZIndex: number,
-                         zIndex: number, offsetTop: number, isIosZIndexOptimized: boolean, task1177692247?, task1181007458?): void {
+                         zIndex: number,
+                         offsetTop: number,
+                         isIosZIndexOptimized: boolean,
+                         task1177692247?,
+                         task1181007458?): void {
         const style = this._getStyle(position, fixedZIndex, zIndex, offsetTop, isIosZIndexOptimized, task1177692247);
         if (this._style !== style) {
             this._style = style;
         }
     }
 
-    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number,
-                        zIndex: number, offsetTop: number, isIosZIndexOptimized: boolean, task1177692247?, task1181007458?): string {
+    protected _getStyle(positionFromOptions: POSITION,
+                        fixedZIndex: number,
+                        zIndex: number, offsetTop: number,
+                        isIosZIndexOptimized: boolean,
+                        task1177692247?,
+                        task1181007458?): string {
         const offset: number = 0;
         let top: number;
         let left: number;
@@ -780,7 +788,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         }
         if (position && this._container) {
             // TODO https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
-            // В ios на стикиблоках всегда установлен z-index: fixedZIndex, т.к в момент оттягивания из-за смены z-index происходят прыжки.
+            // В ios на стикиблоках всегда установлен z-index: fixedZIndex,
+            // т.к в момент оттягивания из-за смены z-index происходят прыжки.
             // Из-за этого возникает следующая проблема: в списке лежат стики и не стики элементы. У не стики элеметов
             // присутствует весло с itemAction. Если следующим элементом идёт стикиблок, то он перекроет весло.
             // Получается, нужно чтобы весло был выше незафиксированного стикиблока, но ниже зафиксированного.
@@ -864,9 +873,11 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     private _restoreBottomShadowHiddenClass(): void {
-        // При создании нового заголовка в группе проставляем ему видимость тени в обход циклов синхронизации, чтобы не было скачков.
-        // Может произойти такой случай, когда группа в этот момент открепляется (тень нужно скрыть), а мы убрали ws-hidden с тени руками,
-        // поэтому vdom думает, что данный класс на ноде весит и не проставляет его при синхронизации - восстановим ws-hidden сами.
+        // При создании нового заголовка в группе проставляем ему видимость тени в обход
+        // циклов синхронизации, чтобы не было скачков. Может произойти такой случай, когда группа в этот
+        // момент открепляется (тень нужно скрыть), а мы убрали ws-hidden с тени руками,
+        // поэтому vdom думает, что данный класс на ноде весит и не проставляет его при с
+        // инхронизации - восстановим ws-hidden сами.
         // _bottomShadowHiddenClassRemovedinJS будем сбрасывать в каждом цикле синхронизации, т.к _isBottomShadowVisible
         // может измениться лишь под конец цикла синхронизации.
         if (this._bottomShadowHiddenClassRemovedinJS && !this._isBottomShadowVisible) {
@@ -906,22 +917,27 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
         const shadowEnabled: boolean = this._isShadowVisibleByScrollState(shadowPosition);
 
-        return !!(shadowEnabled &&
-            ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isStickyShadowVisible)) &&
-            (shadowVisibility === SHADOW_VISIBILITY.visible ||
+        return !!(
+            shadowEnabled &&
+            (
+                (this._model && this._model.fixedPosition === fixedPosition) ||
+                (!this._model && this._isStickyShadowVisible)
+            ) &&
+            (
+                shadowVisibility === SHADOW_VISIBILITY.visible ||
                 shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
-                shadowVisibility === SHADOW_VISIBILITY.initial) &&
-            (mode === MODE.stackable || this._isStickyShadowVisible));
+                shadowVisibility === SHADOW_VISIBILITY.initial
+            ) &&
+            (mode === MODE.stackable || this._isStickyShadowVisible)
+        );
     }
 
     private _isShadowVisibleByScrollState(shadowPosition: POSITION): boolean {
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
 
-        const shadowVisible: boolean = !!(this._scrollState.verticalPosition &&
+        return  !!(this._scrollState.verticalPosition &&
             (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
                 shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END));
-
-        return  shadowVisible;
     }
 
     _updateComputedStyle(): void {

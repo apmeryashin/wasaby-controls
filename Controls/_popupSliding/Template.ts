@@ -45,6 +45,7 @@ export default class Template extends Control<ISlidingPanelTemplateOptions> {
     }
 
     private _getAdaptiveTemplate(slidingPanelOptions: ISlidingPanelTemplateOptions['slidingPanelOptions']): string {
-        return slidingPanelOptions.isMobileMode ? MOBILE_TEMPLATE : DESKTOP_TEMPLATE_BY_MODE[slidingPanelOptions.desktopMode];
+        return slidingPanelOptions.isMobileMode
+            ? MOBILE_TEMPLATE : DESKTOP_TEMPLATE_BY_MODE[slidingPanelOptions.desktopMode];
     }
 }

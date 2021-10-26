@@ -426,7 +426,9 @@ abstract class BaseController implements IPopupController {
 
     private static rootContainers = {};
 
-    static getRootContainerCoords(item: IPopupItem, baseRootSelector: string, rightOffset?: number): IPopupPosition | void {
+    static getRootContainerCoords(item: IPopupItem,
+                                  baseRootSelector: string,
+                                  rightOffset?: number): IPopupPosition | void {
         const getRestrictiveContainer = (popupItem: IPopupItem) => {
             if (popupItem.popupOptions.restrictiveContainer) {
                 return popupItem.popupOptions.restrictiveContainer;

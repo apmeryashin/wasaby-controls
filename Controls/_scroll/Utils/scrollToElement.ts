@@ -172,7 +172,8 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
 
 export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boolean | SCROLL_POSITION,
                                 force?: Boolean, waitInitialization: boolean = false): Promise<void> {
-   // TODO: переделать аргумент toBottom в position https://online.sbis.ru/opendoc.html?guid=4693dfce-f11d-4792-b62d-9faf54564553
+   // TODO: переделать аргумент toBottom в position
+   //  https://online.sbis.ru/opendoc.html?guid=4693dfce-f11d-4792-b62d-9faf54564553
    const position: SCROLL_POSITION = toBottomOrPosition === true ? SCROLL_POSITION.bottom : toBottomOrPosition;
    const stickyHeaderClass = 'controls-StickyHeader';
    // Элемент, к которому нужно подскролить, может находиться в стики блоке.
@@ -237,7 +238,8 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
       if (force || parentOffset.bottom < elemOffset.bottom) {
          if (position === SCROLL_POSITION.center) {
             const centerOffset: number = getCenterOffset(parent, element);
-            elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.topWithOffset - centerOffset);
+            elemToScroll.scrollTop +=
+                Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.topWithOffset - centerOffset);
          } else if (position === SCROLL_POSITION.bottom) {
             elemToScroll.scrollTop += Math.ceil(elemOffset.bottom - parentOffset.bottom + stickyHeaderHeight.bottom);
          } else {
@@ -256,11 +258,14 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
          if (parentOffset.top + stickyHeaderHeight.top > elemOffset.top) {
             if (position === SCROLL_POSITION.center) {
                const centerOffset: number = getCenterOffset(parent, element);
-               elemToScroll.scrollTop -= Math.max(parentOffset.top - elemOffset.top + stickyHeaderHeight.topWithOffset + centerOffset, 0);
+               elemToScroll.scrollTop -=
+                   Math.max(parentOffset.top - elemOffset.top + stickyHeaderHeight.topWithOffset + centerOffset, 0);
             } else if (position === SCROLL_POSITION.bottom) {
-               elemToScroll.scrollTop -= Math.max(parentOffset.bottom - elemOffset.bottom + stickyHeaderHeight.bottom, 0);
+               elemToScroll.scrollTop -=
+                   Math.max(parentOffset.bottom - elemOffset.bottom + stickyHeaderHeight.bottom, 0);
             } else {
-               elemToScroll.scrollTop -= Math.max(parentOffset.top - elemOffset.top + stickyHeaderHeight.topWithOffset, 0);
+               elemToScroll.scrollTop -=
+                   Math.max(parentOffset.top - elemOffset.top + stickyHeaderHeight.topWithOffset, 0);
             }
          }
       }

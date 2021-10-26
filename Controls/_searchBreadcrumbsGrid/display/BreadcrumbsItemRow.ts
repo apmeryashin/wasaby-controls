@@ -156,7 +156,9 @@ export default class BreadcrumbsItemRow<T extends Model = Model> extends GridDat
     }
 
     protected _getMultiSelectAccessibility(): boolean | null {
-        const value = object.getPropertyValue<boolean | null>(this.getLast().getContents(), this._$multiSelectAccessibilityProperty);
+        const value = object.getPropertyValue<boolean | null>(
+            this.getLast().getContents(), this._$multiSelectAccessibilityProperty
+        );
         return value === undefined ? true : value;
     }
 

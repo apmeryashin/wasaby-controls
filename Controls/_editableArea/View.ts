@@ -112,7 +112,8 @@ export default class View extends Control<IViewControlOptions> {
    }
 
     protected _cloneEditObject(editObject: Record<any>): void {
-        // При любом изменении данных будет обновляться editObject, что может приводить к ошибкам. Чтобы этого избежать, клонируем его
+        // При любом изменении данных будет обновляться editObject,
+        // что может приводить к ошибкам. Чтобы этого избежать, клонируем его
         this._editObject = editObject.clone();
         // Если опция editObject изменилась, то она ждет подтверждения изменения, делаем подтверждение у клона.
         this._editObject.acceptChanges();

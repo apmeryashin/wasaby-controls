@@ -497,7 +497,9 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                     }
 
                     this._$historySource.saveHistory(this._$historySource.getHistoryId(), this._$history);
-                    resolve(this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(historyData, meta));
+                    resolve(
+                        this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(historyData, meta)
+                    );
                 } else {
                     resolve(false);
                 }

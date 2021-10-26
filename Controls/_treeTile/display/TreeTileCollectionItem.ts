@@ -224,7 +224,9 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         titlePosition: TTitlePosition = 'underImage',
         imageViewMode: TImageViewMode = 'rectangle'
     ): string {
-        let classes = super.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle, titlePosition, imageViewMode);
+        let classes = super.getTitleClasses(
+            itemType, titleStyle, hasTitle, titleLines, titleColorStyle, titlePosition, imageViewMode
+        );
 
         switch (itemType) {
             case 'default':
