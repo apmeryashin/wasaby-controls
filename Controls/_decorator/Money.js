@@ -199,6 +199,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
 
 /**
  * @name Controls/_decorator/IMoney#showEmptyDecimals
+ * @cfg {Boolean}
  * @default true
  */
 
