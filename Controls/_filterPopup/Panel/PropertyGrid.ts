@@ -123,12 +123,11 @@ class PropertyGrid extends Control<IFilterPropertyGridOptions> {
    // Binding on object property in array does not update control, if this property is not versioned.
    private _observeProp(propName: string, obj: IFilterItem): void {
       let value = obj[propName];
-      const _this = this;
 
       Object.defineProperty(obj, propName, {
-         set(newValue: unknown): void {
+         set: (newValue: unknown): void => {
             value = newValue;
-            _this._itemsChanged();
+            this._itemsChanged();
          },
 
          get(): unknown {

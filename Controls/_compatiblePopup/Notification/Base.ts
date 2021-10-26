@@ -7,16 +7,14 @@ class NotificationBase extends Notification {
     protected _template: TemplateFunction = template;
 
    protected _beforeMount(options): void {
-      const _this = this;
-
-      _this._contentTemplateOptions = options.contentTemplateOptions;
+      this._contentTemplateOptions = options.contentTemplateOptions;
 
       /**
        * После показа размеры контента изменяться, нужно сказать об этом потомкам.
        */
-      _this._contentTemplateOptions.handlers = {
-         onAfterShow(): void {
-            _this._notify('controlResize', [], {bubbling: true});
+      this._contentTemplateOptions.handlers = {
+         onAfterShow: (): void => {
+             this._notify('controlResize', [], {bubbling: true});
          }
       };
 

@@ -136,10 +136,9 @@ const Suggest = Control.extend({
 
       if (newOptions.selectedKey !== undefined && (newOptions.selectedKey !== this._options.selectedKey ||
          newOptions.source !== this._options.source)) {
-         const self = this;
          return _private.loadSelectedItem(this, newOptions).addCallback((items) => {
-            _private.updateValue(self, self._value);
-            self._forceUpdate();
+            _private.updateValue(this, this._value);
+            this._forceUpdate();
             return items;
          });
       }

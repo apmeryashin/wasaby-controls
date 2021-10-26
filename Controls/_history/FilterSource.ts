@@ -413,7 +413,6 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    },
 
    update(data, meta) {
-      const self = this;
       let serData;
       let item;
 
@@ -427,7 +426,7 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          _private.updateFavorite(this, data, meta);
       }
       if (meta.hasOwnProperty('$_addFromData')) {
-         item = _private.findHistoryItem(self, data);
+         item = _private.findHistoryItem(this, data);
          if (item) {
             meta = {
                $_history: true
@@ -441,10 +440,10 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
 
          return _private.getSourceByMeta(this, meta).update(serData, meta).addCallback((dataSet) => {
             if (dataSet) {
-                const hId = item ? item.get('HistoryId') : self.historySource.getHistoryId();
+                const hId = item ? item.get('HistoryId') : this.historySource.getHistoryId();
                 _private.updateRecent(
-                    self,
-                    _private.getRawHistoryItem(self, dataSet.getRawData(), serData, hId)
+                    this,
+                    _private.getRawHistoryItem(this, dataSet.getRawData(), serData, hId)
                 );
             }
             return dataSet?.getRawData() || '';
@@ -474,15 +473,14 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    },
 
    query(query) {
-      const self = this;
       const where = query.getWhere();
       let newItems;
 
       if (where && where.$_history === true) {
          const prepareHistory = () => {
-            newItems = _private.getItemsWithHistory(self, self._history);
-            self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
-            self._loadDef.callback(
+            newItems = _private.getItemsWithHistory(this, this._history);
+            this.historySource.saveHistory(this.historySource.getHistoryId(), this._history);
+            this._loadDef.callback(
                 new sourceLib.DataSet({
                    rawData: newItems.getRawData(),
                    keyProperty: newItems.getKeyProperty()
@@ -490,11 +488,11 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
             );
          };
 
-         if (!self._loadDef || self._loadDef.isReady()) {
-            self._loadDef = new Deferred();
+         if (!this._loadDef || this._loadDef.isReady()) {
+            this._loadDef = new Deferred();
 
-            self.historySource.query().addCallback((data) => {
-               _private.initHistory(self, data);
+            this.historySource.query().addCallback((data) => {
+               _private.initHistory(this, data);
                prepareHistory();
             }).addErrback((error): Promise<sourceLib.DataSet> => {
                _private.initHistory(this, new sourceLib.DataSet({
@@ -508,9 +506,9 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
                return error;
             });
          }
-         return self._loadDef;
+         return this._loadDef;
       }
-      return self.originSource.query(query);
+      return this.originSource.query(query);
    },
 
    /**

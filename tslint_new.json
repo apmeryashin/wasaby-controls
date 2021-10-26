@@ -8,11 +8,10 @@
       ]
    },
    "rules": {
-      "no-conditional-assignment": false,
-      "no-this-assignment": false,
       "no-shadowed-variable": false,
       "no-parameter-reassignment": false,
       "no-magic-numbers": false,
+
       "ban-types": false,
       "ban-ts-ignore": false,
       "no-any": false,

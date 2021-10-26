@@ -255,6 +255,7 @@ const moduleClass = CompoundControl.extend({
 
    // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент добавился в dom нет.
    _afterMountHandler() {
+       // tslint:disable-next-line:no-this-assignment
       const self = this;
       self._baseAfterMount = self._vDomTemplate._afterMount;
       self._vDomTemplate._afterMount = function() {
@@ -285,6 +286,7 @@ const moduleClass = CompoundControl.extend({
 
    // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент обновился - нет.
    _afterUpdateHandler() {
+       // tslint:disable-next-line:no-this-assignment
       const self = this;
       self._baseAfterUpdate = self._vDomTemplate._afterUpdate;
       self._vDomTemplate._afterUpdate = function() {
