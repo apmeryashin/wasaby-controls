@@ -6,7 +6,7 @@ import {Range, Base as dateUtils} from 'Controls/dateUtils';
 import {getMaskType, DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, TIME_MASK_TYPE} from './Utils';
 import {INPUT_MODE} from 'Controls/input';
 import {IDateConstructorOptions} from 'Controls/interface';
-import {IMaskOptions} from "Controls/decorator";
+import {IMaskOptions} from 'Controls/decorator';
 
 const MASK_MAP = {
     YY: 'year',

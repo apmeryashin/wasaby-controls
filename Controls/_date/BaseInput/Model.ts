@@ -2,11 +2,11 @@ import {ObservableMixin} from 'Types/entity';
 import {INPUT_MODE, IInputDisplayValueOptions} from 'Controls/input';
 import StringValueConverter from 'Controls/_date/BaseInput/StringValueConverter';
 import {Base as dateUtils} from 'Controls/dateUtils';
-import {VersionableMixin} from "Types/entity";
+import {VersionableMixin} from 'Types/entity';
 import {IDateConstructorOptions} from 'Controls/interface';
-import {IMaskOptions} from "Controls/decorator";
+import {IMaskOptions} from 'Controls/decorator';
 import IValueOptions from 'Controls/_date/interface/IValue';
-import {mixin} from "Types/util";
+import {mixin} from 'Types/util';
 
 const ALL_SPACES_REGEXP = /[ ]/g;
 const SPACE = ' ';
@@ -152,7 +152,9 @@ export default class Model extends mixin<VersionableMixin, ObservableMixin>(Vers
    autocomplete(textValue: string, autocompleteType: string) {
       this._nextVersion();
       this._textValue = textValue;
-      this.value = this._stringValueConverter.getValueByString(textValue, this._lastValue, autocompleteType, this._inputMode);
+      this.value = this._stringValueConverter.getValueByString(
+          textValue, this._lastValue, autocompleteType, this._inputMode
+      );
       if (dateUtils.isValidDate(this.value)) {
          this._textValue = this._stringValueConverter.getStringByValue(this.value);
       } else if (this._inputMode === INPUT_MODE.partial && !!this._textValue.match(VALID_PARTIAL_DATE_REGEXP)) {
@@ -173,8 +175,8 @@ export default class Model extends mixin<VersionableMixin, ObservableMixin>(Vers
       }
    }
    private _updateValue(value: Date): void {
-      const oldValue = this._value,
-          oldTextValue = this._textValue;
+      const oldValue = this._value;
+      const oldTextValue = this._textValue;
       this._value = value;
 
       this._updateLastValue();

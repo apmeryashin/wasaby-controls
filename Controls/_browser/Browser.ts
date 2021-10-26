@@ -923,11 +923,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _getFilterControllerOptions(options: IBrowserOptions): IFilterControllerOptions {
         const {filterButtonSource, filterController} = options;
-       return {
-           ...options,
-           searchValue: this._getSearchValue(options),
-           historySaveCallback: this._historySaveCallback.bind(this),
-           filterButtonSource: filterButtonSource || filterController?.getFilterButtonItems()
+        return {
+            ...options,
+            searchValue: this._getSearchValue(options),
+            historySaveCallback: this._historySaveCallback.bind(this),
+            filterButtonSource: filterButtonSource || filterController?.getFilterButtonItems()
         } as IFilterControllerOptions;
     }
 

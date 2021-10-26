@@ -16,7 +16,7 @@ import 'css!Controls/CommonClasses';
 import 'css!Controls/date';
 
 import template = require('wml!Controls/_date/Input/Input');
-import {StickyOpener} from "Controls/popup";
+import {StickyOpener} from 'Controls/popup';
 
 interface IDateInput extends ICalendarButtonVisibleOptions, IControlOptions, IDatePopupTypeOptions,
     IValueOptions, IValueValidatorsOptions, IMaskOptions, IDateConstructorOptions {
@@ -58,7 +58,7 @@ class Input extends Control<IDateInput> {
     private _stickyOpener: StickyOpener;
     protected _children: {
         input: BaseInput;
-    }
+    };
     private _state: string;
 
     protected _beforeMount(): void {
