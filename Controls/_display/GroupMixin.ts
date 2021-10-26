@@ -57,8 +57,6 @@ export default abstract class GroupMixin {
         let classes = 'controls-ListView__groupContent-text_wrapper';
         classes += this.getContentTextStylingClasses(templateFontColorStyle, templateFontSize,
             templateFontWeight, templateTextTransform);
-
-        classes += this._getBaseLineClasses(templateFontSize);
         return classes;
     }
 

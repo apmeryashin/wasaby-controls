@@ -92,7 +92,7 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
         const fontWeight = config.groupNodeConfig?.fontWeight || config.fontWeight || templateFontWeight;
         const textTransform = config.groupNodeConfig?.textTransform || templateTextTransform;
 
-        classes += this.getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight, textTransform);
+        classes += super.getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform);
         classes += this._getBaseLineClasses(templateFontSize);
         return classes;
     }

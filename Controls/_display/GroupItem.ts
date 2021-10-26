@@ -3,6 +3,10 @@ import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './Expandable
 import {mixin} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import GroupMixin from './GroupMixin';
+import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
+import {TFontSize} from 'Controls/_interface/IFontSize';
+import {TFontWeight} from 'Controls/_interface/IFontWeight';
+import {TTextTransform} from 'Controls/_interface/ITextTransform';
 
 interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
 }
@@ -89,6 +93,25 @@ export default class GroupItem<T> extends mixin<
     // TODO Убрать после https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
     isIosZIndexOptimized(): boolean {
         return false;
+    }
+
+    /**
+     * CSS классы обёртки текста заголовка группы.
+     * @param templateFontColorStyle
+     * @param templateFontSize
+     * @param templateFontWeight
+     * @param templateTextTransform
+     */
+    getContentTextWrapperClasses(templateFontColorStyle?: TFontColorStyle,
+                                 templateFontSize?: TFontSize,
+                                 templateFontWeight?: TFontWeight,
+                                 templateTextTransform?: TTextTransform): string {
+        let classes = 'controls-ListView__groupContent-text_wrapper';
+        classes += super.getContentTextWrapperClasses(templateFontColorStyle, templateFontSize,
+            templateFontWeight, templateTextTransform);
+
+        classes += this._getBaseLineClasses(templateFontSize);
+        return classes;
     }
 }
 

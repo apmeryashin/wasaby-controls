@@ -83,7 +83,7 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
                                  templateFontSize?: TFontSize,
                                  templateFontWeight?: TFontWeight,
                                  templateTextTransform?: TTextTransform): string {
-        let classes = this.getContentTextStylingClasses(templateFontColorStyle, templateFontSize,
+        let classes = super.getContentTextWrapperClasses(templateFontColorStyle, templateFontSize,
             templateFontWeight, templateTextTransform);
 
         classes += this._getBaseLineClasses(templateFontSize);
