@@ -1,4 +1,12 @@
 import { Control } from 'UI/Base';
+import { detection } from 'Env/Env';
+import { SyntheticEvent } from 'UI/Vdom';
+import { Model } from 'Types/entity';
+import { CrudEntityKey } from 'Types/source';
+import { IObservable } from 'Types/collection';
+
+import InertialScrolling from 'Controls/_baseList/resources/utils/InertialScrolling';
+
 import {
     CollectionItem,
     Collection,
@@ -6,8 +14,6 @@ import {
     VirtualScrollHideController,
     VirtualScrollController
 } from 'Controls/display';
-import { Model } from 'Types/entity';
-import { IObservable } from 'Types/collection';
 import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 import {
     ScrollController,
@@ -23,10 +29,8 @@ import {
     IScheduledRestoreScrollParams,
     IActiveElementChangedChangedCallback
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
-import { SyntheticEvent } from 'UI/Vdom';
-import { CrudEntityKey } from 'Types/source';
 import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
-import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import type { ITriggersVisibility } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
 
 export interface IShadowVisibility {
     backward: boolean;
@@ -67,6 +71,8 @@ interface IListVirtualScrollControllerOptions {
 }
 
 export class ListVirtualScrollController {
+    private readonly _inertialScrolling: InertialScrolling = new InertialScrolling();
+
     private _collection: Collection;
     private _itemSizeProperty: string;
 
@@ -122,6 +128,10 @@ export class ListVirtualScrollController {
     }
 
     scrollPositionChange(position: number): void {
+        if (detection.isMobileIOS) {
+            this._inertialScrolling.scrollStarted();
+        }
+
         this._scrollController.scrollPositionChange(position);
     }
 
@@ -345,15 +355,17 @@ export class ListVirtualScrollController {
     }
 
     private _scrollToElement(key: CrudEntityKey, toBottom?: boolean, force?: boolean): void {
-        const element = this._scrollController.getElement(key);
-        if (element) {
-            const promise = this._scrollToElementUtil(element, toBottom, force);
-            promise.then(() => this._scrollToElementCompletedCallback());
-        } else {
-            throw new Error('Controls/_baseList/Controllers/ListVirtualScrollController::_scrollToElement | ' +
-                'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
-                'Промис scrollToItem не отстрельнет, возможны ошибки.');
-        }
+        this._inertialScrolling.callAfterScrollStopped(() => {
+            const element = this._scrollController.getElement(key);
+            if (element) {
+                const promise = this._scrollToElementUtil(element, toBottom, force);
+                promise.then(() => this._scrollToElementCompletedCallback());
+            } else {
+                throw new Error('Controls/_baseList/Controllers/ListVirtualScrollController::_scrollToElement | ' +
+                    'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
+                    'Промис scrollToItem не отстрельнет, возможны ошибки.');
+            }
+        });
     }
 
     /**
