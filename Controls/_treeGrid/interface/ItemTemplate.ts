@@ -65,7 +65,7 @@ export default interface IItemTemplateOptions {
  * @name Controls/_treeGrid/interface/ItemTemplate#fontColorStyle
  * @cfg {TFontColorStyle} Стиль цвета текста записи.
  * @remark
- * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
+ * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
  * {@link Controls/_treeGrid/interface/IColumn#fontColorStyle Стиль цвета текста ячейки} имеет больший приоритет, чем стиль цвета текста записи.
  * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
  */
@@ -73,8 +73,9 @@ export default interface IItemTemplateOptions {
  * @name Controls/_treeGrid/interface/ItemTemplate#fontSize
  * @cfg {TFontSize} Размер шрифта записи.
  * @remark
- * Размер шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
- * {@link Controls/_treeGrid/interface/IColumn#fontSize Размер шрифта ячейки} имеет больший приоритет, чем стиль размер шрифта текста записи.
+ * Размер шрифта применяется ко всем записям дерева с колонками, включая {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
+ * Базовая линия в узлах, отображаемых в виде групп, основывается на этом значении, поэтому для корректного выравнивания здесь стоит указывать максимальную величину шрифта.
+ * {@link Controls/_treeGrid/interface/IColumn#fontSize Размер шрифта ячейки} имеет больший приоритет, чем стиль размер шрифта текста записи, но на базовую линию не влияет.
  * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
  * @default l
  */
@@ -82,7 +83,7 @@ export default interface IItemTemplateOptions {
  * @name Controls/_treeGrid/interface/ItemTemplate#fontWeight
  * @cfg {TFontWeight} Насыщенность шрифта.
  * @remark
- * Насыщенность шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
+ * Насыщенность шрифта применяется ко всем записям дерева с колонками, включая {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
  * {@link Controls/_treeGrid/interface/IColumn#fontWeight Насыщенность шрифта ячейки} имеет больший приоритет, чем Насыщенность шрифта текста записи.
  * @default "default".
  */

@@ -32,84 +32,77 @@ describe('Controls/grid/Display/Group/GroupCell', () => {
     });
 
     describe('shouldDisplayLeftSeparator', () => {
-        it('should return true when columnAlignGroup !== undefined and textAlign === \'left\'', () => {
-            const result = getGroupCell().shouldDisplayLeftSeparator(true, undefined, 2, 'left');
-            assert.isTrue(result);
-        });
-
-        it('should return true when columnAlignGroup === undefined and textAlign !== \'left\'', () => {
-            const result = getGroupCell().shouldDisplayLeftSeparator(true, undefined, undefined, 'right');
-            assert.isTrue(result);
-        });
-
-        it('should not return true when columnAlignGroup === undefined and textAlign === \'left\'', () => {
-            const result = getGroupCell().shouldDisplayLeftSeparator(true, undefined, undefined, 'left');
+        it('should return false when textAlign === \'left\'', () => {
+            const result = getGroupCell().shouldDisplayLeftSeparator(true, undefined, 'left');
             assert.isFalse(result);
         });
 
+        it('should return true when textAlign !== \'left\'', () => {
+            const result = getGroupCell().shouldDisplayLeftSeparator(true, undefined, 'right');
+            assert.isTrue(result);
+        });
+
         it('should not return true when textVisible === false', () => {
-            const result = getGroupCell().shouldDisplayLeftSeparator(true, false, 2, 'right');
+            const result = getGroupCell().shouldDisplayLeftSeparator(true, false, 'right');
             assert.isFalse(result);
         });
 
         it('should not return true when separatorVisibility === false', () => {
-            const result = getGroupCell().shouldDisplayLeftSeparator(false, undefined, 2, 'right');
+            const result = getGroupCell().shouldDisplayLeftSeparator(false, undefined, 'right');
             assert.isFalse(result);
         });
     });
 
     describe('shouldDisplayRightSeparator', () => {
-        it('should return true when columnAlignGroup !== undefined and textVisible === false and textAlign === \'right\'', () => {
-            const result = getGroupCell().shouldDisplayRightSeparator(true, false, 2, 'right');
-            assert.isTrue(result);
-        });
-
-        it('should return true when columnAlignGroup === undefined', () => {
-            const result = getGroupCell().shouldDisplayRightSeparator(true, false, undefined, 'left');
+        it('should return true when textVisible === false and textAlign === \'right\'', () => {
+            const result = getGroupCell().shouldDisplayRightSeparator(true, false, 'right');
             assert.isTrue(result);
         });
 
         it('should return true when textVisible !== false', () => {
-            const result = getGroupCell().shouldDisplayRightSeparator(true, undefined, 2, 'left');
+            const result = getGroupCell().shouldDisplayRightSeparator(true, undefined, 'left');
             assert.isTrue(result);
         });
 
-        it('should return false when columnAlignGroup === undefined and textVisible !== false and textAlign === \'right\'', () => {
-            const result = getGroupCell().shouldDisplayRightSeparator(true, undefined, undefined, 'right');
+        it('should return false when textVisible !== false and textAlign === \'right\'', () => {
+            const result = getGroupCell().shouldDisplayRightSeparator(true, undefined, 'right');
             assert.isFalse(result);
         });
 
         it('should return false when separatorVisibility === false', () => {
-            const result = getGroupCell().shouldDisplayRightSeparator(false, false, 2, 'left');
+            const result = getGroupCell().shouldDisplayRightSeparator(false, false, 'left');
             assert.isFalse(result);
         });
     });
 
     describe('getContentTextClasses', () => {
         it('should contain placeholder class when no separator and textAlign === right', () => {
-            const classes = getGroupCell().getContentTextClasses(false, 'right');
+            const classes = getGroupCell().getContentTextWrapperClasses(undefined,
+                undefined, undefined, undefined, false);
             CssClassesAssert.include(classes, ['controls-ListView__groupContent-withoutGroupSeparator']);
         });
 
         it('should contain placeholder class when no separator', () => {
-            const classes = getGroupCell().getContentTextClasses(false, 'left');
+            const classes = getGroupCell().getContentTextWrapperClasses(undefined,
+                undefined, undefined, undefined, false);
             CssClassesAssert.include(classes, ['controls-ListView__groupContent-withoutGroupSeparator']);
         });
 
         it('should contain align class', () => {
             let classes: string;
-            classes = getGroupCell().getContentTextClasses(false, 'left');
+            classes = getGroupCell().getContentTextClasses('left');
             CssClassesAssert.include(classes, ['controls-ListView__groupContent_left']);
 
-            classes = getGroupCell().getContentTextClasses(false, 'right');
+            classes = getGroupCell().getContentTextClasses('right');
             CssClassesAssert.include(classes, ['controls-ListView__groupContent_right']);
 
-            classes = getGroupCell().getContentTextClasses(false, undefined);
+            classes = getGroupCell().getContentTextClasses(undefined);
             CssClassesAssert.include(classes, ['controls-ListView__groupContent_center']);
         });
 
         it('should NOT contain placeholder class when separator and textAlign === right', () => {
-            const classes = getGroupCell().getContentTextClasses(true, 'right');
+            const classes = getGroupCell().getContentTextWrapperClasses(undefined,
+                undefined, undefined, undefined, true);
             CssClassesAssert.notInclude(classes, ['controls-ListView__groupContent-withoutGroupSeparator']);
         });
     });
