@@ -20,6 +20,7 @@ import {RecordSet} from 'Types/collection';
 interface IFilterTumblerOptions extends IControlOptions {
     useStore?: boolean;
     filterButtonItems?: IFilterItem[];
+    filterButtonSource?: IFilterItem[];
 }
 
 export default class FilterTumblerContainer extends Control<IFilterTumblerOptions> {
@@ -70,7 +71,7 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
         if (options.useStore) {
             filterSource = Store.getState().filterSource;
         } else {
-            filterSource = options.filterButtonItems;
+            filterSource = options.filterButtonItems || options.filterButtonSource;
         }
         this._setTumblerStates(filterSource);
 
@@ -83,8 +84,9 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
     }
 
     private _getUpdatedSource(value: number|string): IFilterItem[] {
-        const tumblerOptions = this._getTumblerOptions(this._options.filterButtonItems);
-        return this._options.filterButtonItems.map((item) => {
+        const filterSource = this._options.filterButtonItems || this._options.filterButtonSource;
+        const tumblerOptions = this._getTumblerOptions(filterSource);
+        return filterSource.map((item) => {
             if (item.name === tumblerOptions.name) {
                 item.value = value;
             }
