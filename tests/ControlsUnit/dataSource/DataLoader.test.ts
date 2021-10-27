@@ -292,6 +292,7 @@ describe('Controls/dataSource:loadData', () => {
             resetValue: [],
             textValue: '',
             editorOptions: {
+                source: getSource(),
                 historyId: 'history',
                 filter: {
                     myTasks: true
@@ -305,6 +306,7 @@ describe('Controls/dataSource:loadData', () => {
                 resetValue: ['2'],
                 textValue: '',
                 editorOptions: {
+                    source: getSource(),
                     historyId: 'history',
                     keyProperty: 'id',
                     filter: {
