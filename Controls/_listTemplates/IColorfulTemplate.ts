@@ -42,7 +42,19 @@ export interface IColorfulTemplateOptions<T> {
      */
     dominantThemeColorProperty: keyof T;
     /**
+     * Шаблон, отображаемый после изображения и до заголовка.
+     */
+    afterImageTemplate?: TemplateFunction;
+    /**
+     * Шаблон для размещения в конце строки заголовка.
+     */
+    afterTitleTemplate?: TemplateFunction;
+    /**
+     * Шаблон, вставляемый в правом верхнем углу изображения для отображения дополнительных прикладных элементов.
+     */
+    additionalPanelTemplate?: TemplateFunction;
+    /**
      * Шаблон подвала.
      */
-    footerTemplate: TemplateFunction;
+    footerTemplate?: TemplateFunction;
 }
