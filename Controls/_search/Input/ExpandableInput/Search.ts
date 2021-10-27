@@ -11,9 +11,9 @@ interface IExpandableInputOptions extends IBaseOptions, ITextOptions,
    /**
     * @name Controls/_search/Input/ExpandableInput/ExpandableInput#inlineWidth
     * @cfg {String} Ширина строки поиска.
-    * @variant m Строка поиска средней ширины.
+    * @variant s Строка поиска малой ширины.
     * @variant l Строка поиска большой ширины.
-    * @default m
+    * @default s
     */
    inlineWidth?: string;
    /**
@@ -91,7 +91,7 @@ export default class ExpandableInput extends Control<IControlOptions> {
 
    static getDefaultOptions(): object {
       return {
-         inlineWidth: 'm',
+         inlineWidth: 's',
          expanded: false
       };
    }
