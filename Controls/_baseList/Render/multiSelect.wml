@@ -1,6 +1,7 @@
 <ws:if data="{{item.isVisibleCheckbox()}}">
     <ws:if data="{{content}}">
         <ws:partial template="{{content}}"
+                    attr:tabindex="-1"
                     attr:class="{{ multiSelectClasses || item.getMultiSelectClasses(backgroundColorStyle, cursor, highlightOnHover) }}"
                     triState="{{ true }}"
                     readOnly="{{ item.isReadonlyCheckbox() || false}}"
@@ -9,6 +10,7 @@
     <ws:else>
         <Controls.Container.Async templateName="Controls/toggle:CheckboxMarker" item="{{ item }}">
             <ws:partial template="{{ content.resolvedTemplate }}"
+                        attr:tabindex="-1"
                         attr:class="{{ multiSelectClasses || item.getMultiSelectClasses(backgroundColorStyle, cursor, highlightOnHover) }}"
                         triState="{{ true }}"
                         readOnly="{{ item.isReadonlyCheckbox() || false}}"
