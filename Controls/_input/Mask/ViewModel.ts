@@ -33,7 +33,7 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
       };
 
       class ViewModel extends BaseViewModel {
-         protected _shouldNotShiftReplacer: boolean;
+         protected _shouldShiftReplacer: boolean = true;
          constructor(...args: any[]) {
             super(...args);
             this.setCarriageDefaultPosition(0);
@@ -169,7 +169,7 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
             this._nextVersion();
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
             const result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format,
-                this._format, this.newValue, this._shouldNotShiftReplacer);
+                this._format, this.newValue, this._shouldShiftReplacer);
             return result;
          }
 

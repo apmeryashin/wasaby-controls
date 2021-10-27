@@ -63,7 +63,7 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
              * @param replacer заменитель.
              * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            insert: function(format, clearSplitValue, replacer, shouldNotShiftReplacer) {
+            insert: function(format, clearSplitValue, replacer, shouldShiftReplacer: boolean = true) {
                var char, oldClearSplitValue, newClearSplitValue, data, result;
 
                oldClearSplitValue = {
@@ -78,7 +78,7 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
                   /**
                    * Если последний символ заменитель, то попытаемся сделать сдвиг.
                    */
-                  if (!shouldNotShiftReplacer && replacer === oldClearSplitValue.after.slice(-1)) {
+                  if (shouldShiftReplacer && replacer === oldClearSplitValue.after.slice(-1)) {
                      newClearSplitValue = {
                         before: oldClearSplitValue.before + char,
                         after: oldClearSplitValue.after.slice(0, -1)
@@ -247,7 +247,7 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
              * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
             input(splitValueSrc: object, inputType: string, replacer: string, oldFormat: object, newFormat: object,
-                  curDisplayValue: string, shouldNotShiftReplacer: boolean = false): object {
+                  curDisplayValue: string, shouldShiftReplacer: boolean): object {
                const splitValue = { ...splitValueSrc };
                let value = splitValue.before + splitValue.delete + splitValue.after;
 
@@ -277,7 +277,7 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
                let result;
                switch (inputType) {
                   case 'insert':
-                     result = InputProcessor.insert(newFormat, clearSplitValue, replacer, shouldNotShiftReplacer);
+                     result = InputProcessor.insert(newFormat, clearSplitValue, replacer, shouldShiftReplacer);
                      break;
                   case 'delete':
                      result = InputProcessor.delete(newFormat, clearSplitValue, replacer);
