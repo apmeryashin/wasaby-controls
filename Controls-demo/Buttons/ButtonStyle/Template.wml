@@ -1,23 +1,23 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell" data-qa="controlsDemo-ButtonStyle__ContrastBackgroundTrue">
         <div class="controls-text-label">viewMode=button, contrastBackground=true</div>
         <ws:for data="buttonStyle in _buttonStyles">
             <Controls.buttons:Button caption="{{buttonStyle}}" buttonStyle="{{buttonStyle}}" contrastBackground="{{true}}"/>{{' '}}
         </ws:for>
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell" data-qa="controlsDemo-ButtonStyle__ContrastBackgroundFalse">
         <div class="controls-text-label">viewMode=button, contrastBackground=false</div>
         <ws:for data="buttonStyle in _buttonStyles">
             <Controls.buttons:Button caption="{{buttonStyle}}" buttonStyle="{{buttonStyle}}" contrastBackground="{{false}}"/>{{' '}}
         </ws:for>
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell" data-qa="controlsDemo-ButtonStyle__ViewModeToolButton">
         <div class="controls-text-label">viewMode=toolButton, different iconStyles</div>
         <ws:for data="buttonStyle in _buttonStyles">
             <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconStyle="{{buttonStyle}}" iconSize="s" buttonStyle="{{buttonStyle}}"/>{{' '}}
         </ws:for>
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell" data-qa="controlsDemo-ButtonStyle__ViewModeFunctionalButton">
         <div class="controls-text-label_theme-{{_options.theme}}">viewMode=functionalButton</div>
         <ws:for data="functionalButton in _functionalButtons">
             <Controls.buttons:Button viewMode="functionalButton" buttonStyle="{{functionalButton.buttonStyle}}" icon="icon-Yes" iconStyle="{{functionalButton.iconStyle}}" contrastBackground="{{true}}"/>{{' '}}
