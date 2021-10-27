@@ -151,6 +151,7 @@ export default class WrappedSearch extends Control {
 /**
  * @name Controls/_search/Input/WrappedSearch#searchButtonIconStyle
  * @cfg {String} Цвет иконки лупы. См. {@link Controls/interface:IIconStyle#iconStyle подробнее}.
+ * @demo Controls-demo/Search/ExpandableInput/SearchButtonIconStyle/Index
  */
 
 /**

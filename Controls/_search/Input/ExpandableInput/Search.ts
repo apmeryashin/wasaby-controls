@@ -31,6 +31,7 @@ interface IExpandableInputOptions extends IBaseOptions, ITextOptions,
      * @variant false Фон строки поиска неконтрастный.
      * @variant true Фон строки поиска контрастный.
      * @default false
+     * @demo Controls-demo/Search/ExpandableInput/SearchInputContrastBackground/Index
      */
     searchInputContrastBackground?: string;
 }
