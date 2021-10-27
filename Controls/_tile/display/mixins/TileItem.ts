@@ -84,7 +84,6 @@ export interface IOptions<S extends Model = Model> extends ICollectionItemOption
     tileWidth: number;
     tileFitProperty: string;
     tileWidthProperty: string;
-    feature1183277279: string;
     roundBorder: ITileRoundBorder;
     imageProperty: string;
     imageFit: TImageFit;
@@ -125,8 +124,6 @@ export default abstract class TileItem<T extends Model = Model> {
     protected _$tileWidth: number;
 
     protected _$tileWidthProperty: string;
-
-    protected _$feature1183277279: string;
 
     protected _$tileFitProperty: string;
 
@@ -214,14 +211,6 @@ export default abstract class TileItem<T extends Model = Model> {
      */
     getTileWidthProperty(): string {
         return this._$tileWidthProperty;
-    }
-
-    /**
-     * Не использовать
-     * @return {string} Название свойства
-     */
-    getFeature1183277279Property(): string {
-        return this._$feature1183277279;
     }
 
     /**
@@ -1310,14 +1299,10 @@ export default abstract class TileItem<T extends Model = Model> {
                     flex-basis: ${flexBasis}px;
                 `;
             } else {
-
-                // TODO: Удалено в 22.1000
-                const customHeightData = this.getContents().get(this.getFeature1183277279Property());
-                const height = customHeightData ? customHeightData : this.getTileHeight();
                 return `
                     -ms-flex-preferred-size: ${flexBasis}px;
                     flex-basis: ${flexBasis}px;
-                    height: ${height}px;
+                    height: ${this.getTileHeight()}px;
                     max-width: ${width}px;
                 `;
             }
@@ -2122,7 +2107,6 @@ Object.assign(TileItem.prototype, {
     _$tileHeight: DEFAULT_TILE_HEIGHT,
     _$tileWidth: DEFAULT_TILE_WIDTH,
     _$tileWidthProperty: '',
-    _$feature1183277279: '',
     _$tileFitProperty: '',
     _$tileScalingMode: 'none',
     _$imageProperty: '',
