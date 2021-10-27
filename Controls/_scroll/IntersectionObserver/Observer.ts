@@ -51,8 +51,12 @@ export default class StickyHeaderResizeObserver {
         }
 
         const item = this._items[instId];
-        this._unobserve(item.element, item.threshold, item.rootMargin);
-        delete this._items[instId];
+        // Защита от ошибки. item может не быть, если вставили свой intersectionObserver и событие register обработали
+        // на своё уровне, но при этом не обработали событие unregister.
+        if (item) {
+            this._unobserve(item.element, item.threshold, item.rootMargin);
+            delete this._items[instId];
+        }
     }
 
     private _observe(root: HTMLElement, element: HTMLElement, threshold: number[], rootMargin: string): void {
