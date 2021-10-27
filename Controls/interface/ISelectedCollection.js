@@ -36,7 +36,7 @@ define('Controls/interface/ISelectedCollection', [
     *    displayProperty="title" />
     * </pre>
     */
-   
+
    /**
     * @name Controls/interface/ISelectedCollection#multiSelect
     * @cfg {Boolean} Включает режим множественного выбора значений.
@@ -105,13 +105,21 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
+    * @name Controls/interface/ISelectedCollection#counterVisibility
+    * @cfg {String} Режим отображения счетчика выбранных элементов.
+    * @variant 'visible'
+    * @variant 'hidden'
+    * @default 'visible'
+    */
+
+   /**
     * @name Controls/interface/ISelectedCollection#itemTemplate
     * @cfg {Function|String} Шаблон отображения выбранного элемента.
     * @markdown
     * @remark
     * Для отображения элементов {@link Controls/lookup:Input} и {@link Controls/lookup:Selector} используется базовый шаблон {@link Controls/lookup:ItemTemplate}.
     * Базовый шаблон поддерживают следующие параметры:
-    * 
+    *
     * * contentTemplate {Function|String} - Шаблон содержимого элемента.
     * * crossTemplate {Function|String} - Шаблон крестика удаления элемента.
     * * displayProperty {String} - Имя поля, значение которого будет отображаться.
@@ -130,7 +138,7 @@ define('Controls/interface/ISelectedCollection', [
     *
     * Если вы переопределите contentTemplate/crossTemplate, вы не будете уведомлены о событиях itemClick/crossClick.
     * Для правильной работы необходимо пометить свой контент классами:
-    * 
+    *
     * * js-controls-SelectedCollection__item__caption
     * * js-controls-SelectedCollection__item__cross
     *
@@ -174,7 +182,7 @@ define('Controls/interface/ISelectedCollection', [
     *
     * If you reimplement contentTemplate/crossTemplate, you will not be notified of itemClick/crossClick events.
     * To work properly, you need to mark your content with classes:
-    * 
+    *
     * * js-controls-SelectedCollection__item__caption
     * * js-controls-SelectedCollection__item__cross
     *

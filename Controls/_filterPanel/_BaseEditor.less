@@ -4,7 +4,25 @@
 }
 
 .controls-FilterViewPanel__baseEditor-cross {
-   padding-left: 12px;
+   padding-left: var(--offset_2xs);
+   padding-right: var(--offset_m);
+}
+
+.controls-FilterViewPanel__baseEditor-cross-lookup {
+   align-self: flex-end;
+   padding-bottom: var(--offset_st);
+}
+
+.controls-FilterViewPanel__basicEditor {
+   overflow: hidden;
+   background-color: var(--background-color);
+   border-radius: var(--border-radius_m);
+   padding: var(--offset_2xs) var(--offset_s);
+   margin-left: calc(-1 * var(--offset_s));
+}
+
+.controls-FilterViewPanel__basicEditor:hover {
+   background-color: var(--hover_background-color);
 }
 
 .controls-FilterViewPanel__baseEditor-cross-icon {

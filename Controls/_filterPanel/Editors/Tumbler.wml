@@ -1,4 +1,5 @@
 <Controls._filterPanel.BaseEditor scope="{{_options}}"
+                                  editorType="tumbler"
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
    <ws:editorTemplate>
