@@ -3665,7 +3665,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         // Если нет данных, то сразу же показываем триггер, чтобы при наличии данных вверх инициировалась их загрузка
         // Или если вверх нет данных, то сразу показываем триггер, чтобы работал виртуальный скролл.
-        if (!this._listViewModel.getCount() || !this._hasMoreData('up') || !this._options.attachLoadTopTriggerToNull) {
+        if (
+            !this._listViewModel.getCount() ||
+            !this._hasMoreData('up') ||
+            !this._options.attachLoadTopTriggerToNull ||
+            this._hasHiddenItemsByVirtualScroll('up')
+        ) {
             this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
         }
 
