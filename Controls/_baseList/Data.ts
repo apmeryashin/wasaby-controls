@@ -441,7 +441,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
    }
 
    private _dataLoadStart(event: SyntheticEvent, direction: Direction): void {
-      if (!direction) {
+      if (!direction && !this._destroyed) {
          this._loading = true;
       }
    }
