@@ -2,7 +2,7 @@ export interface ITextOptions {
     constraint?: string;
     maxLength?: number;
     convertPunycode: boolean;
-    trim: number;
+    trim: boolean;
     transliterate?: boolean;
 }
 
