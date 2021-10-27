@@ -1,10 +1,15 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/dropdown_new/Button/OpenFromCode/Index');
 import {Memory} from 'Types/source';
+import {Button} from 'Controls/dropdown';
 
 export default class extends Control {
     protected _template: TemplateFunction = controlTemplate;
     protected _source: Memory;
+
+    protected _children: {
+        button: Button
+    }
 
     protected _beforeMount(): void {
         this._source = new Memory({
@@ -37,5 +42,18 @@ export default class extends Control {
             ]
         });
     }
+
+    _openSubMenu(): void {
+        this._children.button.openMenu({
+            templateOptions: {
+                borderStyle: 'warning'
+            }
+        }, 1);
+    }
+
+    _closeSubMenu(event, key): void {
+        this._children.button.closeMenu(key);
+    }
+
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

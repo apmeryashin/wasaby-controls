@@ -110,10 +110,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
             this._options.headConfig !== newOptions.headConfig) {
             this._prepareHeaderConfig(newOptions);
         }
-
-        if (newOptions.subMenuTargetId && this._options.subMenuTargetId !== newOptions.subMenuTargetId) {
-            this._children.menuControl.openSubMenu(newOptions.subMenuOptions, newOptions.subMenuTargetId);
-        }
     }
 
     protected _sendResult(event: SyntheticEvent<MouseEvent>,
@@ -207,7 +203,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     }
 
     protected _onFooterMouseEnter(): void {
-        this._children.menuControl.closeSubMenu();
+        this._children.menuControl.closeSubMenu(false);
     }
 
     private _updateApplyButton(): void {

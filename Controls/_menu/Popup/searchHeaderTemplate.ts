@@ -6,7 +6,7 @@ import 'css!Controls/menu';
  * Шапка меню со строкой поиска.
  * @class Controls/menu:SearchHeaderTemplate
  * @extends UICore/Base:Control
- * @private
+ * @public
  * @demo Controls-demo/dropdown_new/Search/SearchWidth/Index
  *
  * @author Герасимов А.М.
@@ -23,6 +23,7 @@ import 'css!Controls/menu';
  * s - маленькая строка поиска;
  * l - большая строка поиска.
  * @default s
+ * @demo Controls-demo/dropdown_new/Search/SearchWidth/Index
  */
 
 class SearchHeaderTemplate extends Control<IControlOptions> {

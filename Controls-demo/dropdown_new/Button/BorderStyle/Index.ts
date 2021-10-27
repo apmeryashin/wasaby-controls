@@ -14,7 +14,10 @@ export default class extends Control {
                     id: 1,
                     title: 'Task',
                     '@parent': true,
-                    parent: null
+                    parent: null,
+                    menuOptions: {
+                        borderStyle: 'danger'
+                    }
                 },
                 { id: 2, title: 'Error in the development', '@parent': false, parent: null },
                 { id: 3, title: 'Commission', parent: 1 },
@@ -22,7 +25,10 @@ export default class extends Control {
                     id: 4,
                     title: 'Coordination',
                     parent: 1,
-                    '@parent': true
+                    '@parent': true,
+                    menuOptions: {
+                        borderStyle: 'warning'
+                    }
                 },
                 { id: 5, title: 'Application', parent: 1 },
                 { id: 6, title: 'Development', parent: 1 },

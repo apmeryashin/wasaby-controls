@@ -146,6 +146,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._closeSubMenu();
         }
 
+        if (newOptions.openedSubMenuKey && this._options.openedSubMenuKey !== newOptions.openedSubMenuKey) {
+            this._openSubMenuByKey(newOptions.openedSubMenuOptions, newOptions.openedSubMenuKey);
+        }
+
+        if (newOptions.closedSubMenuKey && this._options.closedSubMenuKey !== newOptions.closedSubMenuKey) {
+            this._closeSubMenuByKey(newOptions.closedSubMenuKey);
+        }
+
         if (newOptions.sourceController && newOptions.searchParam &&
             (newOptions.searchValue && searchValueChanged || newOptions.viewMode !== this._options.viewMode)) {
             this._notifyResizeAfterRender = true;
@@ -175,7 +183,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return result;
     }
 
-    protected _afterRender(oldOptions: IMenuControlOptions): void {
+    protected _afterRender(): void {
         if (this._notifyResizeAfterRender) {
             this._notify('controlResize', [], {bubbling: true});
         }
@@ -201,23 +209,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    public closeSubMenu(): void {
-        this._closeSubMenu(false, true);
-    }
-
-    public openSubMenu(popupOptions?: IStickyPopupOptions, id?: string): void {
-        const dataName = this._dataName + '_item_' + id;
-        const target = this._container.querySelector(`[data-name=${dataName}]`);
-        const item = this._listModel.getItemBySourceKey(id);
-        if (item && this._canOpenSubMenu(item)) {
-            this._preventCloseSubMenu = true;
-            this._openSubMenuEvent = {};
-            this._subDropdownItem = item;
-            this._openedTarget = target;
-            this._openSubMenu(target, item, popupOptions);
-        } else if (id && this._children.Sticky.isOpened()) {
-            this._openSubMenu(this._openedTarget, this._subDropdownItem);
-        }
+    public closeSubMenu(fromCode: boolean = true): void {
+        this._closeSubMenu(false, fromCode);
     }
 
     protected _mouseEnterHandler(): void {
@@ -228,7 +221,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._updateItemActions(this._listModel, this._options);
     }
 
-    protected _mouseLeaveHandler(event: SyntheticEvent<MouseEvent>): void {
+    protected _mouseLeaveHandler(): void {
         this._clearOpeningTimout();
         this._startClosingTimout();
     }
@@ -512,6 +505,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._isMouseInOpenedItemArea = false;
         }
         return this._isMouseInOpenedItemArea;
+    }
+
+    private _closeSubMenuByKey(key?: string): void {
+        if (this._subDropdownItem && this._subDropdownItem.getContents().getKey() === key) {
+            this.closeSubMenu();
+        } else if (this._children.Sticky.isOpened()) {
+            this._openSubMenuByKey(undefined, key);
+        }
     }
 
     private _closeSubMenu(needOpenDropDown: boolean = false, closeFromCode: boolean = false): void {
@@ -1035,6 +1036,21 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             });
         }
         return hasAdditional;
+    }
+
+    private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: string): void {
+        const dataName = this._dataName + '_item_' + key;
+        const target = this._container.querySelector(`[data-name=${dataName}]`);
+        const item = this._listModel.getItemBySourceKey(key);
+        if (item && this._canOpenSubMenu(item)) {
+            this._preventCloseSubMenu = true;
+            this._openSubMenuEvent = {};
+            this._subDropdownItem = item;
+            this._openedTarget = target;
+            this._openSubMenu(target, item, popupOptions);
+        } else if (key && this._children.Sticky.isOpened()) {
+            this._openSubMenu(this._openedTarget, this._subDropdownItem);
+        }
     }
 
     private _openSubMenu(target: EventTarget,

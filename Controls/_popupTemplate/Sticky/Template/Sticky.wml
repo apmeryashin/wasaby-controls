@@ -3,7 +3,7 @@
                 controls-StickyTemplate
                 {{_options.roundBorder !== false ? 'controls-StickyTemplate_roundBorder'}}
                 controls-StickyTemplate-borderStyle-{{_options.borderStyle}}
-                controls-StickyTemplate-borderWidth-{{_options.borderWidth}}
+                controls-StickyTemplate-borderSize-{{_options.borderSize}}
                 {{_options.shadowVisible ? 'controls-StickyTemplate-shadow'}}
                 {{_options.draggable ? 'ws-window-draggable'}}"
          on:mousedown="_onMouseDown()"

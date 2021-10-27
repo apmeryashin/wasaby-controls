@@ -6,6 +6,7 @@ import {EventUtils} from 'UI/Events';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
+import {TKey} from './interface/IDropdownController';
 import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {IIconOptions, IHeightOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
@@ -296,16 +297,15 @@ export default class Button extends BaseDropdown {
         }
     }
 
-    _openMenu(popupOptions?: IStickyPopupOptions, id?: string): Promise<any> {
+    _openMenu(popupOptions?: IStickyPopupOptions, key?: TKey): Promise<any> {
         let config;
-        if (id) {
-            const targetIdConfig = {
+        if (key) {
+            config = Merge(this._getMenuPopupConfig(),  {
                 templateOptions: {
-                    subMenuOptions: popupOptions,
-                    subMenuTargetId: id
+                    openedSubMenuOptions: popupOptions,
+                    openedSubMenuKey: key
                 }
-            };
-            config = Merge(this._getMenuPopupConfig(), targetIdConfig);
+            });
         } else {
             config = Merge(this._getMenuPopupConfig(), popupOptions || {});
         }
@@ -314,12 +314,24 @@ export default class Button extends BaseDropdown {
         return this._controller.openMenu(config);
     }
 
-    openMenu(popupOptions?: IStickyPopupOptions, id?: string): Promise<any> {
-        return this._openMenu(popupOptions, id).then((result) => {
+    openMenu(popupOptions?: IStickyPopupOptions, key?: TKey): Promise<any> {
+        return this._openMenu(popupOptions, key).then((result) => {
             if (result) {
                 this._onItemClickHandler(result);
             }
         });
+    }
+
+    closeMenu(key?: string): void {
+        if (key) {
+            this._openMenu({
+                templateOptions: {
+                    closedSubMenuKey: key
+                }
+            })
+        } else {
+            this._controller.closeMenu();
+        }
     }
 
     protected _onResult(action, data, nativeEvent): void {

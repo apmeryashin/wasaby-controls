@@ -6,8 +6,8 @@
               source="{{_source}}"
               nodeProperty="@parent"
               parentProperty="parent"
-              borderStyle="info"
-              borderWidth="l"
+              menuBorderStyle="info"
+              menuBorderSize="l"
               attr:class="controlsDemo-menuButton">
       </Controls.dropdown:Button>
    </div>

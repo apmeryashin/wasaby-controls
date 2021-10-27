@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper ws-flexbox">
    <div class="controlsDemo__wrapper">
       <Controls.dropdown:Button
-              name="menu"
+              name="button"
               keyProperty="id"
               caption="Create"
               source="{{_source}}"
@@ -9,6 +9,18 @@
               parentProperty="parent"
               menuDataName="menu"
               attr:class="controlsDemo-menuButton">
+         <ws:footerContentTemplate>
+            <Controls.buttons:Button on:click="_openSubMenu()"
+                                     caption="Open sub menu"
+                                     viewMode="link"
+            />
+         </ws:footerContentTemplate>
+         <ws:nodeFooterTemplate>
+            <Controls.buttons:Button on:click="_closeSubMenu(nodeFooterTemplate.footerItemData.key)"
+                                     caption="Close sub menu"
+                                     viewMode="link"
+            />
+         </ws:nodeFooterTemplate>
       </Controls.dropdown:Button>
    </div>
 </div>

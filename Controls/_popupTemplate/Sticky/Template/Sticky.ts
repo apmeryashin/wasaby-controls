@@ -19,7 +19,7 @@ interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions,
     shadowVisible?: boolean;
     stickyPosition?: object;
     borderStyle?: string;
-    borderWidth?: string;
+    borderSize?: string;
 }
 
 /**
@@ -161,7 +161,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             headerBackgroundStyle: 'default',
             closeButtonViewMode: 'link',
             borderStyle: 'default',
-            borderWidth: 'default'
+            borderSize: 'default'
         };
     }
 }
