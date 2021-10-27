@@ -460,6 +460,8 @@ export class Controller {
          const items = this._model.getItems().filter((it) => it.SelectableItem);
 
          if (firstSelectPack) {
+            this._separatedSelectedItems.push(...selection.selected);
+
             // Если выбор первой пачки, то бежим по всем элементам, чтобы в excluded закинуть
             // все не выбранные записи.
             for (let i = 0; i < items.length; i++) {
