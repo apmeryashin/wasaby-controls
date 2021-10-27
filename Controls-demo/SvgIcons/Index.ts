@@ -61,13 +61,16 @@ export default class extends Control {
 
     private _appendSvgToDom(name, result): void {
         this._icon = name;
-        const icon = document.createElement('div');
-        icon.innerHTML = result;
-        icon.children[0].id = '#example';
-        icon.className = 'controls-icon_size-m';
-        const container = document.querySelector('.controls-demo_svg-icon');
-        container.children[0]?.remove();
-        container.appendChild(icon);
+        const containers = document.querySelectorAll('.controls-demo_svg-icon');
+        containers.forEach((container) => {
+            const icon = document.createElement('div');
+            icon.innerHTML = result;
+            icon.children[0].id = '#example';
+            icon.children[0].classList.add('controls-demo_svg-icon_baseline');
+            icon.className = 'controls-icon_size-m';
+            container.children[0]?.remove();
+            container.appendChild(icon);
+        });
     }
 
 static _styles: string[] = ['Controls-demo/Controls-demo'];
