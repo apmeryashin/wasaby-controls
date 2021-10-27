@@ -12,7 +12,7 @@
                 parentProperty="parent"
                 nodeProperty="type"
                 colspanCallback="{{ _colspanCallback }}">
-            <ws:virtualScrollConfig pageSize="{{ 5 }}"/>
+            <ws:virtualScrollConfig pageSize="{{ 20 }}"/>
             <ws:navigation source="page" view="infinity">
                 <ws:sourceConfig pageSize="{{ 5 }}" page="{{ 0 }}" hasMore="{{ false }}"/>
             </ws:navigation>

@@ -378,7 +378,9 @@ export default class VirtualScroll {
             start = 0;
             stop = itemsCount;
         }
-
+        if (stop < pageSize && stop < itemsCount) {
+            stop = Math.min(pageSize, itemsCount);
+        }
         return this._setRange({start, stop});
     }
 
