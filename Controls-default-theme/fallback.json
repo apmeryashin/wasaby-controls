@@ -1297,6 +1297,8 @@
   "--caret-color_empty_searchInput": "var(--placeholder-color_inputText)",
   "--width_s_inputSearch": "184px",
   "--width_l_inputSearch": "300px",
+  "--width_xl_inputSearch": "340px",
+  "--input_m-width-expandableSearch": "184px",
   "--input_container_l-width-expandableSearch": "334px",
   "--input_container_s-width-expandableSearch": "218px",
 
