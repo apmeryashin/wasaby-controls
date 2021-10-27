@@ -3663,9 +3663,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // для вычисления сдвига виртуального скролла нужно знать об отступах триггеров
         this._updateScrollController();
 
-        // Если верхний индикатор не будет показан, то сразу же показываем триггер,
-        // чтобы в кейсе когда нет данных после моунта инициировать их загрузку
-        if (!this._indicatorsController.shouldDisplayTopIndicator()) {
+        // Если нет данных, то сразу же показываем триггер, чтобы при наличии данных вверх инициировалась их загрузка
+        if (!this._listViewModel.getCount()) {
             this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
         }
 
