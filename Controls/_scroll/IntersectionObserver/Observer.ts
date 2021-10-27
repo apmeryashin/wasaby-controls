@@ -51,8 +51,11 @@ export default class StickyHeaderResizeObserver {
         }
 
         const item = this._items[instId];
-        this._unobserve(item.element, item.threshold, item.rootMargin);
-        delete this._items[instId];
+        // item может не быть, если событие register было обработано и остановлено всплытие в другом месте.
+        if (item) {
+            this._unobserve(item.element, item.threshold, item.rootMargin);
+            delete this._items[instId];
+        }
     }
 
     private _observe(root: HTMLElement, element: HTMLElement, threshold: number[], rootMargin: string): void {
