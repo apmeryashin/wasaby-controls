@@ -50,6 +50,8 @@ export default abstract class Tile<
 
     protected _$tileWidthProperty: string;
 
+    protected _$feature1183277279: string;
+
     protected _$tileFitProperty: string;
 
     protected _$tileScalingMode: TTileScalingMode;
@@ -162,6 +164,14 @@ export default abstract class Tile<
      */
     getTileWidthProperty(): string {
         return this._$tileWidthProperty;
+    }
+
+    /**
+     * Не использовать
+     * @return {string} Название свойства
+     */
+    getFeature1183277279Property(): string {
+        return this._$feature1183277279;
     }
 
     /**
@@ -521,6 +531,7 @@ export default abstract class Tile<
         params.tileWidth = this.getTileWidth();
         params.tileFitProperty = this.getTileFitProperty();
         params.tileWidthProperty = this.getTileWidthProperty();
+        params.feature1183277279 = this.getFeature1183277279Property();
         params.roundBorder = this.getRoundBorder();
         params.imageProperty = this.getImageProperty();
         params.imageFit = this.getImageFit();
@@ -559,6 +570,7 @@ Object.assign(Tile.prototype, {
     _$imageUrlResolver: null,
     _$tileScalingMode: 'none',
     _$tileWidthProperty: '',
+    _$feature1183277279: '',
     _$tileFitProperty: '',
     _$itemsContainerPadding: null,
     _$roundBorder: null,
