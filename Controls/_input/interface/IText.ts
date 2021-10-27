@@ -53,3 +53,8 @@ export interface IText {
  * @default true
  * @demo Controls-demo/Input/Text/Transliterate/Index
  */
+/**
+ * @name Controls/_input/interface/IText#contrastBackground
+ * @cfg {Boolean}
+ * @demo Controls-demo/Input/Text/ContrastBackground/Index
+ */
