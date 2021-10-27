@@ -136,7 +136,7 @@ export default interface ISearch {
  * @cfg {Function} Функция для фильтрации записей, синхронно вызывается при изменении поискового значения.
  * В функцию передаётся два аргумента: поисковое значение и запись.
  * Если функция возвращает true, то запись остаётся в списке.
- * @demo Controls-demo/Search/Browser/PrefilterOnSearchCallback/Index
+ * @demo Controls-demo/Search/Browser/PreFilterSearchCallback/Index
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
