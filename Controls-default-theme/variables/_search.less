@@ -26,34 +26,22 @@
 
    // Иконка поиска
 
-
-
    --trigger_m_icon-size_searchInput:                                           var(--icon-size_s);
-
-
-
-   --trigger_icon-color_searchInput:                                            var(--secondary_icon-color);
-   --trigger_icon-color_hover_searchInput:                                      var(--secondary_hover_icon-color);
-   --readonly_trigger_icon-color_searchInput:                                   var(--readonly_color);
 
    // Иконка сброса
 
    --reset-button_icon-color_searchInput:                                       var(--label_text-color);
+
    // Курсор
    --caret-color_empty_searchInput:                                             var(--placeholder-color_inputText);
-
-   // Переменные для подсказки при неверной раскладке клавиаутры
-
-   --height_searchMisspell:                                                     var(--inline_height_default);
-
 
    // Переменные для разворачиваемого поиска
 
 
-   --input_m-width-expandableSearch:                                            184px;
-   --input_l-width-expandableSearch:                                            300px;
-   --input_container_l-width-expandableSearch:                                  calc(var(--input_l-width-expandableSearch) + var(--icon-size_m) + var(--close-button_shadow-width-expandableSearch));
-   --input_container_m-width-expandableSearch:                                  calc(var(--input_m-width-expandableSearch) + var(--icon-size_m) + var(--close-button_shadow-width-expandableSearch));
-   --close-button_icon-background-expandableSearch:                             #ffffff;
-   --close-button_shadow-width-expandableSearch:                                10px;
+   --width_s_inputSearch: 184px;
+   --width_l_inputSearch: 300px;
+   --width_xl_inputSearch: 340px;
+   --input_m-width-expandableSearch: 184px;//todo временно до лечения тестов
+   --input_container_l-width-expandableSearch:                                  calc(var(--width_l_inputSearch) + var(--icon-size_m) + 10px);  //10px - вшитая ширина тени
+   --input_container_s-width-expandableSearch:                                  calc(var(--width_s_inputSearch) + var(--icon-size_m) + 10px);
 }

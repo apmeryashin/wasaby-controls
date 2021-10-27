@@ -124,11 +124,11 @@
 }
 
 .controls-Search__searchButton_color {
-   color: var(--trigger_icon-color_searchInput);
+   color: var(--secondary_icon-color);
 }
 
 .controls-Search__searchButton_color_readOnly {
-   color: var(--readonly_trigger_icon-color_searchInput);
+   color: var(--readonly_color);
 }
 
 .controls-Search__resetButton {
@@ -140,7 +140,7 @@
 }
 
 .controls-Search__searchButton_color:active {
-   color: var(--trigger_icon-color_hover_searchInput);
+   color: var(--secondary_hover_icon-color);
 }
 
 .controls-Search__resetButton_color:active {
@@ -149,7 +149,7 @@
 
 .ws-is-hover {
    .controls-Search__searchButton_color:hover {
-      color: var(--trigger_icon-color_hover_searchInput);
+      color: var(--secondary_hover_icon-color);
    }
 
    .controls-Search__resetButton_color:hover {
@@ -189,8 +189,8 @@
    position: relative;
 }
 
-.controls-Search__expandable-container-inlineWidth-m {
-   width: var(--input_container_m-width-expandableSearch);
+.controls-Search__expandable-container-inlineWidth-s {
+   width: var(--input_container_s-width-expandableSearch);
 }
 
 .controls-Search__expandable-container-inlineWidth-l {
@@ -204,7 +204,7 @@
    left: 0;
 }
 
-.controls-Search__expandable-input-inlineWidth-m {
+.controls-Search__expandable-input-inlineWidth-s {
    animation: inputRightMoveSearch 0.3s;
 }
 
@@ -213,11 +213,11 @@
 }
 
 .controls-Search__input-inlineWidth-l {
-   width: var(--input_l-width-expandableSearch);
+   width: var(--width_l_inputSearch);
 }
 
-.controls-Search__input-inlineWidth-m {
-   width: var(--input_m-width-expandableSearch);
+.controls-Search__input-inlineWidth-s {
+   width: var(--width_s_inputSearch);
 }
 
 .controls-Search__expandable-reset-button {
@@ -226,14 +226,14 @@
 }
 
 .controls-Search__expandable-reset-button_background-contrast {
-   background: var(--close-button_icon-background-expandableSearch);
+   background: var(--background-color_contrast_searchInput);
    &::after {
       content: '';
       position: absolute;
       top: 0;
       height: 100%;
-      width: var(--close-button_shadow-width-expandableSearch);
-      background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, var(--close-button_icon-background-expandableSearch) 80%);
+      width: 10px;
+      background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, var(--background-color_contrast_searchInput) 80%);
    }
 }
 
@@ -270,7 +270,7 @@
 
 @keyframes inputRightMoveSearch {
    0% {
-      transform: calc(translateX(- var(--input_container_m-width-expandableSearch)));
+      transform: calc(translateX(- var(--input_container_s-width-expandableSearch)));
    }
 
    100% {
