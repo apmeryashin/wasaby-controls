@@ -460,18 +460,20 @@ export class Controller {
          const items = this._model.getItems().filter((it) => it.SelectableItem);
 
          if (firstSelectPack) {
-            this._separatedSelectedItems.push(...selection.selected);
-
             // Если выбор первой пачки, то бежим по всем элементам, чтобы в excluded закинуть
             // все не выбранные записи.
             for (let i = 0; i < items.length; i++) {
                const item = items[i];
                const itemKey = this._getKey(item);
                const isSelectedByLimit = i < this._limit;
-               if (isSelectedByLimit && item.isSelected()) {
-                  // если элемент входит в пачку и уже был до этого выбран,
-                  // то добавляем его в пачку увеличивая размер самой пачки
-                  this._limit++;
+               if (item.isSelected()) {
+                  if (isSelectedByLimit) {
+                     // если элемент входит в пачку и уже был до этого выбран,
+                     // то добавляем его в пачку увеличивая размер самой пачки
+                     this._limit++;
+                  } else {
+                     this._separatedSelectedItems.push(itemKey);
+                  }
                }
                if (!isSelectedByLimit && !item.isSelected()) {
                   ArraySimpleValuesUtil.addSubArray(newSelection.excluded, [itemKey]);
