@@ -1,7 +1,10 @@
 import {Memory} from 'Types/source';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+
 import * as Images from 'Controls-demo/resources/Images';
 import * as template from 'wml!Controls-demo/listTemplates/ColorfulTemplate/ColorfulTemplate';
+
+import 'css!Controls/listTemplates';
 
 class ColorfulTemplate extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
