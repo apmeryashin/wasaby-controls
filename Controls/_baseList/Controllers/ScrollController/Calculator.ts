@@ -517,9 +517,7 @@ export class Calculator {
         const virtualScrollConfig = this._virtualScrollConfig;
         let segmentSize = virtualScrollConfig.segmentSize;
         if (!segmentSize) {
-            if (!segmentSize) {
-                segmentSize = Math.ceil(virtualScrollConfig.pageSize / RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT);
-            }
+            segmentSize = Math.ceil(virtualScrollConfig.pageSize / RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT);
         }
         return segmentSize;
     }
