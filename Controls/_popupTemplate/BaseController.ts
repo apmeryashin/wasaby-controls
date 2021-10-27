@@ -512,6 +512,11 @@ abstract class BaseController implements IPopupController {
         const restrictiveContainerNode = document?.querySelector(restrictiveContainer);
 
         if (restrictiveContainerNode) {
+            if (!restrictiveContainerNode.offsetWidth && !restrictiveContainerNode.offsetHeight) {
+                const errorMessage = "В опции restrictiveContainer указан селектор для DOM-element'a, у которого отсутствуют размеры";
+                Logger.error(`Controls/popup: ${errorMessage}`);
+                return;
+            }
             // TODO: В рамках оптимизации нижний попап скрывается через ws-hidden
             // Нужно это учитывать при расчете размеров https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
             const popup = restrictiveContainerNode.closest('.controls-Popup');
