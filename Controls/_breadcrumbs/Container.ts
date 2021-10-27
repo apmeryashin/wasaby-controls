@@ -80,6 +80,8 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
     }
 
     protected _documentDragStart(event: SyntheticEvent, dragObject: IDragObject): void {
+        this._hoveredBreadCrumb = undefined;
+
         if (this._options.itemsDragNDrop &&
             this._parentProperty &&
             cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
