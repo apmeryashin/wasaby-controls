@@ -84,7 +84,7 @@ export interface IOptions<S extends Model = Model> extends ICollectionItemOption
     tileWidth: number;
     tileFitProperty: string;
     tileWidthProperty: string;
-    tileHeightProperty: string;
+    feature1183277279: string;
     roundBorder: ITileRoundBorder;
     imageProperty: string;
     imageFit: TImageFit;
@@ -126,7 +126,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
     protected _$tileWidthProperty: string;
 
-    protected _$tileHeightProperty: string;
+    protected _$feature1183277279: string;
 
     protected _$tileFitProperty: string;
 
@@ -217,11 +217,11 @@ export default abstract class TileItem<T extends Model = Model> {
     }
 
     /**
-     * Возвращает название свойства на рекорде, которое содержит высоту плитки
+     * Не использовать
      * @return {string} Название свойства
      */
-    getTileHeightProperty(): string {
-        return this._$tileHeightProperty;
+    getFeature1183277279Property(): string {
+        return this._$feature1183277279;
     }
 
     /**
@@ -1311,9 +1311,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 `;
             } else {
 
-                // TODO: Временно для реализации макета по задаче:
-                // https://online.sbis.ru/opendoc.html?guid=8a7ac746-af65-49e8-8d06-e3c7488a2598
-                const customHeightData = this.getContents().get(this.getTileHeightProperty());
+                // TODO: Удалено в 22.1000
+                const customHeightData = this.getContents().get(this.getFeature1183277279Property());
                 const height = customHeightData ? customHeightData : this.getTileHeight();
                 return `
                     -ms-flex-preferred-size: ${flexBasis}px;
@@ -2121,7 +2120,7 @@ Object.assign(TileItem.prototype, {
     _$tileHeight: DEFAULT_TILE_HEIGHT,
     _$tileWidth: DEFAULT_TILE_WIDTH,
     _$tileWidthProperty: '',
-    _$tileHeightProperty: '',
+    _$feature1183277279: '',
     _$tileFitProperty: '',
     _$tileScalingMode: 'none',
     _$imageProperty: '',
