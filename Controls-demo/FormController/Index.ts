@@ -30,15 +30,14 @@ class FormController extends Control<IControlOptions> {
     }
 
     private _create(config): Promise<any> {
-        const self = this;
         const initValues = config.initValues;
         const finishDef = this._children.registrator.finishPendingOperations();
         initValues.id = this.idCount;
         const result = new Promise((resolve, reject) => {
         finishDef.then((finishResult) => {
-            const createDef = self._children.formControllerInst.create(initValues);
+            const createDef = this._children.formControllerInst.create(initValues);
             createDef.then((cbResult) => {
-                self.idCount++;
+                this.idCount++;
                 resolve(true);
                 return cbResult;
             }, (error) => {
@@ -54,8 +53,8 @@ class FormController extends Control<IControlOptions> {
         });
         });
 
-        result.then((result) => {
-            return result;
+        result.then((promiseResult) => {
+            return promiseResult;
         }, (error) => {
             return error;
         });
@@ -71,13 +70,12 @@ class FormController extends Control<IControlOptions> {
     }
 
     private _read(config): Promise<any> {
-        const self = this;
         const finishDef = this._children.registrator.finishPendingOperations();
         const result = new Promise((resolve, reject) => {
         finishDef.then((finishResult) => {
-            self._key = config.key;
-            self._record = null;
-            self._forceUpdate();
+            this._key = config.key;
+            this._record = null;
+            this._forceUpdate();
             resolve(true);
             return finishResult;
         }, (e) => {
@@ -86,8 +84,8 @@ class FormController extends Control<IControlOptions> {
             return e;
         });
         });
-        result.then((result) => {
-            return result;
+        result.then((promiseResult) => {
+            return promiseResult;
             },
             (error) => {
             return error;
@@ -161,14 +159,14 @@ class FormController extends Control<IControlOptions> {
 
         // запросим еще данные прямо из dataSource и обновим dataSourceRecordString
         const def = this._dataSource.read(this._key);
-        def.then((record) => {
-            if (!record) {
+        def.then((loadedRecord) => {
+            if (!loadedRecord) {
                 return '';
             }
-            if (!record.getRawData()) {
+            if (!loadedRecord.getRawData()) {
                 return '';
             }
-            this.dataSourceRecordString = record.getRawData();
+            this.dataSourceRecordString = loadedRecord.getRawData();
             this._forceUpdate();
         }, (e) => {
             this.dataSourceRecordString = '';

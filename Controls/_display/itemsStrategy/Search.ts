@@ -357,17 +357,17 @@ export default class SearchStrategy<S extends Model, T extends TreeItem<S> = Tre
                         // the level by set the origin as parent if necessary
                         const itsDescendant = item.getParent() !== breadcrumbsReference.last;
 
-                        let parent;
+                        let parentLocal;
                         if (itsDescendant) {
-                            parent = item.getParent();
+                            parentLocal = item.getParent();
                         } else {
-                            parent = currentBreadcrumbs['[Controls/_display/SearchSeparator]']
+                            parentLocal = currentBreadcrumbs['[Controls/_display/SearchSeparator]']
                                 ? display.getRoot() : currentBreadcrumbs;
                         }
 
                         decoratedItem = create(options.treeItemDecoratorModule, {
                             source: item,
-                            parent,
+                            parent: parentLocal,
                             multiSelectVisibility: display.getMultiSelectVisibility(),
                             multiSelectAccessibilityProperty: display.getMultiSelectAccessibilityProperty()
                         });

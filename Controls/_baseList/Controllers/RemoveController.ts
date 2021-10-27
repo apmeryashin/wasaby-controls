@@ -87,7 +87,7 @@ export class RemoveController {
         //  не можем избавиться от getItemsBySelection по крайней мере до тех пор, пока не будет везде внедрён
         //  DeleteSelected https://online.sbis.ru/opendoc.html?guid=9ddef508-29e2-4acf-ac76-7afe03509c4c
         return getItemsBySelection(selection, this._source, null, filter)
-            .then((selection) => this._source.destroy(selection));
+            .then((selectionItems) => this._source.destroy(selectionItems));
     }
 
     private static _validateBeforeRemove(source: ICrud, selection: ISelectionObject): string {

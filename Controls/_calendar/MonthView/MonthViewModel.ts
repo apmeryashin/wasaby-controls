@@ -144,15 +144,15 @@ export default class MonthViewModel extends VersionableMixin {
                     css.push('controls-MonthViewVDOM__cursor-item');
                 }
                 if (!scope.selected) {
-                    let borderStyle;
+                    let borderStyleLocal;
                     if (scope.selectionEnabled && this._singleDayHover) {
-                        borderStyle = 'controls-MonthView__border-currentMonthDay-unselected';
+                        borderStyleLocal = 'controls-MonthView__border-currentMonthDay-unselected';
                     } else if (scope.hovered) {
-                        borderStyle = 'controls-MonthView__border-hover';
+                        borderStyleLocal = 'controls-MonthView__border-hover';
                     }
-                    if (borderStyle) {
-                        borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
-                        css.push(borderStyle);
+                    if (borderStyleLocal) {
+                        borderStyleLocal += backgroundStyle ? '_style-' + backgroundStyle : '';
+                        css.push(borderStyleLocal);
                     }
                 }
                 css.push('controls-MonthViewVDOM__selectableItem');

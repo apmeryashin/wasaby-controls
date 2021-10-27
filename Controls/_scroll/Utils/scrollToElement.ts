@@ -226,11 +226,11 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
       const innerStickyHeaderHeight = stickyElement?.offsetHeight;
       if (innerStickyHeaderHeight) {
          const positions = ['top', 'topWithOffset', 'bottom'];
-         for (const position of positions) {
+         for (const pos of positions) {
             // Если мы отнимаем высоту заголовка и получаем результат меньше нуля, значит заголовок был последним.
             // В таком случае не нужно отнимать высоту.
-            if (stickyHeaderHeight[position] - innerStickyHeaderHeight >= 0) {
-               stickyHeaderHeight[position] -= innerStickyHeaderHeight;
+            if (stickyHeaderHeight[pos] - innerStickyHeaderHeight >= 0) {
+               stickyHeaderHeight[pos] -= innerStickyHeaderHeight;
             }
          }
       }

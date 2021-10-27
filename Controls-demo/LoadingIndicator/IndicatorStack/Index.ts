@@ -51,7 +51,6 @@ class IndicatorStack extends Control<IControlOptions> {
 
     }
     private _interval(id, delay): void {
-        const self = this;
         setTimeout(() => {
             if (delay > 1000) {
                 delay -= 1000;
@@ -61,10 +60,10 @@ class IndicatorStack extends Control<IControlOptions> {
                     message: 'The indicator will close after ' + delay / 1000,
                     delay: 0
                 };
-                self._overlayId = self._notify('showIndicator', [cfg], { bubbling: true });
-                self._interval(self._overlayId, delay);
+                this._overlayId = this._notify('showIndicator', [cfg], { bubbling: true });
+                this._interval(this._overlayId, delay);
             } else {
-                self._notify('hideIndicator', [this._overlayId], {bubbling: true});
+                this._notify('hideIndicator', [this._overlayId], {bubbling: true});
             }
         }, 1000);
     }

@@ -146,15 +146,15 @@ const Remover = BaseAction.extend({
                     } : selection
                 });
                 return this._removeAction.execute()
-                    .then((result) => {
+                    .then((promiseResult) => {
                         if (this._destroyed) {
                             return Promise.reject();
                         }
                         _private.removeFromItems(this, selection);
-                        return result;
+                        return promiseResult;
                     })
-                    .then((result) => both(result))
-                    .catch((result) => both(result));
+                    .then((promiseResult) => both(promiseResult))
+                    .catch((promiseResult) => both(promiseResult));
             });
         });
     }

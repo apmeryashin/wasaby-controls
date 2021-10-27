@@ -4315,19 +4315,19 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             filter = cClone(this._options.filter);
             filter[this._keyProperty] = [newArgs.key];
             sourceController.setFilter(filter);
-            reloadItemDeferred = sourceController.load().then((items) => {
-                if (items instanceof RecordSet) {
-                    itemsCount = items.getCount();
+            reloadItemDeferred = sourceController.load().then((loadedItems) => {
+                if (loadedItems instanceof RecordSet) {
+                    itemsCount = loadedItems.getCount();
 
                     if (itemsCount === 1) {
-                        loadCallback(items.at(0));
+                        loadCallback(loadedItems.at(0));
                     } else if (itemsCount > 1) {
                         Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + newArgs.key);
                     } else {
                         Logger.info('BaseControl: reloadItem::query returns empty recordSet.');
                     }
                 }
-                return items;
+                return loadedItems;
             });
         } else {
             reloadItemDeferred = sourceController.read(newArgs.key, newArgs.options.readMeta).then((item) => {

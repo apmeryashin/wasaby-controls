@@ -479,8 +479,8 @@ export default class Controller implements IDropdownController {
       } else {
          sourcePromise = Promise.resolve(source || options.source);
       }
-      return sourcePromise.then((source) => {
-         this._source = source;
+      return sourcePromise.then((result) => {
+         this._source = result;
          if (isHistorySource(this._source)) {
             this._source.setDataLoadCallback(options.dataLoadCallback);
          }

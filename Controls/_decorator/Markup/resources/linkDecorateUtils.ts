@@ -316,9 +316,9 @@ export function needDecorate(jsonNode, parentNode) {
          }
          const tagName = getTagName(nodeToCheck);
          if (tagName === 'a') {
-            const attributes = getAttributes(nodeToCheck);
+            const attrs = getAttributes(nodeToCheck);
             canBeDecorated = canBeDecorated && isLinkGoodForDecorating(nodeToCheck);
-            attributes[fakeNeedDecorateAttribute] = canBeDecorated;
+            attrs[fakeNeedDecorateAttribute] = canBeDecorated;
          } else {
             // Tag br is the end of paragraph.
             canBeDecorated = tagName === 'br';
@@ -515,10 +515,10 @@ export function normalizeLink(linkToCheck: string, linkDomain: string, ending: s
    linkToCheck = linkToCheck + ending;
 
    if (needToCreateLinkNode) {
-      const result = isWrongDomain ? match : createLinkNode(
+      const resultNode = isWrongDomain ? match : createLinkNode(
          (linkPrefix ? 'http://' : '') + linkToCheck, linkToCheck);
 
-      return [isCorrectLink, result];
+      return [isCorrectLink, resultNode];
    }
 
    const result = isWrongDomain ? match : linkPrefix ? 'http://' + linkToCheck : '' + linkToCheck;

@@ -160,8 +160,8 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
 
     setEditingObjectValue(editorName: string, editorValue: object): void {
         const source = coreClone(this._source);
-        const item = source.find((item) => {
-            return item.name === editorName;
+        const item = source.find((sItem) => {
+            return sItem.name === editorName;
         });
         if (item.viewMode === 'extended') {
             item.viewMode = 'basic';

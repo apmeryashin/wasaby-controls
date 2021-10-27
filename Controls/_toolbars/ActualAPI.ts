@@ -1,8 +1,8 @@
 import {Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 
-export function items(items: RecordSet<Record>): RecordSet<Record> {
-    items.each((item) => {
+export function items(itemsPram: RecordSet<Record>): RecordSet<Record> {
+    itemsPram.each((item) => {
         const iconSize = item.get('iconSize');
         const viewModeValue = item.get('viewMode');
         let captionValue = '';
@@ -18,5 +18,5 @@ export function items(items: RecordSet<Record>): RecordSet<Record> {
         item.set('iconSize', iconSize || 'm');
     });
 
-    return items;
+    return itemsPram;
 }

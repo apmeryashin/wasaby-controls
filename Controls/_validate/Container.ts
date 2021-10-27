@@ -254,7 +254,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
 
         // далее, смотрим что возвращают результаты-деферреды
         parallelDeferred.done().getResult().addCallback((results) => {
-            let validationResult = null;
+            let validationResultFromDef = null;
             if (typeof results === 'object') {
                 for (const resultIndex in results) {
                     // плохие результаты запоминаем в массиве с ошибками
@@ -274,11 +274,11 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
 
             // если ошибки были найдены, отдадим их в качестве ответа
             if (errors.length) {
-                validationResult = errors;
+                validationResultFromDef = errors;
             }
 
-            this.setValidationResult(validationResult, validateConfig);
-            resultDeferred.callback(validationResult);
+            this.setValidationResult(validationResultFromDef, validateConfig);
+            resultDeferred.callback(validationResultFromDef);
         }).addErrback((e) => {
             Logger.error('Validate: Validation error', this, e);
         });

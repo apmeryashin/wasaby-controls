@@ -291,11 +291,11 @@ const BaseOpener = {
       }
       if (cfg.maxWidth) {
          if (cfg.maxWidthWithoutSideBar !== true) {
-            const MINIMAL_PANEL_DISTANCE = 50;
+            const OLD_MINIMAL_PANEL_DISTANCE = 50;
             const stackContainer = document.querySelector('.controls-Popup__stack-target-container');
             const sideBar = document.querySelector('.online-Sidebar');
             if (stackContainer && sideBar) {
-               const maxCompatibleWidth = stackContainer.clientWidth - sideBar.clientWidth - MINIMAL_PANEL_DISTANCE;
+               const maxCompatibleWidth = stackContainer.clientWidth - sideBar.clientWidth - OLD_MINIMAL_PANEL_DISTANCE;
                cfg.maxWidth = Math.min(maxCompatibleWidth, cfg.maxWidth);
             }
          }

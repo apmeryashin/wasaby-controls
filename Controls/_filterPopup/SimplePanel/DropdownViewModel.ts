@@ -115,7 +115,6 @@ const DropdownViewModel = BaseViewModel.extend({
          _expanded: false,
 
          constructor(cfg) {
-            const self = this;
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
@@ -127,7 +126,7 @@ const DropdownViewModel = BaseViewModel.extend({
                displayProperty: cfg.displayProperty || 'title'
             });
             this._itemsModel.subscribe('onListChange', () => {
-               self._nextVersion();
+                this._nextVersion();
             });
             this._hierarchy = new entity.relation.Hierarchy({
                keyProperty: cfg.keyProperty,
@@ -291,13 +290,12 @@ const DropdownViewModel = BaseViewModel.extend({
             return false;
          },
          hasAdditional() {
-            const self = this;
             let hasAdditional = false;
 
             if (this._options.additionalProperty && this._options.rootKey === null) {
                this._options.items.each((item) => {
                   if (!hasAdditional) {
-                     hasAdditional = item.get(self._options.additionalProperty) && !_private.isHistoryItem(item);
+                     hasAdditional = item.get(this._options.additionalProperty) && !_private.isHistoryItem(item);
                   }
                });
             }

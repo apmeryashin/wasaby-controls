@@ -443,9 +443,9 @@ class FormController extends ControllerBase<IFormController> {
 
     update(config?: IUpdateConfig): Promise<undefined | boolean | Model> {
         const updateResult = new Deferred();
-        const updateCallback = (result) => {
+        const updateCallback = (updResult) => {
             // if result is true, custom update called and we dont need to call original update.
-            if (result !== true) {
+            if (updResult !== true) {
                 this._notifyToOpener(CRUD_EVENTS.UPDATE_STARTED, [this._record, this._getRecordId()]);
                 this._startFormOperations('save').then(() => {
                     const res = this._update(config).then(this._getData);
@@ -540,12 +540,12 @@ class FormController extends ControllerBase<IFormController> {
     /**
      *
      * @param {Error} error
-     * @param {Controls/_dataSource/_error/ErrorViewMode} [ErrorViewMode]
+     * @param {Controls/_dataSource/_error/ErrorViewMode} [errorViewMode]
      * @return {Promise<*>}
      * @private
      */
-    private _crudErrback(error: Error, ErrorViewMode: ErrorViewMode): Promise<undefined | Model> {
-        return this.processError(error, ErrorViewMode).then(this._getData);
+    private _crudErrback(error: Error, errorViewMode: ErrorViewMode): Promise<undefined | Model> {
+        return this.processError(error, errorViewMode).then(this._getData);
     }
 
     private _updateIsNewRecord(value: boolean): void {

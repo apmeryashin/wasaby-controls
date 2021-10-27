@@ -349,7 +349,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
     splice(start: number, deleteCount: number, added?: S[]): T[] {
         added = added || [];
 
-        const shiftTail = (start, offset) => (value) => value >= start ? value + offset : value;
+        const shiftTail = (startIndex, offset) => (value) => value >= startIndex ? value + offset : value;
 
         const source = this.source;
         // Deleted indices in this.source.items
@@ -531,8 +531,8 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         const newSourceItems = this._sourceItems;
         const sourceToInner = new Map();
 
-        oldOrder.forEach((sourceIndex, innerIndex) => {
-            sourceToInner.set(oldSourceItems[sourceIndex], oldItems[innerIndex]);
+        oldOrder.forEach((sourceIdx, innerIndex) => {
+            sourceToInner.set(oldSourceItems[sourceIdx], oldItems[innerIndex]);
         });
 
         const newItems = new Array(newOrder.length);

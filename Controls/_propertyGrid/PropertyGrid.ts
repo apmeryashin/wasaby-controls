@@ -592,8 +592,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                     }],
                     source
                 },
-                beforeMoveCallback: (selection: ISelectionObject, target: Model): void => {
-                    movedItems = selection.selected;
+                beforeMoveCallback: (currentSelection: ISelectionObject, target: Model): void => {
+                    movedItems = currentSelection.selected;
                     resultTarget = target;
                 }
             }

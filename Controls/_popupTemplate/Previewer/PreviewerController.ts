@@ -44,7 +44,7 @@ class PreviewerController extends StickyController {
         if (item.childs.length) {
             return false;
         }
-        return super.beforeElementDestroyed(item, container);;
+        return super.beforeElementDestroyed(item, container);
     }
 
     private _isLinkedPopup(previewerItem: IStickyItem): boolean {

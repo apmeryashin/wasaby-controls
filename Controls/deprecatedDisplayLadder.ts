@@ -341,8 +341,8 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
         const push = Array.prototype.push;
         let result = [];
 
-        const removeData = (oldItems, newItems) => {
-            if (oldItems.length) {
+        const removeData = (oldItemsLocal, newItemsLocal) => {
+            if (oldItemsLocal.length) {
                 const columnNames = this._columnNames;
                 const newItemsId = new Set();
                 let columnIndex;
@@ -350,7 +350,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
                 let delta;
                 let itemId;
 
-                newItems.forEach((item) => {
+                newItemsLocal.forEach((item) => {
                     newItemsId.add(
                         getCollectionItemId(item)
                     );
@@ -358,8 +358,8 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
 
                 for (columnIndex = 0; columnIndex < columnNames.length; columnIndex++) {
                     columnData = this._getColumnData(columnNames[columnIndex]);
-                    for (delta = 0; delta < oldItems.length; ++delta) {
-                        itemId = getCollectionItemId(oldItems[delta]);
+                    for (delta = 0; delta < oldItemsLocal.length; ++delta) {
+                        itemId = getCollectionItemId(oldItemsLocal[delta]);
                         if (!newItemsId.has(itemId)) {
                             columnData.delete(itemId);
                         }
