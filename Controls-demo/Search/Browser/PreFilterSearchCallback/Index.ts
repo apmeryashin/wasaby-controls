@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as controlTemplate from 'wml!Controls-demo/Search/Browser/PrefilterOnSearchCallback/Index';
+import * as controlTemplate from 'wml!Controls-demo/Search/Browser/PreFilterSearchCallback/Index';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 
