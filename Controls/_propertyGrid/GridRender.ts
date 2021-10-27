@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_propertyGrid/GridRender/Render';
 import * as groupTemplate from 'wml!Controls/_propertyGrid/Render/resources/groupTemplate';
 import * as itemTemplate from 'wml!Controls/_propertyGrid/Render/resources/itemTemplate';
 import * as toggleEditorsTemplate from 'wml!Controls/_propertyGrid/Render/resources/toggleEditorsGroupTemplate';
-import {default as PropertyGridItem } from './PropertyGridCollectionItem';
+import PropertyGridCollectionItem, {default as PropertyGridItem } from './PropertyGridCollectionItem';
 import PropertyGridCollection from './PropertyGridCollection';
 import {isFullGridSupport} from 'Controls/display';
 import {Model} from 'Types/entity';
@@ -126,11 +126,11 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     }
 
     protected _mouseEnterHandler(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
-        this._notify('hoveredItemChanged', [item]);
+        this._notify('itemMouseEnter', [item, e]);
     }
 
     protected _mouseLeaveHandler(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
-        this._notify('hoveredItemChanged', [null]);
+        this._notify('itemMouseLeave', [item, e]);
     }
 
     protected _toggleEditor(event: SyntheticEvent, item: Model, value: boolean): void {
@@ -163,6 +163,18 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
             this._notify('groupClick', [item, e]);
         } else {
             this._notify('itemClick', [item.getContents(), e]);
+        }
+    }
+
+    protected _itemMouseDown(e: SyntheticEvent<MouseEvent>, item: PropertyGridCollectionItem<Model>): void {
+        if (!item['[Controls/_display/GroupItem]']) {
+            this._notify('itemMouseDown', [item, e]);
+        }
+    }
+
+    protected _itemMouseUp(e: SyntheticEvent<MouseEvent>, item: PropertyGridCollectionItem<Model>): void {
+        if (!item['[Controls/_display/GroupItem]']) {
+            this._notify('itemMouseUp', [item, e]);
         }
     }
 
