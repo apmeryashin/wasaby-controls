@@ -3664,7 +3664,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._updateScrollController();
 
         // Если нет данных, то сразу же показываем триггер, чтобы при наличии данных вверх инициировалась их загрузка
-        if (!this._listViewModel.getCount()) {
+        // Или если вверх нет данных, то сразу показываем триггер, чтобы работал виртуальный скролл.
+        if (!this._listViewModel.getCount() || !this._hasMoreData('up') || !this._options.attachLoadTopTriggerToNull) {
             this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
         }
 
@@ -6097,8 +6098,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!_private.isPortionedLoad(this)) {
             if (this._indicatorsController.shouldDisplayTopIndicator()) {
                 this._indicatorsController.displayTopIndicator(true);
-            } else {
-                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
             }
 
             if (this._indicatorsController.shouldDisplayBottomIndicator()) {
