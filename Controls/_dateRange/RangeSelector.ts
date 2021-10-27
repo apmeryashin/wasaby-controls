@@ -150,6 +150,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             } else {
                 className += ' controls-DatePopup__selector-marginLeft-withoutModeBtn';
             }
+            className += ` controls_popupTemplate_theme-${this._options.theme}`;
         }
 
         if (this._options.popupClassName) {
