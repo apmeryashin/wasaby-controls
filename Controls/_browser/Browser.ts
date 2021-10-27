@@ -756,7 +756,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             listsSelectedKeys: operationsController.getSelectedKeysByLists(),
             listsExcludedKeys: operationsController.getExcludedKeysByLists(),
             operationsController,
-            sourceController: this._getSourceController(),
             filterController: dataLoader.getFilterController()
         };
         this._sourceControllerState = sourceControllerState;
