@@ -446,7 +446,8 @@ const ListView = Control.extend(
         _getFooterClasses(): string {
             let result = 'controls-ListView__footer';
 
-            if (this._options.itemActionsPosition === 'outside') {
+            // Есть смысл добавлять минимальную высоту футеру только если в коллекции есть данные
+            if (this._options.itemActionsPosition === 'outside' && this._listModel.getCount()) {
                 result += ' controls-ListView__footer__itemActionsV_outside';
             }
 
