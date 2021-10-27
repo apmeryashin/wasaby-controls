@@ -32,7 +32,7 @@ export default class extends Control {
 
    private dataArray: IItem[] = generateData({
       keyProperty: 'key',
-      count: 50,
+      count: 500,
       beforeCreateItemCallback: (item: IItem) => {
          item.capital = 'South';
          item.number = this.count + 1;

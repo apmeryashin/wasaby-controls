@@ -6,7 +6,6 @@
    <ws:partial template="Controls/dropdown:ItemTemplate"
                itemData="{{itemData}}"
                displayProperty="{{displayProperty}}"
-               multiSelect="{{false}}"
-               markerSize="s">
+               multiSelect="{{false}}">
    </ws:partial>
 </Controls.scroll:StickyBlock>

@@ -25,11 +25,7 @@
 }
 
 .controls-Button__close__icon_external {
-   fill: var(--unaccented_icon-color);
-
-   &:active {
-      fill: var(--icon-color_hovered_closeButton_external);
-   }
+   fill: var(--contrast_icon-color);
 }
 
 .controls-Button__close__icon_link,
@@ -79,11 +75,12 @@
    border-width: var(--border-thickness_closeButton_functionalButton);
    border-radius: var(--border-radius_button_functionalButton);
    box-shadow: var(--box-shadow_closeButton_functionalButton);
-   background-color: var(--background-color_closeButton_external);
+   background-color: var(--translucent_background-color_button);
+   backdrop-filter: blur(var(--translucent_backdrop-filter-blur_button));
 
    &:active {
       box-shadow: var(--box-shadow_closeButton_toolButton);
-      background-color: var(--background-color_hover_closeButton_external);
+      background-color: var(--translucent_active_background-color_button);
    }
 }
 
@@ -123,11 +120,7 @@
    }
 
    .controls-Button__close_external:hover {
-      background-color: var(--background-color_hover_closeButton_external);
-
-      .controls-Button__close__icon_external {
-         fill: var(--icon-color_hovered_closeButton_external);
-      }
+      background-color: var(--translucent_hover_background-color_button);
    }
 
    .controls-Button__close_toolButton_transparent:hover {

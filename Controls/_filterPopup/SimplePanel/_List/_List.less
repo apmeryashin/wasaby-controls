@@ -1,5 +1,5 @@
 .controls-SimplePanel-List__hasMoreButton {
-   padding-left: var(--item_padding-horizontal_l_menu);
+   padding-left: calc(var(--item_padding-left_s_list) + var(--icon-size_2xs) + var(--offset_3xs));
    display: flex;
    align-items: center;
    height: var(--footer_min-height_menuPopup);
@@ -22,16 +22,12 @@
    padding-right: calc(var(--offset_s) + var(--inline_height_l) + var(--offset_l) + var(--width_closeButton_link) + var(--close-button_offset-right_sticky) + var(--border-thickness_sticky));
 }
 
-.controls-SimplePanel-List__hierarchyItem-leftPadding_default {
-   padding-left: calc(var(--item_padding-horizontal_l_menu) + var(--offset_m));
-}
-
-.controls-SimplePanel-List__hierarchyItem-leftPadding {
-   padding-left: calc(var(--item_padding-horizontal_s_menu) + var(--offset_m));
+.controls-SimplePanel-List__hierarchyItem-checkbox-rightPadding {
+   margin-right: calc(var(--offset_3xs) + var(--offset_m));
 }
 
 .controls-SimplePanel-List__item-leftPadding_default {
-   padding-left: var(--item_padding-horizontal_l_menu);
+   padding-left: var(--item_padding-left_s_list);
 }
 
 .controls-SimplePanel-List__item-leftPadding_xs {

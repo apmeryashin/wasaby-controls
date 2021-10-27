@@ -7,7 +7,7 @@ import componentTmpl = require('wml!Controls/_dateRange/RangeSelector/RangeSelec
 import {Popup as PopupUtil, Base as dateUtils} from 'Controls/dateUtils';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
-import * as monthCaptionTemplate from 'wml!Controls/_dateRange/DateSelector/monthCaptionTemplate';
+import {MonthCaptionTemplate} from 'Controls/date';
 import {getDatePopupName, IDatePopupTypeOptions} from 'Controls/date';
 import 'css!Controls/dateRange';
 
@@ -32,7 +32,6 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @implements Controls/dateRange:IDateRangeSelectable
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
- * @implements Controls/interface:IUnderline
  * @implements Controls/interface:IFontWeight
  * @implements Controls/interface:IOpenPopup
  * @implements Controls/dateRange:ICaptionFormatter
@@ -68,7 +67,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  */
 export default class RangeSelector extends BaseSelector<IRangeSelector> {
     protected _template: TemplateFunction = componentTmpl;
-    protected _monthCaptionTemplate: TemplateFunction = monthCaptionTemplate;
+    protected _monthCaptionTemplate: TemplateFunction = MonthCaptionTemplate;
     protected _emptyCaption: string;
     EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;
 

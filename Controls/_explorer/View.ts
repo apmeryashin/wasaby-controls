@@ -302,6 +302,14 @@ export default class Explorer extends Control<IExplorerOptions> {
             Logger.error(`${this._moduleName}: Для задания многоуровневых хлебных крошек вместо displayMode используйте опцию breadcrumbsDisplayMode`, this);
         }
 
+        // Это нужно для попадания стилей плитки в bundle на сервере
+        // https://online.sbis.ru/opendoc.html?guid=f9cf5faa-15cf-4286-9721-a2e4439c0b5d
+        if (cfg.viewMode === 'tile') {
+            addPageDeps(['css!Controls/tile']);
+        } else if (cfg.viewMode === 'list' && cfg.useColumns) {
+            addPageDeps(['css!Controls/columns']);
+        }
+
         return this._setViewMode(cfg.viewMode, cfg);
     }
 
@@ -717,7 +725,9 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     scrollToItem(key: string | number, toBottom?: boolean): void {
-        this._children.treeControl.scrollToItem(key, toBottom);
+        if (this._children.treeControl) {
+            this._children.treeControl.scrollToItem(key, toBottom);
+        }
     }
 
     getLastVisibleItemKey(): number | string | void {
@@ -1122,10 +1132,6 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     private _loadTileViewMode(): Promise<void> | void {
-        // Это нужно для попадания стилей плитки в bundle на сервере
-        // https://online.sbis.ru/opendoc.html?guid=f9cf5faa-15cf-4286-9721-a2e4439c0b5d
-        addPageDeps(['css!Controls/tile']);
-
         return executeSyncOrAsync(['Controls/treeTile'], (tile) => {
             VIEW_NAMES.tile = tile.TreeTileView;
             VIEW_TABLE_NAMES.tile = tile.TreeTileView;
@@ -1134,10 +1140,6 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     private _loadColumnsViewMode(): Promise<void> | void {
-        // Это нужно для попадания стилей плитки в bundle на сервере
-        // https://online.sbis.ru/opendoc.html?guid=f9cf5faa-15cf-4286-9721-a2e4439c0b5d
-        addPageDeps(['css!Controls/columns']);
-
         return executeSyncOrAsync(['Controls/columns'], (columns) => {
             VIEW_NAMES.list = columns.ViewTemplate;
             MARKER_STRATEGY.list = MultiColumnStrategy;

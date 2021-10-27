@@ -164,7 +164,6 @@
    align-self: center;
    display: inline-block;
    flex-shrink: 0;
-   width: var(--icon-size_2xs);
    top: 0;
 }
 
@@ -185,7 +184,7 @@
 }
 
 .controls-ListView__multiSelect__borderCircle {
-   fill: transparent;
+   fill: var(--unaccented_background-color);
 }
 
 .ws-is-hover .controls-ListView__itemV:hover {
@@ -558,6 +557,18 @@
    text-overflow: ellipsis;
 }
 
+.controls-ListView__groupContent_textTransform_uppercase {
+   text-transform: uppercase;
+
+   @variants: xs 1.25px, s 1.25px, m 1.25px, l 1.5px, xl 1.5px, 2xl 1.75px, 3xl 1.75px;
+   .for(@variants, {
+      @letter-spacing-value: extract(@_item, 1);
+      &_@{letter-spacing-value} {
+         letter-spacing: extract(@_item, 2);
+      }
+   });
+}
+
 .controls-ListView__groupContent_left {
    text-align: left;
 }
@@ -623,12 +634,34 @@
    }});
 }
 
-.ws-is-hover .controls-ListView__groupExpander:hover {
+.ws-is-hover .controls-ListView__groupExpander:hover,
+.ws-is-hover .controls-ListView__groupExpander:hover::before,
+.ws-is-hover .controls-ListView__groupExpander:hover::after {
    color: var(--grouping_expander_hover_text-color_list);
 }
 
-.controls-ListView__groupExpander:active {
+.controls-ListView__groupExpander:active,
+.controls-ListView__groupExpander:active::before,
+.controls-ListView__groupExpander:active::after {
    color: var(--grouping_expander_hover_text-color_list);
+}
+
+.controls-ListView__groupExpander-iconStyle_default {
+   &::before,
+   &::after {
+      color: var(--grouping_expander_text-color_list);
+   }
+}
+
+.controls-ListView__groupExpander-iconStyle_ {
+   @variants: primary, secondary, success, warning, danger, info, label, contrast, unaccented;
+   .for(@variants, { &@{_item}, &@{_item}:hover {
+      &::before,
+      &::after {
+         color: ~"var(--controls-icon_style-@{_item})";
+         fill: ~"var(--controls-icon_style-@{_item})";
+      }
+   }});
 }
 
 .controls-ListView__groupExpander_collapsed_left:before {

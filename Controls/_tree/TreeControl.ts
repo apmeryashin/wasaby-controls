@@ -1119,6 +1119,15 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             this._notify('collapsedItemsChanged', [result.collapsedItems]);
         }
     }
+    protected _afterCollectionAdd(addedItems: CollectionItem[], addedItemsIndex: number): void {
+        super._afterCollectionAdd(addedItems, addedItemsIndex);
+
+        // В добавленных записях может быть развернутый узел с hasMore, поэтому пересчитываем hasMoreStorage
+        const collection = this._listViewModel;
+        const expandedItems = _private.getExpandedItems(this, this._options, this._items, this._expandController.getExpandedItems());
+        const hasMoreStorage = _private.prepareHasMoreStorage(this._sourceController, expandedItems, collection.getHasMoreStorage());
+        collection.setHasMoreStorage(hasMoreStorage, true);
+    }
 
     private setMarkerOnFirstLeaf(options, startKey) {
         const markerController = this.getMarkerController();

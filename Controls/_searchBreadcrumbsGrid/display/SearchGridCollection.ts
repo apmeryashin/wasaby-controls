@@ -6,6 +6,7 @@ import {ItemsFactory, itemsStrategy, TreeItem} from 'Controls/display';
 import BreadcrumbsItemRow from './BreadcrumbsItemRow';
 import {IOptions as ITreeGridOptions} from 'Controls/_treeGrid/display/TreeGridCollection';
 import TreeGridDataRow from 'Controls/_treeGrid/display/TreeGridDataRow';
+import AdjacencyListStrategy from 'Controls/_display/itemsStrategy/AdjacencyList';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -133,6 +134,25 @@ export default
       });
 
       return composer;
+   }
+
+   protected _changedParent(oldItem: T, newParentValue: boolean): boolean {
+      const oldItemParent = oldItem.getParent();
+      if (oldItemParent['[Controls/_display/BreadcrumbsItem]']) {
+         // Если родитель это хлебная крошка, то родителем записи будет последний элемент хлебной крошки
+         const parents = oldItemParent.getContents() as Model[];
+         const parent = parents[parents.length - 1];
+         const oldValue = parent.getKey();
+         return newParentValue !== oldValue;
+      } else {
+         return super._changedParent(oldItem, newParentValue);
+      }
+   }
+
+   protected _reCountHierarchy(): void {
+      super._reCountHierarchy();
+      const strategy = this.getStrategyInstance(itemsStrategy.Search);
+      strategy.reset();
    }
 
    protected _recountHasNodeWithChildren(): void {

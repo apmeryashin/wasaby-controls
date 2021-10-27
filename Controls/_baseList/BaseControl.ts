@@ -79,7 +79,7 @@ import {
     IBeforeBeginEditCallbackParams,
     IBeforeEndEditCallbackParams, TAsyncOperationResult
 } from '../editInPlace';
-import {IEditableListOption} from './interface/IEditableList';
+import {IEditingConfig as IEditableListOption} from './interface/IEditableList';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
 
@@ -1436,8 +1436,9 @@ const _private = {
                                 self._addItems.push(...newItems);
                                 self._addItemsIndex = newItemsIndex;
                             } else {
+                                const isBottom = (self._viewportSize + self._scrollTop) === self._viewSize;
                                 let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                                    : (newItemsIndex >= collectionStopIndex ? 'down' : undefined);
+                                    : (newItemsIndex >= collectionStopIndex && !isBottom ? 'down' : undefined);
                                 if (self._listViewModel.getCount() === newItems.length) {
                                     direction = undefined;
                                 }
@@ -3330,11 +3331,17 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (action === IObservable.ACTION_REMOVE) {
             this._afterCollectionRemove(removedItems, removedItemsIndex);
         }
+        if (action === IObservable.ACTION_ADD) {
+            this._afterCollectionAdd(newItems, newItemsIndex);
+        }
     }
     protected _afterCollectionReset(): void {
         // для переопределения
     }
     protected _afterCollectionRemove(removedItems: Array<CollectionItem<Model>>, removedItemsIndex: number): void {
+        // для переопределения
+    }
+    protected _afterCollectionAdd(addedItems: CollectionItem[], addedItemsIndex: number): void {
         // для переопределения
     }
     _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
@@ -3434,6 +3441,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
+            this._scrollController.scrollPositionChange({scrollTop}, false);
             this._observersController?.setScrollTop(
                 this._scrollTop,
                 this._children.listView?.getTopLoadingTrigger(),
@@ -4052,11 +4060,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (newOptions.searchValue || this._loadedBySourceController) {
             _private.tryLoadToDirectionAgain(this, null, newOptions);
         }
-        // если у нас не изменилось searchValue, оно не пустое и началась загрузка, то это ситуация описанная выше
-        // нужен завершить показ порционного поиска при начале подгрузки(перезагрузки) и начать показ после загрузки
+        // В случае если у нас пустой список, то при сценарии выше не сработает событие reset. Поэтому нужно завершить
+        // показ порционного поиска и начать его в этом месте,
+        // по опциям от DataContainer(loading - loadStarted, loadedBySourceController)
         if (
+            (!this._listViewModel || !this._listViewModel.getCount()) &&
             this._options.searchValue &&
-            this._options.searchValue === newOptions.searchValue &&
+            newOptions.searchValue &&
             _private.isPortionedLoad(this)
         ) {
             if (loadStarted) {
@@ -5446,7 +5456,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         switch (nativeEvent.keyCode) {
             case 13: // Enter
-                return this._editingRowEnterHandler(e);
+                if (this._getEditingConfig().sequentialEditingMode === 'cell') {
+                    return Promise.resolve();
+                } else {
+                    return this._editingRowEnterHandler(e);
+                }
             case 27: // Esc
                 // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
                 e.stopPropagation();
@@ -5464,7 +5478,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const editingConfig = this._getEditingConfig();
         const columnIndex = this._editInPlaceController._getEditingItem()._$editingColumnIndex;
         const next = this._getEditInPlaceController().getNextEditableItem();
-        const shouldEdit = editingConfig.sequentialEditing && !!next;
+        const shouldEdit = editingConfig.sequentialEditingMode !== 'none' && !!next;
         const shouldAdd = !next && !shouldEdit && !!editingConfig.autoAdd && editingConfig.addPosition === 'bottom';
         return this._tryContinueEditing(shouldEdit, shouldAdd, next && next.contents, columnIndex);
     }
@@ -5561,11 +5575,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _getEditingConfig(options = this._options): Required<IEditableListOption['editingConfig']> {
         const editingConfig = options.editingConfig || {};
         const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
+        const getSequentialEditingMode = () => {
+            if (typeof editingConfig.sequentialEditingMode === 'string') {
+                return editingConfig.sequentialEditingMode;
+            } else {
+                return editingConfig.sequentialEditing !== false ? 'row' : 'none';
+            }
+        };
 
         return {
             mode: editingConfig.mode || 'row',
             editOnClick: !!editingConfig.editOnClick,
-            sequentialEditing: editingConfig.sequentialEditing !== false,
+            sequentialEditingMode: getSequentialEditingMode(),
             addPosition,
             item: editingConfig.item,
             autoAdd: !!editingConfig.autoAdd,

@@ -15,7 +15,11 @@ import {
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
-import { getOffsetTop, getDimensionsByRelativeParent as uDimension } from '../sizeUtils';
+import {
+    getOffsetTop,
+    getDimensionsByRelativeParent as uDimension,
+    getDimensions
+} from '../sizeUtils';
 import { getStickyHeadersHeight } from '../scroll';
 import {IVirtualScrollConfig} from 'Controls/_baseList/interface/IVirtualScroll';
 
@@ -612,7 +616,7 @@ export default class ScrollController {
         // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
         const scrollContent = itemsContainer.closest('.controls-Scroll-ContainerBase__content');
         const topCompensation = scrollContent ?
-            (scrollContent.getBoundingClientRect().top - itemsContainer.getBoundingClientRect().top) :
+            (scrollContent.getBoundingClientRect().top - getDimensions(itemsContainer).top) :
             getOffsetTop(itemsContainer);
         const scrollTop = this.getScrollTop();
 
@@ -621,6 +625,12 @@ export default class ScrollController {
 
         items.some((item: HTMLElement) => {
             if (item.className.includes('controls-ListView__hiddenContainer')) {
+                return false;
+            }
+
+            // Если элемент застикан, то пропускаем его, граничным будет элемент следующий за ним
+            // https://online.sbis.ru/opendoc.html?guid=9a0d939d-a08b-478b-b981-ccd1577fb184
+            if (window.getComputedStyle(item).position === 'sticky' || (item.children[0] && window.getComputedStyle(item.children[0]).position === 'sticky')) {
                 return false;
             }
 

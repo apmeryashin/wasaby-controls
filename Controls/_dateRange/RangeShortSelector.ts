@@ -44,7 +44,6 @@ interface IRangeShortSelectorOptions extends IControlOptions {
  *
  * @implements Controls/interface:IOpenPopup
  * @implements Controls/interface:IFontSize
- * @implements Controls/interface:IUnderline
  * @implements Controls/interface:IFontWeight
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/dateRange:ICaptionFormatter

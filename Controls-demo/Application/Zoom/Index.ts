@@ -61,7 +61,7 @@ export default class Stack extends Control<IControlOptions> {
             opener: this,
             closeOnOutsideClick: true,
             templateOptions: {
-                draggable: true
+                canTemplateDrag: true
             },
             propStorageId: 'draggableDialog',
             maxHeight: 700,

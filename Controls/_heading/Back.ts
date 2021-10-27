@@ -8,16 +8,12 @@ import {
     IFontColorStyleOptions,
     IFontSize,
     IFontSizeOptions,
-    IIconSize,
-    IIconSizeOptions,
     IIconStyle,
     IIconStyleOptions
 } from 'Controls/interface';
 
-export interface IBackOptions extends IControlOptions, IFontColorStyleOptions, IFontSizeOptions, IIconStyleOptions, IIconSizeOptions {
+export interface IBackOptions extends IControlOptions, IFontColorStyleOptions, IFontSizeOptions, IIconStyleOptions {
 }
-
-const MODERN_IE_VERSION = 11;
 
 /**
  * Специализированный заголовок-кнопка для перехода на предыдущий уровень.
@@ -38,7 +34,6 @@ const MODERN_IE_VERSION = 11;
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
- * @implements Controls/interface:IIconSize
  * @implements Controls/interface:IIconStyle
  *
  * @public
@@ -47,7 +42,7 @@ const MODERN_IE_VERSION = 11;
  * @demo Controls-demo/Heading/SubCaption/Index
  */
 
- /**
+/**
  * @name Controls/_heading/Back#fontColorStyle
  * @cfg
  * @variant primary
@@ -74,7 +69,6 @@ const MODERN_IE_VERSION = 11;
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
- * @implements Controls/interface:IIconSize
  * @implements Controls/interface:IIconStyle
  *
  * @public
@@ -82,9 +76,12 @@ const MODERN_IE_VERSION = 11;
  * @demo Controls-demo/Heading/Back/SizesAndStyles/Index
  */
 
-class Back extends Control<IBackOptions> implements IFontColorStyle, IFontSize, IIconStyle, IIconSize {
+export default class Back extends Control<IBackOptions> implements IFontColorStyle, IFontSize, IIconStyle {
     protected _template: TemplateFunction = backTemplate;
-    protected _isOldIe: Boolean = false;
+
+    readonly '[Controls/_interface/IFontSize]': boolean = true;
+    readonly '[Controls/_interface/IIconStyle]': boolean = true;
+    readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
 
     static getDefaultOptions(): object {
         return {
@@ -114,11 +111,6 @@ class Back extends Control<IBackOptions> implements IFontColorStyle, IFontSize, 
                 'default',
                 'contrast',
                 'unaccented'
-            ]),
-            iconSize: EntityDescriptor(String).oneOf([
-                's',
-                'm',
-                'l'
             ])
         };
     }
@@ -132,5 +124,3 @@ Object.defineProperty(Back, 'defaultProps', {
       return Back.getDefaultOptions();
    }
 });
-
-export default Back;

@@ -116,10 +116,13 @@ describe('Controls/grid/Display/Group/GroupCell', () => {
 
     describe('getContentTextStylingClasses', () => {
         it('should contain styling classes when styling options are set', () => {
-            const classes = getGroupCell().getContentTextStylingClasses('secondary', 's');
+            const classes = getGroupCell().getContentTextStylingClasses('secondary', 's', 'bold', 'uppercase');
             CssClassesAssert.include(classes, [
                 'controls-fontsize-s',
-                'controls-text-secondary'
+                'controls-text-secondary',
+                'controls-fontweight-bold',
+                'controls-ListView__groupContent_textTransform_uppercase',
+                'controls-ListView__groupContent_textTransform_uppercase_s'
             ]);
         });
 
@@ -128,6 +131,11 @@ describe('Controls/grid/Display/Group/GroupCell', () => {
             CssClassesAssert.include(classes, [
                 'controls-ListView__groupContent-text_default',
                 'controls-ListView__groupContent-text_color_default'
+            ]);
+            CssClassesAssert.notInclude(classes, [
+                'controls-fontweight-bold',
+                'controls-ListView__groupContent_textTransform_uppercase',
+                'controls-ListView__groupContent_textTransform_uppercase_s'
             ]);
         });
     });

@@ -16,7 +16,7 @@ import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
-import {TFontColorStyle, TFontSize} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
@@ -446,17 +446,26 @@ export default class Cell<
 
     /**
      * Добавляет CSS классы для стилизации текста в ячейке грида.
+     * Настройки из конфига колонок имеют бОльший приоритет
      * @param templateFontColorStyle Цвет шрифта
      * @param templateFontSize Размер шрифта
+     * @param templateFontWeight Насыщенность шрифта
      */
     getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
-                                 templateFontSize?: TFontSize): string {
+                                 templateFontSize?: TFontSize,
+                                 templateFontWeight?: TFontWeight): string {
+        const fontColorStyle = this.config.fontColorStyle || templateFontColorStyle;
+        const fontSize = this.config.fontSize || templateFontSize;
+        const fontWeight = this.config.fontWeight || templateFontWeight;
         let contentClasses = '';
-        if (this.config.fontColorStyle || templateFontColorStyle) {
-            contentClasses += ` controls-text-${this.config.fontColorStyle || templateFontColorStyle}`;
+        if (fontColorStyle) {
+            contentClasses += ` controls-text-${fontColorStyle}`;
         }
-        if (this.config.fontSize || templateFontSize) {
-            contentClasses += ` controls-fontsize-${this.config.fontSize || templateFontSize}`;
+        if (fontSize) {
+            contentClasses += ` controls-fontsize-${fontSize}`;
+        }
+        if (fontWeight) {
+            contentClasses += ` controls-fontweight-${fontWeight}`;
         }
         return contentClasses;
     }

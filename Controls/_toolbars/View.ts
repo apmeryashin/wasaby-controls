@@ -766,6 +766,22 @@ Object.defineProperty(Toolbar, 'defaultProps', {
  * @name Controls/_toolbars/View#itemTemplate
  * @cfg {String | TemplateFunction} Пользовательский шаблон отображения элемента внутри тулбара.
  * Для того чтобы задать шаблон элемента и в тулбаре и в выпадающем списке, используйте опцию {@link Controls/interface/IItemTemplate itemTemplateProperty}.
+ * Для определения внутри шаблона места построения(тулбар или меню) используйте переменную type="toolbar"
+ * внутри шаблона.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <div class="wrapper">
+ *    <div class="cell">
+ *        <ws:if data="{{type === 'toolbar'}}">
+ *            {{toolbarContent}}
+ *        </ws:if>
+ *        <ws:else>
+ *            {{menuContent}}}
+ *        </ws:else>
+ *    </div>
+ * </div>
+ * </pre>
  *
  * @example
  * <pre class="brush: html">

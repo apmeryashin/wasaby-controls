@@ -1,4 +1,4 @@
-import {TFontColorStyle, TFontSize} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight, TIconSize, TIconStyle, TTextTransform} from 'Controls/interface';
 import {IColumn} from 'Controls/grid';
 
 /**
@@ -17,31 +17,42 @@ export default abstract class GroupCell<T> {
     }
 
     /**
-     * Добавляет CSS классы для стилизации текста в заголовке группы
-     * @param fontColorStyle Цвет шрифта
-     * @param fontSize Размер шрифта
+     * Добавляет CSS классы для стилизации текста в заголовке группы.
+     * Настройки из шаблона по умолчанию имеют больший приоритет, т.к. обычные группы настраиваются через шаблон Controls/grid:GroupTemplate.
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param templateFontWeight жирность шрифта
+     * @param templateTextTransform Преобразование шрифта
      */
-    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
-                                 fontSize?: TFontSize): string {
+    getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
+                                 templateFontSize?: TFontSize,
+                                 templateFontWeight?: TFontWeight,
+                                 templateTextTransform?: TTextTransform): string {
         let classes = '';
-        const config = this.getColumnConfig();
-        if (config.fontSize || fontSize) {
-            classes += ` controls-fontsize-${config.fontSize || fontSize}`;
+        if (templateFontSize) {
+            classes += ` controls-fontsize-${templateFontSize}`;
         } else {
             classes += ' controls-ListView__groupContent-text_default';
         }
-
-        // Настройка в колонке приоритетнее, чем полученная из ItemTemplate
-        if (config.fontColorStyle || fontColorStyle) {
-            classes += ` controls-text-${config.fontColorStyle || fontColorStyle}`;
+        if (templateFontColorStyle) {
+            classes += ` controls-text-${templateFontColorStyle}`;
         } else {
             classes += ' controls-ListView__groupContent-text_color_default';
+        }
+        if (templateFontWeight) {
+            classes += ` controls-fontweight-${templateFontWeight}`;
+        }
+        if (templateTextTransform) {
+            classes += ` controls-ListView__groupContent_textTransform_${templateTextTransform}` +
+                       ` controls-ListView__groupContent_textTransform_${templateTextTransform}_${templateFontSize || 's'}`;
         }
         return classes;
     }
 
     getExpanderClasses(expanderVisible: boolean = true,
-                       expanderAlign: 'right' | 'left' = 'left'): string {
+                       expanderAlign: 'right' | 'left' = 'left',
+                       iconSize: TIconSize,
+                       iconStyle: TIconStyle): string {
         let classes = '';
         if (expanderVisible !== false) {
             if (!this.isExpanded()) {
@@ -49,9 +60,10 @@ export default abstract class GroupCell<T> {
                 classes += ` controls-ListView__groupExpander_collapsed_${expanderAlign}`;
             }
 
-            classes += ` controls-ListView__groupExpander ` +
+            classes += ' controls-ListView__groupExpander ' +
                 ` controls-ListView__groupExpander_${expanderAlign}` +
-                ` controls-ListView__groupExpander-iconSize_default`;
+                ` controls-ListView__groupExpander-iconSize_${iconSize || 'default'}` +
+                ` controls-ListView__groupExpander-iconStyle_${iconStyle || 'default'}`;
 
             classes += ' js-controls-Tree__row-expander';
         }

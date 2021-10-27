@@ -25,7 +25,7 @@ export default class extends Control {
                 viewMode: 'extended',
                 value: false,
                 editorOptions: {
-                    value: true,
+                    filterValue: true,
                     extendedCaption: 'Разработка'
                 }
             }

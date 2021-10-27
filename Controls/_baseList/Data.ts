@@ -123,7 +123,6 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
    protected _contextState: IContextOptionsValue;
    private _isMounted: boolean;
    private _loading: boolean = false;
-   private _itemsReadyCallback: Function = null;
    private _loadToDirectionRegister: RegisterClass = null;
    private _sourceController: SourceController = null;
    private _source: ICrudPlus | ICrud & ICrudPlus & IData;
@@ -146,7 +145,6 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
        context?: object,
        receivedState?: IReceivedState
    ): Promise<IReceivedState>|void {
-      this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
       this._onDataLoad = this._onDataLoad.bind(this);
@@ -251,6 +249,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
       if (currentSourceController && (currentSourceController.getItems() !== this._items)) {
          this._items = currentSourceController.getItems();
+         this._updateBreadcrumbsFromSourceController();
       }
 
       if (currentSourceController) {
@@ -412,22 +411,6 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
    _unregisterHandler(event, registerType, component, config): void {
       this._loadToDirectionRegister.unregister(event, component, config);
-   }
-
-   _itemsReadyCallbackHandler(items): void {
-      if (this._items !== items) {
-         this._items = this._sourceController.setItems(items);
-         this._updateBreadcrumbsFromSourceController();
-
-         this._contextState = {
-            ...this._contextState,
-            items: this._items
-         };
-      }
-
-      if (this._options.itemsReadyCallback) {
-         this._options.itemsReadyCallback(items);
-      }
    }
 
    _filterChanged(event, filter): void {

@@ -37,3 +37,10 @@
  * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
  * @default l
  */
+/**
+ * @name Controls/_grid/interface/ItemTemplate#fontWeight
+ * @cfg {TFontWeight} Насыщенность шрифта.
+ * @default "default".
+ * @remark
+ * {@link Controls/_grid/display/interface/IColumn#fontWeight Насыщенность шрифта ячейки} имеет больший приоритет, чем Насыщенность шрифта записи.
+ */

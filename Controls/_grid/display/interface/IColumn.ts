@@ -1,5 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
-import {TFontSize, TFontColorStyle} from 'Controls/interface';
+import {TFontSize, TFontColorStyle, TFontWeight} from 'Controls/interface';
 
 /**
  * @typedef {IColumn[]}
@@ -508,4 +508,11 @@ export interface IColumn extends IColspanParams {
      * Размер шрифта ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontSize размер шрифта записи}.
      */
     fontSize?: TFontSize;
+    /**
+     * @cfg {TFontWeight} Насыщенность шрифта.
+     * @default "default".
+     * @remark
+     * Насыщенность шрифта ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontWeight Насыщенность шрифта записи}.
+     */
+    fontWeight?: TFontWeight;
 }
