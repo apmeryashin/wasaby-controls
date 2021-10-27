@@ -12,6 +12,10 @@
    padding-right: var(--master_item_horizontal-offset_list);
 }
 
+.controls-Grid_master {
+   grid-row-gap: var(--master_item_separator_thickness_list);
+}
+
 .controls-GridView__loadingTrigger_notFullGridSupport {
    position: relative;
 }
@@ -266,7 +270,6 @@
 
 .controls-Grid__row-cell_master {
    font-size: var(--font-size_l);
-   border-bottom: var(--master_item_separator_thickness_list) solid var(--master_item_background-color_list) ;
 }
 
 .controls-Grid__header-cell__content-ellipsis,
@@ -861,10 +864,6 @@
    font-weight: bold;
    color: var(--master_item_selected_text-color_list);
    font-size: var(--font-size_l);
-}
-
-.controls-Grid__cell_master {
-   background-color: var(--master_item_background-color_list);
 }
 
 .controls-master-template-default {
