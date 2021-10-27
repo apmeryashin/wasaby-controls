@@ -127,15 +127,32 @@ class StackController extends BaseController {
     }
 
     elementMaximized(item: IStackItem, container?: HTMLElement, maximized?: boolean): boolean {
-        const state = maximized !== undefined ? maximized : !this._getMaximizedState(item);
+        const maxPanelWidth = StackStrategy.getMaxPanelWidth(this._getStackParentCoords(item));
+        const state = maximized !== undefined ? maximized : !this._getMaximizedState(item, maxPanelWidth);
         this._setMaximizedState(item, state);
-        const minWidth = item.minSavedWidth || item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+        const minWidth = this._getMinWidth(item, maxPanelWidth);
         const maxWidth = item.maxSavedWidth || item.popupOptions.maxWidth;
         item.popupOptions.width = state ? maxWidth : minWidth;
         this._prepareSizes(item, container);
         this._update();
         this._savePopupWidth(item);
         return true;
+    }
+
+    /**
+     * Расчет минимальноё ширины для панели в случае переключения maximized
+     * Если minSavedWidth оказался больше максимальной доступной ширины попапа, то нужно использовать минимальную
+     * Иначе при переключении maximized в обоих состояниях будет обрезаться
+     * @param item
+     * @param maxPanelWidth
+     * @private
+     */
+    private _getMinWidth(item: IStackItem, maxPanelWidth: number): number {
+        if (item.minSavedWidth && item.minSavedWidth < maxPanelWidth) {
+            return item.minSavedWidth;
+        } else {
+            return item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+        }
     }
 
     resizeInner(): boolean {
@@ -180,9 +197,8 @@ class StackController extends BaseController {
         return true;
     }
 
-    private _getMaximizedState(item: IStackItem): boolean {
+    private _getMaximizedState(item: IStackItem, maxPanelWidth: number): boolean {
         if (!item.popupOptions.minimizedWidth && item.popupOptions.minWidth && item.popupOptions.maxWidth) {
-            const maxPanelWidth = StackStrategy.getMaxPanelWidth();
             // Если максимально возможная ширина окна меньше, чем выставлена через опцию, то нужно ориентироваться
             // на неё. Иначе кнопка разворота будет всегда пытаться развернуть окно,
             // которое уже итак максимально широкое.
@@ -207,7 +223,6 @@ class StackController extends BaseController {
     }
 
     private _update(): void {
-        const maxPanelWidth = StackStrategy.getMaxPanelWidth();
         let cache: IStackItem[] = [];
         this._stack.each((item) => {
             if (item.popupState !== this.POPUP_STATE_DESTROYING) {
@@ -244,7 +259,10 @@ class StackController extends BaseController {
                 });
 
                 if (StackStrategy.isMaximizedPanel(item)) {
-                    this._prepareMaximizedState(maxPanelWidth, item);
+                    this._prepareMaximizedState(
+                        StackStrategy.getMaxPanelWidth(this._getStackParentCoords(item)),
+                        item
+                    );
                 }
             }
         });
@@ -353,7 +371,7 @@ class StackController extends BaseController {
             item.position = this._getItemPosition(item);
             if (this._stack.getCount() <= 1) {
                 if (StackStrategy.isMaximizedPanel(item)) {
-                    this._prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
+                    this._prepareMaximizedState(StackStrategy.getMaxPanelWidth(this._getStackParentCoords(item)), item);
                 }
                 this._updatePopupOptions(item);
                 this._addLastStackClass(item);
