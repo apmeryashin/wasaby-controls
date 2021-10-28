@@ -22,7 +22,7 @@
             _iconStyle="{{ action.showType === 3 ? action.iconStyle : (iconStyle || action.iconStyle) }}"
             _height="{{ action.inlineHeight }}"
             _captionPosition="right"
-            _options="{{ { 'readonly': false } }}"
+            _options="{{ { 'readOnly': false } }}"
             attr:class="controls-itemActionsV__Button_iconSize_{{ action.iconSize }}"
             attr:ws-no-focus="true"/>
     </div>
