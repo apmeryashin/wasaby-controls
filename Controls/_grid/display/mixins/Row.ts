@@ -376,9 +376,12 @@ export default abstract class Row<T extends Model = Model> {
      * Получить индекс ячейки в строке.
      * @param {Cell} cell - Ячейка таблицы.
      * @param {Boolean} [takeIntoAccountColspans=false] - Учитывать ли колспаны ячеек, расположенных до искомой.
+     * @param {Boolean} [takeIntoHiddenColumns=false] - Учитывать ли при расчете индекса скрытые ячейки, расположенные до искомой.
      * @returns {Number} Индекс ячейки в строке.
      */
-    getColumnIndex(cell: Cell<T, Row<T>>, takeIntoAccountColspans: boolean = false): number {
+    getColumnIndex(cell: Cell<T, Row<T>>,
+                   takeIntoAccountColspans: boolean = false,
+                   takeIntoHiddenColumns: boolean = true): number {
         const columnItems = this.getColumns();
         let columnItemIndexWithColspan = 0;
 
@@ -395,7 +398,18 @@ export default abstract class Row<T extends Model = Model> {
         if (columnItemIndex === -1) {
             throw Error('Fatal error! Expected column missing in columnItems.');
         }
-        return takeIntoAccountColspans ? columnItemIndexWithColspan : columnItemIndex;
+
+        let result = takeIntoAccountColspans ? columnItemIndexWithColspan : columnItemIndex;
+
+        if (!takeIntoHiddenColumns) {
+            let hiddenColumnsCount = 0;
+            for (let i = columnItemIndex - 1; i >= 0; i--) {
+                hiddenColumnsCount += +(columnItems[i].isHidden());
+            }
+            result -= hiddenColumnsCount;
+        }
+
+        return result;
     }
 
     protected _redrawColumns(target: 'first' | 'last' | 'all'): void {

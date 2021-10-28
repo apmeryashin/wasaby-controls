@@ -107,7 +107,7 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
             colspanStrategy: 'consistently',
             prepareStickyLadderCellsStrategy: !this._$rowTemplate ? 'add' :
                 (this.getStickyLadderCellsCount() ? 'offset' : 'colspan'),
-            shouldAddMultiSelectCell: !this._$rowTemplate,
+            shouldAddMultiSelectCell: true,
             extensionCellsConstructors: {
                 multiSelectCell: this.getColumnsFactory({column: {}})
             }
