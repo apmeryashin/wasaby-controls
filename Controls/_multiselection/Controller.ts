@@ -466,10 +466,14 @@ export class Controller {
                const item = items[i];
                const itemKey = this._getKey(item);
                const isSelectedByLimit = i < this._limit;
-               if (isSelectedByLimit && item.isSelected()) {
-                  // если элемент входит в пачку и уже был до этого выбран,
-                  // то добавляем его в пачку увеличивая размер самой пачки
-                  this._limit++;
+               if (item.isSelected()) {
+                  if (isSelectedByLimit) {
+                     // если элемент входит в пачку и уже был до этого выбран,
+                     // то добавляем его в пачку увеличивая размер самой пачки
+                     this._limit++;
+                  } else {
+                     this._separatedSelectedItems.push(itemKey);
+                  }
                }
                if (!isSelectedByLimit && !item.isSelected()) {
                   ArraySimpleValuesUtil.addSubArray(newSelection.excluded, [itemKey]);
