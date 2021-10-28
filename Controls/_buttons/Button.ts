@@ -302,31 +302,31 @@ Object.defineProperty(Button, 'defaultProps', {
 
 /**
  * @name Controls/_buttons/Button#fontColorStyle
- * @cfg
+ * @cfg {String}
  * @demo Controls-demo/Buttons/FontStyles/Index
  */
 
 /**
  * @name Controls/_buttons/Button#href
- * @cfg
+ * @cfg {String}
  * @demo Controls-demo/Buttons/Href/Index
  */
 
 /**
  * @name Controls/_buttons/Button#iconStyle
- * @cfg
+ * @cfg {String}
  * @demo Controls-demo/Buttons/IconStyles/Index
  */
 
 /**
  * @name Controls/_buttons/Button#tooltip
- * @cfg
+ * @cfg {String}
  * @demo Controls-demo/Buttons/Tooltip/Index
  */
 
 /**
  * @name Controls/_buttons/Button#translucent
- * @cfg
+ * @cfg {Boolean}
  * @demo Controls-demo/Buttons/Translucent/Index
  */
 
@@ -349,7 +349,7 @@ Object.defineProperty(Button, 'defaultProps', {
 
 /**
  * @name Controls/_buttons/Button#fontSize
- * @cfg
+ * @cfg {String}
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @default m
  * @example
@@ -360,7 +360,7 @@ Object.defineProperty(Button, 'defaultProps', {
 
 /**
  * @name Controls/_buttons/Button#contrastBackground
- * @cfg
+ * @cfg {Boolean}
  * @default false (Когда опция {@link Controls/buttons:Button#viewMode viewMode} установлена в значение functionalButton, то для опции contrastBackground значение по умолчанию - true.)
  * @remark
  * Опция используется для акцентирования внимания на кнопке, и ее визуального выделения относительно окружения.
