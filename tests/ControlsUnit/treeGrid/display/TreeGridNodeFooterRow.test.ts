@@ -85,7 +85,7 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterRow', () => {
 
       treeGridCollection.setMultiSelectVisibility('visible');
       columns = nodeFooterRow.getColumns();
-      assert.equal(columns.length, 1);
+      assert.equal(columns.length, 2);
    });
 
    it('.getItemClasses()', () => {
