@@ -17,7 +17,7 @@ export class StackStrategy {
      * @param isAboveMaximizePopup {Boolean}
      */
     getPosition(tCoords, item: IPopupItem, isAboveMaximizePopup: boolean = false): IPopupPosition {
-        const maxPanelWidth = this.getMaxPanelWidth();
+        const maxPanelWidth = this.getMaxPanelWidth(tCoords);
         const width = this._getPanelWidth(item, tCoords, maxPanelWidth);
         const right = this._getRightPosition(tCoords, isAboveMaximizePopup);
         const position: IPopupPosition = {
@@ -59,9 +59,9 @@ export class StackStrategy {
      * Returns the maximum possible width of popup
      * @function Controls/_popupTemplate/Stack/Opener/StackController#getMaxPanelWidth
      */
-    getMaxPanelWidth(): number {
+    getMaxPanelWidth(stackParentCoords: IPopupPosition): number {
         // window.innerWidth брать нельзя, при масштабировании на ios значение меняется, что влияет на ширину панелей.
-        return document.body.clientWidth - MINIMAL_PANEL_DISTANCE;
+        return document.body.clientWidth - MINIMAL_PANEL_DISTANCE - stackParentCoords.right;
     }
 
     private _getRightPosition(tCoords, isAboveMaximizePopup: boolean): number {
@@ -73,10 +73,9 @@ export class StackStrategy {
 
     private _getPanelWidth(item: IPopupItem, tCoords, maxPanelWidth: number): number {
         let panelWidth;
-        const maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
         let minWidth = parseInt(item.popupOptions.minWidth, 10);
         const rightPanelWidth = getRightPanelWidth();
-        const minRightSpace = tCoords.right - (minWidth - maxPanelWidthWithOffset);
+        const minRightSpace = tCoords.right - (minWidth - maxPanelWidth);
         const rightCoord = Math.max(minRightSpace, rightPanelWidth);
         const maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
@@ -84,22 +83,22 @@ export class StackStrategy {
             if (!this._isMaximizedState(item)) {
                 panelWidth = item.popupOptions.minimizedWidth;
             } else {
-                panelWidth = Math.min(maxWidth, maxPanelWidthWithOffset);
+                panelWidth = Math.min(maxWidth, maxPanelWidth);
                 if (minWidth) {
                     panelWidth = Math.max(panelWidth, minWidth); // more then minWidth
                 }
             }
-            if (panelWidth > maxPanelWidthWithOffset) {
+            if (panelWidth > maxPanelWidth) {
                 tCoords.right = rightCoord;
             }
             return panelWidth;
         }
         // If the minimum width does not fit into the screen - positioned on the right edge of the window
-        if (minWidth > maxPanelWidthWithOffset) {
+        if (minWidth > maxPanelWidth) {
             if (this.isMaximizedPanel(item)) {
                 minWidth = item.popupOptions.minimizedWidth;
             }
-            if (minWidth > maxPanelWidthWithOffset) {
+            if (minWidth > maxPanelWidth) {
                 tCoords.right = rightCoord;
             }
             panelWidth = minWidth;
@@ -128,7 +127,7 @@ export class StackStrategy {
         return !!item.popupOptions.maximized;
     }
     private _calculateMaxWidth(popupOptions, tCoords): number {
-        const maxPanelWidth = this.getMaxPanelWidth() - tCoords.right;
+        const maxPanelWidth = this.getMaxPanelWidth(tCoords);
         let maxWidth = maxPanelWidth;
 
         // maxWidth limit on the allowable width
