@@ -11,7 +11,7 @@ import template = require('wml!Controls/_form/FocusWithEnter/FocusWithEnter');
  * @author Таранин С.М.
  */
 
-export default class PrimaryAction extends Control<IControlOptions> {
+export default class FocusWithEnter extends Control<IControlOptions> {
    _template: TemplateFunction = template;
 
    protected keyDownHandler(e: SyntheticEvent<KeyboardEvent>): void {
@@ -45,7 +45,7 @@ export default class PrimaryAction extends Control<IControlOptions> {
    }
 
    /**
-    * Проверяет, может ли элемент быть сфокусирован по ENTER
+    * Проверяет, может ли элемент быть сфокусирован по ENTER (поля ввода, чекбокс, комбобокс, поле связи)
     * @param {HTMLElement} target Проверяемый html-элемент
     */
    _isFocusable(target: HTMLElement): boolean {
