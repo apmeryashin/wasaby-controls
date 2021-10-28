@@ -127,7 +127,8 @@ class StackController extends BaseController {
     }
 
     elementMaximized(item: IStackItem, container?: HTMLElement, maximized?: boolean): boolean {
-        const maxPanelWidth = StackStrategy.getMaxPanelWidth(this._getStackParentCoords(item));
+        const stackParentCoords = this._getStackParentCoords(item);
+        const maxPanelWidth = StackStrategy.getMaxPanelWidth(stackParentCoords);
         const state = maximized !== undefined ? maximized : !this._getMaximizedState(item, maxPanelWidth);
         this._setMaximizedState(item, state);
         const minWidth = this._getMinWidth(item, maxPanelWidth);
@@ -148,11 +149,10 @@ class StackController extends BaseController {
      * @private
      */
     private _getMinWidth(item: IStackItem, maxPanelWidth: number): number {
-        if (item.minSavedWidth && item.minSavedWidth < maxPanelWidth) {
+        if (item.minSavedWidth < maxPanelWidth) {
             return item.minSavedWidth;
-        } else {
-            return item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
         }
+        return item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
     }
 
     resizeInner(): boolean {
@@ -259,10 +259,7 @@ class StackController extends BaseController {
                 });
 
                 if (StackStrategy.isMaximizedPanel(item)) {
-                    this._prepareMaximizedState(
-                        StackStrategy.getMaxPanelWidth(this._getStackParentCoords(item)),
-                        item
-                    );
+                    this._prepareMaximizedState(item);
                 }
             }
         });
@@ -371,7 +368,7 @@ class StackController extends BaseController {
             item.position = this._getItemPosition(item);
             if (this._stack.getCount() <= 1) {
                 if (StackStrategy.isMaximizedPanel(item)) {
-                    this._prepareMaximizedState(StackStrategy.getMaxPanelWidth(this._getStackParentCoords(item)), item);
+                    this._prepareMaximizedState(item);
                 }
                 this._updatePopupOptions(item);
                 this._addLastStackClass(item);
@@ -463,7 +460,9 @@ class StackController extends BaseController {
         item.popupOptions._version++;
     }
 
-    private _prepareMaximizedState(maxPanelWidth: number, item: IStackItem): void {
+    private _prepareMaximizedState(item: IStackItem): void {
+        const stackParentCoords = this._getStackParentCoords(item);
+        const maxPanelWidth = StackStrategy.getMaxPanelWidth(stackParentCoords);
         const canMaximized = maxPanelWidth > item.popupOptions.minWidth;
         if (!canMaximized) {
             // If we can't turn around, we hide the turn button and change the state

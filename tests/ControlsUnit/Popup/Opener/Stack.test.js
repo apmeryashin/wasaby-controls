@@ -413,10 +413,11 @@ define(
             }, itemConfig);
             assert.equal(position.maxWidth, popupOptions.maxWidth);
 
-            popupTemplate.StackController._prepareMaximizedState(1600, itemConfig);
+            popupTemplate.StackController._prepareMaximizedState(itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.maximizeButtonVisibility, true);
 
-            popupTemplate.StackController._prepareMaximizedState(800, itemConfig);
+            StackStrategy.getMaxPanelWidth = ({right = 0}) => 800 - right;
+            popupTemplate.StackController._prepareMaximizedState(itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.maximizeButtonVisibility, false);
             delete itemConfig.popupOptions.width;
          });
@@ -427,6 +428,7 @@ define(
                right: 0
             };
             StackStrategy._getParentPosition = () => parentPosition;
+            StackStrategy.getMaxPanelWidth = ({right = 0}) => 1600 - right;
 
             const popupOptions = {
                minWidth: 900,
