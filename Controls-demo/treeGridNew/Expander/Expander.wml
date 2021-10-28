@@ -26,4 +26,13 @@
         </Router.router:Reference>
         <Controls-demo.treeGridNew.Expander.ExpanderIcon.Index/>
     </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/treeGridNew/Expander/ExpanderIconStyle/Index' }}">
+            <a href="{{content.href}}">Стиль цвета и размер иконки экспандера</a>
+        </Router.router:Reference>
+        <Controls-demo.treeGridNew.Expander.ExpanderIconStyle.Index/>
+    </div>
 </div>
