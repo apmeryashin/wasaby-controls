@@ -1,5 +1,5 @@
 import BaseController, {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
-import {IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions} from 'Controls/popup';
+import {IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions, IPopupItem} from 'Controls/popup';
 import StackStrategy, {IStackItem} from 'Controls/_popupTemplate/Stack/StackStrategy';
 import {getPopupWidth, savePopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {List} from 'Types/collection';
@@ -18,6 +18,13 @@ import {DimensionsMeasurer} from 'Controls/sizeUtils';
  *
  * @private
  */
+
+export interface IStackItem extends IPopupItem {
+    containerWidth: number;
+    popupOptions: IStackPopupOptions;
+    minSavedWidth: number;
+    maxSavedWidth: number;
+}
 
 const ACCORDEON_MIN_WIDTH = 50;
 const MIN_DISTANCE = 100;
