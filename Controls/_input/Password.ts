@@ -1,6 +1,6 @@
 import {default as Base, IBaseInputOptions} from 'Controls/_input/Base';
 import {descriptor} from 'Types/entity';
-import * as ViewModel from 'Controls/_input/Password/ViewModel';
+import {ViewModel} from 'Controls/_input/Password/ViewModel';
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/input';
