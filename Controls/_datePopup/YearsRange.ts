@@ -28,6 +28,8 @@ export default class YearsRange extends Control<IYearsRangeOptions> {
     _rangeModel: DateRangeModel;
     _model: object[];
     _lastYear: number;
+    protected _prevButtonReadOnly: boolean;
+    protected _nextButtonReadOnly: boolean;
 
     protected _beforeMount(options: IYearsRangeOptions): void {
         this._year = options.year ? options.year.getFullYear() : (new Date()).getFullYear();
@@ -123,8 +125,12 @@ export default class YearsRange extends Control<IYearsRangeOptions> {
     }
 
     private _changeYear(delta: number): void {
-        this._lastYear = this._lastYear + delta;
-        this._updateModel();
+        const newValue = this._lastYear + delta;
+
+        if (dateUtils.MIN_YEAR_VALUE <= newValue && newValue <= dateUtils.MAX_YEAR_VALUE) {
+            this._lastYear = newValue;
+            this._updateModel();
+        }
     }
 
     private _updateModel(options?: IYearsRangeOptions): void {
@@ -137,6 +143,8 @@ export default class YearsRange extends Control<IYearsRangeOptions> {
         if (this._lastYear > maxRange) {
             this._lastYear = maxRange;
         }
+        this._prevButtonReadOnly = this._lastYear === minRange;
+        this._nextButtonReadOnly = this._lastYear === maxRange;
 
         const items = [];
         const currentYear = (new Date()).getFullYear();

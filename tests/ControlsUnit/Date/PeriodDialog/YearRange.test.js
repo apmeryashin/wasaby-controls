@@ -74,11 +74,25 @@ define([
             component._changeYear(-1);
             assert.equal(component._lastYear, cachedYear - 1);
          });
+         it('should not decrease year', () => {
+            const component = calendarTestUtils.createComponent(YearsRange, { year: year });
+            const lastYear = dateUtils.Base.MIN_YEAR_VALUE;
+            component._lastYear = lastYear;
+            component._changeYear(-1);
+            assert.equal(component._lastYear, lastYear);
+         });
          it('should increase year', function() {
             const component = calendarTestUtils.createComponent(YearsRange, { year: year });
             const cachedYear = component._lastYear;
             component._changeYear(1);
             assert.equal(component._lastYear, cachedYear + 1);
+         });
+         it('should not increase year', () => {
+            const component = calendarTestUtils.createComponent(YearsRange, { year: year });
+            const lastYear = dateUtils.Base.MAX_YEAR_VALUE;
+            component._lastYear = lastYear;
+            component._changeYear(1);
+            assert.equal(component._lastYear, lastYear);
          });
       });
       describe('_updateModel', () => {
