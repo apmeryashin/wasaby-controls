@@ -1,84 +1,42 @@
-<div class="controlsDemo__wrapper controlsDemo__flex">
-    <div class="controlsDemo_fixedWidth500">
-        <div class="controlsDemo__cell ControlsDemo-IconStyle__secondary">
-            <div class="controls-text-label">iconStyle=secondary</div>
-            <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="secondary"/>
-        </div>
-        <div class="controlsDemo__cell ControlsDemo-IconStyle__primary">
-            <div class="controls-text-label">iconStyle=primary</div>
-            <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="primary"/>
-        </div>
-        <div class="controlsDemo__cell ControlsDemo-IconStyle__warning">
-            <div class="controls-text-label">iconStyle=warning</div>
-            <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="warning"/>
-        </div>
-        <div class="controlsDemo__cell ControlsDemo-IconStyle__success">
-            <div class="controls-text-label">iconStyle=success, buttonStyle=success</div>
-            <Controls.buttons:Button viewMode="toolButton" buttonStyle="success" iconSize="s" icon="icon-Author"
-                                     iconStyle="success"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=danger, buttonStyle=danger</div>
-            <Controls.buttons:Button viewMode="toolButton" buttonStyle="danger" iconSize="s" icon="icon-Author"
-                                     iconStyle="danger"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=info</div>
-            <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="info"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=unaccented</div>
-            <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="unaccented"/>
-        </div>
-        <div class="controlsDemo__cell ControlsDemo-IconStyle__label">
-            <div class="controls-text-label">iconStyle=label</div>
-            <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="label"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=default</div>
-            <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="default"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=contrast</div>
-            <Controls.buttons:Button viewMode="functionalButton" icon="icon-Author" iconSize="s" iconStyle="contrast"/>
-        </div>
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__secondary">
+        <div class="controls-text-label">iconStyle=secondary</div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="secondary"/>
     </div>
-    <div class="controlsDemo_fixedWidth500">
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=secondary, viewMode=linkButton</div>
-            <Controls.buttons:Button viewMode="linkButton" icon="icon-Author" iconSize="s" iconStyle="secondary"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=primary, viewMode=linkButton</div>
-            <Controls.buttons:Button viewMode="linkButton" icon="icon-Author" iconSize="s" iconStyle="primary"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=warning, viewMode=linkButton</div>
-            <Controls.buttons:Button viewMode="linkButton" icon="icon-Author" iconSize="s" iconStyle="warning"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=success, viewMode=linkButton</div>
-            <Controls.buttons:Button viewMode="linkButton" iconSize="s" icon="icon-Author" iconStyle="success"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=danger, viewMode=linkButton</div>
-            <Controls.buttons:Button viewMode="linkButton" iconSize="s" icon="icon-Author" iconStyle="danger"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=info, viewMode=linkButton</div>
-            <Controls.buttons:Button viewMode="linkButton" icon="icon-Author" iconSize="s" iconStyle="info"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=unaccented, viewMode=linkButton</div>
-            <Controls.buttons:Button viewMode="linkButton" icon="icon-Author" iconSize="s" iconStyle="unaccented"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=label, viewMode=linkButton</div>
-            <Controls.buttons:Button viewMode="linkButton" icon="icon-Author" iconSize="s" iconStyle="label"/>
-        </div>
-        <div class="controlsDemo__cell">
-            <div class="controls-text-label">iconStyle=default, viewMode=linkButton</div>
-            <Controls.buttons:Button viewMode="linkButton" icon="icon-Author" iconSize="s" iconStyle="default"/>
-        </div>
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__primary">
+        <div class="controls-text-label">iconStyle=primary</div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="primary"/>
+    </div>
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__warning">
+        <div class="controls-text-label">iconStyle=warning</div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="warning"/>
+    </div>
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__success">
+        <div class="controls-text-label">iconStyle=success, buttonStyle=success</div>
+        <Controls.buttons:Button viewMode="toolButton" buttonStyle="success" iconSize="s" icon="icon-Author" iconStyle="success"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">iconStyle=danger, buttonStyle=danger</div>
+        <Controls.buttons:Button viewMode="toolButton" buttonStyle="danger" iconSize="s" icon="icon-Author" iconStyle="danger"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">iconStyle=info</div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="info"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">iconStyle=unaccented</div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="unaccented"/>
+    </div>
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__label">
+        <div class="controls-text-label">iconStyle=label</div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="label"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">iconStyle=default</div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="default"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">iconStyle=contrast</div>
+        <Controls.buttons:Button viewMode="functionalButton" icon="icon-Author" iconSize="s" iconStyle="contrast"/>
     </div>
 </div>
