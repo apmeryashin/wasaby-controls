@@ -636,10 +636,11 @@ export default class Cell<
     /**
      * Получить индекс данной ячейки в строке.
      * @param {Boolean} [takeIntoAccountColspans=false] - Учитывать ли колспаны ячеек, расположенных перед данной в строке.
+     * @param {Boolean} [takeIntoHiddenColumns=false] - Учитывать ли при расчете индекса скрытые ячейки, расположенные до искомой.
      * @returns {Number} Индекс ячейки в строке.
      */
-    getColumnIndex(takeIntoAccountColspans: boolean = false): number {
-        return this._$owner.getColumnIndex(this, takeIntoAccountColspans);
+    getColumnIndex(takeIntoAccountColspans: boolean = false, takeIntoHiddenColumns: boolean = true): number {
+        return this._$owner.getColumnIndex(this, takeIntoAccountColspans, takeIntoHiddenColumns);
     }
 
     isLadderCell(): boolean {
