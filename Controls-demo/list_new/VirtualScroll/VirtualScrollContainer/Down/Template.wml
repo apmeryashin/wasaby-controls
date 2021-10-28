@@ -12,7 +12,7 @@
             <ws:virtualScrollConfig pageSize="{{20}}"/>
         </Controls.list:View>
         <Controls.scroll:VirtualScrollContainer position="bottom">
-            <div>
+            <div data-qa="ControlsDemo-VisualScrollContainer__bottom">
                 Контент, который расположен ниже списка.
                 Он не должен отображаться, пока у списка есть данные внизу.
                 Появляется только если отображается последняя запись списка.
