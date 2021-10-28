@@ -57,7 +57,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
  * @mixes Controls/dateRange:IRangeInputTag
  * @implements Controls/interface:IDateMask
  * @implements Controls/dateRange:IDateRangeSelectable
- * @implements Controls/dateRange:IDatePopupType
+ * @implements Controls/date:IDatePopupType
  *
  *
  * @public
@@ -74,6 +74,11 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
  * * value - значение в поле ввода
  * * inputPosition - расположение инпута. В зависимости от расположения, значение может быть либо 'left' либо 'right'
  * @demo Controls-demo/dateRange/Input/RightFieldTemplate/Index
+ */
+
+/**
+ * @name Controls/_dateRange/Input#datePopupType
+ * @variant shortDatePicker Быстрый выбор периода
  */
 
 export default class DateRangeInput extends Control<IDateRangeInputOptions> implements
