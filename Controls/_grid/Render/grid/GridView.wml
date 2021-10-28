@@ -137,7 +137,7 @@
      on:focusIn="_onFocusIn()"
      class="{{ _getGridViewWrapperClasses(_options) }}">
 
-    <style>{{_getLadderTopOffsetStyles()}}</style>
+    <style>{{_ladderTopOffsetStyles}}</style>
 
     <ws:if data="{{ _options.columnScroll }}">
         <Controls.columnScroll:StyleContainers name="columnScrollStyleContainers"/>

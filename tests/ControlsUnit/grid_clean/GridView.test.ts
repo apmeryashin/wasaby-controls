@@ -152,6 +152,8 @@ describe('Controls/grid_clean/GridView', () => {
 
     describe('ladder offset style', () => {
         it('_getLadderTopOffsetStyles', () => {
+            let headerHeight = 100;
+            let resultsHeight = 50;
             const options = {
                 columns: [{}],
                 ladderOffset: 'offset'
@@ -167,7 +169,7 @@ describe('Controls/grid_clean/GridView', () => {
                         return [
                             {
                                 getComputedStyle: () => '',
-                                getBoundingClientRect: () => ({height: 100}),
+                                getBoundingClientRect: () => ({height: headerHeight}),
                                 closest: () => undefined
                             }
                         ];
@@ -176,7 +178,7 @@ describe('Controls/grid_clean/GridView', () => {
                         return [
                             {
                                 getComputedStyle: () => '',
-                                getBoundingClientRect: () => ({height: 50}),
+                                getBoundingClientRect: () => ({height: resultsHeight}),
                                 closest: () => undefined
                             }
                         ];
@@ -192,6 +194,13 @@ describe('Controls/grid_clean/GridView', () => {
                                     '.controls-GridView__ladderOffset-guid .controls-Grid__row-cell__ladder-spacing_withHeader_withResults_withGroup {' +
                                     'top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + offset + 150px) !important;' +
                                     '}';
+            assert.equal(gridView._getLadderTopOffsetStyles(), expectedStyle);
+
+            // Таблицу скрыли на switchableArea или на панели
+            // Стиль не должен поменяться
+            gridView._container.closest = (selector) => selector === '.ws-hidden' ? {} : null;
+            headerHeight = 0;
+            resultsHeight = 0;
             assert.equal(gridView._getLadderTopOffsetStyles(), expectedStyle);
         });
     });
