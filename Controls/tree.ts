@@ -7,6 +7,7 @@ import TreeNodeFooterItem from 'Controls/_tree/display/TreeNodeFooterItem';
 import TreeItem from 'Controls/_tree/display/TreeItem';
 import { default as View } from 'Controls/_tree/Tree';
 import {INodeFooterTemplate} from 'Controls/_tree/interface/INodeFooterTemplate';
+import { default as IItemTemplateOptions } from 'Controls/_tree/interface/ItemTemplate';
 import { register } from 'Types/di';
 
 import * as NodeFooterTemplate from 'wml!Controls/_tree/render/NodeFooterTemplate';
@@ -31,7 +32,8 @@ export {
     TreeNodeFooterItem,
     NodeFooterTemplate,
     ItemTemplate,
-    INodeFooterTemplate
+    INodeFooterTemplate,
+    IItemTemplateOptions
 };
 
 register('Controls/tree:TreeCollection', TreeCollection, {instantiate: false});

@@ -9,6 +9,7 @@ import TreeChildren from './TreeChildren';
 import { TemplateFunction } from 'UI/Base';
 import { Model } from 'Types/entity';
 import IGroupNode from './interface/IGroupNode';
+import {TExpanderIconSize, TExpanderIconStyle} from './interface/ITree';
 
 export interface IOptions<T extends Model> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -70,6 +71,16 @@ export default class TreeItem<T extends Model = Model> extends mixin<
      * @private
      */
     private _$displayExpanderPadding: boolean;
+
+    /**
+     * Размер иконки разворота узла
+     */
+    protected _$expanderIconSize: TExpanderIconSize;
+
+    /**
+     * Стиль цвета иконки разворота узла
+     */
+    protected _$expanderIconStyle: TExpanderIconStyle;
 
     /**
      * Признак, означающий что в узле можно еще подгрузить данные
@@ -322,6 +333,28 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return expanderSize || this._$owner.getExpanderSize();
     }
 
+    setExpanderIconSize(expanderIconSize: TExpanderIconSize): void {
+        if (this._$expanderIconSize !== expanderIconSize) {
+            this._$expanderIconSize = expanderIconSize;
+            this._nextVersion();
+        }
+    }
+
+    setExpanderIconStyle(expanderIconStyle: TExpanderIconStyle): void {
+        if (this._$expanderIconStyle !== expanderIconStyle) {
+            this._$expanderIconStyle = expanderIconStyle;
+            this._nextVersion();
+        }
+    }
+
+    getExpanderIconSize(expanderIconSize?: TExpanderIconSize): TExpanderIconSize {
+        return expanderIconSize || this._$expanderIconSize;
+    }
+
+    getExpanderIconStyle(expanderIconStyle?: TExpanderIconStyle): TExpanderIconStyle {
+        return expanderIconStyle || this._$expanderIconStyle;
+    }
+
     shouldDisplayExpanderBlock(): boolean {
         return this._$owner.getExpanderVisibility() === 'hasChildren'
             ? this._$owner.hasNodeWithChildren()
@@ -395,9 +428,15 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return `controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_${resultLevelIndentSize}`;
     }
 
-    getExpanderClasses(tmplExpanderIcon?: string, tmplExpanderSize?: string): string {
+    getExpanderClasses(tmplExpanderIcon?: string,
+                       tmplExpanderSize?: string,
+                       tmplExpanderIconSize?: TExpanderIconSize,
+                       tmplExpanderIconStyle?: TExpanderIconStyle): string {
         const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
         const expanderSize = this.getExpanderSize(tmplExpanderSize);
+        const expanderIconSize = this.getExpanderIconSize(tmplExpanderIconSize);
+        const expanderIconStyle = this.getExpanderIconStyle(tmplExpanderIconStyle);
+
         const expanderPosition = this._$owner.getExpanderPosition();
 
         let expanderClasses = 'js-controls-Tree__row-expander controls-TreeGrid__row-expander';
@@ -423,6 +462,13 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         }
         expanderClasses += ` controls-TreeGrid__row-expander_${icon}_${iconStyle}_position_${expanderPosition}`;
         expanderClasses += expanderIconClass;
+
+        if (iconStyle !== 'master') {
+            expanderClasses += ` controls-TreeGrid__row-expander_${icon}_iconSize_${expanderIconSize}`;
+
+            expanderClasses += ` controls-TreeGrid__row-expander_${icon}_iconStyle` +
+                `_${expanderIconStyle !== 'default' ? expanderIconStyle : iconStyle}`;
+        }
 
         // добавляем класс свертнутости развернутости для тестов
         expanderClasses += ' controls-TreeGrid__row-expander' + (this.isExpanded() ? '_expanded' : '_collapsed');
@@ -487,5 +533,7 @@ Object.assign(TreeItem.prototype, {
     _$hasChildrenProperty: '',
     _$hasMore: false,
     _$displayExpanderPadding: false,
+    _$expanderIconSize: 'default',
+    _$expanderIconStyle: 'default',
     _instancePrefix: 'tree-item-'
 });
