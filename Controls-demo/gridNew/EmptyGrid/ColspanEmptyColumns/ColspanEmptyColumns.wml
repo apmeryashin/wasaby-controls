@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper" attr:style="width: 800px">
+<div class="controlsDemo__wrapper controlsDemo__width800px">
 
     <!-- Необязательно оборачивать список в скролл контейнер. -->
     <!-- Здесь это сделано для месного решения этих ошибок со stickyHeader. -->
