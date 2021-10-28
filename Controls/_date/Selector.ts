@@ -25,6 +25,7 @@ import 'css!Controls/date';
  * @implements Controls/interface:IFontWeight
  * @implements Controls/date:ICaption
  * @implements Controls/date:IValue
+ * @implements Controls/date:IDatePopupType
  * @mixes Controls/dateRange:IDateSelector
  * @mixes Controls/dateRange:IMonthCaptionTemplate
  *
