@@ -129,7 +129,8 @@ export class StackController extends BaseController {
     elementMaximized(item: IStackItem, container?: HTMLElement, maximized?: boolean): boolean {
         const stackParentCoords = this._getStackParentCoords(item);
         const maxPanelWidth = StackStrategy.getMaxPanelWidth(stackParentCoords);
-        this._updateMaximizedState(item, maximized);
+        const state = maximized !== undefined ? maximized : !this._getMaximizedState(item, maxPanelWidth);
+        this._setMaximizedState(item, state);
         const minWidth = this._getMinWidth(item, maxPanelWidth);
         const maxWidth = item.maxSavedWidth || item.popupOptions.maxWidth;
         item.popupOptions.width = item.popupOptions.maximized ? maxWidth : minWidth;
