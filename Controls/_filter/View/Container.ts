@@ -108,7 +108,12 @@ class Container extends Control<IControlOptions> {
             } else {
                 this._source = null;
             }
-            Store.dispatch('filterSource', this._source);
+            if (!oldPreloadedSources) {
+                // Изменение поля filterSource слушает Browser.
+                // При изменении filterSource Browser вызывает загрузку данных и сохранение истории фильтров.
+                // Делаем запись только при инициализации фильтров.
+                Store.dispatch('filterSource', this._source);
+            }
         }
     }
 
