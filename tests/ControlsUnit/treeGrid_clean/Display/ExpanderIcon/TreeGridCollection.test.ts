@@ -31,7 +31,7 @@ describe('treeGrid/Display/ExpanderIcon/TreeGridCollection', () => {
 
         it('expander classes should contain expanderIconStyle classes', () => {
             const itemAt0 = getTreeGridCollection({ expanderIconStyle: 'unaccented' }).at(0);
-            CssClassesAssert.include(itemAt0.getExpanderClasses(),
+            CssClassesAssert.include(itemAt0.getExpanderClasses('node'),
                 'controls-TreeGrid__row-expander_node_iconStyle_unaccented');
             CssClassesAssert.include(itemAt0.getExpanderClasses('node', 'default', 'default', 'default'),
                 'controls-TreeGrid__row-expander_node_iconStyle_default');
@@ -52,7 +52,7 @@ describe('treeGrid/Display/ExpanderIcon/TreeGridCollection', () => {
 
         it('expander classes should contain expanderIconStyle classes', () => {
             const itemAt0 = getTreeGridCollection({ expanderIconSize: '2xs' }).at(0);
-            CssClassesAssert.include(itemAt0.getExpanderClasses(),
+            CssClassesAssert.include(itemAt0.getExpanderClasses('node'),
                 'controls-TreeGrid__row-expander_node_iconSize_2xs');
             CssClassesAssert.include(itemAt0.getExpanderClasses('node', 'default', 'default', 'default'),
                 'controls-TreeGrid__row-expander_node_iconSize_default');
