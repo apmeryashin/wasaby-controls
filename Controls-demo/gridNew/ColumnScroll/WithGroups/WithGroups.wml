@@ -1,31 +1,19 @@
-<div class="controlsDemo__wrapper controlDemo__grid-columnScroll-with-groups">
-    <div class="controlsDemo__cell">
-        <Controls.buttons:Button caption="Переключить separatorVisibility" on:click="_onToggleSeparatorVisibility()"/>
+<div class="controlsDemo__wrapper controlsDemo__flexRow controlsDemo__childMinWidth400">
+    <div class="controlsDemo__cell ControlsDemo-grouped__SeparatorVisibility-false">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/gridNew/ColumnScroll/WithGroups/WithoutSeparator/Index' }}">
+            <a href="{{content.href}}">Без разделителей</a>
+        </Router.router:Reference>
+        <Controls-demo.gridNew.ColumnScroll.WithGroups.WithoutSeparator.Index/>
     </div>
-    <Controls.scroll:Container attr:style="width: 600px; height: 400px">
-        <Controls.list:Container>
-            <Controls.grid:View
-                    attr:class=""
-                    keyProperty="key"
-                    source="{{_viewSource}}"
-                    rowSeparatorSize="s"
-                    header="{{_header}}"
-                    columns="{{_columns}}"
-                    columnScroll="{{true}}"
-                    stickyColumnsCount="{{2}}"
-                    groupProperty="fullName">
-                <ws:groupTemplate>
-                    <ws:partial
-                            template="Controls/grid:GroupTemplate"
-                            separatorVisibility="{{_separatorVisibility}}"
-                            expanderVisible="{{true}}"
-                            columnAlignGroup="{{3}}">
-                        <ws:contentTemplate>
-                            <span>{{contentTemplate.item.contents}}</span>
-                        </ws:contentTemplate>
-                    </ws:partial>
-                </ws:groupTemplate>
-            </Controls.grid:View>
-        </Controls.list:Container>
-    </Controls.scroll:Container>
+
+    <div class="controlsDemo__cell ControlsDemo-grouped__SeparatorVisibility-true">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/gridNew/ColumnScroll/WithGroups/WithSeparator/Index' }}">
+            <a href="{{content.href}}">С разделителями</a>
+        </Router.router:Reference>
+        <Controls-demo.gridNew.ColumnScroll.WithGroups.WithSeparator.Index/>
+    </div>
 </div>
