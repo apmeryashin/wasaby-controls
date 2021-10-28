@@ -32,7 +32,7 @@ define(
       });
 
       describe('Controls/_popup/Opener/Stack', () => {
-         StackStrategy.getMaxPanelWidth = () => 1000;
+         StackStrategy.getMaxPanelWidth = ({right = 0} = {}) => 1000 - right;
          popupTemplate.StackController._getWindowSize = () => ({
             width: 1000,
             height: 1000
@@ -61,7 +61,7 @@ define(
                   }
                }
             };
-            let result = popupTemplate.StackController._getMaximizedState(item);
+            let result = popupTemplate.StackController._getMaximizedState(item, StackStrategy.getMaxPanelWidth());
             assert.isFalse(result);
             item = {
                popupOptions: {
@@ -70,8 +70,7 @@ define(
                   stackWidth: 900
                }
             };
-            StackStrategy.getMaxPanelWidth();
-            result = popupTemplate.StackController._getMaximizedState(item);
+            result = popupTemplate.StackController._getMaximizedState(item, StackStrategy.getMaxPanelWidth());
             assert.isTrue(result);
             item = {
                popupOptions: {
@@ -80,8 +79,7 @@ define(
                   stackWidth: 950
                }
             };
-            StackStrategy.getMaxPanelWidth();
-            result = popupTemplate.StackController._getMaximizedState(item);
+            result = popupTemplate.StackController._getMaximizedState(item, StackStrategy.getMaxPanelWidth());
             assert.isTrue(result);
          });
 
@@ -386,7 +384,7 @@ define(
                popupOptions: popupOptions
             };
 
-            StackStrategy.getMaxPanelWidth = () => 1600;
+            StackStrategy.getMaxPanelWidth = ({right = 0}) => 1600 - right;
 
             assert.equal(StackStrategy.isMaximizedPanel(itemConfig), true);
 
@@ -415,10 +413,11 @@ define(
             }, itemConfig);
             assert.equal(position.maxWidth, popupOptions.maxWidth);
 
-            popupTemplate.StackController._prepareMaximizedState(1600, itemConfig);
+            popupTemplate.StackController._prepareMaximizedState(itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.maximizeButtonVisibility, true);
 
-            popupTemplate.StackController._prepareMaximizedState(800, itemConfig);
+            StackStrategy.getMaxPanelWidth = ({right = 0}) => 800 - right;
+            popupTemplate.StackController._prepareMaximizedState(itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.maximizeButtonVisibility, false);
             delete itemConfig.popupOptions.width;
          });
@@ -429,6 +428,7 @@ define(
                right: 0
             };
             StackStrategy._getParentPosition = () => parentPosition;
+            StackStrategy.getMaxPanelWidth = ({right = 0}) => 1600 - right;
 
             const popupOptions = {
                minWidth: 900,
@@ -540,7 +540,7 @@ define(
             assert.isTrue(position.height === undefined);
          });
          it('stack without config sizes', () => {
-            StackStrategy.getMaxPanelWidth = () => 1000;
+            StackStrategy.getMaxPanelWidth = ({right = 0} = {}) => 1000 - right;
             let item = {
                popupOptions: {},
                containerWidth: 800
@@ -579,7 +579,7 @@ define(
          });
 
          it('stack reduced width', () => {
-            StackStrategy.getMaxPanelWidth = () => 1000;
+            StackStrategy.getMaxPanelWidth = ({right = 0} = {}) => 1000 - right;
             let item = {
                popupOptions: {
                   minWidth: 600,
@@ -638,7 +638,7 @@ define(
          });
 
          it('stack max width', () => {
-            StackStrategy.getMaxPanelWidth = () => 1000;
+            StackStrategy.getMaxPanelWidth = ({right = 0} = {}) => 1000 - right;
             let tCoords = {
                right: 100
             };
@@ -834,6 +834,7 @@ define(
                   isCompoundTemplate: true
                }
             };
+            StackStrategy.getMaxPanelWidth = ({right}) => 924 - right;
             StackStrategy.getParentPosition = () => {
                return undefined;
             };
@@ -842,7 +843,7 @@ define(
                top: 0
             };
             // document.body.clientWidth = 1024, maxPanelWidth = 1024 - 100 = 924
-            const panelWidth = StackStrategy._getPanelWidth(item, tCoords, 924);
+            const panelWidth = StackStrategy._getPanelWidth(item, tCoords, StackStrategy.getMaxPanelWidth(tCoords));
             assert.equal(panelWidth, 950);
             /* Так как окно спозиционируется с координатами right: 150 с шириной 950 - то панель не влезет в окно браузера.
             Если панель не уместилась по ширине, то позиционирование панели осуществляется от правого края экрана.
