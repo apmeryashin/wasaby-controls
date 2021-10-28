@@ -29,6 +29,7 @@ import {IObservable, RecordSet} from 'Types/collection';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { ISourceCollection } from './interface/ICollection';
 import AddStrategy from 'Controls/_display/itemsStrategy/Add';
+import {TExpanderIconSize, TExpanderIconStyle} from './interface/ITree';
 
 export type TNodeFooterVisibilityCallback<S extends Model = Model> = (contents: S) => boolean;
 
@@ -53,6 +54,8 @@ interface IItemsFactoryOptions<S> {
     displayExpanderPadding?: boolean;
     expanded?: boolean;
     hasMore?: boolean;
+    expanderIconSize?: TExpanderIconSize;
+    expanderIconStyle?: TExpanderIconStyle;
 }
 
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
@@ -253,6 +256,16 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      */
     protected _$expanderSize: 's'|'m'|'l'|'xl';
 
+    /**
+     * Размер иконки разворота узла
+     */
+    protected _$expanderIconSize: TExpanderIconSize;
+
+    /**
+     * Стиль цвета иконки разворота узла
+     */
+    protected _$expanderIconStyle: TExpanderIconStyle;
+
     protected _$nodeFooterTemplateMoreButton: TemplateFunction;
 
     /**
@@ -438,6 +451,22 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     getExpanderSize(): 's'|'m'|'l'|'xl' {
         return this._$expanderSize;
+    }
+
+    setExpanderIconSize(expanderIconSize: TExpanderIconSize): void {
+        if (this._$expanderIconSize !== expanderIconSize) {
+            this._$expanderIconSize = expanderIconSize;
+            this._updateItemsProperty('setExpanderIconSize', expanderIconSize, 'setExpanderIconSize');
+            this._nextVersion();
+        }
+    }
+
+    setExpanderIconStyle(expanderIconStyle: TExpanderIconStyle): void {
+        if (this._$expanderIconStyle !== expanderIconStyle) {
+            this._$expanderIconStyle = expanderIconStyle;
+            this._updateItemsProperty('setExpanderIconStyle', expanderIconStyle, 'setExpanderIconStyle');
+            this._nextVersion();
+        }
     }
 
     protected _recountDisplayExpanderPadding(): void {
@@ -962,6 +991,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             options.hasChildrenByRecordSet = !!this.getChildrenByRecordSet(options.contents).length;
             options.expanderTemplate = this._$expanderTemplate;
             options.displayExpanderPadding = this._displayExpanderPadding;
+            options.expanderIconStyle = this._$expanderIconStyle;
+            options.expanderIconSize = this._$expanderIconSize;
 
             const key = object.getPropertyValue<CrudEntityKey>(options.contents, this._$keyProperty);
             options.expanded = this.getExpandedItems().includes(key) ||
@@ -1430,6 +1461,8 @@ Object.assign(Tree.prototype, {
     _$expanderVisibility: 'visible',
     _$expanderSize: undefined,
     _$expanderIcon: undefined,
+    _$expanderIconSize: 'default',
+    _$expanderIconStyle: 'default',
     _$root: undefined,
     _$rootEnumerable: false,
     _$nodeFooterTemplate: null,

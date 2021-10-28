@@ -1,5 +1,5 @@
 <ws:template name="EXPANDER">
-    <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"
+    <div class="{{ item.getExpanderClasses(expanderIcon, expanderSize, expanderIconSize, expanderIconStyle) }}"
          attr:data-qa="{{ item.listElementName }}-expander"></div>
 </ws:template>
 

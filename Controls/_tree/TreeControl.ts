@@ -635,6 +635,14 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             viewModel.setExpanderSize(newOptions.expanderSize);
         }
 
+        if (newOptions.expanderIconSize !== this._options.expanderIconSize) {
+            viewModel.setExpanderIconSize(newOptions.expanderIconSize);
+        }
+
+        if (newOptions.expanderIconStyle !== this._options.expanderIconStyle) {
+            viewModel.setExpanderIconStyle(newOptions.expanderIconStyle);
+        }
+
         if (newOptions.nodeProperty !== this._options.nodeProperty) {
             viewModel.setNodeProperty(newOptions.nodeProperty);
         }

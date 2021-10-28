@@ -7,7 +7,7 @@
  * @variant l большой
  * @variant default по-умолчанию
  */
-export type TIconSize = '2xs' | 'xs' | 's' | 'm' | 'l';
+export type TIconSize = '2xs' | 'xs' | 's' | 'm' | 'l' | 'default';
 
 export interface IIconSizeOptions {
    iconSize?: string;
