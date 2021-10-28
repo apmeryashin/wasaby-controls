@@ -1638,14 +1638,7 @@ const _private = {
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
         // But we should not update any ItemActions when marker has changed
-        if (
-            (changesType === 'collectionChanged' && _private.shouldUpdateItemActions(newItems)) ||
-            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
-            newModelChanged
-        ) {
-            self._itemsChanged = true;
-            _private.updateInitializedItemActions(self, self._options);
-        }
+        _private.updateItemActionsOnCollectionChange(self, action, changesType, newItems, removedItems, newModelChanged);
 
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
@@ -1672,6 +1665,51 @@ const _private = {
     shouldUpdateItemActions(newItems): boolean {
         const propertyVariants = ['selected', 'marked', 'swiped', 'hovered', 'active', 'dragged', 'editingContents'];
         return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
+    },
+
+    /**
+     * Обновляет операции над записью при изменениях модели.
+     * Кейсы когда это нужно;
+     * 1. Добавление записи
+     * 2. Ресет записей в модели
+     * 3. Изменение ItemActionProperty записи
+     * 4. Удаление, на случай, если есть кнопки перемещения.
+     * ...
+     * @param self
+     * @param action
+     * @param changesType
+     * @param newItems
+     * @param removedItems
+     * @param newModelChanged
+     */
+    updateItemActionsOnCollectionChange(self: BaseControl,
+                                        action: string,
+                                        changesType: string,
+                                        newItems: Array<CollectionItem<Model>>,
+                                        removedItems: Array<CollectionItem<Model>>,
+                                        newModelChanged: boolean): void {
+        // При добавлении или удалении элементов списка, которые не имеют операций над записью
+        // не надо набирать операции заново.
+        // Например, nodeFooter не имеют операций над записью и никак не должны на них влиять.
+        if (newItems && newItems.length) {
+            const newItemsWithItemActionsExist = newItems.some((item) => item.ItemActionsItem);
+            if (!newItemsWithItemActionsExist && action === IObservable.ACTION_ADD) {
+                return;
+            }
+        }
+        if (removedItems && removedItems.length) {
+            const removedItemsWithItemActionsExist = removedItems.some((item) => item.ItemActionsItem);
+            if (!removedItemsWithItemActionsExist && action === IObservable.ACTION_REMOVE) {
+                return;
+            }
+        }
+        if ((changesType === 'collectionChanged' && _private.shouldUpdateItemActions(newItems)) ||
+            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
+            newModelChanged
+        ) {
+            self._itemsChanged = true;
+            _private.updateInitializedItemActions(self, self._options);
+        }
     },
 
     initListViewModelHandler(self, model) {
