@@ -1,0 +1,11 @@
+<div class="ws-flexbox ws-flex-column controlsDemo_fixedWidth500 controls-background-unaccented"
+     attr:style="padding: 20px">
+    <div class="cell" attr:style="margin-bottom: 10px">
+        <div class="controls-text-label">contrastBackground=false</div>
+        <Controls.input:Text bind:value="_value1" attr:style="width:200px"/>
+    </div>
+    <div class="cell">
+        <div class="controls-text-label">contrastBackground=true</div>
+        <Controls.input:Text bind:value="_value1" contrastBackground="{{true}}" attr:style="width:200px"/>
+    </div>
+</div>
