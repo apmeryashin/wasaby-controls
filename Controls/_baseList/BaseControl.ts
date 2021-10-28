@@ -6855,7 +6855,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _isPagingPadding(): boolean {
-        return !detection.isMobileIOS && this._isPagingPaddingFromOptions() && this._bottomVisible;
+        return !detection.isMobileIOS &&
+            this._isPagingPaddingFromOptions() &&
+            (this._bottomVisible || !!this._indicatorsController.getPortionedSearchDirection());
     }
 
     /**

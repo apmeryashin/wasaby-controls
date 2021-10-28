@@ -7,6 +7,7 @@
                               minSearchLength="{{3}}" >
         <ws:navigation source="position" view="infinity">
             <ws:sourceConfig field="key" position="{{_position}}" direction="forward" limit="{{15}}"/>
+            <ws:viewConfig pagingMode="basic"/>
         </ws:navigation>
         <ws:content>
             <div class="ws-fragment">
