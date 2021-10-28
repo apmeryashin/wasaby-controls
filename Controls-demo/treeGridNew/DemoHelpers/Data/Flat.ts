@@ -306,6 +306,7 @@ export const Flat = {
     ],
     getColumnsWithNodeFooters: (needSeparator) => {
         const columns = Flat.getColumns();
+        columns[0].compatibleWidth = '170px';
         columns[0].nodeFooterTemplate = needSeparator ? SeparatorNodeFooterTmpl : AddButtonNodeFooterTmpl;
         columns[1].nodeFooterTemplate = EmptyNodeFooterTmpl;
         columns[2].nodeFooterTemplate = EmptyNodeFooterTmpl;

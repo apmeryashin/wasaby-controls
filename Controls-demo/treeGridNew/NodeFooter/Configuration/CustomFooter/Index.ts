@@ -9,7 +9,7 @@ import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
-    protected _columns: IColumn[] = Flat.getColumnsWithNodeFooters().map((c) => ({...c, compatibleWidth: '150px'}));
+    protected _columns: IColumn[] = Flat.getColumnsWithNodeFooters();
     protected _hoveredCellIndex: number = -1;
 
     protected _navigation: INavigationOptionValue<INavigationSourceConfig> = {
