@@ -47,8 +47,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
                 this._prefetchData[result.key] = result.prefetchResult;
             });
         }
-        this._initActions(options);
-        this._updateToolbarItems();
+        this._initActionsAndUpdateConfig();
     }
 
     filterChanged(filter: object): void {
@@ -57,28 +56,14 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
 
     private _initActions(options: IActionsCollectionOptions): void {
         this._childItems = {};
-        const listActions = this._prepareActionsShowType(options.listActions);
-        const actions = this._prepareActionsShowType(options.actions);
-        this._actions = this._createActions(actions);
-        this._listActions = this._createActions(listActions);
-    }
-
-    protected _getToolbarActionsCount(actions: IAction[]): number {
-        return actions.filter((action) => {
-            return action.showType !== showType.MENU;
-        }).length;
-    }
-
-    protected _prepareActionsShowType(actions: IAction[] = []): IAction[] {
-        // TODO: тут должен быть код, который уберет кнопку с меню если все основные команды в тулбаре
-        return actions;
+        this._actions = this._createActions(options.actions);
+        this._listActions = this._createActions(options.listActions);
     }
 
     update(options: IActionsCollectionOptions): void {
         if (!isEqual(this._options, options)) {
             this._options = options;
-            this._initActions(this._options);
-            this._notifyConfigChanged();
+            this._initActionsAndUpdateConfig();
         }
     }
 
@@ -176,6 +161,25 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
 
     private _itemChanged(): void {
         this._updateToolbarItems();
+        this._notifyConfigChanged();
+    }
+
+    setActions(actions: IAction[]): void {
+        if (!isEqual(actions, this._options.actions)) {
+            this._options.actions = actions;
+            this._initActionsAndUpdateConfig();
+        }
+    }
+
+    setListActions(listActions: IAction[]): void {
+        if (!isEqual(listActions, this._options.listActions)) {
+            this._options.listActions = listActions;
+            this._initActionsAndUpdateConfig();
+        }
+    }
+
+    private _initActionsAndUpdateConfig(options: IActionsCollectionOptions = this._options): void {
+        this._initActions(options);
         this._notifyConfigChanged();
     }
 

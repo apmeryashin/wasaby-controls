@@ -12,6 +12,7 @@ import Store from 'Controls/Store';
 import MenuSource from './MenuSource';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 import {ControllerClass as FilterController} from 'Controls/filter';
+import {IBaseAction} from 'Controls/_actions/BaseAction';
 
 interface IContainerOptions extends IControlOptions {
     _dataOptionsValue: {
@@ -46,8 +47,18 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._updateActions = this._updateActions.bind(this);
         this._operationsPanelVisibleChanged = this._operationsPanelVisibleChanged.bind(this);
         this._operationsMenuVisibleChanged = this._operationsMenuVisibleChanged.bind(this);
+        this._listActionsChanged = this._listActionsChanged.bind(this);
+        this._actionsChanged = this._actionsChanged.bind(this);
         this._selectionChanged = this._selectionChanged.bind(this);
         this._filterChanged = this._filterChanged.bind(this);
+    }
+
+    protected _listActionsChanged(e: SyntheticEvent, listActions: IAction[]): void {
+        this._actionsCollection.setListActions(listActions);
+    }
+
+    protected _actionsChanged(e: SyntheticEvent, actions: IAction[]): void {
+        this._actionsCollection.setActions(actions);
     }
 
     protected _beforeMount(options: IContainerOptions): void {
@@ -184,6 +195,8 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             this._operationsController.subscribe('operationsPanelVisibleChanged', this._operationsPanelVisibleChanged);
             this._operationsController.subscribe('selectionChanged', this._selectionChanged);
             this._operationsController.subscribe('operationsMenuVisibleChanged', this._operationsMenuVisibleChanged);
+            this._operationsController.subscribe('listActionsChanged', this._listActionsChanged);
+            this._operationsController.subscribe('actionsChanged', this._actionsChanged);
         }
     }
 
@@ -210,6 +223,8 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                 this._operationsPanelVisibleChanged);
             this._operationsController.unsubscribe('selectionChanged', this._selectionChanged);
             this._operationsController.unsubscribe('operationsMenuVisibleChanged', this._operationsPanelVisibleChanged);
+            this._operationsController.unsubscribe('listActionsChanged', this._listActionsChanged);
+            this._operationsController.unsubscribe('actionsChanged', this._actionsChanged);
         }
         if (this._filterController) {
             this._filterController.unsubscribe('filterChanged', this._filterChanged);
