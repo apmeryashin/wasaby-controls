@@ -475,8 +475,8 @@ export default class ControllerClass {
       const sourceController = this._sourceController;
       const items = sourceController.getItems();
 
-      items.assign(this._preFilterItemsBySearchValue(items, searchValue));
       sourceController.setFilter(this._getFilter());
+      items.assign(this._preFilterItemsBySearchValue(items, searchValue));
       return items;
    }
 
