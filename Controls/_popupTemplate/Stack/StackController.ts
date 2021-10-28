@@ -1,6 +1,6 @@
 import BaseController, {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
-import {IPopupItem, IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions} from 'Controls/popup';
-import StackStrategy from 'Controls/_popupTemplate/Stack/StackStrategy';
+import {IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions} from 'Controls/popup';
+import StackStrategy, {IStackItem} from 'Controls/_popupTemplate/Stack/StackStrategy';
 import {getPopupWidth, savePopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {List} from 'Types/collection';
 import getTargetCoords from 'Controls/_popupTemplate/TargetCoords';
@@ -22,14 +22,7 @@ import {DimensionsMeasurer} from 'Controls/sizeUtils';
 const ACCORDEON_MIN_WIDTH = 50;
 const MIN_DISTANCE = 100;
 
-interface IStackItem extends IPopupItem {
-    containerWidth: number;
-    popupOptions: IStackPopupOptions;
-    minSavedWidth: number;
-    maxSavedWidth: number;
-}
-
-class StackController extends BaseController {
+export class StackController extends BaseController {
     TYPE: string = 'Stack';
     _stack: List<IStackItem> = new List();
 
@@ -129,15 +122,21 @@ class StackController extends BaseController {
     elementMaximized(item: IStackItem, container?: HTMLElement, maximized?: boolean): boolean {
         const stackParentCoords = this._getStackParentCoords(item);
         const maxPanelWidth = StackStrategy.getMaxPanelWidth(stackParentCoords);
-        const state = maximized !== undefined ? maximized : !this._getMaximizedState(item, maxPanelWidth);
-        this._setMaximizedState(item, state);
+        this._updateMaximizedState(item, maximized);
         const minWidth = this._getMinWidth(item, maxPanelWidth);
         const maxWidth = item.maxSavedWidth || item.popupOptions.maxWidth;
-        item.popupOptions.width = state ? maxWidth : minWidth;
+        item.popupOptions.width = item.popupOptions.maximized ? maxWidth : minWidth;
         this._prepareSizes(item, container);
         this._update();
         this._savePopupWidth(item);
         return true;
+    }
+
+    private _updateMaximizedState(item: IStackItem, state?: boolean): void {
+        const stackParentCoords = this._getStackParentCoords(item);
+        const maxPanelWidth = StackStrategy.getMaxPanelWidth(stackParentCoords);
+        const maximized = state !== undefined ? state : this._getMaximizedState(item, maxPanelWidth);
+        this._setMaximizedState(item, maximized);
     }
 
     /**
@@ -192,9 +191,14 @@ class StackController extends BaseController {
         item.minSavedWidth = minSavedWidth;
         item.maxSavedWidth = maxSavedWidth;
         item.popupOptions.workspaceWidth = newValue;
+        this._updateMaximizedState(item);
         this._update();
         this._savePopupWidth(item);
         return true;
+    }
+
+    getMaximizedState(width: number, minWidth: number, maxWidth: number): boolean {
+        return width - (minWidth + maxWidth) / 2 > 0;
     }
 
     private _getMaximizedState(item: IStackItem, maxPanelWidth: number): boolean {
@@ -203,8 +207,7 @@ class StackController extends BaseController {
             // на неё. Иначе кнопка разворота будет всегда пытаться развернуть окно,
             // которое уже итак максимально широкое.
             const maxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
-            const middle = (item.popupOptions.minWidth + maxWidth) / 2;
-            return item.popupOptions.stackWidth - middle > 0;
+            return this.getMaximizedState(item.popupOptions.stackWidth, item.popupOptions.minWidth, maxWidth);
         }
         return item.popupOptions.templateOptions.maximized;
     }
@@ -259,6 +262,7 @@ class StackController extends BaseController {
                 });
 
                 if (StackStrategy.isMaximizedPanel(item)) {
+                    this._updateMaximizedState(item);
                     this._prepareMaximizedState(item);
                 }
             }
@@ -368,6 +372,7 @@ class StackController extends BaseController {
             item.position = this._getItemPosition(item);
             if (this._stack.getCount() <= 1) {
                 if (StackStrategy.isMaximizedPanel(item)) {
+                    this._updateMaximizedState(item);
                     this._prepareMaximizedState(item);
                 }
                 this._updatePopupOptions(item);

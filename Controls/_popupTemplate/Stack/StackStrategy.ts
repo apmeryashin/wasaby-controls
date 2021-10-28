@@ -2,11 +2,24 @@
  * Created by as.krasilnikov on 21.03.2018.
  */
 import {detection} from 'Env/Env';
-import {Controller as ManagerController, Controller, IPopupItem, IPopupPosition} from 'Controls/popup';
+import {
+    Controller as ManagerController,
+    Controller,
+    IPopupItem,
+    IPopupPosition,
+    IStackPopupOptions
+} from 'Controls/popup';
 import {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 
 // Minimum popup indentation from the right edge
 const MINIMAL_PANEL_DISTANCE = 48;
+
+export interface IStackItem extends IPopupItem {
+    containerWidth: number;
+    popupOptions: IStackPopupOptions;
+    minSavedWidth: number;
+    maxSavedWidth: number;
+}
 
 export class StackStrategy {
     /**
@@ -16,7 +29,7 @@ export class StackStrategy {
      * @param item Popup configuration
      * @param isAboveMaximizePopup {Boolean}
      */
-    getPosition(tCoords, item: IPopupItem, isAboveMaximizePopup: boolean = false): IPopupPosition {
+    getPosition(tCoords, item: IStackItem, isAboveMaximizePopup: boolean = false): IPopupPosition {
         const maxPanelWidth = this.getMaxPanelWidth(tCoords);
         const width = this._getPanelWidth(item, tCoords, maxPanelWidth);
         const right = this._getRightPosition(tCoords, isAboveMaximizePopup);
@@ -51,8 +64,13 @@ export class StackStrategy {
         return position;
     }
 
-    isMaximizedPanel(item: IPopupItem): boolean {
-        return !!item.popupOptions.minimizedWidth && !item.popupOptions.propStorageId;
+    isMaximizedPanel(item: IStackItem): boolean {
+        const minWidth = item.popupOptions.minWidth;
+        const maxWidth = item.popupOptions.maxWidth;
+        const hasPropStorageId = !!item.popupOptions.propStorageId;
+        return minWidth && maxWidth && minWidth !== maxWidth && hasPropStorageId ||
+            // deprecated definition
+            !!item.popupOptions.minimizedWidth && !hasPropStorageId;
     }
 
     /**
@@ -71,7 +89,7 @@ export class StackStrategy {
         return tCoords.right;
     }
 
-    private _getPanelWidth(item: IPopupItem, tCoords, maxPanelWidth: number): number {
+    private _getPanelWidth(item: IStackItem, tCoords, maxPanelWidth: number): number {
         let panelWidth;
         let minWidth = parseInt(item.popupOptions.minWidth, 10);
         const rightPanelWidth = getRightPanelWidth();
@@ -118,12 +136,12 @@ export class StackStrategy {
         return panelWidth;
     }
 
-    private _getParentPosition(item: IPopupItem): IPopupPosition {
+    private _getParentPosition(item: IStackItem): IPopupPosition {
         const parentItem = Controller.find(item.parentId);
         return parentItem?.position;
     }
 
-    private _isMaximizedState(item: IPopupItem): boolean {
+    private _isMaximizedState(item: IStackItem): boolean {
         return !!item.popupOptions.maximized;
     }
     private _calculateMaxWidth(popupOptions, tCoords): number {
