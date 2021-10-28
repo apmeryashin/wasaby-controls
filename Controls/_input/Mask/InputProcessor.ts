@@ -62,7 +62,7 @@ const InputProcessor = {
      * @param replacer заменитель.
      * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
      */
-    insert(format, clearSplitValue, replacer) {
+    insert(format, clearSplitValue, replacer, shouldShiftReplacer: boolean = true) {
         let char;
         let oldClearSplitValue;
         let newClearSplitValue;
@@ -81,7 +81,7 @@ const InputProcessor = {
             /**
              * Если последний символ заменитель, то попытаемся сделать сдвиг.
              */
-            if (replacer === oldClearSplitValue.after.slice(-1)) {
+            if (shouldShiftReplacer && replacer === oldClearSplitValue.after.slice(-1)) {
                 newClearSplitValue = {
                     before: oldClearSplitValue.before + char,
                     after: oldClearSplitValue.after.slice(0, -1)
@@ -250,7 +250,7 @@ const InputProcessor = {
      * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
      */
     input(splitValueSrc: object, inputType: string, replacer: string, oldFormat: object, newFormat: object,
-          curDisplayValue: string): object {
+          curDisplayValue: string, shouldShiftReplacer: boolean): object {
         const splitValue = {...splitValueSrc};
         let value = splitValue.before + splitValue.delete + splitValue.after;
 
@@ -280,7 +280,7 @@ const InputProcessor = {
         let result;
         switch (inputType) {
             case 'insert':
-                result = InputProcessor.insert(newFormat, clearSplitValue, replacer);
+                result = InputProcessor.insert(newFormat, clearSplitValue, replacer, shouldShiftReplacer);
                 break;
             case 'delete':
                 result = InputProcessor.delete(newFormat, clearSplitValue, replacer);

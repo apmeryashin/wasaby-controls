@@ -33,6 +33,7 @@ const _private = {
       };
 
 class ViewModel extends BaseViewModel {
+         protected _shouldShiftReplacer: boolean = true;
          constructor(...args: any[]) {
             super(...args);
             this.setCarriageDefaultPosition(0);
@@ -169,7 +170,7 @@ class ViewModel extends BaseViewModel {
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
             const result = InputProcessor.input(
                 splitValue, inputType, this.options.replacer, this._format, this._format, this.newValue
-            );
+            , this._shouldShiftReplacer);
             return result;
          }
 
