@@ -32,7 +32,7 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
     }
 
     getWrapperClasses(): string {
-        return `controls-TreeGrid__nodeFooter__wrapper ${this._getWrapperSeparatorClasses()}`;
+        return `controls-TreeGrid__nodeFooter__wrapper ${this._getColumnSeparatorClasses()}`;
     }
 
     getContentClasses(params: {hasContent: boolean}): string {
