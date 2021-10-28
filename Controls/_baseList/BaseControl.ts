@@ -3479,13 +3479,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._afterCollectionAdd(newItems, newItemsIndex);
         }
         if (this._useNewScroll) {
-            this._listVirtualScrollController.collectionChange(
-                action,
-                newItems,
-                newItemsIndex,
-                removedItems,
-                removedItemsIndex);
-
             // TODO по идее это нужно делать после релоада.
             if (action === IObservable.ACTION_RESET) {
                 // если есть данные и вниз и вверх, то скрываем триггер вверх, т.к. в первую очередь грузим вниз

@@ -97,7 +97,9 @@ export class ListVirtualScrollController {
     private _scrollToElementCompletedCallback: () => void;
 
     constructor(options: IListVirtualScrollControllerOptions) {
-        this._collection = options.collection;
+        this._onCollectionChange = this._onCollectionChange.bind(this);
+        this._initCollection(options.collection);
+
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
 
         this._scrollToElementUtil = options.scrollToElementUtil;
@@ -108,6 +110,10 @@ export class ListVirtualScrollController {
 
         this._setCollectionIterator(options.virtualScrollConfig.mode);
         this._createScrollController(options);
+    }
+
+    setCollection(collection: Collection): void {
+        this._initCollection(collection);
     }
 
     setItemsContainer(itemsContainer: HTMLElement): void {
@@ -142,42 +148,6 @@ export class ListVirtualScrollController {
 
     disableKeepScrollPosition(): void {
         this._keepScrollPosition = false;
-    }
-
-    collectionChange(action: string,
-                     newItems: Array<CollectionItem<Model>>,
-                     newItemsIndex: number,
-                     removedItems: Array<CollectionItem<Model>>,
-                     removedItemsIndex: number): void {
-        if (!this._scrollController) {
-            return;
-        }
-
-        const totalCount = this._collection.getCount();
-
-        switch (action) {
-            case IObservable.ACTION_ADD: {
-                this._scrollController.addItems(newItemsIndex, newItems.length);
-                break;
-            }
-            case IObservable.ACTION_MOVE: {
-                this._scrollController.moveItems(
-                    newItemsIndex,
-                    newItems.length,
-                    removedItemsIndex,
-                    removedItems.length);
-                break;
-            }
-            case IObservable.ACTION_REMOVE: {
-                this._scrollController.removeItems(removedItemsIndex, removedItems.length);
-                break;
-            }
-            case IObservable.ACTION_RESET: {
-                this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
-                this._scrollController.resetItems(totalCount, this._keepScrollPosition);
-                break;
-            }
-        }
     }
 
     scrollToItem(key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
@@ -433,5 +403,57 @@ export class ListVirtualScrollController {
             });
 
         return itemsSizes;
+    }
+
+    private _initCollection(collection: Collection): void {
+        if (this._collection === collection) {
+            return;
+        }
+
+        if (this._collection) {
+            this._collection.unsubscribe('onCollectionChange', this._onCollectionChange);
+        }
+
+        this._collection = collection;
+
+        this._collection.subscribe('onCollectionChange', this._onCollectionChange);
+    }
+
+    private _onCollectionChange(
+        action: string,
+        newItems: Array<CollectionItem<Model>>,
+        newItemsIndex: number,
+        removedItems: Array<CollectionItem<Model>>,
+        removedItemsIndex: number
+    ): void {
+        if (!this._scrollController) {
+            return;
+        }
+
+        const totalCount = this._collection.getCount();
+
+        switch (action) {
+            case IObservable.ACTION_ADD: {
+                this._scrollController.addItems(newItemsIndex, newItems.length);
+                break;
+            }
+            case IObservable.ACTION_MOVE: {
+                this._scrollController.moveItems(
+                    newItemsIndex,
+                    newItems.length,
+                    removedItemsIndex,
+                    removedItems.length);
+                break;
+            }
+            case IObservable.ACTION_REMOVE: {
+                this._scrollController.removeItems(removedItemsIndex, removedItems.length);
+                break;
+            }
+            case IObservable.ACTION_RESET: {
+                this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
+                this._scrollController.resetItems(totalCount, this._keepScrollPosition);
+                break;
+            }
+        }
     }
 }
