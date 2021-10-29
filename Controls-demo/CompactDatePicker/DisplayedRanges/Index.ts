@@ -9,5 +9,6 @@ export default class RangeCompactSelector extends Control<IControlOptions> {
         [new Date(2017, 0), new Date(2018, 3)],
         [new Date(2018, 5), new Date(2019, 7)]
     ];
+    protected _date: Date = new Date(2018, 2, 1);
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
