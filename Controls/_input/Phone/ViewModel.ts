@@ -1,7 +1,8 @@
 import {ViewModel as BaseViewModel} from 'Controls/_input/Base/ViewModel';
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
-import {FormatBuilder, Formatter, phoneMask, REPLACER, FORMAT_MASK_CHARS} from 'Controls/decorator';
+import {FormatBuilder, Formatter, phoneMask, REPLACER, FORMAT_MASK_CHARS, IFormat} from 'Controls/decorator';
 import {InputType, ISplitValue} from 'Controls/_input/resources/Types';
+import {IInputConfig} from 'Controls/_input/Mask/InputProcessor';
 
 /**
  * @class Controls/_input/Text/ViewModel
@@ -11,12 +12,13 @@ import {InputType, ISplitValue} from 'Controls/_input/resources/Types';
 const NOT_PHONE_NUMBER_SYMBOLS_REGEXP = /[^0-9+]/g;
 
 export class ViewModel extends BaseViewModel {
+    protected _format: IFormat;
     private _updateFormat(value: string): void {
         const mask = phoneMask(value);
         this._format = FormatBuilder.getFormat(mask, FORMAT_MASK_CHARS, REPLACER);
         this._nextVersion();
     }
-    private _prepareData(result: object): ISplitValue {
+    private _prepareData(result: IInputConfig): ISplitValue {
         const position = result.position;
         return {
             before: result.value.substring(0, position),
@@ -67,7 +69,8 @@ export class ViewModel extends BaseViewModel {
         }
         const newMask = phoneMask(clearSplitValue.before + clearSplitValue.insert + clearSplitValue.after);
         const newFormat = FormatBuilder.getFormat(newMask, FORMAT_MASK_CHARS, REPLACER);
-        const result = InputProcessor.input(splitValue, inputType, REPLACER, this._format, newFormat);
+        const result: IInputConfig =
+            InputProcessor.input(splitValue, inputType, REPLACER, this._format, newFormat, undefined, undefined);
         return super.handleInput.call(this, this._prepareData(result), inputType);
     }
     protected isFilled(): boolean {

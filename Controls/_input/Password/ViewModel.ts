@@ -1,6 +1,6 @@
 import {ViewModel as BaseViewModel} from 'Controls/_input/Base/ViewModel';
 import {InputType, ISplitValue} from '../resources/Types';
-import {IBaseInputOptions} from 'Controls/_input/Base';
+import {IPasswordOptions} from 'Controls/_input/Password';
 
 /**
  * @class Controls/_input/Password/ViewModel
@@ -17,7 +17,7 @@ export class ViewModel extends BaseViewModel {
    private _replaceOnAsterisks(value: string): string {
       return '•'.repeat(value.length);
    }
-   private _isReplaceWithAsterisks(options: IBaseInputOptions): boolean | string {
+   private _isReplaceWithAsterisks(options: IPasswordOptions): boolean | string {
       return !(options.autoComplete || options.passwordVisible) || options.readOnly;
    }
    private _adjustSplitValue(splitValue: ISplitValue, value: string): void {

@@ -44,6 +44,7 @@ export {INumberOptions, RoundMode} from 'Controls/_decorator/resources/Number';
 export * as MoneyFunctions from 'Controls/_decorator/resources/Money';
 export * as NumberFunctions from 'Controls/_decorator/resources/Number';
 export {default as IOnlyPositive, IOnlyPositiveOptions} from 'Controls/_decorator/interfaces/IOnlyPositive';
+export {IFormat} from 'Controls/_decorator/resources/FormatBuilder';
 
 export * from './_decorator/resources/IMask';
 export * from './_decorator/resources/Util';
