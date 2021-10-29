@@ -112,7 +112,7 @@ function onCollectionChange<T>(
                 this.instance._recountHasChildrenByRecordSet();
             }
         }
-        this.instance.resetHasNode();
+        this.instance._recountHasNode();
     }
 
     if (action === IObservable.ACTION_CHANGE) {
@@ -138,7 +138,7 @@ function onCollectionItemChange<T extends Model>(event: EventObject, item: T, in
         const displayItem = this.instance.getItemBySourceItem(item);
         displayItem.setNode(item.get(this.instance.getNodeProperty()));
 
-        this.instance.resetHasNode();
+        this.instance._recountHasNode();
     }
 
     if (this.instance.getExpanderVisibility() === 'hasChildren') {
@@ -576,7 +576,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 this._recountHasChildrenByRecordSet();
             }
         }
-        this.resetHasNode();
+        this._recountHasNode();
     }
 
     getIndexBySourceItem(item: any): number {
@@ -781,7 +781,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         this._reIndex();
         this._reAnalize();
         this._updateEdgeItems();
-        this.resetHasNode();
+        this._recountHasNode();
     }
 
     /**
@@ -1329,14 +1329,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     hasNode(): boolean {
-        if (this._hasNode === null) {
-            this._recountHasNode();
-        }
         return this._hasNode;
-    }
-
-    resetHasNode(): void {
-        this._hasNode = null;
     }
 
     // endregion HasNode
