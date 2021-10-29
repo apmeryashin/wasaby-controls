@@ -27,7 +27,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     _hoveredCellIndex: null,
     _hoveredCellItem: null,
     _groupTemplate: GroupTemplate,
-
+    _ladderTopOffsetStyles: '',
     _ladderOffsetSelector: '',
 
     _beforeMount(options: IGridOptions): void {
@@ -177,6 +177,8 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             this._listModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
         }
 
+        this._ladderTopOffsetStyles = this._getLadderTopOffsetStyles();
+
         this._listModel.setColspanGroup(!newOptions.columnScroll || !this.isColumnScrollVisible());
     },
 
@@ -265,6 +267,11 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     _getLadderTopOffsetStyles(): string {
         if (!this._container) {
             return '';
+        }
+
+        // Если таблица скрыта, то вычисления размеров бессмысленны. Оставляем как есть.
+        if (this._container.closest('.ws-hidden')) {
+            return this._ladderTopOffsetStyles;
         }
         let headerHeight = 0;
         let resultsHeight = 0;
