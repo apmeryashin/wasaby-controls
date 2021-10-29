@@ -169,7 +169,8 @@ describe('Controls/_baseList/Controllers/ScrollController/HandleCollectionChange
     describe('removeItems', () => {
         it('1. totalCount < pageSize => totalCount < pageSize', () => {
             const indexesChangedCallback = spy((result) => null);
-            const environmentChangedCallback = spy((result) => null);
+            const placeholdersChangedCallback = spy((result) => null);
+            const hasItemsOutRangeChangedCallback = spy((result) => null);
             const activeElementChangedCallback = spy((result) => null);
 
             const controller = initTest({
@@ -178,15 +179,16 @@ describe('Controls/_baseList/Controllers/ScrollController/HandleCollectionChange
                     segmentSize: 2
                 },
                 indexesChangedCallback,
-                environmentChangedCallback,
+                placeholdersChangedCallback,
+                hasItemsOutRangeChangedCallback,
                 activeElementChangedCallback
             });
             indexesChangedCallback.resetHistory();
-            environmentChangedCallback.resetHistory();
+            placeholdersChangedCallback.resetHistory();
+            hasItemsOutRangeChangedCallback.resetHistory();
             activeElementChangedCallback.resetHistory();
 
-            const result = controller.removeItems(0, 1, 3);
-            assert.isUndefined(result); // чтобы не забыть удалить возврат результата
+            controller.removeItems(0, 1);
 
             assert.isTrue(indexesChangedCallback.calledOnce);
             assert.isTrue(
@@ -195,7 +197,8 @@ describe('Controls/_baseList/Controllers/ScrollController/HandleCollectionChange
                     endIndex: 2
                 }).calledOnce
             );
-            assert.isFalse(environmentChangedCallback.called);
+            assert.isFalse(placeholdersChangedCallback.called);
+            assert.isFalse(hasItemsOutRangeChangedCallback.called);
             // TODO assert.isFalse(activeElementChangedCallback.called);
         });
 

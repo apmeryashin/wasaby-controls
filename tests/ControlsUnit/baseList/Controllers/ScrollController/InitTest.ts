@@ -2,14 +2,22 @@ import {
     IScrollControllerOptions,
     ScrollController
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import { JSDOM } from 'jsdom';
 
 export function initTest(options: Partial<IScrollControllerOptions>): ScrollController {
     return new ScrollController({
         viewportSize: 0,
-        scrollTop: 0,
-        indexesChangedCallback: () => null,
-        environmentChangedCallback: () => null,
-        activeElementChangedCallback: () => null,
+        contentSize: 0,
+        scrollPosition: 0,
+        totalCount: 0,
+        givenItemsSizes: null,
+        topTriggerOffsetCoefficient: 0.3,
+        bottomTriggerOffsetCoefficient: 0.3,
+        indexesChangedCallback: (result) => null,
+        indexesInitializedCallback: (result) => null,
+        placeholdersChangedCallback: (result) => null,
+        hasItemsOutRangeChangedCallback: (result) => null,
+        activeElementChangedCallback: (result) => null,
         itemsEndedCallback: () => null,
         itemsContainer: null,
         itemsQuerySelector: '',
@@ -17,10 +25,13 @@ export function initTest(options: Partial<IScrollControllerOptions>): ScrollCont
         listControl: null,
         triggersQuerySelector: '',
         virtualScrollConfig: {},
-        // TODO не должно быть этих опций(в интерфейс попали из extends)
-        triggersVisibility: {top: false, bottom: false},
-        itemsSizes: [],
-        triggersOffsets: {top: 0, bottom: 0},
+        triggersVisibility: {backward: false, forward: false},
         ...options
     });
+}
+
+export function getItemsContainer(): HTMLElement {
+    const dom = new JSDOM('');
+    const items = dom.window.document.createElement('div');
+    return items;
 }

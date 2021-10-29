@@ -392,7 +392,7 @@ export class ScrollController {
 
     /**
      * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback.
-     * Также, по необходимости, обеспечивает вызов activeElementChangedCallback, environmentChangedCallback.
+     * Также, по необходимости, обеспечивает вызов activeElementChangedCallback.
      * @param {ICalculatorResult} result
      * @private
      */
