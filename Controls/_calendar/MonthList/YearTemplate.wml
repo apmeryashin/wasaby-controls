@@ -13,6 +13,8 @@
       <ws:if data="{{bodyTemplate}}">
          <ws:partial
             template="{{bodyTemplate}}"
+            startValue="{{ startValue }}"
+            endValue="{{ endValue }}"
             date="{{date}}"
             extData="{{extData}}"
             _dateToDataString="{{_dateToDataString}}"
@@ -22,6 +24,8 @@
          <ws:for data="month in 12">
             <ws:partial
                template="{{monthTemplate}}"
+               startValue="{{ startValue }}"
+               endValue="{{ endValue }}"
                date="{{_getMonth(date.getFullYear(), month)}}"
                extData="{{extData[month]}}"
                _formatMonth="{{_formatMonth}}"
