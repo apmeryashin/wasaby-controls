@@ -868,5 +868,21 @@ define([
             sinon.restore();
          });
       });
+
+      describe('_yearCanBeDisplayed', () => {
+         it('should return false, if we want to scroll to last visible year', () => {
+            const component = calendarTestUtils.createComponent(PeriodDialog.default, {});
+            const value = new Date(dateUtils.Base.MAX_YEAR_VALUE, 0);
+            const result = component._yearCanBeDisplayed(value);
+            assert.isFalse(result);
+         });
+
+         it('should return true, if we want to scroll to not last visible year', () => {
+            const component = calendarTestUtils.createComponent(PeriodDialog.default, {});
+            const value = new Date(2021, 0);
+            const result = component._yearCanBeDisplayed(value);
+            assert.isTrue(result);
+         });
+      });
    });
 });

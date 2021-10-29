@@ -5,8 +5,8 @@
             on:click="_onPrevNextButtonClick(-1)"
             title="{[Предыдущий год]}"
             data-qa="controls-PeriodDialog-Years__prevNextBtn__left"
-            class="controls-PeriodDialog-Years__prevNextBtn_icon
-            controls-PeriodDialog__cursor-pointer icon-MarkLeftBold controls-icon controls-icon_size-m
+            class="controls-PeriodDialog-Years__prevNextBtn_icon{{ _prevButtonReadOnly ? '_readOnly' }}
+            icon-MarkLeftBold controls-icon controls-icon_size-m
             {{ _options.keyboardActive ? 'controls-PeriodDialog-Years__prevNextBtn_icon_focus' }}">
       </span>
    </div>
@@ -31,8 +31,8 @@
                on:click="_onPrevNextButtonClick(1)"
                title="{[Следующий год]}"
                data-qa="controls-PeriodDialog-Years__prevNextBtn__right"
-               class="controls-PeriodDialog-Years__prevNextBtn_icon
-               controls-PeriodDialog__cursor-pointer icon-MarkRightBold controls-icon controls-icon_size-m
+               class="controls-PeriodDialog-Years__prevNextBtn_icon{{ _nextButtonReadOnly ? '_readOnly' }}
+               icon-MarkRightBold controls-icon controls-icon_size-m
                {{ _options.keyboardActive ? 'controls-PeriodDialog-Years__prevNextBtn_icon_focus' }}">
          </span>
       </div>
