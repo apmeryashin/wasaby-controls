@@ -1,166 +1,104 @@
 .controls-Back {
+   min-width: 1px;
+   max-width: 100%;
    display: inline-block;
 }
 
+// region Icon "<" styles
+.controls-Back__icon {
+   height: 1em;
+}
+
+.ws-is-ie {
+   // ie не умеет автоматически сайзить ширину svg элемента относительно его высоты
+   .controls-Back__icon {
+      width: calc(1em / 2);
+   }
+}
+
+.controls-Back__icon_style-primary {
+   fill: var(--primary_hover_text-color_headingBack);
+}
+
+.controls-Back__icon_style-secondary {
+   fill: var(--secondary_hover_text-color_headingBack);
+}
+//endregion
+
+//region icon view
+.controls-Back__icon_view-button {
+   // view
+   width: 1em;
+   height: 1em;
+   border-radius: 50%;
+   box-sizing: border-box;
+   background-color: var(--unaccented_same_background-color);
+   border: 1px solid var(--unaccented_contrast_background-color);
+
+   // inner align
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   .controls-Back__icon {
+      height: 50%;
+   }
+}
+//endregion
+
+.controls-Back__wrapper {
+   cursor: pointer;
+   max-width: 100%;
+
+   // inner align
+   display: flex;
+   align-items: baseline;
+}
+
+.controls-Back__icon-wrapper,
+.controls-Back__middle-wrapper {
+   flex-shrink: 0;
+   box-sizing: border-box;
+
+   // inner align
+   display: flex;
+   align-items: center;
+
+   &::before {
+      content: '\200b';
+   }
+}
+
+.controls-Back__icon-wrapper {
+   padding-right: var(--offset_xs);
+}
+
+.ws-is-ie {
+   .controls-Back__icon-wrapper {
+      align-items: baseline;
+   }
+}
+
+.controls-Back__middle-wrapper {
+   padding-right: var(--offset_3xs);
+}
+
+.controls-Back__middle {
+   // Делаем через max т.к. в этот элемент прикладники могут положить иконки, а у них фиксированная сетка размеров
+   // и она ни как не сочетается с размером шрифта. И получается что иконка будет либо много меньше чем 1em либо много
+   // больше и из-за этого она криво выравнивается.
+   // При таких стилях контейнер ужмется под иконку и она адекватно встанет по центру.
+   max-width: 1em;
+   max-height: 1em;
+}
+
+//region Caption styles
 .controls-Back__caption {
-   .text-overflow();
    font-weight: var(--font-weight_heading);
 }
 
-.controls-Back_style-secondary, .controls-Back_style-primary {
-   display: inline-flex;
-   flex-shrink: 0;
-}
-
-.controls-Back_style-primary:before, .controls-Back_style-secondary:before {
-   display: inline-block;
-   width: 100%;
-   height: 100%;
-}
-
-.controls-Back_arrow {
-   flex-shrink: 0;
-}
-
-.controls-Back__icon_style-primary_modified {
-   fill: var(--primary_text-color_headingBack);
-}
-.controls-Back__icon_style-secondary_modified {
-   fill: var(--secondary_text-color_headingBack);
-}
-.controls-Back_style-secondary_size-l:before {
-   background-image: var(--secondary_icon_background-image_l_headingBack);
-}
-
-.controls-Back_style-secondary_size-m:before {
-   background-image: var(--secondary_icon_background-image_m_headingBack);
-}
-
-.controls-Back_style-secondary_size-s:before {
-   background-image: var(--secondary_icon_background-image_s_headingBack);
-}
-
-.controls-Back_style-secondary:before {
-   background-repeat: no-repeat;
-   content: '';
-}
-.controls-Back_style-primary_size-l:before {
-   background-image: var(--primary_icon_background-image_l_headingBack);
-}
-
-.controls-Back_style-primary_size-m:before {
-   background-image: var(--primary_icon_background-image_m_headingBack);
-}
-
-.controls-Back_style-primary_size-s:before {
-   background-image: var(--primary_icon_background-image_s_headingBack);
-}
-
-// В Яндекс браузере для win-XP css переменные поддерживаются не в полном объеме, из-за чего браузер ожидает полный путь с указанием домена
-// Поэтому каскадом задаем корректный путь
-.ws-is-chrome.ws-is-windows-xp {
-   .controls-Back_style-primary_size-m:before {
-      background-image: url('/resources/Controls-default-theme/img/BackArrowOrange.svg');
-   }
-   .controls-Back_style-secondary_size-m:before {
-      background-image: url('/resources/Controls-default-theme/img/BackArrowBlue.svg');
-   }
-   .controls-Back__wrapper:active {
-      .controls-Back_style-primary_size-m:before {
-         background-image: url('/resources/Controls-default-theme/img/BackArrowOrange.svg');
-      }
-      .controls-Back_style-secondary_size-m:before {
-         background-image: url('/resources/Controls-default-theme/img/BackArrowBlue.svg');
-      }
-   }
-   &.ws-is-hover {
-      .controls-Back__wrapper:hover {
-         .controls-Back_style-primary_size-m:before {
-            background-image: url('/resources/Controls-default-theme/img/BackArrowOrange.svg');
-         }
-         .controls-Back_style-secondary_size-m:before {
-            background-image: url('/resources/Controls-default-theme/img/BackArrowBlue.svg');
-         }
-      }
-   }
-}
-
-.controls-Back_style-primary:before {
-   background-repeat: no-repeat;
-   content: '';
-}
-.controls-Header_all__clickable:active, .controls-Back__wrapper:active {
-   .controls-Back_style-primary_size-l:before {
-      background-image: var(--primary_icon_hover_background-image_l_headingBack);
-   }
-
-   .controls-Back_style-primary_size-m:before {
-      background-image: var(--primary_icon_hover_background-image_m_headingBack);
-   }
-
-   .controls-Back_style-primary_size-s:before {
-      background-image: var(--primary_icon_hover_background-image_s_headingBack);
-   }
-
-   .controls-Back_style-secondary_size-l:before {
-      background-image: var(--secondary_icon_hover_background-image_l_headingBack);
-   }
-
-   .controls-Back_style-secondary_size-m:before {
-      background-image: var(--secondary_icon_hover_background-image_m_headingBack);
-   }
-
-   .controls-Back_style-secondary_size-s:before {
-      background-image: var(--secondary_icon_hover_background-image_s_headingBack);
-   }
-
-   .controls-Back__caption_style-primary {
-      color: var(--primary_hover_text-color);
-   }
-
-   .controls-Back__caption_style-secondary {
-      color: var(--secondary_hover_text-color_headingBack);
-   }
-}
-
-.ws-is-hover {
-   .controls-Header_all__clickable:hover {
-      cursor: pointer;
-   }
-
-   .controls-Header_all__clickable:hover, .controls-Back__wrapper:hover {
-      .controls-Back_style-primary_size-l:before {
-         background-image: var(--primary_icon_hover_background-image_l_headingBack);
-      }
-
-      .controls-Back_style-primary_size-m:before {
-         background-image: var(--primary_icon_hover_background-image_m_headingBack);
-      }
-
-      .controls-Back_style-primary_size-s:before {
-         background-image: var(--primary_icon_hover_background-image_s_headingBack);
-      }
-
-      .controls-Back_style-secondary_size-l:before {
-         background-image: var(--secondary_icon_hover_background-image_l_headingBack);
-      }
-
-      .controls-Back_style-secondary_size-m:before {
-         background-image: var(--secondary_icon_hover_background-image_m_headingBack);
-      }
-
-      .controls-Back_style-secondary_size-s:before {
-         background-image: var(--secondary_icon_hover_background-image_s_headingBack);
-      }
-
-      .controls-Back__caption_style-primary {
-         color: var(--primary_hover_text-color);
-      }
-
-      .controls-Back__caption_style-secondary {
-         color: var(--secondary_hover_text-color_headingBack);
-      }
-   }
+.controls-Back__caption_overflow-ellipsis {
+   .text-overflow();
 }
 
 .controls-Back__caption_style-secondary {
@@ -175,62 +113,44 @@
    color: var(--text-color);
 }
 
-// region "<" icon size
-.controls-Back_size-l {
-   width: var(--icon_l_width_headingBack);
-   height: var(--icon_l_height_headingBack);
-   padding-right: var(--offset_3xs);
-}
+.controls-Back__wrapper:active,
+.controls-Header_all__clickable:active {
+   .controls-Back__caption_style-primary {
+      color: var(--primary_hover_text-color);
+   }
 
-.controls-Back_size-m {
-   width: var(--icon_m_width_headingBack);
-   height: var(--icon_m_height_headingBack);
-   padding-right: var(--icon_m_offset_headingBack);
-}
-
-.controls-Back_size-s {
-   width: var(--icon_s_width_headingBack);
-   height: var(--icon_s_height_headingBack);
-   padding-right: var(--icon_s_offset_headingBack);
-}
-
-.controls-Back_size-l::before {
-   background-size: var(--icon_l_width_headingBack) var(--icon_l_height_headingBack);
-}
-
-.controls-Back_size-m::before {
-   background-size: var(--icon_m_width_headingBack) var(--icon_m_height_headingBack);
-}
-
-.controls-Back_size-s::before {
-   background-size: var(--icon_s_width_headingBack) var(--icon_s_height_headingBack);
-}
-
-.controls-Back_new-icon {
-   height: 1em;
-   padding-right: var(--offset_3xs);
-}
-
-.ws-is-ie {
-   // ie не умеет автоматически сайзить ширину svg элемента относительно его высоты
-   .controls-Back_new-icon {
-      width: calc(1em / 2);
+   .controls-Back__caption_style-secondary {
+      color: var(--secondary_hover_text-color_headingBack);
    }
 }
 //endregion
 
-.controls-Back__wrapper {
-   &:before {
-      content: "\200b";
+.ws-is-hover {
+   .controls-Header_all__clickable:hover {
+      cursor: pointer;
    }
 
-   display: inline-flex;
-   align-items: baseline;
-   cursor: pointer;
-   max-width: 100%;
-   height: var(--inline-height_headingBack);
-}
+   .controls-Back__wrapper:hover,
+   .controls-Header_all__clickable:hover {
+      .controls-Back__caption_style-primary {
+         color: var(--primary_hover_text-color);
+      }
 
-.controls-ButtonBack__caption {
-   .text-overflow();
+      .controls-Back__caption_style-secondary {
+         color: var(--secondary_hover_text-color_headingBack);
+      }
+
+      .controls-Back__icon_view-button {
+         border-color: var(--unaccented_hover_contrast_background-color);
+         background-color: var(--unaccented_hover_same_background-color);
+      }
+
+      .controls-Back__icon_style-primary {
+         fill: var(--primary_text-color_headingBack);
+      }
+
+      .controls-Back__icon_style-secondary {
+         fill: var(--secondary_text-color_headingBack);
+      }
+   }
 }

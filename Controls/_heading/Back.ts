@@ -12,7 +12,42 @@ import {
     IIconStyleOptions
 } from 'Controls/interface';
 
+/**
+ * Интерфейс, описывающий структуру объекта конфигурации контрола {@link Controls/heading:Back}
+ * @public
+ * @author Уфимцев Д.Ю.
+ */
 export interface IBackOptions extends IControlOptions, IFontColorStyleOptions, IFontSizeOptions, IIconStyleOptions {
+    /**
+     * @cfg {String} Задает режим вывода текста в заголовке кнопки.
+     * @variant ellipsis - текст заголовок выводится выводится в одну строку, все что не влезло обрезается многоточием.
+     * @variant none - текст заголовка выводится полностью, если он не влазит в отведенное место, то переносится на
+     * новую строку.
+     * @default ellipsis
+     * @demo Controls-demo/Heading/Back/TextOverflow/Index
+     */
+    textOverflow?: 'ellipsis' | 'none';
+
+    /**
+     * @cfg {String} Задает режим отображения иконки кнопки.
+     * @variant default - иконка кнопки отображается в виде обычного уголка без дополнительных стилей.
+     * @variant functionalButton - иконка кнопки отображается в виде уголка с обводкой.
+     * @default default
+     * @demo Controls-demo/Heading/Back/IconViewMode/Index
+     */
+    iconViewMode?: 'functionalButton' | 'default';
+
+    /**
+     * @cfg {String | UI/Base:TemplateFunction} Кастомное содержимое, отображаемое между иконкой и заголовком кнопки
+     * @see Controls/heading:IBackOptions#beforeCaptionTemplateOptions
+     */
+    beforeCaptionTemplate?: string | TemplateFunction;
+
+    /**
+     * @cfg {Object} Опции, которые будут переданы в шаблон, указанный в опции
+     * @see Controls/heading:IBackOptions#beforeCaptionTemplateOptions
+     */
+    beforeCaptionTemplateOptions?: object;
 }
 
 /**
@@ -83,18 +118,17 @@ export default class Back extends Control<IBackOptions> implements IFontColorSty
     readonly '[Controls/_interface/IIconStyle]': boolean = true;
     readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
 
-    static getDefaultOptions(): object {
-        return {
-            iconSize: 'm',
-            fontSize: '3xl',
-            iconStyle: 'secondary',
-            fontColorStyle: 'primary'
-        };
-    }
+    static defaultProps: IBackOptions = {
+        fontSize: '3xl',
+        iconStyle: 'secondary',
+        iconViewMode: 'default',
+        textOverflow: 'ellipsis',
+        fontColorStyle: 'primary'
+    };
 
     static getOptionTypes(): object {
         return {
-            caption: EntityDescriptor(String).required(),
+            caption: EntityDescriptor(String),
             fontColorStyle: EntityDescriptor(String).oneOf([
                 'primary',
                 'secondary',
@@ -115,12 +149,3 @@ export default class Back extends Control<IBackOptions> implements IFontColorSty
         };
     }
 }
-
-Object.defineProperty(Back, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
-
-   get(): object {
-      return Back.getDefaultOptions();
-   }
-});
