@@ -16,8 +16,8 @@ export class ViewModel extends VersionableMixin {
    protected _displayValue: string;
    constructor(options: IBaseInputOptions, value: string) {
       super();
-      this._selection = {};
-      this._oldSelection = {};
+      this._selection = {start: null, end: null};
+      this._oldSelection = {start: null, end: null};
       this._options = clone(options);
       this.value = value;
       this.changesHaveBeenApplied();

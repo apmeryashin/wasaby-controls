@@ -38,12 +38,17 @@ import 'css!Controls/input';
  *
  * @author Красильников А.С.
  */
+
+export interface IPasswordOptions extends IBaseInputOptions {
+    passwordVisible?: boolean;
+}
+
 class Password extends Base {
     protected _defaultValue: string = '';
     private _passwordVisible: boolean = false;
     protected _controlName: string = 'Password';
 
-    protected _getViewModelOptions(options): object {
+    protected _getViewModelOptions(options: IPasswordOptions): object {
         return {
             readOnly: options.readOnly,
             autoComplete: Password._isAutoComplete(this._autoComplete),
@@ -51,7 +56,7 @@ class Password extends Base {
         };
     }
 
-    protected _getViewModelConstructor(): ViewModel {
+    protected _getViewModelConstructor(): typeof ViewModel {
         return ViewModel;
     }
 
