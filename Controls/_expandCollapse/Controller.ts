@@ -230,7 +230,7 @@ export class Controller {
 
         if (this._model && (this._options.expandedItems?.length || this._options.collapsedItems?.length)) {
             // обрабатываем только узлы
-            const items = removedItems.filter((it) => it.Expandable && it.isNode() !== null);
+            const items = removedItems.filter((it) => it['[Controls/_display/TreeItem]'] && it.Expandable && it.isNode() !== null);
             let removedKeys = items.map((it) => it.getContents().getKey());
             // отфильтровываем скрытые записи
             removedKeys = removedKeys.filter((it) => !this._model.getCollection().getRecordById(it) && it !== ALL_EXPANDED_VALUE);
@@ -340,7 +340,7 @@ export class Controller {
             // которых явно не сказано что они должны быть свернуты
             this._model?.each((item) => {
                 // пропускаем не разворачиваемые элементы и листья
-                if (!item.Expandable || item.isNode() === null) {
+                if (!item['[Controls/_display/TreeItem]'] || !item.Expandable || item.isNode() === null) {
                     return;
                 }
 
@@ -442,7 +442,7 @@ export class Controller {
             }
             const childrenOfCollapsedItem = this._model.getChildren(parent);
             childrenOfCollapsedItem.forEach((it) => {
-                if (!it.Expandable || it.isNode() === null || !it.isExpanded()) {
+                if (!it['[Controls/_display/TreeItem]'] || !it.Expandable || it.isNode() === null || !it.isExpanded()) {
                     return;
                 }
 

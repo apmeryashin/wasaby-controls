@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 
-import { Tree, TreeItem } from 'Controls/display';
+import {groupConstants, Tree, TreeItem} from 'Controls/display';
 import {ALL_EXPANDED_VALUE, ExpandController} from 'Controls/expandCollapse';
 import { RecordSet } from 'Types/collection';
 import {Model} from 'Types/entity';
@@ -34,16 +34,16 @@ function initTest(data: object[], options?: {}, collectionOptions?: {}): {record
 
 describe('ExpandCollapse/Controller', () => {
     describe('setExpandedItems', () => {
-        it('with node footers', () => {
+        it('with node footers and groups', () => {
             const data = [
-                {id: 1, parent: null, node: true},
-                {id: 2, parent: null, node: true},
-                {id: 3, parent: null, node: true}
+                {id: 1, parent: null, node: true, group: groupConstants.hiddenGroup},
+                {id: 2, parent: null, node: true, group: groupConstants.hiddenGroup},
+                {id: 3, parent: null, node: true, group: groupConstants.hiddenGroup}
             ];
             const {controller, model} = initTest(
                 data,
                 {expandedItems: [1, 2, 3]},
-                {nodeFooterTemplate: () => null}
+                {nodeFooterTemplate: () => null, groupProperty: 'group'}
             );
             controller.setExpandedItems([1, 2]);
             controller.applyStateToModel();
