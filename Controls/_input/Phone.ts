@@ -1,5 +1,5 @@
 import {default as Base, IBaseInputOptions} from 'Controls/_input/Base';
-import * as ViewModel from 'Controls/_input/Phone/ViewModel';
+import {ViewModel} from 'Controls/_input/Phone/ViewModel';
 
 /**
  * Поле ввода телефона.

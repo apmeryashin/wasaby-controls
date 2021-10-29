@@ -7,7 +7,7 @@ describe('Controls/input:ValueInField', () => {
     const field: HTMLInputElement = {
         value: fieldValue
     } as HTMLInputElement;
-    const model = new BaseViewModel({}, 'test model');
+    const model = new BaseViewModel.ViewModel({}, 'test model');
     const stateValue = model.displayValue;
     beforeEach(() => {
         inst = new __ValueInField();
