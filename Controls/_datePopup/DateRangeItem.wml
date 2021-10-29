@@ -10,8 +10,8 @@
         dateConstructor="{{_options.dateConstructor}}"
         _date="{{ _options._date }}"
 
-        startValue="{{ _startValue }}"
-        endValue="{{ _endValue }}"
+        startValue="{{ _options.startValue }}"
+        endValue="{{ _options.endValue }}"
 
         newMode="{{true}}"
 

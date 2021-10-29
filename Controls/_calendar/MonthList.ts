@@ -1,4 +1,3 @@
-import {date as formatDate} from 'Types/formatter';
 import {Date as WSDate} from 'Types/entity';
 import {debounce} from 'Types/function';
 import {Base as BaseSource} from 'Types/source';
@@ -22,7 +21,6 @@ import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
 import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
-import {Logger} from 'UI/Utils';
 
 interface IModuleComponentOptions extends
     IControlOptions,
@@ -199,10 +197,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._updateScrollAfterViewModification();
     }
 
-    protected _getMonth(year: number, month: number): Date {
-        return new WSDate(year, month, 1);
-    }
-
     private _updateShadowVisibility(topShadowVisibility: string, bottomShadowVisibility: string): void {
         if (this._topShadowVisibility !== topShadowVisibility) {
             this._topShadowVisibility = topShadowVisibility;
@@ -260,16 +254,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
         this._itemTemplate = options.viewMode === VIEW_MODE.year ?
             options.yearTemplate : options.monthTemplate;
-    }
-    protected _getTemplate(data): TemplateFunction {
-        switch (data.get('type')) {
-            case ITEM_TYPES.header:
-                return this._itemHeaderTemplate;
-            case ITEM_TYPES.stub:
-                return this._options.stubTemplate;
-            default:
-                return this._itemTemplate;
-        }
     }
 
     private _updateSource(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): boolean {
@@ -461,10 +445,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    protected  _formatMonth(date: Date): string {
-        return date ? formatDate(date, formatDate.FULL_MONTH) : '';
-    }
-
     private _updateScrollAfterViewModification(notResetPositionToScroll: boolean = false): void {
         if (this._positionToScroll && this._canScroll(this._positionToScroll)) {
             if (this._scrollToDate(this._positionToScroll)) {
@@ -577,10 +557,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _getElementByDate(selector: string, dateId: string): HTMLElement {
         return this._getNormalizedContainer().querySelector(selector + '[data-date="' + dateId + '"]');
-    }
-
-    protected _dateToDataString(date: Date): string {
-        return monthListUtils.dateToId(date);
     }
 
     private _errorHandler(error: Error): Promise<unknown> {
