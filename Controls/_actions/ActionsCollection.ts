@@ -180,6 +180,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
 
     private _initActionsAndUpdateConfig(options: IActionsCollectionOptions = this._options): void {
         this._initActions(options);
+        this._updateToolbarItems();
         this._notifyConfigChanged();
     }
 
