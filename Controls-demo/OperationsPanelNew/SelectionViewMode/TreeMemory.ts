@@ -13,14 +13,15 @@ export default class TreeMemory extends Memory {
         const selection = filter.selection || filter.entries;
         if (selection) {
             const markedKeys = selection.get('marked');
-            const resultArray = [];
-            this.data.forEach((item) => {
-                const itemKey = item[this.getKeyProperty()].toString();
-                if (markedKeys.includes(itemKey) && itemKey !== null) {
-                    resultArray.push({...item});
-                }
-            });
-
+            const resultArray = filter.SelectionWithPath ? [] : this.data;
+            if (filter.SelectionWithPath) {
+                this.data.forEach((item) => {
+                    const itemKey = item[this.getKeyProperty()].toString();
+                    if (markedKeys.includes(itemKey) && itemKey !== null) {
+                        resultArray.push({...item});
+                    }
+                });
+            }
             return Promise.resolve(this._createDataSet(resultArray));
         } else {
             return super.query(query.where(filter));
