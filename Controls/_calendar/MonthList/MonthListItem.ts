@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_calendar/MonthList/MonthListItem';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import ITEM_TYPES from 'Controls/_calendar/MonthList/ItemTypes';
 import {date as formatDate} from 'Types/formatter';
-import {Date as WSDate} from 'Types/_entity/applied';
+import {Date as WSDate} from 'Types/entity';
 import monthListUtils from 'Controls/_calendar/MonthList/Utils';
 import {IDateRangeOptions} from 'Controls/dateRange';
 
