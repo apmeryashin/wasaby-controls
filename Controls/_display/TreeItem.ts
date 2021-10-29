@@ -432,44 +432,46 @@ export default class TreeItem<T extends Model = Model> extends mixin<
                        tmplExpanderSize?: string,
                        tmplExpanderIconSize?: TExpanderIconSize,
                        tmplExpanderIconStyle?: TExpanderIconStyle): string {
-        const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
-        const expanderSize = this.getExpanderSize(tmplExpanderSize);
-        const expanderIconSize = this.getExpanderIconSize(tmplExpanderIconSize);
-        const expanderIconStyle = this.getExpanderIconStyle(tmplExpanderIconStyle);
-
+        const expanderIcon = this.getExpanderIcon(tmplExpanderIcon) || (this.isNode() ? 'node' : 'hiddenNode');
+        const expanderSize = this.getExpanderSize(tmplExpanderSize) || 'default';
         const expanderPosition = this._$owner.getExpanderPosition();
+
+        let expanderIconSize: TExpanderIconSize | 'master';
+        let expanderIconStyle;
+
+        if (this.getStyle() === 'master') {
+            expanderIconSize = expanderPosition === 'default' ? 'master' : 'default';
+            expanderIconStyle = 'unaccented';
+
+        } else {
+            expanderIconSize = this.getExpanderIconSize(tmplExpanderIconSize);
+            expanderIconStyle = expanderIcon === 'hiddenNode' ? 'unaccented' :
+                this.getExpanderIconStyle(tmplExpanderIconStyle);
+        }
 
         let expanderClasses = 'js-controls-Tree__row-expander controls-TreeGrid__row-expander';
         expanderClasses += ' js-controls-ListView__notEditable';
 
         if (expanderPosition === 'default') {
-            expanderClasses +=
-                ` controls-TreeGrid__row_${this.getStyle()}-expander_size_${(expanderSize || 'default')}`;
+            expanderClasses += ` controls-TreeGrid__row_${this.getStyle()}-expander_size_${expanderSize}`;
         } else if (expanderPosition === 'right') {
             expanderClasses += ' controls-TreeGrid__row_expander_position_right';
         }
         expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${this.getOwner().getTopPadding()}`;
         expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${this.getOwner().getBottomPadding()}`;
 
-        let expanderIconClass = '';
-        const iconStyle = this.getStyle() === 'master' && expanderPosition !== 'right' ? 'master' : 'default';
-        const appliedIcon = expanderIcon && expanderIcon !== 'node' && expanderIcon !== 'hiddenNode' &&
-            expanderIcon !== 'emptyNode';
-        const icon = expanderIcon || (this.isNode() ? 'node' : 'hiddenNode');
-        if (appliedIcon) {
-            expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
-        } else {
-            expanderIconClass = ` controls-TreeGrid__row-expander_${icon}_${iconStyle}`;
+        const style = this.getStyle() === 'master' && expanderPosition !== 'right' ? 'master' : 'default';
+
+        let expanderIconClass = ` controls-TreeGrid__row-expander_${expanderIcon}`;
+        if (expanderIcon === 'node' || expanderIcon === 'hiddenNode' || expanderIcon === 'emptyNode') {
+            expanderIconClass += `_${style}`;
         }
-        expanderClasses += ` controls-TreeGrid__row-expander_${icon}_${iconStyle}_position_${expanderPosition}`;
+
+        expanderClasses += ` controls-TreeGrid__row-expander_${expanderIcon}_${style}_position_${expanderPosition}`;
         expanderClasses += expanderIconClass;
 
-        if (iconStyle !== 'master') {
-            expanderClasses += ` controls-TreeGrid__row-expander_${icon}_iconSize_${expanderIconSize}`;
-
-            expanderClasses += ` controls-TreeGrid__row-expander_${icon}_iconStyle` +
-                `_${expanderIconStyle !== 'default' ? expanderIconStyle : iconStyle}`;
-        }
+        expanderClasses += ` controls-TreeGrid__row-expander_${expanderIcon}_iconSize_${expanderIconSize}`;
+        expanderClasses += ` controls-TreeGrid__row-expander_${expanderIcon}_iconStyle_${expanderIconStyle}`;
 
         // добавляем класс свертнутости развернутости для тестов
         expanderClasses += ' controls-TreeGrid__row-expander' + (this.isExpanded() ? '_expanded' : '_collapsed');
