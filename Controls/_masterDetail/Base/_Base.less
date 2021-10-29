@@ -6,6 +6,29 @@
    background-color: var(--master_item_background-color_list);
 }
 
+.controls-MasterDetail-transparent {
+   .controls-Grid__row-cell_selected-master.controls-background-master,
+   .controls-background-master_sticked {
+      background-color: var(--unaccented_background-color);
+   }
+}
+
+.ws-is-hover {
+   .controls-MasterDetail-transparent {
+      .controls-BaseControl_hover_enabled {
+         .controls-Grid__row_highlightOnHover_master:hover .controls-Grid__row-cell-background-hover-master {
+            background-color: var(--unaccented_background-color);
+         }
+      }
+   }
+}
+
+.ws-is-hover:not(.ws-is-mobile-platform) {
+   .controls-MasterDetail-transparent .controls-ListView__item_master:hover {
+      background-color: var(--unaccented_background-color);
+   }
+}
+
 .controls-MasterDetail_master {
    position: relative;
    flex-shrink: 0;
