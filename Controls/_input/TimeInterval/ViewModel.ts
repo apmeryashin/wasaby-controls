@@ -1,4 +1,4 @@
-import BaseViewModel = require('Controls/_input/Base/ViewModel');
+import {ViewModel as BaseViewModel} from 'Controls/_input/Base/ViewModel';
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
 import {FormatBuilder, Formatter} from 'Controls/decorator';
 
