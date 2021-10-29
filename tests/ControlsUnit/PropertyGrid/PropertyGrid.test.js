@@ -31,10 +31,11 @@ define([
                 booleanField: Constants.DEFAULT_EDITORS.boolean,
                 stringField1: Constants.DEFAULT_EDITORS.string
             };
+            const groupProperty = 'group';
             ViewInstance = new propertyGridLib.PropertyGrid();
-            ViewInstance._beforeMount({typeDescription, editingObject});
+            ViewInstance._beforeMount({typeDescription, editingObject, groupProperty});
             ViewInstance._itemActionsController = new itemActions.Controller();
-            ViewInstance.saveOptions({typeDescription, editingObject});
+            ViewInstance.saveOptions({typeDescription, editingObject, groupProperty});
         });
 
         describe('_getCollapsedGroups', () => {
@@ -89,8 +90,7 @@ define([
                    parentProperty: 'parent',
                    editingObject,
                    typeDescription,
-                   keyProperty: 'name',
-                   groupProperty: 'group'
+                   keyProperty: 'name'
                 };
                 const collection = ViewInstance._getCollection(options);
                 const collapsedItem = collection.getItemBySourceKey('stringField');
@@ -98,6 +98,7 @@ define([
                     text: true
                 };
                 const resultDisplay = ViewInstance._displayFilter(collapsedItem.getContents());
+                assert.equal(ViewInstance._options.groupProperty, 'group');
                 assert.isFalse(resultDisplay);
             });
 
@@ -107,9 +108,10 @@ define([
                    parentProperty: 'parent',
                    editingObject,
                    typeDescription,
-                   keyProperty: 'name',
-                   groupProperty: 'name'
+                   keyProperty: 'name'
                 };
+                const groupProperty = 'name';
+                ViewInstance.saveOptions({groupProperty});
                 const collection = ViewInstance._getCollection(options);
                 const collapsedItem = collection.getItemBySourceKey('stringField');
                 ViewInstance._collapsedGroups = {
