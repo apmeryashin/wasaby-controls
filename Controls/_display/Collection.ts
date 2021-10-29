@@ -144,6 +144,7 @@ export interface IOptions<
     theme?: string;
     style?: string;
     backgroundStyle?: string;
+    footerBackgroundStyle?: string;
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -899,6 +900,7 @@ export default class Collection<
 
     // Фон застиканных записей и лесенки
     protected _$backgroundStyle?: string;
+    protected _$footerBackgroundStyle?: string;
 
     private _firstItem: CollectionItem;
 
@@ -2483,15 +2485,27 @@ export default class Collection<
     }
 
     setBackgroundStyle(backgroundStyle: string): void {
-        this._$backgroundStyle = backgroundStyle;
-        this.getItems().forEach((item) => {
-           item.setBackgroundStyle(backgroundStyle);
-        });
-        this.nextVersion();
+        if (this._$backgroundStyle !== backgroundStyle) {
+            this._$backgroundStyle = backgroundStyle;
+            this.getItems().forEach((item) => {
+                item.setBackgroundStyle(backgroundStyle);
+            });
+            this.nextVersion();
+        }
     }
 
     getBackgroundStyle(): string {
         return this._$backgroundStyle;
+    }
+
+    setFooterBackgroundStyle(footerBackgroundStyle: string): void {
+        if (this._$footerBackgroundStyle !== footerBackgroundStyle) {
+            this._$footerBackgroundStyle = footerBackgroundStyle;
+            if (this.getFooter()) {
+                this.getFooter().setBackgroundStyle(footerBackgroundStyle);
+            }
+            this.nextVersion();
+        }
     }
 
     getEditingBackgroundStyle(): string {
@@ -3388,10 +3402,11 @@ export default class Collection<
         return {
             owner: this,
             sticky: options.stickyFooter,
+            backgroundStyle: options.footerBackgroundStyle,
             contentTemplate: options.footerTemplate,
             style: this.getStyle(),
             theme: this.getTheme()
-        }
+        };
     }
     //endregion
 
@@ -4264,6 +4279,7 @@ Object.assign(Collection.prototype, {
     _$theme: 'default',
     _$hoverBackgroundStyle: 'default',
     _$backgroundStyle: 'default',
+    _$footerBackgroundStyle: 'default',
     _$rowSeparatorSize: null,
     _$hiddenGroupPosition: 'first',
     _$footerTemplate: null,
