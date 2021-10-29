@@ -1,5 +1,8 @@
 .controls-MasterDetail {
    display: flex;
+}
+
+.controls-MasterDetail-contrast {
    background-color: var(--master_item_background-color_list);
 }
 
@@ -135,6 +138,10 @@
 // При изменении требований к внешнему виду класс может стать ненужным
 .controls-background-master_sticked {
    background-color: var(--master_item_selected_background-color_list);
+}
+
+.controls-MasterDetail-transparent .controls-background-master_sticked {
+   background-color: var(--unaccented_background-color);
 }
 
 // Класс для установки фона контрола через backgroundStyle (detail)
