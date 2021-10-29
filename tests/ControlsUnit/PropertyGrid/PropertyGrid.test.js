@@ -99,6 +99,24 @@ define([
                 const resultDisplay = ViewInstance._displayFilter(collapsedItem.getContents());
                 assert.isFalse(resultDisplay);
             });
+
+            it('not filtered item from collapsed group and groupProperty === name', () => {
+                const options = {
+                   nodeProperty: 'node',
+                   parentProperty: 'parent',
+                   editingObject,
+                   typeDescription,
+                   keyProperty: 'name',
+                   groupProperty: 'name'
+                };
+                const collection = ViewInstance._getCollection(options);
+                const collapsedItem = collection.getItemBySourceKey('stringField');
+                ViewInstance._collapsedGroups = {
+                    stringField: true
+                };
+                const resultDisplay = ViewInstance._displayFilter(collapsedItem.getContents());
+                assert.isFalse(resultDisplay);
+            });
             it('filtered groupItem', () => {
                const options = {
                   nodeProperty: 'node',
