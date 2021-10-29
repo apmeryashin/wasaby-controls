@@ -1,0 +1,16 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell demo-switchBase__default">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">default switch</div>
+        <Controls.toggle:Switch bind:value="_value"
+                                caption="state"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__custom">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">custom caption</div>
+        <Controls.toggle:Switch bind:value="_value2"
+                                caption="test">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/toggle:switchItemTemplate" scope="{{itemTemplate}}" additionalCaption="{{_captionTemplate}}"/>
+            </ws:itemTemplate>
+        </Controls.toggle:Switch>
+    </div>
+</div>

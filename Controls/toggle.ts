@@ -61,6 +61,7 @@ import * as tumblerItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate'
 import * as tumblerItemCounterTemplate from 'wml!Controls/_toggle/Tumbler/itemCounterTemplate';
 import * as chipsItemTemplate from 'wml!Controls/_toggle/ButtonGroup/itemTemplate';
 import * as chipsItemCounterTemplate from 'wml!Controls/_toggle/ButtonGroup/itemCounterTemplate';
+import * as switchItemTemplate from 'wml!Controls/_toggle/Switch/resources/ItemTemplate';
 
 export {
     ItemTemplate,
@@ -69,5 +70,6 @@ export {
     tumblerItemTemplate,
     tumblerItemCounterTemplate,
     chipsItemTemplate,
-    chipsItemCounterTemplate
+    chipsItemCounterTemplate,
+    switchItemTemplate
 };
