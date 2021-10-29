@@ -10,6 +10,7 @@
                 keyProperty="key"
                 source="{{_viewSource}}"
                 feature1183020440="{{true}}"
+                readOnly="{{ true }}"
                 itemActionsProperty="itemActions"
                 on:actionClick="_onActionClick()"/>
     </div>
@@ -20,6 +21,7 @@
                 keyProperty="key"
                 source="{{_viewSource}}"
                 feature1183020440="{{true}}"
+                readOnly="{{ true }}"
                 itemActionsProperty="itemActions"
                 itemActionsPosition="outside"
                 on:actionClick="_onActionClick()"/>
