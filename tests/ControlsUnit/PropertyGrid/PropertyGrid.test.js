@@ -89,7 +89,8 @@ define([
                    parentProperty: 'parent',
                    editingObject,
                    typeDescription,
-                   keyProperty: 'name'
+                   keyProperty: 'name',
+                   groupProperty: 'group'
                 };
                 const collection = ViewInstance._getCollection(options);
                 const collapsedItem = collection.getItemBySourceKey('stringField');
