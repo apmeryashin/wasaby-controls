@@ -909,6 +909,7 @@
   "--checkbox_height_list": "var(--height_checkbox)",
   "--item_padding-top_s_list": "3px",
   "--item_padding-bottom_s_list": "3px",
+  "--item_padding-bottom_l_list": "var(--offset_xs)",
   "--item_padding-left_xs_list": "0",
   "--item_padding-right_xs_list": "0",
   "--item_padding-left_s_list": "var(--offset_s)",
