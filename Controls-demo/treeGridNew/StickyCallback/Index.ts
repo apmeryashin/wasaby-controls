@@ -5,6 +5,7 @@ import { IHeader } from 'Controls-demo/types';
 import { IColumn } from 'Controls/grid';
 import 'css!Controls-demo/Controls-demo';
 import { Flat } from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
+import {Model} from 'Types/entity';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -20,7 +21,8 @@ export default class extends Control {
         });
     }
 
-    protected _stickyCallback(item: any): boolean {
-        return item.get('title') === 'Smartphones1' || item.get('title') === 'Smartphones5';
+    protected _stickyCallback(item: Model): string | undefined {
+        const title = item.get('title');
+        return (title === 'Smartphones1' || title === 'Smartphones5') ? 'topBottom' : undefined;
     }
 }
