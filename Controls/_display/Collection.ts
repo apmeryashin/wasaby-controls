@@ -921,14 +921,18 @@ export default class Collection<
              this._$keyProperty = (options as any).idProperty;
         }
 
-        if (options.groupProperty) {
-            this._$groupProperty = options.groupProperty;
-            this._$group = this._createGroupFunctor();
-        }
+        // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
+        // https://online.sbis.ru/opendoc.html?guid=37b14566-12c3-44ed-ac0b-0cd7e0ae5c9d
+        if (!this._disableSupportsGrouping) {
+            if (options.groupProperty) {
+                this._$groupProperty = options.groupProperty;
+                this._$group = this._createGroupFunctor();
+            }
 
-        // Support of 'groupingKeyCallback' option
-        if (!this._$group && (options as any).groupingKeyCallback) {
-            this._$group = (options as any).groupingKeyCallback;
+            // Support of 'groupingKeyCallback' option
+            if (!this._$group && (options as any).groupingKeyCallback) {
+                this._$group = (options as any).groupingKeyCallback;
+            }
         }
 
         if (options.itemTemplateProperty) {
@@ -4299,6 +4303,7 @@ Object.assign(Collection.prototype, {
     _actionsTemplateConfig: null,
     _swipeConfig: null,
     _userStrategies: null,
+    _disableSupportsGrouping: false,
     _$emptyTemplate: null,
     _$emptyTemplateOptions: null,
     _$itemActionsPosition: 'inside',
