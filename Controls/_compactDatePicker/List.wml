@@ -1,6 +1,8 @@
 <Controls.calendar:MonthList attr:class="controls-CompactDatePicker__month-list"
                              attr:data-qa="controls-CompactDatePicker__month-list"
                              viewMode="month"
+                             startValue="{{ _options.rangeModel.startValue }}"
+                             endValue="{{ _options.rangeModel.endValue }}"
                              hoveredStartValue="{{ null }}"
                              hoveredEndValue="{{ null }}"
                              _shouldUseScrollToItem="{{ true }}"
@@ -29,8 +31,6 @@
                         daysData="{{extData[monthTemplate.date.getMonth()]}}"
                         selectionType="{{ _options.selectionType }}"
 
-                        startValue="{{ _options.rangeModel.startValue }}"
-                        endValue="{{ _options.rangeModel.endValue }}"
                         newMode="{{true}}"
                         selectionProcessing="{{_options.selectionProcessing}}"
                         on:selectionProcessingChanged="_proxyEvent()"
