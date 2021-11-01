@@ -1,5 +1,4 @@
 <Controls._filterPanel.BaseEditor scope="{{_options}}"
-                                  editorType="lookup"
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
     <ws:editorTemplate>
@@ -13,7 +12,7 @@
                                   on:selectedKeysChanged="_handleSelectedKeysChanged()"
                                   on:textValueChanged="_handleTextValueChanged()"
                                   on:itemClick="_handleLookupClick()"
-                                  attr:class="controls-LookupEditor controls-FilterViewPanel__basicEditor">
+                                  attr:class="controls-FilterViewPanel__basicEditor controls-LookupEditor">
             <ws:itemTemplate>
                 <ws:partial template="Controls/lookup:ItemTemplate"
                             readOnly="{{true}}"/>

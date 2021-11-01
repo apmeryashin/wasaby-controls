@@ -5,7 +5,6 @@
         <ws:if data="{{_options.closeButtonVisibility !== 'hidden'}}">
             <Controls.icon:Icon icon="icon-CloseNew"
                                 attr:class="controls-FilterViewPanel__baseEditor-cross
-                                            controls-FilterViewPanel__baseEditor-cross-{{_options.editorType}}
                                             controls-FilterViewPanel__groupReset-icon"
                                 on:click="_handleCloseEditorClick()"/>
         </ws:if>
