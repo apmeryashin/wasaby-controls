@@ -2,7 +2,7 @@ import {TemplateFunction} from 'UI/Base';
 import {TreeItem, MoreButtonVisibility} from 'Controls/display';
 import {Model} from 'Types/entity';
 import TreeGridDataRow, {IOptions} from './TreeGridDataRow';
-import {IColumn, TColspanCallbackResult} from 'Controls/grid';
+import {IColumn, TColspanCallbackResult, TColumns} from 'Controls/grid';
 
 /**
  * Футер узла в иерархической таблице
@@ -32,6 +32,16 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
     getNode(): TreeItem<Model> {
         return this.getParent();
+    }
+
+    // FIXME: Необходимость переопределения этого метода - следствие неправильного наследования.
+    //  Подвал наследуется от строки данных дерева, хотя должен просто от абстрактной строки дерева.
+    //  У строки данных наиболее специфичная логика колонок строки и колонок всего дерева(в данных это одно и то же).
+    //  Для абстрактной строки в дереве это не так.
+    //  Привело к ошибке, что при установке колонок всей таблицы, они устанавливались в подвал.
+    setGridColumnsConfig(columns: TColumns): void {
+        this._$gridColumnsConfig = columns;
+        this._reinitializeColumns(true);
     }
 
     getNodeFooterTemplateMoreButton(): TemplateFunction {
