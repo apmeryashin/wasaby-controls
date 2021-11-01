@@ -27,8 +27,12 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
         return this.isMoreButtonFooter() && this._$isFirstDataCell;
     }
 
+    isFirstColumn(): boolean {
+        return this.getColumnIndex(false, false) === 0;
+    }
+
     getWrapperClasses(): string {
-        return 'controls-TreeGrid__nodeFooter__wrapper';
+        return `controls-TreeGrid__nodeFooter__wrapper ${this._getColumnSeparatorClasses()}`;
     }
 
     getContentClasses(params: {hasContent: boolean}): string {
@@ -42,10 +46,10 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
 
         if (params.hasContent || this.isMoreButtonFooter()) {
             classes += ' controls-TreeGrid__nodeFooter-cell_withContent';
-        }
 
-        if (this.getOwner().isFullGridSupport()) {
-            classes += ' controls-TreeGrid__nodeFooterContent__baseline';
+            if (this.getOwner().isFullGridSupport()) {
+                classes += ' controls-TreeGrid__nodeFooterContent__baseline';
+            }
         }
 
         if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn()) {
@@ -59,8 +63,14 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
         return classes;
     }
 
-    getRelativeCellWrapperClasses(): string {
-        return super.getRelativeCellWrapperClasses() + ' controls-TreeGrid__nodeFooterContent__baseline';
+    getRelativeCellWrapperClasses(params: { hasContent: boolean }): string {
+        let classes = super.getRelativeCellWrapperClasses();
+
+        if (params.hasContent || this.isMoreButtonFooter()) {
+            classes += ' controls-TreeGrid__nodeFooterContent__baseline';
+        }
+
+        return classes;
     }
 }
 

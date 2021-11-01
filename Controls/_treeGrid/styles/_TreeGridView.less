@@ -266,6 +266,10 @@
    font-size: var(--font-size_2xl);
 }
 
+.controls-TreeGrid__nodeFooter-cell__customContent {
+   width: 100%;
+}
+
 .controls-TreeGrid__row-levelPadding_size_default {
    width: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
@@ -408,6 +412,12 @@
 .controls-Grid_table-layout .controls-TreeGrid__nodeFooter__wrapper {
    display: table-cell;
 }
+
+// IE only. Обертка для выравнивания контента в подвалах узлов должна быть 24, в отличае от строки(31px)
+.controls-TreeGrid__nodeFooter__wrapper .controls-TreeGridView__row-cell_innerWrapper {
+   min-height: var(--inline_height_m);
+}
+
 // Master list sets ::before on selected item, witch overflows expander. It has z-index: 2 and pointer-events: none, but
 // Old IE doesn't support pointer-events.
 .ws-is-ie10 .controls-TreeGrid__row-expander {
