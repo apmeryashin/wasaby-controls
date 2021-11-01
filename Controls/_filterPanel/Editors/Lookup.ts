@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import LookupTemplate = require('wml!Controls/_filterPanel/Editors/Lookup');
 import {Selector, showSelector} from 'Controls/lookup';
-import 'css!Controls/filterPanel';
 import * as rk from 'i18n!Controls';
 import {Model} from 'Types/entity';
 import 'css!Controls/filterPanel';

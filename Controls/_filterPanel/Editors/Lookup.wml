@@ -13,7 +13,7 @@
                                   on:selectedKeysChanged="_handleSelectedKeysChanged()"
                                   on:textValueChanged="_handleTextValueChanged()"
                                   on:itemClick="_handleLookupClick()"
-                                  attr:class="controls-LookupEditor">
+                                  attr:class="controls-LookupEditor controls-FilterViewPanel__basicEditor">
             <ws:itemTemplate>
                 <ws:partial template="Controls/lookup:ItemTemplate"
                             readOnly="{{true}}"/>

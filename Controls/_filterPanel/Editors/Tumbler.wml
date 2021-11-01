@@ -1,5 +1,4 @@
 <Controls._filterPanel.BaseEditor scope="{{_options}}"
-                                  outlineContainerVisibility="hidden"
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
    <ws:editorTemplate>
