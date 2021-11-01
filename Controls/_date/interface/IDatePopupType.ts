@@ -13,7 +13,7 @@ export interface IDatePopupTypeOptions {
 
 /**
  * @name Controls/_date/interface/IDatePopupType#datePopupType
- * @cfg {string} Календарь, который откроется при нажатии на вызывающий элемент
+ * @cfg {String} Календарь, который откроется при нажатии на вызывающий элемент
  * @variant datePicker Большой выбор периода
  * @variant compactDatePicker Компактный выбор периода
  * @default datePicker
