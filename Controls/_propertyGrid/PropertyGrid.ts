@@ -45,6 +45,7 @@ import {FlatSiblingStrategy} from "Controls/_baseList/Strategies/FlatSiblingStra
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
 const IE_MOUSEMOVE_FIX_DELAY = 50;
+const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
@@ -162,11 +163,18 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _afterMount(): void {
+        if (this._options.itemsDragNDrop) {
+            this._container.addEventListener('dragstart', this._nativeDragStart);
+        }
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
     }
 
     protected _beforeUnmount(): void {
+        if (this._options.itemsDragNDrop) {
+            this._container.removeEventListener('dragstart', this._nativeDragStart);
+            this._notify('_removeDraggingTemplate', [], {bubbling: true});
+        }
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
     }
@@ -298,6 +306,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         displayItem: PropertyGridCollectionItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
+        if (!!clickEvent.target.closest(ITEM_ACTION_SELECTOR)) {
+            event.stopPropagation();
+            return;
+        }
         if (this._unprocessedDragEnteredItem) {
             this._unprocessedDragEnteredItem = null;
         }
@@ -553,6 +565,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._changeSelection(newSelection);
             }
         }
+    }
+
+    _nativeDragStart(event) {
+        // preventDefault нужно делать именно на нативный dragStart:
+        // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
+        //    preventDefault в startDragNDrop сработает слишком поздно, браузер уже включит нативное перетаскивание
+        // 2. На mouseDown ставится фокус, если на нём сделать preventDefault - фокус не будет устанавливаться
+        event.preventDefault();
     }
 
     _documentDragStart(dragObject: IDragObject): void {
