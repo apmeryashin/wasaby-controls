@@ -59,6 +59,8 @@ export default function openPopup(config: IBaseOpenerOptions, controller: string
         } else {
             openByConfig(config, controller);
         }
+    }).catch((err: Error) => {
+        Logger.error( `${moduleName}: ${err.message}`);
     });
     return promise;
 }
