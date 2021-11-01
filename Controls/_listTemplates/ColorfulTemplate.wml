@@ -11,11 +11,6 @@
                                  {{(_options.item || _options.itemData).getRoundBorderClasses()}}">
             <ws:contentTemplate>
                <div class="controls-listTemplates-ColorfulTemplate__content">
-                  <ws:if data="{{_options.additionalPanelTemplate}}">
-                     <ws:partial
-                        attr:class="controls-listTemplates-ColorfulTemplate__additionalPanelTemplate"
-                        template="{{_options.additionalPanelTemplate}}"/>
-                  </ws:if>
                   <!--Изображение-->
                   <ws:partial
                      src="{{_options.item.contents[_options.imageProperty]}}"
@@ -51,6 +46,15 @@
                   <!--Подвал-->
                   <ws:if data="{{_options.footerTemplate}}">
                      <ws:partial template="{{_options.footerTemplate}}"/>
+                  </ws:if>
+                  <!--
+                     Шаблон в правом верхнем углу поверх изображения.
+                     Позиционируется абсолютно, поэтому должен стоять в конце верстки, либо иметь z-index.
+                  -->
+                  <ws:if data="{{_options.additionalPanelTemplate}}">
+                     <ws:partial
+                        attr:class="controls-listTemplates-ColorfulTemplate__additionalPanelTemplate"
+                        template="{{_options.additionalPanelTemplate}}"/>
                   </ws:if>
                </div>
             </ws:contentTemplate>
