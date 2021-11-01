@@ -2,11 +2,12 @@ define(
    [
       'Controls/_input/Phone/ViewModel'
    ],
-   function(ViewModel) {
+   function(ViewModelModule) {
 
       'use strict';
 
       describe('Controls.Input.Phone.ViewModel', function() {
+         const ViewModel = ViewModelModule.ViewModel;
          var model;
          it('isFilled', function() {
             model = new ViewModel({}, '123');

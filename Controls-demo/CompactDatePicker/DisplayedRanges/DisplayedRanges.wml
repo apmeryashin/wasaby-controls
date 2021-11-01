@@ -3,5 +3,6 @@
             bind:startValue="_startValue"
             bind:endValue="_endValue"
             displayedRanges="{{ _displayedRanges }}"
+            _date="{{ _date }}"
     />
 </div>

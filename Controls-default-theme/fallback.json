@@ -350,7 +350,7 @@
   "--inline_height_ArrowButton": "var(--inline_height_m)",
 
   "--monthview_width_monthSlider": "204px",
-  "--monthview_height_monthSlider": "226px",
+  "--monthview_height_monthSlider": "202px",
   "--header_height_monthSlider": "28px",
   "--arrow_icon-size_monthSlider": "var(--icon-size_s)",
   "--heading_text-color_monthSlider": "#587AB0",
@@ -911,6 +911,7 @@
   "--checkbox_height_list": "var(--height_checkbox)",
   "--item_padding-top_s_list": "3px",
   "--item_padding-bottom_s_list": "3px",
+  "--item_padding-bottom_l_list": "var(--offset_xs)",
   "--item_padding-left_xs_list": "0",
   "--item_padding-right_xs_list": "0",
   "--item_padding-left_s_list": "var(--offset_s)",

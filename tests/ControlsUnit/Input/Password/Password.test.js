@@ -1,9 +1,9 @@
 define(
    [
-      'Core/core-instance',
-      'Controls/input'
+      'Controls/input',
+      'Controls/_input/Password/ViewModel'
    ],
-   function(instance, input) {
+   function(input, ViewModelModule) {
       describe('Controls/_input/Password', function() {
          var ctrl, calls;
 
@@ -30,8 +30,8 @@ define(
             ctrl._beforeMount({
                value: ''
             });
-
-            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/_input/Password/ViewModel'));
+            const viewModel = ViewModelModule.ViewModel;
+            assert.isTrue(ctrl._viewModel instanceof viewModel);
          });
 
          describe('The type attribute of the field when mounting.', function() {

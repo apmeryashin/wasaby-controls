@@ -1,5 +1,10 @@
-import {FormatBuilder, Formatter} from 'Controls/decorator';
+import {Formatter} from 'Controls/decorator';
+import {ISplitValue} from 'Controls/_input/resources/Types';
 
+export interface IInputConfig {
+    position: number;
+    value: string;
+}
 
 
       var
@@ -30,16 +35,16 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
          },
          InputProcessor = {
 
-            /**
-             * Получить разбиение чистого значения.
-             * @param splitValue разбиение исходного значения.
-             * @param clearData чистые данные.
-             * @return {Object}
-             */
-            getClearSplitValue: function(splitValue, clearData) {
-               var
-                  clearSplitValue = {},
-                  start = 0, position;
+    /**
+     * Получить разбиение чистого значения.
+     * @param splitValue разбиение исходного значения.
+     * @param clearData чистые данные.
+     * @return {Object}
+     */
+    getClearSplitValue(splitValue, clearData): ISplitValue {
+        const clearSplitValue = {};
+        let start = 0;
+        let position;
 
                clearSplitValue.before = clearData.value.substring(start, clearData.positions[splitValue.before.length]);
                start = clearSplitValue.before.length;
@@ -237,19 +242,19 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
                }
             },
 
-            /**
-             * Ввод.
-             * @param splitValue значение разбитое на части before, insert, after, delete.
-             * @param inputType тип ввода.
-             * @param replacer заменитель.
-             * @param oldFormat данные маски, на которую проецировалось разбитое значение.
-             * @param newFormat данные маски, на которую будет проецироваться разбитое значение.
-             * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
-             */
-            input(splitValueSrc: object, inputType: string, replacer: string, oldFormat: object, newFormat: object,
-                  curDisplayValue: string, shouldShiftReplacer: boolean): object {
-               const splitValue = { ...splitValueSrc };
-               let value = splitValue.before + splitValue.delete + splitValue.after;
+    /**
+     * Ввод.
+     * @param splitValue значение разбитое на части before, insert, after, delete.
+     * @param inputType тип ввода.
+     * @param replacer заменитель.
+     * @param oldFormat данные маски, на которую проецировалось разбитое значение.
+     * @param newFormat данные маски, на которую будет проецироваться разбитое значение.
+     * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
+     */
+    input(splitValueSrc: object, inputType: string, replacer: string, oldFormat: object, newFormat: object,
+          curDisplayValue: string, shouldShiftReplacer: boolean): IInputConfig {
+        const splitValue = {...splitValueSrc};
+        let value = splitValue.before + splitValue.delete + splitValue.after;
 
                const dataCurDisplayValue = this._getDataByCurDisplayValue(
                    value,

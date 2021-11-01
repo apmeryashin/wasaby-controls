@@ -282,5 +282,19 @@ define([
             assert.instanceOf(rDate, Date);
          });
       });
+      describe('_createDate', () => {
+         it('should autocorrect date value', () => {
+            const converter = new dateLib.StringValueConverter({
+               mask: 'DD.MM.YY',
+               dateConstructor: Date
+            });
+            const value = converter._createDate(2010, 99, 99, 99, 99, 99, true, Date);
+            assert.equal(value.getMonth(), 11);
+            assert.equal(value.getDate(), 30);
+            assert.equal(value.getHours(), 23);
+            assert.equal(value.getMinutes(), 59);
+            assert.equal(value.getSeconds(), 59);
+         });
+      });
    });
 });

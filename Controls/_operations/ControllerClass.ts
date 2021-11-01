@@ -3,6 +3,7 @@ import {Control} from 'UI/Base';
 import {Model, OptionsToPropertyMixin, SerializableMixin, ObservableMixin} from 'Types/entity';
 import {ISelectionObject, TKey, ISourceOptions, INavigationSourceConfig} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {IAction} from 'Controls/actions';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {isEqual} from 'Types/object';
 import {mixin} from 'Types/util';
@@ -172,6 +173,14 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
         }
         this._$selectedKeys = result;
         return result;
+    }
+
+    setListActions(actions: IAction[]): void {
+        this._notify('listActionsChanged', actions);
+    }
+
+    setActions(actions: IAction[]): void {
+        this._notify('actionsChanged', actions);
     }
 
     setSelectedKeysCount(count: number): void {

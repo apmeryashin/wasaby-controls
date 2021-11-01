@@ -4,6 +4,8 @@
  * @includes Input Controls/_date/Input
  * @includes BaseInput Controls/_date/BaseInput
  * @includes IBaseInputMask Controls/_date/interface/IBaseInputMask
+ * @includes IDatePopupType Controls/_date/interface/IDatePopupType
+ * @includes ICaption Controls/_date/interfaces/ICaption
  */
 
 export {default as Input} from 'Controls/_date/Input';
@@ -28,4 +30,4 @@ export {ICalendarButtonVisibleOptions} from 'Controls/_date/interface/ICalendarB
 export {
     MonthCaptionTemplate,
     ILinkViewDefaultOptions
-}
+};

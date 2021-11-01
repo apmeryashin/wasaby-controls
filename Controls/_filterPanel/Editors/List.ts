@@ -156,7 +156,7 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _afterMount(): void {
         // В 5000 поправится при переходе на новый стандарт по задаче: https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
-        if (this._selectedKeys.length) {
+        if (this._selectedKeys.length && !isEqual(this._options.resetValue, this._selectedKeys)) {
             this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
         }
     }
@@ -175,6 +175,9 @@ class ListEditor extends Control<IListEditorOptions> {
         }
         if (filterChanged || valueChanged) {
             this._setFilter(this._selectedKeys, options);
+        }
+        if (valueChanged) {
+            this._setMarkedKey(this._selectedKeys, options);
         }
     }
 
@@ -450,14 +453,13 @@ class ListEditor extends Control<IListEditorOptions> {
         return Promise.resolve(this._historyService);
     }
 
-    private _getTextValue(selectedKeys: number[]|string[]|Model[]): string {
+    private _getTextValue(selectedKeys: number[]|string[]): string {
         const textArray = [];
-        selectedKeys.forEach((item, index) => {
+
+        selectedKeys.forEach((item) => {
             const record = this._items.getRecordById(item);
             if (record) {
                 textArray.push(record.get(this._options.displayProperty));
-            } else {
-                textArray.push(item.get(this._options.displayProperty));
             }
         });
         return textArray.join(', ');
