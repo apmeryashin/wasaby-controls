@@ -40,7 +40,6 @@ import {TouchDetect} from 'Env/Touch';
 import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
 import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Controls/listDragNDrop';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
-import {FlatSiblingStrategy} from "Controls/_baseList/Strategies/FlatSiblingStrategy";
 
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
@@ -163,16 +162,12 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _afterMount(): void {
-        if (this._options.itemsDragNDrop) {
-            this._container.addEventListener('dragstart', this._nativeDragStart);
-        }
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
     }
 
     protected _beforeUnmount(): void {
         if (this._options.itemsDragNDrop) {
-            this._container.removeEventListener('dragstart', this._nativeDragStart);
             this._notify('_removeDraggingTemplate', [], {bubbling: true});
         }
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
@@ -318,30 +313,32 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
-    _itemMouseUp(e, displayItem, domEvent): void {
+    protected _itemMouseUp(e, displayItem, domEvent): void {
         this._draggedKey = null;
         if (this._dndController && !this._dndController.isDragging()) {
             this._dndController = null;
         }
 
         this._onLastMouseUpWasDrag = this._dndController && this._dndController.isDragging();
-        this._notify('itemMouseUp', [displayItem.item, domEvent.nativeEvent]);
     }
 
-    _itemMouseEnter(event: SyntheticEvent<Event>,
+    protected _itemMouseEnter(event: SyntheticEvent<Event>,
                     displayItem: PropertyGridCollectionItem<Model>): void {
         if (this._dndController) {
             if (this._dndController.isDragging()) {
                 this._listModel.setHoveredItem(null);
             }
-            this._unprocessedDragEnteredItem = displayItem;
-            this._processItemMouseEnterWithDragNDrop(displayItem);
+            if (this._itemMouseEntered !== displayItem) {
+                this._itemMouseEntered = displayItem;
+                this._unprocessedDragEnteredItem = displayItem;
+                this._processItemMouseEnterWithDragNDrop(displayItem);
+            }
         } else {
             this._listModel.setHoveredItem(displayItem);
         }
     }
 
-    _itemMouseLeave() {
+    protected _itemMouseLeave() {
         this._listModel.setHoveredItem(null);
         if (this._dndController) {
             this._unprocessedDragEnteredItem = null;
@@ -349,6 +346,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _mouseEnterHandler(): void {
+        if (this._listModel) {
+            this._dragEnter(this._getDragObject());
+        }
         if (!this._itemActionsController) {
             import('Controls/itemActions').then(({Controller}) => {
                 this._itemActionsController = new Controller();
@@ -565,14 +565,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._changeSelection(newSelection);
             }
         }
-    }
-
-    _nativeDragStart(event) {
-        // preventDefault нужно делать именно на нативный dragStart:
-        // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
-        //    preventDefault в startDragNDrop сработает слишком поздно, браузер уже включит нативное перетаскивание
-        // 2. На mouseDown ставится фокус, если на нём сделать preventDefault - фокус не будет устанавливаться
-        event.preventDefault();
     }
 
     _documentDragStart(dragObject: IDragObject): void {
@@ -808,7 +800,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._notify('_documentDragStart', [dragObject], {bubbling: true});
             }
             if (this._dndController && this._dndController.isDragging()) {
-                const moveOutsideList = !(this._container[0] || this._container).contains(nativeEvent.target);
+                const moveOutsideList = !this._container.contains(nativeEvent.target);
                 if (moveOutsideList !== this._listModel.isDragOutsideList()) {
                     this._listModel.setDragOutsideList(moveOutsideList);
                 }
