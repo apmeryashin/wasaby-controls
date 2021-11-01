@@ -18,6 +18,8 @@ const enum POSITION {
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions, IBackgroundStyleOptions {
     shadowVisible?: boolean;
     stickyPosition?: object;
+    borderStyle?: string;
+    borderSize?: string;
 }
 
 /**
@@ -159,7 +161,9 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             shadowVisible: false,
             backgroundStyle: 'default',
             headerBackgroundStyle: 'default',
-            closeButtonViewMode: 'link'
+            closeButtonViewMode: 'link',
+            borderStyle: 'default',
+            borderSize: 'default'
         };
     }
 }

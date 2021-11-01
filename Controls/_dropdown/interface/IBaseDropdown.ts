@@ -225,6 +225,27 @@ export default interface IBaseDropdown {
  */
 
 /**
+ * @name Controls/_dropdown/interface/IBaseDropdown#menuBorderStyle
+ * @cfg {backgroundStyle} Цвет обводки меню.
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
+ * @default default
+ */
+
+/**
+ * @name Controls/_dropdown/interface/IBaseDropdown#menuHoverBorderStyle
+ * @cfg {backgroundStyle} Цвет обводки меню при наведении.
+ * @default default
+ */
+
+/**
+ * @name Controls/_dropdown/interface/IBaseDropdown#menuBorderSize
+ * @cfg {backgroundStyle} Толщина обводки меню.
+ * default - толщина обводки по умолчанию.
+ * m - жирная обводка.
+ * @default default
+ */
+
+/**
  * @event Происходит при открытии выпадающего списка.
  * @name Controls/_dropdown/interface/IBaseDropdown#dropDownOpen
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
@@ -271,6 +292,9 @@ export default interface IBaseDropdown {
  * Открывает выпадающий список.
  * @function Controls/_dropdown/interface/IBaseDropdown#openMenu
  * @param {Object} popupOptions Конфигурация прилипающего блока {@link /docs/js/Controls/popup/IStickyPopupOptions/ popupOptions}
+ * @param {String} key Идентификатор элемента, для которого необходимо открыть подменю.
+ * Подменю может быть открыто только в случае, если предыдущий уровень уже открыт.
+ * @demo Controls-demo/dropdown_new/Button/OpenFromCode/Index
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
@@ -284,7 +308,11 @@ export default interface IBaseDropdown {
  * <pre class="brush: js">
  * // TypeScript
  * _showMenu(): void {
- *    this._children.dropDownButton.openMenu();
+ *    this._children.dropDownButton.openMenu({
+ *        templateOptions: {
+ *            borderStyle: 'danger'
+ *        }
+ *    }, 'task_key');
  * }
  * </pre>
  */
@@ -342,6 +370,7 @@ export default interface IBaseDropdown {
  * @property {String} [pinned] Определяет является ли пункт закрепленным.
  * @property {Boolean} [doNotSaveToHistory] Используется для меню с историей, определяет можно ли пункт запинить или добавить в историю.
  * Пункт будет отображен на той же позиции, на которой он находится в загруженном рекордсете. В меню с множественным выбором клик по такому пункту сбрасывает выделение.
+ * @property {IMenuPopupOptions} [menuOptions] Опции, которые будут переданы в подменю, открытое для текущего элемента.
  *
  */
 
