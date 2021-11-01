@@ -4,5 +4,6 @@
             bind:endValue="_value"
             selectionType="single"
             isDayAvailable="{{ _isDayAvailable }}"
+            _date="{{ _date }}"
     />
 </div>
