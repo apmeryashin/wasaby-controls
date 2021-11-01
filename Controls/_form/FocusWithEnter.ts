@@ -45,11 +45,12 @@ export default class FocusWithEnter extends Control<IControlOptions> {
    }
 
    /**
-    * Проверяет, может ли элемент быть сфокусирован по ENTER (поля ввода, чекбокс, комбобокс, поле связи)
+    * Проверяет, может ли элемент быть сфокусирован по ENTER
     * @param {HTMLElement} target Проверяемый html-элемент
     */
    _isFocusable(target: HTMLElement): boolean {
-      return target && !!(target instanceof HTMLInputElement || target.closest('.controls-ComboBox') ||
-         target.closest('.controls-Lookup'));
+      // TODO: Пропускаю кнопки при обходе по ENTER:
+      // https://online.sbis.ru/open_dialog.html?guid=5e1a9e18-3941-4725-8963-9a8fff7eec9f&user=902970aa-2a7b-4677-bcb9-b2aaa044bb0b
+      return target && !target.closest('.controls-BaseButton');
    }
 }
