@@ -2,6 +2,6 @@
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
     <ws:editorTemplate>
-        <div class="controls-FilterViewPanel__basicEditor"> {{_options.extendedCaption}} </div>
+        <div class="ccontrols-FilterViewPanel__basicEditor-cloud"> {{_options.extendedCaption}} </div>
     </ws:editorTemplate>
 </Controls._filterPanel.BaseEditor>

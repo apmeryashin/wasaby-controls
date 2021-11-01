@@ -6,7 +6,7 @@
                                     fontColorStyle="default"
                                     selectedKeys="{{_options.propertyValue}}"
                                     style="filterPanel"
-                                    attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor"
+                                    attr:class="ws-ellipsis ccontrols-FilterViewPanel__basicEditor-cloud"
                                     on:textValueChanged="_handleTextValueChanged()"
                                     on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
     </ws:editorTemplate>
