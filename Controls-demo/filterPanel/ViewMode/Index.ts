@@ -63,7 +63,6 @@ export default class extends Control {
                     keyProperty: 'id',
                     extendedCaption: 'Должность',
                     multiSelect: true,
-                    maxVisibleItems: 2,
                     selectorTemplate: {
                         templateName: 'Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate',
                         templateOptions: {items: [
@@ -71,10 +70,6 @@ export default class extends Control {
                                 { id: '2', title: 'Moscow' },
                                 { id: '3', title: 'St-Petersburg' },
                                 { id: '4', title: 'Astrahan' },
-                                { id: '5', title: 'Arhangelsk' },
-                                { id: '5', title: 'Arhangelsk' },
-                                { id: '5', title: 'Arhangelsk' },
-                                { id: '5', title: 'Arhangelsk' },
                                 { id: '5', title: 'Arhangelsk' }
                             ]},
                         popupOptions: {
