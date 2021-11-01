@@ -39,7 +39,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @implements Controls/interface:IDateRangeValidators
  * @implements Controls/interface:IMonthCaptionTemplate
  * @implements Controls/interface:IDateConstructor
- * @implements Controls/dateRange:IDatePopupType
+ * @implements Controls/date:IDatePopupType
  *
  * @public
  * @author Красильников А.С.
@@ -66,6 +66,12 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @demo Controls-demo/dateRange/LinkView/FontWeight/Index
  * @default bold
  */
+
+/**
+ * @name Controls/_dateRange/RangeSelector#datePopupType
+ * @variant shortDatePicker Быстрый выбор периода
+ */
+
 export default class RangeSelector extends BaseSelector<IRangeSelector> {
     protected _template: TemplateFunction = componentTmpl;
     protected _monthCaptionTemplate: TemplateFunction = MonthCaptionTemplate;
@@ -150,6 +156,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             } else {
                 className += ' controls-DatePopup__selector-marginLeft-withoutModeBtn';
             }
+            className += ` controls_popupTemplate_theme-${this._options.theme}`;
         }
 
         if (this._options.popupClassName) {

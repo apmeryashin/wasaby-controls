@@ -14,6 +14,7 @@
                     markerVisibility="{{_options.multiSelect ? 'hidden' : 'onactivated'}}"
                     itemsReadyCallback="{{_itemsReadyCallback}}"
                     itemActions="{{_itemActions}}"
+                    items="{{_options.items}}"
                     itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                     parentProperty="{{_options.parentProperty}}"
                     nodeProperty="{{_options.nodeProperty}}"

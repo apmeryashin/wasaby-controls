@@ -29,4 +29,12 @@ export default class RightPanel extends Control<IRightPanelOptions> {
     protected _close(): void {
         this._notify('close', [], {bubbling: true});
     }
+    // Для пользователей делается механизм подсказок, который должен быть привязан к определенному шаблону на
+    // сайте. На уровне StackTemplate мы не знаем в каком шаблоне находимся и не можем передать это в контроллер
+    // подсказок. Передадим метод, который по DOM определит имя шаблона. Другого способа узнать имя шаблона окна пока
+    // нет, оставим поддержку полукостыля на нашем уровне.
+    protected _getTemplateName(): string {
+        const rightPanelElement = document.querySelector('.controls-Popup');
+        return rightPanelElement.getAttribute('templateName') || '';
+    }
 }

@@ -152,6 +152,8 @@ describe('Controls/grid_clean/GridView', () => {
 
     describe('ladder offset style', () => {
         it('_getLadderTopOffsetStyles', () => {
+            let headerHeight = 100;
+            let resultsHeight = 50;
             const options = {
                 columns: [{}],
                 ladderOffset: 'offset'
@@ -164,10 +166,10 @@ describe('Controls/grid_clean/GridView', () => {
             gridView._container = {
                 getElementsByClassName: (className) => {
                     if (className === 'controls-Grid__header') {
-                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: 100}), closest: () => undefined }];
+                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: headerHeight}), closest: () => undefined }];
                     }
                     if (className === 'controls-Grid__results') {
-                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: 50}), closest: () => undefined }];
+                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: resultsHeight}), closest: () => undefined }];
                     }
                 },
                 closest: () => undefined
@@ -180,7 +182,16 @@ describe('Controls/grid_clean/GridView', () => {
                                     '.controls-GridView__ladderOffset-guid .controls-Grid__row-cell__ladder-spacing_withHeader_withResults_withGroup {' +
                                     'top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + offset + 150px) !important;' +
                                     '}';
-            assert.equal(gridView._getLadderTopOffsetStyles(), expectedStyle);
+            gridView._ladderTopOffsetStyles = gridView._getLadderTopOffsetStyles();
+            assert.equal(gridView._ladderTopOffsetStyles, expectedStyle);
+
+            // Таблицу скрыли на switchableArea или на панели
+            // Стиль не должен поменяться
+            gridView._container.closest = (selector) => selector === '.ws-hidden' ? {} : null;
+            headerHeight = 0;
+            resultsHeight = 0;
+            gridView._ladderTopOffsetStyles = gridView._getLadderTopOffsetStyles();
+            assert.equal(gridView._ladderTopOffsetStyles, expectedStyle);
         });
     });
 

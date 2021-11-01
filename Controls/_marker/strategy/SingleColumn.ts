@@ -11,7 +11,7 @@ export default class SingleColumnMarkerStrategy extends AbstractStrategy {
     }
 
     getMarkedKeyByDirection(index: number, direction: string): CrudEntityKey | void {
-        const next = direction === 'Down' || direction === 'Forward';
+        const next = direction === 'Down' || direction === 'Right' || direction === 'Forward';
         const resIndex = next ? index + 1 : index - 1;
         return this._calculateNearbyItem(resIndex,  direction);
     }

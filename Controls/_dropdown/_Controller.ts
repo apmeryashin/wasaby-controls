@@ -103,16 +103,20 @@ export default class _Controller implements IDropdownController {
       }
    }
 
-   setItems(items?: RecordSet): Promise<void> {
+   setItems(items?: RecordSet): Promise<void>|void {
       this._items = items;
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(this._items);
       }
       this._updateSelectedItems(this._options);
-      return this._getSourceController(this._options).then((sourceController) => {
-         this._setItemsAndMenuSource(items);
-         sourceController.setItems(this._items);
-      });
+      if (this._options.sourceController) {
+         this._sourceController = this._options.sourceController;
+      } else {
+         return this._getSourceController(this._options).then((sourceController) => {
+            this._setItemsAndMenuSource(items);
+            sourceController.setItems(this._items);
+         });
+      }
    }
 
    setHistoryItems(history?: RecordSet): void {

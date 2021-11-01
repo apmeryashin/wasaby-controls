@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_propertyGrid/PropertyGrid';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import * as cInstance from 'Core/core-instance';
 import {GroupItem, CollectionItem} from 'Controls/display';
 import {IObservable, RecordSet} from 'Types/collection';
 import {Model, Record as entityRecord} from 'Types/entity';
@@ -10,13 +11,13 @@ import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
-import {Move as MoveCommand} from 'Controls/listCommands';
+import {IMoveActionOptions, Move as MoveAction, Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
 import {
     PROPERTY_GROUP_FIELD,
     PROPERTY_TOGGLE_BUTTON_ICON_FIELD
 } from './Constants';
-import {groupConstants as constView} from '../list';
+import {groupConstants as constView, IList} from '../list';
 import PropertyGridCollection from './PropertyGridCollection';
 import PropertyGridCollectionItem from './PropertyGridCollectionItem';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
@@ -33,7 +34,17 @@ import {
 } from 'Controls/multiselection';
 import {isEqual} from 'Types/object';
 import {ISelectionObject, TKey} from 'Controls/interface';
-import {LOCAL_MOVE_POSITION, Memory} from 'Types/source';
+import {CrudEntityKey, LOCAL_MOVE_POSITION, Memory} from 'Types/source';
+import {detection} from 'Env/Env';
+import {TouchDetect} from 'Env/Touch';
+import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
+import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Controls/listDragNDrop';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import {FlatSiblingStrategy} from "Controls/_baseList/Strategies/FlatSiblingStrategy";
+
+const DRAGGING_OFFSET = 10;
+const DRAG_SHIFT_LIMIT = 4;
+const IE_MOUSEMOVE_FIX_DELAY = 50;
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
@@ -54,7 +65,6 @@ interface IPropertyGridValidatorArguments {
  *
  * @extends UI/Base:Control
  * @implements Controls/interface/IPropertyGrid
- * @implements Controls/propertyGrid:IProperty
  * @implements Controls/propertyGrid:IPropertyGrid
  * @implements Controls/interface/IPromisedSelectable
  * @implements Controls/list:IRemovableList
@@ -88,6 +98,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _itemActionSticky: StickyOpener;
     private _collapsedGroupsChanged: boolean = false;
     private _editingObject: TEditingObject = null;
+    private _dndController: DndController;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
         const {selectedKeys} = options;
@@ -150,6 +161,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
+    protected _afterMount(): void {
+        this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
+        this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
+    }
+
+    protected _beforeUnmount(): void {
+        this._notify('unregister', ['documentDragStart', this], {bubbling: true});
+        this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
+    }
+
     private _getCollection(options: IPropertyGridOptions): TPropertyGridCollection {
         const propertyGridItems = this._getPropertyGridItems(options.typeDescription, options.keyProperty);
         return new PropertyGridCollection({
@@ -192,7 +213,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         itemContents: Model | string,
     ): boolean {
         if (itemContents instanceof Model) {
-            const group = itemContents.get(PROPERTY_GROUP_FIELD) || itemContents.get(this._options.groupProperty);
+            const group = itemContents.get(this._options.groupProperty);
             const name = itemContents.get(itemContents.getKeyProperty());
 
             return !this._collapsedGroups[group] && this._toggledEditors[name] !== false;
@@ -272,8 +293,47 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
-    _hoveredItemChanged(e: SyntheticEvent<Event>, item: PropertyGridCollectionItem<Model>): void {
-        this._listModel.setHoveredItem(item);
+    protected _itemMouseDown(
+        event: SyntheticEvent<Event>,
+        displayItem: PropertyGridCollectionItem<Model>,
+        clickEvent: SyntheticEvent<MouseEvent>
+    ): void {
+        if (this._unprocessedDragEnteredItem) {
+            this._unprocessedDragEnteredItem = null;
+        }
+        if (!this._options.readOnly && this._options.itemsDragNDrop) {
+            this._startDragNDrop(clickEvent, displayItem);
+        }
+    }
+
+    _itemMouseUp(e, displayItem, domEvent): void {
+        this._draggedKey = null;
+        if (this._dndController && !this._dndController.isDragging()) {
+            this._dndController = null;
+        }
+
+        this._onLastMouseUpWasDrag = this._dndController && this._dndController.isDragging();
+        this._notify('itemMouseUp', [displayItem.item, domEvent.nativeEvent]);
+    }
+
+    _itemMouseEnter(event: SyntheticEvent<Event>,
+                    displayItem: PropertyGridCollectionItem<Model>): void {
+        if (this._dndController) {
+            if (this._dndController.isDragging()) {
+                this._listModel.setHoveredItem(null);
+            }
+            this._unprocessedDragEnteredItem = displayItem;
+            this._processItemMouseEnterWithDragNDrop(displayItem);
+        } else {
+            this._listModel.setHoveredItem(displayItem);
+        }
+    }
+
+    _itemMouseLeave() {
+        this._listModel.setHoveredItem(null);
+        if (this._dndController) {
+            this._unprocessedDragEnteredItem = null;
+        }
     }
 
     protected _mouseEnterHandler(): void {
@@ -495,6 +555,317 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
+    _documentDragStart(dragObject: IDragObject): void {
+        if (this._options.readOnly || !this._options.itemsDragNDrop || !(dragObject && dragObject.entity)) {
+            return;
+        }
+
+        if (this._insideDragging) {
+            this._dragStart(dragObject, this._draggedKey);
+        }
+        this._documentDragging = true;
+    }
+
+    _dragStart(dragObject: IDragObject, draggedKey: CrudEntityKey): void {
+        this._dndController.startDrag(dragObject.entity);
+
+        if (this._unprocessedDragEnteredItem) {
+            this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
+        }
+
+        if (this._options.draggingTemplate && this._listModel.isDragOutsideList()) {
+            this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
+        }
+    }
+
+    _dragLeave(): void {
+        this._insideDragging = false;
+        if (this._dndController && this._dndController.isDragging()) {
+            const draggableItem = this._dndController.getDraggableItem();
+            if (draggableItem && this._listModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
+                const newPosition = this._dndController.calculateDragPosition({targetItem: null});
+                this._dndController.setDragPosition(newPosition);
+            } else {
+                this._dndController.endDrag();
+            }
+        }
+        this._listModel.setDragOutsideList(true);
+    }
+
+    _dragEnter(dragObject: IDragObject): void {
+        this._insideDragging = true;
+        if (this._documentDragging) {
+            this._notify('_removeDraggingTemplate', [], {bubbling: true});
+        }
+        this._listModel.setDragOutsideList(false);
+
+        if (this._dndController?.isDragging()) {
+            return;
+        }
+
+        if (this._documentDragging) {
+            if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
+                const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
+
+                if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
+                    const draggableItem = this._listModel.createItem({contents: dragEnterResult});
+                    this._dndController = this._createDndController(this._listModel, draggableItem, this._options);
+                    this._dndController.startDrag(dragObject.entity);
+
+                    let startPosition;
+                    if (this._listModel.getCount()) {
+                        const lastItem = this._listModel.getLast();
+                        startPosition = {
+                            index: this._listModel.getIndex(lastItem),
+                            dispItem: lastItem,
+                            position: 'after'
+                        };
+                    } else {
+                        startPosition = {
+                            index: 0,
+                            dispItem: draggableItem,
+                            position: 'before'
+                        };
+                    }
+
+                    this._dndController.setDragPosition(startPosition);
+                } else if (dragEnterResult === true) {
+                    this._dndController = this._createDndController(this._listModel, null, this._options);
+                    this._dndController.startDrag(dragObject.entity);
+                }
+            }
+        }
+    }
+
+    _documentDragEnd(dragObject: IDragObject): void {
+        this._documentDragging = false;
+
+        if (!this._listModel || !this._dndController || !this._dndController.isDragging()) {
+            return;
+        }
+
+        let dragEndResult: Promise<any> | undefined;
+        if (this._insideDragging && this._dndController) {
+            const targetPosition = this._dndController.getDragPosition();
+            if (targetPosition && targetPosition.dispItem) {
+                dragEndResult = this._notify('dragEnd', [
+                    dragObject.entity,
+                    targetPosition.dispItem.getContents(),
+                    targetPosition.position
+                ]);
+            }
+        }
+
+        const endDrag = () => {
+            this._dndController.endDrag();
+            this._dndController = null;
+        };
+
+        if (this._dndController) {
+            if (dragEndResult instanceof Promise) {
+                dragEndResult.finally(() => {
+                    endDrag();
+                });
+            } else {
+                endDrag();
+            }
+        }
+
+        this._insideDragging = false;
+        this._draggedKey = null;
+        this._listModel.setDragOutsideList(false);
+    }
+
+    private _startDragNDrop(event: SyntheticEvent<MouseEvent>, draggableItem: PropertyGridCollectionItem<Model>): void {
+        if (DndController.canStartDragNDrop(undefined, event, TouchDetect.getInstance().isTouch())) {
+            const draggableKey = draggableItem.getContents().getKey();
+
+            this._dndController = this._createDndController(this._listModel, draggableItem, this._options);
+            let dragStartResult = this._notify('dragStart', [[draggableKey], draggableKey]);
+
+            if (dragStartResult === undefined) {
+                dragStartResult = new ItemsEntity({items: [draggableKey]});
+            }
+
+            if (dragStartResult) {
+                if (this._options.dragControlId) {
+                    dragStartResult.dragControlId = this._options.dragControlId;
+                }
+
+                this._dragEntity = dragStartResult;
+                this._draggedKey = draggableKey;
+                this._startEvent = event.nativeEvent;
+
+                this._clearSelectedText(this._startEvent);
+                if (this._startEvent && this._startEvent.target) {
+                    this._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
+                }
+
+                this._registerMouseMove();
+                this._registerMouseUp();
+            }
+        }
+    }
+
+    private _clearSelectedText(event): void {
+        if (event.type === 'mousedown') {
+            const selection = window.getSelection();
+            if (selection.removeAllRanges) {
+                selection.removeAllRanges();
+            } else if (selection.empty) {
+                selection.empty();
+            }
+        }
+    }
+
+    private _dragNDropEnded(event: SyntheticEvent): void {
+        if (this._dndController && this._dndController.isDragging()) {
+            const dragObject = this._getDragObject(event.nativeEvent, this._startEvent);
+            this._notify('_documentDragEnd', [dragObject], {bubbling: true});
+        }
+        if (this._startEvent && this._startEvent.target) {
+            this._startEvent.target.classList.remove('controls-DragNDrop__dragTarget');
+        }
+        this._unregisterMouseMove();
+        this._unregisterMouseUp();
+        this._dragEntity = null;
+        this._startEvent = null;
+    }
+
+    private _getDragObject(mouseEvent?, startEvent?): IDragObject {
+        const result: IDragObject = {
+            entity: this._dragEntity
+        };
+        if (mouseEvent && startEvent) {
+            result.domEvent = mouseEvent;
+            result.position = this._getPageXY(mouseEvent);
+            result.offset = this._getDragOffset(mouseEvent, startEvent);
+            result.draggingTemplateOffset = DRAGGING_OFFSET;
+        }
+        return result;
+    }
+
+    private _registerMouseMove(): void {
+        this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
+        this._notify('register', ['touchmove', this, this._onTouchMove], {bubbling: true});
+    }
+
+    private _unregisterMouseMove(): void {
+        this._notify('unregister', ['mousemove', this], {bubbling: true});
+        this._notify('unregister', ['touchmove', this], {bubbling: true});
+    }
+
+    private _registerMouseUp(): void {
+        this._notify('register', ['mouseup', this, this._onMouseUp], {bubbling: true});
+        this._notify('register', ['touchend', this, this._onMouseUp], {bubbling: true});
+    }
+
+    private _unregisterMouseUp(): void {
+        this._notify('unregister', ['mouseup', this], {bubbling: true});
+        this._notify('unregister', ['touchend', this], {bubbling: true});
+    }
+
+    private _onMouseMove(event): void {
+        if (event.nativeEvent) {
+            if (detection.isIE) {
+                this._onMouseMoveIEFix(event);
+            } else {
+                if (!event.nativeEvent.buttons) {
+                    this._dragNDropEnded(event);
+                }
+            }
+            if (event.nativeEvent.buttons) {
+                this._onMove(event.nativeEvent);
+            }
+        }
+    }
+
+    private _onMove(nativeEvent): void {
+        if (this._startEvent) {
+            const dragObject = this._getDragObject(nativeEvent, this._startEvent);
+            if ((!this._dndController || !this._dndController.isDragging()) && this._isDragStarted(this._startEvent, nativeEvent)) {
+                this._insideDragging = true;
+                this._notify('_documentDragStart', [dragObject], {bubbling: true});
+            }
+            if (this._dndController && this._dndController.isDragging()) {
+                const moveOutsideList = !(this._container[0] || this._container).contains(nativeEvent.target);
+                if (moveOutsideList !== this._listModel.isDragOutsideList()) {
+                    this._listModel.setDragOutsideList(moveOutsideList);
+                }
+
+                this._notify('dragMove', [dragObject]);
+                if (this._options.draggingTemplate && this._listModel.isDragOutsideList()) {
+                    this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
+                }
+            }
+        }
+    }
+
+    private _getPageXY(event): object {
+        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent ? event.nativeEvent : event);
+    }
+
+    private _isDragStarted(startEvent, moveEvent): boolean {
+        const offset = this._getDragOffset(moveEvent, startEvent);
+        return Math.abs(offset.x) > DRAG_SHIFT_LIMIT || Math.abs(offset.y) > DRAG_SHIFT_LIMIT;
+    }
+
+    private _getDragOffset(moveEvent, startEvent): object {
+        const moveEventXY = this._getPageXY(moveEvent),
+            startEventXY = this._getPageXY(startEvent);
+
+        return {
+            y: moveEventXY.y - startEventXY.y,
+            x: moveEventXY.x - startEventXY.x
+        };
+    }
+
+    private _onMouseUp(event): void {
+        if (this._startEvent) {
+            this._dragNDropEnded(event);
+        }
+    }
+
+    private _onMouseMoveIEFix(event): void {
+        if (!event.nativeEvent.buttons && !this._endDragNDropTimer) {
+            this._endDragNDropTimer = setTimeout(() => {
+                this._dragNDropEnded(event);
+            }, IE_MOUSEMOVE_FIX_DELAY);
+        } else {
+            clearTimeout(this._endDragNDropTimer);
+            this._endDragNDropTimer = null;
+        }
+    }
+
+    private _createDndController(
+        model: TPropertyGridCollection,
+        draggableItem: CollectionItem,
+        options: any
+    ): DndController<IDragStrategyParams> {
+        let strategy;
+        if (options.parentProperty) {
+            strategy = TreeStrategy;
+        } else {
+            strategy = FlatStrategy;
+        }
+        return new DndController(model, draggableItem, strategy);
+    }
+
+    private _processItemMouseEnterWithDragNDrop(item): void {
+        let dragPosition;
+        const targetItem = item;
+        if (this._dndController.isDragging()) {
+            dragPosition = this._dndController.calculateDragPosition({targetItem});
+            if (dragPosition) {
+                const changeDragTarget = this._notify('changeDragTarget', [this._dndController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
+                if (changeDragTarget !== false) {
+                    this._dndController.setDragPosition(dragPosition);
+                }
+            }
+            this._unprocessedDragEnteredItem = null;
+        }
+    }
+
     validate({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
@@ -527,7 +898,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
-    _getMoveViewCommand(keys: TKey[], direction: LOCAL_MOVE_POSITION, target?: Model): MoveViewCommand {
+    _getMoveViewCommand(keys: TKey[],
+                        direction: LOCAL_MOVE_POSITION,
+                        target?: Model): MoveViewCommand {
         return new MoveViewCommand({
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
@@ -555,6 +928,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             }).then((result) => result && this._getRemoveViewCommand(resultSelection).execute({}));
         }
         return this._getRemoveViewCommand(resultSelection).execute({});
+    }
+
+    moveItems(keys: TKey[], target: Model, position: LOCAL_MOVE_POSITION): void {
+        return this._getMoveViewCommand(keys, position, target).execute();
     }
 
     moveItemUp(key: TKey): void {

@@ -46,6 +46,7 @@ export {IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility,
     getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_input/interface/IBorderVisibility';
 export {IBorderVisibilityArea, TBorderVisibilityArea, getOptionBorderVisibilityAreaTypes} from './_input/interface/IBorderVisibilityArea';
 export {IFieldTemplate, IFieldTemplateOptions} from './_input/interface/IFieldTemplate';
+export {IPasswordOptions} from 'Controls/_input/Password';
 
 // Helpers
 import * as ActualAPI from 'Controls/_input/ActualAPI';

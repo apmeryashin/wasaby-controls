@@ -15,8 +15,10 @@
             captionPosition="{{captionPosition}}"
             multiSelectVisibility="{{_options.multiSelectVisibility}}"
             on:mouseenter="_mouseEnterHandler(item)"
-            on:mouseleave="_mouseLeaveHandler()"
+            on:mouseleave="_mouseLeaveHandler(item)"
             on:click="_itemClick(item)"
+            on:mousedown="_itemMouseDown(item)"
+            on:mouseup="_itemMouseUp(item)"
             on:propertyValueChanged="_propertyValueChanged(item.getContents())">
         <ws:itemActionsTemplate>
             <Controls.Container.Async templateName="Controls/itemActions:ItemActionsTemplate">

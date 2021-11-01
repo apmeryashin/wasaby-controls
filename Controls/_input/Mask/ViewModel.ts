@@ -1,6 +1,6 @@
 import {FormatBuilder, Formatter} from 'Controls/decorator';
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
-import BaseViewModel = require('Controls/_input/Base/ViewModel');
+import {ViewModel as BaseViewModel} from 'Controls/_input/Base/ViewModel';
 import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
 
       /**
@@ -33,6 +33,7 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
       };
 
       class ViewModel extends BaseViewModel {
+         protected _shouldShiftReplacer: boolean = true;
          constructor(...args: any[]) {
             super(...args);
             this.setCarriageDefaultPosition(0);
@@ -167,7 +168,8 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
             this._format = FormatBuilder.getFormat(mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
-            const result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format, this.newValue);
+            const result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format,
+                this._format, this.newValue, this._shouldShiftReplacer);
             return result;
          }
 

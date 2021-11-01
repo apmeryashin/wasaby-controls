@@ -25,7 +25,8 @@
          </ws:partial>
 
          <div if="{{additionalPaneltemplate}}"
-              attr:class="controls-TileView__additionalPaneltemplate" >
+              attr:class="controls-TileView__additionalPaneltemplate
+                          controls-TileView__additionalPaneltemplate_{{additionalPanelPosition || 'topRight'}}" >
             <ws:partial template="{{additionalPaneltemplate}}"/>
          </div>
          <ws:partial

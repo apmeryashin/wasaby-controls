@@ -41,6 +41,11 @@
    min-width: 1px;
 }
 
+//Z-index нужен, чтобы тень от ScrollContainer'a в master'e перекрывалась тенью от detail'a
+.controls-MasterDetail_details {
+   z-index: 1;
+}
+
 .controls-MasterDetail_master-content {
    height: 100%;
 }

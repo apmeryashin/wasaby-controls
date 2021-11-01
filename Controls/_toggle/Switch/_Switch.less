@@ -145,14 +145,27 @@
       }
 
       .controls-Switch__toggle__wrapper_bg-contrast {
+         border-color: var(--unaccented_hover_contrast_background-color);
+         background-color: var(--unaccented_hover_contrast_background-color);
+      }
+
+      .controls-SwitchCircle_contrast-unselected {
+         border-color: var(--unaccented_hover_contrast_background-color);
+      }
+
+      .controls-SwitchCircle_unselected {
          border-color: var(--unselected_marker-hover_color_switcher);
-         background-color: var(--unselected_marker-hover_color_switcher);
       }
 
       .controls-Switch__toggle__wrapper_bg-contrast_checked {
          border-color: var(--selected_marker-hover_color_switcher);
          background-color: var(--selected_marker-hover_color_switcher);
       }
+
+      .controls-SwitchCircle_contrast-selected,
+      .controls-SwitchCircle_selected {
+          border-color: var(--selected_marker-hover_color_switcher);
+       }
 
       .controls-Switch__toggle__wrapper_resetValue {
          .controls-SwitchCircle_unselected {
@@ -162,11 +175,21 @@
          &.controls-Switch__toggle__wrapper_bg-same,
          &.controls-Switch__toggle__wrapper_bg-contrast {
             border-color: var(--unaccented_active_same_background-color);
-            background-color: var(--unaccented_hover_same_background-color);
+            background-color: var(--hover_background-color);
          }
 
          .controls-SwitchCircle_selected {
             background-color: var(--primary_active_background-color);
+         }
+
+         .controls-SwitchCircle_contrast-unselected,
+         .controls-SwitchCircle_unselected {
+            border-color: var(--unaccented_active_same_background-color);
+         }
+
+         .controls-SwitchCircle_selected,
+         .controls-SwitchCircle_contrast-selected {
+            border-color: var(--primary_active_background-color);
          }
 
          &.controls-Switch__toggle__wrapper_bg-same_checked,

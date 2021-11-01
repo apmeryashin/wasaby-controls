@@ -320,9 +320,6 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
             if (this._$owner.hasMultiSelectColumn()) {
                 headerEndColumn += 1;
             }
-            if (this._$owner.hasItemActionsSeparatedCell()) {
-                headerEndColumn -= 1;
-            }
             return currentEndColumn === headerEndColumn;
         } else {
             return super.isLastColumn();

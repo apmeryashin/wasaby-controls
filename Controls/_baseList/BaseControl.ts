@@ -697,7 +697,7 @@ const _private = {
                 // После выполнения поиска мы должны поставить маркер.
                 // Если выполняется порционный поиск и первый запрос не вернул ни одной записи,
                 // то на событие reset список будет пустой и нам некуда будет ставить маркер.
-                if (_private.hasMarkerController(self) && self._indicatorsController.isDisplayedPortionedSearch()) {
+                if (_private.hasMarkerController(self) && _private.isPortionedLoad(self)) {
                     const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
                     self._changeMarkedKey(newMarkedKey);
                 }
@@ -1991,11 +1991,12 @@ const _private = {
 
         if (!direction) {
             this._loadedBySourceController = true;
-            if (this._isMounted && this._children.listView) {
+            if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
                 this._children.listView.reset({
                     keepScroll: this._keepScrollAfterReload
                 });
             }
+            this._keepHorizontalScroll = false;
             _private.setReloadingState(this, false);
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
@@ -3209,6 +3210,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _hoverFreezeController: HoverFreeze;
 
+    _keepHorizontalScroll: boolean = false;
+
     //#endregion
 
     constructor(options, context) {
@@ -3663,9 +3666,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // для вычисления сдвига виртуального скролла нужно знать об отступах триггеров
         this._updateScrollController();
 
-        // Если верхний индикатор не будет показан, то сразу же показываем триггер,
-        // чтобы в кейсе когда нет данных после моунта инициировать их загрузку
-        if (!this._indicatorsController.shouldDisplayTopIndicator()) {
+        // Если нет данных, то сразу же показываем триггер, чтобы при наличии данных вверх инициировалась их загрузка
+        // Если вверх нет данных, то сразу показываем триггер, т.к. ромашку показывать не будем, а триггер нужен для виртуального скролла.
+        if (
+            !this._listViewModel.getCount() ||
+            !this._hasMoreData('up') ||
+            !this._options.attachLoadTopTriggerToNull ||
+            this._hasHiddenItemsByVirtualScroll('up')
+        ) {
             this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
         }
 
@@ -6078,6 +6086,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _sortingChanged(event, propName) {
         const newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
+
+        // При смене сортировки позиция горизонтального скролла не должна изменяться.
+        // FIXME: Временное решение, до перехода на нативный горизонтальный скролл.
+        //  https://online.sbis.ru/opendoc.html?guid=bc40e794-c5d4-4381-800f-a98f2746750a
+        this._keepHorizontalScroll = true;
         this._notify('sortingChanged', [newSorting]);
     }
 
@@ -6099,8 +6112,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!_private.isPortionedLoad(this)) {
             if (this._indicatorsController.shouldDisplayTopIndicator()) {
                 this._indicatorsController.displayTopIndicator(true);
-            } else {
-                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
             }
 
             if (this._indicatorsController.shouldDisplayBottomIndicator()) {
@@ -6676,7 +6687,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _isPagingPadding(): boolean {
-        return !detection.isMobileIOS && this._isPagingPaddingFromOptions() && this._bottomVisible;
+        return !detection.isMobileIOS &&
+            this._isPagingPaddingFromOptions() &&
+            (this._bottomVisible || !!this._indicatorsController.getPortionedSearchDirection());
     }
 
     /**

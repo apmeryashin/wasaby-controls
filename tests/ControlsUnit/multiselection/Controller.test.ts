@@ -471,6 +471,7 @@ describe('Controls/_multiselection/Controller', () => {
          assert.isFalse(model.getItemBySourceKey(9).isSelected());
 
          assert.equal(controller.getCountOfSelected(), 3);
+         assert.equal(controller.getLimit(), 3);
       });
 
       it('select pack, select one item and select pack, selected item should be selected', () => {

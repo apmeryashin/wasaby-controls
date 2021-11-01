@@ -38,6 +38,27 @@ define(
          });
          describe('input', function() {
             describe('insert', function() {
+               [{
+                  shouldShiftReplacer: true,
+                  result: '2 .13'
+               }, {
+                  shouldShiftReplacer: false,
+                  result: '21.3 '
+               }].forEach((test) => {
+                  it(`should ${!test.shouldShiftReplacer ? 'not' : ''} shift replacer`, () => {
+                     result = inputMod.MaskInputProcessor.input({
+                        before: '',
+                        after: ' 1.3 ',
+                        delete: '',
+                        insert: '2'
+                     }, 'insert', replacer, format, format, null, test.shouldShiftReplacer);
+                     assert.deepEqual(result, {
+                        value: test.result,
+                        position: 1,
+                        format: format
+                     });
+                  });
+               });
                it('Test_01', function() {
                   result = inputMod.MaskInputProcessor.input({
                      before: '1',
@@ -167,7 +188,7 @@ define(
                      assert.equal(result.value, result.value);
                      assert.equal(result.position, result.position);
                   });
-               })
+               });
             });
             describe('delete', function() {
                it('Test_01', function() {
