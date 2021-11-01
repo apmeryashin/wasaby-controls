@@ -12,14 +12,14 @@ import {
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
-import * as ItemTemplate from 'wml!Controls/_toggle/Switch/resources/ItemTemplate';
+import * as CaptionTemplate from 'wml!Controls/_toggle/Switch/resources/CaptionTemplate';
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
     ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
    caption: string;
    captionPosition: string;
    size?: string;
-   itemTemplate: TemplateFunction;
+   captionTemplate: TemplateFunction;
 }
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
@@ -77,7 +77,7 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
          validationStatus: 'valid',
          contrastBackground: true,
          size: 'l',
-         itemTemplate: ItemTemplate
+         captionTemplate: CaptionTemplate
       };
    }
    static getOptionTypes(): object {
@@ -150,10 +150,10 @@ Object.defineProperty(Switch, 'defaultProps', {
  */
 
 /**
- * @name Controls/_toggle/Switch#itemTemplate
+ * @name Controls/_toggle/Switch#captionTemplate
  * @cfg {TemplateFunction|String} Шаблон текста заголовка кнопки.
  * @remark
- * По умолчанию используется шаблон "Controls/toggle:switchItemTemplate".
+ * По умолчанию используется шаблон "Controls/toggle:switchCaptionTemplate".
  *
  * Базовый шаблон itemTemplate поддерживает следующие параметры:
  * - additionalCaption {Function|String} — Дополнительный текст заголовка кнопки.
@@ -162,10 +162,10 @@ Object.defineProperty(Switch, 'defaultProps', {
  * <!-- WML -->
  * <Controls.toggle:Switch>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/toggle:switchItemTemplate" scope="{{itemTemplate}}" additionalCaption="{{_captionTemplate}}"/>
+ *       <ws:partial template="Controls/toggle:switchCaptionTemplate" scope="{{itemTemplate}}" additionalCaption="{{_captionTemplate}}"/>
  *    </ws:itemTemplate>
  * </Controls.toggle:Switch>
  * </pre>
- * @demo Controls-demo/toggle/Switch/ItemTemplate/Index
+ * @demo Controls-demo/toggle/Switch/CaptionTemplate/Index
  */
 export default Switch;

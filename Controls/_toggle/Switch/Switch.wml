@@ -16,7 +16,7 @@
    </span>
 </ws:template>
 <ws:template name="caption">
-   <ws:partial template="{{_options.itemTemplate}}" scope="{{_options}}"/>
+   <ws:partial template="{{_options.captionTemplate}}" scope="{{_options}}"/>
 </ws:template>
 
 <span class="controls_toggle_theme-{{_options.theme}} controls-Switch"

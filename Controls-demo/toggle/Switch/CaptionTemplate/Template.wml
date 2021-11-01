@@ -9,7 +9,7 @@
         <Controls.toggle:Switch bind:value="_value2"
                                 caption="test">
             <ws:itemTemplate>
-                <ws:partial template="Controls/toggle:switchItemTemplate" scope="{{itemTemplate}}" additionalCaption="{{_captionTemplate}}"/>
+                <ws:partial template="Controls/toggle:switchCaptionTemplate" scope="{{itemTemplate}}" additionalCaption="{{_captionTemplate}}"/>
             </ws:itemTemplate>
         </Controls.toggle:Switch>
     </div>
