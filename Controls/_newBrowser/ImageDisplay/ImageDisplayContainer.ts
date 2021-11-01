@@ -27,17 +27,17 @@ export default class BrowserImageDisplayContainer extends ImageDisplayContainer 
     }
 
     protected _getListImagePosition(item: CollectionItem): string {
-        const imagePosition = this._viewConfiguration.getListCfg().imagePosition;
+        const imagePosition = this._options.listCfg.imagePosition;
         return this._hasItemWithImage ? imagePosition : 'none';
     }
 
     protected _getTileImageViewMode(item: CollectionItem): string {
-        const imageViewMode = this._viewConfiguration.getTileCfg().getImageViewMode(item);
+        const imageViewMode = this._options.tileCfg.getImageViewMode(item);
         return this._hasItemWithImage ? imageViewMode : 'none';
     }
 
     protected _getTileImagePosition(item: CollectionItem): string {
-        const imagePosition = this._viewConfiguration.getTileCfg().imagePosition;
+        const imagePosition = this._options.tileCfg.imagePosition;
         return this._hasItemWithImage ? imagePosition : 'none';
     }
 }
