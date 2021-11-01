@@ -85,8 +85,13 @@
    flex-shrink: 1;
    min-width: 0;
    height: 100%;
-   align-items: center;
+   align-items: baseline;
    padding-right: var(--header-content_padding-right_stack);
+
+   &::before {
+      content: '\200b';
+      font-size: var(--header_lineheight_stack);
+   }
 
    &:empty {
       padding-right: 0;
