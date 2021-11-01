@@ -61,7 +61,9 @@ const getRestrictiveContainerCoords = (item: IStickyItem): ITargetCoords => {
             restrictiveContainer = item.popupOptions.restrictiveContainer;
         } else if (typeof item.popupOptions.restrictiveContainer === 'string') {
             // ищем ближайшего
-            restrictiveContainer = item.popupOptions.target.closest(item.popupOptions.restrictiveContainer);
+            if (item.popupOptions.target instanceof HTMLElement) {
+                restrictiveContainer = item.popupOptions.target.closest(item.popupOptions.restrictiveContainer);
+            }
             if (!restrictiveContainer) {
                 restrictiveContainer = document.querySelector(item.popupOptions.restrictiveContainer);
             }
