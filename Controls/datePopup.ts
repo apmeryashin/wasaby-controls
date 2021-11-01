@@ -214,6 +214,10 @@ export default class DatePopup extends Control implements EventProxyMixin {
         this._updateResetButtonVisible(options);
 
         this._headerType = options.headerType;
+
+        if (!this._yearCanBeDisplayed(this._displayedDate)) {
+            this._displayedDate = new Date(dateUtils.MAX_YEAR_VALUE, -1);
+        }
     }
 
     _afterUpdate(): void {
@@ -323,7 +327,7 @@ export default class DatePopup extends Control implements EventProxyMixin {
 
     _onYearsSelectionHoveredValueChanged(e: SyntheticEvent, value: Date): void {
         // We update the displayed date only during the selection process.
-        if (value) {
+        if (value && this._yearCanBeDisplayed(value)) {
             this._displayedDate = value;
         }
     }
@@ -340,8 +344,17 @@ export default class DatePopup extends Control implements EventProxyMixin {
         this.sendResult(startValue, endValue);
     }
 
+    _yearCanBeDisplayed(value: Date): boolean {
+        const lastDisplayedYear = dateUtils.MAX_YEAR_VALUE;
+        const nextVisibleYear = value.getFullYear() + 1;
+
+        return lastDisplayedYear >= nextVisibleYear;
+    }
+
     _onYearsItemClick(e: SyntheticEvent, item: Date): void {
-        this._displayedDate = item;
+        if (this._yearCanBeDisplayed(item)) {
+            this._displayedDate = item;
+        }
     }
 
     _monthsRangeChanged(e: SyntheticEvent, start: Date, end: Date): void {
@@ -563,6 +576,9 @@ export default class DatePopup extends Control implements EventProxyMixin {
             displayedDate = this._options.endDate;
         } else {
             displayedDate = new Date();
+        }
+        if (!this._yearCanBeDisplayed(displayedDate)) {
+            displayedDate = new Date(dateUtils.MAX_YEAR_VALUE, -1);
         }
         this._displayedDate = this._state === STATES.year ?
             dateUtils.getStartOfYear(displayedDate) : dateUtils.getStartOfMonth(displayedDate);

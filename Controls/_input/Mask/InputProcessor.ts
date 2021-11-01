@@ -1,6 +1,14 @@
-import {FormatBuilder, Formatter} from 'Controls/decorator';
+import {Formatter} from 'Controls/decorator';
+import {ISplitValue} from 'Controls/_input/resources/Types';
 
-const _private = {
+export interface IInputConfig {
+    position: number;
+    value: string;
+}
+
+
+      var
+         _private = {
 
     /**
      * Получить данные путем приведения исходного значения в виде разбиения к маске.
@@ -33,7 +41,7 @@ const InputProcessor = {
      * @param clearData чистые данные.
      * @return {Object}
      */
-    getClearSplitValue(splitValue, clearData) {
+    getClearSplitValue(splitValue, clearData): ISplitValue {
         const clearSplitValue = {};
         let start = 0;
         let position;
@@ -250,7 +258,7 @@ const InputProcessor = {
      * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
      */
     input(splitValueSrc: object, inputType: string, replacer: string, oldFormat: object, newFormat: object,
-          curDisplayValue: string, shouldShiftReplacer: boolean): object {
+          curDisplayValue: string, shouldShiftReplacer: boolean): IInputConfig {
         const splitValue = {...splitValueSrc};
         let value = splitValue.before + splitValue.delete + splitValue.after;
 

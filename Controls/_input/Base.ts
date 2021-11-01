@@ -4,7 +4,7 @@ import {descriptor} from 'Types/entity';
 import {EventUtils} from 'UI/Events';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import * as ViewModel from 'Controls/_input/Base/ViewModel';
+import {ViewModel} from 'Controls/_input/Base/ViewModel';
 import * as unEscapeASCII from 'Core/helpers/String/unEscapeASCII';
 import {hasHorizontalScroll} from 'Controls/scroll';
 import {processKeydownEvent} from 'Controls/_input/resources/Util';
@@ -19,6 +19,7 @@ import 'css!Controls/input';
 import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
 import { getOptionBorderVisibilityTypes } from 'Controls/_input/interface/IBorderVisibility';
+import BaseViewModel from 'Controls/_input/BaseViewModel';
 
 interface IFieldTemplate {
     template: string|TemplateFunction;
@@ -530,7 +531,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
      * @return {Controls/_input/Base/ViewModel} View model constructor.
      * @private
      */
-    protected _getViewModelConstructor(): ViewModel {
+    protected _getViewModelConstructor(): typeof ViewModel {
         return ViewModel;
     }
 

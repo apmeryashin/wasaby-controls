@@ -169,7 +169,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._initSourceController(options, receivedState);
       const sourceController = this._sourceController;
       const controllerState = sourceController.getState();
-      const items = receivedState?.items instanceof RecordSet ? receivedState.items : options.items;
+      const items = receivedState?.items instanceof RecordSet ? receivedState.items : null;
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       this._filter = controllerState.filter;

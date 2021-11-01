@@ -125,7 +125,7 @@ export function getStartOfMonth(date: Date): Date {
  */
 export function getEndOfMonth(date: Date): Date {
     const d: Date = date || new Date();
-    return new date.constructor(d.getFullYear(), d.getMonth() + 1, 0);
+    return new d.constructor(d.getFullYear(), d.getMonth() + 1, 0);
 }
 
 /**

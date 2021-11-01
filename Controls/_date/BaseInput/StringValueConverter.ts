@@ -460,17 +460,24 @@ export default class StringValueConverter {
 
         if (autoCorrect) {
             endDateOfMonth = dateUtils.getEndOfMonth(new dateConstructor(year, month, 1)).getDate();
+            const maxMonth = 11;
+            const maxHours = 23;
+            const maxMinutes = 59;
+            const maxSeconds = 59;
+            if (month > maxMonth) {
+                month = maxMonth;
+            }
             if (date > endDateOfMonth) {
                 date = endDateOfMonth;
             }
-            if (hours >= 24) {
-                hours = 23;
+            if (hours > maxHours) {
+                hours = maxHours;
             }
-            if (minutes >= 60) {
-                minutes = 59;
+            if (minutes > maxMinutes) {
+                minutes = maxMinutes;
             }
-            if (seconds >= 60) {
-                seconds = 59;
+            if (seconds > maxSeconds) {
+                seconds = maxSeconds;
             }
         }
 

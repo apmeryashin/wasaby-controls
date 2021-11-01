@@ -1,0 +1,6 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">searchInputContrastBackground = true</div>
+        <Controls.search:ExpandableInput searchInputContrastBackground="{{true}}" attr:class="controlsDemo__ml1"/>
+    </div>
+</div>

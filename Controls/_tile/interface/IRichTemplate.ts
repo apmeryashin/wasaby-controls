@@ -270,10 +270,26 @@ export default interface IRichTemplateOptions {
     afterImageTemplate?: TemplateFunction;
 
     /**
-     * @cfg {TemplateFunction|String} Шаблон, вставляемый в правом верхнем углу плитки для отображения дополнительных прикладных элементов.
+     * @cfg {TemplateFunction|String} Шаблон, вставляемый в углу плитки для отображения дополнительных прикладных элементов.
      * @demo Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/AdditionalPaneltemplate/Index
+     * @see additionalPanelPosition
      */
-     additionalPanelTemplate?: TemplateFunction;
+    additionalPanelTemplate?: TemplateFunction;
+
+   /**
+     * @typedef {String} TAdditionalPanelPosition
+     * @variant topRight Верхний правый угол.
+     * @variant bottomRight Нижний правый угол.
+     * @variant topLeft Верхний левый угол.
+     * @variant bottomLeft Нижний левый угол.
+     */
+    /**
+     * @cfg {TAdditionalPanelPosition} Угол, в который вставляется additionalPanelTemplate
+     * @default topRight
+     * @demo Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/AdditionalPaneltemplate/Index
+     * @see additionalPanelTemplate
+     */
+    additionalPanelPosition?: string;
 
     /**
      * @cfg {String} Соотношение сторон изображения в формате x:y, где x-ширина, y-высота.

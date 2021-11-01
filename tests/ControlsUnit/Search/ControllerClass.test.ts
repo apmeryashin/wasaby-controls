@@ -432,7 +432,11 @@ describe('Controls/search:ControllerClass', () => {
       sourceController = new NewSourceController({
          source
       });
+      let filterOnItemsChanged;
       await sourceController.reload();
+      sourceController.getItems().subscribe('onCollectionChange', () => {
+         filterOnItemsChanged = sourceController.getFilter();
+      });
       const searchControllerOptions = {
          filterOnSearchCallback: (searchValue, item) => {
             return item.get('title').toLowerCase().includes(searchValue.toLowerCase());
@@ -444,6 +448,7 @@ describe('Controls/search:ControllerClass', () => {
       const searchController = getSearchController(searchControllerOptions);
       searchController.search('test2');
 
+      assert.ok(filterOnItemsChanged.testParam);
       assert.ok(sourceController.getItems().getCount() === 1);
       assert.ok(sourceController.getItems().at(0).get('title') === 'test2');
    });

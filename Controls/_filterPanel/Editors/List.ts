@@ -176,6 +176,9 @@ class ListEditor extends Control<IListEditorOptions> {
         if (filterChanged || valueChanged) {
             this._setFilter(this._selectedKeys, options);
         }
+        if (valueChanged) {
+            this._setMarkedKey(this._selectedKeys, options);
+        }
     }
 
     protected _itemActionVisibilityCallback(action: IItemAction, item: Model): boolean {

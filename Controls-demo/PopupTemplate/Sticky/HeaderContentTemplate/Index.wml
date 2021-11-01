@@ -1,7 +1,13 @@
 <div class="controlsDemo__flexRow">
     <div class="controlsDemo__wrapper">
         <div class="controls-text-label">С headerContentTemplate</div>
-        <Controls.popupTemplate:Sticky headingCaption="Заголовок">
+        <Controls.popupTemplate:Sticky>
+            <ws:headerContentTemplate>
+                <div class="ws-flexbox" attr:style="padding-right: 8px">
+                    <div class="controls-text-secondary" attr:style="margin-right: 8px">Список элементов</div>
+                    <div class="icon-Agreed controls-icon_size-m controls-icon_style-secondary"></div>
+                </div>
+            </ws:headerContentTemplate>
             <ws:bodyContentTemplate>
                 <div class="controlsDemo-PopupTemplate__list-item"> Элемент меню 1 </div>
                 <div class="controlsDemo-PopupTemplate__list-item"> Элемент меню 2 </div>

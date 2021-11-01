@@ -404,13 +404,6 @@ define([
          });
       });
 
-      describe('_getMonth', function() {
-         it('should return correct month', function() {
-            let mv = calendarTestUtils.createComponent(calendar.MonthList, config);
-            assert.isTrue(DateUtil.Base.isDatesEqual(mv._getMonth(2018, 1), new Date(2018, 1, 1)));
-         });
-      });
-
       describe('_intersectHandler', function() {
          [{
             title: 'Should generate an event when the element appeared on top and half visible',

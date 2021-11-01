@@ -11,15 +11,16 @@ const DATA = [{
     type: null,
     title: 'Мост',
     image: Images.BRIDGE,
-    'parent@': true,
-    description: 'папка с мостом',
+    'parent@': null,
+    description: 'Мост',
     imageProportion: '1:1',
     imageViewMode: 'circle',
     imagePosition: 'top',
     gradientType: 'dark',
     isDocument: true,
     width: 300,
-    isShadow: true
+    isShadow: true,
+    additionalPanelPosition: 'topRight'
 }, {
     id: 1,
     parent: null,
@@ -31,30 +32,43 @@ const DATA = [{
     imagePosition: 'top',
     imageViewMode: 'rectangle',
     'parent@': null,
-    imageHeight: 's',
     image: Images.MEDVED,
-    isShadow: true
+    isShadow: true,
+    additionalPanelPosition: 'bottomLeft'
+}, {
+    id: 2,
+    parent: null,
+    type: null,
+    title: 'Мост',
+    description: 'Элемент с описанием',
+    imageProportion: '16:9',
+    titleLines: 1,
+    imagePosition: 'top',
+    imageViewMode: 'rectangle',
+    'parent@': null,
+    image: Images.BRIDGE,
+    isShadow: true,
+    additionalPanelPosition: 'topLeft'
+}, {
+    id: 3,
+    parent: null,
+    type: null,
+    title: 'Медведики',
+    description: 'Элемент с описанием',
+    imageProportion: '1:1',
+    titleLines: 1,
+    imagePosition: 'top',
+    imageViewMode: 'rectangle',
+    'parent@': null,
+    image: Images.MEDVED,
+    isShadow: true,
+    additionalPanelPosition: 'bottomRight'
 }];
-const ITEM_ACTIONS = [
-    {
-        id: 1,
-        icon: 'icon-PhoneNull',
-        title: 'phone',
-        showType: 0
-    },
-    {
-        id: 2,
-        icon: 'icon-EmptyMessage',
-        title: 'message',
-        showType: 0
-    }
-];
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory = null;
     protected _selectedKeys: string[] = [];
-    protected _itemActions: IItemAction[];
 
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
@@ -62,7 +76,6 @@ export default class extends Control {
             parentProperty: 'parent',
             data: DATA
         });
-        this._itemActions = ITEM_ACTIONS;
     }
 
     protected _setLove(e: Event, item: Model, value: boolean): void {

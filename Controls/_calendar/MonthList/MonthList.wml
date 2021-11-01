@@ -36,35 +36,20 @@
             </ws:navigation>
 
             <ws:itemTemplate>
-               <ws:partial template="Controls/list:ItemTemplate"
-                           itemData="{{itemTemplate.itemData}}"
-                           highlightOnHover="{{false}}"
-                           attr:class="controls-MonthList__item">
-                  <ws:contentTemplate>
-                     <Controls.scroll:IntersectionObserverContainer
-                           observerName="monthList"
-                           data="{{ itemTemplate.itemData.item.getRawData() }}">
-                        <ws:partial
-                              attr:class="controls-MonthList__template"
-                              template="{{_getTemplate(itemTemplate.itemData.item)}}"
-                              date="{{itemTemplate.itemData.item.date}}"
-                              extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
-                              startValue="{{itemTemplate.itemData.item.startValue}}"
-                              endValue="{{itemTemplate.itemData.item.endValue}}"
-                              _extDataVersion="{{_extData._version}}"
-                              monthTemplate="{{_options.monthTemplate}}"
-                              dayTemplate="{{_options.dayTemplate}}"
-                              dayHeaderTemplate="{{ _options.dayHeaderTemplate }}"
-                              theme="{{ _options.theme }}"
-                              newMode="{{ _options.newMode }}"
-                              _formatMonth="{{_formatMonth}}"
-                              _options="{{ _options.viewMode !== 'month' ? _options}}"
-                              _getMonth="{{_getMonth}}"
-                              _dateToDataString="{{_dateToDataString}}"
-                           />
-                     </Controls.scroll:IntersectionObserverContainer>
-                  </ws:contentTemplate>
-               </ws:partial>
+               <Controls._calendar.MonthList.MonthListItem
+                       itemHeaderTemplate="{{ _itemHeaderTemplate }}"
+                       stubTemplate="{{ _options.stubTemplate }}"
+                       startValue="{{ _options.startValue }}"
+                       endValue="{{ _options.endValue }}"
+                       itemTemplate="{{ _itemTemplate }}"
+                       itemData="{{ itemTemplate.itemData }}"
+                       extData="{{ _extData }}"
+                       monthTemplate="{{ _options.monthTemplate }}"
+                       dayTemplate="{{ _options.dayTemplate }}"
+                       dayHeaderTemplate="{{ _options.dayHeaderTemplate }}"
+                       newMode="{{ _options.newMode }}"
+                       viewMode="{{ _options.viewMode }}"
+               />
             </ws:itemTemplate>
          </Controls.list:View>
       </Controls.scroll:Container>

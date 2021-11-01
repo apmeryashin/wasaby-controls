@@ -2,7 +2,7 @@ define(
    [
       'Env/Event',
       'Env/Env',
-      'Core/core-instance',
+      'Controls/_input/Base/ViewModel',
       'Core/helpers/Hcontrol/makeInstanceCompatible',
       'Controls/input',
       'ControlsUnit/resources/ProxyCall',
@@ -10,7 +10,7 @@ define(
       'ControlsUnit/resources/TemplateUtil',
       'Vdom/Vdom'
    ],
-   function(EnvEvent, Env, instance, makeInstanceCompatible, inputMod, ProxyCall, InputUtility, TemplateUtil, Vdom) {
+   function(EnvEvent, Env, BaseViewModelModule, makeInstanceCompatible, inputMod, ProxyCall, InputUtility, TemplateUtil, Vdom) {
       describe('Controls/_input/Base', function() {
          var calls;
          var ctrl = new inputMod.Base();
@@ -53,11 +53,8 @@ define(
             ctrl._beforeMount({
                value: ''
             });
-
-            assert.isTrue(
-               instance.instanceOfModule(ctrl._viewModel, 'Controls/input:BaseViewModel') ||
-               instance.instanceOfModule(ctrl._viewModel, 'Controls/_input/Base/ViewModel')
-            );
+            const baseModel = BaseViewModelModule.ViewModel;
+            assert.isTrue((ctrl._viewModel instanceof baseModel))
          });
          it('ViewModel _isEmptyValue', function() {
             const isEmptyValue = inputMod.NewBaseViewModel.prototype._isEmptyValue;

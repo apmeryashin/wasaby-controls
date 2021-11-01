@@ -1,11 +1,11 @@
 import {assert} from 'chai';
 
-import { Tree, TreeItem } from 'Controls/display';
+import {groupConstants, Tree, TreeItem} from 'Controls/display';
 import {ALL_EXPANDED_VALUE, ExpandController} from 'Controls/expandCollapse';
 import { RecordSet } from 'Types/collection';
 import {Model} from 'Types/entity';
 
-function initTest(data: object[], options?: {}): {recordSet: RecordSet, model: Tree, controller: ExpandController} {
+function initTest(data: object[], options?: {}, collectionOptions?: {}): {recordSet: RecordSet, model: Tree, controller: ExpandController} {
     const recordSet = new RecordSet({
         rawData: data,
         keyProperty: 'id'
@@ -16,7 +16,8 @@ function initTest(data: object[], options?: {}): {recordSet: RecordSet, model: T
         keyProperty: 'id',
         nodeProperty: 'node',
         parentProperty: 'parent',
-        root: null
+        root: null,
+        ...collectionOptions
     });
 
     const controller = new ExpandController({
@@ -32,6 +33,26 @@ function initTest(data: object[], options?: {}): {recordSet: RecordSet, model: T
 }
 
 describe('ExpandCollapse/Controller', () => {
+    describe('setExpandedItems', () => {
+        it('with node footers and groups', () => {
+            const data = [
+                {id: 1, parent: null, node: true, group: groupConstants.hiddenGroup},
+                {id: 2, parent: null, node: true, group: groupConstants.hiddenGroup},
+                {id: 3, parent: null, node: true, group: groupConstants.hiddenGroup}
+            ];
+            const {controller, model} = initTest(
+                data,
+                {expandedItems: [1, 2, 3]},
+                {nodeFooterTemplate: () => null, groupProperty: 'group'}
+            );
+            controller.setExpandedItems([1, 2]);
+            controller.applyStateToModel();
+            assert.isTrue(model.getItemBySourceKey(1).isExpanded());
+            assert.isTrue(model.getItemBySourceKey(2).isExpanded());
+            assert.isFalse(model.getItemBySourceKey(3).isExpanded());
+        });
+    });
+
     describe('onCollectionRemove', () => {
         it('remove from expanded items removed item keys', () => {
             const data = [
