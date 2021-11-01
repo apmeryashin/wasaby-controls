@@ -32,15 +32,15 @@ describe('treeGrid/Display/ExpanderIcon/TreeGridCollection', () => {
         it('expander classes should contain expanderIconStyle classes', () => {
             const itemAt0 = getTreeGridCollection({ expanderIconStyle: 'unaccented' }).at(0);
             CssClassesAssert.include(itemAt0.getExpanderClasses('node'),
-                'controls-TreeGrid__row-expander_iconStyle_unaccented');
+                'controls-TreeGrid__row-expander_node_iconStyle_unaccented');
             CssClassesAssert.include(itemAt0.getExpanderClasses('node', 'default', 'default', 'default'),
-                'controls-TreeGrid__row-expander_iconStyle_default');
+                'controls-TreeGrid__row-expander_node_iconStyle_default');
         });
 
         it('should also affect when style=master', () => {
             const itemAt0 = getTreeGridCollection({ style: 'master' }).at(0);
-            CssClassesAssert.include(itemAt0.getExpanderClasses(),
-                'controls-TreeGrid__row-expander_iconStyle_unaccented');
+            CssClassesAssert.include(itemAt0.getExpanderClasses('node'),
+                'controls-TreeGrid__row-expander_node_iconStyle_unaccented');
         });
     });
 
@@ -53,15 +53,15 @@ describe('treeGrid/Display/ExpanderIcon/TreeGridCollection', () => {
         it('expander classes should contain expanderIconStyle classes', () => {
             const itemAt0 = getTreeGridCollection({ expanderIconSize: '2xs' }).at(0);
             CssClassesAssert.include(itemAt0.getExpanderClasses('node'),
-                'controls-TreeGrid__row-expander_iconSize_2xs');
+                'controls-TreeGrid__row-expander_node_iconSize_2xs');
             CssClassesAssert.include(itemAt0.getExpanderClasses('node', 'default', 'default', 'default'),
-                'controls-TreeGrid__row-expander_iconSize_default');
+                'controls-TreeGrid__row-expander_node_iconSize_default');
         });
 
         it('should also affect when style=master', () => {
             const itemAt0 = getTreeGridCollection({ style: 'master', expanderIconSize: '2xs' }).at(0);
-            CssClassesAssert.include(itemAt0.getExpanderClasses(),
-                'controls-TreeGrid__row-expander_iconSize_master');
+            CssClassesAssert.include(itemAt0.getExpanderClasses('node'),
+                'controls-TreeGrid__row-expander_node_iconSize_master');
         });
     });
 });
