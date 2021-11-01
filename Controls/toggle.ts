@@ -62,6 +62,7 @@ import * as tumblerItemCounterTemplate from 'wml!Controls/_toggle/Tumbler/itemCo
 import * as chipsItemTemplate from 'wml!Controls/_toggle/ButtonGroup/itemTemplate';
 import * as chipsItemCounterTemplate from 'wml!Controls/_toggle/ButtonGroup/itemCounterTemplate';
 import * as switchCaptionTemplate from 'wml!Controls/_toggle/Switch/resources/CaptionTemplate';
+import * as doubleSwitchCaptionTemplate from 'wml!Controls/_toggle/DoubleSwitch/resources/CaptionTemplate';
 
 export {
     ItemTemplate,
@@ -71,5 +72,6 @@ export {
     tumblerItemCounterTemplate,
     chipsItemTemplate,
     chipsItemCounterTemplate,
-    switchCaptionTemplate
+    switchCaptionTemplate,
+    doubleSwitchCaptionTemplate
 };

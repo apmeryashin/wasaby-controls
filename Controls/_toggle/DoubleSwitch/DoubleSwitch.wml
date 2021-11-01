@@ -1,11 +1,12 @@
 <ws:template name="Text">
-   <ws:partial template="{{_textTemplate}}"
-               _enabled="{{!_options.readOnly}}"
-               _orientation="{{_options.orientation}}"
-               _toggleValue="{{_options.value}}"
-               _value="{{_value}}"
-               _nextValue="{{_nextValue}}"
-               _caption="{{_caption}}"/>
+   <ws:partial template="{{_options.captionTemplate}}"
+               on:mouseover="_toggleSwitchHoverState(_options.value !== _nextValue)"
+               on:mouseout="_toggleSwitchHoverState(false)"
+               on:click="_clickTextHandler(_nextValue)"
+               enabled="{{!_options.readOnly}}"
+               orientation="{{_options.orientation}}"
+               value="{{_value}}"
+               caption="{{_caption}}"/>
 </ws:template>
 <ws:template name="Toggle">
    <ws:partial template="{{_toggleTemplate}}"
