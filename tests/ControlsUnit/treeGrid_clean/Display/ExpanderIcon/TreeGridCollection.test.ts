@@ -37,9 +37,9 @@ describe('treeGrid/Display/ExpanderIcon/TreeGridCollection', () => {
                 'controls-TreeGrid__row-expander_iconStyle_default');
         });
 
-        it('should not affect when style=master', () => {
-            const itemAt0 = getTreeGridCollection({ style: 'master', expanderIconStyle: 'unaccented' }).at(0);
-            CssClassesAssert.notInclude(itemAt0.getExpanderClasses(),
+        it('should also affect when style=master', () => {
+            const itemAt0 = getTreeGridCollection({ style: 'master' }).at(0);
+            CssClassesAssert.include(itemAt0.getExpanderClasses(),
                 'controls-TreeGrid__row-expander_iconStyle_unaccented');
         });
     });
@@ -58,10 +58,10 @@ describe('treeGrid/Display/ExpanderIcon/TreeGridCollection', () => {
                 'controls-TreeGrid__row-expander_iconSize_default');
         });
 
-        it('should not affect when style=master', () => {
+        it('should also affect when style=master', () => {
             const itemAt0 = getTreeGridCollection({ style: 'master', expanderIconSize: '2xs' }).at(0);
-            CssClassesAssert.notInclude(itemAt0.getExpanderClasses(),
-                'controls-TreeGrid__row-expander_iconSize_2xs');
+            CssClassesAssert.include(itemAt0.getExpanderClasses(),
+                'controls-TreeGrid__row-expander_iconSize_master');
         });
     });
 });
