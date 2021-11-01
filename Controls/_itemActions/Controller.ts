@@ -1,11 +1,11 @@
-import * as clone from 'Core/core-clone';
 import {Control} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
+import {IObservable} from 'Types/collection';
+import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem} from 'Controls/display';
 import {IStickyPopupOptions} from 'Controls/popup';
 import {IMenuPopupOptions} from 'Controls/menu';
 import {
@@ -227,6 +227,38 @@ export class Controller {
             result = this._updateActionsOnItems(options.editingItem);
         }
         return result;
+    }
+
+    /**
+     * Возвращает boolean, надо ли обновлять проинициализированные ранее ItemActions, основываясь на newItems.properties.
+     * Возвращается true, если newItems или newItems.properties не заданы
+     * Новая модель в событии collectionChanged для newItems задаёт properties,
+     * где указано, что именно обновляется.
+     * @param action
+     * @param newItems
+     * @param removedItems
+     */
+    shouldUpdateItemActionsOnCollectionChange(
+                action: string,
+                newItems: Array<CollectionItem<Model>> & {properties: string},
+                removedItems: Array<CollectionItem<Model>> & {properties: string}): boolean {
+        // При добавлении или удалении элементов списка, которые не имеют операций над записью
+        // не надо набирать операции заново.
+        // Например, nodeFooter не имеют операций над записью и никак не должны на них влиять.
+        if (newItems && newItems.length) {
+            const newItemsWithItemActionsExist = newItems.some((item) => item.ItemActionsItem);
+            if (!newItemsWithItemActionsExist && action === IObservable.ACTION_ADD) {
+                return;
+            }
+        }
+        if (removedItems && removedItems.length) {
+            const removedItemsWithItemActionsExist = removedItems.some((item) => item.ItemActionsItem);
+            if (!removedItemsWithItemActionsExist && action === IObservable.ACTION_REMOVE) {
+                return;
+            }
+        }
+        const propertyVariants = ['selected', 'marked', 'swiped', 'hovered', 'active', 'dragged', 'editingContents'];
+        return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     }
 
     /**
