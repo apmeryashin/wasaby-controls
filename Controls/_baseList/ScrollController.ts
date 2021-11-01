@@ -616,7 +616,7 @@ export default class ScrollController {
         // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
         const scrollContent = itemsContainer.closest('.controls-Scroll-ContainerBase__content');
         const topCompensation = scrollContent ?
-            (scrollContent.getBoundingClientRect().top - getDimensions(itemsContainer).top) :
+            (scrollContent.getBoundingClientRect().top - getDimensions(itemsContainer, true).top) :
             getOffsetTop(itemsContainer);
         const scrollTop = this.getScrollTop();
 
