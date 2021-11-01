@@ -143,7 +143,7 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
         this._setMarkedKey(this._selectedKeys, options);
-        this._setColumns(options, options.propertyValue);
+        this._setColumns(options);
         this._setFilter(this._selectedKeys, options);
         this._navigation = this._getNavigation(options);
         this._itemActions = this._getItemActions(options.historyId);
@@ -170,7 +170,7 @@ class ListEditor extends Control<IListEditorOptions> {
         const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = options.propertyValue;
-            this._setColumns(options, options.propertyValue);
+            this._setColumns(options);
             this._navigation = this._getNavigation(options);
         }
         if (filterChanged || valueChanged) {
@@ -277,7 +277,7 @@ class ListEditor extends Control<IListEditorOptions> {
             this._handleResetItems();
         }
         this._setMarkedKey(this._selectedKeys, this._options);
-        this._setColumns(this._options, this._selectedKeys);
+        this._setColumns(this._options);
         this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
     }
 
@@ -298,11 +298,9 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _setColumns(
-        {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions,
-        propertyValue: string[]|number[]): void {
+        {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions): void {
         this._columns = [{
             template: ColumnTemplate,
-            selected: propertyValue,
             displayProperty,
             keyProperty,
             imageProperty,
