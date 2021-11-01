@@ -87,8 +87,9 @@ export default class CompactDatePicker extends Control<ICompactDatePickerOptions
         // В случае, если при маунте мы находимся не на текущем месяце, IntersectionObserver, находящийся на текущем
         // дне, не инициализируется. В таком случае мы не будем знать, нужно ли показывать кнопку 'Домой'. Сами
         // посчитаем видимость кнопки
-        if (this._position.getFullYear() !== new WSDate().getFullYear() ||
-            this._position.getMonth() !== new WSDate().getMonth()) {
+        const currentPeriod = options._date || new WSDate();
+        if (this._position.getFullYear() !== currentPeriod.getFullYear() ||
+            this._position.getMonth() !== currentPeriod.getMonth()) {
             this._updateTodayIconVisible(true, options.displayedRanges);
         }
     }
