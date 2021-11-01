@@ -103,8 +103,5 @@ export default class extends Control {
         this._hoveredCellIndex = cell === null ? -1 : cell;
     }
 
-    static _styles: string[] = [
-        'Controls-demo/Controls-demo',
-        'Controls-demo/treeGridNew/NodeFooter/Configuration/Configuration'
-    ];
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
