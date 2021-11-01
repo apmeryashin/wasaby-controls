@@ -2477,7 +2477,7 @@ const _private = {
             }
             if (self._items && typeof self._items.getRecordById(result.activeElement || self._options.activeElement) !== 'undefined') {
                 // activeElement запишется в result только, когда он изменится
-                if (result.activeElement) {
+                if (result.activeElement && !self._container.closest('.ws-hidden')) {
                     self._notify('activeElementChanged', [result.activeElement]);
                 }
 
