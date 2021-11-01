@@ -1,8 +1,8 @@
 import { IControlOptions, TemplateFunction } from 'UI/Base';
 import { Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
-import { ISelectionCountModeOptions } from 'Controls/interface';
-
+import {ISelectionCountModeOptions} from 'Controls/interface';
+import {TExpanderIconSize, TExpanderIconStyle} from 'Controls/display';
 
 type TNodeFooterVisibilityCallback = (item: Model) => boolean;
 
@@ -25,6 +25,8 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
     selectDescendants?: boolean;
     markItemByExpanderClick?: boolean;
     expanderSize?: 's'|'m'|'l'|'xl';
+    expanderIconSize?: TExpanderIconSize;
+    expanderIconStyle?: TExpanderIconStyle;
     expanderPosition?: TExpanderPosition;
 }
 
@@ -381,6 +383,18 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * В случае, если для разных элементов дерева заданы разные значения опции, то для корректного выравнивания подвалов узлов необходимо продублировать опцию на {@link nodeFooterTemplate шаблоне подвалов узлов}.
  * @see expanderSize
  * @see expanderVisibility
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#expanderIconStyle
+ * @cfg {Controls/_display/interface/ITree/TExpanderIconStyle.typedef} Стиль цвета иконки разворота узлов дерева
+ * @default default
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#expanderIconSize
+ * @cfg {Controls/_display/interface/ITree/TExpanderIconSize.typedef} Размер иконки разворота узлов дерева
+ * @default default
  */
 
 /**
