@@ -5,6 +5,7 @@ import { IHeader } from 'Controls-demo/types';
 import { IColumn } from 'Controls/grid';
 import 'css!Controls-demo/Controls-demo';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
+import {Model} from 'Types/entity';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -19,7 +20,8 @@ export default class extends Control {
         });
     }
 
-    protected _stickyCallback(item: any): boolean {
-        return item.get('country') === 'Китай' || item.get('country') === 'Казахстан';
+    protected _stickyCallback(item: Model): string | undefined {
+        const country = item.get('country');
+        return (country === 'Китай' || country === 'Казахстан') ? 'topBottom' : undefined;
     }
 }
