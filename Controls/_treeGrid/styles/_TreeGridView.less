@@ -116,21 +116,49 @@
    visibility: hidden;
 }
 
-.controls-TreeGrid__row-expander_node_default::before,
-.controls-TreeGrid__row-expander_emptyNode_default::before {
-   color: var(--node_expander_icon-color_treeGrid);
-   font-family: var(--icon_font-family_s);
+// region Аспект iconSize
+
+.controls-TreeGrid__row-expander_hiddenNode_iconSize_default::before,
+.controls-TreeGrid__row-expander_emptyNode_iconSize_default::before,
+.controls-TreeGrid__row-expander_node_iconSize_default::before {
    font-size: @_expander_height_treeGrid;
 }
 
-.controls-TreeGrid__row-expander_hiddenNode_default::before {
-   color: var(--hidden-node_expander_icon-color_treeGrid);
-   font-family: var(--icon_font-family_s);
-   font-size: @_expander_height_treeGrid;
+.controls-TreeGrid__row-expander_emptyNode_iconSize_2xs::before,
+.controls-TreeGrid__row-expander_node_iconSize_2xs::before {
+   font-size: var(--icon-size_2xs);
 }
+
+.controls-TreeGrid__row-expander_node_iconSize_master::before,
+.controls-TreeGrid__row-expander_hiddenNode_iconSize_master::before {
+   font-size: var(--master_node_expander_icon-size_treeGrid);
+}
+
+// endregion Аспект iconSize
+
+// region Аспект iconStyle
+
+.controls-TreeGrid__row-expander_emptyNode_iconStyle_default::before,
+.controls-TreeGrid__row-expander_node_iconStyle_default::before {
+   color: var(--node_expander_icon-color_treeGrid);
+}
+
+.controls-TreeGrid__row-expander_hiddenNode_iconStyle_unaccented::before,
+.controls-TreeGrid__row-expander_emptyNode_iconStyle_unaccented::before,
+.controls-TreeGrid__row-expander_node_iconStyle_unaccented::before {
+   color: var(--label_icon-color);
+}
+
+// endregion Аспект iconStyle
 
 .controls-TreeGrid__row-expander_node_default::before,
 .controls-TreeGrid__row-expander_emptyNode_default::before,
+.controls-TreeGrid__row-expander_hiddenNode_default::before {
+   font-family: var(--icon_font-family_s);
+}
+
+.controls-TreeGrid__row-expander_node_iconSize_default::before,
+.controls-TreeGrid__row-expander_emptyNode_iconSize_default::before,
 .controls-TreeGrid__row-expander_node_master_position_custom::before,
 .controls-TreeGrid__row-expander_node_master_position_right::before {
    position: relative;
@@ -145,22 +173,13 @@
 }
 
 .controls-TreeGrid__row-expander_node_master::before {
-   color: var(--master_node_expander_icon-color_treeGrid);
    font-family: var(--icon_font-family_s);
    padding-left: calc(@_expander_width_treeGrid - var(--master_node_expander_icon-size_treeGrid));
-   font-size: @_expander_height_treeGrid;
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_master::before {
-   color: var(--master_hidden-node_expander_icon-color_treeGrid);
    font-family: var(--icon_font-family_s);
    padding-left: calc(@_expander_width_treeGrid - var(--master_hidden-node_expander_icon-size_treeGrid));
-   font-size: @_expander_height_treeGrid;
-}
-
-.controls-TreeGrid__row-expander_node_master_position_default::before,
-.controls-TreeGrid__row-expander_hiddenNode_master_position_default::before {
-   font-size: var(--master_node_expander_icon-size_treeGrid);
 }
 
 .controls-TreeGrid__row-expander::before {
@@ -457,21 +476,15 @@
 }
 
 .ws-is-hover {
-   .controls-TreeGrid__row-expander_node_default:hover::before,
-   .controls-TreeGrid__row-expander_emptyNode_default:hover::before {
+   .controls-TreeGrid__row-expander_emptyNode_iconStyle_default:hover::before,
+   .controls-TreeGrid__row-expander_node_iconStyle_default:hover::before {
       color: var(--node_expander_hover_icon-color_treeGrid);
    }
 
-   .controls-TreeGrid__row-expander_hiddenNode_default:hover::before {
-      color: var(--hidden-node_expander_hover_icon-color_treeGrid);
-   }
-
-   .controls-TreeGrid__row-expander_node_master:hover::before {
-      color: var(--master_node_expander_hover_icon-color_treeGrid);
-   }
-
-   .controls-TreeGrid__row-expander_hiddenNode_master:hover::before {
-      color: var(--master_hidden-node_expander_hover_icon-color_treeGrid);
+   .controls-TreeGrid__row-expander_hiddenNode_iconStyle_unaccented:hover::before,
+   .controls-TreeGrid__row-expander_emptyNode_iconStyle_unaccented:hover::before,
+   .controls-TreeGrid__row-expander_node_iconStyle_unaccented:hover::before {
+      color: var(--label_hover_text-color);
    }
 
    .controls-TreeGrid__row-expander_visibility_hover {
