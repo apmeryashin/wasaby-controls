@@ -470,8 +470,8 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         expanderClasses += ` controls-TreeGrid__row-expander_${expanderIcon}_${style}_position_${expanderPosition}`;
         expanderClasses += expanderIconClass;
 
-        expanderClasses += ` controls-TreeGrid__row-expander_${expanderIcon}_iconSize_${expanderIconSize}`;
-        expanderClasses += ` controls-TreeGrid__row-expander_${expanderIcon}_iconStyle_${expanderIconStyle}`;
+        expanderClasses += ` controls-TreeGrid__row-expander_iconSize_${expanderIconSize}`;
+        expanderClasses += ` controls-TreeGrid__row-expander_iconStyle_${expanderIconStyle}`;
 
         // добавляем класс свертнутости развернутости для тестов
         expanderClasses += ' controls-TreeGrid__row-expander' + (this.isExpanded() ? '_expanded' : '_collapsed');
