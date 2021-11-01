@@ -1,10 +1,34 @@
 .controls-FilterViewPanel__baseEditor-container {
    display: flex;
    align-items: baseline;
+   line-height: var(--inline_height_m);
 }
 
 .controls-FilterViewPanel__baseEditor-cross {
-   padding-left: 12px;
+   padding-left: var(--offset_2xs);
+   padding-right: var(--offset_m);
+   align-self: flex-end;
+   height: var(--inline_height_m);
+}
+
+.controls-FilterViewPanel__baseEditor-cross_container {
+   display: inline-flex;
+   align-items: baseline;
+   line-height: var(--inline_height_m);
+}
+
+.controls-FilterViewPanel__basicEditor-cloud {
+   overflow: hidden;
+   background-color: var(--background-color);
+   border-radius: var(--border-radius_m);
+   padding: 0 var(--offset_s);
+   margin-left: calc(-1 * var(--offset_s));
+}
+
+.ws-is-hover {
+   .controls-FilterViewPanel__basicEditor-cloud:hover {
+      background-color: var(--hover_background-color);
+   }
 }
 
 .controls-FilterViewPanel__baseEditor-cross-icon {
