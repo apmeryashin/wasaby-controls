@@ -2,7 +2,7 @@
     <div class="controls-FilterViewPanel__baseEditor-container">
         <ws:partial template="{{_options.editorTemplate}}"
                     scope="{{_options}}"
-                    attr:class="{{_options.editorType !== 'tumbler' ? 'controls-FilterViewPanel__basicEditor'}}"/>
+                    attr:class="{{_options.outlineContainerVisibility !== 'hidden' ? 'controls-FilterViewPanel__basicEditor'}}"/>
         <ws:if data="{{_options.closeButtonVisibility !== 'hidden'}}">
             <Controls.icon:Icon icon="icon-CloseNew"
                                 attr:class="controls-FilterViewPanel__baseEditor-cross

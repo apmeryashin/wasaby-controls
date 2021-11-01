@@ -1,5 +1,5 @@
 <Controls._filterPanel.BaseEditor scope="{{_options}}"
-                                  editorType="tumbler"
+                                  outlineContainerVisibility="hidden"
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
    <ws:editorTemplate>
