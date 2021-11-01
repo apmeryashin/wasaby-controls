@@ -354,6 +354,22 @@
             </div>
 
             <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-null">
+                <div class="controls-text-label">Отступы соответствующие размеру default,
+                    markerClassName соответствует значению text-xs
+                </div>
+                <Controls.grid:View
+                        keyProperty="key"
+                        source="{{_viewSourceText}}"
+                        markerVisibility="visible"
+                        columns="{{_columnsText}}">
+                    <ws:itemTemplate>
+                        <ws:partial template="Controls/grid:ItemTemplate"
+                                    scope="{{ _options }}"
+                                    markerClassName="text-xs"/>
+                    </ws:itemTemplate>
+                </Controls.grid:View>
+            </div>
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-null">
                 <div class="controls-text-label">Отступы соответствующие размеру s.
                     markerClassName соответствует значению text-xs
                 </div>
