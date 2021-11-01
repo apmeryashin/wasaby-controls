@@ -3,7 +3,7 @@ import * as TableCellTemplate from 'wml!Controls/_listTemplates/TableCellTemplat
 import * as ColorfulTemplate from 'wml!Controls/_listTemplates/ColorfulTemplate';
 
 export {IColorfulTemplateOptions} from './_listTemplates/IColorfulTemplate';
-export {default as ImageDisplayContainer} from 'Controls/_listTemplates/ImageDisplay/ImageDisplayContainer';
+export {default as ImageDisplayContainer, IImageDisplayContainerOptions} from 'Controls/_listTemplates/ImageDisplay/ImageDisplayContainer';
 
 export {
     ListItemTemplate,

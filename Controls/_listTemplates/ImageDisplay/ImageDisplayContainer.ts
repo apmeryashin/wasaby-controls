@@ -10,6 +10,17 @@ import * as Template from 'wml!Controls/_listTemplates/ImageDisplay/ImageDisplay
 import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 import {Model} from 'Types/entity';
+import {CollectionItem} from 'Controls/display';
+
+export interface IImageDisplayContainerOptions extends IControlOptions {
+    itemsReadyCallback: (items: RecordSet) => void;
+    imageProperty: string;
+    imagePosition: string;
+    imageViewMode: string;
+    itemTemplate: TemplateFunction;
+    columns?: TColumns;
+    sourceController: SourceController;
+}
 
 /**
  * Класс используется для управления в списочных шаблонах выводом контейнера, предназначенного под изображение и
@@ -44,26 +55,14 @@ import {Model} from 'Types/entity';
  * @demo Controls-demo/tileNew/DifferentItemTemplates/ToggleImageVisible/ScrollToDown/
  */
 
-interface IImageDisplayContainerOptions extends IControlOptions {
-    itemsReadyCallback: (items: RecordSet) => void;
-    imageProperty: string;
-    imagePosition: string;
-    imageViewMode: string;
-    itemTemplate: TemplateFunction;
-    tileItemTemplate: TemplateFunction;
-    columns?: TColumns;
-    sourceController: SourceController;
-}
-
 export default class ImageDisplayContainer extends Control<IImageDisplayContainerOptions> {
     protected _template: TemplateFunction = Template;
 
     private _columns: TColumns;
-    private _itemTemplate: TemplateFunction;
-    private _tileItemTemplate: TemplateFunction;
+    protected _itemTemplate: TemplateFunction;
     private _imagePosition: string;
     private _imageViewMode: string;
-    private _hasItemWithImage: boolean = false;
+    protected _hasItemWithImage: boolean = false;
     private _items: RecordSet;
 
     constructor(options: IImageDisplayContainerOptions, context?: object) {
@@ -78,7 +77,6 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         this._imageViewMode = options.imageViewMode;
         this._columns = options.columns;
         this._itemTemplate = options.itemTemplate;
-        this._tileItemTemplate = options.tileItemTemplate;
         if (!options.sourceController) {
             Logger.error('ImageDisplayContainer should be child of Browser or DataContainer', this);
         }
@@ -151,12 +149,22 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
-    private _getImageViewMode(imageViewMode?: string): string {
-        return this._hasItemWithImage ? imageViewMode || this._imageViewMode : 'none';
+    /**
+     * Возвращает отображение картинки для текущего элемента
+     * @param item
+     * @private
+     */
+    protected _getImageViewMode(item: CollectionItem): string {
+        return this._hasItemWithImage ? this._imageViewMode : 'none';
     }
 
-    private _getImagePosition(imagePosition?: string): string {
-        return this._hasItemWithImage ? imagePosition || this._imagePosition : 'none';
+    /**
+     * Возвращает положение картинки для текущего элемента
+     * @param item
+     * @private
+     */
+    protected _getImagePosition(item: CollectionItem): string {
+        return this._hasItemWithImage ? this._imagePosition : 'none';
     }
 
     private _getPatchedColumns(columns: TColumns): TColumns {
