@@ -19,10 +19,9 @@ import {
  */
 export interface IBackOptions extends IControlOptions, IFontColorStyleOptions, IFontSizeOptions, IIconStyleOptions {
     /**
-     * @cfg {String} Задает режим вывода текста в заголовке кнопки.
-     * @variant ellipsis - текст заголовок выводится выводится в одну строку, все что не влезло обрезается многоточием.
-     * @variant none - текст заголовка выводится полностью, если он не влазит в отведенное место, то переносится на
-     * новую строку.
+     * @cfg {String} Задает режим отображения текста заголовка.
+     * @variant ellipsis - Текст выводится в одну строку. Если текст целиком не помещается в отведенную область, то он обрезается и к концу строки добавляется многоточие.
+     * @variant none - Текст выводится в одну строку. Если текст целиком не помещается в отведенную область, то он переносится на следующую строку.
      * @default ellipsis
      * @demo Controls-demo/Heading/Back/TextOverflow/Index
      */
@@ -30,22 +29,22 @@ export interface IBackOptions extends IControlOptions, IFontColorStyleOptions, I
 
     /**
      * @cfg {String} Задает режим отображения иконки кнопки.
-     * @variant default - иконка кнопки отображается в виде обычного уголка без дополнительных стилей.
-     * @variant functionalButton - иконка кнопки отображается в виде уголка с обводкой.
+     * @variant default - иконка кнопки отображается без обводки.
+     * @variant functionalButton - иконка кнопки отображается с обводкой.
      * @default default
      * @demo Controls-demo/Heading/Back/IconViewMode/Index
      */
     iconViewMode?: 'functionalButton' | 'default';
 
     /**
-     * @cfg {String | UI/Base:TemplateFunction} Кастомное содержимое, отображаемое между иконкой и заголовком кнопки
+     * @cfg {String | UI/Base:TemplateFunction} Шаблон, отображаемый между иконкой и заголовком кнопки
      * @see Controls/heading:IBackOptions#beforeCaptionTemplateOptions
      */
     beforeCaptionTemplate?: string | TemplateFunction;
 
     /**
-     * @cfg {Object} Опции, которые будут переданы в шаблон, указанный в опции
-     * @see Controls/heading:IBackOptions#beforeCaptionTemplateOptions
+     * @cfg {Object} Опции, которые будут переданы в шаблон, указанный в {@link Controls/heading:IBackOptions#beforeCaptionTemplate beforeCaptionTemplate}
+     * @see Controls/heading:IBackOptions#beforeCaptionTemplate
      */
     beforeCaptionTemplateOptions?: object;
 }
