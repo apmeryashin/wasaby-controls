@@ -109,7 +109,13 @@ export default abstract class Row<T extends Model = Model> {
     }
 
     getStickyHeaderPosition(stickyCallback: Function): {} {
-        const stickyVerticalPosition = stickyCallback ? 'top' : 'topBottom';
+        let stickyVerticalPosition = 'topBottom';
+
+        if (stickyCallback) {
+            const callbackResult = stickyCallback(this.getContents());
+            stickyVerticalPosition = callbackResult === true ? 'top' : callbackResult;
+        }
+
         return {
             vertical: stickyVerticalPosition
         };
