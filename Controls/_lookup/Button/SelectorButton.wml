@@ -4,6 +4,7 @@
         <Controls._lookup.SelectedCollection
                 items="{{_items}}"
                 maxVisibleItems="{{_options.maxVisibleItems}}"
+                counterVisibility="{{_options.counterVisibility}}"
                 displayProperty="{{_options.displayProperty}}"
                 multiLine="{{_options.multiSelect}}"
                 clickable="{{true}}"

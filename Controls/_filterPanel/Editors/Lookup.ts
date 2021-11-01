@@ -2,13 +2,12 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import LookupTemplate = require('wml!Controls/_filterPanel/Editors/Lookup');
 import {Selector, showSelector} from 'Controls/lookup';
-import 'css!Controls/filterPanel';
 import * as rk from 'i18n!Controls';
 import {Model} from 'Types/entity';
+import 'css!Controls/filterPanel';
 
 interface ILookupOptions extends IControlOptions {
     propertyValue: number[] | string[];
-    maxVisibleItems: number;
 }
 
 interface ILookup {
@@ -24,26 +23,13 @@ interface ILookup {
  * @public
  */
 
-const MAX_VISIBLE_ITEMS = 7;
-
 class LookupEditor extends Control<ILookupOptions> implements ILookup {
     readonly '[Controls/_filterPanel/Editors/Lookup]': boolean = true;
     protected _template: TemplateFunction = LookupTemplate;
     protected _textValue: string = rk('Еще');
-    protected _showSelectorCaption: string = null;
     protected _children: {
         lookupEditor: Selector
     };
-
-    protected _beforeMount(options: ILookupOptions): void {
-        this._showSelectorCaption = this._getShowSelectorCaption(options.propertyValue, options.maxVisibleItems);
-    }
-
-    protected _beforeUpdate(options: ILookupOptions): void {
-        if (this._options.propertyValue !== options.propertyValue) {
-            this._showSelectorCaption = this._getShowSelectorCaption(options.propertyValue, options.maxVisibleItems);
-        }
-    }
 
     protected _handleCloseEditorClick(event: SyntheticEvent): void {
         const extendedValue = {
@@ -60,7 +46,6 @@ class LookupEditor extends Control<ILookupOptions> implements ILookup {
             textValue: this._textValue
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
-        this._showSelectorCaption = this._getShowSelectorCaption(value, this._options.maxVisibleItems);
     }
 
     protected _extendedCaptionClickHandler(event: SyntheticEvent): void {
@@ -82,25 +67,9 @@ class LookupEditor extends Control<ILookupOptions> implements ILookup {
         this._textValue = value;
     }
 
-    private _getShowSelectorCaption(values: number[] | string [], maxVisibleItems): string {
-        const amount = values?.length - maxVisibleItems;
-        return  amount > 0 ? rk('Еще ') + amount : '';
-    }
-
-    static getDefaultOptions(): object {
-        return {
-            maxVisibleItems: MAX_VISIBLE_ITEMS
-        };
+    protected _handleLookupClick(): void {
+        this._children.lookupEditor.showSelector();
     }
 }
-
-Object.defineProperty(LookupEditor, 'defaultProps', {
-    enumerable: true,
-    configurable: true,
-
-    get(): object {
-        return LookupEditor.getDefaultOptions();
-    }
-});
 
 export default LookupEditor;
