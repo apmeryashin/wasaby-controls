@@ -130,14 +130,19 @@ export class StickyController extends BaseController {
         return true;
     }
 
-    private _isVisibleTarget(target: HTMLElement): boolean {
-        const scrollContainer = StickyStrategy.getScrollContainer(target);
+    private _isVisibleTarget(target: HTMLElement, scrollTarget: HTMLElement = null): boolean {
+        if (!scrollTarget) {
+            scrollTarget = target;
+        }
+        const scrollContainer = StickyStrategy.getScrollContainer(scrollTarget);
         if (scrollContainer) {
             const targetDimensions = getDimensions(target);
             const scrollDimensions = getDimensions(scrollContainer);
             if (targetDimensions.top < 0 || targetDimensions.top < scrollDimensions.top ||
                 targetDimensions.top > scrollDimensions.bottom || targetDimensions.bottom > window.innerHeight) {
                 return false;
+            } else {
+                return this._isVisibleTarget(target, scrollContainer);
             }
         }
         return true;
