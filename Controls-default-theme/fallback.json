@@ -1126,7 +1126,7 @@
   "--header_color_sticky": "var(--secondary_text-color)",
   "--close-button_offset-top_sticky": "var(--offset_2xs)",
   "--close-button_offset-right_sticky": "var(--offset_xs)",
-  "--close-button_offset-left_sticky": "0px",
+  "--close-button_offset-left_sticky": "var(--offset_xl)",
   "--arrow_base_length_infobox": "16px",
   "--arrow_side_length_infobox": "12px",
   "--arrow_offset_infobox": "9px",
