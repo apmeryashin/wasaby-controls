@@ -72,6 +72,7 @@ export default class ItemsView<TOptions extends IItemsViewOptions = IItemsViewOp
         multiSelectVisibility: 'hidden',
         multiSelectPosition: 'default',
         stickyHeader: true,
+        stickyResults: true,
         style: 'default'
     };
 }
