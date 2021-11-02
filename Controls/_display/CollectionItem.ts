@@ -717,6 +717,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         this._nextVersion();
     }
 
+    getBackgroundStyle(): string {
+        return this._$backgroundStyle;
+    }
+
     // region Drag-n-drop
 
     setDragged(dragged: boolean, silent?: boolean): void {
