@@ -111,6 +111,7 @@ export default class Grid extends List {
 Grid.getDefaultOptions = function () {
    return {
        stickyHeader: true,
+       stickyResults: true,
        stickyColumnsCount: 1,
        rowSeparatorSize: null,
        columnSeparatorSize: null,
