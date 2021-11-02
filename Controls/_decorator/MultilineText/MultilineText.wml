@@ -4,7 +4,9 @@
             <br/>
         </ws:if>
         <ws:if data="{{text !== ''}}">
-            <Controls._decorator.WrapURLs attr:class="controls-MultilineText-display_wrapper" value="{{text}}"/>
+            <Controls._decorator.WrapURLs attr:class="controls-MultilineText-display_wrapper"
+                                          attr:tabindex="null"
+                                          value="{{text}}"/>
         </ws:if>
     </ws:for>
 </span>
