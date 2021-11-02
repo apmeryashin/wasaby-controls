@@ -40,6 +40,11 @@ class MultilineText extends Control<IMultilineTextDecoratorOptions> {
         }
     }
 
+    protected _isUseWrapUrls(text: string): boolean {
+        return text.includes('http') || text.includes('ftp') || text.includes('file') ||
+            text.includes('notes') || text.includes('Notes') || text.includes('@');
+    }
+
     private _getTextLinesList(text: string): string[] {
         return text?.split(LINE_BREAK_SEPARATOR) || [];
     }
