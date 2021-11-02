@@ -780,7 +780,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                 (item.viewMode !== 'extended' || item.visibility === true) &&
                  this._isItemChanged(item) &&
                   // Временная проверка, пока не согласовано API отображения фильтров (панель/окно)
-                 item.editorTemplateName !== 'Controls/filterPanel:ListEditor') {
+                (item.editorTemplateName !== 'Controls/filterPanel:ListEditor' || this._options?.detailPanelOpenMode === 'stack')) {
                 textValue = item.textValue;
                 if (textValue) {
                     textArr.push(textValue);
