@@ -208,6 +208,7 @@ implements IMovableList, IRemovableList {
             multiSelectVisibility: 'hidden',
             multiSelectPosition: 'default',
             stickyHeader: true,
+            stickyResults: true,
             style: 'default'
         };
     }
