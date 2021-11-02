@@ -25,5 +25,8 @@ export interface IOperationsPanelOptions extends IControlOptions {
     operationsPanelOpenedCallback: () => void;
     itemTemplateProperty?: string;
     parentProperty?: string;
+    listParentProperty?: string;
+    listMarkedKey?: TKey;
+    root: TKey;
     fontColorStyle?: string;
 }

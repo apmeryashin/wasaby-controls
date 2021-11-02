@@ -4,4 +4,6 @@
             items="{{null}}"
             source="{{null}}"
             scope="{{_options}}"
+            listMarkedKey="{{_listMarkedKey}}"
+            listParentProperty="{{_options.parentProperty}}"
             selectedKeys="{{_selectedKeys}}"/>
