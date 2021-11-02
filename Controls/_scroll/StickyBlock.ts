@@ -374,7 +374,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                 this._height = container.clientHeight;
             } else {
                 this._height = container.offsetHeight;
-                if (!detection.isMobileAndroid && !detection.isMac) {
+                if (detection.isWin) {
                     // offsetHeight округляет к ближайшему числу, из-за этого на масштабе просвечивают полупиксели.
                     // Такое решение подходит только для Windows Desktop, т.к.
                     // на мобильных устройствах devicePixelRatio = 2.75
