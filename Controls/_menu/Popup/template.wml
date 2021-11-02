@@ -14,7 +14,7 @@
               headingIconSize="{{_headingIconSize}}"
               caption="{{_headingCaption}}"
               searchHeaderTheme="{{_options.theme}}"
-              headingCaption="{{!_options.headerTemplate ? _headingCaption : ''}}"
+              headingCaption="{{!_options.headerTemplate && !_headerTemplate ? _headingCaption : ''}}"
               iconSize="{{_options.iconSize}}"
               iconStyle="{{_options.iconStyle}}"
               footerContentTemplate="{{footerContent}}"
