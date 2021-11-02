@@ -1,6 +1,6 @@
 .controls-BreadCrumbsPath {
    max-width: 100%;
-   min-width: 0px;
+   min-width: 0;
    flex-grow: 1;
    box-sizing: border-box;
 }
@@ -15,7 +15,7 @@
    align-items: baseline;
 
    //TODO KINGO есть темы, в которых выравнивание ХК идет по базовой линии шрифта, размер которого отличается от размера шрифта кнопки назад
-   .controls-Back__wrapper:before {
+   .controls-Back__wrapper::before {
       font-size: var(--line-height_breadcrumbsView);
    }
 }
@@ -48,24 +48,6 @@
    .controls-Back__caption {
       font-weight: var(--font-weight_headingPathBack_headingBack);
    }
-}
-
-.controls-BreadCrumbsPath__backButton__before-caption-wrapper {
-   position: relative;
-   display: inline-flex;
-   width: var(--size_s_image);
-
-   .baseline-fix();
-   &::before {
-      line-height: 1;
-   }
-}
-
-.controls-BreadCrumbsPath__backButton__before-caption-content {
-   width: var(--size_s_image);
-   height: var(--size_s_image);
-   position: absolute;
-   bottom: 0;
 }
 
 .controls-BreadCrumbsPath__home {
@@ -113,10 +95,6 @@
    align-items: baseline;
    right: calc(-1 * var(--back_offset_breadcrumbsHeadingPath));
    bottom: 0;
-
-   &::before {
-      font-size: var(--line-height_breadcrumbsView);
-   }
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
