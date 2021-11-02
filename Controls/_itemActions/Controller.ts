@@ -139,6 +139,11 @@ export interface IControllerOptions {
      * https://online.sbis.ru/opendoc.html?guid=76408b97-fc91-46dc-81b0-0f375d07ab99
      */
     feature1183020440: boolean;
+
+    // Временная опция, чтобы не выводить меню опций записи, если нет выводимых опций, но задан футер
+    // Для устранения опции требуется переход на настоящие actions и footer по задаче:
+    // https://online.sbis.ru/opendoc.html?guid=dca1ba93-ffe6-4f68-9f05-9d266a0bc28f
+    task1183329228: boolean;
 }
 
 /**
@@ -190,6 +195,11 @@ export class Controller {
     // https://online.sbis.ru/opendoc.html?guid=76408b97-fc91-46dc-81b0-0f375d07ab99
     private _feature1183020440: boolean;
 
+    // Временная опция, чтобы не выводить меню опций записи, если нет выводимых опций, но задан футер
+    // Для устранения опции требуется переход на настоящие actions и footer по задаче:
+    // https://online.sbis.ru/opendoc.html?guid=dca1ba93-ffe6-4f68-9f05-9d266a0bc28f
+    private _task1183329228: boolean;
+
     /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
@@ -211,6 +221,7 @@ export class Controller {
         this._collection = options.collection;
         this._itemActionsVisibility = options.itemActionsVisibility;
         this._feature1183020440 = options.feature1183020440;
+        this._task1183329228 = options.task1183329228;
         this._updateActionsTemplateConfig(options);
 
         if (!options.itemActions ||
@@ -755,8 +766,10 @@ export class Controller {
             }
         } else {
             showed = visibleActions;
-            if (this._hasMenuHeaderOrFooter()) {
-                showed.push(this._getMenuItemAction());
+            if (!this._task1183329228) {
+                if (this._hasMenuHeaderOrFooter()) {
+                    showed.push(this._getMenuItemAction());
+                }
             }
         }
         return { all, showed };
