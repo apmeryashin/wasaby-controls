@@ -328,6 +328,10 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _keyDown(event: SyntheticEvent): void {
+        if (this._options.readOnly) {
+            return;
+        }
+
         const items = this._items;
         const keyCodeEvent = event.nativeEvent.keyCode;
         const hasValueInInput = this._getInputValue(this._options);
