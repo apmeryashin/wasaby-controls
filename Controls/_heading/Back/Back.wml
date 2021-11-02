@@ -1,42 +1,58 @@
-<ws:template name="caption">
-   <span attr:class="
-      controls-Back__caption
-      controls-fontsize-{{_options.fontSize}}
-      controls-Back__caption_style-{{_options.fontColorStyle}}
-   ">
-      {{_options.caption}}
-   </span>
+<ws:template name="icon">
+   <svg
+      id="Слой_1"
+      version="1.1"
+      xml:space="preserve"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      style="enable-background: new 0 0 8 16;"
+      x="0px"
+      y="0px"
+      viewBox="0 0 8 16"
+      class="controls-Back_arrow controls-Back__icon controls-Back__icon_style-{{_options.iconStyle}}"
+   >
+      <polygon transform="{{transform}}" points="0.5,8 6,0 8,0 2.5,8 8,16 6,16 "/>
+   </svg>
 </ws:template>
 
-<span attr:title="{{_options.tooltip}}" class="controls-Back">
-   <span class="
-      controls-Back__wrapper
-      controls-fontsize-{{_options.fontSize}}
-      controls-Back__wrapper_{{_options.fontSize}}
-   ">
-      <svg
-         version="1.1"
-         id="Слой_1"
-         xmlns="http://www.w3.org/2000/svg"
-         xmlns:xlink="http://www.w3.org/1999/xlink"
-         x="0px"
-         y="0px"
-         viewBox="0 0 9 16"
-         style="enable-background:new 0 0 8 16;"
-         xml:space="preserve"
-         class="
-            controls-Back_arrow
-            controls-Back_new-icon
-            controls-Back__icon_style-{{_options.iconStyle}}_modified
-         "
-      >
-         <polygon transform="matrix(0.7,0,0,0.7,2,5)" points="0.5,8 6,0 8,0 2.5,8 8,16 6,16 "/>
-      </svg>
+<div class="controls-Back" title="{{_options.tooltip}}">
+
+   <div class="controls-Back__wrapper controls-fontsize-{{_options.fontSize}}">
+
+      <div class="controls-Back__icon-wrapper">
+         <ws:if data="{{_options.iconViewMode === 'functionalButton'}}">
+            <div class="controls-Back__icon_view-button">
+               <ws:partial template="icon" transform=""/>
+            </div>
+         </ws:if>
+         <ws:else>
+            <div class="controls-Back__icon_view-default">
+               <ws:partial template="icon" transform="matrix(0.7, 0, 0, 0.7, 2, 5)"/>
+            </div>
+         </ws:else>
+      </div>
 
       <ws:if data="{{_options.beforeCaptionTemplate}}">
-         <ws:partial template="{{_options.beforeCaptionTemplate}}"/>
+         <div class="controls-Back__middle-wrapper">
+            <div class="controls-Back__middle">
+               <ws:partial
+                  template="{{_options.beforeCaptionTemplate}}"
+                  scope="{{_options.beforeCaptionTemplateOptions}}"
+               />
+            </div>
+         </div>
       </ws:if>
 
-      <ws:partial template="caption"/>
-   </span>
-</span>
+      <ws:if data="{{_options.caption}}">
+         <div class="
+            controls-Back__caption
+            controls-Back__caption_style-{{_options.fontColorStyle}}
+            controls-Back__caption_overflow-{{_options.textOverflow}}
+         ">
+            {{ _options.caption }}
+         </div>
+      </ws:if>
+
+   </div>
+
+</div>
