@@ -41,7 +41,7 @@ class ResultsRow extends Row<null> {
     }
 
     isSticked(): boolean {
-        return this.isStickyHeader();
+        return this.isStickyHeader() && this.isStickyResults();
     }
 
     getStickyHeaderPosition(stickyCallback: Function): {} {
