@@ -80,7 +80,9 @@ export function getScrollPositionTypeByState(scrollState: IScrollState,
 }
 
 export function canScroll(viewportSize: number, contentSize: number): boolean {
-    return contentSize - viewportSize > 1;
+    // Значения могут быть дробными т.к. мы считаем размеры с помощью getBoundingClientRect.
+    // Округлим и не будем считать что скролл есть при дробных пикселях
+    return Math.floor(contentSize - viewportSize) > 1;
 }
 
 export function canScrollByState(scrollState: IScrollState,
