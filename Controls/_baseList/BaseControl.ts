@@ -377,20 +377,34 @@ const _private = {
     initializeModel(self: BaseControl, options: IBaseControlOptions, data: RecordSet): void {
         // Модели могло изначально не создаться (не передали receivedState и source)
         // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
-        if (!self._destroyed && data) {
-            self._items = data;
+        if (!self._destroyed) {
+            let items = data;
+            const hasItems = !!items;
 
-            self._onItemsReady(options, data);
+            // Если нет items, то мы все равно должны создать модель. Для модели опция collection обязательная.
+            // Поэтому инициализируем ее пустым рекордсетом. Модель нужна всегда, т.к. через нее отображаются:
+            // хедеры, футеры, индикаторы.
+            if (!hasItems) {
+                items = new RecordSet();
+            }
+
+            self._items = items;
+
+            if (hasItems) {
+                self._onItemsReady(options, items);
+            }
             if (options.collection) {
                 self._listViewModel = options.collection;
             } else {
                 self._listViewModel = self._createNewModel(
-                    data,
+                    items,
                     options,
                     options.viewModelConstructor
                 );
             }
-            self._afterItemsSet(options);
+            if (hasItems) {
+                self._afterItemsSet(options);
+            }
 
             if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel);
@@ -3465,7 +3479,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             collapsedGroups: collapsedGroups || newOptions.collapsedGroups
         };
 
-        _private.initializeModel(self, viewModelConfig, items || new RecordSet());
+        _private.initializeModel(self, viewModelConfig, items);
 
         if (items) {
             _private.setHasMoreData(self._listViewModel, _private.getHasMoreData(self), true);
