@@ -26,7 +26,6 @@
                     on:keyDown="_keyDownHandler(value.date, value.isCurrentMonth)"
                     on:mouseenter="_mouseEnterHandler(value.date, value.isCurrentMonth)"
                     on:mouseleave="_mouseLeaveHandler(value.date, value.isCurrentMonth)"
-                    attr:data-date="{{value.id}}"
                     monthViewModel="{{monthViewModel}}"
                     template="{{dayTemplate}}"
                     newMode="{{newMode}}"
