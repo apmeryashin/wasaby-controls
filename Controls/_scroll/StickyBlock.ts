@@ -374,10 +374,11 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                 this._height = container.clientHeight;
             } else {
                 this._height = container.offsetHeight;
-                if (!detection.isMobileAndroid) {
+                if (detection.isWin) {
                     // offsetHeight округляет к ближайшему числу, из-за этого на масштабе просвечивают полупиксели.
-                    // Такое решение подходит тоько для десктопа, т.к. на мобильных устройствах devicePixelRatio всегда
-                    // равен 2.75
+                    // Такое решение подходит только для Windows Desktop, т.к.
+                    // на мобильных устройствах devicePixelRatio = 2.75
+                    // на Mac devicePixelRatio = 2
                     this._height -= Math.abs(1 - StickyBlock.getDevicePixelRatio());
                 }
             }
