@@ -135,7 +135,8 @@ export class StickyController extends BaseController {
         if (scrollContainer) {
             const targetDimensions = getDimensions(target);
             const scrollDimensions = getDimensions(scrollContainer);
-            if (targetDimensions.top < scrollDimensions.top || targetDimensions.top > scrollDimensions.bottom) {
+            if (targetDimensions.top < 0 || targetDimensions.top < scrollDimensions.top ||
+                targetDimensions.top > scrollDimensions.bottom || targetDimensions.bottom > window.innerHeight) {
                 return false;
             }
         }
