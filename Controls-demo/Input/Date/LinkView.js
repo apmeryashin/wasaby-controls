@@ -12,7 +12,7 @@ define('Controls-demo/Input/Date/LinkView', [
       _startValue: new Date(2017, 0, 1),
       _endValue: new Date(2017, 0, 31)
    });
-   ModuleClass._styles = ['Controls-demo/Input/Date/LinkView'];
+   ModuleClass._styles = ['Controls-demo/Input/Date/LinkView', 'Controls-demo/Controls-demo'];
 
    return ModuleClass;
 });

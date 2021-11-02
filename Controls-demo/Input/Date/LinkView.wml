@@ -39,7 +39,7 @@
       <div class="controlsDemo-LinkView__pageBlock-baseline ws-flexbox">
          Baseline
          <Controls.dateRange:LinkView
-               attr:class="controlsDemo-LinkView__component"
+               attr:class="controlsDemo__ml2 controlsDemo-LinkView__component"
                prevArrowVisibility="{{true}}"
                nextArrowVisibility="{{true}}"
                bind:startValue="_startValue"
@@ -74,7 +74,7 @@
       <div class="controlsDemo-LinkView__pageBlock-baseline controlsDemo-LinkView__pageBlock-baseline-size ws-flexbox">
          Baseline
          <Controls.dateRange:LinkView
-               attr:class="controlsDemo-LinkView__component"
+               attr:class="controlsDemo__ml2 controlsDemo-LinkView__component"
                prevArrowVisibility="{{true}}"
                nextArrowVisibility="{{true}}"
                bind:startValue="_startValue"
