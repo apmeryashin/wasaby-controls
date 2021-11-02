@@ -1273,6 +1273,7 @@ export default class Explorer extends Control<IExplorerOptions> {
             backButtonFontColorStyle: 'secondary',
             columnsCount: 1,
             stickyHeader: true,
+            stickyResults: true,
             searchStartingWith: 'root',
             showActionButton: false,
             isFullGridSupport: isFullGridSupport(),
