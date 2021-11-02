@@ -19,12 +19,12 @@
       <ws:backButtonBeforeCaptionTemplate>
          <ws:if data="{{backButtonBeforeCaptionTemplate.item.icon}}">
             <div class="
-               controls-icon_size-m
+               controls-icon_size-s
                {{backButtonBeforeCaptionTemplate.item.icon}}
             "></div>
          </ws:if>
          <ws:if data="{{backButtonBeforeCaptionTemplate.item.image}}">
-            <img src="{{backButtonBeforeCaptionTemplate.item.image}}"/>
+            <img src="{{backButtonBeforeCaptionTemplate.item.image}}" style="max-width: 100%"/>
          </ws:if>
       </ws:backButtonBeforeCaptionTemplate>
    </Controls.explorer:View>
