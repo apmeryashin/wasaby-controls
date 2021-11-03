@@ -155,7 +155,7 @@ Object.defineProperty(Switch, 'defaultProps', {
  * @remark
  * По умолчанию используется шаблон "Controls/toggle:switchCaptionTemplate".
  *
- * Базовый шаблон itemTemplate поддерживает следующие параметры:
+ * Базовый шаблон captionTemplate поддерживает следующие параметры:
  * - additionalCaption {Function|String} — Дополнительный текст заголовка кнопки.
  * @example
  * <pre class="brush: html">
