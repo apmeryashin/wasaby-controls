@@ -832,9 +832,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                               (this._inputActive || this._tabsSelectedKey !== null)
                           ) {
                              this._setItems(recordSet);
-                             if (this._options.dataLoadCallback) {
-                                this._options.dataLoadCallback(recordSet);
-                             }
                              this._setFilter(this._options.filter, this._options);
                              this._open();
                              this._markerVisibility = 'visible';
@@ -868,9 +865,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
             if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
-               if (scopeOptions.dataLoadCallback) {
-                  scopeOptions.dataLoadCallback(recordSet);
-               }
 
                this._updateSuggestState();
 
@@ -958,7 +952,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          sorting: options.sorting,
          source,
          parentProperty: options.parentProperty,
-         root: options.root
+         root: options.root,
+         dataLoadCallback: options.dataLoadCallback
       };
    }
 
