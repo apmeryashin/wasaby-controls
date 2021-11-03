@@ -231,7 +231,6 @@ class Search extends Base {
        const defaultOptions = Base.getDefaultOptions();
        defaultOptions.borderVisibility = 'visible';
        defaultOptions.contrastBackground = false;
-       defaultOptions.trim = false;
        defaultOptions.placeholder = rk('Найти') + '...';
        defaultOptions.searchButtonVisible = true;
        defaultOptions.validationStatus = 'valid';
