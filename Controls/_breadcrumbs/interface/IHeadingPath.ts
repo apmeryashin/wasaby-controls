@@ -17,6 +17,13 @@ export interface IHeadingPath extends IBreadCrumbsOptions {
     feature1182709671?: boolean;
 
     /**
+     * @name Controls/_breadcrumbs/interface/IBreadCrumbs#pathButtonCaption
+     * @cfg {String} Заголовок кнопки, отображаемой в шапке навигационного меню, клик по которой приводит к переходу в корень.
+     * @default 'На главную'
+     */
+    pathButtonCaption?: string;
+
+    /**
      * @name Controls/_breadcrumbs/interface/IBreadCrumbs#pathButtonSource
      * @cfg {Types/source#ICrud} Источник данных для кнопки меню при клике на которую отображается дерево каталогов.
      */
