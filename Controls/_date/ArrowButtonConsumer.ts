@@ -8,7 +8,7 @@ import {IArrowButtonOptions} from 'Controls/buttons';
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/DateRangeContextProvider/Index
- * @see Controls/_date/DateContextProvider
+ * @see Controls/_date/ContextProvider
  * @see Controls/_buttons/ArrowButton
  */
 

@@ -5,7 +5,7 @@ import DateContext from 'Controls/_date/DateContext';
 /**
  * Контрол-обертка для связи выбора периода и кнопок-стрелок, которые будут сдвигать период.
  *
- * @class Controls/_date/DateContextProvider
+ * @class Controls/_date/ContextProvider
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/DateRangeContextProvider/Index
@@ -13,15 +13,15 @@ import DateContext from 'Controls/_date/DateContext';
  */
 
 /**
- * @name Controls/_date/DateContextProvider#content
+ * @name Controls/_date/ContextProvider#content
  * @cfg {TemplateFunction|String} Пользовательский шаблон.
  * @example
  * <pre>
- *     <Controls.date:DateContextProvider>
+ *     <Controls.date:ContextProvider>
  *         <Controls.date:ArrowButtonConsumer direction="left"/>
  *         <Controls.date:SelectorConsumer bind:value="_value"/>
  *         <Controls.date:ArrowButtonConsumer direction="right"/>
- *     </Controls.date:DateContextProvider>
+ *     </Controls.date:ContextProvider>
  * </pre>
  */
 
