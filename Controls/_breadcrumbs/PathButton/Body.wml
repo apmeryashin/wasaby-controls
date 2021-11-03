@@ -9,7 +9,7 @@
          iconSize="s"
          iconStyle="primary"
          fontColorStyle="primary"
-         caption="{[На главную]}"
+         caption="{{_options.caption}}"
          on:click="_goToRoot()"
       />
 

@@ -21,6 +21,7 @@
       nodeProperty="parent@"
       parentProperty="parent"
       displayProperty="title"
+      breadcrumbsPathButtonCaption="Домой"
 
       bind:root="_root"
       attr:class="demo-Explorer ControlsDemo-Explorer"

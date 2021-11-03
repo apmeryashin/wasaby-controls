@@ -1,6 +1,6 @@
 import {IControlOptions} from 'UI/Base';
 import {Path} from 'Controls/dataSource';
-import {IFilterOptions, IHierarchyOptions, ISourceOptions} from 'Controls/interface';
+import {ICaption, IFilterOptions, IHierarchyOptions, ISourceOptions} from 'Controls/interface';
 import IItemTemplateOptions from 'Controls/_baseList/interface/ItemTemplate';
 import {ITreeControlOptions} from 'Controls/tree';
 
@@ -17,7 +17,8 @@ export interface IPathButton
         IHierarchyOptions,
         IFilterOptions,
         IItemTemplateOptions,
-        ITreeControlOptions {
+        ITreeControlOptions,
+        ICaption {
 
     /**
      * @cfg {Controls/breadcrumbs#Path} Текущий отображаемый путь

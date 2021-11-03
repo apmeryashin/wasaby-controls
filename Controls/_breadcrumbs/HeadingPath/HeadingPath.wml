@@ -45,6 +45,7 @@
                         path="{{_items}}"
                         source="{{_options.pathButtonSource}}"
                         filter="{{_options.pathButtonFilter}}"
+                        caption="{{_options.pathButtonCaption}}"
                         keyProperty="{{_options.pathButtonKeyProperty}}"
                         nodeProperty="{{_options.pathButtonNodeProperty}}"
                         parentProperty="{{_options.pathButtonParentProperty}}"
