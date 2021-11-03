@@ -663,7 +663,7 @@ export default class ScrollController {
                         borderDistance = itemBorderBottom - scrollTop;
                     } else {
                         border = 'top';
-                        borderDistance = scrollTop - itemOffsetTop + topCompensation;
+                        borderDistance = scrollTop - itemOffsetTop;
                     }
                 }
                 edgeItemParams = {
@@ -699,7 +699,7 @@ export default class ScrollController {
                     if (this._edgeItemParams.border === 'bottom') {
                         return itemOffsetTop + (itemDimensions.height - this._edgeItemParams.borderDistance);
                     } else {
-                        return itemOffsetTop + this._edgeItemParams.borderDistance - topCompensation;
+                        return itemOffsetTop + this._edgeItemParams.borderDistance;
                     }
                 }
                 const viewportHeight = this._viewportHeight;
