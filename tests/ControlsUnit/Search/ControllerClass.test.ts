@@ -429,8 +429,17 @@ describe('Controls/search:ControllerClass', () => {
    it('search with filterOnSearchCallback option', async () => {
       const filter = {};
       const source = getMemorySource();
-      sourceController = new NewSourceController({
-         source
+      const navigation = {
+         source: 'page',
+         sourceConfig: {
+            pageSize: 2,
+            page: 0,
+            hasMore: false
+         }
+      };
+      const sourceController = new NewSourceController({
+         source,
+         navigation
       });
       let filterOnItemsChanged;
       await sourceController.reload();
@@ -439,18 +448,23 @@ describe('Controls/search:ControllerClass', () => {
       });
       const searchControllerOptions = {
          filterOnSearchCallback: (searchValue, item) => {
-            return item.get('title').toLowerCase().includes(searchValue.toLowerCase());
+            return item.get('title') === 'test';
          },
          filter,
          sourceController,
-         source
+         source,
+         navigation,
+         searchParam: 'title'
       };
       const searchController = getSearchController(searchControllerOptions);
-      searchController.search('test2');
+      const searchPromise = searchController.search('test');
 
-      assert.ok(filterOnItemsChanged.testParam);
+      assert.ok(filterOnItemsChanged.title);
       assert.ok(sourceController.getItems().getCount() === 1);
-      assert.ok(sourceController.getItems().at(0).get('title') === 'test2');
+      assert.ok(sourceController.getItems().at(0).get('title') === 'test');
+
+      await searchPromise;
+      assert.ok(sourceController.getItems().getCount() === 2);
    });
 
    describe('search', () => {
