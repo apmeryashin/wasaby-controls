@@ -203,7 +203,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     }
 
     protected _onFooterMouseEnter(): void {
-        this._children.menuControl.closeSubMenu();
+        this._children.menuControl.closeSubMenu(false);
     }
 
     private _updateApplyButton(): void {
