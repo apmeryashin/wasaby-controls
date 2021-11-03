@@ -1,38 +1,38 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
     <div class="controlsDemo__cell">
-        <Controls.dateRange:DateRangeContextProvider attr:class="controlsDemo__flex controlsDemo-DateRangeContextProvider_default">
+        <Controls.date:ContextProvider attr:class="controlsDemo__flex controlsDemo-DateRangeContextProvider_default">
             <div>
-                <Controls.dateRange:ArrowButtonConsumer direction="left"/>
+                <Controls.date:ArrowButtonConsumer direction="left"/>
                 <Controls.dateRange:RangeSelectorConsumer
                         bind:startValue="_startValue1"
                         bind:endValue="_endValue1"
                 />
-                <Controls.dateRange:ArrowButtonConsumer direction="right"/>
+                <Controls.date:ArrowButtonConsumer direction="right"/>
             </div>
-        </Controls.dateRange:DateRangeContextProvider>
+        </Controls.date:ContextProvider>
     </div>
     <div class="controlsDemo__cell">
-        <Controls.dateRange:DateRangeContextProvider attr:class="controlsDemo__flex controlsDemo-DateRangeContextProvider_left">
+        <Controls.date:ContextProvider attr:class="controlsDemo__flex controlsDemo-DateRangeContextProvider_left">
             <div>
-                <Controls.dateRange:ArrowButtonConsumer direction="left"/>
-                <Controls.dateRange:ArrowButtonConsumer direction="right"/>
-                <Controls.dateRange:DateSelectorConsumer
+                <Controls.date:ArrowButtonConsumer direction="left"/>
+                <Controls.date:ArrowButtonConsumer direction="right"/>
+                <Controls.date:SelectorConsumer
                         bind:value="_startValue2"
                         bind:endValue="_endValue2"
                 />
             </div>
-        </Controls.dateRange:DateRangeContextProvider>
+        </Controls.date:ContextProvider>
     </div>
     <div class="controlsDemo__cell">
-        <Controls.dateRange:DateRangeContextProvider attr:class="controlsDemo__flex controlsDemo-DateRangeContextProvider_right">
+        <Controls.date:ContextProvider attr:class="controlsDemo__flex controlsDemo-DateRangeContextProvider_right">
             <div>
                 <Controls.dateRange:RangeShortSelectorConsumer
                         bind:startValue="_startValue3"
                         bind:endValue="_endValue3"
                 />
-                <Controls.dateRange:ArrowButtonConsumer direction="left"/>
-                <Controls.dateRange:ArrowButtonConsumer direction="right"/>
+                <Controls.date:ArrowButtonConsumer direction="left"/>
+                <Controls.date:ArrowButtonConsumer direction="right"/>
             </div>
-        </Controls.dateRange:DateRangeContextProvider>
+        </Controls.date:ContextProvider>
     </div>
 </div>
