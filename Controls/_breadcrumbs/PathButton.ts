@@ -87,6 +87,8 @@ export default class PathButton extends Control<IPathButton> {
                 opener: this,
                 maxWidth: 700,
 
+                actionOnScroll: 'close',
+                closeOnOutsideClick: true,
                 backgroundStyle: 'default',
                 targetPoint: {
                     vertical: 'top',
