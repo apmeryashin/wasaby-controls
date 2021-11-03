@@ -6,7 +6,7 @@
    box-sizing: border-box;
    min-height: 0;
    height: 100%;
-   border: var(--border-thickness_sticky) solid var(--border-color_sticky);
+   border-style: solid;
 }
 
 .controls-StickyTemplate-backgroundColor {
@@ -125,4 +125,40 @@
 .controls-StickyTemplate-visibility-hidden {
    opacity: 0;
    pointer-events: none;
+}
+
+.controls-StickyTemplate-borderStyle-default {
+   border-color: var(--border-color_sticky);
+}
+
+.controls-StickyTemplate-borderStyle-primary {
+   border-color: var(--primary_border-color);
+}
+
+.controls-StickyTemplate-borderStyle-secondary {
+   border-color: var(--secondary_border-color);
+}
+
+.controls-StickyTemplate-borderStyle-danger {
+   border-color: var(--danger_border-color);
+}
+
+.controls-StickyTemplate-borderStyle-warning {
+   border-color: var(--warning_border-color);
+}
+
+.controls-StickyTemplate-borderStyle-info {
+   border-color: var(--info_border-color);
+}
+
+.controls-StickyTemplate-borderStyle-unaccented {
+   border-color: var(--unaccented_border-color);
+}
+
+.controls-StickyTemplate-borderSize-default {
+   border-width: var(--border-thickness_sticky);
+}
+
+.controls-StickyTemplate-borderThickness-m {
+   border-width: var(--border-thickness_m_sticky);
 }
