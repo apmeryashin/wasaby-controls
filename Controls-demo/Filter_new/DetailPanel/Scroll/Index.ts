@@ -17,12 +17,13 @@ export default class extends Control {
 
     protected _beforeMount(): void {
         this._source = getItems();
-        for (let i = 0; i < 20; i++) {
+        const itemsCount = 20;
+        for (let i = 0; i < itemsCount; i++) {
             this._listItems1.push({
                 key: i
             });
             this._listItems2.push({
-                key: 20 + i
+                key: itemsCount + i
             });
         }
         this._listViewSource1 = new Memory({

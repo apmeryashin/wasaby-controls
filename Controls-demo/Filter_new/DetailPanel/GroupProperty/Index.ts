@@ -1,12 +1,13 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/Filter_new/DetailPanel/GroupProperty/GroupProperty';
 import {getItemsWithGroup} from 'Controls-demo/Filter_new/resources/FilterItemsStorage';
+import {IFilterItem} from 'Controls/filter';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _items: unknown[] = [];
 
-    private _resolveTemplates(items: any): Promise<any> {
+    private _resolveTemplates(items: IFilterItem[]): Promise<unknown> {
         const resultTemplates = [];
         items.forEach((item) => {
             if (item.additionalTemplate) {
@@ -19,9 +20,9 @@ export default class extends Control {
         return Promise.all(resultTemplates).then(() => null);
     }
 
-    protected _beforeMount(): Promise<any> {
+    protected _beforeMount(): Promise<unknown> {
         this._items = getItemsWithGroup();
-        return this._resolveTemplates(this._items);
+        return this._resolveTemplates(this._items as IFilterItem[]);
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Filter_new/Filter'];
