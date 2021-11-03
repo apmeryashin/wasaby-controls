@@ -71,6 +71,7 @@ export default interface IItemPadding {
  * @cfg {Controls/_interface/IItemPadding/ItemPadding.typedef} Конфигурация отступов внутри элементов списка.
  * @name Controls/_interface/IItemPadding#itemPadding
  * @demo Controls-demo/gridNew/ItemPaddingNull/Index
+ * @remark Во избежание наслаивания текста на маркер, для списков со style='master' менять горизонтальный отступ не рекомендуется
  */
 
 /*ENG
