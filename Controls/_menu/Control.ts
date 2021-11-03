@@ -800,6 +800,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         let isVisible: boolean = true;
         if (item && item.getKey) {
             isVisible = this._visibleIds.includes(item.getKey());
+        } else if (item && item.forEach) {
+            isVisible = this._visibleIds.includes(item[0].getKey());
         }
         return isVisible;
     }
@@ -1016,7 +1018,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._visibleIds = [];
             const fixedIds = [];
             factory(items).each((item) => {
-                if (MenuControl._isItemCurrentRoot(item, options))  {
+                if (options.searchParam && options.searchValue || MenuControl._isItemCurrentRoot(item, options))  {
                     if (item.get('doNotSaveToHistory')) {
                         fixedIds.push(item.getKey());
                     } else {
@@ -1029,6 +1031,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 this._visibleIds.splice(MAX_HISTORY_VISIBLE_ITEMS_COUNT);
             }
 
+            this._addParentIdForSearchMode(options, items);
+
             fixedIds.forEach((fixedId) => {
                 if (!this._visibleIds.includes(fixedId)) {
                     this._visibleIds.push(fixedId);
@@ -1036,6 +1040,18 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             });
         }
         return hasAdditional;
+    }
+
+    private _addParentIdForSearchMode(options, items): void {
+        if (options.searchParam && options.searchValue) {
+            const ids = this._visibleIds.slice();
+            ids.forEach((id) => {
+                const parent = items.getRecordById(id).get(options.parentProperty);
+                if (parent) {
+                    this._visibleIds.push(parent);
+                }
+            });
+        }
     }
 
     private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: string): void {
