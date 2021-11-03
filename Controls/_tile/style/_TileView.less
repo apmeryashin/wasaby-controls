@@ -1036,7 +1036,8 @@
 
    .for(@variants, {
       &_@{_item},
-      &_@{_item}.controls-TileView__item_withMarker::after {
+      &_@{_item}.controls-TileView__item_withMarker::after,
+      &_@{_item} .controls-TileView__itemActions_bottomRight {
          border-top-left-radius: ~"var(--border-radius_@{_item})";
       }
    });
