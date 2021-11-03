@@ -33,6 +33,7 @@ export enum BACKGROUND_STYLE {
 }
 
 export interface IStickyHeaderOptions extends IControlOptions {
+    _subPixelArtifactFix: Boolean;
     position: IPositionOrientation;
     mode: MODE;
     fixedZIndex: number;
@@ -160,6 +161,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _scroll: HTMLElement;
 
     private _needUpdateObserver: boolean = false;
+    private _isMounted: boolean = false;
 
     // Если заголовок сконфигурариован так, что при построении отображется тень, то установим true.
     // Сбросим обратно только, когда отработает обсервер и мы узнаем настоящее положение заголовка.
@@ -218,6 +220,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     protected _afterMount(options: IStickyHeaderOptions): void {
+        this._isMounted = true;
         if (!this._isStickyEnabled(options)) {
             return;
         }
@@ -944,6 +947,36 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                 boxSizing: styles.boxSizing
             };
         }
+    }
+
+    protected _getSubPixelArtifactFixClass(): string {
+        if (!this._isMounted) {
+            return '';
+        }
+
+        let result = '';
+        // В StickyBlock может лежать контент, у которого по бокам рисуется border. В таком случае, border будут
+        // перекрыты box-shadow. Вводим возможность отключить box-shadow через навешивание класса.
+        const artifactFixOff = this._container.closest('.controls-StickyBlock__onSideIsBorder');
+        if (this._options._subPixelArtifactFix && !artifactFixOff) {
+            result = `controls-StickyBlock__subpixelFix-${this._options.backgroundStyle}`;
+        }
+        return result;
+    }
+
+    protected _getTopGapFixClass(): string {
+        if (!this._isMounted) {
+            return '';
+        }
+
+        let result = '';
+        // Над StickyBlock может лежать контент, у которого рисуется border-bottom. В таком случае, border будут
+        // перекрыты box-shadow. Вводим возможность отключить box-shadow через навешивание класса.
+        const topGapFixOff = this._container.closest('.controls-StickyBlock__aboveIsBorder');
+        if (this._isMobileIOS && this._isPixelRatioBug && !topGapFixOff) {
+            result = `controls-StickyBlock__topGapFix-${this._options.backgroundStyle}`;
+        }
+        return result;
     }
 
     private _getComputedStyle(): CSSStyleDeclaration | object {
