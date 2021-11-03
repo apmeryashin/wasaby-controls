@@ -22,8 +22,16 @@ export default class History extends Control<IHistoryOptions> {
     protected _template: TemplateFunction = template;
     protected _historyItems: RecordSet | List<IFilterItem[]>;
 
-    protected _beforeMount(options: IHistoryOptions): Promise<RecordSet | List<IFilterItem[]>> {
-        return this._loadHistoryItems(options.historyId, options.source);
+    protected _beforeMount(
+        options: IHistoryOptions,
+        context: object,
+        receivedState: RecordSet | List<IFilterItem[]>
+    ): Promise<RecordSet | List<IFilterItem[]>> {
+        if (receivedState) {
+            this._historyItems = receivedState;
+        } else {
+            return this._loadHistoryItems(options.historyId, options.source);
+        }
     }
 
     protected _beforeUpdate(options: IHistoryOptions): void | Promise<RecordSet | List<IFilterItem[]>> {
