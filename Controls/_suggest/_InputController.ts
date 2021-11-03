@@ -757,11 +757,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _getSuggestPopupStyles(suggestWidth: number): string {
-      const maxWidth = this._options.suggestPopupOptions?.maxWidth;
+      const suggestPopupOptions = this._options.suggestPopupOptions;
+      const maxWidth = suggestPopupOptions?.maxWidth;
       if (maxWidth) {
          return `min-width: ${suggestWidth}px; max-width: ${maxWidth}px`;
       } else {
-         return `width: ${suggestWidth}px;`;
+         const width = suggestWidth || suggestPopupOptions?.width;
+         return `width: ${width}px;`;
       }
    }
 
