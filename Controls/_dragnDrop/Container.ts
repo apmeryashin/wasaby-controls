@@ -262,9 +262,23 @@ class Container extends Control<IContainerOptions> {
         }
         this._unregisterMouseMove();
         this._unregisterMouseUp();
+        this._toggleFixIoSDragBug(false);
         this._dragEntity = null;
         this._startEvent = null;
         this._currentEvent = null;
+    }
+
+    /**
+     * Фиксим ошибку, при которой при перетаскивании чего либо у нас оттягивается еще и весь документ
+     * Связано с особенностями скролла в сафари, при котором область,
+     * которая может скроллиться при свайпе может оттягиваться
+     * @param state
+     * @private
+     */
+    private _toggleFixIoSDragBug(state: boolean): void {
+        if (detection.isMobileSafari) {
+            document.documentElement.style.overflow = state ? 'hidden' : '';
+        }
     }
 
     protected _afterMount(options?: IContainerOptions, contexts?: any): void {
@@ -372,6 +386,7 @@ class Container extends Control<IContainerOptions> {
 
         this._registerMouseMove();
         this._registerMouseUp();
+        this._toggleFixIoSDragBug(true);
     }
 
     private static SHIFT_LIMIT: number = 4;
