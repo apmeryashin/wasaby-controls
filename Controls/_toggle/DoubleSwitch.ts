@@ -12,7 +12,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
    captions?: string[];
    orientation?: string;
    size?: string;
-   captionTemplate: Function;
+   captionTemplate?: Function;
 }
 
 const CAPTIONS_LENGTH = 2;
@@ -189,15 +189,15 @@ Object.defineProperty(DoubleSwitch, 'defaultProps', {
  * @remark
  * По умолчанию используется шаблон "Controls/toggle:doubleSwitchCaptionTemplate".
  *
- * Базовый шаблон itemTemplate поддерживает следующие параметры:
+ * Базовый шаблон captionTemplate поддерживает следующие параметры:
  * - additionalCaption {Function|String} — Дополнительный текст заголовка кнопки.
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.toggle:DoubleSwitch>
- *    <ws:itemTemplate>
- *       <ws:partial template="Controls/toggle:doubleSwitchCaptionTemplate" scope="{{itemTemplate}}" additionalCaption="{{_captionTemplate}}"/>
- *    </ws:itemTemplate>
+ *    <ws:captionTemplate>
+ *       <ws:partial template="Controls/toggle:doubleSwitchCaptionTemplate" scope="{{captionTemplate}}" additionalCaption="{{_captionTemplate}}"/>
+ *    </ws:captionTemplate>
  * </Controls.toggle:DoubleSwitch>
  * </pre>
  */

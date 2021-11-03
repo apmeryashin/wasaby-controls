@@ -19,7 +19,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
    caption: string;
    captionPosition: string;
    size?: string;
-   captionTemplate: TemplateFunction;
+   captionTemplate?: TemplateFunction;
 }
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
@@ -161,9 +161,9 @@ Object.defineProperty(Switch, 'defaultProps', {
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.toggle:Switch>
- *    <ws:itemTemplate>
- *       <ws:partial template="Controls/toggle:switchCaptionTemplate" scope="{{itemTemplate}}" additionalCaption="{{_captionTemplate}}"/>
- *    </ws:itemTemplate>
+ *    <ws:captionTemplate>
+ *       <ws:partial template="Controls/toggle:switchCaptionTemplate" scope="{{captionTemplate}}" additionalCaption="{{_captionTemplate}}"/>
+ *    </ws:captionTemplate>
  * </Controls.toggle:Switch>
  * </pre>
  * @demo Controls-demo/toggle/Switch/CaptionTemplate/Index

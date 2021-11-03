@@ -8,9 +8,9 @@
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">custom caption</div>
         <Controls.toggle:Switch bind:value="_value2"
                                 caption="test">
-            <ws:itemTemplate>
-                <ws:partial template="Controls/toggle:switchCaptionTemplate" scope="{{itemTemplate}}" additionalCaption="{{_captionTemplate}}"/>
-            </ws:itemTemplate>
+            <ws:captionTemplate>
+                <ws:partial template="Controls/toggle:switchCaptionTemplate" scope="{{captionTemplate}}" additionalCaption="{{_captionTemplate}}"/>
+            </ws:captionTemplate>
         </Controls.toggle:Switch>
     </div>
 </div>
