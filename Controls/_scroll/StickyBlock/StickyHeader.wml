@@ -4,9 +4,7 @@
    <div class="controls-StickyHeader controls_scroll_theme-{{ _options.theme }}
    controls-background-{{ _options.backgroundStyle }}
    controls-StickyHeader_position
-   {{_gapFixClass}}
-   {{_getSubPixelArtifactFixClass()}}
-   {{_getTopGapFixClass()}}"
+   {{_subPixelArtifactClass}} {{_topGapFixClass}}"
         style="{{_style + (_options.style || '')}}"
         name="content">
       <ws:if data="{{_canShadowVisible.top}}">

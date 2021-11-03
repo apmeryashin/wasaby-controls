@@ -44,11 +44,6 @@ export interface IStickyHeaderOptions extends IControlOptions {
     offsetLeft: number;
 }
 
-interface IResizeObserver {
-    observe: (el: HTMLElement) => void;
-    unobserve: (el: HTMLElement) => void;
-    disconnect: () => void;
-}
 /**
  * Обеспечивает прилипание контента к краю родительского контейнера при прокрутке.
  * В зависимости от конфигурации, прилипание происходит в момент пересечения верхней, нижней, левой или правой
@@ -95,12 +90,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     private _model: Model;
 
-    /**
-     * type {Boolean} Determines whether the component is built on the Android mobile platform.
-     * @private
-     */
-    protected _isMobilePlatform: boolean = detection.isMobilePlatform;
-    protected _isMobileAndroid: boolean = detection.isMobileAndroid;
     protected _isIOSChrome: boolean = StickyBlock._isIOSChrome();
     protected _isMobileIOS: boolean = detection.isMobileIOS;
 
@@ -123,8 +112,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     private _height: number = 0;
 
-    private _reverseOffsetStyle: string = null;
-    private _minHeight: number = 0;
     private _cachedStyles: CSSStyleDeclaration = null;
     private _cssClassName: string = null;
     private _canScroll: boolean = false;
@@ -161,7 +148,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _scroll: HTMLElement;
 
     private _needUpdateObserver: boolean = false;
-    private _isMounted: boolean = false;
 
     // Если заголовок сконфигурариован так, что при построении отображется тень, то установим true.
     // Сбросим обратно только, когда отработает обсервер и мы узнаем настоящее положение заголовка.
@@ -180,6 +166,9 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _isHidden: boolean = false;
 
     protected _isPixelRatioBug: boolean = false;
+
+    protected _subPixelArtifactClass: string = '';
+    protected _topGapFixClass: string = '';
 
     group: Group;
 
@@ -220,12 +209,13 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     protected _afterMount(options: IStickyHeaderOptions): void {
-        this._isMounted = true;
         if (!this._isStickyEnabled(options)) {
             return;
         }
         this._register();
         this._init();
+        this._subPixelArtifactClass = this._getSubPixelArtifactFixClass();
+        this._topGapFixClass = this._getTopGapFixClass();
     }
 
     getHeaderContainer(): HTMLElement {
@@ -950,14 +940,13 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     protected _getSubPixelArtifactFixClass(): string {
-        if (!this._isMounted) {
-            return '';
-        }
-
         let result = '';
         // В StickyBlock может лежать контент, у которого по бокам рисуется border. В таком случае, border будут
         // перекрыты box-shadow. Вводим возможность отключить box-shadow через навешивание класса.
-        const artifactFixOff = this._container.closest('.controls-StickyBlock__onSideIsBorder');
+        // Этот способ отключения будет описан в статье отладке скролла и стикиблоков:
+        // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/debug/scroll-container/ после
+        // https://online.sbis.ru/opendoc.html?guid=9e7f5914-3b96-4799-9e1d-9390944b4ab3
+        const artifactFixOff = this._children.content?.classList.contains('controls-StickyBlock__onSideIsBorder');
         if (this._options._subPixelArtifactFix && !artifactFixOff) {
             result = `controls-StickyBlock__subpixelFix-${this._options.backgroundStyle}`;
         }
@@ -965,14 +954,13 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     protected _getTopGapFixClass(): string {
-        if (!this._isMounted) {
-            return '';
-        }
-
         let result = '';
         // Над StickyBlock может лежать контент, у которого рисуется border-bottom. В таком случае, border будут
         // перекрыты box-shadow. Вводим возможность отключить box-shadow через навешивание класса.
-        const topGapFixOff = this._container.closest('.controls-StickyBlock__aboveIsBorder');
+        // Этот способ отключения будет описан в статье отладке скролла и стикиблоков:
+        // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/debug/scroll-container/ после
+        // https://online.sbis.ru/opendoc.html?guid=9e7f5914-3b96-4799-9e1d-9390944b4ab3
+        const topGapFixOff = this._children.content?.classList.contains('controls-StickyBlock__aboveBorder');
         if (this._isMobileIOS && this._isPixelRatioBug && !topGapFixOff) {
             result = `controls-StickyBlock__topGapFix-${this._options.backgroundStyle}`;
         }
