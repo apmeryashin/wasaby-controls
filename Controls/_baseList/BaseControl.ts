@@ -4588,6 +4588,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             if (result && this._needScrollCalculation) {
                 _private.handleScrollControllerResult(this, result);
+
+                // Если мы попали в этот иф - это значит что сейчас сдвинулся виртуальный диапазон.
+                // Если больше нет записей скрытых виртуальным скроллом, мы должны показать индикатор.
+                // Проверяем это и если нужно показываем индикатор.
+                if (direction === 'down' && this._indicatorsController.shouldDisplayBottomIndicator()) {
+                    this._indicatorsController.displayBottomIndicator();
+                } else if (direction === 'up' && this._indicatorsController.shouldDisplayTopIndicator()) {
+                    this._indicatorsController.displayTopIndicator(false);
+                }
+
                 this._handleLoadToDirection = false;
                 this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
                 this._indicatorsController.displayDrawingIndicator(

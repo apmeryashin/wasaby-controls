@@ -296,9 +296,11 @@ export default class IndicatorsController {
         }
 
         this._clearDisplayIndicatorTimer();
-        indicatorElement.style.display = 'none';
-        indicatorElement.style.position = '';
-        indicatorElement.style[position] = '';
+        if (indicatorElement.style.position === 'sticky') {
+            indicatorElement.style.display = 'none';
+            indicatorElement.style.position = '';
+            indicatorElement.style[position] = '';
+        }
     }
 
     /**
