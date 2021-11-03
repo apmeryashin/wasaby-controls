@@ -6,6 +6,7 @@ import {EventUtils} from 'UI/Events';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
+import {TKey} from './interface/IDropdownController';
 import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {IIconOptions, IHeightOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
@@ -296,19 +297,41 @@ export default class Button extends BaseDropdown {
         }
     }
 
-    _openMenu(popupOptions?: IStickyPopupOptions): Promise<any> {
-        const config = this._getMenuPopupConfig();
+    _openMenu(popupOptions?: IStickyPopupOptions, key?: TKey): Promise<any> {
+        let config;
+        if (key) {
+            config = Merge(this._getMenuPopupConfig(),  {
+                templateOptions: {
+                    openedSubMenuOptions: popupOptions,
+                    openedSubMenuKey: key
+                }
+            });
+        } else {
+            config = Merge(this._getMenuPopupConfig(), popupOptions || {});
+        }
         this._controller.setMenuPopupTarget(this._children.content);
 
-        return this._controller.openMenu(Merge(config, popupOptions || {}));
+        return this._controller.openMenu(config);
     }
 
-    openMenu(popupOptions?: IStickyPopupOptions): Promise<any> {
-        return this._openMenu(popupOptions).then((result) => {
+    openMenu(popupOptions?: IStickyPopupOptions, key?: TKey): Promise<any> {
+        return this._openMenu(popupOptions, key).then((result) => {
             if (result) {
                 this._onItemClickHandler(result);
             }
         });
+    }
+
+    closeMenu(key?: string): void {
+        if (key) {
+            this._openMenu({
+                templateOptions: {
+                    closedSubMenuKey: key
+                }
+            })
+        } else {
+            this._controller.closeMenu();
+        }
     }
 
     protected _onResult(action, data, nativeEvent): void {
