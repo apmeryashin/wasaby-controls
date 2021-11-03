@@ -71,7 +71,7 @@ export default interface IItemPadding {
  * @cfg {Controls/_interface/IItemPadding/ItemPadding.typedef} Конфигурация отступов внутри элементов списка.
  * @name Controls/_interface/IItemPadding#itemPadding
  * @demo Controls-demo/gridNew/ItemPaddingNull/Index
- * @remark При задании значения нужно учитывать высоту маркера, заданную с помощью опции {@link Controls/_list/interface/IBaseItemTemplate#markerClassName markerClassName}
+ * @remark Во избежании наслаивания текста на маркер, для списков со style='master' менять горизонтальный отступ не рекомендуется
  */
 
 /*ENG
