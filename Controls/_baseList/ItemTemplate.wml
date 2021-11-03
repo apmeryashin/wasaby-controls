@@ -25,7 +25,17 @@
     </ws:if>
     <ws:else>
         <div attr:class="{{ (item || itemData).getContentClasses(fontColorStyle) }}">
-            {{ (item || itemData).getContents()[displayProperty || 'title'] }}
+            <ws:if data="{{ (item || itemData).getSearchValue() }}">
+                <Controls.decorator:Highlight attr:title="{{title}}" highlightedValue="{{ (item || itemData).getSearchValue() }}">
+                    <ws:value>
+                        <ws:String>{{ (item || itemData).getContents()[displayProperty || 'title'] }}</ws:String>
+                    </ws:value>
+                </Controls.decorator:Highlight>
+
+            </ws:if>
+            <ws:else>
+                {{ (item || itemData).getContents()[displayProperty || 'title'] }}
+            </ws:else>
         </div>
     </ws:else>
     <ws:if data="{{ (item || itemData).hasVisibleActions() || (item || itemData).isEditing() }}">
