@@ -141,6 +141,10 @@ export class StickyController extends BaseController {
             if (targetDimensions.top < scrollDimensions.top || targetDimensions.top > scrollDimensions.bottom) {
                 return false;
             } else {
+                // Может возникнуть ситуация, когда окно находится в нескольких вложенных scrollContainer.
+                // Из-за чего окно отображается когда target скрыт в одном из вложенных контейнеров.
+                // Поэтому, если окно видно в 1 из scrollContainer, то проверяем, что оно видно в другом
+                // https://online.sbis.ru/opendoc.html?guid=aedc6f40-e28b-413d-8a21-31c7a1ae83cf
                 return this._isVisibleTarget(target, scrollContainer);
             }
         }
