@@ -26,7 +26,7 @@
     <ws:else>
         <div attr:class="{{ (item || itemData).getContentClasses(fontColorStyle) }}">
             <ws:if data="{{ (item || itemData).getSearchValue() }}">
-                <Controls.decorator:Highlight attr:title="{{title}}" highlightedValue="{{ (item || itemData).getSearchValue() }}">
+                <Controls.decorator:Highlight highlightedValue="{{ (item || itemData).getSearchValue() }}">
                     <ws:value>
                         <ws:String>{{ (item || itemData).getContents()[displayProperty || 'title'] }}</ws:String>
                     </ws:value>
