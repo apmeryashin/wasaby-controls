@@ -18,6 +18,7 @@
                         verticalDirection="{{_verticalDirection}}"
                         closeBtnPosition="{{_closeBtnPosition}}"
                         stickyOptions="{{_options}}"
+                        on:mouseenter="_proxyEvent('headerMouseEnter')"
                         on:click="_proxyEvent('headerClick')"/>
         </ws:if>
         <ws:else>
