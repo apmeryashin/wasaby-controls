@@ -5,8 +5,13 @@
 
 .controls-Switch__wrapper {
    display: inline-flex;
-   align-items: center;
+   align-items: baseline;
    min-height: var(--caption_height_switcher);
+
+   &::before {
+      content: '\200b';
+      line-height: var(--caption_height_switcher);
+   }
 }
 
 .controls-Switch__toggle__wrapper {
@@ -131,8 +136,7 @@
 
 .ws-is-hover {
    .controls-Switch__wrapper:hover {
-      .controls-Switch__text_enabled_unselected,
-      .controls-Switch__text_enabled_selected {
+      .controls-Switch__text-decoration {
          text-decoration: underline;
       }
 

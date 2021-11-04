@@ -13,6 +13,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
    captions?: string[];
    orientation?: string;
    size?: string;
+   captionTemplate?: Function;
 }
 
 const CAPTIONS_LENGTH = 2;
@@ -59,7 +60,6 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
    protected _template: TemplateFunction = DoubleSwitchTemplate;
 
    protected _toggleTemplate: Function = toggleTemplate;
-   protected _textTemplate: Function = textTemplate;
    protected _toggleHoverState: boolean = false;
 
    private _checkCaptions(captions: string[]): void {
@@ -102,7 +102,8 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
          value: false,
          contrastBackground: true,
          orientation: 'horizontal',
-         size: 'l'
+         size: 'l',
+         captionTemplate: textTemplate
       };
    }
    static getOptionTypes(): object {
@@ -182,4 +183,24 @@ Object.defineProperty(DoubleSwitch, 'defaultProps', {
  * @variant horizontal Horizontal orientation. It is default value.
  * @variant vertical Vertical orientation.
  */
+
+/**
+ * @name Controls/_toggle/DoubleSwitch#captionTemplate
+ * @cfg {TemplateFunction|String} Шаблон текста заголовка кнопки.
+ * @remark
+ * По умолчанию используется шаблон "Controls/toggle:doubleSwitchCaptionTemplate".
+ *
+ * Базовый шаблон captionTemplate поддерживает следующие параметры:
+ * - additionalCaption {Function|String} — Дополнительный текст заголовка кнопки.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.toggle:DoubleSwitch>
+ *    <ws:captionTemplate>
+ *       <ws:partial template="Controls/toggle:doubleSwitchCaptionTemplate" scope="{{captionTemplate}}" additionalCaption="{{_captionTemplate}}"/>
+ *    </ws:captionTemplate>
+ * </Controls.toggle:DoubleSwitch>
+ * </pre>
+ */
+
 export default DoubleSwitch;
