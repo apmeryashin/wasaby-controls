@@ -26,6 +26,7 @@
         filter="{{_options.filter}}"
         sorting="{{_options.sorting}}"
         dataLoadCallback="{{_options.dataLoadCallback}}"
+        suggestPopupOptions="{{_options.suggestPopupOptions}}"
         layerName="Controls/suggestPopup:__ContentLayer">
     <Controls.search:Input
             value="{{_options.value}}"
