@@ -19,6 +19,7 @@
         navigation="{{_options.navigation}}"
         searchParam="{{_options.searchParam}}"
         searchDelay="{{_options.searchDelay}}"
+        searchValueTrim="{{_options.searchValueTrim}}"
         trim="{{_options.trim}}"
         suggestStyle="overInput"
         suggestState="{{_options.suggestState}}"
