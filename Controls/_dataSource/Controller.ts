@@ -416,11 +416,20 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
      * Устанавливает узел, относительно которого будет производиться выборка данных
      * @param {string|number} key
      */
-    setRoot(key: TKey): void {
+    setRoot(key: TKey, byPage?: boolean): void {
         const currentRoot = this.getRoot();
 
         if (key !== currentRoot) {
-            this._setRoot(key);
+            // Костыль до 22.1100, убираем полностью логику перезагрузки из sabyPage при нажатии на кнопку "назад"
+            if (!byPage || !this._options.task1183145150) {
+                this._setRoot(key);
+            }
+
+            if (byPage && !this._options.task1183145150) {
+                this.setExpandedItems([]);
+                this.reload();
+            }
+
             this._notify('rootChanged', key, this._options.id);
         }
     }
