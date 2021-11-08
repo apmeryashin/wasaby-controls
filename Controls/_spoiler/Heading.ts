@@ -240,6 +240,7 @@ export default Heading;
  * @cfg {String} Стиль цвета текста и иконки контрола.
  * @variant label
  * @variant secondary
+ * @variant default
  *
  * @remark
  * Когда опция не задана, то её значение определяется контролом в зависимости от состояния развернутости.
