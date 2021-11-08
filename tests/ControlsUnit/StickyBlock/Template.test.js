@@ -140,7 +140,7 @@ define(
 
                inst._updateStyles(inst._options);
 
-               assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position controls-StickyBlock__topGapFix-default" style="top: 0px;z-index: 2;">' +
+               assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
                   '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
