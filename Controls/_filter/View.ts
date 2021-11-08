@@ -151,10 +151,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                     horizontal: 'overflow',
                     vertical: 'overflow'
                 },
-
-                // close нельзя на мобилках, т.к. если там есть инпут,
-                // то при открытии клавы произойдет подскролл и закрытие
-                actionOnScroll: detection.isMobilePlatform ? 'track' : 'close'
+                actionOnScroll: 'close'
             };
             if (this._options.alignment === 'right') {
                 popupOptions.targetPoint = {
