@@ -76,7 +76,7 @@ interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISear
    layerName: string;
    suggestTemplate: ISuggestTemplateProp | null;
    footerTemplate?: ISuggestFooterTemplate;
-   trim?: boolean; // TODO: searchValueTrim ???
+   searchValueTrim?: boolean;
    dataLoadCallback?: Function;
 }
 
@@ -916,7 +916,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                minSearchLength: this._options.minSearchLength,
                searchDelay: this._options.searchDelay as number,
                searchParam: this._options.searchParam,
-               searchValueTrim: this._options.trim,
+               searchValueTrim: this._options.searchValueTrim,
                navigation: this._options.navigation
             } as ISearchControllerOptions);
             return this._searchController;
