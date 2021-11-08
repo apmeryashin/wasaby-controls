@@ -295,11 +295,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          selectedItems.get(isSelected).push(item);
       };
 
-      if (items) {
-         items.forEach(handleItem);
-      } else {
-         this._model.each(handleItem);
-      }
+      const handleItems = items || this._model.getItems();
+      handleItems.forEach(handleItem);
 
       return selectedItems;
    }
