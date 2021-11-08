@@ -37,7 +37,7 @@ export interface IConfirmationOpener {
 
 /**
  * @name Controls/_popup/interface/IConfirmationOpener#details
- * @cfg {String} Дополнительный текст диалога подтверждения
+ * @cfg {String | TemplateFunction} Дополнительный текст диалога подтверждения
  */
 
 /**
