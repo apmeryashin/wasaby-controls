@@ -1541,7 +1541,7 @@
   "--readonly_marker-box_border-color_checkbox": "#e4e4e4",
   "--marker-box_size_checkbox": "12px",
   "--true_marker_padding-left_checkbox": "4px",
-  "--true_marker_padding-top_checkbox": "0",
+  "--true_marker_padding-top_checkbox": "0px",
   "--tristate_marker_size_checkbox": "6px",
   "--item_offset-vertical_radioGroup": "var(--offset_st)",
   "--item_offset-horizontal_radioGroup": "var(--offset_m)",
