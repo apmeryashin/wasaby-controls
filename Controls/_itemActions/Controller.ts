@@ -250,10 +250,10 @@ export class Controller {
      * @param newItems
      * @param removedItems
      */
-    shouldUpdateItemActionsOnCollectionChange(
+    shouldUpdateOnCollectionChange(
                 action: string,
-                newItems: Array<CollectionItem<Model>> & {properties: string},
-                removedItems: Array<CollectionItem<Model>> & {properties: string}): boolean {
+                newItems?: Array<CollectionItem<Model>> & {properties: string},
+                removedItems?: Array<CollectionItem<Model>> & {properties: string}): boolean {
         // При добавлении или удалении элементов списка, которые не имеют операций над записью
         // не надо набирать операции заново.
         // Например, nodeFooter не имеют операций над записью и никак не должны на них влиять.
