@@ -9,7 +9,7 @@ import {RecordSet} from 'Types/collection';
 import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
 import {
     ISource, ISourceOptions, IMultiSelectable,
-    IMultiSelectableOptions, IHierarchy, IHierarchyOptions
+    IMultiSelectableOptions, IHierarchy, IHierarchyOptions, IValidationStatusOptions
 } from 'Controls/interface';
 import 'css!Controls/toggle';
 
@@ -17,7 +17,8 @@ export interface ICheckboxGroupOptions extends IControlOptions,
             IMultiSelectableOptions,
             IHierarchyOptions,
             ISourceOptions,
-            IToggleGroupOptions {
+            IToggleGroupOptions,
+            IValidationStatusOptions {
     direction?: string;
 }
 /**
@@ -34,6 +35,7 @@ export interface ICheckboxGroupOptions extends IControlOptions,
  * @implements Controls/interface:IMultiSelectable
  * @implements Controls/interface:IHierarchy
  * @implements Controls/toggle:IToggleGroup
+ * @implements Controls/interface:IValidationStatus
  *
  * @public
  * @author Красильников А.С.
@@ -298,7 +300,8 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements
         return {
             direction: 'vertical',
             keyProperty: 'id',
-            itemTemplate: defaultItemTemplate
+            itemTemplate: defaultItemTemplate,
+            validationStatus: 'valid'
         };
     }
 
