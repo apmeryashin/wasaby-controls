@@ -1,6 +1,6 @@
 import {default as Base, IBaseInputOptions} from 'Controls/_input/Base';
 import {descriptor} from 'Types/entity';
-import * as ViewModel from 'Controls/_input/Password/ViewModel';
+import {ViewModel} from 'Controls/_input/Password/ViewModel';
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/input';
@@ -38,12 +38,17 @@ import 'css!Controls/input';
  *
  * @author Красильников А.С.
  */
+
+export interface IPasswordOptions extends IBaseInputOptions {
+    passwordVisible?: boolean;
+}
+
 class Password extends Base {
     protected _defaultValue: string = '';
     private _passwordVisible: boolean = false;
     protected _controlName: string = 'Password';
 
-    protected _getViewModelOptions(options): object {
+    protected _getViewModelOptions(options: IPasswordOptions): object {
         return {
             readOnly: options.readOnly,
             autoComplete: Password._isAutoComplete(this._autoComplete),
@@ -51,7 +56,7 @@ class Password extends Base {
         };
     }
 
-    protected _getViewModelConstructor(): ViewModel {
+    protected _getViewModelConstructor(): typeof ViewModel {
         return ViewModel;
     }
 
@@ -181,7 +186,7 @@ export default Password;
  * @cfg
  * @example
  * Сохраняем данные о пользователе и текущее время при отправке формы.
- * 
+ *
  * <pre class="brush: html; highlight: [4]">
  * <!-- WML -->
  * <form action="Auth.php" name="form">
@@ -190,7 +195,7 @@ export default Password;
  *     <Controls.buttons:Button on:click="_saveUser()" caption="Отправить"/>
  * </form>
  * </pre>
- * 
+ *
  * <pre class="brush: js; highlight: [4,11]">
  * // TypeScript
  * export class Form extends Control<IControlOptions, void> {

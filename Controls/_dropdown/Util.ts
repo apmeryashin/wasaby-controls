@@ -21,7 +21,7 @@ export function loadItems(
     controller: Controller,
     receivedState: DropdownReceivedState,
     options?: IDropdownControllerOptions
-): Promise<void | DropdownReceivedState> {
+): Promise<void | DropdownReceivedState> | void {
    const source = options.source;
    if (receivedState) {
       return controller.setItems(receivedState.items).then(() => {

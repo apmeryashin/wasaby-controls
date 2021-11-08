@@ -1,7 +1,9 @@
+import {IItemTemplateOptions as ITreeItemTemplateOptions} from 'Controls/tree';
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/treeGrid:View дереве с колонками}.
  * @class Controls/_treeGrid/interface/ItemTemplate
  * @implements Controls/list:IBaseItemTemplate
+ * @implements Controls/tree:IItemTemplateOptions
  * @author Авраменко А.С.
  * @see Controls/interface/ITreeGridItemTemplate#itemTemplate
  * @see Controls/interface/ITreeGridItemTemplate#itemTemplateProperty
@@ -22,7 +24,7 @@
  * @public
  */
 
-export default interface IItemTemplateOptions {
+export default interface IItemTemplateOptions extends ITreeItemTemplateOptions {
     /**
      * @cfg {Boolean} Когда опция установлена в значение true, в дереве отсутствуют {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/paddings/ структурные отступы} для элементов иерархии.
      * @default false

@@ -2,7 +2,8 @@ define(
    [
       'Controls/_input/Password/ViewModel'
    ],
-   function(ViewModel) {
+   function(ViewModelModule) {
+      const ViewModel = ViewModelModule.ViewModel;
       describe('Controls/_input/Password/ViewModel', function() {
          var currentModel;
          var changeVisibilityPassword = function(model, value) {

@@ -141,9 +141,11 @@ export interface IOptions<
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
+    stickyResults?: boolean;
     theme?: string;
     style?: string;
     backgroundStyle?: string;
+    footerBackgroundStyle?: string;
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -733,6 +735,8 @@ export default class Collection<
 
     protected _$stickyHeader: boolean;
 
+    protected _$stickyResults: boolean;
+
     protected _$stickyGroup: boolean;
 
     protected _$editingConfig: IEditingConfig;
@@ -899,6 +903,7 @@ export default class Collection<
 
     // Фон застиканных записей и лесенки
     protected _$backgroundStyle?: string;
+    protected _$footerBackgroundStyle?: string;
 
     private _firstItem: CollectionItem;
 
@@ -919,14 +924,18 @@ export default class Collection<
              this._$keyProperty = (options as any).idProperty;
         }
 
-        if (options.groupProperty) {
-            this._$groupProperty = options.groupProperty;
-            this._$group = this._createGroupFunctor();
-        }
+        // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
+        // https://online.sbis.ru/opendoc.html?guid=37b14566-12c3-44ed-ac0b-0cd7e0ae5c9d
+        if (!this._disableSupportsGrouping) {
+            if (options.groupProperty) {
+                this._$groupProperty = options.groupProperty;
+                this._$group = this._createGroupFunctor();
+            }
 
-        // Support of 'groupingKeyCallback' option
-        if (!this._$group && (options as any).groupingKeyCallback) {
-            this._$group = (options as any).groupingKeyCallback;
+            // Support of 'groupingKeyCallback' option
+            if (!this._$group && (options as any).groupingKeyCallback) {
+                this._$group = (options as any).groupingKeyCallback;
+            }
         }
 
         if (options.itemTemplateProperty) {
@@ -949,6 +958,10 @@ export default class Collection<
 
         if (options.stickyHeader !== undefined) {
             this._$stickyHeader = options.stickyHeader;
+        }
+
+        if (options.stickyResults !== undefined) {
+            this._$stickyResults = options.stickyResults;
         }
 
         // Если опция stickyGroup задана, то запоминаем её значение.
@@ -2378,6 +2391,10 @@ export default class Collection<
         return this._$stickyHeader;
     }
 
+    isStickyResults(): boolean {
+        return this._$stickyResults;
+    }
+
     isStickyGroup(): boolean {
         return this._$stickyGroup;
     }
@@ -2483,15 +2500,27 @@ export default class Collection<
     }
 
     setBackgroundStyle(backgroundStyle: string): void {
-        this._$backgroundStyle = backgroundStyle;
-        this.getItems().forEach((item) => {
-           item.setBackgroundStyle(backgroundStyle);
-        });
-        this.nextVersion();
+        if (this._$backgroundStyle !== backgroundStyle) {
+            this._$backgroundStyle = backgroundStyle;
+            this.getItems().forEach((item) => {
+                item.setBackgroundStyle(backgroundStyle);
+            });
+            this.nextVersion();
+        }
     }
 
     getBackgroundStyle(): string {
         return this._$backgroundStyle;
+    }
+
+    setFooterBackgroundStyle(footerBackgroundStyle: string): void {
+        if (this._$footerBackgroundStyle !== footerBackgroundStyle) {
+            this._$footerBackgroundStyle = footerBackgroundStyle;
+            if (this.getFooter()) {
+                this.getFooter().setBackgroundStyle(footerBackgroundStyle);
+            }
+            this.nextVersion();
+        }
     }
 
     getEditingBackgroundStyle(): string {
@@ -3388,10 +3417,11 @@ export default class Collection<
         return {
             owner: this,
             sticky: options.stickyFooter,
+            backgroundStyle: options.footerBackgroundStyle,
             contentTemplate: options.footerTemplate,
             style: this.getStyle(),
             theme: this.getTheme()
-        }
+        };
     }
     //endregion
 
@@ -4264,6 +4294,7 @@ Object.assign(Collection.prototype, {
     _$theme: 'default',
     _$hoverBackgroundStyle: 'default',
     _$backgroundStyle: 'default',
+    _$footerBackgroundStyle: 'default',
     _$rowSeparatorSize: null,
     _$hiddenGroupPosition: 'first',
     _$footerTemplate: null,
@@ -4285,6 +4316,7 @@ Object.assign(Collection.prototype, {
     _actionsTemplateConfig: null,
     _swipeConfig: null,
     _userStrategies: null,
+    _disableSupportsGrouping: false,
     _$emptyTemplate: null,
     _$emptyTemplateOptions: null,
     _$itemActionsPosition: 'inside',

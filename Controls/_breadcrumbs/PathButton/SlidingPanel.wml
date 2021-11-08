@@ -8,6 +8,7 @@
       <Controls._breadcrumbs.PathButton.Body
          path="{{path}}"
          source="{{source}}"
+         caption="{{caption}}"
          keyProperty="{{keyProperty}}"
          nodeProperty="{{nodeProperty}}"
          parentProperty="{{parentProperty}}"

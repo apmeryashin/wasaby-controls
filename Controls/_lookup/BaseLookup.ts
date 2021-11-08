@@ -140,9 +140,9 @@ export default abstract class
         this._lookupController.setItems(items);
     }
 
-    private _notifyChanges(): void {
+    protected _notifyChanges(selectedKeys?: TKey[]): void {
         const controller = this._lookupController;
-        const newSelectedKeys = controller.getSelectedKeys();
+        const newSelectedKeys = selectedKeys || controller.getSelectedKeys();
         const {added, removed} = ArrayUtil.getArrayDifference(this._getSelectedKeys(this._options), newSelectedKeys);
         if (added?.length || removed?.length) {
             this._notify('selectedKeysChanged', [newSelectedKeys, added, removed]);

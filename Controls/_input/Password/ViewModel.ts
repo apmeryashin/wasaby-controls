@@ -1,58 +1,50 @@
-import BaseViewModel = require('Controls/_input/Base/ViewModel');
-      
+import {ViewModel as BaseViewModel} from 'Controls/_input/Base/ViewModel';
+import {InputType, ISplitValue} from '../resources/Types';
+import {IPasswordOptions} from 'Controls/_input/Password';
 
-      /**
-       * @class Controls/_input/Password/ViewModel
-       * @extends Controls/_input/Base/ViewModel
-       *
-       * @private
-       *
-       * @author Красильников А.С.
-       */
+/**
+ * @class Controls/_input/Password/ViewModel
+ * @extends Controls/_input/Base/ViewModel
+ *
+ * @private
+ *
+ * @author Красильников А.С.
+ */
 
-      var _private = {
-         replaceOnAsterisks: function(value) {
-            return '•'.repeat(value.length);
-         },
-         isReplaceWithAsterisks: function(options) {
-            return !(options.autoComplete || options.passwordVisible) || options.readOnly;
-         },
-         adjustSplitValue: function(splitValue, value) {
-            splitValue.before = value.substring(0, splitValue.before.length);
-            splitValue.after = value.substring(value.length - splitValue.after.length);
-         },
-         calcDisplayValue: function(replaceWithAsterisks, value) {
-            return replaceWithAsterisks ? _private.replaceOnAsterisks(value) : value;
-         }
-      };
+export class ViewModel extends BaseViewModel {
+   protected _value: string;
+   protected _displayValue: string;
+   private _replaceOnAsterisks(value: string): string {
+      return '•'.repeat(value.length);
+   }
+   private _isReplaceWithAsterisks(options: IPasswordOptions): boolean | string {
+      return !(options.autoComplete || options.passwordVisible) || options.readOnly;
+   }
+   private _adjustSplitValue(splitValue: ISplitValue, value: string): void {
+      splitValue.before = value.substring(0, splitValue.before.length);
+      splitValue.after = value.substring(value.length - splitValue.after.length);
+   }
+   private _calcDisplayValue(replaceWithAsterisks: string | boolean, value: string): string {
+      return replaceWithAsterisks ? this._replaceOnAsterisks(value) : value;
+   }
+   protected _convertToDisplayValue(value: string | null): string {
+      const curValue = super._convertToDisplayValue.call(this, value);
+      const replaceWithAsterisks = this._isReplaceWithAsterisks(this._options);
+      const displayValue = super._convertToDisplayValue.call(this, curValue);
+      return this._calcDisplayValue(replaceWithAsterisks, displayValue);
+   }
 
-      var ViewModel = BaseViewModel.extend({
-         _convertToDisplayValue: function(value: string | null) {
-            const curValue = ViewModel.superclass._convertToDisplayValue.call(this, value);
-            const replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
-            const displayValue = ViewModel.superclass._convertToDisplayValue.call(this, curValue);
-
-            return _private.calcDisplayValue(replaceWithAsterisks, displayValue);
-         },
-
-         handleInput: function(splitValue, inputType) {
-            var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
-
-            if (replaceWithAsterisks) {
-               _private.adjustSplitValue(splitValue, this._value || '');
-            }
-
-            var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
-
-            this._displayValue = _private.calcDisplayValue(replaceWithAsterisks, this._value);
-            this._nextVersion();
-
-            return result;
-         },
-         isValueChanged: function(oldDisplayValue: string, oldValue?: string) {
-            return oldValue !== this._value;
-         }
-      });
-
-      export = ViewModel;
-   
+   protected handleInput(splitValue: ISplitValue, inputType: InputType): boolean {
+      const replaceWithAsterisks = this._isReplaceWithAsterisks(this._options);
+      if (replaceWithAsterisks) {
+         this._adjustSplitValue(splitValue, this._value || '');
+      }
+      const result = super.handleInput.call(this, splitValue, inputType);
+      this._displayValue = this._calcDisplayValue(replaceWithAsterisks, this._value);
+      this._nextVersion();
+      return result;
+   }
+   protected isValueChanged(oldDisplayValue: string, oldValue?: string): boolean {
+      return oldValue !== this._value;
+   }
+}

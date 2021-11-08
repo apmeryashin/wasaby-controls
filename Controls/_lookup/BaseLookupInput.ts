@@ -120,7 +120,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
             this._calculateSizes(newOptions);
         }
 
-        if (!this._isInputActive(newOptions)) {
+        if (!this._isInputActive(newOptions) || !this._isSuggestCanBeShown()) {
             this.closeSuggest();
         }
 
@@ -225,7 +225,11 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     private _determineAutoDropDown(): boolean {
         return this._options.autoDropDown &&
                this._isInputActive(this._options) &&
-               (this._isEmpty() || this._options.multiSelect);
+               this._isSuggestCanBeShown();
+    }
+
+    private _isSuggestCanBeShown(): boolean {
+        return this._options.multiSelect || this._isEmpty();
     }
 
     private _resize(): void {
@@ -324,6 +328,10 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _keyDown(event: SyntheticEvent): void {
+        if (this._options.readOnly) {
+            return;
+        }
+
         const items = this._items;
         const keyCodeEvent = event.nativeEvent.keyCode;
         const hasValueInInput = this._getInputValue(this._options);

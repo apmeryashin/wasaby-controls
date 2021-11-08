@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/StickyCallback/Index';
 import {Memory} from 'Types/source';
 import 'css!Controls-demo/Controls-demo';
+import {Model} from 'Types/entity';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -73,7 +74,8 @@ export default class extends Control {
         ];
     }
 
-    protected _stickyCallback(item: any): boolean {
-        return item.get('title') === 'Laptop computers 2' || item.get('title') === 'Android gadgets 2';
+    protected _stickyCallback(item: Model): string | undefined {
+        const title = item.get('title');
+        return (title === 'Laptop computers 2' || title === 'Android gadgets 2') ? 'topBottom' : undefined;
     }
 }

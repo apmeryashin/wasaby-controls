@@ -127,7 +127,7 @@ export default class View extends Control<IViewPanelOptions> {
         }
         //Будет удалено после: https://online.sbis.ru/opendoc.html?guid=53839728-e9dc-4af0-88a8-e847b5b4c5f8
         if (isResultClick) {
-            this._notify('groupClick');
+            this._notify('groupClick', [itemContents]);
         }
         this._notify('collapsedGroupsChanged', [this._viewModel.getCollapsedGroups()]);
     }

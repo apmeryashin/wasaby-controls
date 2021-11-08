@@ -375,20 +375,34 @@ const _private = {
     initializeModel(self: BaseControl, options: IBaseControlOptions, data: RecordSet): void {
         // Модели могло изначально не создаться (не передали receivedState и source)
         // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
-        if (!self._destroyed && data) {
-            self._items = data;
+        if (!self._destroyed) {
+            let items = data;
+            const hasItems = !!items;
 
-            self._onItemsReady(options, data);
+            // Если нет items, то мы все равно должны создать модель. Для модели опция collection обязательная.
+            // Поэтому инициализируем ее пустым рекордсетом. Модель нужна всегда, т.к. через нее отображаются:
+            // хедеры, футеры, индикаторы.
+            if (!hasItems) {
+                items = new RecordSet();
+            }
+
+            self._items = items;
+
+            if (hasItems) {
+                self._onItemsReady(options, items);
+            }
             if (options.collection) {
                 self._listViewModel = options.collection;
             } else {
                 self._listViewModel = self._createNewModel(
-                    data,
+                    items,
                     options,
                     options.viewModelConstructor
                 );
             }
-            self._afterItemsSet(options);
+            if (hasItems) {
+                self._afterItemsSet(options);
+            }
 
             if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel);
@@ -2392,7 +2406,7 @@ const _private = {
             }
             if (self._items && typeof self._items.getRecordById(result.activeElement || self._options.activeElement) !== 'undefined') {
                 // activeElement запишется в result только, когда он изменится
-                if (result.activeElement) {
+                if (result.activeElement && !self._container.closest('.ws-hidden')) {
                     self._notify('activeElementChanged', [result.activeElement]);
                 }
 
@@ -3355,7 +3369,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             collapsedGroups: collapsedGroups || newOptions.collapsedGroups
         };
 
-        _private.initializeModel(self, viewModelConfig, items || new RecordSet());
+        _private.initializeModel(self, viewModelConfig, items);
 
         if (items) {
             _private.setHasMoreData(self._listViewModel, _private.getHasMoreData(self), true);
@@ -3655,9 +3669,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // для вычисления сдвига виртуального скролла нужно знать об отступах триггеров
         this._updateScrollController();
 
-        // Если верхний индикатор не будет показан, то сразу же показываем триггер,
-        // чтобы в кейсе когда нет данных после моунта инициировать их загрузку
-        if (!this._indicatorsController.shouldDisplayTopIndicator()) {
+        // Если нет данных, то сразу же показываем триггер, чтобы при наличии данных вверх инициировалась их загрузка
+        // Если вверх нет данных, то сразу показываем триггер, т.к. ромашку показывать не будем, а триггер нужен для виртуального скролла.
+        if (
+            !this._listViewModel.getCount() ||
+            !this._hasMoreData('up') ||
+            !this._options.attachLoadTopTriggerToNull ||
+            this._hasHiddenItemsByVirtualScroll('up')
+        ) {
             this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
         }
 
@@ -4533,7 +4552,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
     handleTriggerVisible(direction: IDirection): void {
         // Если уже идет загрузка в какую-то сторону, то в другую сторону не начинаем загрузку
-        if (!this._handleLoadToDirection) {
+        if (!this._handleLoadToDirection && !this._sourceController?.getLoadError()) {
             // Вызываем сдвиг диапазона в направлении видимого триггера
             this._shiftToDirection(direction);
         }
@@ -4960,6 +4979,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
+
+        if (originalEvent?.nativeEvent?.button === 1) {
+            // на MacOS нажатие средней кнопкой мыши порождает событие click, но обычно кликом считается только ЛКМ
+            e.stopPropagation();
+            return;
+        }
+
         if (this._itemActionMouseDown) {
             // Не нужно кликать по Item, если MouseDown был сделан по ItemAction
             this._itemActionMouseDown = null;
@@ -6096,8 +6122,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!_private.isPortionedLoad(this)) {
             if (this._indicatorsController.shouldDisplayTopIndicator()) {
                 this._indicatorsController.displayTopIndicator(true);
-            } else {
-                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
             }
 
             if (this._indicatorsController.shouldDisplayBottomIndicator()) {
@@ -7086,6 +7110,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=12b8b9b1-b9d2-4fda-85d6-f871ecc5474c
             stickyHeader: true,
+            stickyResults: true,
             stickyColumnsCount: 1,
             notifyKeyOnRender: false,
             topTriggerOffsetCoefficient: DEFAULT_TRIGGER_OFFSET,

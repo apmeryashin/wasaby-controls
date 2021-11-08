@@ -765,8 +765,12 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         const textArr = [];
         let textValue;
         factory(items).each((item) => {
-            if (!this._isFrequentItem(item) && item.type !== 'dateRange' &&
-                (item.viewMode !== 'extended' || item.visibility === true) && this._isItemChanged(item)) {
+            if (!this._isFrequentItem(item) &&
+                 item.type !== 'dateRange' &&
+                (item.viewMode !== 'extended' || item.visibility === true) &&
+                 this._isItemChanged(item) &&
+                  // Временная проверка, пока не согласовано API отображения фильтров (панель/окно)
+                (item.editorTemplateName !== 'Controls/filterPanel:ListEditor' || this._options?.detailPanelOpenMode === 'stack')) {
                 textValue = item.textValue;
                 if (textValue) {
                     textArr.push(textValue);

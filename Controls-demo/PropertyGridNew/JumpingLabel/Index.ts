@@ -14,6 +14,7 @@ export default class Demo extends Control<IControlOptions> {
                     name: 'description',
                     caption: 'Описание',
                     editorOptions: {
+                        placeholder: 'Описание',
                         minLines: 3,
                         jumpingLabel: true
                     },

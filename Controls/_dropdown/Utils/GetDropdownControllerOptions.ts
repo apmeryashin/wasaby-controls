@@ -5,6 +5,8 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
     const dropdownOptions: IDropdownControllerOptions = {
         backgroundStyle: options.menuBackgroundStyle,
         hoverBackgroundStyle: options.menuHoverBackgroundStyle,
+        borderStyle: options.menuBorderStyle,
+        borderWidth: options.menuBorderWidth,
         sourceController: options.sourceController,
         source: options.source,
         items: options.items,
@@ -74,7 +76,9 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         searchDelay: options.searchDelay,
         searchValueTrim: options.searchValueTrim,
         searchPlaceholder: options.searchPlaceholder,
-        subMenuDirection: options.subMenuDirection
+        subMenuDirection: options.subMenuDirection,
+        dataName: options.menuDataName,
+        menuOpenedCallback: options.menuOpenedCallback
     };
     return dropdownOptions;
 }

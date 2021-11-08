@@ -8,9 +8,10 @@
                      displayMode="{{_options.breadcrumbsDisplayMode}}"
 
                      withoutBackButton="{{_withoutBackButton}}"
-                     backButtonNewIcon="{{_options.backButtonNewIcon}}"
+                     backButtonIconViewMode="{{_options.backButtonIconViewMode}}"
                      backButtonBeforeCaptionTemplate="{{_options.backButtonBeforeCaptionTemplate}}"
 
+                     pathButtonCaption="{{_options.breadcrumbsPathButtonCaption}}"
                      pathButtonSource="{{_options.source}}"
                      pathButtonFilter="{{_options.filter}}"
                      pathButtonKeyProperty="{{_options.keyProperty}}"

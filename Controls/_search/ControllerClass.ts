@@ -145,6 +145,7 @@ export default class ControllerClass {
       const filter = this._getFilter();
 
       if (!dontLoad) {
+         this._resetNavigation();
          resetResult = this._updateFilterAndLoad(filter, this._getRoot());
       } else {
          resetResult = filter;
@@ -175,10 +176,11 @@ export default class ControllerClass {
          this._saveRootBeforeSearch();
 
          if (this._options.filterOnSearchCallback) {
-            searchResult =  Promise.resolve(this._preFilterItemsAndUpdateFilter(value));
+            this._preFilterItemsAndUpdateFilter(value);
          } else {
-            searchResult = this._updateFilterAndLoad(this._getFilter(), this._getRoot());
+            this._resetNavigation();
          }
+         searchResult = this._updateFilterAndLoad(this._getFilter(), this._getRoot());
       } else if (this._searchPromise) {
          searchResult = this._searchPromise;
       } else {
@@ -415,14 +417,6 @@ export default class ControllerClass {
       this._searchStarted(filter);
       this._sourceController.setRoot(root);
 
-      // Перезададим параметры навигации т.к. они могли измениться.
-      // Сейчас explorer хранит у себя ссылку на объект navigation и меняет в нем значение position
-      // Правим по задаче https://online.sbis.ru/opendoc.html?guid=4f23b2e1-89ea-4a1d-bd58-ce7f9d00b58d
-      if (!this._sourceController.isLoading()) {
-         this._sourceController.setNavigation(null);
-         this._sourceController.setNavigation(this._options.navigation);
-      }
-
       return this._searchPromise =
           this._sourceController
               .load(undefined, undefined, filter)
@@ -471,12 +465,22 @@ export default class ControllerClass {
       return !!this._sourceController.getFilter()[this._options.searchParam];
    }
 
+   private _resetNavigation(): void {
+      // Перезададим параметры навигации т.к. они могли измениться.
+      // Сейчас explorer хранит у себя ссылку на объект navigation и меняет в нем значение position
+      // Правим по задаче https://online.sbis.ru/opendoc.html?guid=4f23b2e1-89ea-4a1d-bd58-ce7f9d00b58d
+      if (!this._sourceController.isLoading()) {
+         this._sourceController.setNavigation(null);
+         this._sourceController.setNavigation(this._options.navigation);
+      }
+   }
+
    private _preFilterItemsAndUpdateFilter(searchValue: string): RecordSet {
       const sourceController = this._sourceController;
       const items = sourceController.getItems();
 
-      items.assign(this._preFilterItemsBySearchValue(items, searchValue));
       sourceController.setFilter(this._getFilter());
+      items.assign(this._preFilterItemsBySearchValue(items, searchValue));
       return items;
    }
 

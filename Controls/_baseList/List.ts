@@ -207,6 +207,7 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
             multiSelectVisibility: 'hidden',
             multiSelectPosition: 'default',
             stickyHeader: true,
+            stickyResults: true,
             style: 'default'
         };
     }

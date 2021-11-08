@@ -2,6 +2,7 @@ import {Model} from 'Types/entity';
 import {getWidth} from 'Controls/sizeUtils';
 import {hasHorizontalScroll as hasHorizontalScrollUtil} from 'Controls/scroll';
 import {CONSTANTS} from './Types';
+import {detection} from 'Env/Env';
 
 const typographyStyles = [
     'fontFamily',
@@ -54,7 +55,7 @@ export class InputActivationHelper {
      * Устанавливает фокус в поле ввода.
      */
     activateInput(activateRowCallback: Function, beforeFocus?: (target: HTMLElement) => void): void {
-        if (!(this._clickItemInfo || this._shouldActivate || this._paramsForFastEdit)) {
+        if (detection.isMobileSafari || !(this._clickItemInfo || this._shouldActivate || this._paramsForFastEdit)) {
             return;
         }
 

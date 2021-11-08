@@ -126,11 +126,15 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
 
    _getControllerOptions(options: IComboboxOptions): object {
       const controllerOptions = getDropdownControllerOptions(options);
+      const popupClassName = `controls-ComboBox-popup ${options.popupClassName || ''}
+                             ${options.contrastBackground ? ' controls-ComboBox-popup_shift_contrastBackground' : ' controls-ComboBox-popup_shift'}
+                             ${options.borderVisibility === 'visible' ? ' controls-ComboBox-popup_shift_borderVisible' : ''}`;
+
       return { ...controllerOptions, ...{
             selectedKeys: [options.selectedKey],
-            markerVisibility: 'hidden',
+            markerVisibility: 'onactivated',
             dataLoadCallback: this._dataLoadCallback.bind(this, options),
-            popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'),
+            popupClassName,
             typeShadow: 'suggestionsContainer',
             close: this._onClose,
             open: this._onOpen,

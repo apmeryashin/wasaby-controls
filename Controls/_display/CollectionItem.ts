@@ -328,6 +328,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner()?.isStickyHeader();
     }
 
+    isStickyResults(): boolean {
+        return this.getOwner()?.isStickyResults();
+    }
+
     /**
      * Устанавливает содержимое элемента коллекции
      * @param contents Новое содержимое
@@ -717,6 +721,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         this._nextVersion();
     }
 
+    getBackgroundStyle(): string {
+        return this._$backgroundStyle;
+    }
+
     // region Drag-n-drop
 
     setDragged(dragged: boolean, silent?: boolean): void {
@@ -764,15 +772,21 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     isSticked(stickyCallback: Function, item: CollectionItem): boolean {
         return stickyCallback ?
-            stickyCallback(item.getContents()) :
+            !!stickyCallback(item.getContents()) :
             this.isMarked() && this._isSupportSticky();
     }
 
     getStickyHeaderPosition(stickyCallback: Function): {} {
-        const stickyVerticalPosition = stickyCallback ? 'top' : 'topBottom';
+        let stickyVerticalPosition = 'topBottom';
+
+        if (stickyCallback) {
+            const callbackResult = stickyCallback(this.getContents());
+            stickyVerticalPosition = callbackResult === true ? 'top' : callbackResult;
+        }
+
         return {
             vertical: stickyVerticalPosition
-        }
+        };
     }
 
     protected _isSupportSticky(): boolean {

@@ -13,6 +13,7 @@
    trim="{{_options.trim}}"
    searchParam="{{_options.searchParam}}"
    searchDelay="{{_options.searchDelay}}"
+   searchValueTrim="{{_options.searchValueTrim}}"
    navigation="{{_options.navigation}}"
    autoDropDown="{{_options.autoDropDown}}"
    emptyTemplate="{{_options.emptyTemplate}}"
