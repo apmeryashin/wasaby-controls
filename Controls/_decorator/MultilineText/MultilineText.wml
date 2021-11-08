@@ -5,7 +5,9 @@
         </ws:if>
         <ws:if data="{{text !== ''}}">
             <ws:if data="{{_isUseWrapUrls(text)}}">
-                <Controls._decorator.WrapURLs attr:class="controls-MultilineText-display_wrapper" value="{{text}}"/>
+                <Controls._decorator.WrapURLs attr:class="controls-MultilineText-display_wrapper"
+                                              attr:tabindex="null"
+                                              value="{{text}}"/>
             </ws:if>
             <ws:else>
                 <div class="controls-MultilineText-display_wrapper">{{text}}</div>
