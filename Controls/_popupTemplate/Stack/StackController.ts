@@ -350,7 +350,9 @@ export class StackController extends BaseController {
     private _getDefaultConfig(item: IStackItem): void {
         this._prepareSizeWithoutDOM(item);
         this._setStackContent(item);
-        if (StackStrategy.isMaximizedPanel(item)) {
+
+        // TODO: old logic will removed
+        if (StackStrategy.isMaximizedPanel(item) && !item.popupOptions.propStorageId) {
             // set default values
             item.popupOptions.templateOptions.maximizeButtonVisibility = undefined; // for vdom dirtyChecking
             const maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
