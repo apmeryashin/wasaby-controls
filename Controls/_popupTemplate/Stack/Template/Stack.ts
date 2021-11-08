@@ -104,7 +104,6 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
     static getDefaultOptions(): IStackTemplateOptions {
         return {
             headingFontSize: '3xl',
-            headerBackgroundStyle: 'unaccented',
             backgroundStyle: 'default',
             headingFontColorStyle: 'secondary',
             closeButtonVisibility: true,
