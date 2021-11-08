@@ -97,7 +97,11 @@ export default class Button extends BaseLookup<ISelectorButtonOptions> {
    }
 
    protected _reset(): void {
-      this._updateItems(new List());
+      if (this._options.hasOwnProperty('selectedKeys')) {
+         this._notifyChanges([]);
+      } else {
+         this._updateItems(new List());
+      }
    }
 
    protected _itemClickHandler(event: SyntheticEvent<Event>, item: Model): void {
