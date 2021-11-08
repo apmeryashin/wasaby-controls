@@ -188,6 +188,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                            receivedState: IFilterReceivedState): Promise<IFilterReceivedState> {
         this._configs = {} as IFilterItemConfigs;
         this._displayText = {};
+        this._detailPanelTemplateName = this._getDetailPanelTemplateName(options);
         let resultDef;
 
         if (receivedState) {
@@ -199,7 +200,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             this._resolveItems(options.source);
             resultDef = this._reload(true, !!options.panelTemplateName);
         }
-        this._detailPanelTemplateName = this._getDetailPanelTemplateName(options);
         return resultDef;
     }
 
@@ -770,7 +770,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                 (item.viewMode !== 'extended' || item.visibility === true) &&
                  this._isItemChanged(item) &&
                   // Временная проверка, пока не согласовано API отображения фильтров (панель/окно)
-                (item.editorTemplateName !== 'Controls/filterPanel:ListEditor' || this._options?.detailPanelOpenMode === 'stack')) {
+                (item.editorTemplateName !== 'Controls/filterPanel:ListEditor' || this._detailPanelTemplateName === FILTER_PANEL_POPUP_STACK)) {
                 textValue = item.textValue;
                 if (textValue) {
                     textArr.push(textValue);
