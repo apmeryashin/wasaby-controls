@@ -18,7 +18,6 @@ export interface IImageDisplayContainerOptions extends IControlOptions {
     imagePosition: string;
     imageViewMode: string;
     itemTemplate: TemplateFunction;
-    columns?: TColumns;
     sourceController: SourceController;
 }
 
@@ -58,7 +57,6 @@ export interface IImageDisplayContainerOptions extends IControlOptions {
 export default class ImageDisplayContainer extends Control<IImageDisplayContainerOptions> {
     protected _template: TemplateFunction = Template;
 
-    private _columns: TColumns;
     protected _itemTemplate: TemplateFunction;
     private _imagePosition: string;
     private _imageViewMode: string;
@@ -75,7 +73,6 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     protected _beforeMount(options?: IImageDisplayContainerOptions, contexts?: object, receivedState?: void): Promise<void> | void {
         this._imagePosition = options.imagePosition;
         this._imageViewMode = options.imageViewMode;
-        this._columns = options.columns;
         this._itemTemplate = options.itemTemplate;
         if (!options.sourceController) {
             Logger.error('ImageDisplayContainer should be child of Browser or DataContainer', this);
@@ -101,9 +98,6 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     }
 
     protected _beforeUpdate(options?: IImageDisplayContainerOptions, contexts?: any): void {
-        if (!isEqual(options.columns, this._columns)) {
-            this._columns = this._getPatchedColumns(options.columns);
-        }
         if (options.imageProperty !== this._options.imageProperty) {
             this._updateDisplayImage(this._items, options.imageProperty, true);
             if (!options.imageProperty) {
@@ -165,19 +159,6 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
      */
     protected _getImagePosition(item: CollectionItem): string {
         return this._hasItemWithImage ? this._imagePosition : 'none';
-    }
-
-    private _getPatchedColumns(columns: TColumns): TColumns {
-        let newColumns = columns;
-        if (columns) {
-            newColumns = object.clonePlain(columns);
-            newColumns.forEach((column) => {
-                const templateOptions: {imageViewMode?: string} = column.templateOptions || {};
-                templateOptions.imageViewMode = this._getImageViewMode(templateOptions.imageViewMode);
-                column.templateOptions = templateOptions;
-            });
-        }
-        return newColumns;
     }
 
     private static _hasImage(items: RecordSet, imageProperty: string): boolean {

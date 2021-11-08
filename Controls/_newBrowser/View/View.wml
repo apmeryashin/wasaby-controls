@@ -52,10 +52,11 @@
                  beforeEndEdit юзают для кастомной логики сохранения записи, т.к не хотят менять БЛ -->
             <Controls.list:Container id="detail">
                 <Controls.list:HotKeysContainer>
-                    <Controls._newBrowser.ImageDisplay.ImageDisplayContainer
+                    <Controls._newBrowser.ImageDisplay.Container
                         scope="{{_detailExplorerOptions}}"
                         columns="{{_columns}}"
                         listCfg="{{_listCfg}}"
+                        tableCfg="{{_tableCfg}}"
                         tileCfg="{{_tileCfg}}">
                         <ws:content>
                             <Controls.explorer:View
@@ -117,7 +118,7 @@
                                     tileCfg="{{_tileCfg}}"
                             />
                         </ws:tileItemTemplate>
-                    </Controls._newBrowser.ImageDisplay.ImageDisplayContainer>
+                    </Controls._newBrowser.ImageDisplay.Container>
                 </Controls.list:HotKeysContainer>
             </Controls.list:Container>
         </ws:else>

@@ -2,8 +2,7 @@
             scope="{{_options}}"
             hasItemWithImage="{{_hasItemWithImage}}"
             itemsReadyCallback="{{_itemsReadyCallback}}"
-            dataLoadCallback="{{_dataLoadCallback}}"
-            columns="{{_columns}}">
+            dataLoadCallback="{{_dataLoadCallback}}">
    <ws:itemTemplate>
       <ws:partial template="{{_itemTemplate}}"
                   imageViewMode="{{_getImageViewMode(itemTemplate.item)}}"
