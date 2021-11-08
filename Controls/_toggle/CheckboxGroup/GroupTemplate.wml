@@ -1,4 +1,4 @@
-<div class="controls-CheckboxGroup__group_{{_options.direction}} {{isChildGroup ? ('controls-CheckboxGroup__childGroup')}}">
+<div class="controls-CheckboxGroup__group_{{_options.direction}} {{isChildGroup ? ('controls-CheckboxGroup__childGroup')}} controls-invalid-container">
     <ws:for data="index, item in groups[parent]">
         <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate}}"
                     selected="{{isSelected(item)}}"
