@@ -1,6 +1,6 @@
-import {IMaxLengthOptions} from "./IMaxLength";
+import {IMaxLengthOptions} from 'Controls/_input/interface/IMaxLength';
 
-export interface ITextOptions extends IMaxLengthOptions{
+export interface ITextOptions extends IMaxLengthOptions {
     constraint?: string;
     convertPunycode: boolean;
     trim: boolean;

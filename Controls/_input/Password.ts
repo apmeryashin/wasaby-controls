@@ -19,7 +19,7 @@ import 'css!Controls/input';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления}
  *
  * @extends Controls/_input/Base
- * @implements CControls/input:IMaxLength
+ * @implements Controls/input:IMaxLength
  *
  * @public
  * @demo Controls-demo/Input/Password/Base/Index
