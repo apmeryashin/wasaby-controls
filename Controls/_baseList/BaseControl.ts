@@ -5182,7 +5182,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (canEditByClick) {
             e.stopPropagation();
             this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
-            this._beginEdit({ item }, { columnIndex }).then((result) => {
+            const hasCheckboxes =
+                this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
+
+            this._beginEdit({ item }, { columnIndex: columnIndex + hasCheckboxes }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
