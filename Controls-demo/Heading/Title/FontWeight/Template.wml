@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper {{_options.theme.indexOf('default')<0 ? 'controlsDemo_fixedWidth800' : 'controlsDemo_fixedWidth500'}}">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">fontWeight is not defined</div>
+        <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xl"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">fontWeight=normal</div>
+        <Controls.heading:Title caption="Heading" fontWeight="normal" fontColorStyle="primary" fontSize="xl"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label"> fontWeight=bold</div>
+        <Controls.heading:Title caption="Heading" fontWeight="bold" fontColorStyle="primary" fontSize="xl"/>
+    </div>
+</div>

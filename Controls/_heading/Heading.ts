@@ -11,12 +11,14 @@ import {
     IFontColorStyleOptions,
     IFontSize,
     IFontSizeOptions,
+    IFontWeight,
+    IFontWeightOptions,
     ITextTransformOptions
 } from 'Controls/interface';
 
 export interface IHeadingOptions
     extends IControlOptions, ICaptionOptions, ITooltipOptions, IFontColorStyleOptions, IFontSizeOptions,
-            ITextTransformOptions {
+            IFontWeightOptions, ITextTransformOptions {
 }
 
 /**
@@ -37,6 +39,7 @@ export interface IHeadingOptions
  * @implements Controls/interface:ICaption
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IFontWeight
  * @public
  * @author Красильников А.С.
  *
@@ -44,19 +47,21 @@ export interface IHeadingOptions
  * @demo Controls-demo/Heading/Group/Index
  *
  */
-class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFontColorStyle, IFontSize {
+class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFontColorStyle, IFontSize, IFontWeight {
     protected _template: TemplateFunction = headingTemplate;
 
     readonly '[Controls/_interface/ICaption]': boolean = true;
     readonly '[Controls/_interface/ITooltip]': boolean = true;
     readonly '[Controls/_interface/IFontSize]': boolean = true;
     readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
+    readonly '[Controls/_interface/IFontWeight]': boolean = true;
 
     static getDefaultOptions(): object {
         return {
             fontSize: 'l',
             fontColorStyle: 'secondary',
-            textTransform: 'none'
+            textTransform: 'none',
+            fontWeight: 'default'
         };
     }
 
