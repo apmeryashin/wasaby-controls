@@ -1145,16 +1145,23 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             this._notify('collapsedItemsChanged', [result.collapsedItems]);
         }
     }
-    protected _afterCollectionAdd(addedItems: CollectionItem[], addedItemsIndex: number): void {
+    protected _afterCollectionAdd(addedItems: TreeItem[], addedItemsIndex: number): void {
         super._afterCollectionAdd(addedItems, addedItemsIndex);
 
-        // В добавленных записях может быть развернутый узел с hasMore, поэтому пересчитываем hasMoreStorage
-        const collection = this._listViewModel;
-        const expandedItems =
-            _private.getExpandedItems(this, this._options, this._items, this._expandController.getExpandedItems());
-        const hasMoreStorage =
-            _private.prepareHasMoreStorage(this._sourceController, expandedItems, collection.getHasMoreStorage());
-        collection.setHasMoreStorage(hasMoreStorage, true);
+        const addedNodes = addedItems.filter(
+            (it) => it['[Controls/_display/TreeItem]'] && it.isNode() !== null
+        );
+        const hasAddedNodeWithHasMore = !!addedNodes.find(
+            (it) => this._sourceController.hasMoreData('down', it.getContents().getKey())
+        );
+        if (hasAddedNodeWithHasMore) {
+            const collection = this._listViewModel;
+            const expandedItems =
+                _private.getExpandedItems(this, this._options, this._items, this._expandController.getExpandedItems());
+            const hasMoreStorage =
+                _private.prepareHasMoreStorage(this._sourceController, expandedItems, collection.getHasMoreStorage());
+            collection.setHasMoreStorage(hasMoreStorage, true);
+        }
     }
 
     private setMarkerOnFirstLeaf(options, startKey) {
