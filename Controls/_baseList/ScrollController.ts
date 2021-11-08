@@ -270,7 +270,7 @@ export default class ScrollController {
         const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide' ? this._virtualScroll.getRange().start : 0;
         let offsetTop = uDimension(listViewContainer.children[firstElementIndex], true).top;
         const container = baseControlContainer[0] || baseControlContainer;
-        offsetTop += container.offsetTop - uDimension(container).top;
+        offsetTop += container.offsetTop;
         return offsetTop;
     }
 
