@@ -41,6 +41,7 @@ import 'css!Controls/input';
 
 export interface IPasswordOptions extends IBaseInputOptions {
     passwordVisible?: boolean;
+    maxLength?: number;
 }
 
 class Password extends Base {
@@ -52,7 +53,8 @@ class Password extends Base {
         return {
             readOnly: options.readOnly,
             autoComplete: Password._isAutoComplete(this._autoComplete),
-            passwordVisible: this._passwordVisible
+            passwordVisible: this._passwordVisible,
+            maxLength: options.maxLength
         };
     }
 
@@ -179,6 +181,14 @@ export default Password;
  * @remark
  *
  * The button does not appear in {@link readOnly read mode} or in an empty field.
+ */
+
+/**
+ * @name Controls/_input/Password#maxLength
+ * @cfg {Number} Максимальное количество символов, которое может ввести пользователь вручную в поле.
+ * @remark
+ * Когда количество символов достигает максиму, тогда последующий символы в поле не добавляются.
+ * @demo Controls-demo/Input/Password/MaxLength/Index
  */
 
 /**
