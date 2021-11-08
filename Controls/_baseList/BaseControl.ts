@@ -4700,7 +4700,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
     handleTriggerVisible(direction: IDirection): void {
         // Если уже идет загрузка в какую-то сторону, то в другую сторону не начинаем загрузку
-        if (!this._handleLoadToDirection) {
+        if (!this._handleLoadToDirection && !this._sourceController?.getLoadError()) {
             // Вызываем сдвиг диапазона в направлении видимого триггера
             this._shiftToDirection(direction);
         }
