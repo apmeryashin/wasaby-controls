@@ -3,6 +3,7 @@ import {descriptor} from 'Types/entity';
 import {ViewModel} from 'Controls/_input/Password/ViewModel';
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {IMaxLengthOptions} from 'Controls/_input/interface/IMaxLength';
 import 'css!Controls/input';
 
 /**
@@ -18,6 +19,7 @@ import 'css!Controls/input';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления}
  *
  * @extends Controls/_input/Base
+ * @implements CControls/input:IMaxLength
  *
  * @public
  * @demo Controls-demo/Input/Password/Base/Index
@@ -39,9 +41,8 @@ import 'css!Controls/input';
  * @author Красильников А.С.
  */
 
-export interface IPasswordOptions extends IBaseInputOptions {
+export interface IPasswordOptions extends IBaseInputOptions, IMaxLengthOptions {
     passwordVisible?: boolean;
-    maxLength?: number;
 }
 
 class Password extends Base {
@@ -185,9 +186,7 @@ export default Password;
 
 /**
  * @name Controls/_input/Password#maxLength
- * @cfg {Number} Максимальное количество символов, которое может ввести пользователь вручную в поле.
- * @remark
- * Когда количество символов достигает максиму, тогда последующий символы в поле не добавляются.
+ * @cfg {Number}
  * @demo Controls-demo/Input/Password/MaxLength/Index
  */
 

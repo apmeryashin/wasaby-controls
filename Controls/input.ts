@@ -4,6 +4,7 @@
  * @includes AdapterMask Controls/_input/Adapter/Mask
  * @includes ISelection Controls/_input/interface/ISelection
  * @includes IArea Controls/_input/interface/IArea
+ * @includes IMaxLength Controls/_input/interface/IMaxLength
  * @includes IBorderVisibility Controls/_input/interface/IBorderVisibility
  * @public
  * @author Крайнов Д.О.
@@ -47,6 +48,7 @@ export {IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility,
 export {IBorderVisibilityArea, TBorderVisibilityArea, getOptionBorderVisibilityAreaTypes} from './_input/interface/IBorderVisibilityArea';
 export {IFieldTemplate, IFieldTemplateOptions} from './_input/interface/IFieldTemplate';
 export {IPasswordOptions} from 'Controls/_input/Password';
+export {IMaxLengthOptions} from 'Controls/_input/interface/IMaxLength';
 
 // Helpers
 import * as ActualAPI from 'Controls/_input/ActualAPI';

@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">maxLength null</div>
+        <div class="controls-text-label">maxLength is not defined</div>
         <Controls.input:Password
             bind:value="_value1"
             attr:style="width:200px"
