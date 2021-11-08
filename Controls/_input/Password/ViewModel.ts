@@ -39,11 +39,20 @@ export class ViewModel extends BaseViewModel {
       if (replaceWithAsterisks) {
          this._adjustSplitValue(splitValue, this._value || '');
       }
+      if (this._options.maxLength && inputType === 'insert') {
+         ViewModel._limitLength(splitValue, this._options.maxLength);
+      }
       const result = super.handleInput.call(this, splitValue, inputType);
       this._displayValue = this._calcDisplayValue(replaceWithAsterisks, this._value);
       this._nextVersion();
       return result;
    }
+
+   private static _limitLength(splitValue: ISplitValue, maxLength: number): void {
+      const maxInsertionLength: number = maxLength - splitValue.before.length - splitValue.after.length;
+      splitValue.insert = splitValue.insert.substring(0, maxInsertionLength);
+   }
+
    protected isValueChanged(oldDisplayValue: string, oldValue?: string): boolean {
       return oldValue !== this._value;
    }

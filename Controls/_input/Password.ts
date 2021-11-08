@@ -3,6 +3,7 @@ import {descriptor} from 'Types/entity';
 import {ViewModel} from 'Controls/_input/Password/ViewModel';
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {IMaxLengthOptions} from 'Controls/_input/interface/IMaxLength';
 import 'css!Controls/input';
 
 /**
@@ -18,6 +19,7 @@ import 'css!Controls/input';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления}
  *
  * @extends Controls/_input/Base
+ * @implements Controls/input:IMaxLength
  *
  * @public
  * @demo Controls-demo/Input/Password/Base/Index
@@ -39,7 +41,7 @@ import 'css!Controls/input';
  * @author Красильников А.С.
  */
 
-export interface IPasswordOptions extends IBaseInputOptions {
+export interface IPasswordOptions extends IBaseInputOptions, IMaxLengthOptions {
     passwordVisible?: boolean;
 }
 
@@ -52,7 +54,8 @@ class Password extends Base {
         return {
             readOnly: options.readOnly,
             autoComplete: Password._isAutoComplete(this._autoComplete),
-            passwordVisible: this._passwordVisible
+            passwordVisible: this._passwordVisible,
+            maxLength: options.maxLength
         };
     }
 
@@ -179,6 +182,12 @@ export default Password;
  * @remark
  *
  * The button does not appear in {@link readOnly read mode} or in an empty field.
+ */
+
+/**
+ * @name Controls/_input/Password#maxLength
+ * @cfg {Number}
+ * @demo Controls-demo/Input/Password/MaxLength/Index
  */
 
 /**
