@@ -1363,9 +1363,9 @@ describe('Controls/_multiselection/Controller', () => {
          // Проверяем что выбраны все хлебные крошки, у которых в пути есть 1 и все дети этих хлебных крошек
          assert.isTrue(model.getItemBySourceKey(1).isSelected());
          assert.isTrue(model.getItemBySourceKey(13).isSelected());
-         assert.isTrue(model.getItemBySourceKey(11).isSelected());
+         assert.isNull(model.getItemBySourceKey(11).isSelected());
          assert.isTrue(model.getItemBySourceKey(111).isSelected());
-         assert.isTrue(model.getItemBySourceKey(12).isSelected());
+         assert.isNull(model.getItemBySourceKey(12).isSelected());
          assert.isTrue(model.getItemBySourceKey(121).isSelected());
          assert.isFalse(model.getItemBySourceKey(2).isSelected());
          assert.isFalse(model.getItemBySourceKey(21).isSelected());
