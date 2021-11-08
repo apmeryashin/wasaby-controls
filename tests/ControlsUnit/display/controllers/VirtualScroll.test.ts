@@ -129,7 +129,7 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
                 if (enumerator._$position === 1) {
                     return {
                         StickableItem: false,
-                        '[Controls/_display/IEditableCollectionItem]': true,
+                        EditableItem: true,
                         isEditing: () => true
                     };
                 }

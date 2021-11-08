@@ -67,7 +67,7 @@ export function each(
     const count = collection.getCount();
     const shouldStayInCollection = (item) => item && (
         (item.StickableItem && item.isSticked()) ||
-        (item['[Controls/_display/IEditableCollectionItem]'] && item.isEditing())
+        (item.EditableItem && item.isEditing())
     );
 
     let stickyItemBefore = null;

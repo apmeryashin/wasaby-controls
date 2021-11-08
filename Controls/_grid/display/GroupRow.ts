@@ -35,7 +35,7 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
     DataRow,
     ExpandableMixin
 ) {
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
+    readonly EditableItem: boolean = false;
     readonly '[Controls/_display/GroupItem]': true;
 
     readonly Markable: boolean = false;

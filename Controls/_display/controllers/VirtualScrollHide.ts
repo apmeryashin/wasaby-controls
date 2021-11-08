@@ -68,7 +68,7 @@ export function isItemAtIndexHidden(
     const current = collection.at(index);
     const shouldStayInCollection = (item) => item && (
         (item.StickableItem && item.isSticked()) ||
-        (item['[Controls/_display/IEditableCollectionItem]'] && item.isEditing())
+        (item.EditableItem && item.isEditing())
     );
     const isSticky = shouldStayInCollection(current);
 
