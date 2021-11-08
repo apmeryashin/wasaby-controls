@@ -10,7 +10,7 @@ import * as Template from 'wml!Controls-demo/treeGridNew/NodeFooter/MoreButton/M
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
-    protected _columns: IColumn[] = Flat.getColumnsWithNodeFooters(true).map((c) => ({...c, compatibleWidth: '150px'}));
+    protected _columns: IColumn[] = Flat.getColumnsWithNodeFooters(true);
 
     protected _navigation: INavigationOptionValue<INavigationSourceConfig> = {
         source: 'page',

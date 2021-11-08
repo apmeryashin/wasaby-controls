@@ -1,5 +1,5 @@
 <ws:template name="EXPANDER">
-    <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"
+    <div class="{{ item.getExpanderClasses(expanderIcon, expanderSize, expanderIconSize, expanderIconStyle) }}"
          attr:data-qa="{{ item.listElementName }}-expander"></div>
 </ws:template>
 
@@ -16,7 +16,7 @@
             attr:colspan="{{ gridColumn.getColspan() }}"
             attr:rowspan="{{ gridColumn.getRowspan() }}"
             attr:data-qa="{{ gridColumn.listElementName }}">
-            <div class="{{ gridColumn.getRelativeCellWrapperClasses() }} {{ gridColumn.isHidden() ? 'ws-hidden' }}"
+            <div class="{{ gridColumn.getRelativeCellWrapperClasses({ 'hasContent': !!content || !!contentTemplate }) }} {{ gridColumn.isHidden() ? 'ws-hidden' }}"
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
                      attr:class="{{ gridColumn.getMarkerClasses() }}"

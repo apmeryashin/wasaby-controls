@@ -32,10 +32,12 @@ export default class OperationsPanelContainer extends Control<IOperationsPanelCo
     protected _template: TemplateFunction = template;
     protected _selectedKeys: TKeys = [];
     protected _selectedKeysCount: number;
+    protected _listMarkedKey: TKey;
 
     protected _beforeMount(options: IOperationsPanelContainerOptions): void {
         this._selectedKeys = this._getSelectedKeys(options);
         this._selectedKeysCount = this._getSelectedKeysCount(options, this._selectedKeys);
+        this._listMarkedKey = this._isEmptySelection(options) ? options.listMarkedKey : null;
     }
 
     protected _beforeUpdate(newOptions: IOperationsPanelContainerOptions): void {
@@ -44,6 +46,7 @@ export default class OperationsPanelContainer extends Control<IOperationsPanelCo
             this._selectedKeysCount !== newOptions.selectedKeysCount ||
             (!newOptions.items?.getCount() && (this._selectedKeys?.length || newOptions.listMarkedKey !== null))) {
             this._selectedKeys = this._getSelectedKeys(newOptions);
+            this._listMarkedKey = this._isEmptySelection(newOptions) ? newOptions.listMarkedKey : null;
             this._selectedKeysCount = this._getSelectedKeysCount(newOptions, this._selectedKeys);
         }
     }
@@ -65,14 +68,18 @@ export default class OperationsPanelContainer extends Control<IOperationsPanelCo
     private _getSelectedKeys(options: IOperationsPanelContainerOptions): TKeys {
         let result;
 
-        if (!options.selectedKeys?.length && options.listMarkedKey !== null &&
-            (!options.items || options.items.getCount())) {
+        if (this._isEmptySelection(options)) {
             result = [options.listMarkedKey];
         } else {
             result = options.selectedKeys;
         }
 
         return result;
+    }
+
+    private _isEmptySelection(options: IOperationsPanelContainerOptions): boolean {
+        return !options.selectedKeys?.length && options.listMarkedKey !== null &&
+               (!options.items || options.items.getCount());
     }
 
     protected _operationPanelItemClick(

@@ -5,6 +5,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {SlidingPanelOpener} from 'Controls/popup';
 import {IPathButton} from 'Controls/_breadcrumbs/PathButton/interfaces';
 import * as template from 'wml!Controls/_breadcrumbs/PathButton/PathButton';
+import * as rk from 'i18n!SBIS3';
 
 /**
  * Контрол кнопки меню для хлебных крошек. При клике открывается popup со списком всех узлов в виде дерева.
@@ -87,6 +88,8 @@ export default class PathButton extends Control<IPathButton> {
                 opener: this,
                 maxWidth: 700,
 
+                actionOnScroll: 'close',
+                closeOnOutsideClick: true,
                 backgroundStyle: 'default',
                 targetPoint: {
                     vertical: 'top',
@@ -126,6 +129,7 @@ export default class PathButton extends Control<IPathButton> {
      */
     private _getPanelTemplateOptions(): IBody {
         return {
+            caption: this._options.caption || rk('На главную'),
             path: this._options.path,
             source: this._options.source,
             filter: this._options.filter,

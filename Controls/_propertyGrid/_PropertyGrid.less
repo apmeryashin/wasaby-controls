@@ -60,6 +60,15 @@
    cursor: pointer;
    margin-left: auto;
    align-self: center;
+   color: var(--unaccented_icon-color);
+}
+
+.ws-is-hover .controls-PropertyGrid__groupExpander:hover {
+   color: var(--unaccented_hover_icon-color);
+}
+
+.controls-PropertyGrid__groupExpander:active {
+   color: var(--unaccented_hover_icon-color);
 }
 
 .controls-PropertyGrid__groupExpander-left {
@@ -269,6 +278,10 @@
 
 .controls-PropertyGrid__itemsContainer_paddingLeft-xl {
    padding-left: var(--offset_xl);
+}
+
+.controls-PropertyGrid__item_dragging {
+   z-index: 2;
 }
 
 .controls-PropertyGrid__item_dragging {

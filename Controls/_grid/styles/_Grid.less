@@ -12,6 +12,10 @@
    padding-right: var(--master_item_horizontal-offset_list);
 }
 
+.controls-Grid_master {
+   grid-row-gap: var(--master_item_separator_thickness_list);
+}
+
 .controls-GridView__loadingTrigger_notFullGridSupport {
    position: relative;
 }
@@ -266,7 +270,6 @@
 
 .controls-Grid__row-cell_master {
    font-size: var(--font-size_l);
-   border-bottom: var(--master_item_separator_thickness_list) solid var(--master_item_background-color_list) ;
 }
 
 .controls-Grid__header-cell__content-ellipsis,
@@ -863,10 +866,6 @@
    font-size: var(--font-size_l);
 }
 
-.controls-Grid__cell_master {
-   background-color: var(--master_item_background-color_list);
-}
-
 .controls-master-template-default {
    .controls-Grid__cell_spacingFirstCol_default {
       padding-left: var(--item_padding-left_l_list);
@@ -893,6 +892,10 @@
 
 .controls-Grid__row-cell_selected-master.controls-background-master {
    background-color: var(--master_item_selected_background-color_list);
+}
+
+.controls-MasterDetail-transparent .controls-Grid__row-cell_selected-master.controls-background-master {
+   background-color: var(--unaccented_background-color);
 }
 
 .controls-GridView__itemV_marker-master {
@@ -928,12 +931,20 @@
    right: var(--offset_xs);
 }
 
-.ws-is-hover .controls-BaseControl_hover_enabled {
+.ws-is-hover {
+   .controls-BaseControl_hover_enabled {
+      .controls-Grid__row_highlightOnHover_master:hover .controls-Grid__row-cell-background-hover-master,
+      .controls-Grid__row_highlightOnHover_master:hover .controls-background-master {
+         background-color: var(--master_item_hover_background-color_list);
+      }
+   }
 
-   .controls-Grid__row_highlightOnHover_master:hover .controls-Grid__row-cell-background-hover-master,
-   .controls-Grid__row_highlightOnHover_master:hover .controls-background-master,
-   .controls-Grid__row_highlightOnHover_master:hover .controls-background-master {
-      background-color: var(--master_item_hover_background-color_list);
+   .controls-MasterDetail-transparent {
+      .controls-BaseControl_hover_enabled {
+         .controls-Grid__row_highlightOnHover_master:hover .controls-Grid__row-cell-background-hover-master {
+            background-color: var(--unaccented_background-color);
+         }
+      }
    }
 }
 

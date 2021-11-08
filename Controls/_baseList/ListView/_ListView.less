@@ -111,6 +111,7 @@
    height: var(--marker_height_padding-s_text-m_list);
 }
 
+.controls-ListView__itemV_marker_padding-default_text-xs,
 .controls-ListView__itemV_marker_padding-s_text-xs,
 .controls-ListView__itemV_marker_padding-null_text-xs {
    height: var(--marker_height_padding-s_text-xs_list);
@@ -875,10 +876,7 @@
 }
 
 .controls-ListView__item_master {
-   border-color: var(--master_item_background-color_list);
-   border-style: solid;
-   border-width: 0;
-   border-bottom-width: var(--master_item_separator_thickness_list);
+   margin-bottom: var(--master_item_separator_thickness_list);
 }
 
 //Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
@@ -887,6 +885,12 @@
    .controls-ListView__item_master {
       &:hover {
          background-color: var(--master_item_hover_background-color_list);
+      }
+   }
+
+   .controls-MasterDetail-transparent .controls-ListView__item_master {
+      &:hover {
+         background-color: var(--unaccented_background-color);
       }
    }
 }

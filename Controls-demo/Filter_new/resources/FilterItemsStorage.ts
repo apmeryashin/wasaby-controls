@@ -1,10 +1,11 @@
 import {Memory} from 'Types/source';
-import hierarchyHistoryMemory = require('Controls-demo/FilterView/resources/hierarchyHistoryMemory');
+import HierarchyHistoryMemory = require('Controls-demo/FilterView/resources/hierarchyHistoryMemory');
 import {Service as HistoryService} from 'Controls/history';
 import memorySourceFilter = require('Controls-demo/Utils/MemorySourceFilter');
 import {warehouseData, responsibleData, hierarchyOperationData} from './DataStorage';
 import {merge, isEqual} from 'Types/object';
 import {object} from 'Types/util';
+import {IFilterItem} from 'Controls/filter';
 
 const STATE_VALUE = 4;
 const historyItemsValues = {
@@ -34,7 +35,7 @@ const historyItemsValues = {
     }
 };
 
-const hierarchyFilters: Array<Record<string, any>> = [{
+const hierarchyFilters: IFilterItem[] = [{
     name: 'hierarchyOperations',
     value: {},
     resetValue: {},
@@ -45,7 +46,7 @@ const hierarchyFilters: Array<Record<string, any>> = [{
         keyProperty: 'id',
         parentProperty: 'parent',
         nodeProperty: '@parent',
-        source: new hierarchyHistoryMemory({
+        source: new HierarchyHistoryMemory({
             originSource: new Memory({
                 keyProperty: 'id',
                 data: hierarchyOperationData
@@ -66,7 +67,7 @@ const hierarchyFilters: Array<Record<string, any>> = [{
                 width: 600
             }
         },
-        navigation: {source: 'page', view: 'page', sourceConfig: {pageSize: 8, page: 0}},
+        navigation: {source: 'page', view: 'pages', sourceConfig: {pageSize: 8, page: 0}},
         selectorTemplateName: 'Controls-demo/Filter_new/resources/TreeStack/TreeStackTemplate',
         suggestTemplateName: 'Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
         className: 'controls-demo-FilterView__lookupTemplate',
@@ -78,7 +79,7 @@ const hierarchyFilters: Array<Record<string, any>> = [{
     viewMode: 'frequent'
 }];
 
-const defaultItems = [{
+const defaultItems: IFilterItem[] = [{
         name: 'date',
         value: null,
         type: 'dateRange',
@@ -288,7 +289,7 @@ const defaultItems = [{
                     width: 600
                 }
             },
-            navigation: {source: 'page', view: 'page', sourceConfig: {pageSize: 8, page: 0}},
+            navigation: {source: 'page', view: 'pages', sourceConfig: {pageSize: 8, page: 0}},
             selectorTemplateName: 'Controls-demo/Filter_new/resources/TreeStack/TreeStackTemplate',
             suggestTemplateName: 'Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
             className: 'controls-demo-FilterView__lookupTemplate',
@@ -328,7 +329,7 @@ const defaultItems = [{
                     width: 600
                 }
             },
-            navigation: {source: 'page', view: 'page', sourceConfig: {pageSize: 8, page: 0}},
+            navigation: {source: 'page', view: 'pages', sourceConfig: {pageSize: 8, page: 0}},
             selectorTemplateName: 'Controls-demo/Filter_new/resources/TreeStack/TreeStackTemplate',
             suggestTemplateName: 'Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
             className: 'controls-demo-FilterView__lookupTemplate',
@@ -374,11 +375,11 @@ const defaultItems = [{
         }
     }];
 
-export function getItems(): unknown[] {
-    return defaultItems.concat(hierarchyFilters);
+export function getItems(): IFilterItem[] {
+    return defaultItems.concat(hierarchyFilters) as IFilterItem[];
 }
 
-export function getItemsWithGroup(): any[] {
+export function getItemsWithGroup(): IFilterItem[] {
     return [{
             name: 'date',
             group: 'firstGroup',

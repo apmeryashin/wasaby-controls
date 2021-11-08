@@ -25,12 +25,15 @@
               stickyPosition="{{_options.stickyPosition}}"
               draggable="{{_options.draggable}}"
               backgroundStyle="transparent"
+              borderStyle="{{_options.borderStyle}}"
+              borderSize="{{_options.borderSize}}"
               searchPlaceholder="{{_options.searchPlaceholder}}"
               minSearchLength="{{_options.minSearchLength}}"
               searchDelay="{{_options.searchDelay}}"
               headerBackgroundStyle="transparent"
               markerVisibility="{{_options.markerVisibility}}"
               on:mouseenter="_mouseEnterHandler()"
+              on:headerMouseEnter="_headerMouseEnter()"
               on:headerClick="_headerClick()"
               on:footerClick="_footerClick()">
          <ws:bodyContentTemplate>
@@ -61,6 +64,7 @@
                               icon="{{_headingIcon}}"
                               caption="{{_headingCaption}}"
                               theme="{{_headerTheme}}"
+                              on:mouseenter="_headerMouseEnter()"
                               on:click="_headerClick()"/>
                </ws:if>
                <Controls._menu.Control
@@ -69,6 +73,7 @@
                        isDragging="{{_options.isDragging}}"
                        dropdownClassName="{{_options.dropdownClassName}}"
                        selectorOpenCallback="{{_options.selectorOpenCallback}}"
+                       menuOpenedCallback="{{_options.menuOpenedCallback}}"
                        nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
                        root="{{_options.root}}"
                        selectorOpener="{{_options.selectorOpener}}"
@@ -120,6 +125,10 @@
                        calmTimer="{{_calmTimer}}"
                        subMenuDirection ="{{_options.subMenuDirection}}"
                        itemAlign="{{_options.itemAlign}}"
+                       dataName="{{_options.dataName}}"
+                       openedSubMenuKey="{{_options.openedSubMenuKey}}"
+                       openedSubMenuOptions="{{_options.openedSubMenuOptions}}"
+                       closedSubMenuKey="{{_options.closedSubMenuKey}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:rightTemplateClick="_sendResult('rightTemplateClick')"
                        on:moreButtonClick="_sendResult('selectorDialogOpened')"
@@ -174,7 +183,9 @@
 <ws:else data="{{_headerTemplate}}">
    <ws:partial template="menuPopupWrapper">
       <ws:headerContentTemplate>
-         <ws:partial template="{{_headerTemplate}}" multiSelect="{{_options.multiSelect}}"/>
+         <ws:partial template="{{_headerTemplate}}"
+                     on:mouseenter="_headerMouseEnter()"
+                     multiSelect="{{_options.multiSelect}}"/>
       </ws:headerContentTemplate>
    </ws:partial>
 </ws:else>

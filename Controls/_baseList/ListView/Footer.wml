@@ -3,7 +3,7 @@
       * item: Controls/_display/Footer
 -->
 <ws:if data="{{item.isStickedToBottom()}}">
-   <Controls.scroll:StickyBlock position="{{ {'vertical' : 'bottom'} }}">
+   <Controls.scroll:StickyBlock position="{{ {'vertical' : 'bottom'} }}" backgroundStyle="{{ item.getBackgroundStyle() }}">
       <ws:content>
          <div>
             <ws:partial template="{{item.getContentTemplate()}}" item="{{ item.contents }}"/>

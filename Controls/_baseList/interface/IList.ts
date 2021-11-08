@@ -51,6 +51,7 @@ export interface IList extends
     moreFontColorStyle?: IFontColorStyle;
     stickyHeader?: boolean;
     stickyGroup?: boolean;
+    stickyResults?: boolean;
 }
 
 /**
@@ -101,6 +102,12 @@ export interface IReloadItemOptions {
  * @cfg {Boolean} При включенной {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировке элементов} опция задает прилипание {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/ заголовков групп} при прокрутке {@link /doc/platform/developmentapl/interface-development/controls/list/ списка}.
  * При этом если опция явно не задана, то её значение приравнивается в значению опции {@link Controls/_list/interface/IList#stickyHeader stickyHeader}.
  * @default undefined
+ */
+
+/**
+ * @name Controls/_list/interface/IList#stickyResults
+ * @cfg {Boolean} Прилипание {@link /doc/platform/developmentapl/interface-development/controls/list/grid/results/ итогов} при прокрутке {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ таблицы}.
+ * @default true
  */
 
 /**
@@ -519,7 +526,13 @@ export interface IReloadItemOptions {
 
 /**
  * @name Controls/_list/interface/IList#stickyCallback
- * @cfg {String} Функция обратного вызова для определения залипания элемента списка. Поддерживается только для шаблона Controls/list:ItemTemplate
+ * @cfg {String} Функция обратного вызова для определения залипания элемента списка.
+ * В зависимости от возвращаемого значения может контролировать залипание элемента списка:
+ * <ul>
+ *     <li>top - элемент списка залипает только у верхней границы списка</li>
+ *     <li>bottom - элемент списка залипает только у нижней границы списка</li>
+ *     <li>topBottom - элемент списка залипает и у верхней и у нижней границы списка</li>
+ * </ul>
  * @demo Controls-demo/list_new/StickyCallback/Index
  */
 

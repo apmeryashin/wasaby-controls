@@ -151,10 +151,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                     horizontal: 'overflow',
                     vertical: 'overflow'
                 },
-
-                // close нельзя на мобилках, т.к. если там есть инпут,
-                // то при открытии клавы произойдет подскролл и закрытие
-                actionOnScroll: detection.isMobilePlatform ? 'track' : 'close'
+                actionOnScroll: 'close'
             };
             if (this._options.alignment === 'right') {
                 popupOptions.targetPoint = {
@@ -770,7 +767,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                 (item.viewMode !== 'extended' || item.visibility === true) &&
                  this._isItemChanged(item) &&
                   // Временная проверка, пока не согласовано API отображения фильтров (панель/окно)
-                 item.editorTemplateName !== 'Controls/filterPanel:ListEditor') {
+                (item.editorTemplateName !== 'Controls/filterPanel:ListEditor' || this._options?.detailPanelOpenMode === 'stack')) {
                 textValue = item.textValue;
                 if (textValue) {
                     textArr.push(textValue);

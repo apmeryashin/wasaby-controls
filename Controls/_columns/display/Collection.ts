@@ -352,6 +352,9 @@ Object.assign(Collection.prototype, {
     '[Controls/_columns/display/Collection]': true,
     _moduleName: 'Controls/columns:ColumnsCollection',
     _itemModule: 'Controls/columns:ColumnsCollectionItem',
+    // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
+    // https://online.sbis.ru/opendoc.html?guid=37b14566-12c3-44ed-ac0b-0cd7e0ae5c9d
+    _disableSupportsGrouping: true,
     _$columnsCount: 2,
     _$spacing: 12,
     _$columnsMode: 'auto',

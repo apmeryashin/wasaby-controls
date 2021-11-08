@@ -40,11 +40,11 @@ import {TouchDetect} from 'Env/Touch';
 import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
 import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Controls/listDragNDrop';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
-import {FlatSiblingStrategy} from "Controls/_baseList/Strategies/FlatSiblingStrategy";
 
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
 const IE_MOUSEMOVE_FIX_DELAY = 50;
+const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
@@ -167,6 +167,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _beforeUnmount(): void {
+        if (this._options.itemsDragNDrop) {
+            this._notify('_removeDraggingTemplate', [], {bubbling: true});
+        }
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
     }
@@ -298,6 +301,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         displayItem: PropertyGridCollectionItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
+        if (!!clickEvent.target.closest(ITEM_ACTION_SELECTOR)) {
+            event.stopPropagation();
+            return;
+        }
         if (this._unprocessedDragEnteredItem) {
             this._unprocessedDragEnteredItem = null;
         }
@@ -306,30 +313,32 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
-    _itemMouseUp(e, displayItem, domEvent): void {
+    protected _itemMouseUp(e, displayItem, domEvent): void {
         this._draggedKey = null;
         if (this._dndController && !this._dndController.isDragging()) {
             this._dndController = null;
         }
 
         this._onLastMouseUpWasDrag = this._dndController && this._dndController.isDragging();
-        this._notify('itemMouseUp', [displayItem.item, domEvent.nativeEvent]);
     }
 
-    _itemMouseEnter(event: SyntheticEvent<Event>,
+    protected _itemMouseEnter(event: SyntheticEvent<Event>,
                     displayItem: PropertyGridCollectionItem<Model>): void {
         if (this._dndController) {
             if (this._dndController.isDragging()) {
                 this._listModel.setHoveredItem(null);
             }
-            this._unprocessedDragEnteredItem = displayItem;
-            this._processItemMouseEnterWithDragNDrop(displayItem);
+            if (this._itemMouseEntered !== displayItem) {
+                this._itemMouseEntered = displayItem;
+                this._unprocessedDragEnteredItem = displayItem;
+                this._processItemMouseEnterWithDragNDrop(displayItem);
+            }
         } else {
             this._listModel.setHoveredItem(displayItem);
         }
     }
 
-    _itemMouseLeave() {
+    protected _itemMouseLeave() {
         this._listModel.setHoveredItem(null);
         if (this._dndController) {
             this._unprocessedDragEnteredItem = null;
@@ -337,6 +346,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _mouseEnterHandler(): void {
+        if (this._listModel) {
+            this._dragEnter(this._getDragObject());
+        }
         if (!this._itemActionsController) {
             import('Controls/itemActions').then(({Controller}) => {
                 this._itemActionsController = new Controller();
@@ -788,7 +800,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._notify('_documentDragStart', [dragObject], {bubbling: true});
             }
             if (this._dndController && this._dndController.isDragging()) {
-                const moveOutsideList = !(this._container[0] || this._container).contains(nativeEvent.target);
+                const moveOutsideList = !this._container.contains(nativeEvent.target);
                 if (moveOutsideList !== this._listModel.isDragOutsideList()) {
                     this._listModel.setDragOutsideList(moveOutsideList);
                 }

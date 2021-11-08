@@ -490,11 +490,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     protected _beforeUpdate(newOptions: IToolbarOptions): void {
         const itemsChanged = this._options.items !== newOptions.items;
+        const filterChanged = this._options.filter !== newOptions.filter;
         const menuSourceChanged = this._options.menuSource !== newOptions.menuSource;
         if (this._needChangeState(newOptions)) {
             this._setState(newOptions);
         }
-        if (hasSourceChanged(newOptions.source, this._options.source)) {
+        if (hasSourceChanged(newOptions.source, this._options.source) || filterChanged) {
             this._isLoadMenuItems = false;
             this._sticky?.close();
             this.setStateBySource(newOptions.source, newOptions.filter);
