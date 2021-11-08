@@ -13,6 +13,6 @@ export interface IMaxLengthOptions {
  * @name Controls/_input/interface/IMaxLength#maxLength
  * @cfg {Number} Максимальное количество символов, которое может ввести пользователь вручную в поле.
  * @remark
- * Когда количество символов достигает максиму, тогда последующий символы в поле не добавляются.
+ * Когда количество символов достигает максимума, тогда последующие символы в поле не добавляются.
  * @demo Controls-demo/Input/MaxLength/Index
  */
