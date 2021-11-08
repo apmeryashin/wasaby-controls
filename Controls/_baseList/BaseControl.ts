@@ -1652,7 +1652,7 @@ const _private = {
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
         // But we should not update any ItemActions when marker has changed
-        const shouldUpdateItemActions = _private.getItemActionsController(self, self._options)
+        const shouldUpdateItemActions = !!self._itemActionsController && self._itemActionsController
             .shouldUpdateItemActionsOnCollectionChange(action, newItems, removedItems);
         if ((changesType === 'collectionChanged' && shouldUpdateItemActions) ||
             changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||

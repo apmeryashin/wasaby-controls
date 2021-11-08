@@ -241,10 +241,11 @@ export class Controller {
     }
 
     /**
-     * Возвращает boolean, надо ли обновлять проинициализированные ранее ItemActions, основываясь на newItems.properties.
-     * Возвращается true, если newItems или newItems.properties не заданы
-     * Новая модель в событии collectionChanged для newItems задаёт properties,
-     * где указано, что именно обновляется.
+     * Определяет на основе переданных newItems и removedItems, надо ли обновлять ItemActions.
+     * Возвращает false, если при добавлении или удалении элементов в newItems и в removedItems отсутствуют
+     * записи, для которых нужно инициализировать ItemActions.
+     * Возвращает false, если в newItems.properties указан тип изменений, при котором не нужно инициализировать ItemActions.
+     * Возвращает true, если newItems или newItems.properties не заданы.
      * @param action
      * @param newItems
      * @param removedItems
@@ -256,17 +257,13 @@ export class Controller {
         // При добавлении или удалении элементов списка, которые не имеют операций над записью
         // не надо набирать операции заново.
         // Например, nodeFooter не имеют операций над записью и никак не должны на них влиять.
-        if (newItems && newItems.length) {
-            const newItemsWithItemActionsExist = newItems.some((item) => item.ItemActionsItem);
-            if (!newItemsWithItemActionsExist && action === IObservable.ACTION_ADD) {
-                return;
-            }
+        if (action === IObservable.ACTION_ADD && newItems && newItems.length &&
+            !newItems.some((item) => item.ItemActionsItem)) {
+            return false;
         }
-        if (removedItems && removedItems.length) {
-            const removedItemsWithItemActionsExist = removedItems.some((item) => item.ItemActionsItem);
-            if (!removedItemsWithItemActionsExist && action === IObservable.ACTION_REMOVE) {
-                return;
-            }
+        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length &&
+            !removedItems.some((item) => item.ItemActionsItem)) {
+            return false;
         }
         const propertyVariants = ['selected', 'marked', 'swiped', 'hovered', 'active', 'dragged', 'editingContents'];
         return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
