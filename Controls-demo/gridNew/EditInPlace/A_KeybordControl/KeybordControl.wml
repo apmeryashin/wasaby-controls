@@ -1,0 +1,30 @@
+<Controls-demo.gridNew.demoLayout.Index>
+    <ws:content>
+        <Controls.grid:View name="list"
+                            keyProperty="key"
+                            source="{{_viewSource}}"
+                            columns="{{_columns}}"
+                            on:beforeBeginEdit="_beforeBeginEdit()"
+                            on:beforeEndEdit="_beforeEndEdit()">
+            <ws:editingConfig>
+                <ws:Object editOnClick="{{true}}"/>
+            </ws:editingConfig>
+        </Controls.grid:View>
+    </ws:content>
+    <ws:rightSidebar isExpanded="{{ true }}">
+        <ws:items>
+            <ws:Array>
+                <ws:Object>
+                    <ws:template>
+                        <div>
+                            <Controls.toggle:Checkbox caption="Долгий старт редактирования" bind:value="_longStart"/>
+                        </div>
+                        <div>
+                            <Controls.toggle:Checkbox caption="Долгое завершение редактирования" bind:value="_longEnd"/>
+                        </div>
+                    </ws:template>
+                </ws:Object>
+            </ws:Array>
+        </ws:items>
+    </ws:rightSidebar>
+</Controls-demo.gridNew.demoLayout.Index>
