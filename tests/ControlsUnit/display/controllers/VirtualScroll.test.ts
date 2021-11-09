@@ -103,6 +103,7 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
                     enumerator._$position === 7 ||
                     enumerator._$position === 15) {
                     return {
+                        StickableItem: true,
                         isSticked: () => true
                     }
                 }
@@ -113,6 +114,32 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
             VirtualScrollController.each(collection, (_item, index) => iteratedIndices.push(index));
 
             assert.deepEqual(iteratedIndices, [1, 6, 7, 8, 15]);
+        });
+        it('iterates over each item once with correct indices with editing item', () => {
+            const collection = makeCollection();
+
+            VirtualScrollController.setup(collection);
+            VirtualScrollController.setIndices(collection, 5, 10);
+
+            const enumerator = makeEnumerator();
+
+            // 1я запись редактируется и должна участвовать в обходе.
+            // При этом, с тех сторон, где есть застканные записи, нужно убрать лишние записи
+            enumerator.getCurrent = () => {
+                if (enumerator._$position === 1) {
+                    return {
+                        StickableItem: false,
+                        EditableItem: true,
+                        isEditing: () => true
+                    };
+                }
+            };
+            collection.getEnumerator = () => enumerator;
+
+            const iteratedIndices = [];
+            VirtualScrollController.each(collection, (_item, index) => iteratedIndices.push(index));
+
+            assert.deepEqual(iteratedIndices, [1, 6, 7, 8, 9]);
         });
         it('iterates over each item once with correct indices with sticky group', () => {
             const collection = makeCollection();
@@ -128,6 +155,7 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
                 if (enumerator._$position === 1) {
                     return {
                         '[Controls/_display/GroupItem]': true,
+                        StickableItem: true,
                         isSticked: () => true
                     };
                 }

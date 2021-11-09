@@ -20,7 +20,7 @@ export default class Row<TContents extends Model = Model>
 
     // По умолчанию любая абстрактная строка таблицы не имеет возможности редактироваться.
     // Данная возможность доступна только строке с данными.
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean;
+    readonly EditableItem: boolean;
 
     // TODO: Удалить имплементирование после выделения сущностей элементов списка
     //  (базовый элемент -> элемент данных / элемент группы /...)
@@ -123,7 +123,7 @@ export default class Row<TContents extends Model = Model>
 }
 
 Object.assign(Row.prototype, {
-    '[Controls/_display/IEditableCollectionItem]': false,
+    EditableItem: false,
     '[Controls/_display/grid/Row]': true,
     _moduleName: 'Controls/grid:GridRow',
     _instancePrefix: 'grid-row-'

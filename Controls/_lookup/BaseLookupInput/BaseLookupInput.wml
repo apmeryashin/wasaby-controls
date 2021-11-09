@@ -20,6 +20,7 @@
             historyId="{{_options.historyId}}"
             searchParam="{{_options.searchParam}}"
             searchDelay="{{_options.searchDelay}}"
+            searchValueTrim="{{_options.searchValueTrim}}"
             trim="{{_options.trim}}"
             navigation="{{_options.navigation}}"
             filter="{{_options.filter}}"

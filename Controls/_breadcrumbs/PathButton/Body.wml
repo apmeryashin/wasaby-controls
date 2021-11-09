@@ -42,7 +42,10 @@
       >
          <ws:columns>
             <ws:Array>
-               <ws:Object displayProperty="{{_options.displayProperty}}"/>
+               <ws:Object
+                  fontSize="l"
+                  displayProperty="{{_options.displayProperty}}"
+               />
             </ws:Array>
          </ws:columns>
       </Controls.treeGrid:View>
