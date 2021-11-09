@@ -34,6 +34,10 @@ export default class Wrapper extends Control<IWrapperOptions> {
         return options.variables;
     }
 
+    static defaultProps: IControlOptions = {
+        notLoadThemes: true
+    };
+
     static prepareStyleValue(variablesObj: Record<string, string> = {}): string {
         let result = '';
         Object.keys(variablesObj).forEach((key) => {

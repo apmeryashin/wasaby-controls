@@ -70,6 +70,7 @@ interface ISuggest {
        * По умолчанию в качестве шаблона используется {@link Controls/suggestPopup:SuggestTemplate}.
        * Корневым контролом автодополнения должен быть {@link Controls/suggestPopup:ListContainer}, этому контролу можно передать в контентной опции контрол ({@link Controls/list:View} или {@link Controls/grid:View}), который отобразит список.
        * Вы можете установить ширину окна с автодополнением, добавив собственный класс в suggestTemplate и установив минимальную ширину. По умолчанию ширина автодополнения равна ширине поля ввода.
+       * Для отключения автодополнения у поля ввода опцию передайте значение null в опцию suggestTemplate.
        * @demo Controls-demo/Suggest_new/SearchInput/SuggestTemplate/SuggestTemplate
        * @editor function
        * @example

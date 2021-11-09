@@ -51,6 +51,7 @@ export interface IList extends
     moreFontColorStyle?: IFontColorStyle;
     stickyHeader?: boolean;
     stickyGroup?: boolean;
+    stickyResults?: boolean;
 }
 
 /**
@@ -101,6 +102,12 @@ export interface IReloadItemOptions {
  * @cfg {Boolean} При включенной {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировке элементов} опция задает прилипание {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/ заголовков групп} при прокрутке {@link /doc/platform/developmentapl/interface-development/controls/list/ списка}.
  * При этом если опция явно не задана, то её значение приравнивается в значению опции {@link Controls/_list/interface/IList#stickyHeader stickyHeader}.
  * @default undefined
+ */
+
+/**
+ * @name Controls/_list/interface/IList#stickyResults
+ * @cfg {Boolean} Прилипание {@link /doc/platform/developmentapl/interface-development/controls/list/grid/results/ итогов} при прокрутке {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ таблицы}.
+ * @default true
  */
 
 /**

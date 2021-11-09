@@ -1998,50 +1998,6 @@ const _private = {
         }
     },
 
-    dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
-        if (items.getCount()) {
-            this._loadedItems = items;
-        }
-
-        if (!direction) {
-            this._loadedBySourceController = true;
-            if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
-                this._children.listView.reset({
-                    keepScroll: this._keepScrollAfterReload
-                });
-            }
-            this._keepHorizontalScroll = false;
-            _private.setReloadingState(this, false);
-            const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
-            _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
-            _private.executeAfterReloadCallbacks(this, items, this._options);
-            if (this._indicatorsController.shouldHideGlobalIndicator()) {
-                this._indicatorsController.hideGlobalIndicator();
-            }
-            // Принудительно прекращаем заморозку ховера
-            if (_private.hasHoverFreezeController(this)) {
-                this._hoverFreezeController.unfreezeHover();
-            }
-            return this.isEditing() && !isEndEditProcessing ?
-                this._cancelEdit(true) :
-                void 0;
-        }
-
-        _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
-
-        _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
-
-        if (this._indicatorsController.shouldHideGlobalIndicator()) {
-            this._indicatorsController.hideGlobalIndicator();
-        }
-
-        if (this._isMounted && this._scrollController) {
-            _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
-            this.startBatchAdding(direction);
-            return this._scrollController.getScrollStopPromise();
-        }
-    },
-
     isPagingNavigation(navigation): boolean {
         return navigation && navigation.view === 'pages';
     },
@@ -2606,7 +2562,8 @@ const _private = {
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
             contextMenuConfig: options.contextMenuConfig,
             itemActionsVisibility: options.itemActionsVisibility,
-            feature1183020440: options.feature1183020440
+            feature1183020440: options.feature1183020440,
+            task1183329228: options.task1183329228
         });
         if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
@@ -3206,7 +3163,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     // callback'ки передаваемые в sourceController
     _notifyNavigationParamsChanged = null;
-    _dataLoadCallback = null;
 
     _useServerSideColumnScroll = false;
     _isColumnScrollVisible = false;
@@ -3248,7 +3204,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      */
     protected _beforeMount(newOptions: TOptions, context?): void | Promise<unknown> {
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
-        this._dataLoadCallback = _private.dataLoadCallback.bind(this);
+        this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._uniqueId = Guid.create();
 
         if (newOptions.sourceController) {
@@ -3273,6 +3229,56 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.addShowActionsClass(this);
 
         return this._doBeforeMount(newOptions);
+    }
+
+    private _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+        this._beforeDataLoadCallback(items, direction);
+
+        if (items.getCount()) {
+            this._loadedItems = items;
+        }
+
+        if (!direction) {
+            this._loadedBySourceController = true;
+            if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
+                this._children.listView.reset({
+                    keepScroll: this._keepScrollAfterReload
+                });
+            }
+            this._keepHorizontalScroll = false;
+            _private.setReloadingState(this, false);
+            const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
+            _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
+            _private.executeAfterReloadCallbacks(this, items, this._options);
+            if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                this._indicatorsController.hideGlobalIndicator();
+            }
+            // Принудительно прекращаем заморозку ховера
+            if (_private.hasHoverFreezeController(this)) {
+                this._hoverFreezeController.unfreezeHover();
+            }
+            return this.isEditing() && !isEndEditProcessing ?
+                this._cancelEdit(true) :
+                void 0;
+        }
+
+        _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
+
+        _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
+
+        if (this._indicatorsController.shouldHideGlobalIndicator()) {
+            this._indicatorsController.hideGlobalIndicator();
+        }
+
+        if (this._isMounted && this._scrollController) {
+            _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
+            this.startBatchAdding(direction);
+            return this._scrollController.getScrollStopPromise();
+        }
+    }
+
+    protected _beforeDataLoadCallback(items: RecordSet, direction: IDirection): void {
+        // для переопределения
     }
 
     _doBeforeMount(newOptions): Promise<unknown> | void {
@@ -3348,17 +3354,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (action === IObservable.ACTION_REMOVE) {
             this._afterCollectionRemove(removedItems, removedItemsIndex);
         }
-        if (action === IObservable.ACTION_ADD) {
-            this._afterCollectionAdd(newItems, newItemsIndex);
-        }
     }
     protected _afterCollectionReset(): void {
         // для переопределения
     }
     protected _afterCollectionRemove(removedItems: Array<CollectionItem<Model>>, removedItemsIndex: number): void {
-        // для переопределения
-    }
-    protected _afterCollectionAdd(addedItems: CollectionItem[], addedItemsIndex: number): void {
         // для переопределения
     }
     _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
@@ -4563,7 +4563,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
     handleTriggerVisible(direction: IDirection): void {
         // Если уже идет загрузка в какую-то сторону, то в другую сторону не начинаем загрузку
-        if (!this._handleLoadToDirection) {
+        if (!this._handleLoadToDirection && !this._sourceController?.getLoadError()) {
             // Вызываем сдвиг диапазона в направлении видимого триггера
             this._shiftToDirection(direction);
         }
@@ -4990,6 +4990,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
+
+        if (originalEvent?.nativeEvent?.button === 1) {
+            // на MacOS нажатие средней кнопкой мыши порождает событие click, но обычно кликом считается только ЛКМ
+            e.stopPropagation();
+            return;
+        }
+
         if (this._itemActionMouseDown) {
             // Не нужно кликать по Item, если MouseDown был сделан по ItemAction
             this._itemActionMouseDown = null;
@@ -5026,7 +5033,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (canEditByClick) {
             e.stopPropagation();
             this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
-            this._beginEdit({ item }, { columnIndex }).then((result) => {
+            const hasCheckboxes =
+                this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
+
+            this._beginEdit({ item }, { columnIndex: columnIndex + hasCheckboxes }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
@@ -6858,16 +6868,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                     // Создаем перетаскиваемый элемент, т.к. в другом списке его нет.
                     const draggableItem = this._listViewModel.createItem({contents: dragEnterResult});
-                    // если мы утащим в другой список, то в нем нужно создать контроллер
-                    this._dndListController = _private.createDndListController(this._listViewModel, draggableItem, this._options);
-                    this._dndListController.startDrag(dragObject.entity);
-
+                    // Считаем изначальную позицию записи. Нужно считать обязательно до ::startDrag,
+                    // т.к. после перетаскиваемая запись уже будет в коллекции
                     let startPosition;
                     if (this._listViewModel.getCount()) {
-                        const lastItem = this._listViewModel.getLast();
                         startPosition = {
-                            index: this._listViewModel.getIndex(lastItem),
-                            dispItem: lastItem,
+                            index: this._listViewModel.getCount(),
+                            dispItem: this._listViewModel.getLast(),
                             position: 'after'
                         };
                     } else {
@@ -6877,6 +6884,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             position: 'before'
                         };
                     }
+
+                    // если мы утащим в другой список, то в нем нужно создать контроллер
+                    this._dndListController = _private.createDndListController(this._listViewModel, draggableItem, this._options);
+                    this._dndListController.startDrag(dragObject.entity);
 
                     // задаем изначальную позицию в другом списке
                     this._dndListController.setDragPosition(startPosition);
@@ -7114,6 +7125,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=12b8b9b1-b9d2-4fda-85d6-f871ecc5474c
             stickyHeader: true,
+            stickyResults: true,
             stickyColumnsCount: 1,
             notifyKeyOnRender: false,
             topTriggerOffsetCoefficient: DEFAULT_TRIGGER_OFFSET,

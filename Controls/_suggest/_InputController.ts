@@ -76,7 +76,7 @@ interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISear
    layerName: string;
    suggestTemplate: ISuggestTemplateProp | null;
    footerTemplate?: ISuggestFooterTemplate;
-   trim?: boolean; // TODO: searchValueTrim ???
+   searchValueTrim?: boolean;
    dataLoadCallback?: Function;
 }
 
@@ -757,11 +757,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _getSuggestPopupStyles(suggestWidth: number): string {
-      const maxWidth = this._options.suggestPopupOptions?.maxWidth;
+      const suggestPopupOptions = this._options.suggestPopupOptions;
+      const maxWidth = suggestPopupOptions?.maxWidth;
       if (maxWidth) {
          return `min-width: ${suggestWidth}px; max-width: ${maxWidth}px`;
       } else {
-         return `width: ${suggestWidth}px;`;
+         const width = suggestWidth || suggestPopupOptions?.width;
+         return `width: ${width}px;`;
       }
    }
 
@@ -826,9 +828,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
                           if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
                              this._setItems(recordSet);
-                             if (this._options.dataLoadCallback) {
-                                this._options.dataLoadCallback(recordSet);
-                             }
                              this._setFilter(this._options.filter, this._options);
                              this._open();
                              this._markerVisibility = 'visible';
@@ -862,9 +861,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
             if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
-               if (scopeOptions.dataLoadCallback) {
-                  scopeOptions.dataLoadCallback(recordSet);
-               }
 
                this._updateSuggestState();
 
@@ -920,7 +916,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                minSearchLength: this._options.minSearchLength,
                searchDelay: this._options.searchDelay as number,
                searchParam: this._options.searchParam,
-               searchValueTrim: this._options.trim,
+               searchValueTrim: this._options.searchValueTrim,
                navigation: this._options.navigation
             } as ISearchControllerOptions);
             return this._searchController;
@@ -952,7 +948,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          sorting: options.sorting,
          source,
          parentProperty: options.parentProperty,
-         root: options.root
+         root: options.root,
+         dataLoadCallback: options.dataLoadCallback
       };
    }
 

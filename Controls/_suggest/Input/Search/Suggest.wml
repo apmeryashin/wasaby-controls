@@ -19,6 +19,7 @@
         navigation="{{_options.navigation}}"
         searchParam="{{_options.searchParam}}"
         searchDelay="{{_options.searchDelay}}"
+        searchValueTrim="{{_options.searchValueTrim}}"
         trim="{{_options.trim}}"
         suggestStyle="overInput"
         suggestState="{{_options.suggestState}}"
@@ -26,11 +27,13 @@
         filter="{{_options.filter}}"
         sorting="{{_options.sorting}}"
         dataLoadCallback="{{_options.dataLoadCallback}}"
+        suggestPopupOptions="{{_options.suggestPopupOptions}}"
         layerName="Controls/suggestPopup:__ContentLayer">
     <Controls.search:Input
             value="{{_options.value}}"
             tagStyle="{{_options.tagStyle}}"
             trim="{{_options.trim}}"
+            borderVisibility="{{_options.borderVisibility}}"
             contrastBackground="{{_options.contrastBackground}}"
             placeholder="{{_options.placeholder}}"
             maxLength="{{_options.maxLength}}"

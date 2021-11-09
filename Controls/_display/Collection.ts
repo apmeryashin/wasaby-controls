@@ -141,6 +141,7 @@ export interface IOptions<
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
+    stickyResults?: boolean;
     theme?: string;
     style?: string;
     backgroundStyle?: string;
@@ -734,6 +735,8 @@ export default class Collection<
 
     protected _$stickyHeader: boolean;
 
+    protected _$stickyResults: boolean;
+
     protected _$stickyGroup: boolean;
 
     protected _$editingConfig: IEditingConfig;
@@ -955,6 +958,10 @@ export default class Collection<
 
         if (options.stickyHeader !== undefined) {
             this._$stickyHeader = options.stickyHeader;
+        }
+
+        if (options.stickyResults !== undefined) {
+            this._$stickyResults = options.stickyResults;
         }
 
         // Если опция stickyGroup задана, то запоминаем её значение.
@@ -2382,6 +2389,10 @@ export default class Collection<
 
     isStickyHeader(): boolean {
         return this._$stickyHeader;
+    }
+
+    isStickyResults(): boolean {
+        return this._$stickyResults;
     }
 
     isStickyGroup(): boolean {

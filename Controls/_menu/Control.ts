@@ -19,7 +19,7 @@ import {IItemAction, Controller as ItemActionsController} from 'Controls/itemAct
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
-import {StickyOpener, StackOpener} from 'Controls/popup';
+import {StickyOpener, StackOpener, IStickyPopupOptions} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
 import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOptions} from 'Controls/multiselection';
@@ -72,8 +72,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
     protected _expander: boolean;
+    protected _dataName: string = '';
     private _sourceController: SourceController = null;
     private _subDropdownItem: CollectionItem<Model>|null;
+    private _preventCloseSubMenu: boolean = false;
     private _selectionChanged: boolean = false;
     private _expandedItems: RecordSet;
     private _itemsCount: number;
@@ -106,6 +108,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._additionalFilter = MenuControl._additionalFilterCheck.bind(this, options);
         this._limitHistoryFilter = this._limitHistoryCheck.bind(this);
 
+        this._dataName = options.dataName + '_level_' + options.subMenuLevel;
+
         this._stack = new StackOpener();
 
         if (options.sourceController) {
@@ -124,6 +128,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
+    protected _afterMount(): void {
+        if (this._options.menuOpenedCallback) {
+            this._options.menuOpenedCallback();
+        }
+    }
+
     protected _beforeUpdate(newOptions: IMenuControlOptions): void {
         const rootChanged = newOptions.root !== this._options.root;
         const sourceChanged = newOptions.source !== this._options.source;
@@ -134,6 +144,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         if (newOptions.isDragging && this._options.isDragging !== newOptions.isDragging) {
             this._closeSubMenu();
+        }
+
+        if (newOptions.openedSubMenuKey && this._options.openedSubMenuKey !== newOptions.openedSubMenuKey) {
+            this._openSubMenuByKey(newOptions.openedSubMenuOptions, newOptions.openedSubMenuKey);
+        }
+
+        if (newOptions.closedSubMenuKey && this._options.closedSubMenuKey !== newOptions.closedSubMenuKey) {
+            this._closeSubMenuByKey(newOptions.closedSubMenuKey);
         }
 
         if (newOptions.sourceController && newOptions.searchParam &&
@@ -165,7 +183,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return result;
     }
 
-    protected _afterRender(oldOptions: IMenuControlOptions): void {
+    protected _afterRender(): void {
         if (this._notifyResizeAfterRender) {
             this._notify('controlResize', [], {bubbling: true});
         }
@@ -191,8 +209,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    public closeSubMenu(): void {
-        this._closeSubMenu();
+    public closeSubMenu(fromCode: boolean = true): void {
+        this._closeSubMenu(false, fromCode);
     }
 
     protected _mouseEnterHandler(): void {
@@ -203,7 +221,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._updateItemActions(this._listModel, this._options);
     }
 
-    protected _mouseLeaveHandler(event: SyntheticEvent<MouseEvent>): void {
+    protected _mouseLeaveHandler(): void {
         this._clearOpeningTimout();
         this._startClosingTimout();
     }
@@ -470,7 +488,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _checkOpenedMenu(nativeEvent: MouseEvent, newItem?: CollectionItem<Model>): void {
-        const needCloseSubMenu: boolean = this._subMenu && this._subDropdownItem &&
+        const needCloseSubMenu: boolean = !this._preventCloseSubMenu && this._subMenu && this._subDropdownItem &&
             (!newItem || newItem !== this._subDropdownItem);
         if (!this._isNeedKeepMenuOpen(needCloseSubMenu, nativeEvent) && needCloseSubMenu) {
             this._closeSubMenu();
@@ -489,12 +507,23 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return this._isMouseInOpenedItemArea;
     }
 
-    private _closeSubMenu(needOpenDropDown: boolean = false): void {
-        if (this._children.Sticky) {
-            this._children.Sticky.close();
+    private _closeSubMenuByKey(key?: string): void {
+        if (this._subDropdownItem && this._subDropdownItem.getContents().getKey() === key) {
+            this.closeSubMenu();
+        } else if (this._children.Sticky.isOpened()) {
+            this._openSubMenuByKey(undefined, key);
         }
-        if (!needOpenDropDown) {
-            this._subDropdownItem = null;
+    }
+
+    private _closeSubMenu(needOpenDropDown: boolean = false, closeFromCode: boolean = false): void {
+        if (closeFromCode || !this._preventCloseSubMenu) {
+            if (this._children.Sticky) {
+                this._preventCloseSubMenu = false;
+                this._children.Sticky.close();
+            }
+            if (!needOpenDropDown) {
+                this._subDropdownItem = null;
+            }
         }
     }
 
@@ -520,24 +549,30 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
+    private _canOpenSubMenu(item: CollectionItem): boolean {
+        return item.getContents().get(this._options.nodeProperty) && !item.getContents().get('readOnly');
+    }
+
     private _handleCurrentItem(
         item: CollectionItem<Model>,
         target: EventTarget,
         nativeEvent: MouseEvent): void {
-        const needOpenDropDown: boolean = item.getContents().get(this._options.nodeProperty) &&
-            !item.getContents().get('readOnly');
-        const needCloseDropDown: boolean = this._subMenu && this._subDropdownItem && this._subDropdownItem !== item;
+        if (!this._preventCloseSubMenu) {
+            const needOpenDropDown: boolean = this._canOpenSubMenu(item);
+            const needCloseDropDown: boolean = this._subMenu && this._subDropdownItem && this._subDropdownItem !== item;
 
-        const needKeepMenuOpen: boolean = this._isNeedKeepMenuOpen(needCloseDropDown, nativeEvent);
+            // Close the already opened sub menu. Installation of new data sets new size of the container.
+            // If you change the size of the update, you will see the container twitch.
+            if (needCloseDropDown) {
+                this._setSubMenuPosition();
+                this._closeSubMenu(needOpenDropDown);
+            }
 
-        // Close the already opened sub menu. Installation of new data sets new size of the container.
-        // If you change the size of the update, you will see the container twitch.
-        this._checkOpenedMenu(nativeEvent, item);
-
-        if (needOpenDropDown && !needKeepMenuOpen) {
-            this._openSubMenuEvent = nativeEvent;
-            this._subDropdownItem = item;
-            this._openSubDropdown(target, item);
+            if (needOpenDropDown) {
+                this._openSubMenuEvent = nativeEvent;
+                this._subDropdownItem = item;
+                this._openSubMenu(target, item);
+            }
         }
     }
 
@@ -556,9 +591,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _handleItemTimeoutCallback(): void {
         this._isMouseInOpenedItemArea = false;
-        if (this._hoveredItem !== this._subDropdownItem) {
-            this._closeSubMenu();
-        }
         this._handleCurrentItem(this._hoveredItem, this._hoveredTarget, this._enterEvent);
     }
 
@@ -768,6 +800,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         let isVisible: boolean = true;
         if (item && item.getKey) {
             isVisible = this._visibleIds.includes(item.getKey());
+        } else if (item && item.forEach) {
+            isVisible = this._visibleIds.includes(item[0].getKey());
         }
         return isVisible;
     }
@@ -984,7 +1018,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._visibleIds = [];
             const fixedIds = [];
             factory(items).each((item) => {
-                if (MenuControl._isItemCurrentRoot(item, options))  {
+                if (options.searchParam && options.searchValue || MenuControl._isItemCurrentRoot(item, options))  {
                     if (item.get('doNotSaveToHistory')) {
                         fixedIds.push(item.getKey());
                     } else {
@@ -997,6 +1031,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 this._visibleIds.splice(MAX_HISTORY_VISIBLE_ITEMS_COUNT);
             }
 
+            this._addParentIdForSearchMode(options, items);
+
             fixedIds.forEach((fixedId) => {
                 if (!this._visibleIds.includes(fixedId)) {
                     this._visibleIds.push(fixedId);
@@ -1006,11 +1042,40 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return hasAdditional;
     }
 
-    private _openSubDropdown(target: EventTarget, item: CollectionItem<Model>): void {
-        // openSubDropdown is called by debounce and a function call can occur when the control is destroyed,
+    private _addParentIdForSearchMode(options, items): void {
+        if (options.searchParam && options.searchValue) {
+            const ids = this._visibleIds.slice();
+            ids.forEach((id) => {
+                const parent = items.getRecordById(id).get(options.parentProperty);
+                if (parent) {
+                    this._visibleIds.push(parent);
+                }
+            });
+        }
+    }
+
+    private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: string): void {
+        const dataName = this._dataName + '_item_' + key;
+        const target = this._container.querySelector(`[data-name=${dataName}]`);
+        const item = this._listModel.getItemBySourceKey(key);
+        if (item && this._canOpenSubMenu(item)) {
+            this._preventCloseSubMenu = true;
+            this._openSubMenuEvent = {};
+            this._subDropdownItem = item;
+            this._openedTarget = target;
+            this._openSubMenu(target, item, popupOptions);
+        } else if (key && this._children.Sticky.isOpened()) {
+            this._openSubMenu(this._openedTarget, this._subDropdownItem);
+        }
+    }
+
+    private _openSubMenu(target: EventTarget,
+                         item: CollectionItem<Model>,
+                         menuPopupOptions?: IStickyPopupOptions): void {
+        // openSubMenu is called by debounce and a function call can occur when the control is destroyed,
         // just check _children to make sure, that the control isn't destroyed
         if (item && this._children.Sticky && this._subDropdownItem) {
-            this._getPopupOptions(target, item).then((popupOptions) => {
+            this._getPopupOptions(target, item, menuPopupOptions).then((popupOptions) => {
                 this._notify('beforeSubMenuOpen',
                     [popupOptions, this._options.subMenuDirection, this._options.itemAlign],
                     // menu:Control могут положить в пункт меню, чтобы событие долетело до menu:Popup
@@ -1041,7 +1106,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return classes;
     }
 
-    private _getPopupOptions(target: EventTarget, item: CollectionItem<Model>): Promise<object> {
+    private _getPopupOptions(target: EventTarget,
+                             item: CollectionItem<Model>,
+                             popupOptions?: IStickyPopupOptions): Promise<object> {
         const subMenuDirection = this._options.subMenuDirection;
         const direction = {
             vertical: 'bottom',
@@ -1057,7 +1124,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         return this._getTemplateOptions(item).then((templateOptions) => {
             className += templateOptions.headingCaption ? ' controls-Menu__subMenu_withHeader_margin' : ' controls-Menu__subMenu_margin';
-            return {
+            const config = {
                 templateOptions,
                 target,
                 autofocus: false,
@@ -1068,6 +1135,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 trigger: this._options.trigger,
                 className
             };
+            return merge(config, popupOptions);
         });
     }
 
@@ -1103,7 +1171,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 sourceController: !source ? this._options.sourceController : undefined,
                 items: isLoadedChildItems ? this._options.items : null,
                 ...item.getContents().get('menuOptions'),
-                subMenuLevel: this._options.subMenuLevel ? this._options.subMenuLevel + 1 : 1,
+                subMenuLevel: this._options.subMenuLevel + 1,
                 iWantBeWS3: false // FIXME https://online.sbis.ru/opendoc.html?guid=9bd2e071-8306-4808-93a7-0e59829a317a
             };
 
@@ -1294,7 +1362,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         markerVisibility: 'hidden',
         hoverBackgroundStyle: 'default',
         subMenuDirection: 'right',
-        itemAlign: 'right'
+        itemAlign: 'right',
+        subMenuLevel: 0
     };
 }
 /**

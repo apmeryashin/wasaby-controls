@@ -8,6 +8,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_breadcrumbs/PathButton/Body';
 
 export interface IBody extends IControlOptions {
+    caption: string;
     path: Path;
     source: ICrudPlus;
     filter: object;

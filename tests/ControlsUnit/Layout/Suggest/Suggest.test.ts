@@ -701,38 +701,6 @@ describe('Controls/suggest', () => {
             inputSandbox.restore();
          });
 
-         it('value is not specified', async () => {
-            inputContainer._inputActive = true;
-            sandbox.stub(SourceController.prototype, 'load')
-               .callsFake(() => Promise.resolve(recordSet));
-            const result = await inputContainer._resolveLoad();
-
-            assert.isTrue(searchCallbackSpy.calledOnce);
-            assert.equal(recordSet, result);
-            assert.isTrue(dataLoadCallbackSpy.withArgs(recordSet).calledOnce);
-            assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
-            assert.isTrue(loadEndSpy.calledOnce);
-         });
-
-         it('value is specified', async () => {
-            const value = 'test1';
-            inputContainer._inputActive = true;
-            sandbox.stub(SearchController.prototype, 'search')
-               .callsFake(() => Promise.resolve(recordSet));
-
-            const result = await inputContainer._resolveLoad(value);
-
-            assert.isTrue(searchCallbackSpy.calledOnce);
-
-            assert.equal(inputContainer._searchValue, value);
-            assert.equal(recordSet, result);
-            assert.isTrue(dataLoadCallbackSpy.withArgs(recordSet).calledOnce);
-            assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
-            assert.deepEqual(inputContainer._filter, {testtt: 'test1'});
-            assert.equal(inputContainer._markerVisibility, 'visible');
-            assert.isTrue(loadEndSpy.calledOnce);
-         });
-
          it('value is cleared', async () => {
             const value = '';
             inputContainer._inputActive = true;

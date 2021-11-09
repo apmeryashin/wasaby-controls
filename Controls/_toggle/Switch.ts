@@ -12,12 +12,14 @@ import {
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
+import * as CaptionTemplate from 'wml!Controls/_toggle/Switch/resources/CaptionTemplate';
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
     ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
    caption: string;
    captionPosition: string;
    size?: string;
+   captionTemplate?: TemplateFunction;
 }
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
@@ -74,7 +76,8 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
          captionPosition: 'right',
          validationStatus: 'valid',
          contrastBackground: true,
-         size: 'l'
+         size: 'l',
+         captionTemplate: CaptionTemplate
       };
    }
    static getOptionTypes(): object {
@@ -144,5 +147,25 @@ Object.defineProperty(Switch, 'defaultProps', {
  * @variant left Caption before toggle.
  * @variant right Toggle before caption.
  * @default right
+ */
+
+/**
+ * @name Controls/_toggle/Switch#captionTemplate
+ * @cfg {TemplateFunction|String} Шаблон текста заголовка кнопки.
+ * @remark
+ * По умолчанию используется шаблон "Controls/toggle:switchCaptionTemplate".
+ *
+ * Базовый шаблон captionTemplate поддерживает следующие параметры:
+ * - additionalCaption {Function|String} — Дополнительный текст заголовка кнопки.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.toggle:Switch>
+ *    <ws:captionTemplate>
+ *       <ws:partial template="Controls/toggle:switchCaptionTemplate" scope="{{captionTemplate}}" additionalCaption="{{_captionTemplate}}"/>
+ *    </ws:captionTemplate>
+ * </Controls.toggle:Switch>
+ * </pre>
+ * @demo Controls-demo/toggle/Switch/CaptionTemplate/Index
  */
 export default Switch;

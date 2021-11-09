@@ -10,7 +10,7 @@ export interface IOptions<T extends Model> extends ITreeItemOptions<T> {
 export default class TreeItem<T extends Model = Model>
     extends mixin<DisplayTreeItem<any>>(DisplayTreeItem) {
 
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly EditableItem: boolean = true;
     readonly DisplayItemActions: boolean = true;
     readonly DisplaySearchValue: boolean = true;
     readonly Markable: boolean = true;

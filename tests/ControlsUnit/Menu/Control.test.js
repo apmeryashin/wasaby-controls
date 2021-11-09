@@ -31,7 +31,8 @@ define(
                   keyProperty: 'key',
                   data: getDefaultItems()
                }),
-               itemPadding: {}
+               itemPadding: {},
+               subMenuLevel: 0
             };
          }
 
