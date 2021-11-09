@@ -363,4 +363,133 @@ describe('Controls/dataSource:loadData', () => {
         });
     });
 
+    it('object config', async () => {
+        const config = {
+            list: {
+                type: 'list',
+                source: getSource(),
+                filter: {}
+            },
+            custom: {
+                type: 'custom',
+                loadDataMethod: () => {
+                    return Promise.resolve('result');
+                }
+            }
+        };
+        const dataLoader = getDataLoader();
+        const loadDataResult = await dataLoader.load(config);
+        assert.isTrue(loadDataResult.list instanceof Object);
+        assert.equal(loadDataResult.custom, 'result');
+    });
+
+    describe('dependencies', () => {
+        it('multiple dependencies', async () => {
+            const config = {
+                list: {
+                    type: 'list',
+                    source: getSource(),
+                    filter: {}
+                },
+                custom: {
+                    type: 'custom',
+                    dependencies: ['list'],
+                    loadDataMethod: (args, [listResult]) => {
+                        return Promise.resolve({
+                            list: listResult instanceof Object
+                        });
+                    }
+                },
+                custom1: {
+                    type: 'custom',
+                    dependencies: ['list', 'custom'],
+                    loadDataMethod: (args, [listResult, customResult]) => {
+                        return Promise.resolve({
+                            list: listResult instanceof Object,
+                            custom: customResult && customResult.list
+                        });
+                    }
+                }
+            };
+            const dataLoader = getDataLoader();
+            const loadDataResult = await dataLoader.load(config);
+            assert.isTrue(loadDataResult.custom.list);
+            assert.isTrue(loadDataResult.custom1.list);
+            assert.isTrue(loadDataResult.custom1.custom);
+        });
+        it('circular dependencies', async () => {
+            const config = {
+                custom: {
+                    type: 'custom',
+                    dependencies: ['custom1'],
+                    loadDataMethod: (args, [customResult]) => {
+                        return Promise.resolve({
+                            custom1: customResult && customResult.custom
+                        });
+                    }
+                },
+                custom1: {
+                    type: 'custom',
+                    dependencies: ['custom'],
+                    loadDataMethod: (args, [customResult]) => {
+                        return Promise.resolve({
+                            custom: customResult && customResult.custom1
+                        });
+                    }
+                }
+            };
+            const dataLoader = getDataLoader();
+            let loadDataResult;
+            try {
+                loadDataResult = await dataLoader.load(config);
+            } catch (error) {
+                loadDataResult = error;
+            }
+            assert.isTrue(loadDataResult instanceof Error);
+        });
+
+        it('undefined dependencies', async () => {
+            const config = {
+                custom: {
+                    type: 'custom',
+                    dependencies: ['custom1', 'custom2'],
+                    loadDataMethod: (args, [customResult]) => {
+                        return Promise.resolve({
+                            custom1: customResult && customResult.custom
+                        });
+                    }
+                }
+            };
+            const dataLoader = getDataLoader();
+            let loadDataResult;
+            try {
+                loadDataResult = await dataLoader.load(config);
+            } catch (e) {
+                loadDataResult = e;
+            }
+            assert.isTrue(loadDataResult instanceof Error);
+        });
+
+        it('self dependencies', async () => {
+            const config = {
+                custom: {
+                    type: 'custom',
+                    dependencies: ['custom'],
+                    loadDataMethod: (args, [customResult]) => {
+                        return Promise.resolve({
+                            custom1: customResult && customResult.custom
+                        });
+                    }
+                }
+            };
+            const dataLoader = getDataLoader();
+            let loadDataResult;
+            try {
+                loadDataResult = await dataLoader.load(config);
+            } catch (error) {
+                loadDataResult = error;
+            }
+            assert.isTrue(loadDataResult instanceof Error);
+        });
+    });
 });
