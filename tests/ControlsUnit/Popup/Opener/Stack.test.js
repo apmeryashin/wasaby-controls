@@ -48,7 +48,8 @@ define(
          let item = {
             popupOptions: {
                minWidth: 600,
-               maxWidth: 800
+               maxWidth: 800,
+               templateOptions: {}
             }
          };
 
@@ -422,6 +423,57 @@ define(
             delete itemConfig.popupOptions.width;
          });
 
+         it('stack maximized with propStorageId', async () => {
+            let popupWidth;
+            const baseParentPosition = StackStrategy._getParentPosition;
+            const parentPosition = {
+               right: 0
+            };
+            StackStrategy._getParentPosition = () => parentPosition;
+            StackStrategy.getMaxPanelWidth = ({right = 0}) => 1600 - right;
+            const controller = new popupTemplate.StackControllerClass();
+            controller._getPopupWidth = (popupItem) => {
+               controller._writeCompatiblePopupWidth(popupItem, popupWidth);
+               return Promise.resolve(popupWidth)
+            };
+            controller._prepareSizes = () => {};
+            controller._getStackParentCoords = () => {
+               return {
+                  top: 0,
+                  right: 0,
+                  width: 1600,
+                  height: 1000
+               };
+            };
+            controller._updatePopupWidth = () => {};
+            controller._updateSideBarVisibility = () => {};
+            controller._savePopupWidth = () => Promise.resolve();
+
+            const item = {
+               popupOptions: {
+                  propStorageId: 'storage',
+                  minWidth: 700,
+                  maxWidth: 1000,
+                  templateOptions: {}
+               }
+            };
+
+            popupWidth = 900;
+            await controller.getDefaultConfig(item);
+            controller.elementUpdated(item, {});
+            assert.isTrue(item.popupOptions.maximized);
+
+            popupWidth = 800;
+            await controller.getDefaultConfig(item);
+            controller.elementUpdated(item, {});
+            assert.isFalse(item.popupOptions.maximized);
+
+            await controller.popupResizingLine(item, 150);
+            assert.isTrue(item.popupOptions.maximized);
+
+            StackStrategy._getParentPosition = baseParentPosition;
+         });
+
          it('stack right position with side parent position', () => {
             const baseParentPosition = StackStrategy._getParentPosition;
             const parentPosition = {
@@ -752,7 +804,8 @@ define(
                   minSavedWidth: 655,
                   maxSavedWidth: 760,
                   minWidth: 500,
-                  maxWidth: 900
+                  maxWidth: 900,
+                  templateOptions: {}
                },
                position: {
                   width: 0
