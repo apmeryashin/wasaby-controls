@@ -11,7 +11,7 @@ export interface IOptions<T extends Model = Model> extends ICollectionItemOption
 
 export default class SearchSeparator<T extends Model = Model> extends CollectionItem<T> implements IGroupNode {
     readonly '[Controls/_display/SearchSeparator]': boolean = true;
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
+    readonly EditableItem: boolean = false;
     readonly '[Controls/_itemActions/interface/IItemActionsItem]': boolean = false;
 
     readonly Markable: boolean = false;
