@@ -3277,7 +3277,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _beforeDataLoadCallback(items: RecordSet, direction: IDirection): void {
-        // точка входа для TreeControl
+        // для переопределения
     }
 
     _doBeforeMount(newOptions): Promise<unknown> | void {
