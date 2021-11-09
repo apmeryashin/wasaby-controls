@@ -950,7 +950,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // Этот способ отключения будет описан в статье отладке скролла и стикиблоков:
         // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/debug/scroll-container/ после
         // https://online.sbis.ru/opendoc.html?guid=9e7f5914-3b96-4799-9e1d-9390944b4ab3
-        const artifactFixOff = this._content.classList.contains('controls-StickyBlock__onSideIsBorder');
+        const artifactFixOff = this._content?.classList.contains('controls-StickyBlock__onSideIsBorder');
         if (this._options._subPixelArtifactFix && !artifactFixOff) {
             result = `controls-StickyBlock__subpixelFix-${this._options.backgroundStyle}`;
         }
@@ -964,7 +964,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // Этот способ отключения будет описан в статье отладке скролла и стикиблоков:
         // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/debug/scroll-container/ после
         // https://online.sbis.ru/opendoc.html?guid=9e7f5914-3b96-4799-9e1d-9390944b4ab3
-        const topGapFixOff = this._content.classList.contains('controls-StickyBlock__aboveBorder');
+        const topGapFixOff = this._content?.classList.contains('controls-StickyBlock__aboveBorder');
         if (this._isMobileIOS && this._isPixelRatioBug && !topGapFixOff) {
             result = `controls-StickyBlock__topGapFix-${this._options.backgroundStyle}`;
         }
