@@ -1544,8 +1544,6 @@
   "--border-radius_tumbler": "100px",
   "--counter_offset_tumbler": "4px",
 
-  "--item_offset_s_toolbar": "var(--offset_m)",
-  "--item_offset_l_toolbar": "var(--offset_l)",
   "--background-color_ToolbarBox": "#f8f8f8",
   "--box-shadow_ToolbarBox": "0 1px 4px rgba(0, 0, 0, 0.156863)",
   "--border-radius_ToolbarBox": "13px",
