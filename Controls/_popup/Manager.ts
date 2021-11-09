@@ -683,7 +683,11 @@ class Manager {
     }
 
     protected _popupClose(id: string): boolean {
-        this.remove(id);
+        const item = this.find(id);
+        if (item) {
+            item.removeInitiator = 'innerTemplate';
+            this.remove(id);
+        }
         return false;
     }
 
