@@ -2054,51 +2054,6 @@ const _private = {
         }
     },
 
-    dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
-        if (items.getCount()) {
-            this._loadedItems = items;
-        }
-
-        if (!direction) {
-            this._loadedBySourceController = true;
-            if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
-                this._children.listView.reset({
-                    keepScroll: this._keepScrollAfterReload
-                });
-            }
-            this._keepHorizontalScroll = false;
-            _private.setReloadingState(this, false);
-            const isEndEditProcessing = this._editInPlaceController &&
-                this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
-            _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
-            _private.executeAfterReloadCallbacks(this, items, this._options);
-            if (this._indicatorsController.shouldHideGlobalIndicator()) {
-                this._indicatorsController.hideGlobalIndicator();
-            }
-            // Принудительно прекращаем заморозку ховера
-            if (_private.hasHoverFreezeController(this)) {
-                this._hoverFreezeController.unfreezeHover();
-            }
-            return this.isEditing() && !isEndEditProcessing ?
-                this._cancelEdit(true) :
-                void 0;
-        }
-
-        _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
-
-        _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
-
-        if (this._indicatorsController.shouldHideGlobalIndicator()) {
-            this._indicatorsController.hideGlobalIndicator();
-        }
-
-        if (this._isMounted && this._scrollController) {
-            _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
-            this.startBatchAdding(direction);
-            return this._scrollController.getScrollStopPromise();
-        }
-    },
-
     isPagingNavigation(navigation): boolean {
         return navigation && navigation.view === 'pages';
     },
@@ -3299,7 +3254,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     // callback'ки передаваемые в sourceController
     _notifyNavigationParamsChanged = null;
-    _dataLoadCallback = null;
 
     _useServerSideColumnScroll = false;
     _isColumnScrollVisible = false;
@@ -3341,7 +3295,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      */
     protected _beforeMount(newOptions: TOptions, context?): void | Promise<unknown> {
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
-        this._dataLoadCallback = _private.dataLoadCallback.bind(this);
+        this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._uniqueId = Guid.create();
 
         if (newOptions.sourceController) {
@@ -3366,6 +3320,50 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.addShowActionsClass(this);
 
         return this._doBeforeMount(newOptions);
+    }
+
+    protected _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+        if (items.getCount()) {
+            this._loadedItems = items;
+        }
+
+        if (!direction) {
+            this._loadedBySourceController = true;
+            if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
+                this._children.listView.reset({
+                    keepScroll: this._keepScrollAfterReload
+                });
+            }
+            this._keepHorizontalScroll = false;
+            _private.setReloadingState(this, false);
+            const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
+            _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
+            _private.executeAfterReloadCallbacks(this, items, this._options);
+            if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                this._indicatorsController.hideGlobalIndicator();
+            }
+            // Принудительно прекращаем заморозку ховера
+            if (_private.hasHoverFreezeController(this)) {
+                this._hoverFreezeController.unfreezeHover();
+            }
+            return this.isEditing() && !isEndEditProcessing ?
+                this._cancelEdit(true) :
+                void 0;
+        }
+
+        _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
+
+        _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
+
+        if (this._indicatorsController.shouldHideGlobalIndicator()) {
+            this._indicatorsController.hideGlobalIndicator();
+        }
+
+        if (this._isMounted && this._scrollController) {
+            _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
+            this.startBatchAdding(direction);
+            return this._scrollController.getScrollStopPromise();
+        }
     }
 
     _doBeforeMount(newOptions): Promise<unknown> | void {
