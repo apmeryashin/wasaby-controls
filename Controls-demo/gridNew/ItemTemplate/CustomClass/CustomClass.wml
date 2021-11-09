@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__width800px">
     <Controls.grid:View
             keyProperty="key"
             source="{{_viewSource}}"
