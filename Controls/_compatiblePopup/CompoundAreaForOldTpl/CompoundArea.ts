@@ -33,6 +33,7 @@ function finishResultOk(result) {
 var allProducedPendingOperations = [];
 var invisibleRe = /ws-invisible/ig;
 var hiddenRe = /ws-hidden/ig;
+const popupHiddenClass = 'controls-Popup__hidden';
 let DialogRecord;
 
 /**
@@ -463,7 +464,7 @@ var CompoundArea = CompoundContainer.extend([
       if (!this._options.autoShow) {
          const popupContainer = this._container.closest('.controls-Popup');
          if (popupContainer) {
-            return !popupContainer.classList.contains('ws-hidden');
+            return !popupContainer.classList.contains(popupHiddenClass);
          }
       }
       return true;
@@ -518,7 +519,7 @@ var CompoundArea = CompoundContainer.extend([
                      // Вдомные стековые окна, если перекрыты другими окнами из стека, скрываются через ws-hidden.
                      // PopupMixin реагирует на скритие таргета и закрывается.
                      // Делаю фикс, чтобы в этом случае попап миксин не закрывался
-                     if (!parentVdomPopup.length || !parentVdomPopup.hasClass('ws-hidden')) {
+                     if (!parentVdomPopup.length || !parentVdomPopup.hasClass(popupHiddenClass)) {
                         self.close();
                      }
                   }
@@ -1129,7 +1130,7 @@ var CompoundArea = CompoundContainer.extend([
    isVisible: function() {
       if (this._options.autoShow === false) {
          const popupContainer = this._container.parentElement;
-         const isHidden = popupContainer?.classList.contains('ws-hidden');
+         const isHidden = popupContainer?.classList.contains(popupHiddenClass);
          return !isHidden && this._isVisible;
       }
       return true;
