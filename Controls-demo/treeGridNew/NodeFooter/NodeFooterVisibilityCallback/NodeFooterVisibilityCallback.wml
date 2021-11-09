@@ -1,0 +1,15 @@
+<div class="controlsDemo__wrapper controlsDemo__treeGrid__nodeFooterVisibilityCallback controlsDemo__maxWidth500">
+    <Controls.buttons:Button caption="Toggle callbacks" on:click="_resetCallbacks()"/>
+    <Controls.treeGrid:View
+            keyProperty="key"
+            name="tree"
+            source="{{_viewSource}}"
+            columns="{{_columns}}"
+            parentProperty="parent"
+            nodeProperty="type"
+            itemActions="{{_itemActions}}"
+            nodeFooterVisibilityCallback="{{_nodeFooterVisibilityCallback}}"
+            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+            navigation="{{_navigation}}">
+    </Controls.treeGrid:View>
+</div>

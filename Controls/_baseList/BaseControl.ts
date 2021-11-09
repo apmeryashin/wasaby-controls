@@ -1654,10 +1654,11 @@ const _private = {
         // But we should not update any ItemActions when marker has changed
         const shouldUpdateItemActions = !!self._itemActionsController && self._itemActionsController
             .shouldUpdateOnCollectionChange(action, newItems, removedItems);
-        if ((changesType === 'collectionChanged' && shouldUpdateItemActions) ||
+        if (shouldUpdateItemActions && (
+            changesType === 'collectionChanged' ||
             changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
             newModelChanged
-        ) {
+        )) {
             self._itemsChanged = true;
             _private.updateInitializedItemActions(self, self._options);
         }
