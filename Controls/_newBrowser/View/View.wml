@@ -44,6 +44,7 @@
                         tileCfg="{{_tileCfg}}"
                         listCfg="{{_listCfg}}"
                         loading="{{_detailLoading}}"
+                        hasItemWithImage="{{content.hasItemWithImage}}"
                         attr:class="controls-newBrowser__detail-list"
                         on:itemClick="_onExplorerItemClick(false)"
                         on:viewModeChanged="_onDetailExplorerChangedViewMode()"
