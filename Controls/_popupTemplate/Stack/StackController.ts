@@ -19,7 +19,10 @@ import {DimensionsMeasurer} from 'Controls/sizeUtils';
  * @private
  */
 
-export interface IStackItem extends IPopupItem {
+const ACCORDEON_MIN_WIDTH = 50;
+const MIN_DISTANCE = 100;
+
+interface IStackItem extends IPopupItem {
     containerWidth: number;
     popupOptions: IStackPopupOptions;
     minSavedWidth: number;
