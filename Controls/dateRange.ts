@@ -18,6 +18,8 @@ export {default as WeekdayFormatter} from './_dateRange/WeekdayFormatter';
 export {default as keyboardPeriodController} from './_dateRange/Utils/keyboardPeriodController';
 export {default as DateRangeContextProvider} from './_dateRange/DateRangeContextProvider';
 export {default as ArrowButtonConsumer} from './_dateRange/ArrowButtonConsumer';
+// TODO: Временная поддержка, удалить по https://online.sbis.ru/opendoc.html?guid=84607f88-046c-4331-a402-68061666d88c
+export {default as SelectorConsumer} from './_dateRange/RangeSelectorConsumer';
 export {default as RangeSelectorConsumer} from './_dateRange/RangeSelectorConsumer';
 export {default as DateSelectorConsumer} from './_dateRange/DateSelectorConsumer';
 export {default as RangeShortSelectorConsumer} from './_dateRange/RangeShortSelectorConsumer';

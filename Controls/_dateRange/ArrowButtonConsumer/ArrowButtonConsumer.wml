@@ -1,3 +1,0 @@
-<Controls._dateRange._ArrowButtonConsumer name="consumer">
-    <Controls.buttons:ArrowButton scope="{{ _options }}" on:click="_clickHandler()"/>
-</Controls._dateRange._ArrowButtonConsumer>
