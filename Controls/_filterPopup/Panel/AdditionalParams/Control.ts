@@ -16,7 +16,6 @@ export default class AdditionalParamsControl extends Control<IAdditionalRenderOp
     protected _arrowVisible: boolean = false;
     protected _arrowExpanded: boolean = false;
     protected _itemsController: ItemsController = null;
-    protected _leftColumnItems: IFilterItem[] = null;
 
     protected _beforeMount(options: IAdditionalRenderOptions): void {
         this._itemsController = new ItemsController({
@@ -27,7 +26,6 @@ export default class AdditionalParamsControl extends Control<IAdditionalRenderOp
         const controllerResult = this._itemsController.getResult();
         this._visibleItems = controllerResult.visibleItems;
         this._arrowVisible = controllerResult.expanderVisible;
-        this._leftColumnItems = controllerResult.leftColumnItems;
     }
 
     protected _beforeUpdate(options: IAdditionalRenderOptions): void {
@@ -38,7 +36,6 @@ export default class AdditionalParamsControl extends Control<IAdditionalRenderOp
         });
         this._visibleItems = updateResult.visibleItems;
         this._arrowVisible = updateResult.expanderVisible;
-        this._leftColumnItems = updateResult.leftColumnItems;
     }
 
     protected _arrowClick(): void {

@@ -19,7 +19,6 @@ export interface IAdditionalParamsControllerResult {
     additionalItems: IFilterItem[];
     visibleItems: IFilterItem[];
     source: IFilterItem[];
-    leftColumnItems: IFilterItem[];
 }
 
 const MAX_COLUMN_ITEMS = 5;
@@ -115,12 +114,6 @@ export default class AdditionalItemsController {
         return resultIndex;
     }
 
-    private _getLeftColumnVisibleItems(): IFilterItem[] {
-        return this._visibleItems.filter((item) => {
-            return object.getPropertyValue(item, 'column') === 'left';
-        });
-    }
-
     update(options: IAdditionalItemsControllerOptions): IAdditionalParamsControllerResult {
         const oldOptions = this._options;
         this._options = options;
@@ -151,8 +144,7 @@ export default class AdditionalItemsController {
             visibleItems: this._visibleItems,
             expanderVisible: this._expanderVisible,
             additionalItems: this._additionalItems,
-            source: this._source.slice(),
-            leftColumnItems: this._getLeftColumnVisibleItems()
+            source: this._source.slice()
         };
     }
 }

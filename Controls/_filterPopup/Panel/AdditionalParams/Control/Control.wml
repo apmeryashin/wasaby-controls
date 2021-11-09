@@ -8,7 +8,6 @@
             headingCaption="{[Еще можно отобрать]}"
             arrowVisible="{{_arrowVisible}}"
             arrowExpanded="{{_arrowExpanded}}"
-            leftColumnItems="{{_leftColumnItems}}"
             on:propertyChanged="_updateItem()"
             on:arrowClick="_arrowClick()"/>
 
