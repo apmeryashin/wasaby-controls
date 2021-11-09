@@ -3230,7 +3230,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._doBeforeMount(newOptions);
     }
 
-    protected _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+    private _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+        this._beforeDataLoadCallback(items, direction);
+
         if (items.getCount()) {
             this._loadedItems = items;
         }
@@ -3272,6 +3274,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this.startBatchAdding(direction);
             return this._scrollController.getScrollStopPromise();
         }
+    }
+
+    protected _beforeDataLoadCallback(items: RecordSet, direction: IDirection): void {
+        // точка входа для TreeControl
     }
 
     _doBeforeMount(newOptions): Promise<unknown> | void {
@@ -3347,17 +3353,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (action === IObservable.ACTION_REMOVE) {
             this._afterCollectionRemove(removedItems, removedItemsIndex);
         }
-        if (action === IObservable.ACTION_ADD) {
-            this._afterCollectionAdd(newItems, newItemsIndex);
-        }
     }
     protected _afterCollectionReset(): void {
         // для переопределения
     }
     protected _afterCollectionRemove(removedItems: Array<CollectionItem<Model>>, removedItemsIndex: number): void {
-        // для переопределения
-    }
-    protected _afterCollectionAdd(addedItems: CollectionItem[], addedItemsIndex: number): void {
         // для переопределения
     }
     _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {

@@ -1128,8 +1128,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
-    protected _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
-        const result = super._dataLoadCallback(items, direction);
+    protected _beforeDataLoadCallback(items: RecordSet, direction: IDirection): void {
+        super._beforeDataLoadCallback(items, direction);
 
         const collection = this._listViewModel;
         const expandedItems
@@ -1137,8 +1137,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const hasMoreStorage
             = _private.prepareHasMoreStorage(this._sourceController, expandedItems, collection.getHasMoreStorage());
         collection.setHasMoreStorage(hasMoreStorage, false);
-
-        return result;
     }
 
     private setMarkerOnFirstLeaf(options, startKey) {
