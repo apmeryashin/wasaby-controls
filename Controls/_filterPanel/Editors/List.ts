@@ -149,6 +149,10 @@ class ListEditor extends Control<IListEditorOptions> {
         this._navigation = this._getNavigation(options);
         this._itemActions = this._getItemActions(options.historyId);
 
+        if (options.sourceController && this._filter) {
+            options.sourceController.setFilter(this._filter);
+        }
+
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
         this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
         this._onCollectionChange = this._onCollectionChange.bind(this);
