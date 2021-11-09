@@ -267,10 +267,11 @@ export default class ScrollController {
     }
 
     private _getTopOffsetForItemsContainer(listViewContainer: HTMLElement, baseControlContainer: HTMLElement): number {
-        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide' ? this._virtualScroll.getRange().start : 0;
-        let offsetTop = uDimension(listViewContainer.children[firstElementIndex], true).top;
+        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide'
+            ? this._virtualScroll.getRange().start : 0;
+        let offsetTop = getDimensions(listViewContainer.children[firstElementIndex], true).top;
         const container = baseControlContainer[0] || baseControlContainer;
-        offsetTop += container.offsetTop - uDimension(container).top;
+        offsetTop += container.offsetTop - getDimensions(container).top;
         return offsetTop;
     }
 
