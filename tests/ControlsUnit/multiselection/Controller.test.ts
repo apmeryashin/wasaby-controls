@@ -827,6 +827,27 @@ describe('Controls/_multiselection/Controller', () => {
          assert.isTrue(model.getItemBySourceKey(3).isSelected());
          assert.isTrue(model.getItemBySourceKey(4).isSelected());
       });
+
+      it('limit, items count was more limit', () => {
+         let newSelection = controller.selectAll(1);
+         controller.setSelection(newSelection);
+         model.setCollection(new RecordSet({
+            rawData: [
+               { id: 1 },
+               { id: 2 },
+               { id: 3 },
+               { id: 4 }
+            ],
+            keyProperty: 'id'
+         }), {});
+
+         newSelection = controller.onCollectionAdd([model.getItemBySourceKey(3), model.getItemBySourceKey(4)], 2);
+         assert.deepEqual(newSelection, {selected: [null], excluded: [2, 3, 4]});
+         controller.setSelection(newSelection);
+
+         assert.isFalse(model.getItemBySourceKey(3).isSelected());
+         assert.isFalse(model.getItemBySourceKey(4).isSelected());
+      });
    });
 
    describe('onCollectionRemove', () => {
