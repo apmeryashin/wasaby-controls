@@ -28,7 +28,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
     protected _collection: Collection<IFilterItem> =  null;
     protected _itemTemplate: TemplateFunction = itemTemplate;
     protected _groupTemplate: TemplateFunction = groupTemplate;
-    protected _leftColumnItems: IFilterItem[] = null;
+    protected _hasLeftColumn: boolean = true;
 
     private _getCollection(options: IAdditionalRenderOptions): Collection<IFilterItem> {
         const items = Clone(options.source);
@@ -46,7 +46,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
 
     protected _beforeMount(options: IAdditionalRenderOptions): void {
         this._collection = this._getCollection(options);
-        this._leftColumnItems = this._getLeftColumnItems(options);
+        this._hasLeftColumn = this._isLeftColumnHasItems(options);
     }
 
     protected _isCurrentColumn(
@@ -70,7 +70,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
     protected _beforeUpdate(options: IAdditionalRenderOptions): void {
         if (this._options.source !== options.source) {
             this._collection = this._getCollection(options);
-            this._leftColumnItems = this._getLeftColumnItems(options);
+            this._hasLeftColumn = this._isLeftColumnHasItems(options);
         }
     }
 
@@ -82,8 +82,8 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
         this._notify('propertyChanged', [item.getRawData(), property, value]);
     }
 
-    protected _getLeftColumnItems({source, columnProperty}: IAdditionalRenderOptions): IFilterItem[] {
-        return source.filter((item) => {
+    protected _isLeftColumnHasItems({source, columnProperty}: IAdditionalRenderOptions): boolean {
+        return source.some((item) => {
             return object.getPropertyValue(item, columnProperty) === 'left';
         });
     }
