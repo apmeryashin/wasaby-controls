@@ -34,6 +34,7 @@ let _private = {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_search.less переменные тем оформления}
  *
  * @mixes Controls/search:Input
+ * @mixes Controls/input:IFieldTemplate
  * @extends Controls/_input/Base
  *
  * @mixes Controls/input:IText
