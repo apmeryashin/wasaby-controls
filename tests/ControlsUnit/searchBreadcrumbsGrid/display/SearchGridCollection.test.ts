@@ -87,6 +87,11 @@ describe('Controls/_searchBreadcrumbsGrid/display/SearchGridCollection', () => {
          const breadcrumbsCell = item.getColumns()[0];
          assert.equal(breadcrumbsCell.getTemplate(), searchBreadCrumbsItemTemplate);
       });
+
+      it('multiSelectAccessibilityProperty', () => {
+         const collection = createCollectionForTest({multiSelectAccessibilityProperty: 'multiSelectAccessibility'});
+         assert.isTrue(collection.getItemBySourceKey(1).isReadonlyCheckbox());
+      });
    });
 
    describe('createSearchSeparator', () => {
