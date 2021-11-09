@@ -57,7 +57,7 @@ export interface IImageDisplayContainerOptions extends IControlOptions {
 export default class ImageDisplayContainer extends Control<IImageDisplayContainerOptions> {
     protected _template: TemplateFunction = Template;
 
-    protected _itemTemplate: TemplateFunction;
+    private _itemTemplate: TemplateFunction;
     private _imagePosition: string;
     private _imageViewMode: string;
     protected _hasItemWithImage: boolean = false;

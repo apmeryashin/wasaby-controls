@@ -22,7 +22,6 @@ export {
 };
 
 export {default as View} from 'Controls/_newBrowser/View/View';
-export {default as ImageDisplayContainer} from 'Controls/_newBrowser/ImageDisplay/Container';
 export {IOptions} from './_newBrowser/interfaces/IOptions';
 export {IMasterOptions, MasterVisibilityEnum} from './_newBrowser/interfaces/IMasterOptions';
 export {IDetailOptions, DetailViewMode} from './_newBrowser/interfaces/IDetailOptions';

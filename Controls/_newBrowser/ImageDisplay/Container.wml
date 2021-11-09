@@ -3,15 +3,4 @@
             hasItemWithImage="{{_hasItemWithImage}}"
             itemsReadyCallback="{{_itemsReadyCallback}}"
             dataLoadCallback="{{_dataLoadCallback}}"
-            columns="{{_columns}}">
-   <ws:itemTemplate>
-      <ws:partial template="{{_itemTemplate}}"
-                  imageViewMode="{{_getListImageViewMode(itemTemplate.item)}}"
-                  imagePosition="{{_getListImagePosition(itemTemplate.item)}}"/>
-   </ws:itemTemplate>
-   <ws:tileItemTemplate>
-      <ws:partial template="{{_tileItemTemplate}}"
-                  imageViewMode="{{_getTileImageViewMode(tileItemTemplate.item)}}"
-                  imagePosition="{{_getTileImagePosition(tileItemTemplate.item)}}"/>
-   </ws:tileItemTemplate>
-</ws:partial>
+            columns="{{_columns}}"/>
