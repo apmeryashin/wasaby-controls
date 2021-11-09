@@ -164,7 +164,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
 
 /**
  * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
- *
+ * @class Controls/_toolbars/View
  * @remark
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2FToolbar%2FBase%2FIndex демо-пример}
@@ -735,7 +735,7 @@ Object.defineProperty(Toolbar, 'defaultProps', {
 
 /**
  * @event Происходит при клике по элементу.
- * @name Controls/toolbars:View#itemClick
+ * @name Controls/_toolbars/View#itemClick
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому производим клик.
  * @example
