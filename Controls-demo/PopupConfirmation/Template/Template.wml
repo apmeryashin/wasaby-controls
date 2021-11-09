@@ -1,0 +1,48 @@
+<div class="wrapper controlsDemo__ml1">
+    <div class="controlsDemo__mb1">
+        <Controls.popupConfirmation:Template style="success">
+            <ws:bodyContentTemplate>
+                <div style="text-align: center">
+                    Ссылка для ознакомления<br/>
+                    <Controls.buttons:Button caption="Перейти" viewMode="link"/>
+                </div>
+            </ws:bodyContentTemplate>
+            <ws:footerContentTemplate >
+                <div style="text-align: center">
+                    <Controls.popupConfirmation:Footer type="ok" okCaption="Подтвердить вызов"/>
+                </div>
+            </ws:footerContentTemplate>
+        </Controls.popupConfirmation:Template>
+    </div>
+    <div class="controlsDemo__mb1">
+        <Controls.popupConfirmation:Template style="danger">
+            <ws:bodyContentTemplate>
+                <div style="text-align: center">
+                    <Controls.heading:Title caption="Подтвердите выбор" fontColorStyle="danger"/>
+                </div>
+            </ws:bodyContentTemplate>
+            <ws:footerContentTemplate>
+                <Controls.popupConfirmation:Footer type="ok"/>
+            </ws:footerContentTemplate>
+        </Controls.popupConfirmation:Template>
+    </div>
+    <div>
+        <Controls.popupConfirmation:Template style="secondary">
+            <ws:bodyContentTemplate>
+                <div style="text-align: center">
+                    <div class="controls-text-secondary controls-fontsize-l">Принять лицензионное соглашение?</div>
+                    <br/>
+                    <div attr:style="width: 300px;height: 100px;">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        A adipisci aliquid architecto atque commodi consequatur dolore
+                        est excepturi fugit id libero nam, natus nesciunt nihil, nobis
+                        quas Lorem ipsum dolor sit amet, consectetur
+                    </div>
+                </div>
+            </ws:bodyContentTemplate>
+            <ws:footerContentTemplate>
+                <Controls.popupConfirmation:Footer/>
+            </ws:footerContentTemplate>
+        </Controls.popupConfirmation:Template>
+    </div>
+</div>

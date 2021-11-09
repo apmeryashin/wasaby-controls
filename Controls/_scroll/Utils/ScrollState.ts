@@ -49,6 +49,9 @@ export interface IScrollState {
 
     /**
      * Позиция вертикального скролла
+     * @variant start - Скроллбар находится в начале.
+     * @variant end - Скроллбар находится в конце.
+     * @variant middle - Скроллбар находится в произвольном месте (но не в начале, не в конце).
      */
     verticalPosition?: SCROLL_POSITION;
 

@@ -1,6 +1,6 @@
 import * as DataContext from 'Core/DataContext';
 
-export default class DateRangeContext extends DataContext {
+export default class DateContext extends DataContext {
     _moduleName: string;
     shiftPeriod: Function;
     constructor() {
@@ -13,4 +13,4 @@ export default class DateRangeContext extends DataContext {
     }
 }
 
-DateRangeContext.prototype._moduleName = 'Controls/_dateRange/DateRangeContext';
+DateContext.prototype._moduleName = 'Controls/_date/DateContext';

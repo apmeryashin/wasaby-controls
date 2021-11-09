@@ -6,7 +6,8 @@ export default function getRecordSet(): RecordSet {
          id: 1,
          parent: null,
          node: true,
-         hasChildren: true
+         hasChildren: true,
+         multiSelectAccessibility: false
       }, {
          id: 2,
          parent: 1,

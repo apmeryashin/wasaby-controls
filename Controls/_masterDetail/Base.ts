@@ -192,6 +192,7 @@ class Base extends Control<IMasterDetail, string> {
     protected _masterFixed: boolean = false;
     private _touchstartPosition: number;
     protected _newDesign: boolean = false;
+    private _savedWidth: number; // Защита от множ. вызова БЛ
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<string> | void {
         this._updateOffsetDebounced = debounce(this._updateOffsetDebounced.bind(this), RESIZE_DELAY);
@@ -230,7 +231,10 @@ class Base extends Control<IMasterDetail, string> {
     private _setSettings(width: number): void {
         const propStorageId = this._options.propStorageId;
         if (propStorageId) {
-            setSettings({[propStorageId]: width});
+            if (this._savedWidth !== width) {
+                this._savedWidth = width;
+                setSettings({[propStorageId]: width});
+            }
         }
     }
 
@@ -261,6 +265,7 @@ class Base extends Control<IMasterDetail, string> {
 
     private _updateOffsetDebounced(): void {
         this._updateOffset(this._options);
+        this._setSettings(parseInt(this._currentWidth, 10));
         this._notify('masterWidthChanged', [this._currentWidth]);
     }
 
@@ -318,6 +323,7 @@ class Base extends Control<IMasterDetail, string> {
         const width = storage && storage[options.propStorageId];
         if (width) {
             this._currentWidth = width + 'px';
+            this._savedWidth = width;
             this._updateOffset(options);
         } else {
             this.initCurrentWidth(options.masterWidth);
