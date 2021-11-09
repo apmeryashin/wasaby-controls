@@ -153,8 +153,8 @@ Object.defineProperty(Rating, 'defaultProps', {
 /**
  * @name Controls/progress:Rating#precision
  * @cfg {Number} Точность рейтинга
- * @variable 0 - отображение полностью закрашенных звезд
- * @variable 0.5 - отображение закрашенных на половину звезд
+ * @variant 0 - отображение полностью закрашенных звезд
+ * @variant 0.5 - отображение закрашенных на половину звезд
  * @default 0
  * @demo Controls-demo/progress/Rating/Base/Index
  * @remark
@@ -164,8 +164,8 @@ Object.defineProperty(Rating, 'defaultProps', {
 /*
  * @name Controls/progress:Rating#precision
  * @cfg {Number} precision rating
- * @variable 0 - displays fully filled stars
- * @variable 0.5 - display half-filled stars
+ * @variant 0 - displays fully filled stars
+ * @variant 0.5 - display half-filled stars
  * @ default 0
  * @remark
  * If the decimal "value" of value is more than half an integer value, and exactly 0.5 is set, then a half star is shown.

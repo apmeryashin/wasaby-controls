@@ -17,6 +17,7 @@ import 'css!Controls/input';
  * * {@link /doc/platform/developmentapl/interface-development/controls/input-elements/input/password/ руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления}
  *
+ * @class Controls/_input/Password
  * @extends Controls/_input/Base
  *
  * @public
