@@ -29,7 +29,7 @@ interface IStackItem extends IPopupItem {
     maxSavedWidth: number;
 }
 
-class StackController extends BaseController {
+export class StackController extends BaseController {
     TYPE: string = 'Stack';
     _stack: List<IStackItem> = new List();
 
