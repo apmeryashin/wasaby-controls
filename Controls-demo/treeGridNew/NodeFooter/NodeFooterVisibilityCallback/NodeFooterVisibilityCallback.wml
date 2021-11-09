@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlsDemo__treeGrid__nodeFooterVisibilityCallback controlsDemo__maxWidth500">
-    <Controls.buttons:Button caption="Toggle callbacks" on:click="_resetCallbacks()"/>
+    <Controls.buttons:Button attr:data-qa="reset-button" caption="Reset callbacks" on:click="_resetCallbacks()"/>
     <Controls.treeGrid:View
             keyProperty="key"
             name="tree"
