@@ -13,8 +13,7 @@ import {
     MODE,
     POSITION,
     SHADOW_VISIBILITY,
-    SHADOW_VISIBILITY_BY_CONTROLLER,
-    IPositionOrientation
+    SHADOW_VISIBILITY_BY_CONTROLLER
 } from './StickyBlock/Utils';
 import fastUpdate from './StickyBlock/FastUpdate';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
