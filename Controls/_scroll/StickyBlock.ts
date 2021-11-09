@@ -214,6 +214,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         if (!this._isStickyEnabled(options)) {
             return;
         }
+        // name на partial не работает, поэтому контентную область ищем через querySelector.
         this._content = this._container.querySelector(CONTENT_CLASS);
         this._register();
         this._init();
