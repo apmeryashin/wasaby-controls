@@ -7,12 +7,14 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
     describe('_handleInputCompleted', () => {
         const numberRangeEditor = new NumberRangeEditor({});
         let changesNotified = false;
+        let textValue = null;
         const event = {
             target: {
                 closest: () => {/* FIXME: sinon mock */}
             }
         };
         numberRangeEditor._notify = (eventName, extendedValue) => {
+            textValue = extendedValue[0].textValue;
             changesNotified = true;
         };
 
@@ -21,12 +23,14 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
         it('minValue is null', () => {
             numberRangeEditor._maxValue = 5;
             numberRangeEditor._handleInputCompleted(event, 1);
+            assert.equal(textValue, '');
             assert.isTrue(changesNotified);
         });
 
         it('minValue is 0', () => {
             numberRangeEditor._minValue = 0;
             numberRangeEditor._handleInputCompleted(event, 0);
+            assert.equal(textValue, '0 - 5');
             assert.isTrue(changesNotified);
         });
 
