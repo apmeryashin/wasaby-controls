@@ -1,11 +1,12 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Stack/Template/StackPageWrapper/StackPageWrapper';
 import {getPopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
-import {RIGHT_PANEL_WIDTH} from 'Controls/_popupTemplate/BaseController';
+import BaseController, {RIGHT_PANEL_WIDTH} from 'Controls/_popupTemplate/BaseController';
 import StackController from 'Controls/_popupTemplate/Stack/StackController';
 import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
 import {RegisterClass} from 'Controls/event';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import StackStrategy, {IStackItem} from '../StackStrategy';
 
 interface IPageTemplate extends IControlOptions, IPropStorageOptions {
     minWidth: number;
@@ -43,6 +44,7 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     private _offsetChanged: boolean;
     private _minSavedWidth: number;
     private _maxSavedWidth: number;
+    private _maximized: boolean = false;
 
     protected _beforeMount(options?: IPageTemplate, context?: object,
                            receivedState?: IReceivedState): void | Promise<IReceivedState> {
@@ -66,9 +68,12 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
                         this._setSavedSizes(resultData);
                     }
                     this._updateProperties(options);
+                    this._maximized = this._getMaximizeState();
                     resolve(resultData);
                 });
             });
+        } else {
+            this._maximized = this._getMaximizeState();
         }
     }
 
@@ -107,22 +112,19 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     }
 
     protected _maximizeHandler(): void {
-        const isPopupMaximized = this._getMaximizeState();
         const item = this._generateControllerItem();
-        const maximized = isPopupMaximized !== undefined ? !isPopupMaximized : undefined;
+        const maximized = this._getMaximizeState();
         StackController.elementMaximized(item, false, maximized);
         this._setWorkSpaceWidth(item.popupOptions.width);
         this._updateOffset();
     }
 
-    private _getMaximizeState(): boolean | void {
-        if (parseInt(this._minSavedWidth, 10) === parseInt(this._templateWorkSpaceWidth, 10)) {
-            return false;
-        }
-        if (parseInt(this._maxSavedWidth, 10) === parseInt(this._templateWorkSpaceWidth, 10)) {
-            return true;
-        }
-        return undefined;
+    private _getMaximizeState(): boolean {
+        return StackController.getMaximizedState(
+            this._templateWorkSpaceWidth,
+            this._minSavedWidth,
+            this._maxSavedWidth
+        );
     }
 
     private _generateControllerItem(): object {
