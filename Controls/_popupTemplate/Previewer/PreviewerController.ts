@@ -3,7 +3,7 @@ import {StickyController, IStickyItem} from 'Controls/_popupTemplate/Sticky/Stic
 import {IPopupItem, Controller as ManagerController} from 'Controls/popup';
 import 'css!Controls/popupTemplate';
 
-class PreviewerController extends StickyController {
+export class PreviewerController extends StickyController {
     _openedPopupIds: string[] = [];
     _destroyDeferred: object = {};
     TYPE: string = 'Previewer';
@@ -40,11 +40,12 @@ class PreviewerController extends StickyController {
     }
 
     beforeElementDestroyed(item: IStickyItem, container: HTMLElement): boolean {
-        // Если у previewer есть дочерние окна, то не закрываем его, иначе дочерние тоже закроются.
-        if (item.childs.length) {
+        // Если у previewer есть дочерние окна, то не закрываем его, иначе дочерние тоже закроются.Если закрытие
+        // вызывается с пользовательским сценарием с шаблона - то закрытие обрабатываем, т.к. оно в приоритете.
+        if (item.removeInitiator !== 'innerTemplate' && item.childs.length) {
             return false;
         }
-        return super.beforeElementDestroyed(item, container);;
+        return super.beforeElementDestroyed(item, container);
     }
 
     private _isLinkedPopup(previewerItem: IStickyItem): boolean {

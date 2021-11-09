@@ -23,6 +23,7 @@ export interface IPopupItem {
     activeNodeAfterDestroy: HTMLElement;
     popupState: string;
     childs: IPopupItem[];
+    removeInitiator?: 'innerTemplate' | 'opener';
     parentId?: string;
     closeId?: number;
     position?: IPopupPosition;

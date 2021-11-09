@@ -1,11 +1,13 @@
 define(
    [
       'Controls/popup',
+      'Controls/popupTemplate',
       'Vdom/Vdom'
    ],
-   (popup, Vdom) => {
+   (popup, popupTemplate, Vdom) => {
       'use strict';
-      var SyntheticEvent = Vdom.SyntheticEvent;
+      const SyntheticEvent = Vdom.SyntheticEvent;
+      const PreviewerControllerClass = popupTemplate.PreviewerController.constructor;
       describe('Controls/_popup/Previewer', () => {
          it('_contentMouseDownHandler', () => {
             let PWInstance = new popup.PreviewerTarget();
@@ -65,9 +67,6 @@ define(
             assert.deepEqual(cancel, true);
             PWInstance.destroy();
          });
-      });
-
-      describe('Controls/_popup/Previewer', () => {
          it('getConfig', () => {
             let PWInstance = new popup.PreviewerTarget();
             let targetPoint = {
@@ -103,6 +102,25 @@ define(
             assert.deepEqual(config.targetPoint, baseCorner);
             assert.equal(config.hasOwnProperty('verticalAlign'), false);
             assert.equal(config.hasOwnProperty('horizontalAlign'), false);
+         });
+      });
+
+      describe('PreviewerController', () => {
+         it('beforeElementDestroyed', () => {
+            const Controller = new PreviewerControllerClass();
+            const fakeItem = {
+               childs: []
+            };
+            let result = Controller.beforeElementDestroyed(fakeItem);
+            assert.equal(result, true);
+
+            fakeItem.childs = [1,2,3]; // не пустой массив
+            result = Controller.beforeElementDestroyed(fakeItem);
+            assert.equal(result, false);
+
+            fakeItem.removeInitiator = 'innerTemplate';
+            result = Controller.beforeElementDestroyed(fakeItem);
+            assert.equal(result, true);
          });
       });
    }
