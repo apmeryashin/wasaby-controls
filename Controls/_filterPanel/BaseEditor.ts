@@ -9,7 +9,6 @@ export default class BaseEditor extends Control<IControlOptions> {
     protected _handleCloseEditorClick(): void {
         const extendedValue = {
             value: this._options.propertyValue,
-            textValue: '',
             viewMode: 'extended'
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});

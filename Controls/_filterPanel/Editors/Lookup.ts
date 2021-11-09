@@ -26,7 +26,6 @@ interface ILookup {
 class LookupEditor extends Control<ILookupOptions> implements ILookup {
     readonly '[Controls/_filterPanel/Editors/Lookup]': boolean = true;
     protected _template: TemplateFunction = LookupTemplate;
-    protected _textValue: string = rk('Еще');
     protected _children: {
         lookupEditor: Selector
     };
@@ -34,7 +33,6 @@ class LookupEditor extends Control<ILookupOptions> implements ILookup {
     protected _handleCloseEditorClick(event: SyntheticEvent): void {
         const extendedValue = {
             value: this._options.propertyValue,
-            textValue: '',
             viewMode: 'extended'
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
@@ -42,8 +40,7 @@ class LookupEditor extends Control<ILookupOptions> implements ILookup {
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, value: number[] | string[]): void {
         const extendedValue = {
-            value,
-            textValue: this._textValue
+            value
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
@@ -61,10 +58,6 @@ class LookupEditor extends Control<ILookupOptions> implements ILookup {
             }
         };
         showSelector(this, popupOptions, this._options.multiSelect);
-    }
-
-    protected _handleTextValueChanged(event: SyntheticEvent, value: string): void {
-        this._textValue = value;
     }
 
     protected _handleLookupClick(): void {

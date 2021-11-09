@@ -25,7 +25,6 @@ import 'css!Controls/filterPanel';
  * @property {String} group Имя группы.
  * @property {*} value Текущее значение фильтра.
  * @property {*} resetValue Значение фильтра по умолчанию.
- * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста при закрытии группы.
  * @property {Controls/filter:EditorOptions.typedef} editorOptions Опции для редактора.
  * @property {String} editorTemplateName Имя редактора.
  * @property {boolean} expanderVisible Видимость экспандера редактора.

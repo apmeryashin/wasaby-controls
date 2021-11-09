@@ -92,14 +92,6 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
         this._processPropertyValueChanged(event, [this._minValue, this._maxValue]);
     }
 
-    protected _getExtendedValue(): object {
-        const value = [this._minValue, this._maxValue];
-        return {
-            value,
-            textValue: !this._isValueEmpty(value) ? this._getTextValue(value) : ''
-        };
-    }
-
     private _updateValues(newValue: number[]): void {
         this._minValue = newValue[0] !== undefined ? newValue[0] : null;
         this._maxValue = newValue[1] !== undefined ? newValue[1] : null;
@@ -107,7 +99,7 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
 
     private _processPropertyValueChanged(event: SyntheticEvent, value: number[]): void {
         if (this._needNotifyChanges(value)) {
-            this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
+            this._notify('propertyValueChanged', [{value: [this._minValue, this._maxValue]}], {bubbling: true});
         }
     }
 
@@ -128,10 +120,6 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
 
     private _isValueEmpty(value: number[]): boolean {
         return value[0] === null || value[1] === null;
-    }
-
-    private _getTextValue(value: number[]): string|number {
-        return value[0] + ' - ' + value[1];
     }
 
     static getDefaultOptions(): object {
