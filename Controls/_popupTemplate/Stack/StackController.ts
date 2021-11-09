@@ -136,7 +136,7 @@ export class StackController extends BaseController {
         item.popupOptions.width = state ? maxWidth : minWidth;
         this._prepareSizes(item, container);
         this._update();
-        this._savePopupWidth(item);
+        this._savePopupWidth(item, item.popupOptions.width);
         return true;
     }
 
@@ -149,10 +149,17 @@ export class StackController extends BaseController {
      * @private
      */
     private _getMinWidth(item: IStackItem, maxPanelWidth: number): number {
+        const middleWidth = this._getMiddleWidth(item, maxPanelWidth);
+        const minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+        // Если размер экрана/рабочей области такой, что минимальное сохраненное значение больше медианы по ширине -
+        // то сбросим его к минимальному возможному значению.
+        if (middleWidth < item.minSavedWidth) {
+            return minWidth;
+        }
         if (item.minSavedWidth < maxPanelWidth) {
             return item.minSavedWidth;
         }
-        return item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+        return minWidth;
     }
 
     resizeInner(): boolean {
@@ -200,14 +207,21 @@ export class StackController extends BaseController {
 
     private _getMaximizedState(item: IStackItem, maxPanelWidth: number): boolean {
         if (!item.popupOptions.minimizedWidth && item.popupOptions.minWidth && item.popupOptions.maxWidth) {
+            const middle = this._getMiddleWidth(item, maxPanelWidth);
+            return item.popupOptions.stackWidth - middle > 0;
+        }
+        return item.popupOptions.templateOptions.maximized;
+    }
+
+    private _getMiddleWidth(item: IStackItem, maxPanelWidth: number): number {
+        if (!item.popupOptions.minimizedWidth && item.popupOptions.minWidth && item.popupOptions.maxWidth) {
             // Если максимально возможная ширина окна меньше, чем выставлена через опцию, то нужно ориентироваться
             // на неё. Иначе кнопка разворота будет всегда пытаться развернуть окно,
             // которое уже итак максимально широкое.
             const maxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
-            const middle = (item.popupOptions.minWidth + maxWidth) / 2;
-            return item.popupOptions.stackWidth - middle > 0;
+            return (item.popupOptions.minWidth + maxWidth) / 2;
         }
-        return item.popupOptions.templateOptions.maximized;
+        return 0;
     }
 
     private _updateItemPosition(item: IStackItem): boolean {
@@ -549,9 +563,9 @@ export class StackController extends BaseController {
         }
     }
 
-    private _savePopupWidth(item: IStackItem): void {
+    private _savePopupWidth(item: IStackItem, width?: number): void {
         const widthState = {
-            width: item.position.width || item.popupOptions.width,
+            width: width || item.position.width || item.popupOptions.width,
             minSavedWidth: item.minSavedWidth,
             maxSavedWidth: item.maxSavedWidth
         };
