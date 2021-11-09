@@ -74,12 +74,17 @@ export class Controller {
      * указывать в newOptions.
      */
     updateOptions(newOptions: IOptions): void {
+        const modelRecreated = this._model !== newOptions.model;
         this._options = {...this._options, ...newOptions};
         this._model = newOptions.model;
 
         if (newOptions.collapsedItems && !isEqual(this._collapsedItems, newOptions.collapsedItems)) {
             this.setCollapsedItems(newOptions.collapsedItems);
             this._model?.setCollapsedItems(newOptions.collapsedItems);
+        }
+
+        if (modelRecreated) {
+            this.applyStateToModel();
         }
 
         // Обновление здесь expandedItems не реализовано т.к. пока не требуется из-за того что в treeControl

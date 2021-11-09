@@ -5033,7 +5033,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (canEditByClick) {
             e.stopPropagation();
             this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
-            this._beginEdit({ item }, { columnIndex }).then((result) => {
+            const hasCheckboxes =
+                this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
+
+            this._beginEdit({ item }, { columnIndex: columnIndex + hasCheckboxes }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
@@ -6865,16 +6868,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                     // Создаем перетаскиваемый элемент, т.к. в другом списке его нет.
                     const draggableItem = this._listViewModel.createItem({contents: dragEnterResult});
-                    // если мы утащим в другой список, то в нем нужно создать контроллер
-                    this._dndListController = _private.createDndListController(this._listViewModel, draggableItem, this._options);
-                    this._dndListController.startDrag(dragObject.entity);
-
+                    // Считаем изначальную позицию записи. Нужно считать обязательно до ::startDrag,
+                    // т.к. после перетаскиваемая запись уже будет в коллекции
                     let startPosition;
                     if (this._listViewModel.getCount()) {
-                        const lastItem = this._listViewModel.getLast();
                         startPosition = {
-                            index: this._listViewModel.getIndex(lastItem),
-                            dispItem: lastItem,
+                            index: this._listViewModel.getCount(),
+                            dispItem: this._listViewModel.getLast(),
                             position: 'after'
                         };
                     } else {
@@ -6884,6 +6884,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             position: 'before'
                         };
                     }
+
+                    // если мы утащим в другой список, то в нем нужно создать контроллер
+                    this._dndListController = _private.createDndListController(this._listViewModel, draggableItem, this._options);
+                    this._dndListController.startDrag(dragObject.entity);
 
                     // задаем изначальную позицию в другом списке
                     this._dndListController.setDragPosition(startPosition);
