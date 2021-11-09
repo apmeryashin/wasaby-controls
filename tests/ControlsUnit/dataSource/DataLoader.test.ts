@@ -363,7 +363,7 @@ describe('Controls/dataSource:loadData', () => {
         });
     });
 
-    it('object config', async () => {
+    it('object config', (done) => {
         const config = {
             list: {
                 type: 'list',
@@ -378,13 +378,15 @@ describe('Controls/dataSource:loadData', () => {
             }
         };
         const dataLoader = getDataLoader();
-        const loadDataResult = await dataLoader.load(config);
-        assert.isTrue(loadDataResult.list instanceof Object);
-        assert.equal(loadDataResult.custom, 'result');
+        dataLoader.load(config).then((loadDataResult) => {
+            assert.isTrue(loadDataResult.list instanceof Object);
+            assert.equal(loadDataResult.custom, 'result');
+            done();
+        });
     });
 
     describe('dependencies', () => {
-        it('multiple dependencies', async () => {
+        it('multiple dependencies', (done) => {
             const config = {
                 list: {
                     type: 'list',
@@ -412,12 +414,14 @@ describe('Controls/dataSource:loadData', () => {
                 }
             };
             const dataLoader = getDataLoader();
-            const loadDataResult = await dataLoader.load(config);
-            assert.isTrue(loadDataResult.custom.list);
-            assert.isTrue(loadDataResult.custom1.list);
-            assert.isTrue(loadDataResult.custom1.custom);
+            dataLoader.load(config).then((loadDataResult) => {
+                assert.isTrue(loadDataResult.custom.list);
+                assert.isTrue(loadDataResult.custom1.list);
+                assert.isTrue(loadDataResult.custom1.custom);
+                done();
+            });
         });
-        it('circular dependencies', async () => {
+        it('circular dependencies', (done) => {
             const config = {
                 custom: {
                     type: 'custom',
@@ -439,16 +443,13 @@ describe('Controls/dataSource:loadData', () => {
                 }
             };
             const dataLoader = getDataLoader();
-            let loadDataResult;
-            try {
-                loadDataResult = await dataLoader.load(config);
-            } catch (error) {
-                loadDataResult = error;
-            }
-            assert.isTrue(loadDataResult instanceof Error);
+            dataLoader.load(config).catch((loadDataResult) => {
+                assert.isTrue(loadDataResult instanceof Error);
+                done();
+            });
         });
 
-        it('undefined dependencies', async () => {
+        it('undefined dependencies', (done) => {
             const config = {
                 custom: {
                     type: 'custom',
@@ -461,16 +462,13 @@ describe('Controls/dataSource:loadData', () => {
                 }
             };
             const dataLoader = getDataLoader();
-            let loadDataResult;
-            try {
-                loadDataResult = await dataLoader.load(config);
-            } catch (e) {
-                loadDataResult = e;
-            }
-            assert.isTrue(loadDataResult instanceof Error);
+            dataLoader.load(config).catch((loadDataResult) => {
+                assert.isTrue(loadDataResult instanceof Error);
+                done();
+            });
         });
 
-        it('self dependencies', async () => {
+        it('self dependencies', (done) => {
             const config = {
                 custom: {
                     type: 'custom',
@@ -483,13 +481,10 @@ describe('Controls/dataSource:loadData', () => {
                 }
             };
             const dataLoader = getDataLoader();
-            let loadDataResult;
-            try {
-                loadDataResult = await dataLoader.load(config);
-            } catch (error) {
-                loadDataResult = error;
-            }
-            assert.isTrue(loadDataResult instanceof Error);
+            dataLoader.load(config).catch((loadDataResult) => {
+                assert.isTrue(loadDataResult instanceof Error);
+                done();
+            });
         });
     });
 });
