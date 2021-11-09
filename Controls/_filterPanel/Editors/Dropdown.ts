@@ -23,16 +23,22 @@ interface IDropdown {
 class DropdownEditor extends Control<IDropdownOptions> implements IDropdown {
     readonly '[Controls/_filterPanel/Editors/Dropdown]': boolean = true;
     protected _template: TemplateFunction = DropdownTemplate;
+    protected _textValue: string = '';
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, value: number[] | string[]): void {
         const extendedValue = {
-            value
+            value,
+            textValue: this._textValue
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 
     protected _extendedCaptionClickHandler(): void {
         this._notify('propertyValueChanged', [this._options.value], {bubbling: true});
+    }
+
+    private _handleTextValueChanged(event: SyntheticEvent, value: string): void {
+        this._textValue = value;
     }
 }
 export default DropdownEditor;

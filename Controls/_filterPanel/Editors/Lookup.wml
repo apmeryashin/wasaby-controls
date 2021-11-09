@@ -10,6 +10,7 @@
                                   style="filterPanel"
                                   readOnly="{{true}}"
                                   on:selectedKeysChanged="_handleSelectedKeysChanged()"
+                                  on:textValueChanged="_handleTextValueChanged()"
                                   on:itemClick="_handleLookupClick()"
                                   attr:class="controls-FilterViewPanel__basicEditor-cloud controls-LookupEditor">
             <ws:itemTemplate>

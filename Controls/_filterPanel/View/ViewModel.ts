@@ -108,6 +108,9 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
 
     private _setValueToSourceItem(item: IFilterItem, editorValue: object): void {
         item.value = editorValue?.value === undefined ? editorValue : editorValue?.value;
+        if (editorValue?.textValue !== undefined) {
+            item.textValue = editorValue.textValue;
+        }
     }
 
     private _resetSourceViewMode(): void {
@@ -218,6 +221,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
         this._source = object.clone(this._source);
         const item = this._source.find((filterItem) => filterItem.name === name);
         item.value = item.resetValue;
+        item.textValue = '';
         this._editingObject = this._getEditingObjectBySource(this._source);
         this._groupItems = this._getGroupItemsBySource(this._source);
         this._nextVersion();
