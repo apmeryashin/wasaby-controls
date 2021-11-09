@@ -15,7 +15,7 @@ import {Direction, IBaseSourceConfig, IFilterOptions, IHierarchyOptions, TKey} f
 import {
     BaseControl,
     convertReloadItemArgs,
-    IBaseControlOptions,
+    IBaseControlOptions, IDirection,
     IReloadItemOptions,
     ISiblingStrategy
 } from 'Controls/baseList';
@@ -1127,21 +1127,18 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             this._notify('collapsedItemsChanged', [result.collapsedItems]);
         }
     }
-    protected _afterCollectionAdd(addedItems: TreeItem[], addedItemsIndex: number): void {
-        super._afterCollectionAdd(addedItems, addedItemsIndex);
 
-        const addedNodes = addedItems.filter(
-            (it) => it['[Controls/_display/TreeItem]'] && it.isNode() !== null
-        );
-        const hasAddedNodeWithHasMore = !!addedNodes.find(
-            (it) => this._sourceController.hasMoreData('down', it.getContents().getKey())
-        );
-        if (hasAddedNodeWithHasMore) {
-            const collection = this._listViewModel;
-            const expandedItems = _private.getExpandedItems(this, this._options, this._items, this._expandController.getExpandedItems());
-            const hasMoreStorage = _private.prepareHasMoreStorage(this._sourceController, expandedItems, collection.getHasMoreStorage());
-            collection.setHasMoreStorage(hasMoreStorage, true);
-        }
+    protected _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+        const result = super._dataLoadCallback(items, direction);
+
+        const collection = this._listViewModel;
+        const expandedItems
+            = _private.getExpandedItems(this, this._options, items, this._expandController.getExpandedItems());
+        const hasMoreStorage
+            = _private.prepareHasMoreStorage(this._sourceController, expandedItems, collection.getHasMoreStorage());
+        collection.setHasMoreStorage(hasMoreStorage, false);
+
+        return result;
     }
 
     private setMarkerOnFirstLeaf(options, startKey) {
