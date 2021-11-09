@@ -13,7 +13,6 @@ import {
     POSITION,
     SHADOW_VISIBILITY,
     SHADOW_VISIBILITY_BY_CONTROLLER,
-    validateIntersectionEntries,
     IPositionOrientation
 } from './StickyBlock/Utils';
 import fastUpdate from './StickyBlock/FastUpdate';
@@ -626,7 +625,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
         const fixedPosition: POSITION = this._model.fixedPosition;
 
-        this._model.update(validateIntersectionEntries(entries, this._scroll));
+        this._model.update(entries);
 
         // Не отклеиваем заголовки scrollTop отрицательный.
         if (this._negativeScrollTop && this._model.fixedPosition === '') {

@@ -267,10 +267,11 @@ export default class ScrollController {
     }
 
     private _getTopOffsetForItemsContainer(listViewContainer: HTMLElement, baseControlContainer: HTMLElement): number {
-        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide' ? this._virtualScroll.getRange().start : 0;
-        let offsetTop = uDimension(listViewContainer.children[firstElementIndex], true).top;
+        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide'
+            ? this._virtualScroll.getRange().start : 0;
+        let offsetTop = getDimensions(listViewContainer.children[firstElementIndex], true).top;
         const container = baseControlContainer[0] || baseControlContainer;
-        offsetTop += container.offsetTop - uDimension(container).top;
+        offsetTop += container.offsetTop - getDimensions(container).top;
         return offsetTop;
     }
 
@@ -616,7 +617,7 @@ export default class ScrollController {
         // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
         const scrollContent = itemsContainer.closest('.controls-Scroll-ContainerBase__content');
         const topCompensation = scrollContent ?
-            (scrollContent.getBoundingClientRect().top - getDimensions(itemsContainer).top) :
+            (scrollContent.getBoundingClientRect().top - getDimensions(itemsContainer, true).top) :
             getOffsetTop(itemsContainer);
         const scrollTop = this.getScrollTop();
 
@@ -655,7 +656,7 @@ export default class ScrollController {
                     // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
                     const bottomViewportBorder = scrollTop + viewportHeight;
                     border = 'top';
-                    borderDistance = bottomViewportBorder - itemOffsetTop;
+                    borderDistance = bottomViewportBorder - itemOffsetTop + topCompensation;
                 } else {
                     // запись - выше, чем верхняя граница viewPort
                     if (scrollTop >= itemOffsetTop) {
@@ -683,10 +684,14 @@ export default class ScrollController {
     }
 
     getScrollTopToEdgeItem(direction: IDirection, itemsContainer: HTMLElement, itemsContainerSelector: string): number {
-        // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
-        // const compensation = getOffsetTop(itemsContainer);
-
         if (this._edgeItemParams) {
+
+            // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
+            const scrollContent = itemsContainer.closest('.controls-Scroll-ContainerBase__content');
+            const topCompensation = scrollContent ?
+                (scrollContent.getBoundingClientRect().top - getDimensions(itemsContainer, true).top) :
+                getOffsetTop(itemsContainer);
+
             const item = itemsContainer.querySelector(`.${itemsContainerSelector} > ${this._options.itemsSelector}[item-key="${this._edgeItemParams.key}"]`) as HTMLElement;
             if (item) {
                 const itemOffsetTop = getOffsetTop(item);
@@ -699,7 +704,7 @@ export default class ScrollController {
                     }
                 }
                 const viewportHeight = this._viewportHeight;
-                return itemOffsetTop + this._edgeItemParams.borderDistance - viewportHeight;
+                return itemOffsetTop + this._edgeItemParams.borderDistance - viewportHeight - topCompensation;
             }
         }
         return 0;

@@ -217,7 +217,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$isLastItem: boolean;
 
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly EditableItem: boolean = true;
 
     readonly isAdd: boolean;
 
