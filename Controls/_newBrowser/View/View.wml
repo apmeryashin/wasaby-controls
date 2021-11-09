@@ -65,6 +65,8 @@
                                 searchValue="{{_options.searchValue}}"
                                 tileSize="{{_tileCfg.tileSize}}"
                                 viewMode="{{viewMode}}"
+                                scope="{{_detailExplorerOptions}}"
+                                columns="{{content.columns}}"
                                 itemsReadyCallback="{{content.itemsReadyCallback}}"
                                 dataLoadCallback="{{content.dataLoadCallback}}"
                                 on:actionClick="_notifyHandler('detailActionClick')"
