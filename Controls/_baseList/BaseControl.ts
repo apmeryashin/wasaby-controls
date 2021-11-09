@@ -2606,7 +2606,8 @@ const _private = {
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
             contextMenuConfig: options.contextMenuConfig,
             itemActionsVisibility: options.itemActionsVisibility,
-            feature1183020440: options.feature1183020440
+            feature1183020440: options.feature1183020440,
+            task1183329228: options.task1183329228
         });
         if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
