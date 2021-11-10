@@ -73,6 +73,7 @@ const MIN_IE_VERSION: number = 12;
  * @implements Controls/input:IPadding
  * @implements Controls/input:ISelection
  * @implements Controls/input:IFieldTemplate
+ * @implements Controls/interface:IInputPlaceholder
  * @public
  * @author Красильников А.С.
  */
