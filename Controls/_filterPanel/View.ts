@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_filterPanel/View/View';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TemplateFunction} from 'UI/Base';
 import {GroupItem, IItemPadding} from 'Controls/display';
-import {IFilterItem} from 'Controls/filter';
+import {IFilterItem, mergeSource} from 'Controls/filter';
 import {Model} from 'Types/entity';
 import {default as ViewModel} from './View/ViewModel';
 import Store from 'Controls/Store';
@@ -148,12 +148,14 @@ export default class View extends Control<IViewPanelOptions> {
     }
 
     private _notifyChanges(): void {
+        const newSource = {...this._options.source};
+        mergeSource(newSource, this._viewModel.getSource());
         this._notify('sendResult', [{
-            items: this._viewModel.getSource(),
+            items: newSource,
             filter: this._viewModel.getEditingObject()
         }], {bubbling: true});
         this._notify('filterChanged', [this._viewModel.getEditingObject()]);
-        this._notify('sourceChanged', [this._viewModel.getSource()]);
+        this._notify('sourceChanged', [newSource]);
     }
 }
 
