@@ -71,6 +71,55 @@ define(
             result = ctrl.calculateFormattedNumber(1.234567890, false, 'trunc', '0', 'none', false, {precision: 0});
             assert.equal(result, '1');
          });
+
+         describe('calculateMainClass', function() {
+            it('fontSize: "m", fontColorStyle: "default", stroked: true, underline: "hovered", fontWeight: "bold"', function() {
+               assert.equal(ctrl.calculateMainClass('m', 'default', true, 'hovered', 'bold'), 'controls-DecoratorNumber controls-fontsize-m controls-text-default controls-DecoratorNumber__stroked controls-DecoratorNumber__underline controls-fontweight-bold');
+            });
+            it('fontSize: "m", fontColorStyle: "default", stroked: false, underline: "none"', function() {
+               assert.equal(ctrl.calculateMainClass('m', 'default', false, 'none', ''), 'controls-DecoratorNumber controls-fontsize-m controls-text-default controls-fontweight-default');
+            });
+         });
+
+         describe('calculateMainClass', function() {
+            it('fontSize: "m", fontColorStyle: "default", stroked: true, underline: "hovered", fontWeight: "bold"', function() {
+               assert.equal(ctrl.calculateMainClass('m', 'default', true, 'hovered', 'bold'), 'controls-DecoratorNumber controls-fontsize-m controls-text-default controls-DecoratorNumber__stroked controls-DecoratorNumber__underline controls-fontweight-bold');
+            });
+            it('fontSize: "m", fontColorStyle: "default", stroked: false, underline: "none"', function() {
+               assert.equal(ctrl.calculateMainClass('m', 'default', false, 'none', ''), 'controls-DecoratorNumber controls-fontsize-m controls-text-default controls-fontweight-default');
+            });
+         });
+
+         describe('calculateFontColorStyle', function() {
+            it('stroked: true, readOnly: true, fontColorStyle: "default"', function() {
+               const options = {
+                  readOnly: true,
+                  fontColorStyle: 'default'
+               };
+               assert.equal(ctrl.calculateFontColorStyle(true, options), 'readonly');
+            });
+            it('stroked: true, readOnly: false, fontColorStyle: "default"', function() {
+               const options = {
+                  readOnly: false,
+                  fontColorStyle: 'default'
+               };
+               assert.equal(ctrl.calculateFontColorStyle(true, options), 'readonly');
+            });
+            it('stroked: false, readOnly: true, fontColorStyle: "default"', function() {
+               const options = {
+                  readOnly: true,
+                  fontColorStyle: 'default'
+               };
+               assert.equal(ctrl.calculateFontColorStyle(false, options), 'readonly');
+            });
+            it('stroked: false, readOnly: false, fontColorStyle: "default"', function() {
+               const options = {
+                  readOnly: false,
+                  fontColorStyle: 'default'
+               };
+               assert.equal(ctrl.calculateFontColorStyle(false, options), 'default');
+            });
+         });
       });
    }
 );

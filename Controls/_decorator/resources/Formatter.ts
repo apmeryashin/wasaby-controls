@@ -189,7 +189,7 @@ export function trimTrailingZeros(str: string, leaveOneZero: boolean = false): s
     return str.match(regExp)[0];
 }
 
-export function fillAdditionalZeros(str: string, precision: number) {
+export function fillAdditionalZeros(str: string, precision: number): string {
     const parsedString: IParsedNumber = parse(str);
     const additionalZeros = precision - parsedString.fractional.length;
     const zeros = '0'.repeat(additionalZeros);
@@ -205,4 +205,11 @@ export function correctNumberValue(value: string, onlyPositive?: boolean): strin
         replaceValue = '- ';
     }
     return value.replace(/-\b/, replaceValue);
+}
+
+/**
+ * Убирает лишние пробелы между классами, которые могут появиться при их вычислении для числового и денежного декораторов
+ */
+export function removeExtraSpaces(str: string): string {
+    return str.replace(/\s+/g, ' ').trim();
 }

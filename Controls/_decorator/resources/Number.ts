@@ -13,7 +13,8 @@ import {
     abbreviateNumber,
     correctNumberValue,
     fillAdditionalZeros,
-    trimTrailingZeros
+    trimTrailingZeros,
+    removeExtraSpaces
 } from 'Controls/_decorator/resources/Formatter';
 
 type TValue = string | number | null;
@@ -40,11 +41,11 @@ export function calculateMainClass(
     underline: string,
     fontWeight: string
 ): string {
-    return 'controls-DecoratorNumber' + `${fontSize ? ' controls-fontsize-' + fontSize : ''}
+    return removeExtraSpaces('controls-DecoratorNumber' + `${fontSize ? ' controls-fontsize-' + fontSize : ''}
     ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
     ${stroked ? ' controls-DecoratorNumber__stroked' : ''}
     ${underline === 'hovered' ? ' controls-DecoratorNumber__underline' : ''}`
-        + ' controls-fontweight-' + (fontWeight ? fontWeight : 'default');
+        + ' controls-fontweight-' + (fontWeight ? fontWeight : 'default'));
 }
 
 export function calculateFontColorStyle(stroked: boolean, options: INumberOptions): string {
