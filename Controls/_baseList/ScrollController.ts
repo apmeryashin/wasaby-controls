@@ -89,11 +89,11 @@ export default class ScrollController {
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
     // https://online.sbis.ru/opendoc.html?guid=23c96b71-b7ec-4060-94c1-94069aec9955
-    // tslint:disable-next-line:no-any
+    // tslint:disable-next-line
     protected _options: any;
 
     // https://online.sbis.ru/opendoc.html?guid=23c96b71-b7ec-4060-94c1-94069aec9955
-    // tslint:disable-next-line:no-any
+    // tslint:disable-next-line
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};
         if (options.needScrollCalculation && options.virtualScrollConfig) {
@@ -229,10 +229,7 @@ export default class ScrollController {
         firstItemIndex = Math.min(firstItemIndex, this._options.collection.getStopIndex());
 
         // TODO: Отрефакторить. Задача: https://online.sbis.ru/opendoc.html?guid=0c097079-0143-4b19-9f43-dc38c68ba3bc
-        if (
-            this._options.collection.getStartIndex() &&
-            this._options.collection.at(0)['[Controls/_display/GroupItem]']
-        ) {
+        if (this._options.collection.getStartIndex() && this._options.collection.at(0)['[Controls/_display/GroupItem]'] ) {
             firstItemIndex--;
         }
         return this._options.collection.at(firstItemIndex);
@@ -255,8 +252,7 @@ export default class ScrollController {
      * @private
      */
     private _getFirstVisibleItemIndex(items: HTMLElement[], verticalOffset: number): number {
-        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide'
-            ? this._virtualScroll.getRange().start : 0;
+        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide' ? this._virtualScroll.getRange().start : 0;
         const itemsCount = items.length;
         let itemsHeight = firstElementIndex;
         let i = 0;
@@ -624,21 +620,76 @@ export default class ScrollController {
             (scrollContent.getBoundingClientRect().top - getDimensions(itemsContainer, true).top) :
             getOffsetTop(itemsContainer);
         const scrollTop = this.getScrollTop();
+        // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
+        let edgeBorder = scrollTop + topCompensation;
+        // при скроле вниз - на границе тот элемент, нижняя граница которого больше scrollTop + viewportHeight
+        if (direction === 'down') {
+            // нижняя граница - это верхняя + размер viewPort
+            edgeBorder += viewportHeight;
+        }
 
         const items = Array.from(itemsContainer.querySelectorAll(`.${itemsContainerSelector} > ${ this._options.itemsSelector }`));
         let edgeItemParams: IEdgeItemParams;
 
-        items.some((item: HTMLElement) => {
+        let lastFitItem = null;
+
+        const getEdgeParams = (item: HTMLElement): IEdgeItemParams => {
+
+            const itemDimensions = uDimension(item);
+            const itemOffsetTop = getOffsetTop(item);
+
+            const itemBorderBottom = Math.round(itemOffsetTop) + Math.round(itemDimensions.height);
+
+            // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
+            let borderDistance;
+            let border;
+            if (direction === 'down') {
+                // от верхней границы элемента до нижней границы viewPort
+                // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
+                const bottomViewportBorder = scrollTop + viewportHeight;
+                border = 'top';
+                borderDistance = bottomViewportBorder - itemOffsetTop + topCompensation;
+            } else {
+                // запись - выше, чем верхняя граница viewPort
+                if (scrollTop >= itemOffsetTop) {
+                    border = 'bottom';
+                    borderDistance = itemBorderBottom - scrollTop;
+                } else {
+                    border = 'top';
+                    borderDistance = scrollTop - itemOffsetTop;
+                }
+            }
+            return {
+                key: item.getAttribute('item-key'),
+                border,
+                borderDistance
+            };
+        };
+
+        const checkItem = (item: HTMLElement) => {
             if (item.className.includes('controls-ListView__hiddenContainer')) {
+                return false;
+            }
+
+            // Подвал узла после подгрузки данных может быть вытеснен из dom данными.
+            if (item.className.includes('controls-TreeGrid__nodeFooter')) {
                 return false;
             }
 
             // Если элемент застикан, то пропускаем его, граничным будет элемент следующий за ним
             // https://online.sbis.ru/opendoc.html?guid=9a0d939d-a08b-478b-b981-ccd1577fb184
-            if (
-                window.getComputedStyle(item).position === 'sticky' ||
-                (item.children[0] && window.getComputedStyle(item.children[0]).position === 'sticky')
-            ) {
+            if (window.getComputedStyle(item).position === 'sticky' ||
+                (item.children[0] && window.getComputedStyle(item.children[0]).position === 'sticky')) {
+                return false;
+            }
+
+            return true;
+        };
+
+        items.some((item: HTMLElement) => {
+            if (checkItem(item)) {
+                lastFitItem = item;
+            } else {
                 return false;
             }
 
@@ -647,44 +698,18 @@ export default class ScrollController {
 
             const itemBorderBottom = Math.round(itemOffsetTop) + Math.round(itemDimensions.height);
 
-            // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
-            let edgeBorder = scrollTop + topCompensation;
-            // при скроле вниз - на границе тот элемент, нижняя граница которого больше scrollTop + viewportHeight
-            if (direction === 'down') {
-                // нижняя граница - это верхняя + размер viewPort
-                edgeBorder += viewportHeight;
-            }
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
             if (itemBorderBottom >= edgeBorder || items.indexOf(item) === items.length - 1) {
-                let borderDistance;
-                let border;
-                if (direction === 'down') {
-                    // от верхней границы элемента до нижней границы viewPort
-                    // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
-                    const bottomViewportBorder = scrollTop + viewportHeight;
-                    border = 'top';
-                    borderDistance = bottomViewportBorder - itemOffsetTop + topCompensation;
-                } else {
-                    // запись - выше, чем верхняя граница viewPort
-                    if (scrollTop >= itemOffsetTop) {
-                        border = 'bottom';
-                        borderDistance = itemBorderBottom - scrollTop;
-                    } else {
-                        border = 'top';
-                        borderDistance = scrollTop - itemOffsetTop;
-                    }
-                }
-                edgeItemParams = {
-                    key: item.getAttribute('item-key'),
-                    border,
-                    borderDistance
-                };
+                edgeItemParams = getEdgeParams(item);
                 return true;
             }
 
             return false;
         });
 
+        if (!edgeItemParams && lastFitItem) {
+            edgeItemParams = getEdgeParams(lastFitItem);
+        }
         if (edgeItemParams) {
             this._edgeItemParams = edgeItemParams;
         }
@@ -750,11 +775,7 @@ export default class ScrollController {
         return !!this._virtualScroll;
     }
 
-    handleMoveItems(addIndex: number,
-                    addedItems: object[],
-                    removeIndex: number,
-                    removedIitems: object[],
-                    direction?: IDirection): IScrollControllerResult {
+    handleMoveItems(addIndex: number, addedItems: object[], removeIndex: number, removedIitems: object[],  direction?: IDirection): IScrollControllerResult {
         let result = {};
         if (!this._virtualScroll) {
             result = this._initVirtualScroll(
@@ -789,10 +810,7 @@ export default class ScrollController {
      * @param shift автоматически сдвинуть диапазон в направлении direction
      * @private
      */
-    handleAddItems(addIndex: number,
-                   items: object[],
-                   direction?: IDirection,
-                   shift: boolean = false): IScrollControllerResult {
+    handleAddItems(addIndex: number, items: object[], direction?: IDirection, shift: boolean = false): IScrollControllerResult {
         let result = {};
         if (!this._virtualScroll) {
             result = this._initVirtualScroll(
@@ -864,10 +882,8 @@ export default class ScrollController {
         this._resetInEnd = resetInEnd;
     }
 
-    destroy(): void {
-        if (this._options.collection) {
-            this._options.collection.setIndexes(0, 0);
-        }
+    destroy() {
+        this._options.collection && this._options.collection.setIndexes(0, 0);
     }
 
     private static _setCollectionIterator(collection: Collection<Record>, mode: 'remove' | 'hide'): void {
