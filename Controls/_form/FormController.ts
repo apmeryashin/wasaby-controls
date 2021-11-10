@@ -501,7 +501,7 @@ class FormController extends ControllerBase<IFormController> {
                 res.then((arg) => {
                     this._updateIsNewRecord(false);
 
-                    updateDef.callback(arg);
+                    updateDef.callback({data: arg});
                     return arg;
                 }).catch((error: Error) => {
                     updateDef.errback(error);
