@@ -1,0 +1,38 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+    <div class="controlsDemo__mr4">
+        <div class="controls-text-label">contrastBackground and validationStatus="invalid"</div>
+        <Controls.dropdown:Combobox source="{{_source}}"
+                                    displayProperty="title"
+                                    keyProperty="key"
+                                    validationStatus="invalid"
+                                    borderVisibility="visible"
+                                    contrastBackground="{{true}}"
+                                    bind:selectedKey="_firstSelectedKey"/>
+    </div>
+    <div class="controlsDemo__mr4">
+        <div class="controls-text-label">contrastBackground and validationStatus="invalidAccent"</div>
+        <Controls.dropdown:Combobox source="{{_source}}"
+                                    displayProperty="title"
+                                    keyProperty="key"
+                                    borderVisibility="visible"
+                                    validationStatus="invalidAccent"
+                                    contrastBackground="{{true}}"
+                                    bind:selectedKey="_secondSelectedKey"/>
+    </div>
+    <div class="controlsDemo__mr4">
+        <div class="controls-text-label">validationStatus="invalid"</div>
+        <Controls.dropdown:Combobox source="{{_source}}"
+                                    displayProperty="title"
+                                    keyProperty="key"
+                                    validationStatus="invalid"
+                                    bind:selectedKey="_thirdSelectedKey"/>
+    </div>
+    <div class="controlsDemo__mr4">
+        <div class="controls-text-label">validationStatus="invalidAccent"</div>
+        <Controls.dropdown:Combobox source="{{_source}}"
+                                    displayProperty="title"
+                                    keyProperty="key"
+                                    validationStatus="invalidAccent"
+                                    bind:selectedKey="_fourthSelectedKey"/>
+    </div>
+</div>
