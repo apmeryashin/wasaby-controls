@@ -13,7 +13,7 @@ import {
     ISelectorDialogOptions,
     TFilter,
     TKey,
-    IHierarchyOptions
+    IHierarchyOptions, INavigationSourceConfig
 } from 'Controls/interface';
 import {IList} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
@@ -29,12 +29,13 @@ import {
 import {create as DiCreate} from 'Types/di';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
 
 export interface IListEditorOptions extends
     IControlOptions,
     IFilterOptions,
     ISourceOptions,
-    INavigationOptions<unknown>,
+    INavigationOptions<INavigationSourceConfig>,
     IItemActionsOptions,
     IList,
     IColumn,
@@ -50,6 +51,7 @@ export interface IListEditorOptions extends
     selectedAllKey: string;
     selectedAllText?: string;
     resetValue?: number[]|string[];
+    sourceController?: SourceController;
 }
 
 /**
@@ -182,6 +184,14 @@ class ListEditor extends Control<IListEditorOptions> {
         }
         if (valueChanged) {
             this._setMarkedKey(this._selectedKeys, options);
+        }
+
+        if (options.sourceController && filterChanged) {
+            options.sourceController.updateOptions({
+                ...options,
+                filter: this._filter
+            });
+            options.sourceController.reload();
         }
     }
 
