@@ -625,7 +625,7 @@ export default ModuleComponent;
  * @example
  * Обновляем заголовок в зависимости от отображаемого года.
  * <pre>
- *    <Controls.calendar:MonthList position="_date" on:positionChanged="_positionChangedHandler()"/>
+ *    <Controls.calendar:MonthList bind:position="_date" on:positionChanged="_positionChangedHandler()"/>
  * </pre>
  * <pre>
  *    class  ModuleComponent extends Control {
