@@ -1,7 +1,7 @@
 <div class="controls-ComboBox
             controls_toggle_theme-{{_options.theme}}
             controls-ComboBox-{{_readOnly ? 'readOnly' : 'borderStyle-' + _borderStyle}} {{_isOpened ? 'controls-ComboBox__opened'}}
-            {{!_readOnly && _options.contrastBackground ? 'controls-ComboBox-backgroundStyle-' + _options.validationStatus}}
+            {{!_readOnly && _options.contrastBackground ? 'controls-ComboBox-validationStatus-' + _options.validationStatus}}
             {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
             controls-text-{{_options.fontColorStyle}}
             controls-inlineheight-{{_options.inlineHeight}}
