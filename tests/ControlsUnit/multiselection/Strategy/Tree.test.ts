@@ -1076,12 +1076,13 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             model,
             selectionType: 'all',
             recursiveSelection: false,
-            entryPath: null
+            entryPath: null,
+            selectionCountMode: 'all'
          });
          const res = strategy.getSelectionForModel({ selected: [2], excluded: [2, 3] });
-         assert.deepEqual(toArrayKeys(res.get(true)), [] );
+         assert.deepEqual(toArrayKeys(res.get(true)), [4] );
          assert.deepEqual(toArrayKeys(res.get(null)), [2]);
-         assert.deepEqual(toArrayKeys(res.get(false)), [5]);
+         assert.deepEqual(toArrayKeys(res.get(false)), [3, 5]);
       });
 
       it('search model', () => {
