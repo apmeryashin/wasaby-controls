@@ -36,6 +36,18 @@ export interface IHeadingPath extends IBreadCrumbsOptions {
     pathButtonFilter: object;
 
     /**
+     * @cfg {Object[]} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/sorting/ сортировки}.
+     * @remark
+     * Допустимы значения направления сортировки ASC/DESC.
+     */
+    pathButtonSorting: object[];
+
+    /**
+     * @cfg {Controls/interface:INavigationOptionValue} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/ навигации} в {@link /doc/platform/developmentapl/interface-development/controls/list/ списке}.
+     */
+    pathButtonNavigation: object;
+
+    /**
      * @name Controls/_breadcrumbs/interface/IBreadCrumbs#pathButtonKeyProperty
      * @cfg {String} Имя поля записи содержащее её ключ.
      */
