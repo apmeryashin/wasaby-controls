@@ -121,7 +121,8 @@ export default class View extends Control<IViewPanelOptions> {
         const itemContents = dispItem.getContents() as string;
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
         const isResultClick = clickEvent?.target.closest('.controls-FilterViewPanel__group-result_wrapper');
-        this._viewModel.handleGroupClick(itemContents, !isResetClick);
+        const isExpanderClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupExpander');
+        this._viewModel.handleGroupClick(itemContents, isExpanderClick);
         if (isResetClick) {
             this._resetFilterItem(dispItem);
         }
