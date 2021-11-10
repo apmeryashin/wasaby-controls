@@ -41,6 +41,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     _componentDidMount(): void {
         GridView.superclass._componentDidMount.apply(this, arguments);
         this._columnScrollOnViewDidMount();
+        this._ladderTopOffsetStyles = this._getLadderTopOffsetStyles();
         this._listModel.setColspanGroup(!this._options.columnScroll || !this.isColumnScrollVisible());
     },
 
@@ -289,11 +290,14 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         const offsetFromOptions = this._options.ladderOffset || '0px';
         const postfixLadderClass = `${header ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}`;
         const ladderClass = `controls-Grid__row-cell__ladder-spacing${postfixLadderClass}`;
+        const mainLadderClass = 'controls-Grid__row-cell__ladder-main_spacing';
         return `.${this._ladderOffsetSelector} .${ladderClass} {` +
             `top: calc(var(--item_line-height_l_grid) + ${offsetFromOptions} + ${topOffset}px) !important;}` +
             `.${this._ladderOffsetSelector} .${ladderClass}_withGroup {` +
             `top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + ${offsetFromOptions} ` +
-            `+ ${topOffset}px) !important;}`;
+            `+ ${topOffset}px) !important;}` +
+            `.${this._ladderOffsetSelector} .${mainLadderClass}_withGroup {` +
+            `top: calc(var(--grouping_height_list) + ${offsetFromOptions} + ${topOffset}px) !important;}`;
 
     },
 
