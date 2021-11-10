@@ -17,5 +17,13 @@
             />
          </div>
       </div>
+      <div class="ws-flexbox controls-padding_top-m">
+         <div>
+            <div class="controls-text-label">value: {{_value1}},  precision: 0.5</div>
+            <Controls.progress:Rating bind:value="_value1"
+                                      precision="{{0.5}}"
+            />
+         </div>
+      </div>
    </div>
 </div>
