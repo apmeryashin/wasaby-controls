@@ -331,6 +331,13 @@ describe('Controls/list/HoverFreeze', () => {
             assert.isFalse(isUnFreezeHoverCallbackCalled);
         });
 
+        it('should unfreeze when item has 0 id', () => {
+            hoverFreeze.startFreezeHoverTimeout(0, startEvent, 0, 0);
+            clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+            hoverFreeze.unfreezeHover();
+            assert.isTrue(isUnFreezeHoverCallbackCalled);
+        });
+
         it('should call unfreeze callback', () => {
             hoverFreeze.startFreezeHoverTimeout('key_1', startEvent, 0, 0);
             clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
