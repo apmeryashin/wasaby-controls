@@ -1140,8 +1140,11 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
  * * right - блок будет прилипать справа
  * * leftRight - блок будет прилипать и слева и справа
  * @example
- * <pre>
- *     <Controls.scroll:StickyBlock position="{{ { 'horizontal': 'top', 'vertical': 'left' } }}">
+ * <pre class="brush: js">
+ *      protected _position: object = { 'horizontal': 'left', 'vertical': 'top' };
+ * </pre>
+ * <pre class="brush: html">
+ *     <Controls.scroll:StickyBlock position="{{ _position }}">
  *         <div> Блок будет прилипать сверху и слева </div>
  *     </Controls.scroll:StickyBlock/>
  * </pre>
