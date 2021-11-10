@@ -18,7 +18,7 @@ import {IOptions as IGroupCellOptions} from 'Controls/_grid/display/GroupCell';
 import {IItemTemplateParams} from 'Controls/_grid/display/mixins/Row';
 import ItemActionsCell from 'Controls/_grid/display/ItemActionsCell';
 
-const GROUP_Z_INDEX_DEFAULT = 2;
+const GROUP_Z_INDEX_DEFAULT = 3;
 const GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS = 3;
 
 export interface IOptions<T extends EntityModel = EntityModel>
