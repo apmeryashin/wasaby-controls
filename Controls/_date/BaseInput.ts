@@ -152,25 +152,27 @@ class BaseInput extends Control<IDateBaseOptions> {
     }
 
     protected _onKeyDown(event: SyntheticEvent<KeyboardEvent>): void {
-        let key = event.nativeEvent.keyCode;
-        if (key === constants.key.insert && !event.nativeEvent.shiftKey && !event.nativeEvent.ctrlKey && !this._options.readOnly) {
-            // on Insert button press current date should be inserted in field
-            this._model.setCurrentDate();
-            this._notify('inputCompleted', [this._model.value, this._model.textValue]);
-            // В IE при нажатии на кнопку insert включается поведение, при котором впередистоящие символы начинают
-            // перезаписываться при вводе. Из-за этого контрол не понимает какое действие произошло,
-            // т.к. при обычном вводе числа, значение в инпуте меняется по другому (например, значение 12.12.12,
-            // при вводе 1 станет 112.12.12). Отключим это поведение.
-            event.preventDefault();
-        }
-        if (key === constants.key.plus || key === constants.key.minus) {
-            // on +/- buttons press date should be increased or decreased in field by one day if date is not empty
-            if (this._model.value) {
-                let delta = key === constants.key.plus ? 1 : -1;
-                let localDate = new this._dateConstructor(this._model.value);
-                localDate.setDate(this._model.value.getDate() + delta);
-                this._model.value = localDate;
+        if (!this._options.readOnly) {
+            const key = event.nativeEvent.keyCode;
+            if (key === constants.key.insert && !event.nativeEvent.shiftKey && !event.nativeEvent.ctrlKey) {
+                // on Insert button press current date should be inserted in field
+                this._model.setCurrentDate();
                 this._notify('inputCompleted', [this._model.value, this._model.textValue]);
+                // В IE при нажатии на кнопку insert включается поведение, при котором впередистоящие символы начинают
+                // перезаписываться при вводе. Из-за этого контрол не понимает какое действие произошло,
+                // т.к. при обычном вводе числа, значение в инпуте меняется по другому (например, значение 12.12.12,
+                // при вводе 1 станет 112.12.12). Отключим это поведение.
+                event.preventDefault();
+            }
+            if (key === constants.key.plus || key === constants.key.minus) {
+                // on +/- buttons press date should be increased or decreased in field by one day if date is not empty
+                if (this._model.value) {
+                    let delta = key === constants.key.plus ? 1 : -1;
+                    let localDate = new this._dateConstructor(this._model.value);
+                    localDate.setDate(this._model.value.getDate() + delta);
+                    this._model.value = localDate;
+                    this._notify('inputCompleted', [this._model.value, this._model.textValue]);
+                }
             }
         }
     }
