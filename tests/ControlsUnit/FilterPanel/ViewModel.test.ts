@@ -7,7 +7,6 @@ describe('Controls/filterPanel:ViewModel', () => {
             {
                 name: 'owners',
                 value: 'Test owner',
-                textValue: 'Test owner',
                 resetValue: null
             }
         ];
@@ -21,11 +20,6 @@ describe('Controls/filterPanel:ViewModel', () => {
             viewModel.resetFilterItem('owners');
             assert.isNull(viewModel._editingObject.owners);
         });
-
-        it('filterItem textValue is updated', () => {
-            viewModel.resetFilterItem('owners');
-            assert.equal(viewModel._groupItems.owners.textValue, '');
-        });
     });
 
     describe('resetFilter', () => {
@@ -33,7 +27,6 @@ describe('Controls/filterPanel:ViewModel', () => {
             {
                 name: 'owners',
                 value: 'Test owner',
-                textValue: 'Test owner',
                 resetValue: null,
                 viewMode: 'basic',
                 editorOptions: {
@@ -58,7 +51,6 @@ describe('Controls/filterPanel:ViewModel', () => {
             {
                 name: 'owners',
                 value: 'Test owner',
-                textValue: 'Test owner',
                 resetValue: null
             }
         ];
@@ -70,14 +62,12 @@ describe('Controls/filterPanel:ViewModel', () => {
 
         it('source value is not an object', () => {
             const editorValue = {
-                value: 'New owner',
-                textValue: 'New text owner'
+                value: 'New owner'
             };
             viewModel.setEditingObjectValue('owners', editorValue);
 
             const item = viewModel._source[0];
             assert.equal(item.value, 'New owner');
-            assert.equal(item.textValue, 'New text owner');
         });
     });
 
@@ -86,7 +76,6 @@ describe('Controls/filterPanel:ViewModel', () => {
             {
                 name: 'owners',
                 value: null,
-                textValue: 'Test owner',
                 resetValue: null
             }
         ];
@@ -111,7 +100,6 @@ describe('Controls/filterPanel:ViewModel', () => {
             {
                 name: 'owners',
                 value: null,
-                textValue: 'Test owner',
                 resetValue: null
             }
         ];

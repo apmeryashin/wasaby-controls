@@ -16,7 +16,6 @@ interface IFilterViewModelOptions {
 }
 
 interface IFilterGroup {
-    textValue: string;
     afterEditorTemplate: TemplateFunction | string;
 }
 
@@ -93,7 +92,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             groupsItems[item.name] = {
                 caption: item.editorCaption,
                 expanderVisible: item.expanderVisible,
-                textValue: item.textValue,
+                resetButtonVisible: !isEqual(item.value, item.resetValue),
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };
         });

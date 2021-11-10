@@ -157,7 +157,7 @@ class ListEditor extends Control<IListEditorOptions> {
         // В 5000 поправится при переходе на новый стандарт по задаче:
         // https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
         if (this._selectedKeys.length && !isEqual(this._options.resetValue, this._selectedKeys)) {
-            this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
+            this._notify('propertyValueChanged', [{value: this._getValue(this._selectedKeys)}], {bubbling: true});
         }
     }
 
@@ -277,15 +277,7 @@ class ListEditor extends Control<IListEditorOptions> {
         }
         this._setMarkedKey(this._selectedKeys, this._options);
         this._setColumns(this._options);
-        this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
-    }
-
-    protected _getExtendedValue(): object {
-        const value = this._getValue(this._selectedKeys);
-        return {
-            value,
-            textValue: this._getTextValue(this._selectedKeys)
-        };
+        this._notify('propertyValueChanged', [{value: this._getValue(this._selectedKeys)}], {bubbling: true});
     }
 
     private _getValue(value: string[] | number[]): string[] | number[] {
@@ -449,18 +441,6 @@ class ListEditor extends Control<IListEditorOptions> {
             });
         }
         return Promise.resolve(this._historyService);
-    }
-
-    private _getTextValue(selectedKeys: number[]|string[]): string {
-        const textArray = [];
-
-        selectedKeys.forEach((item) => {
-            const record = this._items.getRecordById(item);
-            if (record) {
-                textArray.push(record.get(this._options.displayProperty));
-            }
-        });
-        return textArray.join(', ');
     }
 
     private _getPopupOpener(mode?: string): StackOpener|DialogOpener {
