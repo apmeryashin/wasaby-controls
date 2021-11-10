@@ -1,10 +1,16 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/gridNew/EditInPlace/A_KeybordControl/KeybordControl';
-import * as EditingCellTmpl from 'wml!Controls-demo/gridNew/EditInPlace/A_KeybordControl/EditingCellTemplate';
+import * as Template from 'wml!Controls-demo/gridNew/EditInPlace/KeybordControl/KeybordControl';
+import * as EditingCellTmpl from 'wml!Controls-demo/gridNew/EditInPlace/KeybordControl/EditingCellTemplate';
 import {IColumnRes} from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
 import {Editing} from 'Controls-demo/gridNew/DemoHelpers/Data/Editing';
 import {Memory} from 'Types/source';
 
+/**
+ * Демо пример для автотестирования аспекта управления управлением редактированием по месту в таблицах с клавиатуры.
+ *
+ * @remark [НЕ ДЛЯ WI]
+ * @private
+ */
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
@@ -20,7 +26,7 @@ export default class extends Control {
         });
     }
 
-    private _beforeBeginEdit() {
+    private _beforeBeginEdit(): Promise<void> | void {
         if (this._longStart) {
             return new Promise((resolve) => {
                 // tslint:disable-next-line:no-magic-numbers
@@ -29,7 +35,7 @@ export default class extends Control {
         }
     }
 
-    private _beforeEndEdit() {
+    private _beforeEndEdit(): Promise<void> | void {
         if (this._longEnd) {
             return new Promise((resolve) => {
                 // tslint:disable-next-line:no-magic-numbers

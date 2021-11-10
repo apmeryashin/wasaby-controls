@@ -83,7 +83,7 @@ export class InputActivationHelper {
                  */
                 const selectors = this._paramsForFastEdit.selector.split(' ');
                 const selector =
-                    `${selectors[0]} ${selectors[selectors.length - 1]}:not(.controls_toggle_fakeCheckbox)`;
+                    `${selectors[0]} ${selectors[selectors.length - 1]}:not(.js-controls-BaseControl__editableItem__checkBox)`;
                 input = this._paramsForFastEdit.container.querySelector(selector);
             }
             if (input) {
