@@ -95,7 +95,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _beforeUpdate(newOptions: IMenuPopupOptions): void {
         this._headerTheme = this._getTheme();
 
-        if (newOptions.stickyPosition.direction &&
+        if (newOptions.stickyPosition && newOptions.stickyPosition.direction &&
             this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
             this._verticalDirection = newOptions.footerContentTemplate ? 'bottom' :
                 newOptions.stickyPosition.direction.vertical;
