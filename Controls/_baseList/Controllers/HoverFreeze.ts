@@ -157,6 +157,10 @@ export default class HoverFreeze {
      * Немедленно "размораживает" запись
      */
     unfreezeHover(): void {
+        // Если размораживать нечего и нет никаких таймеров, то просто выходим из метода.
+        if (this.getCurrentItemKey() === null && !this._itemFreezeHoverTimeout && !this._itemUnfreezeHoverTimeout) {
+            return;
+        }
         // Сбрасываем текущий ховер
         this._itemData = null;
         this._mouseLeavePoint = null;

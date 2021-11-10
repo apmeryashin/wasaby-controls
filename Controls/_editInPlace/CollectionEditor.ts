@@ -220,13 +220,13 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         const collection = this._options.collection;
 
         if (!fromItem) {
-            next = collection.getFirst('[Controls/_display/IEditableCollectionItem]');
+            next = collection.getFirst('EditableItem');
         } else {
             next = direction === 'after' ? collection.getNext(fromItem) :
                 collection.getPrevious(fromItem);
         }
 
-        while (next && !next['[Controls/_display/IEditableCollectionItem]']) {
+        while (next && !next.EditableItem) {
             next = direction === 'after' ? collection.getNext(next) : collection.getPrevious(next);
         }
 
@@ -293,7 +293,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
 
     private _throwEditingItemMissingError(item: Model): never {
         const keys = '[\n\t' + this._options.collection.getItems()
-            .filter((i) => i['[Controls/_display/IEditableCollectionItem]'])
+            .filter((i) => i.EditableItem)
             .map((i) => i.contents.getKey())
             .join(',\n\t') + '\n]';
 

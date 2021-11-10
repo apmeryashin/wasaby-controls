@@ -76,7 +76,7 @@ interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISear
    layerName: string;
    suggestTemplate: ISuggestTemplateProp | null;
    footerTemplate?: ISuggestFooterTemplate;
-   trim?: boolean; // TODO: searchValueTrim ???
+   searchValueTrim?: boolean;
    dataLoadCallback?: Function;
 }
 
@@ -757,11 +757,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _getSuggestPopupStyles(suggestWidth: number): string {
-      const maxWidth = this._options.suggestPopupOptions?.maxWidth;
+      const suggestPopupOptions = this._options.suggestPopupOptions;
+      const maxWidth = suggestPopupOptions?.maxWidth;
       if (maxWidth) {
          return `min-width: ${suggestWidth}px; max-width: ${maxWidth}px`;
       } else {
-         return `width: ${suggestWidth}px;`;
+         const width = suggestWidth || suggestPopupOptions?.width;
+         return `width: ${width}px;`;
       }
    }
 
@@ -914,7 +916,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                minSearchLength: this._options.minSearchLength,
                searchDelay: this._options.searchDelay as number,
                searchParam: this._options.searchParam,
-               searchValueTrim: this._options.trim,
+               searchValueTrim: this._options.searchValueTrim,
                navigation: this._options.navigation
             } as ISearchControllerOptions);
             return this._searchController;

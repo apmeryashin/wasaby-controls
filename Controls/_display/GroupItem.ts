@@ -24,7 +24,7 @@ export default class GroupItem<T> extends mixin<
     ExpandableMixin,
     GroupMixin
 ) {
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
+    readonly EditableItem: boolean = false;
     readonly '[Controls/_display/GroupItem]': true;
 
     readonly Markable: boolean = false;
