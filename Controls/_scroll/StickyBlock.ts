@@ -208,15 +208,9 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             this._container.style.top = '';
             this._container.style.bottom = '';
         }
-    }
-
-    protected _afterMount(options: IStickyHeaderOptions): void {
-        if (!this._isStickyEnabled(options)) {
-            return;
-        }
+        this._register();
         // name на partial не работает, поэтому контентную область ищем через querySelector.
         this._content = this._container.querySelector(CONTENT_CLASS);
-        this._register();
         this._init();
         this._subPixelArtifactClass = this._getSubPixelArtifactFixClass();
         this._topGapFixClass = this._getTopGapFixClass();

@@ -101,7 +101,7 @@ define([
             component._canScroll = true;
             sinon.stub(component, '_getSubPixelArtifactFixClass');
             sinon.stub(component, '_getTopGapFixClass');
-            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            component._componentDidMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             component._onScrollStateChanged({ canVerticalScroll: true }, {});
             assert.isUndefined(component._observer);
             component._container.closest = () => false;
@@ -123,7 +123,7 @@ define([
             sinon.stub(component, '_getTopGapFixClass');
             sinon.stub(component, '_createObserver');
             sinon.stub(component, '_updateComputedStyle');
-            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            component._componentDidMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             assert.isUndefined(component._observer);
             component._onScrollStateChanged({ canVerticalScroll: true }, {});
             sinon.assert.called(component._createObserver);
@@ -158,8 +158,10 @@ define([
                },
                dataset: {
                   stickyBlockNode: 'true'
-               }
+               },
+               querySelector: sinon.fake()
             };
+            sinon.stub(component, '_init');
             component._componentDidMount();
             assert.equal(component._container.style.top, 0);
             sandbox.restore();
@@ -176,8 +178,10 @@ define([
                },
                dataset: {
                   stickyBlockNode: ''
-               }
+               },
+               querySelector: sinon.fake()
             };
+            sinon.stub(component, '_init');
             component._componentDidMount();
             assert.equal(component._container.style.top, 1);
             sandbox.restore();
@@ -267,7 +271,7 @@ define([
             component._canScroll = true;
             sinon.stub(component, '_getSubPixelArtifactFixClass');
             sinon.stub(component, '_getTopGapFixClass');
-            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), { preferSource: true }));
+            component._componentDidMount(coreMerge(options, StickyHeader.getDefaultOptions(), { preferSource: true }));
 
             assert.isUndefined(component._observer);
             component._options.mode = 'notsticky';
@@ -290,7 +294,7 @@ define([
             sandbox.stub(component, '_updateComputedStyle');
             sinon.stub(component, '_getSubPixelArtifactFixClass');
             sinon.stub(component, '_getTopGapFixClass');
-            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            component._componentDidMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             sandbox.stub(component._model, 'update');
 
             component._observeHandler();
