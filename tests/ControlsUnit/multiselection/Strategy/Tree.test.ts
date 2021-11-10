@@ -413,6 +413,109 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const result = strategy.unselect({selected: [null], excluded: [null]}, 11, 'aaa');
          assert.deepEqual(result, {selected: [null], excluded: [null, 11]});
       });
+
+      it('search model, select node and unselect only one deep inside breadcrumb child', () => {
+         /*
+            node-1, node-21
+               leaf-211
+          */
+         const items = new RecordSet({
+            rawData: [{
+               id: 1,
+               parent: null,
+               nodeType: true,
+               title: 'test_node1'
+            }, {
+               id: 21,
+               parent: 1,
+               nodeType: true,
+               title: 'test_node2'
+            }, {
+               id: 211,
+               parent: 21,
+               nodeType: null,
+               title: 'test_leaf21'
+            }],
+            keyProperty: 'id'
+         });
+
+         const searchModel = new SearchGridCollection({
+            collection: items,
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            columns: [{}]
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: searchModel,
+            selectionType: 'all',
+            recursiveSelection: false,
+            entryPath: [],
+            selectionCountMode: 'all'
+         });
+
+         const selection = strategy.unselect({selected: [1], excluded: []}, 211, 'aaa');
+         assert.deepEqual(selection, {selected: [1], excluded: [211]});
+
+         const res = strategy.getSelectionForModel(selection, undefined, undefined, 'sad');
+         assert.deepEqual(toArrayKeys(res.get(true)), []);
+         assert.deepEqual(toArrayKeys(res.get(null)), [21]);
+         assert.deepEqual(toArrayKeys(res.get(false)), [211]);
+      });
+
+      it('search model, select node and unselect this node when it is breadcrumb', () => {
+         /*
+            node-1, node-21
+               leaf-211
+          */
+         const items = new RecordSet({
+            rawData: [{
+               id: 1,
+               parent: null,
+               nodeType: true,
+               title: 'test_node1'
+            }, {
+               id: 21,
+               parent: 1,
+               nodeType: true,
+               title: 'test_node2'
+            }, {
+               id: 211,
+               parent: 21,
+               nodeType: null,
+               title: 'test_leaf21'
+            }],
+            keyProperty: 'id'
+         });
+
+         const searchModel = new SearchGridCollection({
+            collection: items,
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            columns: [{}]
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: searchModel,
+            selectionType: 'all',
+            recursiveSelection: false,
+            entryPath: [],
+            selectionCountMode: 'all'
+         });
+
+         const selection = strategy.unselect({selected: [1], excluded: []}, 21, 'aaa');
+         assert.deepEqual(selection, {selected: [1], excluded: [21]});
+      });
    });
 
    describe('selectAll', () => {
@@ -938,12 +1041,13 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             model,
             selectionType: 'all',
             recursiveSelection: false,
-            entryPath: null
+            entryPath: null,
+            selectionCountMode: 'all'
          });
          const res = strategy.getSelectionForModel({ selected: [2], excluded: [2, 3] });
-         assert.deepEqual(toArrayKeys(res.get(true)), [] );
+         assert.deepEqual(toArrayKeys(res.get(true)), [4] );
          assert.deepEqual(toArrayKeys(res.get(null)), [2]);
-         assert.deepEqual(toArrayKeys(res.get(false)), [5]);
+         assert.deepEqual(toArrayKeys(res.get(false)), [3, 5]);
       });
 
       it('search model', () => {
