@@ -98,7 +98,7 @@ export default class Button extends BaseLookup<ISelectorButtonOptions> {
 
    protected _reset(): void {
       if (this._options.hasOwnProperty('selectedKeys')) {
-         this._notifyChanges([]);
+         this._notifySelectedKeysChanged([]);
       } else {
          this._updateItems(new List());
       }
