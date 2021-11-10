@@ -6,6 +6,7 @@ import {createSandbox, useFakeTimers} from 'sinon';
 import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 import {RecordSet} from 'Types/collection';
 import {HTTPStatus} from 'Browser/Transport';
+import {Logger} from 'UI/Utils';
 import {assert} from 'chai';
 
 function getDataArray(): object[] {
@@ -420,22 +421,25 @@ describe('Controls/dataSource:loadData', () => {
             });
         });
         it('circular dependencies', () => {
+            // Мокаем логгер, т.к. при ошибке загрузки кидаем ошибку в логи, но при ошибках в консоль падают юниты
+            const logError = Logger.error;
+            Logger.error = () => void 0;
             const config = {
+                custom1: {
+                    type: 'custom',
+                    dependencies: ['custom'],
+                    loadDataMethod: (args, [customResult]) => {
+                        return Promise.resolve({
+                           custom: customResult && customResult.custom1
+                        });
+                    }
+                },
                 custom: {
                     type: 'custom',
                     dependencies: ['custom1'],
                     loadDataMethod: (args, [customResult]) => {
                         return Promise.resolve({
                             custom1: customResult && customResult.custom
-                        });
-                    }
-                },
-                custom1: {
-                    type: 'custom',
-                    dependencies: ['custom'],
-                    loadDataMethod: (args, [customResult]) => {
-                        return Promise.resolve({
-                            custom: customResult && customResult.custom1
                         });
                     }
                 }
@@ -446,10 +450,14 @@ describe('Controls/dataSource:loadData', () => {
                 finishedWithErrors = true;
             }).finally(() => {
                 assert.isTrue(finishedWithErrors);
+                Logger.error = logError;
             });
         });
 
         it('undefined dependencies', () => {
+            // Мокаем логгер, т.к. при ошибке загрузки кидаем ошибку в логи, но при ошибках в консоль падают юниты
+            const logError = Logger.error;
+            Logger.error = () => void 0;
             const config = {
                 custom: {
                     type: 'custom',
@@ -467,10 +475,14 @@ describe('Controls/dataSource:loadData', () => {
                 finishedWithErrors = true;
             }).finally(() => {
                 assert.isTrue(finishedWithErrors);
+                Logger.error = logError;
             });
         });
 
         it('self dependencies', () => {
+            // Мокаем логгер, т.к. при ошибке загрузки кидаем ошибку в логи, но при ошибках в консоль падают юниты
+            const logError = Logger.error;
+            Logger.error = () => void 0;
             const config = {
                 custom: {
                     type: 'custom',
@@ -488,6 +500,7 @@ describe('Controls/dataSource:loadData', () => {
                 finishedWithErrors = true;
             }).finally(() => {
                 assert.isTrue(finishedWithErrors);
+                Logger.error = logError;
             });
         });
     });
