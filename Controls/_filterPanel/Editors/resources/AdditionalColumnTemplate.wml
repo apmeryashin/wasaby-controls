@@ -1,7 +1,15 @@
 <ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}" attr:class="controls-ListEditor__columns">
     <ws:contentTemplate>
-        <div class="controls-EditorList__additional-column">
-            {{item.contents[column.config.displayProperty]}}
-        </div>
+        <ws:if data="{{item.contents['pinned']}}">
+            <Controls.icon:Icon icon="icon-PinOff"
+                                iconStyle="secondary"
+                                iconSize="s"
+                                attr:class="controls-EditorList__additional-icon"/>
+        </ws:if>
+        <ws:else>
+            <div class="controls-EditorList__additional-column">
+                {{item.contents[column.config.displayProperty]}}
+            </div>
+        </ws:else>
     </ws:contentTemplate>
 </ws:partial>
