@@ -22,7 +22,7 @@ export default IBorderStyle;
  * @variant warning
  */
 /**
- * @name Controls/interface/IBorderStyle#borderStyle
+ * @name Controls/_interface/IBorderStyle#borderStyle
  * @cfg {BorderStyle} Цвет обводки контрола.
  * @demo Controls-demo/Input/BorderStyles/Index
  */
