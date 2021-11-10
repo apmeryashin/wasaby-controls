@@ -4,13 +4,22 @@ import {HierarchicalMemory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+import {Model} from 'Types/entity';
+import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
+
 import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {getActionsForContacts as getItemActions} from 'Controls-demo/list_new/DemoHelpers/ItemActionsCatalog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
     protected _columns: IColumn[] = Flat.getColumnsWithNodeFooters();
     protected _hoveredCellIndex: number = -1;
+    protected _isNodeFooterVisible: boolean;
+    protected _isItemActionVisible: boolean;
+    protected _nodeFooterVisibilityCallback: (contents?: Model) => boolean;
+    protected _itemActionVisibilityCallback: TItemActionVisibilityCallback;
+    protected _itemActions: IItemAction[] = getItemActions();
 
     protected _navigation: INavigationOptionValue<INavigationSourceConfig> = {
         source: 'page',
@@ -88,6 +97,9 @@ export default class extends Control {
             ],
             parentProperty: 'parent'
         });
+        this._isNodeFooterVisible = true;
+        this._isItemActionVisible = true;
+        this._bindCallbacks();
     }
 
     protected _afterMount(): void {
@@ -98,9 +110,29 @@ export default class extends Control {
         tree.toggleExpanded(1).then(() => tree.toggleExpanded(11)).then(() => tree.toggleExpanded(12));
     }
 
-    // tslint:disable-next-line
-    protected _hoveredCellChanged(_: SyntheticEvent, item: any, itemContainer: any, cell: any): void {
-        this._hoveredCellIndex = cell === null ? -1 : cell;
+    protected _resetCallbacks(): void {
+        this._isNodeFooterVisible = !this._isNodeFooterVisible;
+        this._isItemActionVisible = !this._isItemActionVisible;
+        this._bindCallbacks();
+    }
+
+    private _bindCallbacks(): void {
+        this._nodeFooterVisibilityCallback =
+            this._getNodeFooterVisibilityCallback(this._isNodeFooterVisible).bind(this);
+        this._itemActionVisibilityCallback =
+            this._getItemActionsVisibilityCallback(this._isItemActionVisible).bind(this);
+    }
+
+    private _getNodeFooterVisibilityCallback(visible: boolean): (contents?: Model) => boolean {
+        const returningTrue = (contents?: Model) => true;
+        const returningFalse = (contents?: Model) => false;
+        return visible ? returningTrue : returningFalse;
+    }
+
+    private _getItemActionsVisibilityCallback(visible: boolean): TItemActionVisibilityCallback {
+        const returningTrue = (action: IItemAction, item: Model, isEditing: boolean) => true;
+        const returningFalse = (action: IItemAction, item: Model, isEditing: boolean) => false;
+        return visible ? returningTrue : returningFalse;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
