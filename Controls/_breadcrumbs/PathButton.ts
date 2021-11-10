@@ -44,6 +44,7 @@ import * as rk from 'i18n!SBIS3';
  */
 export default class PathButton extends Control<IPathButton> {
     //region base props
+    protected _options: IPathButton;
     protected _template: TemplateFunction = template;
     //endregion
 
@@ -129,10 +130,12 @@ export default class PathButton extends Control<IPathButton> {
      */
     private _getPanelTemplateOptions(): IBody {
         return {
-            caption: this._options.caption || rk('На главную'),
+            caption: (this._options.caption || rk('На главную')) as string,
             path: this._options.path,
             source: this._options.source,
             filter: this._options.filter,
+            sorting: this._options.sorting,
+            navigation: this._options.navigation,
             keyProperty: this._options.keyProperty,
             nodeProperty: this._options.nodeProperty,
             parentProperty: this._options.parentProperty,
