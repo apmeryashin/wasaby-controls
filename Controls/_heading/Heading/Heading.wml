@@ -4,6 +4,7 @@
                   controls-fontsize-{{_options.fontSize}}
                   controls-Header-fontsize-{{_options.fontSize}}
                   controls-Header_{{_options.readOnly ? 'readonly' : 'clickable'}}
-                  controls-Header__caption_style-{{_options.fontColorStyle}}{{_options.readOnly ? '':'_hovered'}}"
+                  {{_options.fontColorStyle ? ('controls-Header__caption_style-' + _options.fontColorStyle + (_options.readOnly ? '':'_hovered')) :
+                  'controls-Header__caption_fontcolor-default'}}"
       attr:title="{{_options.tooltip}}"
 >{{_options.caption}}</span>

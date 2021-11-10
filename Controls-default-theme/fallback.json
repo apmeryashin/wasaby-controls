@@ -742,6 +742,7 @@
   "--font-size_m_heading": "var(--font-size_m)",
   "--font-size_l_heading": "var(--font-size_l)",
   "--font-size_xl_heading": "var(--font-size_xl)",
+  "--default_text-color_heading": "var(--text-color)",
   "--primary_text-color_heading": "var(--primary_text-color)",
   "--primary_hover_text-color_heading": "var(--primary_hover_text-color)",
   "--secondary_text-color_heading": "var(--secondary_text-color)",

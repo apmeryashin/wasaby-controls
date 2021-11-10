@@ -43,11 +43,11 @@
    cursor: default;
 }
 
-.controls-Header__caption_style-default, controls-Header__caption_style-default_hovered {
-   color: var(--text-color);
+.controls-Header__caption_fontcolor-default {
+   color: var(--default_text-color_heading);
 }
 
-.controls-Header__caption_style-secondary, .controls-Header__caption_style-secondary_hovered  {
+.controls-Header__caption_style-secondary, .controls-Header__caption_style-secondary_hovered {
    color: var(--secondary_text-color_heading);
 }
 
@@ -96,10 +96,6 @@
 }
 
 .ws-is-hover {
-   .controls-Header__caption_style-default_hovered:hover {
-      color: var(--hover_text-color);
-   }
-
    .controls-Header__caption_style-primary_hovered:hover {
       color: var(--primary_hover_text-color_heading);
    }
@@ -118,10 +114,6 @@
 //а на счетчике ховер по умолчанию, в таком случае прикладник повесит на контейнер с этим сложным компонентом класс: controls-Header_Separator__clickable и все заработает по стандарту.
 
 .controls-Header_Counter__clickable:active {
-   .controls-Header__caption_style-default_hovered {
-      color: var(--hover_text-color);
-   }
-
    .controls-Header__caption_style-primary_hovered {
       color: var(--primary_hover_text-color_heading);
    }
@@ -144,10 +136,6 @@
 }
 
 .controls-Header_all__clickable:active {
-   .controls-Header__caption_style-default_hovered {
-      color: var(--hover_text-color);
-   }
-
    .controls-Header__caption_style-primary_hovered {
       color: var(--primary_hover_text-color_heading);
    }
@@ -190,10 +178,6 @@
 }
 
 .controls-Header_Separator__clickable:active {
-   .controls-Header__caption_style-default_hovered {
-      color: var(--hover_text-color);
-   }
-
    .controls-Header__caption_style-primary_hovered {
       color: var(--primary_hover_text-color_heading);
    }
@@ -217,10 +201,6 @@
 
 .ws-is-hover {
    .controls-Header_Counter__clickable:hover {
-      .controls-Header__caption_style-default_hovered {
-         color: var(--hover_text-color);
-      }
-
       .controls-Header__caption_style-primary_hovered {
          color: var(--primary_hover_text-color_heading);
       }
@@ -243,10 +223,6 @@
    }
 
    .controls-Header_all__clickable:hover {
-      .controls-Header__caption_style-default_hovered {
-         color: var(--hover_text-color);
-      }
-
       .controls-Header__caption_style-primary_hovered {
          color: var(--primary_hover_text-color_heading);
       }
@@ -288,10 +264,6 @@
       }
    }
    .controls-Header_Separator__clickable:hover {
-      .controls-Header__caption_style-default_hovered {
-         color: var(--hover_text-color);
-      }
-
       .controls-Header__caption_style-primary_hovered {
          color: var(--primary_hover_text-color_heading);
       }
