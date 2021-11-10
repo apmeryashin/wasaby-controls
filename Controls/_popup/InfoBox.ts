@@ -88,6 +88,8 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
             targetSide: this._options.targetSide,
             alignment: this._options.alignment,
             style: this._options.style,
+            validationStatus: 'valid',
+            horizontalPadding: this._options.horizontalPadding,
             // InfoBox close by outside click only if trigger is set to 'demand' or 'click'.
             closeOnOutsideClick: this._options.trigger === 'click' || this._options.trigger === 'demand',
             floatCloseButton: this._options.floatCloseButton,

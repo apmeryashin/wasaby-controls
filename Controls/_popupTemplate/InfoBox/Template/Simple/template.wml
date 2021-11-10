@@ -5,10 +5,10 @@
                                  on:mouseenter="_sendResult()"
                                  on:mouseleave="_sendResult()"
                                  attr:template="{{_getTemplateName()}}">
-   <div class="controls_popupTemplate_theme-{{_options.theme}} controls-InfoBox">
+   <div class="controls_popupTemplate_theme-{{_options.theme}} controls-InfoBox controls-InfoBox__horizontal-padding-{{_options.horizontalPadding}}">
       <ws:if data="{{_options.closeButtonVisibility}}">
          <Controls._popupTemplate.CloseButton attr:class="controls-InfoBoxTemplate__closeButton" on:click="_close()" viewMode="link" attr:ws-no-focus="true"/>
-         <ws:if data="{{_options.floatCloseButton}}">
+         <ws:if data="{{_options.floatCloseButton && _options.horizontalPadding !== 'null'}}">
             <div class="controls-InfoBox_floatElement"></div>
          </ws:if>
       </ws:if>
@@ -17,7 +17,7 @@
             template="{{_options.template}}"
             scope="{{_options.templateOptions}}"
             class="controls-InfoBox__content controls-InfoBox__message
-                  {{!_options.floatCloseButton ? 'controls-InfoBox__message_margin'}}">
+                  {{!_options.floatCloseButton && _options.horizontalPadding !== 'null' ? 'controls-InfoBox__message_margin'}}">
          </ws:partial>
       </ws:if>
       <ws:else>

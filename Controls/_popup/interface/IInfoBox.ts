@@ -132,6 +132,19 @@ export interface IInfoBoxOptions extends IControlOptions {
     * @default true
     */
     closeButtonVisibility?: boolean;
+
+    /**
+     * @name Controls/_popup/interface/IInfoBox#horizontalPadding
+     * @cfg {Boolean} Задает отступ контента по горизонтали
+     * @default m
+     */
+
+    /*
+    * @name Controls/_popup/interface/IInfoBox#closeButtonVisibility
+    * @cfg {Boolean} Whether the close button is displayed.
+    * @default true
+    */
+    horizontalPadding?: 'm' | 'null';
 }
 
 /**
