@@ -4,6 +4,6 @@
                                 captions="{{['Свернуть', 'Развернуть']}}"
                                 bind:expanded="_expanded"/>
       <div class="controlsDemo__mr">baseline</div>
-      <Controls.heading:Title fontSize="3xl" caption="baseline"/>
+      <Controls.heading:Title fontColorStyle="secondary" fontSize="3xl" caption="baseline"/>
    </div>
 </div>
