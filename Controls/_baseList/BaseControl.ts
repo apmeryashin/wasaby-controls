@@ -3925,6 +3925,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         this._listViewModel.destroy();
                     }
                     _private.initializeModel(this, newOptions, items);
+                    this._modelRecreated = true;
                     this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
                     this._updateScrollController(newOptions);
                     this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
@@ -4495,6 +4496,19 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 callback();
             });
             this.callbackAfterRender = null;
+        }
+
+        // TODO после выполнения код будет в одном месте https://online.sbis.ru/opendoc.html?guid=59d99675-6bc4-436e-967a-34b448e8f3a4
+        // При пересоздании коллекции будет скрыт верхний триггер и индикатор,
+        // чтобы не было лишней подгрузки при отрисовке нового списка
+        // Сразу же после отрисовки списка нужно показать триггер и ромашку(аналогично моунту)
+        // mouseEnter исключаем в этом кейсе, т.к. его может не произойти(мышка и так будет на списке)
+        if (this._modelRecreated) {
+            if (this._indicatorsController.shouldDisplayTopIndicator()) {
+                this._indicatorsController.displayTopIndicator(true);
+            } else {
+                this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+            }
         }
 
         if (
