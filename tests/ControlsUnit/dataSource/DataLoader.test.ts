@@ -6,7 +6,7 @@ import {createSandbox, useFakeTimers} from 'sinon';
 import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 import {RecordSet} from 'Types/collection';
 import {HTTPStatus} from 'Browser/Transport';
-import {assert} from "chai";
+import {assert} from 'chai';
 
 function getDataArray(): object[] {
     return [
@@ -363,7 +363,7 @@ describe('Controls/dataSource:loadData', () => {
         });
     });
 
-    it('object config', (done) => {
+    it('object config', () => {
         const config = {
             list: {
                 type: 'list',
@@ -378,15 +378,14 @@ describe('Controls/dataSource:loadData', () => {
             }
         };
         const dataLoader = getDataLoader();
-        dataLoader.load(config).then((loadDataResult) => {
+        return dataLoader.load(config).then((loadDataResult) => {
             assert.isTrue(loadDataResult.list instanceof Object);
             assert.equal(loadDataResult.custom, 'result');
-            done();
         });
     });
 
     describe('dependencies', () => {
-        it('multiple dependencies', (done) => {
+        it('multiple dependencies', () => {
             const config = {
                 list: {
                     type: 'list',
@@ -414,14 +413,13 @@ describe('Controls/dataSource:loadData', () => {
                 }
             };
             const dataLoader = getDataLoader();
-            dataLoader.load(config).then((loadDataResult) => {
+            return dataLoader.load(config).then((loadDataResult) => {
                 assert.isTrue(loadDataResult.custom.list);
                 assert.isTrue(loadDataResult.custom1.list);
                 assert.isTrue(loadDataResult.custom1.custom);
-                done();
             });
         });
-        it('circular dependencies', (done) => {
+        it('circular dependencies', () => {
             const config = {
                 custom: {
                     type: 'custom',
@@ -443,13 +441,15 @@ describe('Controls/dataSource:loadData', () => {
                 }
             };
             const dataLoader = getDataLoader();
-            dataLoader.load(config).catch((loadDataResult) => {
-                assert.isTrue(loadDataResult instanceof Error);
-                done();
+            let finishedWithErrors = false;
+            return dataLoader.load(config).catch(() => {
+                finishedWithErrors = true;
+            }).finally(() => {
+                assert.isTrue(finishedWithErrors);
             });
         });
 
-        it('undefined dependencies', (done) => {
+        it('undefined dependencies', () => {
             const config = {
                 custom: {
                     type: 'custom',
@@ -462,13 +462,15 @@ describe('Controls/dataSource:loadData', () => {
                 }
             };
             const dataLoader = getDataLoader();
-            dataLoader.load(config).catch((loadDataResult) => {
-                assert.isTrue(loadDataResult instanceof Error);
-                done();
+            let finishedWithErrors = false;
+            return dataLoader.load(config).catch(() => {
+                finishedWithErrors = true;
+            }).finally(() => {
+                assert.isTrue(finishedWithErrors);
             });
         });
 
-        it('self dependencies', (done) => {
+        it('self dependencies', () => {
             const config = {
                 custom: {
                     type: 'custom',
@@ -481,9 +483,11 @@ describe('Controls/dataSource:loadData', () => {
                 }
             };
             const dataLoader = getDataLoader();
-            dataLoader.load(config).catch((loadDataResult) => {
-                assert.isTrue(loadDataResult instanceof Error);
-                done();
+            let finishedWithErrors = false;
+            return dataLoader.load(config).catch(() => {
+                finishedWithErrors = true;
+            }).finally(() => {
+                assert.isTrue(finishedWithErrors);
             });
         });
     });
