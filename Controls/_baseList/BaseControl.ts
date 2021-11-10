@@ -1698,13 +1698,14 @@ const _private = {
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
         // But we should not update any ItemActions when marker has changed
-        if (
-            (changesType === 'collectionChanged' && _private.shouldUpdateItemActions(newItems)) ||
-            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
-            newModelChanged
-        ) {
+        if (changesType === 'collectionChanged' ||
+            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) || newModelChanged) {
             self._itemsChanged = true;
-            _private.updateInitializedItemActions(self, self._options);
+
+            if (!!self._itemActionsController && self._itemActionsController
+                .shouldUpdateOnCollectionChange(action, newItems, removedItems)) {
+                _private.updateInitializedItemActions(self, self._options);
+            }
         }
 
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
@@ -1720,18 +1721,6 @@ const _private = {
         }
 
         self._removedItems = [];
-    },
-
-    /**
-     * Возвращает boolean, надо ли обновлять проинициализированные ранее ItemActions, основываясь на newItems.properties.
-     * Возвращается true, если newItems или newItems.properties не заданы
-     * Новая модель в событии collectionChanged для newItems задаёт properties,
-     * где указано, что именно обновляется.
-     * @param newItems
-     */
-    shouldUpdateItemActions(newItems): boolean {
-        const propertyVariants = ['selected', 'marked', 'swiped', 'hovered', 'active', 'dragged', 'editingContents'];
-        return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     },
 
     initListViewModelHandler(self, model) {
