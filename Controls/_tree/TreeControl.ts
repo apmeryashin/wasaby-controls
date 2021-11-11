@@ -31,7 +31,7 @@ import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
 import {ExpandController} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
-import {applyReloadedNodes, getRootsForHierarchyReload} from 'Controls/_tree/utils';
+import {applyReloadedNodes, getItemHierarchy, getRootsForHierarchyReload} from 'Controls/_tree/utils';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -830,10 +830,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     reloadItem(key: TKey, options: IReloadItemOptions | object, direction?: boolean | string): Promise<Model> {
         const newArgs = convertReloadItemArgs(...arguments);
+        // Получаем иерархию перезагружаемого итема без корня
+        const itemHierarchy = getItemHierarchy(this.getViewModel() as Tree, newArgs.key as TKey).slice(1);
 
         return newArgs.options.hierarchyReload
             ? _private.reloadItem(key, this.getViewModel() as Tree, this._options.filter, this.getSourceController())
-            : super.reloadItem.apply(this, [newArgs.key, newArgs.options]);
+            : super.reloadItem.apply(this, [itemHierarchy, newArgs.options]);
     }
 
     // region Drag
