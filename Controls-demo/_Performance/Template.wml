@@ -1,6 +1,7 @@
 <div class="controlsDemo__wrapper">
     <Controls.heading:Title
             caption="Controls performance tests"
+            fontColorStyle="secondary"
             fontSize="2xl"/>
     <div>
         <div class="ControlsDemo-Performance__panel">
