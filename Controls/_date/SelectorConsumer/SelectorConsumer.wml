@@ -1,0 +1,3 @@
+<Controls._date._DateSelectorConsumer name="consumer">
+    <Controls._date.Selector scope="{{ _options }}" name="selector"/>
+</Controls._date._DateSelectorConsumer>

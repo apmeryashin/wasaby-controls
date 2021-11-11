@@ -1,10 +1,11 @@
 /**
  * @typedef {String} TFontWeight
  * @description Допустимые значения для опции {@link Controls/interface:IFontWeight#fontWeight fontWeight}.
- * @variant default
- * @variant bold
+ * @variant default начертание, которое задается при помощи переменной темы оформления
+ * @variant normal нормальное начертание
+ * @variant bold полужирное начертание
  */
-export type TFontWeight = 'default' | 'bold';
+export type TFontWeight = 'default' | 'normal' | 'bold';
 
 export interface IFontWeightOptions {
     /**

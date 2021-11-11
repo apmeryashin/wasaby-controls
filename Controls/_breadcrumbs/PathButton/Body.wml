@@ -26,6 +26,8 @@
          name="treeGrid"
          filter="{{_filter}}"
          source="{{_options.source}}"
+         sorting="{{_options.sorting}}"
+         navigation="{{_options.navigation}}"
 
          keyProperty="{{_options.keyProperty}}"
          nodeProperty="{{_options.nodeProperty}}"
@@ -42,7 +44,10 @@
       >
          <ws:columns>
             <ws:Array>
-               <ws:Object displayProperty="{{_options.displayProperty}}"/>
+               <ws:Object
+                  fontSize="l"
+                  displayProperty="{{_options.displayProperty}}"
+               />
             </ws:Array>
          </ws:columns>
       </Controls.treeGrid:View>

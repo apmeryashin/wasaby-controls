@@ -16,6 +16,11 @@
             <ws:footerTemplate>
                 <Controls.list:AddButton if="{{ _isMounted && !_isEditing }}" caption="Запись" on:click="_beginAdd()" class="test_add_record_1"/>
             </ws:footerTemplate>
+            <ws:emptyTemplate>
+                <ws:partial template="Controls/grid:EmptyTemplate">
+                    Нет данных
+                </ws:partial>
+            </ws:emptyTemplate>
         </Controls.grid:View>
     </Controls.scroll:Container>
 </div>

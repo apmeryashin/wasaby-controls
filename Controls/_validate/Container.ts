@@ -83,10 +83,11 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
      * @function
      * @name Controls/_validate/Container#validate
      * @param {IValidateConfig} validateConfig
+     * @return {Promise<string[] | null>}
      * @see setValidationResult
      * @see isValid
      */
-    validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
+    validate(validateConfig?: IValidateConfig): Promise<string[] | null> {
         return new Promise((resolve) => {
             if (this._indicatorId) {
                 IndicatorOpener.hide(this._indicatorId);

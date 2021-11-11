@@ -6,7 +6,8 @@ import {createSandbox, useFakeTimers} from 'sinon';
 import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 import {RecordSet} from 'Types/collection';
 import {HTTPStatus} from 'Browser/Transport';
-import {assert} from "chai";
+import {Logger} from 'UI/Utils';
+import {assert} from 'chai';
 
 function getDataArray(): object[] {
     return [
@@ -363,4 +364,144 @@ describe('Controls/dataSource:loadData', () => {
         });
     });
 
+    it('object config', () => {
+        const config = {
+            list: {
+                type: 'list',
+                source: getSource(),
+                filter: {}
+            },
+            custom: {
+                type: 'custom',
+                loadDataMethod: () => {
+                    return Promise.resolve('result');
+                }
+            }
+        };
+        const dataLoader = getDataLoader();
+        return dataLoader.load(config).then((loadDataResult) => {
+            assert.isTrue(loadDataResult.list instanceof Object);
+            assert.equal(loadDataResult.custom, 'result');
+        });
+    });
+
+    describe('dependencies', () => {
+        it('multiple dependencies', () => {
+            const config = {
+                list: {
+                    type: 'list',
+                    source: getSource(),
+                    filter: {}
+                },
+                custom: {
+                    type: 'custom',
+                    dependencies: ['list'],
+                    loadDataMethod: (args, [listResult]) => {
+                        return Promise.resolve({
+                            list: listResult instanceof Object
+                        });
+                    }
+                },
+                custom1: {
+                    type: 'custom',
+                    dependencies: ['list', 'custom'],
+                    loadDataMethod: (args, [listResult, customResult]) => {
+                        return Promise.resolve({
+                            list: listResult instanceof Object,
+                            custom: customResult && customResult.list
+                        });
+                    }
+                }
+            };
+            const dataLoader = getDataLoader();
+            return dataLoader.load(config).then((loadDataResult) => {
+                assert.isTrue(loadDataResult.custom.list);
+                assert.isTrue(loadDataResult.custom1.list);
+                assert.isTrue(loadDataResult.custom1.custom);
+            });
+        });
+        it('circular dependencies', () => {
+            // Мокаем логгер, т.к. при ошибке загрузки кидаем ошибку в логи, но при ошибках в консоль падают юниты
+            const logError = Logger.error;
+            Logger.error = () => void 0;
+            const config = {
+                custom1: {
+                    type: 'custom',
+                    dependencies: ['custom'],
+                    loadDataMethod: (args, [customResult]) => {
+                        return Promise.resolve({
+                           custom: customResult && customResult.custom1
+                        });
+                    }
+                },
+                custom: {
+                    type: 'custom',
+                    dependencies: ['custom1'],
+                    loadDataMethod: (args, [customResult]) => {
+                        return Promise.resolve({
+                            custom1: customResult && customResult.custom
+                        });
+                    }
+                }
+            };
+            const dataLoader = getDataLoader();
+            let finishedWithErrors = false;
+            return dataLoader.load(config).catch(() => {
+                finishedWithErrors = true;
+            }).finally(() => {
+                assert.isTrue(finishedWithErrors);
+                Logger.error = logError;
+            });
+        });
+
+        it('undefined dependencies', () => {
+            // Мокаем логгер, т.к. при ошибке загрузки кидаем ошибку в логи, но при ошибках в консоль падают юниты
+            const logError = Logger.error;
+            Logger.error = () => void 0;
+            const config = {
+                custom: {
+                    type: 'custom',
+                    dependencies: ['custom1', 'custom2'],
+                    loadDataMethod: (args, [customResult]) => {
+                        return Promise.resolve({
+                            custom1: customResult && customResult.custom
+                        });
+                    }
+                }
+            };
+            const dataLoader = getDataLoader();
+            let finishedWithErrors = false;
+            return dataLoader.load(config).catch(() => {
+                finishedWithErrors = true;
+            }).finally(() => {
+                assert.isTrue(finishedWithErrors);
+                Logger.error = logError;
+            });
+        });
+
+        it('self dependencies', () => {
+            // Мокаем логгер, т.к. при ошибке загрузки кидаем ошибку в логи, но при ошибках в консоль падают юниты
+            const logError = Logger.error;
+            Logger.error = () => void 0;
+            const config = {
+                custom: {
+                    type: 'custom',
+                    dependencies: ['custom'],
+                    loadDataMethod: (args, [customResult]) => {
+                        return Promise.resolve({
+                            custom1: customResult && customResult.custom
+                        });
+                    }
+                }
+            };
+            const dataLoader = getDataLoader();
+            let finishedWithErrors = false;
+            return dataLoader.load(config).catch(() => {
+                finishedWithErrors = true;
+            }).finally(() => {
+                assert.isTrue(finishedWithErrors);
+                Logger.error = logError;
+            });
+        });
+    });
 });

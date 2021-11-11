@@ -142,16 +142,137 @@ define(
          });
          describe('calculateMainClass', function() {
             it('fontColorStyle: "default", underline: "hovered"', function() {
-               assert.equal(ctrl.calculateMainClass('default', 'hovered'), 'controls-DecoratorMoney controls-DecoratorMoney__underline\n             controls-text-default');
+               assert.equal(ctrl.calculateMainClass('default', 'hovered'), 'controls-DecoratorMoney controls-DecoratorMoney__underline controls-text-default');
             });
             it('fontColorStyle: "primary", underline: "none"', function() {
-               assert.equal(ctrl.calculateMainClass('primary', 'none'), 'controls-DecoratorMoney\n             controls-text-primary');
+               assert.equal(ctrl.calculateMainClass('primary', 'none'), 'controls-DecoratorMoney controls-text-primary');
             });
             it('fontColorStyle: "primary", underline: "none", style: "style"', function() {
-               assert.equal(ctrl.calculateMainClass('primary', 'none', 'style'), 'controls-DecoratorMoney\n             controls-DecoratorMoney_style-style controls-text-primary');
+               assert.equal(ctrl.calculateMainClass('primary', 'none', 'style'), 'controls-DecoratorMoney controls-DecoratorMoney_style-style controls-text-primary');
             });
             it('fontColorStyle: "primary", underline: "hovered", style: "style"', function() {
-               assert.equal(ctrl.calculateMainClass('primary', 'hovered', 'style'), 'controls-DecoratorMoney controls-DecoratorMoney__underline\n             controls-DecoratorMoney_style-style controls-text-primary');
+               assert.equal(ctrl.calculateMainClass('primary', 'hovered', 'style'), 'controls-DecoratorMoney controls-DecoratorMoney__underline controls-DecoratorMoney_style-style controls-text-primary');
+            });
+         });
+
+         describe('calculateCurrencyClass', function() {
+            it('currencySize: "m", fontColorStyle: "default", fontWeight: "bold"', function() {
+               assert.equal(ctrl.calculateCurrencyClass('m', 'default', 'bold'), 'controls-fontsize-m controls-text-default controls-fontweight-bold');
+            });
+         });
+
+         describe('calculateStrokedClass', function() {
+            it('stroked: true', function() {
+               assert.equal(ctrl.calculateStrokedClass(true), 'controls-DecoratorMoney__stroked');
+            });
+            it('stroked: false', function() {
+               assert.equal(ctrl.calculateStrokedClass(false), '');
+            });
+         });
+
+         describe('calculateIntegerClass', function() {
+            it('fontSize: "m", fontColorStyle: "default", fontWeight: "bold", "currency": "Euro", currencyPosition: "left", isDisplayFractionPathParam: true', function() {
+               assert.equal(ctrl.calculateIntegerClass('m', 'default', 'bold', 'Euro', 'left', true), 'controls-fontsize-m controls-text-default controls-fontweight-bold controls-margin_left-2xs');
+            });
+            it('fontSize: "m", fontColorStyle: "default", fontWeight: "bold", "currency": "Euro", currencyPosition: "right", isDisplayFractionPathParam: false', function() {
+               assert.equal(ctrl.calculateIntegerClass('m', 'default', 'bold', 'Euro', 'right', false), 'controls-fontsize-m controls-text-default controls-fontweight-bold controls-margin_right-2xs');
+            });
+            it('fontSize: "m", fontColorStyle: "default", fontWeight: "bold", "currency": "Euro", currencyPosition: "right", isDisplayFractionPathParam: true', function() {
+               assert.equal(ctrl.calculateIntegerClass('m', 'default', 'bold', 'Euro', 'right', true), 'controls-fontsize-m controls-text-default controls-fontweight-bold');
+            });
+         });
+
+         describe('calculateFractionClass', function() {
+            it('fraction: ".00", fontColorStyle: "default", fractionFontSize: "bold", "currency": "Euro", currencyPosition: "left"', function() {
+               assert.equal(ctrl.calculateFractionClass('.00', 'default', 'bold', 'Euro', 'left'), 'controls-DecoratorMoney__fraction__colorStyle-readonly controls-fontsize-bold');
+            });
+            it('fraction: ".00", fontColorStyle: "default", fractionFontSize: "bold", "currency": "Euro", currencyPosition: "right"', function() {
+               assert.equal(ctrl.calculateFractionClass('.00', 'default', 'bold', 'Euro', 'right'), 'controls-DecoratorMoney__fraction__colorStyle-readonly controls-fontsize-bold controls-margin_right-2xs');
+            });
+            it('fraction: ".10", fontColorStyle: "default", fractionFontSize: "bold", "currency": "Euro", currencyPosition: "left"', function() {
+               assert.equal(ctrl.calculateFractionClass('.10', 'default', 'bold', 'Euro', 'left'), 'controls-DecoratorMoney__fraction__colorStyle-default controls-fontsize-bold');
+            });
+            it('fraction: ".10", fontColorStyle: "default", fractionFontSize: "bold", "currency": "Euro", currencyPosition: "right"', function() {
+               assert.equal(ctrl.calculateFractionClass('.10', 'default', 'bold', 'Euro', 'right'), 'controls-DecoratorMoney__fraction__colorStyle-default controls-fontsize-bold controls-margin_right-2xs');
+            });
+         });
+
+         describe('calculateCurrency', function() {
+            it('"currency": "Ruble"', function() {
+               assert.equal(ctrl.calculateCurrency('Ruble'), '₽');
+            });
+            it('"currency": "Dollar"', function() {
+               assert.equal(ctrl.calculateCurrency('Dollar'), '$');
+            });
+            it('"currency": "Euro"', function() {
+               assert.equal(ctrl.calculateCurrency('Euro'), '€');
+            });
+         });
+
+         describe('calculateFontColorStyle', function() {
+            it('stroked: true, readOnly: true, fontColorStyle: "default"', function() {
+               const options = {
+                  readOnly: true,
+                  fontColorStyle: 'default'
+               };
+               assert.equal(ctrl.calculateFontColorStyle(true, options), 'readonly');
+            });
+            it('stroked: true, readOnly: false, fontColorStyle: "default"', function() {
+               const options = {
+                  readOnly: false,
+                  fontColorStyle: 'default'
+               };
+               assert.equal(ctrl.calculateFontColorStyle(true, options), 'readonly');
+            });
+            it('stroked: false, readOnly: true, fontColorStyle: "default"', function() {
+               const options = {
+                  readOnly: true,
+                  fontColorStyle: 'default'
+               };
+               assert.equal(ctrl.calculateFontColorStyle(false, options), 'readonly');
+            });
+            it('stroked: false, readOnly: false, fontColorStyle: "default"', function() {
+               const options = {
+                  readOnly: false,
+                  fontColorStyle: 'default'
+               };
+               assert.equal(ctrl.calculateFontColorStyle(false, options), 'default');
+            });
+         });
+
+         describe('calculateTooltip', function() {
+            it('number: 10, no tooltip', function() {
+               const formattedNumber = {
+                  number: 10,
+                  fraction: 10
+               };
+               const options = {};
+               assert.equal(ctrl.calculateTooltip(formattedNumber, options), '10');
+            });
+            it('number: 10, no tooltip', function() {
+               const formattedNumber = {
+                  number: 10,
+                  fraction: 10
+               };
+               const options = {
+                  tooltip: 'tooltip'
+               };
+               assert.equal(ctrl.calculateTooltip(formattedNumber, options), 'tooltip');
+            });
+         });
+
+         describe('calculateFractionFontSize', function() {
+            it('fontSize: "6xl"', function() {
+               assert.equal(ctrl.calculateFractionFontSize('6xl'), '3xl');
+            });
+            it('fontSize: "7xl"', function() {
+               assert.equal(ctrl.calculateFractionFontSize('7xl'), '3xl');
+            });
+            it('fontSize: "8xl"', function() {
+               assert.equal(ctrl.calculateFractionFontSize('8xl'), '3xl');
+            });
+            it('fontSize: "m"', function() {
+               assert.equal(ctrl.calculateFractionFontSize('m'), 'xs');
             });
          });
       });

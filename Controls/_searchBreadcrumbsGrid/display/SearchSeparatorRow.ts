@@ -2,7 +2,7 @@ import {GridRow, TColspanCallbackResult, IColumn, TColumns} from 'Controls/grid'
 import SearchGridCollection from './SearchGridCollection';
 
 export default class SearchSeparatorRow extends GridRow<string> {
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
+    readonly EditableItem: boolean = false;
     readonly '[Controls/_itemActions/interface/IItemActionsItem]': boolean = false;
 
     readonly Markable: boolean = false;

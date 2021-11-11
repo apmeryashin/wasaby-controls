@@ -7,7 +7,7 @@ import {ITooltipOptions} from 'Controls/_interface/ITooltip';
 import {INumberFormatOptions} from 'Controls/_interface/INumberFormat';
 import {IOnlyPositiveOptions} from 'Controls/_decorator/interfaces/IOnlyPositive';
 
-import {abbreviateNumber, correctNumberValue} from 'Controls/_decorator/resources/Formatter';
+import {abbreviateNumber, correctNumberValue, removeExtraSpaces} from 'Controls/_decorator/resources/Formatter';
 import splitIntoTriads from 'Controls/_decorator/inputUtils/splitIntoTriads';
 import numberToString from 'Controls/_decorator/inputUtils/toString';
 
@@ -40,13 +40,13 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
 // TODO Покрыть тестами функции https://online.sbis.ru/opendoc.html?guid=dd60b3fe-5990-4abf-9a7e-436763a85f69
 
 export function calculateMainClass(fontColorStyle: string, underline: string, style: string): string {
-    return 'controls-DecoratorMoney' + `${underline === 'hovered' ? ' controls-DecoratorMoney__underline' : ''}
-            ${style ? ' controls-DecoratorMoney_style-' + style : ''}` + `${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}`;
+    return removeExtraSpaces('controls-DecoratorMoney' + `${underline === 'hovered' ? ' controls-DecoratorMoney__underline' : ''}
+            ${style ? ' controls-DecoratorMoney_style-' + style : ''}` + `${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}`);
 }
 
 export function calculateCurrencyClass(currencySize: string, fontColorStyle: string, fontWeight: string): string {
-    return `${currencySize ? 'controls-fontsize-' + currencySize : ''} ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
-            ${fontWeight ? ' controls-fontweight-' + fontWeight : ''}`;
+    return removeExtraSpaces(`${currencySize ? 'controls-fontsize-' + currencySize : ''} ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
+            ${fontWeight ? ' controls-fontweight-' + fontWeight : ''}`);
 }
 
 export function calculateStrokedClass(stroked: boolean): string {
@@ -61,9 +61,9 @@ export function calculateIntegerClass(
     currencyPosition: string,
     isDisplayFractionPathParam: boolean
 ): string {
-    return `${fontSize ? 'controls-fontsize-' + fontSize : ''} ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
+    return removeExtraSpaces(`${fontSize ? 'controls-fontsize-' + fontSize : ''} ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
             ${fontWeight ? ' controls-fontweight-' + fontWeight : ''} ${currency && currencyPosition === 'left' ? ' controls-margin_left-2xs' : ''}
-            ${currency && currencyPosition === 'right' && !isDisplayFractionPathParam ? ' controls-margin_right-2xs' : ''}`;
+            ${currency && currencyPosition === 'right' && !isDisplayFractionPathParam ? ' controls-margin_right-2xs' : ''}`);
 }
 
 export function calculateFractionClass(
@@ -73,9 +73,9 @@ export function calculateFractionClass(
     currency: string,
     currencyPosition: string
 ): string {
-    return 'controls-DecoratorMoney__fraction__colorStyle-' + `${fraction === '.00' ? 'readonly' : fontColorStyle}
+    return removeExtraSpaces('controls-DecoratorMoney__fraction__colorStyle-' + `${fraction === '.00' ? 'readonly' : fontColorStyle}
             ${fractionFontSize ? ' controls-fontsize-' + fractionFontSize : ''}
-            ${currency && currencyPosition === 'right' ? ' controls-margin_right-2xs' : ''}`;
+            ${currency && currencyPosition === 'right' ? ' controls-margin_right-2xs' : ''}`);
 }
 
 export function calculateCurrency(currency: string): string {

@@ -75,11 +75,14 @@ define([
             const component = createComponent(StickyHeader, { mode: 'notsticky' });
             component._container = {
                closest: () => true,
-               className: ''
+               className: '',
+               querySelector: sinon.fake()
             };
             sinon.stub(component, '_createObserver');
             sinon.stub(component, '_updateComputedStyle');
             component._canScroll = true;
+            sinon.stub(component, '_getSubPixelArtifactFixClass');
+            sinon.stub(component, '_getTopGapFixClass');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             component._onScrollStateChanged({ canVerticalScroll: true }, {});
             assert.isUndefined(component._observer);
@@ -90,11 +93,14 @@ define([
             const component = createComponent(StickyHeader, options);
             component._container = {
                closest: () => true,
-               className: ''
+               className: '',
+               querySelector: sinon.fake()
             };
             sinon.stub(component, '_createObserver');
             sinon.stub(component, '_updateComputedStyle');
             component._canScroll = true;
+            sinon.stub(component, '_getSubPixelArtifactFixClass');
+            sinon.stub(component, '_getTopGapFixClass');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             component._onScrollStateChanged({ canVerticalScroll: true }, {});
             assert.isUndefined(component._observer);
@@ -110,8 +116,11 @@ define([
                closest: (selector) => {
                   return selector !== '.ws-hidden';
                },
-               className: ''
+               className: '',
+               querySelector: sinon.fake()
             };
+            sinon.stub(component, '_getSubPixelArtifactFixClass');
+            sinon.stub(component, '_getTopGapFixClass');
             sinon.stub(component, '_createObserver');
             sinon.stub(component, '_updateComputedStyle');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
@@ -149,8 +158,10 @@ define([
                },
                dataset: {
                   stickyBlockNode: 'true'
-               }
+               },
+               querySelector: sinon.fake()
             };
+            sinon.stub(component, '_init');
             component._componentDidMount();
             assert.equal(component._container.style.top, 0);
             sandbox.restore();
@@ -167,8 +178,10 @@ define([
                },
                dataset: {
                   stickyBlockNode: ''
-               }
+               },
+               querySelector: sinon.fake()
             };
+            sinon.stub(component, '_init');
             component._componentDidMount();
             assert.equal(component._container.style.top, 1);
             sandbox.restore();
@@ -204,11 +217,14 @@ define([
                closest: (selector) => {
                   return selector !== '.ws-hidden';
                },
-               className: ''
+               className: '',
+               querySelector: sinon.fake()
             };
             sinon.stub(component, '_createObserver');
             sinon.stub(component, '_updateComputedStyle');
             component._canScroll = true;
+            sinon.stub(component, '_getSubPixelArtifactFixClass');
+            sinon.stub(component, '_getTopGapFixClass');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), { preferSource: true }));
 
             assert.isUndefined(component._observer);
@@ -247,11 +263,14 @@ define([
                closest: (selector) => {
                   return selector !== '.ws-hidden';
                },
-               className: ''
+               className: '',
+               querySelector: sinon.fake()
             };
             sinon.stub(component, '_createObserver');
             sinon.stub(component, '_updateComputedStyle');
             component._canScroll = true;
+            sinon.stub(component, '_getSubPixelArtifactFixClass');
+            sinon.stub(component, '_getTopGapFixClass');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), { preferSource: true }));
 
             assert.isUndefined(component._observer);
@@ -267,11 +286,14 @@ define([
             const component = createComponent(StickyHeader, {});
             var sandbox = sinon.createSandbox();
             component._container = {
-               closest: sandbox.stub().returns(true)
+               closest: sandbox.stub().returns(true),
+               querySelector: sinon.fake()
             };
             sandbox.stub(component, '_createObserver');
             sandbox.stub(StickyHeaderUtils, 'isHidden').returns(true);
             sandbox.stub(component, '_updateComputedStyle');
+            sinon.stub(component, '_getSubPixelArtifactFixClass');
+            sinon.stub(component, '_getTopGapFixClass');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             sandbox.stub(component._model, 'update');
 

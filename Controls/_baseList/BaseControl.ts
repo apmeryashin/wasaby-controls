@@ -527,7 +527,7 @@ const _private = {
     },
 
     enterHandler(self, event) {
-        if (event.nativeEvent.ctrlKey || !self.getViewModel() || !self.getViewModel().getCount()) {
+        if (event.nativeEvent.ctrlKey || self.isEditing() || !self.getViewModel() || !self.getViewModel().getCount()) {
             return;
         }
         if (_private.hasMarkerController(self)) {
@@ -1698,13 +1698,14 @@ const _private = {
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
         // But we should not update any ItemActions when marker has changed
-        if (
-            (changesType === 'collectionChanged' && _private.shouldUpdateItemActions(newItems)) ||
-            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
-            newModelChanged
-        ) {
+        if (changesType === 'collectionChanged' ||
+            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) || newModelChanged) {
             self._itemsChanged = true;
-            _private.updateInitializedItemActions(self, self._options);
+
+            if (!!self._itemActionsController && self._itemActionsController
+                .shouldUpdateOnCollectionChange(action, newItems, removedItems)) {
+                _private.updateInitializedItemActions(self, self._options);
+            }
         }
 
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
@@ -1720,18 +1721,6 @@ const _private = {
         }
 
         self._removedItems = [];
-    },
-
-    /**
-     * Возвращает boolean, надо ли обновлять проинициализированные ранее ItemActions, основываясь на newItems.properties.
-     * Возвращается true, если newItems или newItems.properties не заданы
-     * Новая модель в событии collectionChanged для newItems задаёт properties,
-     * где указано, что именно обновляется.
-     * @param newItems
-     */
-    shouldUpdateItemActions(newItems): boolean {
-        const propertyVariants = ['selected', 'marked', 'swiped', 'hovered', 'active', 'dragged', 'editingContents'];
-        return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     },
 
     initListViewModelHandler(self, model) {
@@ -2051,51 +2040,6 @@ const _private = {
     notifyNavigationParamsChanged(actualParams): void {
         if (this._isMounted) {
             this._notify('navigationParamsChanged', [actualParams]);
-        }
-    },
-
-    dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
-        if (items.getCount()) {
-            this._loadedItems = items;
-        }
-
-        if (!direction) {
-            this._loadedBySourceController = true;
-            if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
-                this._children.listView.reset({
-                    keepScroll: this._keepScrollAfterReload
-                });
-            }
-            this._keepHorizontalScroll = false;
-            _private.setReloadingState(this, false);
-            const isEndEditProcessing = this._editInPlaceController &&
-                this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
-            _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
-            _private.executeAfterReloadCallbacks(this, items, this._options);
-            if (this._indicatorsController.shouldHideGlobalIndicator()) {
-                this._indicatorsController.hideGlobalIndicator();
-            }
-            // Принудительно прекращаем заморозку ховера
-            if (_private.hasHoverFreezeController(this)) {
-                this._hoverFreezeController.unfreezeHover();
-            }
-            return this.isEditing() && !isEndEditProcessing ?
-                this._cancelEdit(true) :
-                void 0;
-        }
-
-        _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
-
-        _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
-
-        if (this._indicatorsController.shouldHideGlobalIndicator()) {
-            this._indicatorsController.hideGlobalIndicator();
-        }
-
-        if (this._isMounted && this._scrollController) {
-            _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
-            this.startBatchAdding(direction);
-            return this._scrollController.getScrollStopPromise();
         }
     },
 
@@ -2681,7 +2625,8 @@ const _private = {
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
             contextMenuConfig: options.contextMenuConfig,
             itemActionsVisibility: options.itemActionsVisibility,
-            feature1183020440: options.feature1183020440
+            feature1183020440: options.feature1183020440,
+            task1183329228: options.task1183329228
         });
         if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
@@ -3299,7 +3244,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     // callback'ки передаваемые в sourceController
     _notifyNavigationParamsChanged = null;
-    _dataLoadCallback = null;
 
     _useServerSideColumnScroll = false;
     _isColumnScrollVisible = false;
@@ -3341,7 +3285,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      */
     protected _beforeMount(newOptions: TOptions, context?): void | Promise<unknown> {
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
-        this._dataLoadCallback = _private.dataLoadCallback.bind(this);
+        this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._uniqueId = Guid.create();
 
         if (newOptions.sourceController) {
@@ -3366,6 +3310,56 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.addShowActionsClass(this);
 
         return this._doBeforeMount(newOptions);
+    }
+
+    private _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+        this._beforeDataLoadCallback(items, direction);
+
+        if (items.getCount()) {
+            this._loadedItems = items;
+        }
+
+        if (!direction) {
+            this._loadedBySourceController = true;
+            if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
+                this._children.listView.reset({
+                    keepScroll: this._keepScrollAfterReload
+                });
+            }
+            this._keepHorizontalScroll = false;
+            _private.setReloadingState(this, false);
+            const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
+            _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
+            _private.executeAfterReloadCallbacks(this, items, this._options);
+            if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                this._indicatorsController.hideGlobalIndicator();
+            }
+            // Принудительно прекращаем заморозку ховера
+            if (_private.hasHoverFreezeController(this)) {
+                this._hoverFreezeController.unfreezeHover();
+            }
+            return this.isEditing() && !isEndEditProcessing ?
+                this._cancelEdit(true) :
+                void 0;
+        }
+
+        _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
+
+        _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
+
+        if (this._indicatorsController.shouldHideGlobalIndicator()) {
+            this._indicatorsController.hideGlobalIndicator();
+        }
+
+        if (this._isMounted && this._scrollController) {
+            _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
+            this.startBatchAdding(direction);
+            return this._scrollController.getScrollStopPromise();
+        }
+    }
+
+    protected _beforeDataLoadCallback(items: RecordSet, direction: IDirection): void {
+        // для переопределения
     }
 
     _doBeforeMount(newOptions): Promise<unknown> | void {
@@ -3447,17 +3441,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (action === IObservable.ACTION_REMOVE) {
             this._afterCollectionRemove(removedItems, removedItemsIndex);
         }
-        if (action === IObservable.ACTION_ADD) {
-            this._afterCollectionAdd(newItems, newItemsIndex);
-        }
     }
     protected _afterCollectionReset(): void {
         // для переопределения
     }
     protected _afterCollectionRemove(removedItems: Array<CollectionItem<Model>>, removedItemsIndex: number): void {
-        // для переопределения
-    }
-    protected _afterCollectionAdd(addedItems: CollectionItem[], addedItemsIndex: number): void {
         // для переопределения
     }
     _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
@@ -5182,7 +5170,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (canEditByClick) {
             e.stopPropagation();
             this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
-            this._beginEdit({ item }, { columnIndex }).then((result) => {
+            const hasCheckboxes =
+                this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
+
+            this._beginEdit({ item }, { columnIndex: columnIndex + hasCheckboxes }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
@@ -7037,17 +7028,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                     // Создаем перетаскиваемый элемент, т.к. в другом списке его нет.
                     const draggableItem = this._listViewModel.createItem({contents: dragEnterResult});
-                    // если мы утащим в другой список, то в нем нужно создать контроллер
-                    this._dndListController =
-                        _private.createDndListController(this._listViewModel, draggableItem, this._options);
-                    this._dndListController.startDrag(dragObject.entity);
-
+                    // Считаем изначальную позицию записи. Нужно считать обязательно до ::startDrag,
+                    // т.к. после перетаскиваемая запись уже будет в коллекции
                     let startPosition;
                     if (this._listViewModel.getCount()) {
-                        const lastItem = this._listViewModel.getLast();
                         startPosition = {
-                            index: this._listViewModel.getIndex(lastItem),
-                            dispItem: lastItem,
+                            index: this._listViewModel.getCount(),
+                            dispItem: this._listViewModel.getLast(),
                             position: 'after'
                         };
                     } else {
@@ -7057,6 +7044,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             position: 'before'
                         };
                     }
+
+                    // если мы утащим в другой список, то в нем нужно создать контроллер
+                    this._dndListController =
+                        _private.createDndListController(this._listViewModel, draggableItem, this._options);
+                    this._dndListController.startDrag(dragObject.entity);
 
                     // задаем изначальную позицию в другом списке
                     this._dndListController.setDragPosition(startPosition);

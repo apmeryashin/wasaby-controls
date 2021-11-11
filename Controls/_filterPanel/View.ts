@@ -25,7 +25,6 @@ import 'css!Controls/filterPanel';
  * @property {String} group Имя группы.
  * @property {*} value Текущее значение фильтра.
  * @property {*} resetValue Значение фильтра по умолчанию.
- * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста при закрытии группы.
  * @property {Controls/filter:EditorOptions.typedef} editorOptions Опции для редактора.
  * @property {String} editorTemplateName Имя редактора.
  * @property {boolean} expanderVisible Видимость экспандера редактора.
@@ -121,13 +120,10 @@ export default class View extends Control<IViewPanelOptions> {
         const itemContents = dispItem.getContents() as string;
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
         const isResultClick = clickEvent?.target.closest('.controls-FilterViewPanel__group-result_wrapper');
-        this._viewModel.handleGroupClick(itemContents, !isResetClick);
+        const isExpanderClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupExpander');
+        this._viewModel.handleGroupClick(itemContents, isExpanderClick);
         if (isResetClick) {
             this._resetFilterItem(dispItem);
-        }
-        // Будет удалено после: https://online.sbis.ru/opendoc.html?guid=53839728-e9dc-4af0-88a8-e847b5b4c5f8
-        if (isResultClick) {
-            this._notify('groupClick', [itemContents]);
         }
         this._notify('collapsedGroupsChanged', [this._viewModel.getCollapsedGroups()]);
     }

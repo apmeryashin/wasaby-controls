@@ -8,7 +8,10 @@
       <Controls._breadcrumbs.PathButton.Body
          path="{{path}}"
          source="{{source}}"
+         filter="{{filter}}"
          caption="{{caption}}"
+         sorting="{{sorting}}"
+         navigation="{{navigation}}"
          keyProperty="{{keyProperty}}"
          nodeProperty="{{nodeProperty}}"
          parentProperty="{{parentProperty}}"

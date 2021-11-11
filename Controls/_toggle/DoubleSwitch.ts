@@ -141,8 +141,8 @@ Object.defineProperty(DoubleSwitch, 'defaultProps', {
 /**
  * @name Controls/_toggle/DoubleSwitch#size
  * @cfg {string} Определяет размер переключателя.
- * @variable s
- * @variable s
+ * @variant s
+ * @variant l
  * @default l
  * @demo Controls-demo/toggle/DoubleSwitch/Size/Index
  */

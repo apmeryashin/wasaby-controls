@@ -13,7 +13,7 @@ import {
     ISelectorDialogOptions,
     TFilter,
     TKey,
-    IHierarchyOptions
+    IHierarchyOptions, INavigationSourceConfig
 } from 'Controls/interface';
 import {IList} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
@@ -29,12 +29,13 @@ import {
 import {create as DiCreate} from 'Types/di';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
 
 export interface IListEditorOptions extends
     IControlOptions,
     IFilterOptions,
     ISourceOptions,
-    INavigationOptions<unknown>,
+    INavigationOptions<INavigationSourceConfig>,
     IItemActionsOptions,
     IList,
     IColumn,
@@ -50,6 +51,7 @@ export interface IListEditorOptions extends
     selectedAllKey: string;
     selectedAllText?: string;
     resetValue?: number[]|string[];
+    sourceController?: SourceController;
 }
 
 /**
@@ -148,6 +150,10 @@ class ListEditor extends Control<IListEditorOptions> {
         this._navigation = this._getNavigation(options);
         this._itemActions = this._getItemActions(options.historyId);
 
+        if (options.sourceController && this._filter) {
+            options.sourceController.setFilter(this._filter);
+        }
+
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
         this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
         this._onCollectionChange = this._onCollectionChange.bind(this);
@@ -157,7 +163,7 @@ class ListEditor extends Control<IListEditorOptions> {
         // В 5000 поправится при переходе на новый стандарт по задаче:
         // https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
         if (this._selectedKeys.length && !isEqual(this._options.resetValue, this._selectedKeys)) {
-            this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
+            this._notify('propertyValueChanged', [{value: this._getValue(this._selectedKeys)}], {bubbling: true});
         }
     }
 
@@ -178,6 +184,14 @@ class ListEditor extends Control<IListEditorOptions> {
         }
         if (valueChanged) {
             this._setMarkedKey(this._selectedKeys, options);
+        }
+
+        if (options.sourceController && filterChanged) {
+            options.sourceController.updateOptions({
+                ...options,
+                filter: this._filter
+            });
+            options.sourceController.reload();
         }
     }
 
@@ -242,7 +256,6 @@ class ListEditor extends Control<IListEditorOptions> {
             selectedKeys.push(item.get(this._options.keyProperty));
         });
         if (selectedKeys.length) {
-            this._items.assign(result);
             this._setFilter(selectedKeys, this._options);
         }
         this._navigation = this._getNavigation(this._options, selectedKeys);
@@ -278,15 +291,7 @@ class ListEditor extends Control<IListEditorOptions> {
         }
         this._setMarkedKey(this._selectedKeys, this._options);
         this._setColumns(this._options);
-        this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
-    }
-
-    protected _getExtendedValue(): object {
-        const value = this._getValue(this._selectedKeys);
-        return {
-            value,
-            textValue: this._getTextValue(this._selectedKeys)
-        };
+        this._notify('propertyValueChanged', [{value: this._getValue(this._selectedKeys)}], {bubbling: true});
     }
 
     private _getValue(value: string[] | number[]): string[] | number[] {
@@ -450,18 +455,6 @@ class ListEditor extends Control<IListEditorOptions> {
             });
         }
         return Promise.resolve(this._historyService);
-    }
-
-    private _getTextValue(selectedKeys: number[]|string[]): string {
-        const textArray = [];
-
-        selectedKeys.forEach((item) => {
-            const record = this._items.getRecordById(item);
-            if (record) {
-                textArray.push(record.get(this._options.displayProperty));
-            }
-        });
-        return textArray.join(', ');
     }
 
     private _getPopupOpener(mode?: string): StackOpener|DialogOpener {
