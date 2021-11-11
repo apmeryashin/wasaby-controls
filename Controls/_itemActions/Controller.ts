@@ -354,7 +354,7 @@ export class Controller {
             return;
         }
         const menuActions = this._getMenuActions(item, parentAction);
-        if ((!menuActions || menuActions.length === 0) && !this._hasMenuHeaderOrFooter()) {
+        if ((!menuActions || menuActions.length === 0) && (!this._hasMenuHeaderOrFooter() || this._task1183329228)) {
             return;
         }
 
