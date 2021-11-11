@@ -150,7 +150,7 @@ export default class View extends Control<IViewPanelOptions> {
     }
 
     private _notifyChanges(): void {
-        const newSource = this._getUpdatedSource([...this._options.source], this._viewModel.getSource());
+        const newSource = this._getUpdatedSource(coreClone(this._options.source), this._viewModel.getSource());
         this._notify('sendResult', [{
             items: newSource,
             filter: this._viewModel.getEditingObject()
