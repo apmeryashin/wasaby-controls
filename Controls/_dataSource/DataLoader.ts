@@ -333,7 +333,7 @@ export default class DataLoader {
         }, []);
         const circularDependencies = dependencies.reduce((result, depKey) => {
             const depConfig = loadersMap[depKey];
-            if (depConfig.dependencies?.includes(id)) {
+            if (depConfig?.dependencies?.includes(id)) {
                 result.push(depKey);
             }
             return result;
