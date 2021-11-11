@@ -175,7 +175,7 @@ export default class TreeGridCollection<
     }
 
     setHasMoreStorage(storage: Record<string, boolean>, reBuildNodeFooters: boolean = false): void {
-        super.setHasMoreStorage(storage, reBuildNodeFooters || !!this._$nodeFooterTemplate || this.hasNodeFooterColumns());
+        super.setHasMoreStorage(storage, reBuildNodeFooters && (!!this._$nodeFooterTemplate || this.hasNodeFooterColumns()));
     }
 
     hasNodeFooterColumns(): boolean {
