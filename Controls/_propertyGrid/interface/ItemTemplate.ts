@@ -28,6 +28,7 @@ import {TemplateFunction} from "UI/Base";
 
 export default interface IItemTemplateOptions {
     /**
+     * @name Controls/propertyGrid:ItemTemplate#highlightOnHover
      * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
      * @remark
      * В значении false элементы редакторf свойств не будут подсвечиваться при наведении курсора мыши.
@@ -37,6 +38,7 @@ export default interface IItemTemplateOptions {
     highlightOnHover: boolean;
 
     /**
+     * @name Controls/propertyGrid:ItemTemplate#afterEditorTemplate
      * @cfg {String | UI/Base:TemplateFunction} Шаблон, который отобразится справа от редактора.
      * @example
      * <pre class="brush: html">
