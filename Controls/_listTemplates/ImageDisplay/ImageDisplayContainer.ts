@@ -17,6 +17,7 @@ export interface IImageDisplayContainerOptions extends IControlOptions {
     imageProperty: string;
     imagePosition: string;
     imageViewMode: string;
+    nodeImageViewMode: string;
     itemTemplate: TemplateFunction;
     tileItemTemplate: TemplateFunction;
     sourceController: SourceController;
@@ -59,10 +60,30 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     protected _template: TemplateFunction = Template;
 
     private _columns: TColumns;
+
+    /**
+     * @name Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer#itemTemplate
+     * @cfg {UI/Base:TemplateFunction} Шаблон записи, для которого будет рассчитан imageViewMode и imagePosition.
+     */
     private _itemTemplate: TemplateFunction;
     private _tileItemTemplate: TemplateFunction;
+
+    /**
+     * @name Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer#imagePosition
+     * @cfg {String} Текущая позиция изображения.
+     */
     private _imagePosition: string;
+
+    /**
+     * @name Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer#imageViewMode
+     * @cfg {String} Режим отображения изображения.
+     */
     private _imageViewMode: string;
+
+    /**
+     * @name Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer#nodeImageViewMode
+     * @cfg {String} Режим отображения изображения для узла, если контейнер оборачивает дерево.
+     */
     private _nodeImageViewMode: string;
     private _hasItemWithImage: boolean = false;
     private _items: RecordSet;
@@ -77,6 +98,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     protected _beforeMount(options?: IImageDisplayContainerOptions, contexts?: object, receivedState?: void): Promise<void> | void {
         this._imagePosition = options.imagePosition;
         this._imageViewMode = options.imageViewMode;
+        this._nodeImageViewMode = options.nodeImageViewMode;
         this._columns = options.columns;
         this._itemTemplate = options.itemTemplate;
         this._tileItemTemplate = options.tileItemTemplate;
@@ -177,11 +199,8 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         if (columns) {
             newColumns = object.clonePlain(columns);
             newColumns.forEach((column) => {
-                const templateOptions: {
-                    imageViewMode?: string,
-                    hasItemWithImage?: boolean } = column.templateOptions || {};
-                templateOptions.hasItemWithImage = this._hasItemWithImage;
-                templateOptions.imageViewMode = this._hasItemWithImage ? templateOptions.imageViewMode : null;
+                const templateOptions: { imageViewMode?: string } = column.templateOptions || {};
+                templateOptions.imageViewMode = this._hasItemWithImage ? templateOptions.imageViewMode : 'none';
                 column.templateOptions = templateOptions;
             });
         }
@@ -202,3 +221,8 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         return has;
     }
 }
+
+/**
+ * @name Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer#imageProperty
+ * @cfg {String} Название поле записи в котором лежит ссылка на картинку.
+ */
