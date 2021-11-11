@@ -586,7 +586,7 @@
   "--grouping_separator_color_menu": "var(--separator_color)",
   "--grouping_text-color_menu": "var(--label_text-color)",
   "--grouping_font-size_menu": "var(--font-size_xs)",
-  "--rightTemplate_separator_thickness_menu": "1px",
+  "--rightTemplate_separator_thickness_menu": "2px",
   "--search_width_s_menuPopup": "184px",
   "--search_width_l_menuPopup": "300px",
 
