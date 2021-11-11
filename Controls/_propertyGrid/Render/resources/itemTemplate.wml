@@ -50,7 +50,7 @@
                 {{highlightOnHover ? 'controls-PropertyGrid__row_highlightOnHover'}}
                 {{!!captionPosition  ? ('controls-PropertyGrid__flex-row controls-PropertyGrid__row_captionPosition-' + captionPosition)}}
                 {{collectionItem.getItemPaddingClasses()}}"
-         attr:key="propertyGrid-editor-{{item.getUid()}}">
+         attr:key="propertyGrid-editor-{{collectionItem.getUid()}}">
         <ws:partial template="itemTemplate" />
         <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
             <ws:if data="{{ !collectionItem.isSwiped() }}">
