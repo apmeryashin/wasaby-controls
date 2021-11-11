@@ -185,7 +185,7 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
         if (answer === true) {
             this.update().then(
                 (res) => {
-                    if (!res.validationErrors) {
+                    if (!res?.validationErrors) {
                         // если нет ошибок в валидации, просто завершаем пендинг с результатом
                         if (!def.isReady()) {
                             this._pendingPromise = null;
