@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/LoadingIndicator/Up/Up';
 import {Memory} from 'Types/source';
 import {generateData, slowDownSource} from '../../DemoHelpers/DataCatalog';
+import {RecordSet} from 'Types/collection';
 
 const TIMEOUT3500 = 3500;
 interface IItem {
@@ -18,6 +19,7 @@ export default class extends Control {
             item.title = `Запись списка с id = ${item.key}.`;
         }
     });
+    private _items: RecordSet;
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -25,6 +27,14 @@ export default class extends Control {
             data: this._dataArray
         });
         slowDownSource(this._viewSource, TIMEOUT3500);
+    }
+
+    protected _saveItems = (items: RecordSet) => {
+        this._items = items;
+    }
+
+    protected _removeTopItem = () => {
+        this._items.removeAt(0);
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
