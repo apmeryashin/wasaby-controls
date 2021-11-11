@@ -707,7 +707,7 @@ export default class ScrollController {
                 return itemOffsetTop + this._edgeItemParams.borderDistance - viewportHeight - topCompensation;
             }
         }
-        return 0;
+        return this._lastScrollTop;
     }
 
     beforeRestoreScrollPosition(): void {
