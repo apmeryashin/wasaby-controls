@@ -524,7 +524,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
 
     // _beforeUnmount
     _columnScrollOnViewBeforeUnmount(): void {
-        const a = 12;
+        const a = 13;
         if (this._$columnScrollController) {
             destroyColumnScroll(this);
         }
