@@ -13,6 +13,20 @@
    </div>
    <div class="controlsDemo__cell">
       <div class="controls-text-label">Ширина поля ввода 5 символов</div>
-      <Controls.input:Text maxLength="{{ 5 }}" bind:value="_value3" attr:style="width: 5ch"/>
+      <div class="controlsDemo__flex" style="align-items: center; height: 50px; background: #f0f0f0" >
+         <div class="controlsDemo__ml1">
+            <div class="controls-text-label">Без отступов</div>
+            <Controls.input:Text maxLength="{{ 5 }}"
+                                 bind:value="_value3"
+                                 attr:style="width: 5ch"/>
+         </div>
+         <div class="controlsDemo__ml4">
+            <div class="controls-text-label">С отступами</div>
+            <Controls.input:Text maxLength="{{ 5 }}"
+                                 contrastBackground="{{ true }}"
+                                 bind:value="_value4"
+                                 attr:style="width: calc(5ch + 2 * var(--padding-horizontal_inputText))"/>
+         </div>
+      </div>
    </div>
 </div>
