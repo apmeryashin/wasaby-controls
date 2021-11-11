@@ -113,10 +113,11 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
 
     private _getGroupItemsBySource(source: IFilterItem[]): Record<string, IFilterGroup> {
         const groupsItems = {};
-        source.forEach((item) => {
+        source.forEach((item, itemIndex) => {
             groupsItems[item.name] = {
                 caption: item.editorCaption,
                 expanderVisible: item.expanderVisible,
+                groupVisible: item.editorCaption || itemIndex,
                 textValue: item.textValue,
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };
