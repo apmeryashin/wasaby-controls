@@ -4043,7 +4043,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (this._indicatorsController.shouldDisplayTopIndicator()) {
                         this._indicatorsController.displayTopIndicator(true);
                     } else {
-                        this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                        this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
                     }
                 }
 
