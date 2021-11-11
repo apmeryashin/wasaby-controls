@@ -1,10 +1,6 @@
-import {assert} from 'chai';
-import {spy} from 'sinon';
-import { initTest } from './InitTest';
-
 //
 describe('Controls/_baseList/Controllers/ScrollController/HandleCollectionChanges', () => {
-    // https://docs.google.com/spreadsheets/d/1L7IHAIKBblk9nStYnT7q6a1LjyU3chqoDwTMA-wgpc0/edit#gid=0
+/*    // https://docs.google.com/spreadsheets/d/1L7IHAIKBblk9nStYnT7q6a1LjyU3chqoDwTMA-wgpc0/edit#gid=0
     describe('addItems', () => {
         it('1. totalCount < pageSize => totalCount === pageSize', () => {
             const indexesChangedCallback = spy((result) => null);
@@ -607,5 +603,5 @@ describe('Controls/_baseList/Controllers/ScrollController/HandleCollectionChange
             );
             // TODO assert.isFalse(activeElementChangedCallback.called);
         });
-    });
+    });*/
 });
