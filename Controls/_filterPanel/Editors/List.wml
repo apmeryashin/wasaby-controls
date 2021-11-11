@@ -2,38 +2,40 @@
     <Controls.Container.Async templateName="{{_options.parentProperty ? 'Controls/treeGrid:View' : 'Controls/grid:View'}}">
         <ws:partial template="{{content.resolvedTemplate}}"
                     name="gridView"
-                    source="{{_options.source}}"
-                    columns="{{_columns}}"
                     filter="{{_filter}}"
                     keyProperty="{{_options.keyProperty}}"
-                    selectedKeys="{{_selectedKeys}}"
+                    source="{{_options.source}}"
+                    sourceController="{{_options.sourceController}}"
+                    parentProperty="{{_options.parentProperty}}"
+                    nodeProperty="{{_options.nodeProperty}}"
+                    expandedItems="{{_options.expandedItems}}"
+                    root="{{_options.root}}"
+                    dataLoadCallback="{{_options.dataLoadCallback}}"
+                    sorting="{{_options.sorting}}"
                     navigation="{{_navigation}}"
+                    columns="{{_columns}}"
                     backgroundStyle="transparent"
                     footerTemplate="{{footerTemplate}}"
                     multiSelectVisibility="onhover"
                     markerVisibility="{{_options.multiSelect ? 'hidden' : 'onactivated'}}"
                     itemsReadyCallback="{{_itemsReadyCallback}}"
                     itemActions="{{_itemActions}}"
-                    items="{{_options.items}}"
                     itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-                    parentProperty="{{_options.parentProperty}}"
-                    nodeProperty="{{_options.nodeProperty}}"
-                    expandedItems="{{_options.expandedItems}}"
-                    root="{{_options.root}}"
                     style="{{_options.style}}"
                     attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
                     on:itemClick="_handleItemClick()"
-                    markedKey="{{_markedKey}}">
+                    markedKey="{{_markedKey}}"
+                    selectedKeys="{{_selectedKeys}}">
             <ws:itemTemplate>
                 <ws:partial template="{{_options.parentProperty ? 'Controls/treeGrid:ItemTemplate' : 'Controls/grid:ItemTemplate'}}"
                             marker="{{_options.markerStyle === 'primary' ||
-                                itemTemplate.item.key === _options.emptyKey ||
-                                itemTemplate.item.key === _options.selectedAllKey}}"/>
+                                        itemTemplate.item.key === _options.emptyKey ||
+                                        itemTemplate.item.key === _options.selectedAllKey}}"/>
             </ws:itemTemplate>
             <ws:multiSelectTemplate>
                 <ws:if data="{{_options.markerStyle !== 'primary' &&
-                        !(multiSelectTemplate.item.key === _options.emptyKey ||
-                        multiSelectTemplate.item.key === _options.selectedAllKey)}}">
+                                !(multiSelectTemplate.item.key === _options.emptyKey ||
+                                multiSelectTemplate.item.key === _options.selectedAllKey)}}">
                     <ws:partial template="{{_options.multiSelect ? 'Controls/list:MultiSelectTemplate' : 'Controls/list:MultiSelectCircleTemplate'}}"
                                 style="{{_options.style}}"
                                 attr:class="controls-ListEditor__multiSelect"
