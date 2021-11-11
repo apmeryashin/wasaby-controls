@@ -124,7 +124,7 @@ class Base extends Control<IMasterDetail, string> {
 
     /**
      * @name Controls/_masterDetail/Base#detailContrastBackground
-     * @cfg {Boolean} Определяет контрастность фона контента detail по отношению к контенту master.
+     * @cfg {Boolean} Определяет контрастность фона для области detail по отношению к окружению.
      * @variant true Контрастный фон.
      * @variant false Фон, гармонично сочетающийся с окружением.
      * @default true
@@ -132,7 +132,7 @@ class Base extends Control<IMasterDetail, string> {
 
     /**
      * @name Controls/_masterDetail/Base#masterContrastBackground
-     * @cfg {Boolean} Определяет контрастность фона master по отношению к контенту master.
+     * @cfg {Boolean} Определяет контрастность фона для области master по отношению к окружению.
      * @variant true Контрастный фон.
      * @variant false Фон, гармонично сочетающийся с окружением.
      * @default true
