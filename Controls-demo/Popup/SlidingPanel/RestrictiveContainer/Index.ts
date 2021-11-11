@@ -33,7 +33,7 @@ class RestrictiveContainer extends Control<IControlOptions> {
             popupConfig.slidingPanelOptions = {
                 ...popupConfig.slidingPanelOptions,
                 restrictiveContainer: '.ControlsDemo-Popup-slidingPanel_RestrictiveContainer-container'
-            }
+            };
         }
         this._opener.open(popupConfig);
     }

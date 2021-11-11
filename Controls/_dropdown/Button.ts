@@ -329,7 +329,7 @@ export default class Button extends BaseDropdown {
                 templateOptions: {
                     closedSubMenuKey: key
                 }
-            })
+            });
         } else {
             this._controller.closeMenu();
         }

@@ -50,7 +50,8 @@ export default class FocusWithEnter extends Control<IControlOptions> {
     */
    _isFocusable(target: HTMLElement): boolean {
       // TODO: Пропускаю кнопки при обходе по ENTER:
-      // https://online.sbis.ru/open_dialog.html?guid=5e1a9e18-3941-4725-8963-9a8fff7eec9f&user=902970aa-2a7b-4677-bcb9-b2aaa044bb0b
+      // tslint:disable-next-line
+      // https://online.sbis.ru/open_dialog.html?guid=5e1a9e18-3941-4725-8963-9a8fff7eec9f&user=321880e7-f6f6-463a-849b-8649be2b6dfc
       return target && !target.closest('.controls-BaseButton');
    }
 }

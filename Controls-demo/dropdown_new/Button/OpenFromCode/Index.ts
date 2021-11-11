@@ -9,7 +9,7 @@ export default class extends Control {
 
     protected _children: {
         button: Button
-    }
+    };
 
     protected _beforeMount(): void {
         this._source = new Memory({

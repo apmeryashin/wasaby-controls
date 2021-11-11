@@ -6,9 +6,7 @@ export interface IInputConfig {
     value: string;
 }
 
-
-      var
-         _private = {
+const _private = {
 
     /**
      * Получить данные путем приведения исходного значения в виде разбиения к маске.
