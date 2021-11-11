@@ -1,6 +1,0 @@
-<ws:partial template="{{_options.content}}"
-            scope="{{_options}}"
-            hasItemWithImage="{{_hasItemWithImage}}"
-            itemsReadyCallback="{{_itemsReadyCallback}}"
-            dataLoadCallback="{{_dataLoadCallback}}"
-            columns="{{_columns}}"/>

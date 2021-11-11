@@ -382,6 +382,45 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._columns = this._getPatchedColumns(this._columns);
     }
 
+    protected _getImageViewMode(viewMode: DetailViewMode): string {
+        switch (viewMode) {
+            case DetailViewMode.search:
+            case DetailViewMode.table:
+                return this._tableCfg.imageViewMode;
+            case DetailViewMode.tile:
+                return this._tileCfg.imageViewMode;
+            case DetailViewMode.list:
+            default:
+                return this._listCfg.imageViewMode;
+        }
+    }
+
+    protected _getNodeImageViewMode(viewMode: DetailViewMode): string {
+        switch (viewMode) {
+            case DetailViewMode.search:
+            case DetailViewMode.table:
+                return this._tableCfg.nodeImageViewMode;
+            case DetailViewMode.tile:
+                return this._tileCfg.nodeImageViewMode;
+            case DetailViewMode.list:
+            default:
+                return null;
+        }
+    }
+
+    protected _getImagePosition(viewMode: DetailViewMode): string {
+        switch (viewMode) {
+            case DetailViewMode.search:
+            case DetailViewMode.table:
+                return null;
+            case DetailViewMode.tile:
+                return this._tileCfg.imagePosition;
+            case DetailViewMode.list:
+            default:
+                return this._listCfg.imagePosition;
+        }
+    }
+
     protected _getPatchedColumns(columns: TColumns): TColumns {
         let newColumns = columns;
         if (columns) {
@@ -389,6 +428,7 @@ export default class View extends Control<IOptions, IReceivedState> {
             newColumns.forEach((column) => {
                 const templateOptions = column.templateOptions || {};
                 templateOptions.tableCfg = this._tableCfg;
+                templateOptions.imageViewMode = this._tableCfg.imageViewMode;
                 column.templateOptions = templateOptions;
             });
         }

@@ -11,6 +11,10 @@ export default class TableController extends BaseController<ITableConfig, TreeIt
         return this._$listConfiguration.table;
     }
 
+    get nodeImageViewMode(): string {
+        return this.imageViewMode;
+    }
+
     get imageViewMode(): string {
         return this._viewModeConfig.leaf.imageViewMode;
     }

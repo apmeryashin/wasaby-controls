@@ -10,7 +10,7 @@ import * as Template from 'wml!Controls/_listTemplates/ImageDisplay/ImageDisplay
 import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 import {Model} from 'Types/entity';
-import {CollectionItem} from 'Controls/display';
+import {TreeItem} from 'Controls/display';
 
 export interface IImageDisplayContainerOptions extends IControlOptions {
     itemsReadyCallback: (items: RecordSet) => void;
@@ -18,6 +18,7 @@ export interface IImageDisplayContainerOptions extends IControlOptions {
     imagePosition: string;
     imageViewMode: string;
     itemTemplate: TemplateFunction;
+    tileItemTemplate: TemplateFunction;
     sourceController: SourceController;
 }
 
@@ -57,10 +58,13 @@ export interface IImageDisplayContainerOptions extends IControlOptions {
 export default class ImageDisplayContainer extends Control<IImageDisplayContainerOptions> {
     protected _template: TemplateFunction = Template;
 
+    private _columns: TColumns;
     private _itemTemplate: TemplateFunction;
+    private _tileItemTemplate: TemplateFunction;
     private _imagePosition: string;
     private _imageViewMode: string;
-    protected _hasItemWithImage: boolean = false;
+    private _nodeImageViewMode: string;
+    private _hasItemWithImage: boolean = false;
     private _items: RecordSet;
 
     constructor(options: IImageDisplayContainerOptions, context?: object) {
@@ -73,7 +77,9 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     protected _beforeMount(options?: IImageDisplayContainerOptions, contexts?: object, receivedState?: void): Promise<void> | void {
         this._imagePosition = options.imagePosition;
         this._imageViewMode = options.imageViewMode;
+        this._columns = options.columns;
         this._itemTemplate = options.itemTemplate;
+        this._tileItemTemplate = options.tileItemTemplate;
         if (!options.sourceController) {
             Logger.error('ImageDisplayContainer should be child of Browser or DataContainer', this);
         }
@@ -98,6 +104,9 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     }
 
     protected _beforeUpdate(options?: IImageDisplayContainerOptions, contexts?: any): void {
+        if (!isEqual(options.columns, this._options.columns)) {
+            this._columns = this._getPatchedColumns(options.columns);
+        }
         if (options.imageProperty !== this._options.imageProperty) {
             this._updateDisplayImage(this._items, options.imageProperty, true);
             if (!options.imageProperty) {
@@ -148,8 +157,10 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
      * @param item
      * @private
      */
-    protected _getImageViewMode(item: CollectionItem): string {
-        return this._hasItemWithImage ? this._imageViewMode : 'none';
+    protected _getImageViewMode(item: TreeItem): string {
+        let imageViewMode;
+        imageViewMode = item.isNode && item.isNode() ? this._nodeImageViewMode : this._imageViewMode;
+        return this._hasItemWithImage ? imageViewMode : 'none';
     }
 
     /**
@@ -157,8 +168,24 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
      * @param item
      * @private
      */
-    protected _getImagePosition(item: CollectionItem): string {
+    protected _getImagePosition(item: TreeItem): string {
         return this._hasItemWithImage ? this._imagePosition : 'none';
+    }
+
+    private _getPatchedColumns(columns: TColumns): TColumns {
+        let newColumns = columns;
+        if (columns) {
+            newColumns = object.clonePlain(columns);
+            newColumns.forEach((column) => {
+                const templateOptions: {
+                    imageViewMode?: string,
+                    hasItemWithImage?: boolean } = column.templateOptions || {};
+                templateOptions.hasItemWithImage = this._hasItemWithImage;
+                templateOptions.imageViewMode = this._hasItemWithImage ? templateOptions.imageViewMode : null;
+                column.templateOptions = templateOptions;
+            });
+        }
+        return newColumns;
     }
 
     private static _hasImage(items: RecordSet, imageProperty: string): boolean {
