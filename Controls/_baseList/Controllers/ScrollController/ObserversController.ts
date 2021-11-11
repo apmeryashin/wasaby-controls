@@ -30,7 +30,7 @@ export interface IObserversControllerOptions extends IObserversControllerBaseOpt
     observersCallback: TObserversCallback;
 }
 
-export const DEFAULT_TRIGGER_OFFSET = 1 / 3;
+export const DEFAULT_TRIGGER_OFFSET = 0.3;
 
 /**
  * Класс предназначен для управления observer, срабатывающим при достижении границ контента списка.
