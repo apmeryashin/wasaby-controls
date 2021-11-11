@@ -14,7 +14,6 @@
             collapsedGroups="{{collapsedGroups}}"
             captionPosition="{{captionPosition}}"
             multiSelectVisibility="{{_options.multiSelectVisibility}}"
-            attr:key="{{item.getUid()}}"
             on:mouseenter="_mouseEnterHandler(item)"
             on:mouseleave="_mouseLeaveHandler(item)"
             on:click="_itemClick(item)"
