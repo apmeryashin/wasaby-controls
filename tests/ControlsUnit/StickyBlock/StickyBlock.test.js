@@ -158,8 +158,10 @@ define([
                },
                dataset: {
                   stickyBlockNode: 'true'
-               }
+               },
+               querySelector: sinon.fake()
             };
+            sinon.stub(component, '_init');
             component._componentDidMount();
             assert.equal(component._container.style.top, 0);
             sandbox.restore();
@@ -176,8 +178,10 @@ define([
                },
                dataset: {
                   stickyBlockNode: ''
-               }
+               },
+               querySelector: sinon.fake()
             };
+            sinon.stub(component, '_init');
             component._componentDidMount();
             assert.equal(component._container.style.top, 1);
             sandbox.restore();
