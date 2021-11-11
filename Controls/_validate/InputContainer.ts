@@ -23,7 +23,7 @@ class Input extends Container {
      *  если была ручная валидация или пользователь ввел что-то в поле ввода
      */
     _shouldValidateByFocusOut: boolean = false;
-    validate(...args: unknown[]): Promise<boolean[]> {
+    validate(...args: unknown[]): Promise<string[] | null> {
         this._shouldValidateByFocusOut = true;
         return super.validate(...args);
     }
