@@ -964,6 +964,20 @@
    height: 100%;
 }
 
+// ie не поддерживает object-fit, поэтому, при указании
+// width: 100%; и height: 100%;
+// изображение непропроционально растягивается
+// https://online.sbis.ru/opendoc.html?guid=743f635b-ce1b-4b7d-84c6-8869daa03af3
+.ws-is-ie {
+   .controls-TileView__image-contain,
+   .controls-TileView__image-none {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+   }
+}
+
 .controls-TileView__image-contain {
    object-fit: contain;
 }
@@ -1036,7 +1050,8 @@
 
    .for(@variants, {
       &_@{_item},
-      &_@{_item}.controls-TileView__item_withMarker::after {
+      &_@{_item}.controls-TileView__item_withMarker::after,
+      &_@{_item} .controls-TileView__itemActions_bottomRight {
          border-top-left-radius: ~"var(--border-radius_@{_item})";
       }
    });

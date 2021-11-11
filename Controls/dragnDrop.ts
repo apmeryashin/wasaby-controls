@@ -27,7 +27,6 @@
 
 export {default as ControllerClass} from 'Controls/_dragnDrop/ControllerClass';
 export {default as Container, IDragObject} from 'Controls/_dragnDrop/Container';
-export {default as ReactContainer, DragNDropContext} from 'Controls/_dragnDrop/ReactContainer';
 export {default as DraggingTemplate} from 'Controls/_dragnDrop/DraggingTemplate';
 export {default as Controller} from 'Controls/_dragnDrop/Controller';
 export {default as ResizingLine} from 'Controls/_dragnDrop/ResizingLine';

@@ -26,6 +26,8 @@
          name="treeGrid"
          filter="{{_filter}}"
          source="{{_options.source}}"
+         sorting="{{_options.sorting}}"
+         navigation="{{_options.navigation}}"
 
          keyProperty="{{_options.keyProperty}}"
          nodeProperty="{{_options.nodeProperty}}"
