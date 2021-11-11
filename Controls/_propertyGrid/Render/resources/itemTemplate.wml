@@ -56,5 +56,8 @@
                 <ws:partial template="{{ itemActionsTemplate }}" />
             </ws:if>
         </ws:if>
+        <ws:if data="{{ afterEditorTemplate }}">
+            <ws:partial template="{{ afterEditorTemplate }}"/>
+        </ws:if>
     </div>
 </ws:else>
