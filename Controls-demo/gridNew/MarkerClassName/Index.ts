@@ -11,7 +11,6 @@ interface INoStickyLadderColumn {
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    protected _viewSourceImage: Memory;
     protected _viewSourceText: Memory;
     protected _columnsImage: INoStickyLadderColumn[] = Tasks.getColumns();
     protected _columnsText: IColumn[] =  [
@@ -27,11 +26,6 @@ export default class extends Control {
     protected _ladderProperties: string[] = ['photo', 'date'];
 
     protected _beforeMount(options?: {}, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._viewSourceImage = new Memory({
-            keyProperty: 'key',
-            data: Tasks.getData()
-        });
-
         this._viewSourceText = new Memory({
             keyProperty: 'key',
             data: [
@@ -46,6 +40,23 @@ export default class extends Control {
                     fr1of3: 'Ячейка 2/3',
                 }
             ]
+        });
+    }
+
+    protected _getViewSource(imageWidth?: string, imageHeight?: string): Memory {
+        const data = Tasks.getData().map((el) => {
+            const newEl = {...el};
+            if (imageWidth) {
+                newEl.width = imageWidth;
+            }
+            if (imageHeight) {
+                newEl.height = imageHeight;
+            }
+            return newEl;
+        });
+        return new Memory({
+            keyProperty: 'key',
+            data
         });
     }
 
