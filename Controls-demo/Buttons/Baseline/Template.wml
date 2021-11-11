@@ -15,9 +15,9 @@
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{true}}" icon="icon-Add" iconSize="m" caption="caption" fontSize="xl" inlineHeight="2xl" buttonStyle="secondary" viewMode="button" tooltip="caption"/>
     <span class="baseline_span">baseline</span>
-    <Controls.list:AddButton readOnly="{{false}}" caption="AddButton"/>
+    <Controls.list:AddButton readOnly="{{false}}" caption="AddButton" tooltip="caption"/>
     <span class="baseline_span">baseline</span>
-    <Controls.list:AddButton readOnly="{{true}}" caption="AddButton"/>
+    <Controls.list:AddButton readOnly="{{true}}" caption="AddButton" tooltip="caption"/>
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{false}}" iconSize="m" icon="icon-Send" tooltip="caption"/>
     <span class="baseline_span">baseline</span>
