@@ -12,8 +12,11 @@ export default class extends Control {
     protected _viewSource: Memory;
     protected _header: IHeader[] = Countries.getHeader();
     protected _columns: IColumn[] = Countries.getColumnsWithWidths();
+    protected _ladderProperties: string[] = ['ladder'];
 
     protected _beforeMount(): void {
+        this._header.push({ title: 'Лесенка' });
+        this._columns.push({ width: '50px', displayProperty: 'ladder' });
         this._viewSource = new Memory({
             keyProperty: 'key',
             data: Countries.getData()
