@@ -747,12 +747,14 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
         this._listsOptions.forEach(({id, filterButtonSource, fastFilterSource}) => {
             if (filterButtonSource || fastFilterSource) {
-                this._dataLoader.getFilterController(id).updateFilterItems(items);
+                const filterController = this._dataLoader.getFilterController(id);
+                filterController.updateFilterItems(items);
+                const filter = filterController.getFilter();
                 this._contextState = {
                     ...this._contextState,
-                    filter: this._filter
+                    filter
                 };
-                this._notify('filterChanged', [this._filter, id]);
+                this._notify('filterChanged', [filter, id]);
             }
         });
     }
