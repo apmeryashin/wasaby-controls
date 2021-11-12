@@ -7,28 +7,7 @@ import {RecordSet} from 'Types/collection';
  * Относительно переданного nodeKey собирает идентификаторы родительских и дочерних раскрытых узлов.
  */
 export function getRootsForHierarchyReload(viewModel: Tree, nodeKey: TKey): TKey[] {
-    // Условие про undefined не понятное, просто оставил как было
-    const nodes = [nodeKey !== undefined ? nodeKey : null];
-    const item = viewModel.getItemBySourceKey(nodeKey);
-
-    if (!item) {
-        return nodes;
-    }
-
-    // region Собираем идентификаторы родительских узлов
-    let parent = item.getParent();
-    const root = viewModel.getRoot();
-
-    // Добавляем идентификаторы родительских узлов
-    while (parent !== root) {
-        nodes.unshift(parent.getContents().getKey());
-        parent = parent.getParent();
-    }
-
-    // Добавляем идентификатор корня
-    nodes.unshift(root.getContents());
-
-    // endregion
+    const items = getItemHierarchy(viewModel, nodeKey);
 
     // Собираем идентификаторы дочерних раскрытых узлов
     nodeChildrenIterator(viewModel, nodeKey, (elem) => {
@@ -36,11 +15,39 @@ export function getRootsForHierarchyReload(viewModel: Tree, nodeKey: TKey): TKey
 
         // Не добавляем узел если он свернут, т.к. если данных не было то и незачем их обновлять
         if (viewModel.getExpandedItems().indexOf(key) >= 0) {
-            nodes.push(key);
+            items.push(key);
         }
     });
 
-    return nodes;
+    return items;
+}
+
+/**
+ * Собирает иерархию итема коллекции в виде массива из его id и id его родительских узлов.
+ * Первым элементом массива будет текущий root коллекции, а последним сам итем.
+ */
+export function getItemHierarchy(viewModel: Tree, itemKey: TKey): TKey[] {
+    // Условие про undefined не понятное, просто оставил как было
+    const hierarchy = [itemKey !== undefined ? itemKey : null];
+    const item = viewModel.getItemBySourceKey(itemKey);
+
+    if (!item) {
+        return hierarchy;
+    }
+
+    let parent = item.getParent();
+    const root = viewModel.getRoot();
+
+    // Добавляем идентификаторы родительских узлов
+    while (parent !== root) {
+        hierarchy.unshift(parent.getContents().getKey());
+        parent = parent.getParent();
+    }
+
+    // Добавляем идентификатор корня
+    hierarchy.unshift(root.getContents());
+
+    return hierarchy;
 }
 
 /**
