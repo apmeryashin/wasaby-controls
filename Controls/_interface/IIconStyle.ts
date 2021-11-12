@@ -9,10 +9,11 @@
  * @variant info
  * @variant label
  * @variant default
+ * @variant link
  * @variant contrast
  * @variant unaccented
  */
-export type TIconStyle = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info' | 'label' | 'default' | 'contrast' | 'unaccented';
+export type TIconStyle = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info' | 'label' | 'default' | 'link' | 'contrast' | 'unaccented';
 
 export interface IIconStyleOptions {
    iconStyle?: string;
@@ -43,6 +44,7 @@ export default interface IIconStyle {
  * @variant info
  * @variant label
  * @variant default
+ * @variant link
  * @variant contrast
  * @variant unaccented
  * @default secondary
@@ -73,6 +75,7 @@ export default interface IIconStyle {
  * @variant danger
  * @variant info
  * @variant default
+ * @variant link
  * @default secondary
  * @example
  * Button with default icon style.
