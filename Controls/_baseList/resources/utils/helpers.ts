@@ -10,7 +10,7 @@ const RELOAD_ITEM_WARN = 'Вы используете устаревшую си�
  * Это временная ф-ия, которая используется для организации совместимости между старой и новой сигнатурой метода
  * reloadItem.
  */
-export function convertReloadItemArgs(...args: unknown[]): {key: TKey, options: IReloadItemOptions} {
+export function convertReloadItemArgs(...args: unknown[]): {key: TKey | TKey[], options: IReloadItemOptions} {
     const result = {
         // первый аргумент это всегда id
         key: args[0] as TKey,
