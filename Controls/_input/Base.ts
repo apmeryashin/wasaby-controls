@@ -58,6 +58,9 @@ const MIN_IE_VERSION: number = 12;
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления}
  *
+ * Ширина поля ввода под определенное количество цифр может быть задана с помощью
+ * класса на корень контрола controls-Input__width-Nch, где N - количество цифр. Например, controls-Input__width-5ch. Максимум 10.
+ *
  * @class Controls/_input/Base
  * @extends UI/Base:Control
  * @implements Controls/interface:IHeight
