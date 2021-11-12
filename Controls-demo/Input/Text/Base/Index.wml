@@ -1,14 +1,32 @@
 <div class="controlsDemo__wrapper">
    <div class="controlsDemo__cell">
       <div class="controls-text-label">default options</div>
-      <Controls.input:Text bind:value="_value1" attr:style="width:200px" attr:class="controlsDemo__defaultOptions"></Controls.input:Text>
+      <Controls.input:Text bind:value="_value1" attr:style="width:200px" attr:class="controlsDemo__defaultOptions"/>
    </div>
    <div class="controlsDemo__cell">
       <div class="controls-text-label">maxLength=10</div>
-      <Controls.input:Text maxLength="{{10}}" bind:value="_value2" attr:style="width:200px"></Controls.input:Text>
+      <Controls.input:Text maxLength="{{10}}" bind:value="_value2" attr:style="width:200px"/>
    </div>
    <div class="controlsDemo__cell">
       <div class="controls-text-label">constraint=[a-zA-Z]</div>
-      <Controls.input:Text constraint="[a-zA-Z]" bind:value="_value3" attr:style="width:200px"></Controls.input:Text>
+      <Controls.input:Text constraint="[a-zA-Z]" bind:value="_value3" attr:style="width:200px"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">Ширина поля ввода 5 символов c помощью класса controls-Input__width-5ch</div>
+      <div class="controlsDemo__flex" style="align-items: center; height: 50px; background: #f0f0f0" >
+         <div class="controlsDemo__ml1">
+            <div class="controls-text-label">Без отступов</div>
+            <Controls.input:Text maxLength="{{ 5 }}"
+                                 bind:value="_value4"
+                                 attr:class="controls-Input__width-5ch"/>
+         </div>
+         <div class="controlsDemo__ml4">
+            <div class="controls-text-label">С отступами</div>
+            <Controls.input:Text maxLength="{{ 5 }}"
+                                 contrastBackground="{{ true }}"
+                                 bind:value="_value5"
+                                 attr:class="controls-Input__width-5ch"/>
+         </div>
+      </div>
    </div>
 </div>
