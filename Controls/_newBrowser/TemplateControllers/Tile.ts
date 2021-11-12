@@ -58,6 +58,13 @@ export default class TileController extends BaseController<ITileConfig, TreeItem
         return null;
     }
 
+    // TODO этот метод нужно будет удалить, когда уберём его использование на онлайне.
+    getImageViewMode(item: TreeItem): string {
+        return this._isNode(item)
+            ? this._viewModeConfig.node.imageViewMode
+            : this._viewModeConfig.leaf.imageViewMode;
+    }
+
     getImageProportion(item: TreeItem): string {
         return this._isNode(item)
             ? this._viewModeConfig.node.imageProportion
