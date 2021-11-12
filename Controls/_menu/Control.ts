@@ -159,7 +159,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._notifyResizeAfterRender = true;
             this._closeSubMenu();
             this._updateItems(newOptions.sourceController.getItems(), newOptions);
-        } else if (rootChanged || sourceChanged || filterChanged) {
+        } else if ((rootChanged || sourceChanged || filterChanged) &&
+            !(newOptions.sourceController && newOptions.sourceController.isLoading())) {
             if (sourceChanged) {
                 this._sourceController = null;
             }
