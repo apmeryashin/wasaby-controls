@@ -31,6 +31,13 @@ class PreviewerTemplate extends Control<IPreviewerOptions> {
     protected _sendResult(event: Event): void {
         this._notify('sendResult', [event], {bubbling: true});
     }
+
+    protected _getTemplateName(): string {
+        if (typeof this._options.template === 'string') {
+            return this._options.template;
+        }
+        return '';
+    }
 }
 
 export default PreviewerTemplate;
