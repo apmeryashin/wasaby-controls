@@ -36,6 +36,10 @@
         <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="default"/>
     </div>
     <div class="controlsDemo__cell">
+        <div class="controls-text-label">iconStyle=link</div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="link"/>
+    </div>
+    <div class="controlsDemo__cell">
         <div class="controls-text-label">iconStyle=contrast</div>
         <Controls.buttons:Button viewMode="functionalButton" icon="icon-Author" iconSize="s" iconStyle="contrast"/>
     </div>

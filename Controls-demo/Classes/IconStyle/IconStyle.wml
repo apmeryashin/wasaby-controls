@@ -37,6 +37,10 @@
             <span class="icon-Author controls-icon controls-icon_style-default controls-icon_size-s"></span>
         </div>
         <div>
+            <div class="controls-text-label">controls-icon_style-link</div>
+            <span class="icon-Author controls-icon controls-icon_style-link controls-icon_size-s"></span>
+        </div>
+        <div>
             <div class="controls-text-label">controls-icon_style-readonly</div>
             <span class="icon-Author controls-icon controls-icon_style-readonly controls-icon_size-s"></span>
         </div>
