@@ -371,7 +371,7 @@ define(
             newOptions.fontSize = 'm';
             newOptions.inlineHeight = 'l';
             menu._beforeUpdate(newOptions);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_functionalButton__l_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_functionalButton__l_iconSize-small_popup');
 
             newOptions.icon = 'icon-Doge';
             newOptions.iconSize = null;

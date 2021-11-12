@@ -242,11 +242,9 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       let currentSourceController = this._sourceController;
 
       if (this._options.sourceController !== sourceController) {
-         this._sourceController = currentSourceController = sourceController;
-
-         if (sourceController) {
-            this._initSourceController(newOptions);
-         }
+         this._sourceController = sourceController;
+         this._initSourceController(newOptions);
+         currentSourceController = this._sourceController;
       }
 
       if (currentSourceController && (currentSourceController.getItems() !== this._items)) {

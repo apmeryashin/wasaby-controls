@@ -4,7 +4,7 @@
     <ws:contentTemplate>
         <ws:partial template="{{contentTemplate.ladderWrapper}}"
                     ladderProperty="photo">
-            <img src="{{item.contents.photo}}"/>
+            <img src="{{item.contents.photo}}" style="width: {{item.contents.width || 'auto'}}; height: {{item.contents.height || 'auto'}};"/>
         </ws:partial>
     </ws:contentTemplate>
 </ws:partial>

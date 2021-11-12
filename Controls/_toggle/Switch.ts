@@ -103,8 +103,8 @@ Object.defineProperty(Switch, 'defaultProps', {
 /**
  * @name Controls/_toggle/Switch#size
  * @cfg {string} Определяет размер переключателя.
- * @variable s
- * @variable s
+ * @variant s
+ * @variant l
  * @default l
  * @demo Controls-demo/toggle/Switch/Size/Index
  */

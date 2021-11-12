@@ -37,7 +37,7 @@
                 </ws:else>
             </div>
             <ws:if data="{{afterTitleTemplate}}">
-                <div class="controls-TileView__afterTitleTemplate-wrapper" style="{{item.getBlurStyles(itemType, imageViewMode, gradientColor)}}">
+                <div class="controls-TileView__afterTitleTemplate-wrapper" style="{{item.getBlurStyles(itemType, imageViewMode, gradientColor, titlePosition)}}">
                     <ws:partial template="{{afterTitleTemplate}}"/>
                 </div>
             </ws:if>

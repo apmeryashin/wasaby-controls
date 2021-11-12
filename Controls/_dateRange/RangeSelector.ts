@@ -163,8 +163,6 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             className += ` ${this._options.popupClassName}`;
         }
 
-        className += ` controls_theme-${this._options.theme}`;
-
         return className;
     }
 
@@ -181,7 +179,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
                 eventHandlers: {
                     onResult: this._sendResultHandler.bind(this)
                 }
-            }
+            };
         }
     }
 
@@ -226,6 +224,9 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
                 monthTemplate: this._options.monthTemplate,
                 headerContentTemplate: this._options.headerContentTemplate,
                 itemTemplate: this._options.itemTemplate,
+                popupClassName: this._options.popupClassName,
+                displayedRanges: this._options.displayedRanges,
+                stubTemplate: this._options.stubTemplate
             }
         };
     }
@@ -261,9 +262,9 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             if (popup.default) {
                 return popup.default.loadCSS();
             } else {
-                return popup.View.loadCSS()
+                return popup.View.loadCSS();
             }
-        }
+        };
         this._startDependenciesTimer(libName, loadCss);
     }
 

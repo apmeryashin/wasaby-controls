@@ -471,6 +471,10 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             newOptions.dataLoadCallback !== undefined &&
             newOptions.dataLoadCallback !== this._options.dataLoadCallback;
 
+        if (isNavigationChanged) {
+            this.setNavigation(newOptions.navigation);
+        }
+
         if (newOptions.navigationParamsChangedCallback !== this._options.navigationParamsChangedCallback) {
             this._resolveNavigationParamsChangedCallback(newOptions);
             this._navigationController?.updateOptions(this._getNavigationControllerOptions(newOptions.navigation));
@@ -506,10 +510,6 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             } else {
                 this._crudWrapper = null;
             }
-        }
-
-        if (isNavigationChanged) {
-            this.setNavigation(newOptions.navigation);
         }
 
         if (newOptions.groupHistoryId !== this._options.groupHistoryId) {

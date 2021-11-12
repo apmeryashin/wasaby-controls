@@ -1,5 +1,7 @@
 export {default as Input} from './_dateRange/Input';
+// TODO: Временная поддержка, удалить по https://online.sbis.ru/opendoc.html?guid=84607f88-046c-4331-a402-68061666d88c
 export {default as RangeSelector} from './_dateRange/RangeSelector';
+export {default as Selector} from './_dateRange/RangeSelector';
 export {default as RangeShortSelector} from './_dateRange/RangeShortSelector';
 export {default as RelationController} from './_dateRange/RelationController';
 export {default as RelationWrapper} from './_dateRange/RelationWrapper';

@@ -437,6 +437,15 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         this._notifyChanges(this._source);
         this._updateText(this._source, this._configs);
     }
+    // В диалоговых окнах отказались от отдельной темы для шапки,поэтому вырезаем тему шапки,которая берется из-за того,
+    // что панель фильтров лежит в шапке стека.
+    protected _prepareTheme(theme: string): string {
+        const containHeader = theme.indexOf('header-');
+        if (containHeader >= 0) {
+            return theme.replace('header-', '');
+        }
+        return theme;
+    }
 
     private _getDetailPanelTemplateName({detailPanelTemplateName, detailPanelOpenMode}: IFilterViewOptions): string {
         return detailPanelOpenMode === 'stack' ? FILTER_PANEL_POPUP_STACK : detailPanelTemplateName;
@@ -467,7 +476,8 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             popupOptions.restrictiveContainer = '.sabyPage-MainLayout__rightPanel_border.sabyPage-MainLayout__rightPanel';
         }
         Merge(popupOptions, panelPopupOptions);
-        popupOptions.className += ` controls_popupTemplate_theme-${this._options.theme} controls_filter_theme-${this._options.theme} controls_filterPopup_theme-${this._options.theme} controls_dropdownPopup_theme-${this._options.theme}`;
+        const theme = this._prepareTheme(this._options.theme);
+        popupOptions.className += ` controls_popupTemplate_theme-${theme} controls_filter_theme-${theme} controls_filterPopup_theme-${theme} controls_dropdownPopup_theme-${theme}`;
         this._getFilterPopupOpener().open(popupOptions);
     }
 
