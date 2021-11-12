@@ -716,6 +716,7 @@ export default class ScrollController {
     }
 
     getScrollTopToEdgeItem(direction: IDirection, itemsContainer: HTMLElement, itemsContainerSelector: string): number {
+        let scrollTop = this._lastScrollTop;
         if (this._edgeItemParams) {
 
             // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
@@ -730,16 +731,19 @@ export default class ScrollController {
                 if (direction === 'up') {
                     const itemDimensions = uDimension(item);
                     if (this._edgeItemParams.border === 'bottom') {
-                        return itemOffsetTop + (itemDimensions.height - this._edgeItemParams.borderDistance);
+                        scrollTop = itemOffsetTop + (itemDimensions.height - this._edgeItemParams.borderDistance);
                     } else {
-                        return itemOffsetTop + this._edgeItemParams.borderDistance;
+                        scrollTop = itemOffsetTop + this._edgeItemParams.borderDistance;
                     }
+                } else {
+                    const viewportHeight = this._viewportHeight;
+                    scrollTop = itemOffsetTop + this._edgeItemParams.borderDistance - viewportHeight - topCompensation;
                 }
-                const viewportHeight = this._viewportHeight;
-                return itemOffsetTop + this._edgeItemParams.borderDistance - viewportHeight - topCompensation;
             }
         }
-        return this._lastScrollTop;
+        const maxPossibleScrollTop =  this._viewHeight - this._viewportHeight;
+        scrollTop = Math.max(0, Math.min(scrollTop, maxPossibleScrollTop));
+        return scrollTop;
     }
 
     beforeRestoreScrollPosition(): void {
