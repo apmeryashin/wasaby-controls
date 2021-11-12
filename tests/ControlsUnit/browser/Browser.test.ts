@@ -1013,6 +1013,15 @@ describe('Controls/browser:Browser', () => {
                         testField: 'testValue',
                         filterField: ''
                     });
+
+                    filterButtonSource = [...filterButtonSource];
+                    filterButtonSource[0] = {...filterButtonSource[0]};
+                    filterButtonSource[0].value = 'newTestValue';
+                    browser._filterItemsChanged(null, filterButtonSource);
+                    assert.deepStrictEqual(browser._dataLoader.getFilterController('list').getFilter(), {
+                        testField: 'testValue',
+                        filterField: 'newTestValue'
+                    });
                 });
 
                 it('root changed with sourceController in listsOptions', async () => {
