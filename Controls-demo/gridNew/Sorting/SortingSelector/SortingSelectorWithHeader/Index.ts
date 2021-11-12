@@ -19,16 +19,24 @@ export default class extends Control {
 
         this._sortingParams = [
             {
+                title: 'По порядку',
+                paramName: null,
+                icon: 'Controls/sortIcons:non_sort'
+            },
+            {
                 title: 'По населению',
-                paramName: 'population'
+                paramName: 'population',
+                icon: 'Controls/sortIcons:number'
             },
             {
                 title: 'По площади',
-                paramName: 'square'
+                paramName: 'square',
+                icon: 'Controls/sortIcons:number'
             },
             {
                 title: 'По плотности населения',
-                paramName: 'populationDensity'
+                paramName: 'populationDensity',
+                icon: 'Controls/sortIcons:rating'
             }
         ];
         this._sorting.push({population: 'ASC'});
