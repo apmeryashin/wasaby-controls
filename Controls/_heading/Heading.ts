@@ -59,7 +59,6 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
     static getDefaultOptions(): object {
         return {
             fontSize: 'l',
-            fontColorStyle: 'secondary',
             textTransform: 'none',
             fontWeight: 'default'
         };
@@ -104,7 +103,6 @@ Object.defineProperty(Header, 'defaultProps', {
 /**
  * @name Controls/_heading/Heading#fontColorStyle
  * @cfg
- * @default secondary
  * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
  * @example
  * <pre class="brush: html">
