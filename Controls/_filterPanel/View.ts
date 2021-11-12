@@ -145,7 +145,8 @@ export default class View extends Control<IViewPanelOptions> {
         if (this._options.viewMode === 'default') {
             this._notifyChanges();
         } else {
-            this._notify('sourceChanged', [this._viewModel.getSource()]);
+            const newSource = this._getUpdatedSource(coreClone(this._options.source), this._viewModel.getSource());
+            this._notify('sourceChanged', [newSource]);
         }
     }
 
