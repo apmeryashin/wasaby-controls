@@ -3,7 +3,8 @@
                                  style="{{_options.style}}"
                                  validationStatus="{{_options.validationStatus}}"
                                  on:mouseenter="_sendResult()"
-                                 on:mouseleave="_sendResult()">
+                                 on:mouseleave="_sendResult()"
+                                 attr:template="{{_getTemplateName()}}">
    <div class="controls_popupTemplate_theme-{{_options.theme}} controls-InfoBox">
       <ws:if data="{{_options.closeButtonVisibility}}">
          <Controls._popupTemplate.CloseButton attr:class="controls-InfoBoxTemplate__closeButton" on:click="_close()" viewMode="link" attr:ws-no-focus="true"/>
