@@ -122,7 +122,6 @@ export default class SearchExpand extends Control<IControlOptions> {
    protected _filter: object;
    protected _expandedItems: any;
    protected _searchStartingWith: string = 'root';
-   protected _multiselectVisibility: string = 'visible';
 
    protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
       this._viewColumns = columns;
