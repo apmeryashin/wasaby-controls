@@ -104,7 +104,7 @@ export default interface IProperty {
      */
     captionTemplate?: TemplateFunction;
     /**
-     * @cfg {Controls/interface:ILabelOptions} Опция для метки, отображающейся рядом с редактором
+     * @cfg {Object} Опция для {@link Controls/input:Label метки}, отображающейся рядом с редактором
      * @example
      * <pre class="brush: js; highlight: [12-15];">
      * // JavaScript
