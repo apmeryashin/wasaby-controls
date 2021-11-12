@@ -91,8 +91,8 @@
 }
 
 .controls-PeriodLiteDialog__vLayoutItem-caption {
-   height: calc(var(--item_height_shortDatePicker) - var(--item_border-thickness_shortDatePicker) * 2);
-   line-height: calc(var(--item_height_shortDatePicker) - var(--item_border-thickness_shortDatePicker) * 2);
+   height: calc(var(--item_height_menu) - var(--item_border-thickness_shortDatePicker) * 2);
+   line-height: calc(var(--item_height_menu) - var(--item_border-thickness_shortDatePicker) * 2);
 }
 
 .controls-PeriodLiteDialog__vLayoutItem:focus-within,
@@ -208,7 +208,7 @@
    position: relative;
    box-sizing: border-box;
    min-width: var(--width_shortDatePicker);
-   height: var(--item_height_shortDatePicker);
+   height: var(--item_height_menu);
 }
 
 .controls-PeriodLiteDialog__yearList-year {
@@ -236,7 +236,7 @@
    .controls-PeriodLiteDialog__container-caption();
 
    color: var(--text-color);
-   width: var(--text-color);  // равен ширине кварталов
+   width: var(--quarterly_quarters_width_shortDatePicker);  // равен ширине кварталов
    display: flex;
    right: 0;
    justify-content: center;
@@ -329,7 +329,7 @@
 }
 
 .controls-PeriodLiteDialog__fullYear-listElement {
-   height: var(--item_height_shortDatePicker);
+   height: var(--item_height_menu);
    background-color: var(--background-color_shortDatePicker);
    color: var(--primary_text-color);
    padding-left: var(--quarterly_item-padding-left_shortDatePicker);  //отступ равен отступу внутри элементов, чтоб они были на одной линии
@@ -349,7 +349,7 @@
 }
 
 .controls-PeriodLiteDialog__fullPicker {
-   height: calc(var(--item_height_shortDatePicker) + var(--separator_thickness_shortDatePicker));
+   height: calc(var(--item_height_menu) + var(--separator_thickness_shortDatePicker));
    &::after {
       border-bottom: solid var(--separator_thickness_shortDatePicker) var(--separator_color_shortDatePicker);
    }
