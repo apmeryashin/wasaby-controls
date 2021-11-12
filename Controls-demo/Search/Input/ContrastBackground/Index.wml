@@ -1,0 +1,4 @@
+<div class="controlsDemo__wrapper">
+    <div class="controls-text-label">contrastBackground = true</div>
+    <Controls.search:Input contrastBackground="{{true}}" />
+</div>
