@@ -582,12 +582,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _subscribeOnFilterControllerEvents(options: IBrowserOptions): void {
         // Для совместимости, пока контролы вынуждены работать и от опций и от настроек на странице
         // + пока нет виджета filter/View
-        this._dataLoader.getFilterController().subscribe('filterSourceChanged', (event, filterSource) => {
+        this._dataLoader.getFilterController().subscribe('filterSourceChanged', () => {
             this._updateFilterAndFilterItems(options);
-
-            if (options.useStore) {
-                Store.dispatch('filterSource', filterSource);
-            }
         });
     }
 
