@@ -1,0 +1,15 @@
+<Controls.Application isAdaptive="{{ true }}">
+    <div class="ControlDemo__SlidingPanel">
+        <Controls.toggle:DoubleSwitch
+                on:valueChanged="_isMobileChanged()"
+                value="{{ _isMobile }}"
+                captions="{{ ['Мобильный', 'Десктоп'] }}"/>
+        <Controls.toggle:DoubleSwitch
+                bind:value="_showHeader"
+                captions="{{ ['С контентом в шапке', 'Без контента в шапке'] }}"/>
+        <Controls.toggle:DoubleSwitch
+                bind:value="_showToolbar"
+                captions="{{ ['С тулбаром', 'Без тулбара'] }}"/>
+        <Controls.buttons:Button caption="Открыть шторку" on:click="_openSlidingPanelHandler()"/>
+    </div>
+</Controls.Application>
