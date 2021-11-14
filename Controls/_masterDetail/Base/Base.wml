@@ -4,8 +4,7 @@
            template="{{_options.master}}"
            shadowMode="js"
            attr:class="controls-MasterDetail_master-template controls-master-template-{{_newDesign ? 'newDesign' : 'default'}}
-                       controls-master-template-{{_newDesign ? 'newDesign' : 'default'}}-{{_options.masterPosition}}
-                       controls-MasterDetail_{{_options.style || 'master'}}-template-{{_options.contrastBackground ? 'contrast'}}"
+                       controls-master-template-{{_newDesign ? 'newDesign' : 'default'}}-{{_options.masterPosition}}"
            on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
 </ws:template>
 
@@ -52,7 +51,7 @@
          <ws:partial
                  attr:class="controls-MasterDetail_detailsContent
                              {{_options.masterPosition === 'right' ? 'ws-flex-grow-1'}}
-                            {{_options.contrastBackground ?
+                            {{_options.contrastBackground && _options.detailContrastBackground ?
                                ('controls-MasterDetail_details-bg-contrast ' + (_newDesign ? 'controls-MasterDetail_details-newDesign') + (_options.masterVisibility === 'visible' ? ' tlr' : ' tr')) :
                                'controls-MasterDetail_details_bg-same'}}"
                  template="{{_options.detail}}"
@@ -64,7 +63,7 @@
    </Controls.event:Register>
 </ws:template>
 
-<div class="controls-MasterDetail controls-MasterDetail-{{_options.contrastBackground ? 'contrast' : 'transparent'}}
+<div class="controls-MasterDetail controls-MasterDetail-{{_options.masterContrastBackground ? 'contrast' : 'transparent'}}
             ws-flexbox controls_list_theme-{{_options.theme}}">
    <ws:if data="{{_options.masterPosition === 'right'}}">
       <ws:partial template="detail" />

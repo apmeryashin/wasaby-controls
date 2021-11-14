@@ -162,6 +162,18 @@
    margin-left: calc(var(--padding-horizontal_inputText) / (-1));
 }
 
+.controls-Input__width {
+   @sizes: 1ch, 2ch, 3ch, 4ch, 5ch, 6ch, 7ch, 8ch, 9ch, 10ch;
+
+   .for(@sizes, {
+      &-@{_item} {
+         .controls-Field {
+            width: ~"@{_item}";
+         }
+      }
+   });
+}
+
 // Нельзя перебить стили из -internal-autofill-selected, поэтому задаем большой transition и внутреннюю тень с background-color
 // Если просто задавать большое transition, то проблема уходит до тех пор, пока не скрыть поле ввода, и не отобразить его заново.
 // Например навесить класс ws-hidden и убрать. В таком случае, у поля ввода появляется заливка.

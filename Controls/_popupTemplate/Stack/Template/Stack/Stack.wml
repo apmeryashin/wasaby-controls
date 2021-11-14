@@ -1,4 +1,7 @@
-<div class="controls_popupTemplate_theme-{{_options.theme}} controls-StackTemplate" ws-tab-cycling="true">
+<div class="controls_popupTemplate_theme-{{_options.theme}}
+           controls-StackTemplate
+           {{ _hasRightPanel ? 'controls-StackTemplate__with-right-panel'}}"
+     ws-tab-cycling="true">
     <div class="controls-StackTemplate-shadow {{ _options.leftContentTemplate ? 'controls-StackTemplate-shadow_zindex' }}"></div>
 
     <ws:if data="{{_options.leftContentTemplate }}">

@@ -1,11 +1,11 @@
-import * as clone from 'Core/core-clone';
 import {Control} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
+import {IObservable} from 'Types/collection';
+import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem} from 'Controls/display';
 import {IStickyPopupOptions} from 'Controls/popup';
 import {IMenuPopupOptions} from 'Controls/menu';
 import {
@@ -241,6 +241,35 @@ export class Controller {
     }
 
     /**
+     * Определяет на основе переданных newItems и removedItems, надо ли обновлять ItemActions.
+     * Возвращает false, если при добавлении или удалении элементов в newItems и в removedItems отсутствуют
+     * записи, для которых нужно инициализировать ItemActions.
+     * Возвращает false, если в newItems.properties указан тип изменений, при котором не нужно инициализировать ItemActions.
+     * Возвращает true, если newItems или newItems.properties не заданы.
+     * @param action
+     * @param newItems
+     * @param removedItems
+     */
+    shouldUpdateOnCollectionChange(
+                action: string,
+                newItems?: Array<CollectionItem<Model>> & {properties: string},
+                removedItems?: Array<CollectionItem<Model>> & {properties: string}): boolean {
+        // При добавлении или удалении элементов списка, которые не имеют операций над записью
+        // не надо набирать операции заново.
+        // Например, nodeFooter не имеют операций над записью и никак не должны на них влиять.
+        if (action === IObservable.ACTION_ADD && newItems && newItems.length &&
+            !newItems.some((item) => item.ItemActionsItem)) {
+            return false;
+        }
+        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length &&
+            !removedItems.some((item) => item.ItemActionsItem)) {
+            return false;
+        }
+        const propertyVariants = ['selected', 'marked', 'swiped', 'hovered', 'active', 'dragged', 'editingContents'];
+        return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
+    }
+
+    /**
      * Активирует Swipe для меню операций с записью
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
      * @param actionsContainerWidth ширина контейнера для расчёта видимых опций записи
@@ -325,7 +354,7 @@ export class Controller {
             return;
         }
         const menuActions = this._getMenuActions(item, parentAction);
-        if ((!menuActions || menuActions.length === 0) && !this._hasMenuHeaderOrFooter()) {
+        if ((!menuActions || menuActions.length === 0) && (!this._hasMenuHeaderOrFooter() || this._task1183329228)) {
             return;
         }
 

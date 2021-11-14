@@ -141,6 +141,7 @@ export interface IOptions<
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
+    stickyCallback?: Function;
     stickyResults?: boolean;
     theme?: string;
     style?: string;
@@ -702,6 +703,8 @@ export default class Collection<
     protected _$footerTemplate: TemplateFunction | string;
 
     protected _$stickyFooter: boolean;
+
+    protected _$stickyCallback: Function;
 
     /**
      * Задает доступность чекбокса
@@ -3459,6 +3462,7 @@ export default class Collection<
             options.isBottomSeparatorEnabled = false;
             options.isFirstItem = false;
             options.isLastItem = false;
+            options.stickyCallback = this._$stickyCallback;
 
             return create(options.itemModule || this._itemModule, options);
         };
@@ -4299,6 +4303,7 @@ Object.assign(Collection.prototype, {
     _$hiddenGroupPosition: 'first',
     _$footerTemplate: null,
     _$stickyFooter: false,
+    _$stickyCallback: null,
     _$moreButtonVisibility: MoreButtonVisibility.visible,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

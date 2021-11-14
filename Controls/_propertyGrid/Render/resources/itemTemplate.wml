@@ -49,12 +49,16 @@
                 {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                 {{highlightOnHover ? 'controls-PropertyGrid__row_highlightOnHover'}}
                 {{!!captionPosition  ? ('controls-PropertyGrid__flex-row controls-PropertyGrid__row_captionPosition-' + captionPosition)}}
-                {{collectionItem.getItemPaddingClasses()}}">
+                {{collectionItem.getItemPaddingClasses()}}"
+         attr:key="propertyGrid-editor-{{collectionItem.getUid()}}">
         <ws:partial template="itemTemplate" />
         <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
             <ws:if data="{{ !collectionItem.isSwiped() }}">
                 <ws:partial template="{{ itemActionsTemplate }}" />
             </ws:if>
+        </ws:if>
+        <ws:if data="{{ afterEditorTemplate }}">
+            <ws:partial template="{{ afterEditorTemplate }}"/>
         </ws:if>
     </div>
 </ws:else>
