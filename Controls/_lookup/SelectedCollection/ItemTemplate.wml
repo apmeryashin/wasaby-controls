@@ -18,6 +18,6 @@
       <ws:partial template="{{crossTemplate}}" theme="{{_options.theme}}"/>
    </ws:if>
    <ws:if data="{{readOnly && !isLastItem && itemsLayout !== 'twoColumns'}}">
-      <span attr:class="controls-text-{{(itemsLayout === 'twoColumns' || !style) ? 'default' : style}}">,</span>
+      <span class="controls-text-{{(itemsLayout === 'twoColumns' || !style) ? 'default' : style}}">,</span>
    </ws:if>
 </div>
