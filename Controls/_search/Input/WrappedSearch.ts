@@ -146,6 +146,7 @@ export default class WrappedSearch extends Control {
  * @variant left Иконка лупы расположена слева.
  * @variant right Иконка лупы расположена справа.
  * @default right
+ * @demo Controls-demo/Search/Input/SearchButtonAlign/Index
  */
 
 /**
