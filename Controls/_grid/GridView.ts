@@ -414,7 +414,8 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
 
         if (this._listModel.getEditingConfig()?.mode === 'cell') {
             const columnIndex = this._getCellIndexByEventTarget(nativeEvent);
-            if (item.getEditingColumnIndex() !== columnIndex) {
+            const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+            if (item.getEditingColumnIndex() !== (columnIndex + multiSelectOffset)) {
                 this._notify('itemClick', [item.getContents(), nativeEvent, columnIndex]);
             }
         }
