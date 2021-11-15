@@ -1,7 +1,7 @@
 define(
    [
       'Env/Env',
-      'Controls/_scroll/Scroll/ScrollHeightFixUtil'
+      'Controls/_scroll/Scroll/ScrollHeightFixUtil',
    ],
    function(Env, ScrollHeightFixUtil) {
 
@@ -24,7 +24,7 @@ define(
       describe('Controls.Container.Scroll.Utils', function() {
          let result;
 
-         describe('calcOverflow', function() {
+         describe('calcHeightFixFn', function() {
             var container;
             it('chrome', function() {
                mockEnv('chrome');
@@ -58,6 +58,28 @@ define(
                   assert.equal(result, undefined);
                }
                restoreEnv('firefox');
+            });
+
+            it('ie', function() {
+               mockEnv('isIE');
+               const oldIsBrowserPlatform = Env.constants.isBrowserPlatform;
+               Env.constants.isBrowserPlatform = true;
+
+               container = {
+                  scrollHeight: 101,
+                  offsetHeight: 100
+               };
+               result = ScrollHeightFixUtil.calcHeightFix(container);
+               assert.equal(result, true);
+
+               container = {
+                  scrollHeight: 200,
+                  offsetHeight: 100
+               };
+               result = ScrollHeightFixUtil.calcHeightFix(container);
+               assert.equal(result, false);
+               restoreEnv('isIE');
+               Env.constants.isBrowserPlatform = oldIsBrowserPlatform;
             });
          });
       });
