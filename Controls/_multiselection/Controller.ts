@@ -199,6 +199,7 @@ export class Controller {
          selection || this._selection,
          this._model.hasMoreData(),
          this._model.getCount(),
+         this._limit,
          byEveryItem,
          rootId
       );
