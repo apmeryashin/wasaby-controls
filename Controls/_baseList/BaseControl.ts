@@ -3864,7 +3864,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
-            this._listViewModel.destroy();
+            if (!newOptions.collection) {
+                this._listViewModel.destroy();
+            }
 
             this._noDataBeforeReload = !(items && items.getCount());
             _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
@@ -3921,7 +3923,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 if (!this._listViewModel || !this._listViewModel.getCount()) {
-                    if (this._listViewModel && !this._listViewModel.destroyed) {
+                    if (this._listViewModel && !this._listViewModel.destroyed && !newOptions.collection) {
                         this._listViewModel.destroy();
                     }
                     _private.initializeModel(this, newOptions, items);
@@ -4301,7 +4303,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._destroyEditInPlaceController();
         }
 
-        if (this._listViewModel) {
+        if (this._listViewModel && !this._options.collection) {
             this._listViewModel.destroy();
         }
 
