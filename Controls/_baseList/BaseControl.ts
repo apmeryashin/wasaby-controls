@@ -4204,10 +4204,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (newArgs.options.method === 'query') {
             filter = cClone(this._options.filter);
-            // Массив в newArgs.key может быть если зовут reloadItem из дерева. В этом случае
-            // в newArgs.key будет лежать иерархий итема за исключением корня, информация о корне
-            // будет в фильтре
-            filter[this._keyProperty] = Array.isArray(newArgs.key) ? newArgs.key : [newArgs.key];
+            filter[this._keyProperty] = [newArgs.key];
 
             sourceController.setFilter(filter);
             reloadItemDeferred = sourceController.load().then((items) => {
