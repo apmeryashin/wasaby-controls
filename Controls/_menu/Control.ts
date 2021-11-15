@@ -702,6 +702,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _updateItems(items: RecordSet, options: IMenuControlOptions): void {
+        this._dataLoadCallback(items, options);
         this._setStateByItems(items, options);
         if (this._selectionController) {
             this._updateSelectionController(options);
