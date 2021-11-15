@@ -565,5 +565,25 @@ describe('Controls/search:ControllerClass', () => {
          searchResult = await searchController.search('     ');
          assert.ok(searchResult === null);
       });
+
+      it('search with new sourceController', async () => {
+         let sourceController = getSourceController({filter: {}});
+         let searchControllerOptions = getSearchControllerClassOptions({
+            sourceController,
+            searchValueTrim: true,
+            searchParam: 'title'
+         });
+         const searchController = getSearchController(searchControllerOptions);
+
+         await searchController.search('test');
+         assert.ok(sourceController.getFilter().title === 'test');
+
+         searchControllerOptions = {...searchControllerOptions};
+         sourceController = getSourceController({filter: {}});
+         searchControllerOptions.sourceController = sourceController;
+         searchController.update(searchControllerOptions);
+         await searchController.search('test2');
+         assert.ok(sourceController.getFilter().title === 'test2');
+      });
    });
 });
