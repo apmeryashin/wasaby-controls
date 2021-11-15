@@ -52,4 +52,20 @@ describe('Controls/filterPanel:View', () => {
             assert.isFalse(filterChanged);
         });
     });
+
+    describe('_getUpdatedSource', () => {
+        it('params are changed', () => {
+            const targetSource = [
+                { name: 'testName', value: null, textValue: '', viewMode: 'extended'}
+            ];
+            const source = [
+                { name: 'testName', value: 'testValue', textValue: 'testTextValue', viewMode: 'basic'}
+            ];
+
+            this._getUpdatedSource(targetSource, source);
+            assert.equal(targetSource[0].value, 'testValue');
+            assert.equal(targetSource[0].textValue, 'textValue');
+            assert.equal(targetSource[0].viewMode, 'basic');
+        });
+    });
 });

@@ -165,6 +165,7 @@ export default class View extends Control<IViewPanelOptions> {
             source.forEach((sourceItem) => {
                 if (isEqualItems(targetItem, sourceItem)) {
                     object.setPropertyValue(targetItem, 'value', sourceItem.value);
+                    object.setPropertyValue(targetItem, 'viewMode', sourceItem.viewMode);
                     object.setPropertyValue(targetItem, 'textValue', sourceItem.textValue);
                 }
             });
