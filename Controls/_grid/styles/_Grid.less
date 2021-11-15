@@ -86,12 +86,12 @@
    @textVariants: text-2xs, text-m, text-l, text-xl, text-2xl;
    .for(@textVariants, {
       &_padding-l_@{_item} {
-         height: ~"height: var(--marker_height_padding-l_@{_item}_list)";
+         height: ~"var(--marker_height_padding-l_@{_item}_list)";
       }
       &_padding-default_@{_item},
       &_padding-null_@{_item},
       &_padding-s_@{_item} {
-         height: ~"height: var(--marker_height_padding-s_@{_item}_list)";
+         height: ~"var(--marker_height_padding-s_@{_item}_list)";
       }
    });
 }
