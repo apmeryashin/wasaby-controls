@@ -3934,6 +3934,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             markerVisibility: newOptions.markerVisibility
                         });
                     }
+
+                    // TODO после выполнения код будет в одном месте https://online.sbis.ru/opendoc.html?guid=59d99675-6bc4-436e-967a-34b448e8f3a4
+                    // При пересоздании коллекции будет скрыт верхний триггер и индикатор,
+                    // чтобы не было лишней подгрузки при отрисовке нового списка.
+                    // Показываем по необходимости верхний индикатор и триггер
+                    if (this._indicatorsController.shouldDisplayTopIndicator()) {
+                        this._indicatorsController.displayTopIndicator(true);
+                    } else {
+                        this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                    }
                 }
 
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
