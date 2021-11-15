@@ -712,6 +712,9 @@ var CompoundArea = CompoundContainer.extend([
       var container = $('.controls-DialogTemplate, .controls-StackTemplate', this.getContainer());
       container.prepend(customHead.addClass('controls-CompoundArea-custom-header'));
       this.getContainer().addClass('controls-CompoundArea-headerPadding');
+      // Добавляем класс который каскадом уберет скругления между шапкой и боди, так как Controls.popupTemplate:Dialog
+      // внутри себя ничего не знает о customHeader CompoundArea.
+      container.addClass('controls-CompoundArea-borderRadius_customHeader');
       if (this._options.type === 'dialog') {
          var height = customHead.height();
          $('.controls-DialogTemplate', this.getContainer()).css('padding-top', height);
