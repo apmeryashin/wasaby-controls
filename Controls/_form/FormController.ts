@@ -441,7 +441,7 @@ class FormController extends ControllerBase<IFormController> {
         return record;
     }
 
-    update(config?: IUpdateConfig): Promise<undefined | boolean | Model> {
+    update(config?: IUpdateConfig): Promise<void> {
         const updateResult = new Deferred();
         const updateCallback = (updResult) => {
             // if result is true, custom update called and we dont need to call original update.
@@ -479,7 +479,7 @@ class FormController extends ControllerBase<IFormController> {
         return updateResult;
     }
 
-    private _update(config: IUpdateConfig = {}): Promise<IDataValid> {
+    private _update(config: IUpdateConfig = {}): Promise<boolean> {
         const record = this._record;
         const updateDef = new Deferred();
 
@@ -501,7 +501,7 @@ class FormController extends ControllerBase<IFormController> {
                 res.then((arg) => {
                     this._updateIsNewRecord(false);
 
-                    updateDef.callback({data: true});
+                    updateDef.callback({data: arg});
                     return arg;
                 }).catch((error: Error) => {
                     updateDef.errback(error);

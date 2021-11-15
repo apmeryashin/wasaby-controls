@@ -113,7 +113,7 @@ export default interface IFormController extends IControllerBase {
  * Обновляет запись в источнике данных. Подробнее {@link Types/source:ICrud#update}.
  * @function Controls/form:IFormController#update
  * @param {Controls/form:IControllerBase/UpdateConfig.typedef} config Параметр сохранения.
- * @return {Promise<undefined | Model>}
+ * @return {Promise<void>}
  * @example
  * Передаем доп данные в update и выключаем индикатор.
  * <pre class="brush: js;">
