@@ -98,8 +98,7 @@ export default class ControllerClass {
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
 
       if (options.sourceController) {
-         this._sourceController = options.sourceController;
-         this._sourceController.subscribe('dataLoad', this._dataLoadCallback);
+         this._initSourceController(options.sourceController);
          this._path = ControllerClass._getPath(this._sourceController.getItems());
       }
 
@@ -213,6 +212,7 @@ export default class ControllerClass {
    update(options: Partial<ISearchControllerOptions>): boolean {
       let updateResult = false;
       const searchValue = options.hasOwnProperty('searchValue') ? options.searchValue : this._options.searchValue;
+      const {sourceController} = options;
 
       if (this._options.root !== options.root) {
          if (this._root !== options.root) {
@@ -221,8 +221,8 @@ export default class ControllerClass {
          this.setRoot(options.root);
       }
 
-      if (options.sourceController && options.sourceController !== this._sourceController) {
-         this._sourceController = options.sourceController;
+      if (sourceController && sourceController !== this._sourceController) {
+         this._initSourceController(sourceController);
          updateResult = true;
       }
 
@@ -488,6 +488,11 @@ export default class ControllerClass {
       return chainFactory(items)
           .filter((item) => !!this._options.filterOnSearchCallback(searchValue, item))
           .value();
+   }
+
+   private _initSourceController(sourceController: NewSourceController): void {
+      this._sourceController = sourceController;
+      this._sourceController.subscribe('dataLoad', this._dataLoadCallback);
    }
 
    private static _hasHierarchyFilter(filter: QueryWhereExpression<unknown>): boolean {
