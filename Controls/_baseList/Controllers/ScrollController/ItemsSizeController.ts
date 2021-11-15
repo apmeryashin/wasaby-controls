@@ -103,10 +103,19 @@ export class ItemsSizesController {
             } else {
                 let position = itemsRange.startIndex;
 
+                // Нужно учитывать оффсет элементов скрытых виртуальным диапазоном.
+                // Например, был диапазон 0 - 10, стал 5 - 15
+                // У 5-ой записи offset === 0, но перед ней есть еще 5-ть скрытых записей, у которых мы знаем offset.
+                // offset после послденей скрытой записи равен ее offset + size.
+                let hiddenItemsOffset = 0;
+                if (position > 0) {
+                    const lastHiddenItem = this._itemsSizes[position - 1];
+                    hiddenItemsOffset = lastHiddenItem.offset + lastHiddenItem.size;
+                }
                 itemsElements.forEach((element: HTMLElement) => {
                     this._itemsSizes[position] = {
                         size: getDimensions(element).height,
-                        offset: getOffsetTop(element)
+                        offset: getOffsetTop(element) + hiddenItemsOffset
                     };
                     position++;
                 });

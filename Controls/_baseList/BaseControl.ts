@@ -3957,7 +3957,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             !this._options.attachLoadTopTriggerToNull ||
             this._hasHiddenItemsByVirtualScroll('up')
         ) {
-            this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+            this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
         }
 
         // на мобильных устройствах не сработает mouseEnter, поэтому ромашку сверху добавляем сразу после моунта

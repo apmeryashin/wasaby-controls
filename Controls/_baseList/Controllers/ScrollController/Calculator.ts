@@ -90,7 +90,7 @@ export class Calculator {
         this._viewportSize = options.viewportSize;
         this._contentSize = options.contentSize;
         this._virtualScrollConfig = options.virtualScrollConfig;
-        this.resetItems(this._totalCount);
+        this.resetItems(this._totalCount, false);
     }
 
     // region Getters/Setters
@@ -300,7 +300,7 @@ export class Calculator {
             pageSize: this._virtualScrollConfig.pageSize,
             scrollPosition,
             totalCount: this._totalCount,
-            triggerOffset: this._triggersOffsets.backward
+            triggerOffset: this._triggersOffsets[direction]
         });
 
         placeholdersChanged = this._updatePlaceholders();
@@ -361,7 +361,7 @@ export class Calculator {
             currentRange: this._range,
             direction,
             pageSize: this._virtualScrollConfig.pageSize,
-            segmentSize: count,
+            segmentSize: this._getSegmentSize(),
             totalCount: this._totalCount
         });
 

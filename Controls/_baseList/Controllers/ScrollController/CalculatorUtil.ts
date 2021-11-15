@@ -55,19 +55,24 @@ export interface IGetSizesByRangeParams {
  */
 export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsRange {
     const { direction, segmentSize, totalCount, pageSize, currentRange } = params;
-    const fixedSegmentSize = Math
-        .min(segmentSize, Math.max(pageSize - (currentRange.endIndex - currentRange.startIndex), 0));
-
     let { startIndex, endIndex } = currentRange;
 
-    if (direction === 'backward') {
-        startIndex = Math.max(0, startIndex - fixedSegmentSize);
-        if (startIndex >= totalCount) {
-            startIndex = Math.max(0, totalCount - pageSize);
+    if (segmentSize && totalCount >= pageSize) {
+        if (direction === 'backward') {
+            startIndex = Math.max(0, startIndex - segmentSize);
+            if (startIndex >= totalCount) {
+                startIndex = Math.max(0, totalCount - pageSize);
+            }
+
+            endIndex = Math.max(endIndex - segmentSize, Math.min(startIndex + pageSize, totalCount));
+        } else {
+            endIndex = Math.min(endIndex + segmentSize, totalCount);
+            startIndex = Math.min(startIndex + segmentSize, Math.max(endIndex - pageSize, 0));
         }
-        endIndex = Math.min(totalCount, Math.max(currentRange.endIndex, startIndex + pageSize));
-    } else {
-        endIndex = Math.min(endIndex + fixedSegmentSize, totalCount);
+    }
+
+    if (endIndex < pageSize && endIndex < totalCount) {
+        endIndex = Math.min(pageSize, totalCount);
     }
 
     return {
@@ -169,7 +174,7 @@ export function getRangeByScrollPosition(params: IGetByPositionParams): IItemsRa
 
     // Если мы скроллим быстро к концу списка, startIndex может вычислиться такой,
     // что число отрисовываемых записей будет меньше virtualPageSize (например если
-    // в списке из 100 записей по scrollTop вычисляется startIndex == 95, то endIndex
+    // в списке из 100 записей по scrollPosition вычисляется startIndex == 95, то endIndex
     // будет равен 100 при любом virtualPageSize >= 5.
     // Нам нужно всегда рендерить virtualPageSize записей, если это возможно, т. е. когда
     // в коллекции достаточно записей. Поэтому если мы находимся в конце списка, пробуем
@@ -193,7 +198,7 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
     let fixedScrollPosition: number;
 
     // На тач устройствах scroll может заходить за пределы границ контейнера.
-    // Такие ситуации нужно корректировать под крайние максимальные и минимальные значения scrollTop
+    // Такие ситуации нужно корректировать под крайние максимальные и минимальные значения scrollPosition
     if (scrollPosition < 0) {
         fixedScrollPosition = 0;
     } else if (viewportSize + scrollPosition > contentSize) {
@@ -204,11 +209,12 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
 
     if (!totalCount) {
         return undefined;
-    } else if (isRangeOnEdge('backward', currentRange, totalCount)
-        && fixedScrollPosition === 0) {
+    } else if (isRangeOnEdge('backward', currentRange, totalCount) && fixedScrollPosition === 0) {
         return currentRange.startIndex;
-    } else if (isRangeOnEdge('forward', currentRange, totalCount)
-        && fixedScrollPosition + viewportSize === contentSize) {
+    } else if (
+        isRangeOnEdge('forward', currentRange, totalCount) &&
+        fixedScrollPosition + viewportSize === contentSize
+    ) {
         return currentRange.endIndex - 1;
     } else {
         let activeElementIndex;

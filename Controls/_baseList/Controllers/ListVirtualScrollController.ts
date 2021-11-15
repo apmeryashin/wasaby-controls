@@ -420,6 +420,7 @@ export class ListVirtualScrollController {
     }
 
     private _onCollectionChange(
+        event: SyntheticEvent,
         action: string,
         newItems: Array<CollectionItem<Model>>,
         newItemsIndex: number,
