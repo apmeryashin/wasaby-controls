@@ -157,11 +157,14 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
        selection: ISelection,
        hasMoreData: boolean,
        itemsCount: number,
+       limit: number,
        byEveryItem: boolean = true
    ): boolean {
       let isAllSelected;
 
-      if (byEveryItem) {
+      if (limit) {
+         isAllSelected = this._isAllSelected(selection) && limit >= itemsCount && !hasMoreData;
+      } else if (byEveryItem) {
          isAllSelected = this._isAllSelected(selection) && selection.excluded.length === 0
             || !hasMoreData && itemsCount > 0 && itemsCount === this.getCount(selection, hasMoreData);
       } else {
