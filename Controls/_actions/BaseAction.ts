@@ -47,6 +47,7 @@ const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'view
 export default abstract class BaseAction extends mixin<ObservableMixin>(
     ObservableMixin
 ) implements IBaseAction {
+    protected _options: IBaseActionOptions = null;
     readonly id: string;
     readonly order: number;
     readonly parent: string | number;
@@ -105,7 +106,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
 
     constructor(options: IBaseActionOptions) {
         super();
-
+        this._options = options;
         this.icon = options.icon || this.icon;
         this.title = options.title || this.title;
         this.tooltip = options.tooltip || this.tooltip || this.title;
