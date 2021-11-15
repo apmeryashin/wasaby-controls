@@ -13,9 +13,11 @@
                                 parentProperty="{{_options.parentProperty}}"
                                 displayProperty="{{_options.displayProperty}}">
             <div class="controls-MoveDialog__content">
-               <Controls.search:InputContainer attr:class="controls-MoveDialog__search">
-                  <Controls.search:Input/>
-               </Controls.search:InputContainer>
+               <ws:if data="{{_options.searchParam}}">
+                  <Controls.search:InputContainer attr:class="controls-MoveDialog__search">
+                     <Controls.search:Input/>
+                  </Controls.search:InputContainer>
+               </ws:if>
                <Controls.scroll:Container attr:class="controls-MoveDialog__scroll">
                   <Controls.list:Container>
                      <Controls.explorer:View
