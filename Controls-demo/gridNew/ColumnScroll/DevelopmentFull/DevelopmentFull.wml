@@ -147,7 +147,12 @@
                         <button on:click="_scrollToColumn()" style="padding: 3px;">Проскролить</button>
                     </ws:template>
                 </ws:Object>
-
+                <ws:Object>
+                    <ws:template>
+                        <h4 class="controlsDemo__mb1">Подскрол к колонке в момент смены набора колонок</h4>
+                        <button on:click="_scrollToNewColumn()" style="padding: 3px;">Добавить и проскролить</button>
+                    </ws:template>
+                </ws:Object>
                 <ws:Object>
                     <ws:template>
                         <h4 class="controlsDemo__mb1">Вкл/Выкл множественный выбор</h4>

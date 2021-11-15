@@ -28,6 +28,7 @@ import 'css!Controls/Application/oldCss';
 import 'css!Controls/application';
 import 'css!Controls/dragnDrop';
 import 'css!Controls/CommonClasses';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 /**
  * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
@@ -582,6 +583,12 @@ export default class Application extends Control<IApplication> {
    protected _cancelFinishingPendingHandler(event: Event, root: string): void {
       event.stopPropagation();
       this._pendingController.cancelFinishingPending(root);
+   }
+
+   protected _workspaceResizeHandler(event: SyntheticEvent): void {
+      const args = Array.prototype.slice.call(arguments, 1);
+      DimensionsMeasurer.resetCache(); // После изменения размеров страницы сбросим кэш, т.к. zoom мог поменяться
+      this._popupEventHandler(event, 'workspaceResize', ...args);
    }
 
    /**
