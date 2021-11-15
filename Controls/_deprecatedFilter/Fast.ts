@@ -470,6 +470,7 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
                query: (this._configs[index].popupItems || this._configs[index]._items).clone()
             }
          }),
+         markerVisibility: 'onactivated',
          selectorOpener: this,
          selectorItems: this._configs[index]._items,
          selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
