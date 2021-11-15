@@ -5,7 +5,7 @@ import 'css!Controls/toggle';
 export interface ICheckboxMarkerOptions extends IControlOptions {
     triState?: boolean;
     value?: boolean | null;
-    offset?: string;
+    horizontalPadding?: string;
 }
 /**
  * Контрол, отображающий элемент контрола "чекбокс" - галочку
@@ -22,17 +22,17 @@ export interface ICheckboxMarkerOptions extends IControlOptions {
 class CheckboxMarker extends Control<ICheckboxMarkerOptions> {
     protected _template: TemplateFunction = controlTemplate;
     static defaultProps: ICheckboxMarkerOptions = {
-        offset: 'default'
+        horizontalPadding: 'default'
     };
 }
 
 /**
- * @name Controls/_toggle/CheckboxMarker#offset
+ * @name Controls/_toggle/CheckboxMarker#horizontalPadding
  * @cfg {String} Конфигурация горизонтальных отступов чекбокса.
  * @default default
  * @variant default
  * @variant none
- * @demo Controls-demo/toggle/CheckboxMarker/Offset/Index
+ * @demo Controls-demo/toggle/CheckboxMarker/HorizontalPadding/Index
  */
 /**
  * @name Controls/_toggle/CheckboxMarker#triState

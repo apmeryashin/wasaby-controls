@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls-demo/toggle/CheckboxMarker/Offset/Offset');
+import template = require('wml!Controls-demo/toggle/CheckboxMarker/HorizontalPadding/HorizontalPadding');
 
 class CheckboxMarker extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
