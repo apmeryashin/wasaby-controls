@@ -150,7 +150,7 @@ function validAttributesInsertion(targetAttributes: object,
       }
    }
 
-function recursiveMarkup(value, attrsToDecorate, key, parent?) {
+function recursiveMarkup(value, attrsToDecorate, key, parent?, options?) {
       let valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
          i;
@@ -158,7 +158,11 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?) {
          if (!resolver || !resolver.__noNeedEscapeString) {
             valueToBuild = markupGenerator.escape(valueToBuild);
          }
-         return markupGenerator.createText(valueToBuild, key);
+         if (options[valueToBuild]) {
+            return markupGenerator.createControlNew('resolver', options[valueToBuild], {}, {}, {}, {});
+         } else {
+            return markupGenerator.createText(valueToBuild, key);
+         }
       }
       if (!valueToBuild) {
          return [];
@@ -172,7 +176,7 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?) {
       const children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
-            children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', valueToBuild));
+            children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', valueToBuild, options));
          }
          resolverMode ^= wasResolved;
          return children;
@@ -198,7 +202,7 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?) {
          validAttributesInsertion(attrs.attributes, valueToBuild[1], additionalValidAttributes);
       }
       for (i = firstChildIndex; i < valueToBuild.length; ++i) {
-         children.push(recursiveMarkup(valueToBuild[i], {}, key + i + '_', valueToBuild));
+         children.push(recursiveMarkup(valueToBuild[i], {}, key + i + '_', valueToBuild, options));
       }
       resolverMode ^= wasResolved;
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
@@ -253,7 +257,7 @@ const template = function(data, attr, context, isVdom, sets, forceCompatible, ge
          };
       }
       try {
-         elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
+         elements = recursiveMarkup(value, attrsToDecorate, key + '0_', null, control._options);
       } catch (e) {
           Logger.error('UI/Executor:TClosure: ' + e.message, undefined, e);
       } finally {
