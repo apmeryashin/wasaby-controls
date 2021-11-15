@@ -96,6 +96,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
 
     protected _dragEndHandler(): void {
         this._notifyDragEnd();
+        this._dragStartHeightDimensions = null;
     }
 
     protected _dragMoveHandler(event: SyntheticEvent<Event>, dragObject: IDragObject): void {
@@ -120,13 +121,22 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         return this._children.customContent.clientHeight;
     }
 
+    private _touchOnController(event: SyntheticEvent<TouchEvent>): boolean {
+        const target = event.target as HTMLElement;
+        return !!(target && target.closest('.controls-SlidingPanel__controller-container'));
+    }
+
     /**
      * Запоминаем начальную позицию тача, чтобы считать offset от нее
      * @param {<TouchEvent>} event
      * @private
      */
     protected _touchStartHandler(event: SyntheticEvent<TouchEvent>): void {
-        this._startTouchYPosition = this._currentTouchYPosition = event.nativeEvent.targetTouches[0].clientY;
+        // Контроллер может быть построен внутри контента, драг в нем обрабатывается через dragNDropContainer
+        if (this._touchOnController(event)) {
+            return;
+        }
+        this._startTouchYPosition = event.nativeEvent.targetTouches[0].clientY;
         this._swipeInProcess = true;
     }
 
@@ -136,6 +146,10 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
      * @private
      */
     protected _touchMoveHandler(event: SyntheticEvent<TouchEvent>): void {
+        // Контроллер может быть построен внутри контента, драг в нем обрабатывается через dragNDropContainer
+        if (this._touchOnController(event)) {
+            return;
+        }
         if (this._scrollAvailable && this._isSwipeForScroll(event)) {
             // Расчет оффсета тача должен начинаться только с того момента как закончится скролл, а не со старта тача
             this._currentTouchPosition = null;
@@ -185,6 +199,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             this._touchDragOffset = null;
         }
         this._currentTouchPosition = null;
+        this._startTouchYPosition = null;
         this._swipeInProcess = false;
     }
 
@@ -227,7 +242,6 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     }
 
     private _notifyDragStart(offset: IDragObject['offset']): void {
-
         /*
            Запоминаем высоту скролла, чтобы при увеличении проверять на то,
            что не увеличим шторку больше, чем есть контента
@@ -270,8 +284,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             offsetY = 0;
         } else if (
             // Если остаток доступного контента меньше сдвига, то сдвигаем на размер оставшегося контента
-            realHeightOffset > scrollContentOffset &&
-            this._getHeight(this._options) > this._options.slidingPanelOptions.minHeight
+            realHeightOffset > scrollContentOffset
         ) {
 
             /*
