@@ -6790,7 +6790,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // событие долетает до всех списков мышка находится уже в другом списке.
         // (1-ый список insideDragging=false, 2-ой список insideDragging=true)
         // Из-за этого пытаемся начать днд не в том списке.
-        if (this._draggedKey) {
+        if (this._draggedKey !== null) {
             this._dragStart(dragObject, this._draggedKey);
         } else {
             this._dragEntity = dragObject.entity;
