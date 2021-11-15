@@ -741,8 +741,7 @@ export default class ScrollController {
                 }
             }
         }
-        const maxPossibleScrollTop =  this._viewHeight - this._viewportHeight;
-        scrollTop = Math.max(0, Math.min(scrollTop, maxPossibleScrollTop));
+        scrollTop = Math.max(0, scrollTop);
         return scrollTop;
     }
 
