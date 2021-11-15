@@ -284,8 +284,16 @@ class PositionParamsCalculator implements IParamsCalculator {
 
     private static _resolvePosition(item: Record, field: TFieldValue): TPositionValue {
         const navPosition: TPositionValue = [];
+        let position;
         for (let i = 0; i < field.length; i++) {
-            navPosition.push(item.get(field[i]));
+            position = item.get(field[i]);
+
+            if (position !== undefined) {
+                navPosition.push(item.get(field[i]));
+            } else {
+                Logger.error(`QueryParamsController/Position:
+                              знание undefined из поля записи ${field[i]} не может использоваться в качестве курсора.`);
+            }
         }
         return navPosition;
     }
