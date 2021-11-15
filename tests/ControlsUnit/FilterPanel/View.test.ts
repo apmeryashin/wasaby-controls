@@ -8,6 +8,7 @@ describe('Controls/filterPanel:View', () => {
                 {
                     name: 'owners',
                     value: 'Test owner',
+                    viewMode: 'default',
                     textValue: 'Test owner',
                     resetValue: null
                 }
