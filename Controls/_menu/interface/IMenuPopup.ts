@@ -11,8 +11,8 @@ export interface IFooterItemData {
 }
 
 export interface IMenuPopupOptions extends IMenuControlOptions, ISearchOptions {
-    headerContentTemplate?: TemplateFunction;
-    footerContentTemplate?: TemplateFunction;
+    headerContentTemplate?: TemplateFunction|string;
+    footerContentTemplate?: TemplateFunction|string;
     closeButtonVisibility?: boolean;
     footerItemData?: IFooterItemData;
     trigger: 'click' | 'hover';
