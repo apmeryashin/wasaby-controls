@@ -29,6 +29,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         historyId: options.historyId,
         historyRoot: options.historyRoot,
         historyNew: options.historyNew,
+        maxHistoryVisibleItems: options.maxHistoryVisibleItems,
         allowPin: options.allowPin,
         width: options.width,
         itemAlign: options.itemAlign,
