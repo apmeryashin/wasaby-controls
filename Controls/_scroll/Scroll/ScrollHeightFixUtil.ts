@@ -20,7 +20,7 @@ const _private = {
                 if (detection.isIE) {
                     // Из-за дробных пикселей в IE может появится ненужный скролл в 1px
                     // Сами выключим скролл через overflow: hidden в таком случае
-                    return container.scrollHeight - container.offsetHeight === 1;
+                    return container.scrollHeight - container.offsetHeight <= 1;
                 }
             }
             return false;
