@@ -706,11 +706,27 @@ class StickyHeaderController {
     }
 
     private _getGeneralParentNode(header0: TRegisterEventData, header1: TRegisterEventData): Node {
-        let parentElementOfHeader0 = header0.inst.getHeaderContainer().parentElement;
-        const parentElementOfHeader1 = header1.inst.getHeaderContainer().parentElement;
-        while (parentElementOfHeader0 !== parentElementOfHeader1 && parentElementOfHeader0 !== document.body) {
-            parentElementOfHeader0 = parentElementOfHeader0.parentElement;
+        let parentElementOfHeader0;
+        let parentElementOfHeader1 = header1.inst.getHeaderContainer().parentElement;
+
+        // У заголовка1 дважды возьмем родителя (прямой родитель и родитель родителя). Доходить у заголовка1 до body
+        // нельзя, т.к в скролл контейнере могут быть несколько независимых гридов со своими стикиблоками, которые не
+        // должны учитывать стикиблоки других гридов (т.е в таком случае общий предок будет скроллконтейнер,
+        // а должен быть грид).
+        const depthParent = 2;
+        for (let i = 0; i < depthParent; i++) {
+            parentElementOfHeader0 = header0.inst.getHeaderContainer().parentElement;
+            while (parentElementOfHeader0 !== parentElementOfHeader1 && parentElementOfHeader0 !== document.body) {
+                parentElementOfHeader0 = parentElementOfHeader0.parentElement;
+            }
+
+            if (parentElementOfHeader0 !== document.body) {
+                break;
+            } else {
+                parentElementOfHeader1 = parentElementOfHeader1.parentElement;
+            }
         }
+
         return parentElementOfHeader0;
     }
 
