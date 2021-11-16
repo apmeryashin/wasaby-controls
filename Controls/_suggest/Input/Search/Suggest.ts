@@ -104,8 +104,15 @@ var Suggest = Control.extend({
          this._suggestState = false;
       }
       this._notify('resetClick');
-   }
+   },
 
+   openSuggest(): void {
+      this._suggestState = true;
+   },
+
+   closeSuggest(): void {
+      this._suggestState = false;
+   }
 });
 
 Suggest.getOptionTypes = getOptionTypes;
