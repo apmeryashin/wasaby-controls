@@ -114,33 +114,35 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
-    private _subscribeToCollectionChange(items, onCollectionItemChange) {
-        items.subscribe('oncollectionitemchange', onCollectionItemChange);
+    private _subscribeToCollectionChange(items: RecordSet): void {
+        items.subscribe('oncollectionitemchange', this._onCollectionItemChange);
     }
 
-    private _unsubscribeToCollectionChange(items, onCollectionItemChange) {
-        items.unsubscribe('oncollectionitemchange', onCollectionItemChange);
+    private _unsubscribeToCollectionChange(items: RecordSet): void {
+        items.unsubscribe('oncollectionitemchange', this._onCollectionItemChange);
     }
 
     protected _beforeUpdate(options?: IImageDisplayContainerOptions, contexts?: any): void {
         if (!isEqual(options.columns, this._options.columns)) {
             this._columns = this._getPatchedColumns(options.columns);
         }
-        if (options.imageProperty !== this._options.imageProperty) {
+        // Ресетим показ изображений при проваливании в папку и если поменяли свойство, которое указывает на картинку
+        if (options.imageProperty !== this._options.imageProperty ||
+            options.root !== this._options.root) {
             this._updateDisplayImage(this._items, options.imageProperty, true);
             if (!options.imageProperty) {
-                this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange);
+                this._unsubscribeToCollectionChange(this._items);
             }
         }
     }
 
     destroy(): void {
-        this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange);
+        this._unsubscribeToCollectionChange(this._items);
     }
 
     private _itemsReadyCallback(items: RecordSet): void {
         this._items = items;
-        this._subscribeToCollectionChange(this._items, this._onCollectionItemChange);
+        this._subscribeToCollectionChange(this._items);
         this._updateDisplayImage(this._items, this._options.imageProperty, true);
 
         if (this._options.itemsReadyCallback) {
@@ -153,6 +155,8 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
             this._items = items;
         }
 
+        // В случае загрузки в каком-либо направлении проверяем, появились ли картинки.
+        // В этом месте нельзя понять, нужно ли ресетить показ изображений, если нет direction.
         if (direction) {
             this._updateDisplayImage(items, this._options.imageProperty, false);
         }
