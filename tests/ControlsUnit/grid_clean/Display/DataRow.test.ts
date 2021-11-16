@@ -45,7 +45,10 @@ describe('Controls/grid_clean/Display/DataRow', () => {
             displayProperty: 'caption'
         }];
         const gridRow = new GridDataRow({
-            owner: mockedCollection,
+            owner: {
+                ...mockedCollection,
+                getMultiSelectPosition: () => 'default'
+            },
             gridColumnsConfig: columnsConfig,
             columnsConfig,
             contents: record

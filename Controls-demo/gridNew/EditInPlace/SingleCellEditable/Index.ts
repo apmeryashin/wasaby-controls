@@ -12,6 +12,8 @@ export default class extends Control {
     private _viewSource: Memory;
     private _itemActions: IItemAction[];
     private _columns: IColumnRes[];
+    private _multiSelectVisibility: 'visible' | 'hidden' | 'onhover' = 'hidden';
+    private _selectedKeys = [];
 
     protected _beforeMount(): void {
         this._setViewSource();
@@ -48,6 +50,10 @@ export default class extends Control {
         if (columnIndex === 0 || columnIndex === 3) {
             return 'Cancel';
         }
+    }
+
+    _toggleMultiSelectVisibility(e, visibility): void {
+        this._multiSelectVisibility = visibility;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
