@@ -66,7 +66,9 @@ export default class MoveViewCommand {
                     }
 
                     if (direction === LOCAL_MOVE_POSITION.After && targetIndex < movedIndex) {
-                        targetIndex = (targetIndex + 1) < collection.getCount() ? targetIndex + 1 : collection.getCount();
+                        targetIndex = (targetIndex + 1) < collection.getCount()
+                            ? targetIndex + 1
+                            : collection.getCount();
                     } else if (direction === LOCAL_MOVE_POSITION.Before && targetIndex > movedIndex) {
                         targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
                     }

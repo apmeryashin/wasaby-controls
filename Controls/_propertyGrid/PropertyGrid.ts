@@ -323,7 +323,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _itemMouseEnter(event: SyntheticEvent<Event>,
-                    displayItem: PropertyGridCollectionItem<Model>): void {
+                              displayItem: PropertyGridCollectionItem<Model>): void {
         if (this._dndController) {
             if (this._dndController.isDragging()) {
                 this._listModel.setHoveredItem(null);
@@ -795,7 +795,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _onMove(nativeEvent): void {
         if (this._startEvent) {
             const dragObject = this._getDragObject(nativeEvent, this._startEvent);
-            if ((!this._dndController || !this._dndController.isDragging()) && this._isDragStarted(this._startEvent, nativeEvent)) {
+            if (
+                (!this._dndController || !this._dndController.isDragging()) &&
+                this._isDragStarted(this._startEvent, nativeEvent)
+            ) {
                 this._insideDragging = true;
                 this._notify('_documentDragStart', [dragObject], {bubbling: true});
             }
@@ -807,7 +810,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
                 this._notify('dragMove', [dragObject]);
                 if (this._options.draggingTemplate && this._listModel.isDragOutsideList()) {
-                    this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
+                    this._notify(
+                        '_updateDraggingTemplate',
+                        [dragObject, this._options.draggingTemplate],
+                        {bubbling: true}
+                    );
                 }
             }
         }
@@ -823,8 +830,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _getDragOffset(moveEvent, startEvent): object {
-        const moveEventXY = this._getPageXY(moveEvent),
-            startEventXY = this._getPageXY(startEvent);
+        const moveEventXY = this._getPageXY(moveEvent);
+        const startEventXY = this._getPageXY(startEvent);
 
         return {
             y: moveEventXY.y - startEventXY.y,
@@ -869,7 +876,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (this._dndController.isDragging()) {
             dragPosition = this._dndController.calculateDragPosition({targetItem});
             if (dragPosition) {
-                const changeDragTarget = this._notify('changeDragTarget', [this._dndController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
+                const changeDragTarget = this._notify(
+                    'changeDragTarget',
+                    [this._dndController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]
+                );
                 if (changeDragTarget !== false) {
                     this._dndController.setDragPosition(dragPosition);
                 }

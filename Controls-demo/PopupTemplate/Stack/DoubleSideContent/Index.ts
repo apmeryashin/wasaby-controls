@@ -11,7 +11,7 @@ class Index extends Control<IControlOptions> {
             {id: 'delete', icon: 'icon-Erase', showType: 2, viewMode: 'toolButton'},
             {id: 'rubles', icon: 'icon-Ruble', showType: 2, viewMode: 'toolButton'},
             {id: 'delete', icon: 'icon-ExpandList', showType: 2, viewMode: 'toolButton'},
-            {id: 'apply', icon: 'icon-Yes', showType: 2, iconStyle: 'success', viewMode: 'functionalButton'},
+            {id: 'apply', icon: 'icon-Yes', showType: 2, iconStyle: 'success', viewMode: 'functionalButton'}
         ]
     });
 
