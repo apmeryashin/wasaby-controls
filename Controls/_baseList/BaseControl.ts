@@ -4864,12 +4864,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         return cancelEditPromise.then(() => {
             if (!this._destroyed) {
-                return this._reload(this._options, sourceConfig);
+                return this._reload(this._options, sourceConfig, false);
             }
         });
     }
 
-    protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|null|void> {
+    protected _reload(cfg, sourceConfig?: IBaseSourceConfig, immediateResolve: boolean = true): Promise<RecordSet|null|void> {
         return new Promise((resolve) => {
             if (this._sourceController) {
                 this._indicatorsController.endDisplayPortionedSearch();
@@ -4880,7 +4880,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             return;
                         }
 
-                        this._resolveSourceLoadPromise(() => resolve(list as RecordSet));
+                        if (immediateResolve) {
+                            resolve(list as RecordSet);
+                        } else {
+                            this._resolveSourceLoadPromise(() => resolve(list as RecordSet));
+                        }
                     })
                     .catch((error) => error);
             } else {
