@@ -4493,7 +4493,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._resolveAfterBeginEdit();
         }
 
-        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
+        if (
+            this._editInPlaceController &&
+            this._editInPlaceController.isEditing() &&
+            !this._editInPlaceController.isEndEditProcessing()
+        ) {
             _private.activateEditingRow(this);
         }
 
