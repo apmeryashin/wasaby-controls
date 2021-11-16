@@ -485,7 +485,10 @@ export default class IndicatorsController {
     stopDisplayPortionedSearch(): void {
         this.clearDisplayPortionedSearchTimer();
         this._setSearchState(SEARCH_STATES.STOPPED);
-        this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.ContinueSearch);
+        // https://online.sbis.ru/opendoc.html?guid=0be69d45-286d-4f71-af2e-fe8653804da9
+        if (this._model && !this._model.destroyed) {
+            this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.ContinueSearch);
+        }
         this._options.stopDisplayPortionedSearchCallback();
     }
 
