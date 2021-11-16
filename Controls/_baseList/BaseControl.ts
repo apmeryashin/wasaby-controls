@@ -3116,6 +3116,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _itemActionsController = null;
     protected _sourceController: SourceController = null;
+    private _sourceControllerLoadingResolver?: () => void;
     _loadedBySourceController = false;
 
     _notifyHandler = EventUtils.tmplNotify;
@@ -4662,6 +4663,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
         this._modelRecreated = false;
+
+        if (this._sourceControllerLoadingResolver) {
+            this._sourceControllerLoadingResolver();
+        }
         if (this._callbackAfterUpdate) {
             this._callbackAfterUpdate.forEach((callback) => {
                 callback();
@@ -4863,7 +4868,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             return;
                         }
 
-                        resolve(list as RecordSet);
+                        this._resolveSourceLoadPromise(() => resolve(list as RecordSet));
                     })
                     .catch((error) => error);
             } else {
@@ -4871,6 +4876,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 Logger.error('BaseControl: Source option is undefined. Can\'t load data', this);
             }
         });
+    }
+
+    private _resolveSourceLoadPromise(nativeResolver: Function): void {
+        this._sourceControllerLoadingResolver = () => {
+            nativeResolver();
+            this._sourceControllerLoadingResolver = null;
+        };
+        this._forceUpdate();
     }
 
     // TODO удалить, когда будет выполнено наследование контролов (TreeControl <- BaseControl)

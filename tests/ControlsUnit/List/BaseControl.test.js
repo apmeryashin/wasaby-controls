@@ -359,6 +359,10 @@ define([
             afterReloadCallbackCalled = true;
          });
 
+         localSandbox.replace(ctrl, '_resolveSourceLoadPromise', (resolver) => {
+             resolver();
+         });
+
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
 
@@ -402,11 +406,17 @@ define([
          await ctrl._beforeMount(cfg);
          ctrl.saveOptions(cfg);
 
+         const localSandbox = sinon.createSandbox();
+         localSandbox.replace(ctrl, '_resolveSourceLoadPromise', (resolver) => {
+             resolver();
+         });
+
          // Empty list
          assert.isUndefined(ctrl._loadedItems);
          await ctrl.reload();
 
          assert.deepEqual(ctrl._loadedItems.getRawData(), data);
+         localSandbox.reset();
       });
 
       it('call itemsReadyCallback on recreation RS', async function () {
@@ -1817,9 +1827,15 @@ define([
          await baseControl._beforeMount(baseControlOptions);
          baseControl.saveOptions(baseControlOptions);
 
+         const localSandbox = sinon.createSandbox();
+         localSandbox.replace(baseControl, '_resolveSourceLoadPromise', (resolver) => {
+             resolver();
+         });
+
          await baseControl._reload(baseControlOptions);
          await baseControl._beforeUpdate(baseControlOptions);
          assert.ok(baseControl._shouldRestoreScrollPosition);
+         localSandbox.reset();
       });
 
       it('reload and restore model state', async function() {

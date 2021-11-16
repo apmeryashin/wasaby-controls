@@ -1809,10 +1809,16 @@ define([
             treeControl = await correctCreateTreeControlAsync(cfg);
          });
 
-         it('set has more for nodes and hidden nodes', async() => {
-            const methodSpy = sinon.spy(treeControl.getViewModel(), 'setHasMoreStorage');
-            await treeControl.reload();
-            assert.isTrue(methodSpy.withArgs({0: false, 1: false}).called);
+         it('set has more for nodes and hidden nodes', async () => {
+             const localSandbox = sinon.createSandbox();
+             const methodSpy = localSandbox.spy(treeControl.getViewModel(), 'setHasMoreStorage');
+
+             localSandbox.replace(treeControl, '_resolveSourceLoadPromise', (resolver) => {
+                 resolver();
+             });
+             await treeControl.reload();
+             assert.isTrue(methodSpy.withArgs({0: false, 1: false}).called);
+             localSandbox.reset();
          });
       });
    });
