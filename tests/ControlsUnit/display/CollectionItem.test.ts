@@ -537,21 +537,27 @@ describe('Controls/_display/CollectionItem', () => {
         };
 
         const item = new CollectionItem({ owner, multiSelectVisibility: 'onhover' });
+        const requiredClasses = 'js-controls-ListView__notEditable ' +
+                                'js-controls-ListView__checkbox ' +
+                                'js-controls-DragScroll__notDraggable ' +
+                                'controls-List_DragNDrop__notDraggable ' +
+                                'controls-ListView__checkbox ' +
+                                'controls-CheckboxMarker_inList';
 
         // multiselect onhover + not selected
         item.setMultiSelectVisibility('onhover');
         const onhoverMultiSelectClasses = item.getMultiSelectClasses('default');
-        CssClassesAssert.isSame(onhoverMultiSelectClasses, 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ListView__checkbox js-controls-DragScroll__notDraggable controls-CheckboxMarker_inList controls-ListView__checkbox controls-ListView__checkbox_position-default controls-ListView__checkbox-onhover');
+        CssClassesAssert.isSame(onhoverMultiSelectClasses, requiredClasses + ' controls-ListView__checkbox_position-default controls-ListView__checkbox-onhover');
 
         // multiselect onhover + selected
         item.setSelected(true, true);
         const selectedMultiSelectClasses = item.getMultiSelectClasses('default');
-        CssClassesAssert.isSame(selectedMultiSelectClasses, 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ListView__checkbox js-controls-DragScroll__notDraggable controls-CheckboxMarker_inList controls-ListView__checkbox controls-ListView__checkbox_position-default');
+        CssClassesAssert.isSame(selectedMultiSelectClasses, requiredClasses + ' controls-ListView__checkbox_position-default');
 
         // custom position
         owner.getMultiSelectPosition = () => 'custom';
         const customMultiSelectClasses = item.getMultiSelectClasses('default');
-        CssClassesAssert.isSame(customMultiSelectClasses, 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ListView__checkbox js-controls-DragScroll__notDraggable controls-CheckboxMarker_inList controls-ListView__checkbox controls-ListView__checkbox_position-custom ');
+        CssClassesAssert.isSame(customMultiSelectClasses, requiredClasses + ' controls-ListView__checkbox_position-custom ');
     });
 
     describe('.setEditing()', () => {
