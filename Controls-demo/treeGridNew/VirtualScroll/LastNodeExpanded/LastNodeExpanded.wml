@@ -16,6 +16,11 @@
             <ws:navigation source="page" view="infinity">
                 <ws:sourceConfig pageSize="{{ 5 }}" page="{{ 0 }}" hasMore="{{ false }}"/>
             </ws:navigation>
+           <ws:nodeFooterTemplate>
+              <ws:partial template="Controls/treeGrid:NodeFooterTemplate">
+                 This is custom node footer template
+              </ws:partial>
+           </ws:nodeFooterTemplate>
         </Controls.treeGrid:View>
     </Controls.scroll:Container>
 </div>
