@@ -28,6 +28,7 @@ export default class extends Control {
     protected _itemActions: IItemAction[];
     protected _columns: IColumn[] = columns;
     protected _items: RecordSet;
+    protected _buttonStyles: string[] = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'unaccented', 'default', 'pale'];
 
     protected _beforeMount(): void {
         const data = Editing.getEditingData();
