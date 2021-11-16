@@ -230,25 +230,25 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
    describe('isAllSelected', () => {
       it('not empty model', () => {
          let selection = { selected: [null], excluded: [] };
-         assert.isTrue(strategy.isAllSelected(selection, false, 3));
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, null));
 
          selection = { selected: [null], excluded: [5] };
-         assert.isFalse(strategy.isAllSelected(selection, false, 3));
+         assert.isFalse(strategy.isAllSelected(selection, false, 3, null));
 
          selection = { selected: [1, 2, 3], excluded: [] };
-         assert.isFalse(strategy.isAllSelected(selection, true, 3));
+         assert.isFalse(strategy.isAllSelected(selection, true, 3, null));
 
          selection = { selected: [1, 2, 3], excluded: [] };
-         assert.isTrue(strategy.isAllSelected(selection, false, 3));
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, null));
 
          selection = { selected: [], excluded: [] };
-         assert.isFalse(strategy.isAllSelected(selection, false, 3, false));
+         assert.isFalse(strategy.isAllSelected(selection, false, 3, null, false));
 
          selection = { selected: [null], excluded: [] };
-         assert.isTrue(strategy.isAllSelected(selection, false, 3, false));
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, null, false));
 
          selection = { selected: [null, 2], excluded: [3] };
-         assert.isTrue(strategy.isAllSelected(selection, false, 3, false));
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, null, false));
       });
 
       it('empty model', () => {
@@ -257,7 +257,15 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
          });
 
          const selection = { selected: [], excluded: [] };
-         assert.isFalse(strategy.isAllSelected(selection, false, 0, true));
+         assert.isFalse(strategy.isAllSelected(selection, false, 0, null, true));
+      });
+
+      it('limit', () => {
+         const selection = { selected: [null], excluded: [] };
+         assert.isFalse(strategy.isAllSelected(selection, false, 3, 2, true));
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, 3, true));
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, 5, true));
+         assert.isFalse(strategy.isAllSelected(selection, true, 3, 5, true));
       });
    });
 });
