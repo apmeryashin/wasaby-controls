@@ -6984,6 +6984,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
 
             this._dndListController = null;
+            this._insideDragging = false;
         };
 
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
@@ -7003,7 +7004,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        this._insideDragging = false;
         this._draggedKey = null;
         this._listViewModel.setDragOutsideList(false);
     }
