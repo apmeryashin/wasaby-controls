@@ -380,7 +380,7 @@ class FormController extends ControllerBase<IFormController> {
         if (!crudResult) {
             return Promise.resolve();
         }
-        if (crudResult.data) {
+        if (crudResult.hasOwnProperty('data')) {
             return Promise.resolve(crudResult.data);
         }
         return Promise.reject(crudResult.error);
