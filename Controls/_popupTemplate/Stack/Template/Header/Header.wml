@@ -31,7 +31,7 @@
                <div class="controls-StackTemplate__maximized_button controls-StackTemplate__header_maximized_button" on:click="changeMaximizedState()"
                     attr:title="{{_options._maximizeButtonTitle}}"></div>
             </ws:if>
-            <ws:if data="{{_options.closeButtonVisibility}}">
+            <ws:if data="{{_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility}}">
                <Controls._popupTemplate.CloseButton attr:class="controls-StackTemplate__close_button"
                                                     attr:data-qa="controls-stack-Button__close"
                                                     viewMode="{{_options.closeButtonViewMode}}"
