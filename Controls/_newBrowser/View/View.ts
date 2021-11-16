@@ -275,6 +275,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     protected _beforeUnmount(): void {
         this._detailDataSource.unsubscribe('dataLoad', this._onDetailDataLoadCallback);
         this._detailDataSource.destroy();
+        this._masterDataSource?.unsubscribe('dataLoad', this._onMasterDataLoadCallback);
         this._masterDataSource?.destroy();
     }
 
