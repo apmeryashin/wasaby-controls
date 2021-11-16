@@ -5354,9 +5354,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._options.readOnly) {
             return BaseControl._rejectEditInPlacePromise('beginEdit');
         }
+        // В публичном API поьзователь указывает индекс колонки из конфигурации, не зная про множественный выбор.
+        // Модель строки работает по индексам своих внутренних колонок (Cell), к которых есть колонка-чекбокс.
+        // FIXME: Не должно быть в BaseControl, унести в GridControl.
+        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
         return this._beginEdit(userOptions, {
             shouldActivateInput: userOptions?.shouldActivateInput,
-            columnIndex: userOptions?.columnIndex || 0
+            columnIndex: (userOptions?.columnIndex || 0) + hasCheckboxes
         });
     }
 
@@ -5364,11 +5368,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._options.readOnly) {
             return BaseControl._rejectEditInPlacePromise('beginAdd');
         }
+        // В публичном API поьзователь указывает индекс колонки из конфигурации, не зная про множественный выбор.
+        // Модель строки работает по индексам своих внутренних колонок (Cell), к которых есть колонка-чекбокс.
+        // FIXME: Не должно быть в BaseControl, унести в GridControl.
+        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
         return this._beginAdd(userOptions, {
             addPosition: userOptions?.addPosition || this._getEditingConfig().addPosition,
             targetItem: userOptions?.targetItem,
             shouldActivateInput: userOptions?.shouldActivateInput,
-            columnIndex: userOptions?.columnIndex || 0
+            columnIndex: (userOptions?.columnIndex || 0) + hasCheckboxes
         });
     }
 
