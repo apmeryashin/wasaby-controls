@@ -134,10 +134,10 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
         let prevDispItem = prev.index >= params.startIndex ? prev.item : null;
 
         // Если запись редактируетсяя, то она не участвует в рассчете лесенки.
-        if (prevDispItem && prevDispItem.isEditing()) {
+        if (prevDispItem && (prevDispItem.isEditing())) {
             prevDispItem = null;
         }
-        if (!item || dispItem.isEditing()) {
+        if (!item || dispItem.isEditing() || dispItem.isSticked()) {
             continue;
         }
 

@@ -342,6 +342,7 @@ define(
             view._container = {};
             view._detailPanelTemplateName = 'detailPanelTemplateName.wml';
             view._source = defaultConfig.source;
+            view._options.theme = 'default';
 
             view.openDetailPanel();
 
@@ -470,6 +471,7 @@ define(
                isOpened = true;
             view._filterPopupOpener = { open: (options) => {popupOptions = options;}, isOpened: () => {return isOpened;} };
             view._container = {};
+            view._options.theme = 'default';
 
             isOpened = false;
             view._open([1, 2, 4], {template: 'templateName'});

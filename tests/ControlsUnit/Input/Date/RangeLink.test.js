@@ -69,7 +69,7 @@ define([
             sinon.assert.called(component._stickyOpener.open);
             sinon.assert.called(component._children.linkView.getPopupTarget);
             sinon.assert.calledWith(component._stickyOpener.open, sinon.match({
-               className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft controls_popupTemplate_theme-default controls_theme-default',
+               className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft controls_popupTemplate_theme-default',
                target: TARGET,
                templateOptions: {
                   startValue: opts.startValue,
@@ -99,7 +99,7 @@ define([
             };
             component.openPopup();
             sinon.assert.calledWith(component._stickyOpener.open, sinon.match({
-               className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft controls_popupTemplate_theme-default controls_theme-default',
+               className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft controls_popupTemplate_theme-default',
                templateOptions: {
                   ranges: extOptions.ranges,
                   minRange: extOptions.minRange,
@@ -144,7 +144,7 @@ define([
                   };
                   component.openPopup();
                   sinon.assert.calledWith(component._stickyOpener.open, sinon.match({
-                     className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft controls_popupTemplate_theme-default controls_theme-default'
+                     className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft controls_popupTemplate_theme-default'
                   }));
                });
             });
@@ -174,7 +174,7 @@ define([
                   };
                   component.openPopup();
                   sinon.assert.calledWith(component._stickyOpener.open, sinon.match({
-                     className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft-withoutModeBtn controls_popupTemplate_theme-default controls_theme-default'
+                     className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft-withoutModeBtn controls_popupTemplate_theme-default'
                   }));
                });
             });

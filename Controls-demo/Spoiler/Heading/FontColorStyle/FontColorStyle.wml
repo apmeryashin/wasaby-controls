@@ -11,6 +11,10 @@
       <Controls.spoiler:Heading captions="{{_captions}}" fontColorStyle="label"/>
    </div>
    <div class="controlsDemo__cell">
+      <div class="controls-text-label">fontColorStyle=default</div>
+      <Controls.spoiler:Heading captions="{{_captions}}" fontColorStyle="default"/>
+   </div>
+   <div class="controlsDemo__cell">
       <div class="controls-text-label">fontColorStyle=secondary && expanded=true, fontColorStyle=label && expanded=false</div>
       <Controls.spoiler:Heading captions="{{_captions}}" fontColorStyle="{{_expanded1 ? 'secondary' : 'label'}}" bind:expanded="_expanded1"/>
    </div>

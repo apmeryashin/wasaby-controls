@@ -8,6 +8,8 @@
  * @author Угриновский Н.В.
  */
 
+const BLOCK_ELEMENTS = ['p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
 /*
  *
  * Module with a function to get inner text from json.
@@ -29,7 +31,7 @@ const innerText = function innerText(value, parent) {
       for (let i = 1; i < value.length; ++i) {
          newValue += innerText(value[i], value);
       }
-      if (value[0] === 'p' || value[0] === 'br') {
+      if (BLOCK_ELEMENTS.includes(value[0])) {
          newValue += '\n';
       }
       return parent ? newValue : [[], newValue];

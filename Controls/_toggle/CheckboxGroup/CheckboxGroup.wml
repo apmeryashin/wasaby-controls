@@ -12,5 +12,6 @@
                displayProperty="{{_options.displayProperty}}"
                keyProperty="{{_options.keyProperty}}"
                parentProperty="{{_options.parentProperty}}"
+               validationStatus="{{_options.validationStatus}}"
                nodeProperty="{{_options.nodeProperty}}" />
 </div>

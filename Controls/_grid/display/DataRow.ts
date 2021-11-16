@@ -22,7 +22,7 @@ export default class DataRow<T extends Model = Model> extends Row<T> implements
     protected _$columnItems: DataCell[];
     protected _$searchValue: string;
 
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly EditableItem: boolean = true;
     readonly DisplayItemActions: boolean = true;
     readonly DisplaySearchValue: boolean = true;
     readonly LadderSupport: boolean = true;

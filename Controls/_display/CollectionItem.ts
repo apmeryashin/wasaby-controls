@@ -52,6 +52,7 @@ export interface IOptions<T extends Model = Model> {
     isFirstItem?: boolean;
     hasMoreDataUp?: boolean;
     isFirstStickedItem?: boolean;
+    stickyCallback: Function;
     roundBorder?: object;
     isTopSeparatorEnabled?: boolean;
     isBottomSeparatorEnabled?: boolean;
@@ -194,6 +195,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$isFirstStickedItem: boolean;
 
+    protected _$stickyCallback: Function;
+
     protected _instancePrefix: string;
 
     protected _$roundBorder: IRoundBorder;
@@ -217,7 +220,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$isLastItem: boolean;
 
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly EditableItem: boolean = true;
 
     readonly isAdd: boolean;
 
@@ -771,8 +774,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     // endregion Drag-n-drop
 
     isSticked(stickyCallback: Function, item: CollectionItem): boolean {
-        return stickyCallback ?
-            !!stickyCallback(item.getContents()) :
+
+        return this._$stickyCallback ?
+            !!this._$stickyCallback(this.getContents()) :
             this.isMarked() && this._isSupportSticky();
     }
 
@@ -1293,6 +1297,7 @@ Object.assign(CollectionItem.prototype, {
     _$markerPosition: undefined,
     _$hasMoreDataUp: false,
     _$isFirstStickedItem: false,
+    _$stickyCallback: null,
     _contentsIndex: undefined,
     _version: 0,
     _counters: null,

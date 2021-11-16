@@ -1323,7 +1323,7 @@ export default abstract class TileItem<T extends Model = Model> {
             }
         } else {
             let styles = `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
-            if (staticHeight && itemType !== 'rich' && itemType !== 'invisible') {
+            if (staticHeight && itemType !== 'invisible') {
                 styles += ` height: ${this.getTileHeight()}px;`;
             }
             return styles;
@@ -1869,8 +1869,9 @@ export default abstract class TileItem<T extends Model = Model> {
      */
     getBlurStyles(
         itemType: TTileItem = 'default',
-        imageViewMode: TImageViewMode,
-        gradientColor: string = '#FFF'
+        imageViewMode: TImageViewMode = 'none',
+        gradientColor: string = '#FFF',
+        titlePosition: TTitlePosition = 'underImage'
     ): string {
         let styles = '';
 
@@ -1882,8 +1883,12 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'rich':
                 const rgbColor = toRgb(gradientColor);
-                if ((!imageViewMode || imageViewMode === 'rectangle')) {
-                    styles += ` background: linear-gradient(to right, ${rgbaToString(rgbToRgba(rgbColor, 0))} 0%, ${rgbaToString(rgbColor)} 12px, ${rgbaToString(rgbColor)} 100%);`;
+                if (imageViewMode === 'none' || imageViewMode === 'rectangle' && titlePosition === 'underImage') {
+                    if (rgbColor) {
+                        styles += ` background: linear-gradient(to right, ${rgbaToString(rgbToRgba(rgbColor, 0))} 0%, ${rgbaToString(rgbColor)} 12px, ${rgbaToString(rgbColor)} 100%);`;
+                    } else {
+                        styles += ` background: linear-gradient(to right, rgb(255, 255, 255, 0) 0%, ${gradientColor} 12px, ${gradientColor} 100%);`;
+                    }
                 }
                 break;
         }

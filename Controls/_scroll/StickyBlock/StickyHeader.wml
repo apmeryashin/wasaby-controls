@@ -5,8 +5,7 @@
    controls-background-{{ _options.backgroundStyle }}
    controls-StickyHeader_position
    {{_subPixelArtifactClass}} {{_topGapFixClass}}"
-        style="{{_style + (_options.style || '')}}"
-        name="content">
+        style="{{_style + (_options.style || '')}}">
       <ws:if data="{{_canShadowVisible.top}}">
          <!-- We use visibility style instead of "display: none;" statement to prevent jumps when scrolling on iPad -->
          <div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal

@@ -1,12 +1,5 @@
-<Controls.scroll:Container attr:style="height: 50vh;margin-top: 50px;">
+<Controls.scroll:Container name="scroll" attr:style="height: 50vh;margin-top: 50px;">
     <div class="popup-page-background">
-        <Controls.popup:Sticky name="sticky"
-                               template="Controls-demo/Popup/Opener/resources/DialogTpl">
-            <ws:direction
-                    vertical='bottom'
-                    horizontal='left'/>
-            <ws:targetPoint vertical="bottom" horizontal="left"/>
-        </Controls.popup:Sticky>
         <div class="popup-page-buttons" style="margin: 300px 0 500px">
             <div>
                 <Controls.buttons:Button attr:class="demo-StackDemo__stickyClose" caption="Open Sticky(close on scroll)"

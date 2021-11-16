@@ -14,6 +14,8 @@
                      pathButtonCaption="{{_options.breadcrumbsPathButtonCaption}}"
                      pathButtonSource="{{_options.source}}"
                      pathButtonFilter="{{_options.filter}}"
+                     pathButtonSorting="{{_options.sorting}}"
+                     pathButtonNavigation="{{_options.navigation}}"
                      pathButtonKeyProperty="{{_options.keyProperty}}"
                      pathButtonNodeProperty="{{_options.nodeProperty}}"
                      pathButtonParentProperty="{{_options.parentProperty}}"

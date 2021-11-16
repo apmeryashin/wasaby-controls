@@ -350,12 +350,6 @@
    cursor: pointer;
 }
 
-.controls-Menu__additional:hover {
-   .controls-BigSeparator-icon {
-      fill: var(--hover_icon-color_BigSeparator);
-   }
-}
-
 .controls-Menu__footer-additionalButton-height {
    height: var(--footer_additionalButton_min-height_menuPopup);
 }
@@ -374,10 +368,6 @@
 
 .controls-text-menuMore {
    color: var(--link_text-color);
-}
-
-.controls-text-menuMore:hover {
-   color: var(--link_hover_text-color);
 }
 
 .controls-text-menuMore:active {
@@ -491,6 +481,16 @@
 }
 
 .ws-is-hover {
+    .controls-Menu__additional:hover {
+       .controls-BigSeparator-icon {
+          fill: var(--hover_icon-color_BigSeparator);
+       }
+    }
+
+    .controls-text-menuMore:hover {
+       color: var(--link_hover_text-color);
+    }
+
     .controls-Menu__row_state_default:hover {
         .controls-Menu__row-checkbox_default {
             visibility: visible;
@@ -545,6 +545,16 @@
     .controls-Menu__row_hoverBackgroundStyle-unaccented:hover {
         background-color: var(--unaccented_hover_contrast_background-color);
     }
+}
+
+.controls-Menu__additional:active {
+   .controls-BigSeparator-icon {
+      fill: var(--hover_icon-color_BigSeparator);
+   }
+}
+
+.controls-text-menuMore:active {
+   color: var(--link_hover_text-color);
 }
 
 .controls-Menu__iconPin:active {

@@ -27,7 +27,7 @@ export default class TreeGridDataRow<T extends Model = Model>
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly EditableItem: boolean = true;
     readonly DisplayItemActions: boolean = true;
     readonly DisplaySearchValue: boolean = true;
     readonly Markable: boolean = true;

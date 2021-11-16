@@ -1,0 +1,19 @@
+<div class="controlsDemo__wrapper controlsDemo__background">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+        <div class="controls__block-wrapper" style="width: 500px; height: 150px">
+            <div class="controls__block-contrast controls__block_backgroundStyle-unaccented">
+                controls__block-contrast controls__block_backgroundStyle-unaccented
+            </div>
+        </div>
+    </div>
+
+    <ws:for data="gradientStyle in _gradientStyles">
+        <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+            <div class="controls__block-wrapper" style="width: 500px; height: 150px">
+                <div class="controls__block-contrast controls__block_backgroundStyle-gradient-{{gradientStyle}}">
+                    controls__block-contrast controls__block_backgroundStyle-gradient-{{gradientStyle}}
+                </div>
+            </div>
+        </div>
+    </ws:for>
+</div>

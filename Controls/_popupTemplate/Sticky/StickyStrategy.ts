@@ -434,10 +434,10 @@ export class StickyStrategy {
 
    /**
     * Оффсеты нужно посчитать с учетом зума, т.к. они высчитываются с контейнера без учета его зума.
-    * @param popupCfg 
-    * @param direction 
-    * @param zoom 
-    * @returns 
+    * @param popupCfg
+    * @param direction
+    * @param zoom
+    * @returns
     */
    private _getMargins(popupCfg: IStickyPositionConfig, direction: TDirection, zoom: number = 1): number {
       const margins = popupCfg.sizes.margins && popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] || 0;
@@ -492,7 +492,7 @@ export class StickyStrategy {
          const parentStyle = window.getComputedStyle(parent);
          if ((parentStyle.overflowY === 'auto'
              || parentStyle.overflowY === 'scroll'
-             || parent.className.indexOf('controls-Scroll__content_hidden') >= 0)
+             || parent.classList.contains('controls-Scroll__content_hidden'))
              && (parent.scrollHeight > parent.clientHeight)) {
             return parent;
          }

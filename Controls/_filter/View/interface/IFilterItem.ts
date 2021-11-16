@@ -71,7 +71,7 @@ export interface IEditorOptions {
      */
     itemTemplateProperty?: string;
     sourceController?: SourceController;
-    dataLoadCallback?: (items: RecordSet) => void;
+    dataLoadCallback?: (items: RecordSet, direction: 'up'|'down') => void;
     [key: string]: unknown;
 }
 

@@ -6,6 +6,7 @@ import * as template from 'wml!Controls/_filterPopup/Panel/AdditionalParams/Rend
 import * as itemTemplate from 'wml!Controls/_filterPopup/Panel/AdditionalParams/Render/resources/ItemTemplate';
 import * as groupTemplate from 'wml!Controls/_filterPopup/Panel/AdditionalParams/Render/resources/GroupTemplate';
 import {IFilterItem} from 'Controls/filter';
+import {object} from 'Types/util';
 import 'css!Controls/filterPopup';
 
 interface IAdditionalRenderOptions extends IControlOptions {
@@ -27,6 +28,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
     protected _collection: Collection<IFilterItem> =  null;
     protected _itemTemplate: TemplateFunction = itemTemplate;
     protected _groupTemplate: TemplateFunction = groupTemplate;
+    protected _hasLeftColumn: boolean = true;
 
     private _getCollection(options: IAdditionalRenderOptions): Collection<IFilterItem> {
         const items = Clone(options.source);
@@ -44,6 +46,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
 
     protected _beforeMount(options: IAdditionalRenderOptions): void {
         this._collection = this._getCollection(options);
+        this._hasLeftColumn = this._isLeftColumnHasItems(options);
     }
 
     protected _isCurrentColumn(
@@ -67,6 +70,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
     protected _beforeUpdate(options: IAdditionalRenderOptions): void {
         if (this._options.source !== options.source) {
             this._collection = this._getCollection(options);
+            this._hasLeftColumn = this._isLeftColumnHasItems(options);
         }
     }
 
@@ -76,6 +80,12 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
 
     protected _propertyChanged(event: Event, item: IFilterItem, property: string, value: any): void {
         this._notify('propertyChanged', [item.getRawData(), property, value]);
+    }
+
+    protected _isLeftColumnHasItems({source, columnProperty}: IAdditionalRenderOptions): boolean {
+        return source.some((item) => {
+            return object.getPropertyValue(item, columnProperty) === 'left';
+        });
     }
 }
 /**

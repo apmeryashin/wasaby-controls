@@ -65,20 +65,24 @@ export function each(
     const stopIndex = getStopIndex(collection);
     const enumerator = collection.getEnumerator();
     const count = collection.getCount();
+    const shouldStayInCollection = (item) => item && (
+        (item.StickableItem && item.isSticked()) ||
+        (item.EditableItem && item.isEditing())
+    );
 
     let stickyItemBefore = null;
     let stickyItemAfter = null;
     enumerator.setPosition(-1);
     while (enumerator.moveNext() && enumerator.getCurrentIndex() < startIndex) {
         const current = enumerator.getCurrent() as any;
-        if (current && current.isSticked && current.isSticked()) {
+        if (shouldStayInCollection(current)) {
             stickyItemBefore = { current, index: enumerator.getCurrentIndex() };
         }
     }
     enumerator.setPosition(stopIndex - 1);
     while (enumerator.moveNext() && enumerator.getCurrentIndex() < count) {
         const current = enumerator.getCurrent() as any;
-        if (current && current.isSticked && current.isSticked()) {
+        if (shouldStayInCollection(current)) {
             stickyItemAfter = { current, index: enumerator.getCurrentIndex() };
             break;
         }

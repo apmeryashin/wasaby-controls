@@ -15,7 +15,7 @@ import {Direction, IBaseSourceConfig, IFilterOptions, IHierarchyOptions, TKey} f
 import {
     BaseControl,
     convertReloadItemArgs,
-    IBaseControlOptions,
+    IBaseControlOptions, IDirection,
     IReloadItemOptions,
     ISiblingStrategy
 } from 'Controls/baseList';
@@ -31,7 +31,7 @@ import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
 import {ExpandController} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
-import {applyReloadedNodes, getRootsForHierarchyReload} from 'Controls/_tree/utils';
+import {applyReloadedNodes, getItemHierarchy, getRootsForHierarchyReload} from 'Controls/_tree/utils';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -1127,14 +1127,16 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             this._notify('collapsedItemsChanged', [result.collapsedItems]);
         }
     }
-    protected _afterCollectionAdd(addedItems: CollectionItem[], addedItemsIndex: number): void {
-        super._afterCollectionAdd(addedItems, addedItemsIndex);
 
-        // В добавленных записях может быть развернутый узел с hasMore, поэтому пересчитываем hasMoreStorage
+    protected _beforeDataLoadCallback(items: RecordSet, direction: IDirection): void {
+        super._beforeDataLoadCallback(items, direction);
+
         const collection = this._listViewModel;
-        const expandedItems = _private.getExpandedItems(this, this._options, this._items, this._expandController.getExpandedItems());
-        const hasMoreStorage = _private.prepareHasMoreStorage(this._sourceController, expandedItems, collection.getHasMoreStorage());
-        collection.setHasMoreStorage(hasMoreStorage, true);
+        const expandedItems
+            = _private.getExpandedItems(this, this._options, items, this._expandController.getExpandedItems());
+        const hasMoreStorage
+            = _private.prepareHasMoreStorage(this._sourceController, expandedItems, collection.getHasMoreStorage());
+        collection.setHasMoreStorage(hasMoreStorage, false);
     }
 
     private setMarkerOnFirstLeaf(options, startKey) {

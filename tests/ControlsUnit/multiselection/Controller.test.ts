@@ -827,6 +827,27 @@ describe('Controls/_multiselection/Controller', () => {
          assert.isTrue(model.getItemBySourceKey(3).isSelected());
          assert.isTrue(model.getItemBySourceKey(4).isSelected());
       });
+
+      it('limit, items count was more limit', () => {
+         let newSelection = controller.selectAll(1);
+         controller.setSelection(newSelection);
+         model.setCollection(new RecordSet({
+            rawData: [
+               { id: 1 },
+               { id: 2 },
+               { id: 3 },
+               { id: 4 }
+            ],
+            keyProperty: 'id'
+         }), {});
+
+         newSelection = controller.onCollectionAdd([model.getItemBySourceKey(3), model.getItemBySourceKey(4)], 2);
+         assert.deepEqual(newSelection, {selected: [null], excluded: [2, 3, 4]});
+         controller.setSelection(newSelection);
+
+         assert.isFalse(model.getItemBySourceKey(3).isSelected());
+         assert.isFalse(model.getItemBySourceKey(4).isSelected());
+      });
    });
 
    describe('onCollectionRemove', () => {
@@ -1363,9 +1384,9 @@ describe('Controls/_multiselection/Controller', () => {
          // Проверяем что выбраны все хлебные крошки, у которых в пути есть 1 и все дети этих хлебных крошек
          assert.isTrue(model.getItemBySourceKey(1).isSelected());
          assert.isTrue(model.getItemBySourceKey(13).isSelected());
-         assert.isTrue(model.getItemBySourceKey(11).isSelected());
+         assert.isNull(model.getItemBySourceKey(11).isSelected());
          assert.isTrue(model.getItemBySourceKey(111).isSelected());
-         assert.isTrue(model.getItemBySourceKey(12).isSelected());
+         assert.isNull(model.getItemBySourceKey(12).isSelected());
          assert.isTrue(model.getItemBySourceKey(121).isSelected());
          assert.isFalse(model.getItemBySourceKey(2).isSelected());
          assert.isFalse(model.getItemBySourceKey(21).isSelected());
@@ -1446,5 +1467,55 @@ describe('Controls/_multiselection/Controller', () => {
          controller.destroy();
          assert.isFalse(model.getItemBySourceKey(1).isSelected());
       });
-   })
+
+      it('should reset selected state on all items in tree', () => {
+         const items = new RecordSet({
+            rawData: [
+               { id: 1, parent: null, node: true },
+               { id: 11, parent: 1, node: null },
+               { id: 12, parent: 1, node: null }
+            ],
+            keyProperty: 'id'
+         });
+
+         const tree = new TreeGridCollection({
+            collection: items,
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'node',
+            hasChildrenProperty: 'hasChildren',
+            columns: [],
+            expandedItems: [1],
+            multiSelectAccessibilityProperty: 'accessibilitySelect'
+         });
+
+         const controller = new SelectionController({
+            model: tree,
+            strategy: new TreeSelectionStrategy({
+               model: tree,
+               selectDescendants: true,
+               selectAncestors: true,
+               rootId: null,
+               entryPath: [],
+               selectionType: 'all',
+               selectionCountMode: 'all',
+               recursiveSelection: true
+            }),
+            selectedKeys: [null],
+            excludedKeys: [],
+            searchValue: '',
+            filter: {}
+         });
+
+         controller.setSelection({selected: [1], excluded: []});
+         tree.setExpandedItems([]);
+         controller.setSelection({selected: [], excluded: []});
+         tree.setExpandedItems([1]);
+
+         assert.isFalse(tree.getItemBySourceKey(1).isSelected());
+         assert.isFalse(tree.getItemBySourceKey(11).isSelected());
+         assert.isFalse(tree.getItemBySourceKey(12).isSelected());
+      });
+   });
 });

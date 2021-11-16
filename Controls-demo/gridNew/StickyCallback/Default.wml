@@ -4,6 +4,7 @@
                 keyProperty="key"
                 source="{{_viewSource}}"
                 header="{{_header}}"
+                ladderProperties="{{_ladderProperties}}"
                 columns="{{_columns}}"/>
     </Controls.scroll:Container>
 </div>

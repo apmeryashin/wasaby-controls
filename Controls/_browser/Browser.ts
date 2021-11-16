@@ -153,12 +153,13 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _beforeMountInternal(options: IBrowserOptions,
                                  _: unknown,
                                  receivedState?: TReceivedState): void | Promise<TReceivedState | Error | void> {
-        if (Browser._checkLoadResult(this._listsOptions, receivedState as IReceivedState[])) {
+        if (Browser._checkLoadResult(options, receivedState as IReceivedState[])) {
             this._updateFilterAndFilterItems(options);
-            this._defineShadowVisibility(receivedState[0].data);
+            const items = receivedState?.[0].data || options.sourceController?.getItems();
+            this._defineShadowVisibility(items);
             this._setItemsAndUpdateContext(options);
             if (options.source && options.dataLoadCallback) {
-                options.dataLoadCallback(receivedState[0].data);
+                options.dataLoadCallback(items);
             }
         } else if (options.source || options.filterButtonSource || options.fastFilterSource || options.listsOptions) {
             if (options.fastFilterSource) {
@@ -168,7 +169,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 this._updateFilterAndFilterItems(options);
                 this._defineShadowVisibility(result[0].data);
 
-                if (Browser._checkLoadResult(this._listsOptions, result as IReceivedState[])) {
+                if (Browser._checkLoadResult(options, result as IReceivedState[])) {
                     this._setItemsAndUpdateContext(options);
                     return result.map(({data, historyItems}) => {
                         return {
@@ -211,6 +212,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
+        this._rootChanged = this._rootChanged.bind(this);
+        this._dataLoadStart = this._dataLoadStart.bind(this);
+        this._sortingChanged = this._sortingChanged.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
         this._searchStartCallback = this._searchStartCallback.bind(this);
         this._itemsChanged = this._itemsChanged.bind(this);
@@ -514,6 +518,14 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._operationsController = null;
         }
 
+        const {sourceController} = this._options;
+        if (sourceController) {
+            sourceController.unsubscribe('rootChanged', this._rootChanged);
+            sourceController.unsubscribe('dataLoadStarted', this._dataLoadStart);
+            sourceController.unsubscribe('sortingChanged', this._sortingChanged);
+            sourceController.unsubscribe('itemsChanged', this._itemsChanged);
+        }
+
         if (this._errorRegister) {
             this._errorRegister.destroy();
             this._errorRegister = null;
@@ -552,22 +564,18 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _subscribeOnSourceControllerEvents(): void {
         const sourceController = this._getSourceController();
         this._dataLoader.each((config, id) => {
-            this._getSourceController(id).subscribe('rootChanged', this._rootChanged.bind(this));
+            this._getSourceController(id).subscribe('rootChanged', this._rootChanged);
         });
-        sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
-        sourceController.subscribe('sortingChanged', this._sortingChanged.bind(this));
+        sourceController.subscribe('dataLoadStarted', this._dataLoadStart);
+        sourceController.subscribe('sortingChanged', this._sortingChanged);
         sourceController.subscribe('itemsChanged', this._itemsChanged);
     }
 
     private _subscribeOnFilterControllerEvents(options: IBrowserOptions): void {
         // Для совместимости, пока контролы вынуждены работать и от опций и от настроек на странице
         // + пока нет виджета filter/View
-        this._dataLoader.getFilterController().subscribe('filterSourceChanged', (event, filterSource) => {
+        this._dataLoader.getFilterController().subscribe('filterSourceChanged', () => {
             this._updateFilterAndFilterItems(options);
-
-            if (options.useStore) {
-                Store.dispatch('filterSource', filterSource);
-            }
         });
     }
 
@@ -725,12 +733,14 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
         this._listsOptions.forEach(({id, filterButtonSource, fastFilterSource}) => {
             if (filterButtonSource || fastFilterSource) {
-                this._dataLoader.getFilterController(id).updateFilterItems(items);
+                const filterController = this._dataLoader.getFilterController(id);
+                filterController.updateFilterItems(items);
+                const filter = filterController.getFilter();
                 this._contextState = {
                     ...this._contextState,
-                    filter: this._filter
+                    filter
                 };
-                this._notify('filterChanged', [this._filter, id]);
+                this._notify('filterChanged', [filter, id]);
             }
         });
     }
@@ -1191,12 +1201,15 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         return browserSourceController;
     }
 
-    private static _checkLoadResult(options: IListConfiguration[], loadResult: IReceivedState[] = []): boolean {
-        return loadResult && loadResult.filter(
-            (result, index) =>
-                (!options[index].filterButtonSource || result.historyItems !== undefined) &&
+    private static _checkLoadResult(
+        options: IBrowserOptions,
+        loadResult: IReceivedState[] = []
+    ): boolean {
+        const listsOptions = Browser._getListsOptions(options);
+        return loadResult?.filter((result, index) =>
+                (!listsOptions[index].filterButtonSource || result.historyItems !== undefined) &&
                 result.data !== undefined && !result.error
-        ).length > 0;
+        ).length > 0 || !!options.sourceController;
     }
 
     private static _getListsOptions(options: IBrowserOptions): IListConfiguration[] {

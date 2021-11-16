@@ -53,6 +53,7 @@ export class NavigationSwitcher extends Control<INavigationSwitcherOptions> {
             view: 'infinity',
             sourceConfig: {
                 direction: cfg.direction || this._options.direction || undefined,
+                multiNavigation: this._options.multiNavigation || undefined,
                 pageSize,
                 page: this._calcPage(cfg.page || this._options.page || 0, pageSize, cfg.totalCount),
                 hasMore: false

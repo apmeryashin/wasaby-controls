@@ -22,7 +22,7 @@
             {{ _caption }}
         </span>
     </ws:else>
-    <ws:if data="{{ _resetButtonVisible }}">
+    <ws:if data="{{ _resetButtonVisible && !_options.readOnly }}">
         <span class="controls-DateLinkView__resetButton
                         controls-icon icon-Close"
               on:click="_resetButtonClickHandler()"></span>

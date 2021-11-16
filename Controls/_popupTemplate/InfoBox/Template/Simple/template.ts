@@ -25,6 +25,13 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions, Te
       this._notify('sendResult', [event], { bubbling: true });
    }
 
+   protected _getTemplateName(): string {
+      if (typeof this._options.template === 'string') {
+         return this._options.template;
+      }
+      return '';
+   }
+
    private static _needRequireModule(module: string | Function): boolean {
       return typeof module === 'string' && !requirejs.defined(module);
    }

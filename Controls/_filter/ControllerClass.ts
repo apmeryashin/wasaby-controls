@@ -96,6 +96,7 @@ export default class FilterControllerClass extends mixin<
         if (options.prefetchParams) {
             this._$filter = Prefetch.prepareFilter(this._$filter, options.prefetchParams);
         }
+        this._$fastFilterItems = this._$fastFilterItems || options.fastFilterSource;
         this._updateFilter(options);
     }
 
@@ -103,7 +104,7 @@ export default class FilterControllerClass extends mixin<
         // TODO: storefix207100
         if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
-            this._setFilterItems(state.filterSource, [], historyItems);
+            this._setFilterItems(state.filterSource, (!state.filterSource && this._options.fastFilterSource) || [], historyItems);
         } else {
             this._setFilterItems(this._options.filterButtonSource, this._options.fastFilterSource, historyItems);
         }

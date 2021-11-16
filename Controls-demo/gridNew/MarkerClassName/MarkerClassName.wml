@@ -10,7 +10,7 @@
                 <Controls.scroll:Container attr:class="controlsDemo__height400">
                     <Controls.grid:View
                             keyProperty="key"
-                            source="{{_viewSourceImage}}"
+                            source="{{_getViewSource()}}"
                             columns="{{_columnsImage}}"
                             markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
@@ -31,7 +31,7 @@
                 <Controls.scroll:Container attr:class="controlsDemo__height400">
                     <Controls.grid:View
                             keyProperty="key"
-                            source="{{_viewSourceImage}}"
+                            source="{{_getViewSource('40px', '40px')}}"
                             columns="{{_columnsImage}}"
                             markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
@@ -51,7 +51,7 @@
                 <Controls.scroll:Container attr:class="controlsDemo__height400">
                     <Controls.grid:View
                             keyProperty="key"
-                            source="{{_viewSourceImage}}"
+                            source="{{_getViewSource('40px', '40px')}}"
                             columns="{{_columnsImage}}"
                             markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
@@ -72,7 +72,7 @@
                 <Controls.scroll:Container attr:class="controlsDemo__height400">
                     <Controls.grid:View
                             keyProperty="key"
-                            source="{{_viewSourceImage}}"
+                            source="{{_getViewSource('32px', '32px')}}"
                             columns="{{_columnsImage}}"
                             markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
@@ -92,15 +92,15 @@
                 <Controls.scroll:Container attr:class="controlsDemo__height400">
                     <Controls.grid:View
                             keyProperty="key"
-                            source="{{_viewSourceImage}}"
+                            source="{{_getViewSource('32px', '32px')}}"
                             columns="{{_columnsImage}}"
                             markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
-                        <ws:itemPadding top="m"/>
+                        <ws:itemPadding top="l"/>
                         <ws:itemTemplate>
                             <ws:partial template="Controls/grid:ItemTemplate"
                                         scope="{{ _options }}"
-                                        markerClassName="image-l"/>
+                                        markerClassName="image-m"/>
                         </ws:itemTemplate>
                     </Controls.grid:View>
                 </Controls.scroll:Container>
@@ -113,7 +113,7 @@
                 <Controls.scroll:Container attr:class="controlsDemo__height400">
                     <Controls.grid:View
                             keyProperty="key"
-                            source="{{_viewSourceImage}}"
+                            source="{{_getViewSource('24px', '24px')}}"
                             columns="{{_columnsImage}}"
                             markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
@@ -133,7 +133,7 @@
                 <Controls.scroll:Container attr:class="controlsDemo__height400">
                     <Controls.grid:View
                             keyProperty="key"
-                            source="{{_viewSourceImage}}"
+                            source="{{_getViewSource('24px', '24px')}}"
                             columns="{{_columnsImage}}"
                             markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
@@ -154,7 +154,7 @@
                 <Controls.scroll:Container attr:class="controlsDemo__height400">
                     <Controls.grid:View
                             keyProperty="key"
-                            source="{{_viewSourceImage}}"
+                            source="{{_getViewSource('16px', '16px')}}"
                             columns="{{_columnsImage}}"
                             markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
@@ -174,7 +174,7 @@
                 <Controls.scroll:Container attr:class="controlsDemo__height400">
                     <Controls.grid:View
                             keyProperty="key"
-                            source="{{_viewSourceImage}}"
+                            source="{{_getViewSource('16px', '16px')}}"
                             columns="{{_columnsImage}}"
                             markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">

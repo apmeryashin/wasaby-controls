@@ -6,6 +6,7 @@
  * @public
  * @see Controls/propertyGrid
  * @see Controls/propertyGrid:PropertyGrid
+ * @see Controls/propertyGrid:ItemTemplate
  *
  *
  * @example

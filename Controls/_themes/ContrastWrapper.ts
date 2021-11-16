@@ -24,7 +24,6 @@ export default class ContrastWrapper extends Control<IControlOptions> {
             '--separator_color': '#EAEAEA',
             '--item_separator_s_color_list': '#EAEAEA',
             '--item_separator_l_color_list': '#EAEAEA',
-            '--background-color': '#F3F5F7',
             '--hover_background-color': '#EBEDF0',
             '--unaccented_active_background-color': '#E3E5E8',
             '--readonly_color': '#B5B5B5',

@@ -20,7 +20,10 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     masterWidth: number | string;
     masterMinWidth: number | string;
     masterMaxWidth: number | string;
+    //TODO: удалить по задаче: https://online.sbis.ru/opendoc.html?guid=59b38808-e604-49a0-8873-bf324655c505
     contrastBackground: boolean;
+    masterContrastBackground: boolean;
+    detailContrastBackground: boolean;
     masterVisibility: TMasterVisibility;
     scrollTop?: number;
     scrollOffsetTop?: number;
@@ -120,8 +123,16 @@ class Base extends Control<IMasterDetail, string> {
      */
 
     /**
-     * @name Controls/_masterDetail/Base#contrastBackground
-     * @cfg {Boolean} Определяет контрастность фона контента detail по отношению к контенту master.
+     * @name Controls/_masterDetail/Base#detailContrastBackground
+     * @cfg {Boolean} Определяет контрастность фона для области detail по отношению к окружению.
+     * @variant true Контрастный фон.
+     * @variant false Фон, гармонично сочетающийся с окружением.
+     * @default true
+     */
+
+    /**
+     * @name Controls/_masterDetail/Base#masterContrastBackground
+     * @cfg {Boolean} Определяет контрастность фона для области master по отношению к окружению.
      * @variant true Контрастный фон.
      * @variant false Фон, гармонично сочетающийся с окружением.
      * @default true
@@ -192,6 +203,7 @@ class Base extends Control<IMasterDetail, string> {
     protected _masterFixed: boolean = false;
     private _touchstartPosition: number;
     protected _newDesign: boolean = false;
+    private _savedWidth: number; // Защита от множ. вызова БЛ
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<string> | void {
         this._updateOffsetDebounced = debounce(this._updateOffsetDebounced.bind(this), RESIZE_DELAY);
@@ -201,6 +213,7 @@ class Base extends Control<IMasterDetail, string> {
         this._newDesign = options._dataOptionsValue?.newDesign || options.newDesign;
         if (receivedState) {
             this._currentWidth = receivedState;
+            this._savedWidth = parseInt(receivedState, 10);
         } else if (options.propStorageId) {
             return new Promise((resolve) => {
                 this._getSettings(options).then((storage) => {
@@ -230,7 +243,10 @@ class Base extends Control<IMasterDetail, string> {
     private _setSettings(width: number): void {
         const propStorageId = this._options.propStorageId;
         if (propStorageId) {
-            setSettings({[propStorageId]: width});
+            if (this._savedWidth !== width) {
+                this._savedWidth = width;
+                setSettings({[propStorageId]: width});
+            }
         }
     }
 
@@ -261,6 +277,7 @@ class Base extends Control<IMasterDetail, string> {
 
     private _updateOffsetDebounced(): void {
         this._updateOffset(this._options);
+        this._setSettings(parseInt(this._currentWidth, 10));
         this._notify('masterWidthChanged', [this._currentWidth]);
     }
 
@@ -318,6 +335,7 @@ class Base extends Control<IMasterDetail, string> {
         const width = storage && storage[options.propStorageId];
         if (width) {
             this._currentWidth = width + 'px';
+            this._savedWidth = width;
             this._updateOffset(options);
         } else {
             this.initCurrentWidth(options.masterWidth);
@@ -497,6 +515,8 @@ class Base extends Control<IMasterDetail, string> {
             masterMinWidth: 30,
             masterMaxWidth: '50%',
             contrastBackground: true,
+            detailContrastBackground: true,
+            masterContrastBackground: true,
             masterPosition: 'left',
             masterVisibility: 'visible'
         };

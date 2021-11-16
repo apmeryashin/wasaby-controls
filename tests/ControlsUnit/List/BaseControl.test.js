@@ -4524,11 +4524,9 @@ define([
 
       describe('onCollectionChanged with some values of \'properties\' should not reinitialize itemactions', () => {
          let self;
-         let handleinitItemActionsCalled;
          let items;
-         let sandbox;
+         let shouldUpdateOnCollectionChangeCalled;
          beforeEach(() => {
-            handleinitItemActionsCalled = false;
             self = {
                _options: {
                   root: 5
@@ -4543,65 +4541,20 @@ define([
                   getCount: () => 5
                },
                _onCollectionChange: () => 0,
-               changeSelection: () => {}
+               changeSelection: () => {},
+               _itemActionsController: {
+                  shouldUpdateOnCollectionChange: () => {
+                     shouldUpdateOnCollectionChangeCalled = true;
+                  }
+               }
             };
+            shouldUpdateOnCollectionChangeCalled = false;
             items = [{}];
-            sandbox = sinon.createSandbox();
-            sandbox.replace(lists.BaseControl._private, 'updateInitializedItemActions', (self, options) => {
-               handleinitItemActionsCalled = true;
-            });
          });
 
-         afterEach(() => {
-            sandbox.restore();
-         });
-
-         // Смена маркера не должна провоцировать обновление itemActions
-         it('should not call updateItemActions when marker has changed', () => {
-            items.properties = 'marked';
+         it('should call shouldUpdateOnCollectionChange', () => {
             lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
-            assert.isFalse(handleinitItemActionsCalled);
-         });
-
-         // Свайп не должен провоцировать обновление itemActions
-         it('should not call updateItemActions when item has swiped', () => {
-            items.properties = 'swiped';
-            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
-            assert.isFalse(handleinitItemActionsCalled);
-         });
-
-         // Активация не должна провоцировать обновление itemActions
-         it('should not call updateItemActions when item has been activated', () => {
-            items.properties = 'active';
-            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
-            assert.isFalse(handleinitItemActionsCalled);
-         });
-
-         // Установка флага hovered не должна провоцировать обновление itemActions
-         it('should not call updateItemActions when item\'s hovered has been set', () => {
-            items.properties = 'hovered';
-            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
-            assert.isFalse(handleinitItemActionsCalled);
-         });
-
-         // Drag не должен провоцировать обновление itemActions
-         it('should not call updateItemActions when item has been dragged', () => {
-            items.properties = 'dragged';
-            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
-            assert.isFalse(handleinitItemActionsCalled);
-         });
-
-         // Ввод данных в строку редактирования не должен провоцировать обновление itemActions
-         it('should not call updateItemActions when item has been dragged', () => {
-            items.properties = 'editingContents';
-            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
-            assert.isFalse(handleinitItemActionsCalled);
-         });
-
-         // Если значение properties===undefined не указан, то обновление itemActions происходит по умолчанию
-         it('should call updateItemActions when properties is not set', () => {
-            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
-            assert.isTrue(handleinitItemActionsCalled);
+            assert.isTrue(shouldUpdateOnCollectionChangeCalled);
          });
       });
 

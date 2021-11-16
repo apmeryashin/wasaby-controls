@@ -89,7 +89,7 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
             } else if (actionOnScroll === 'close') {
                 BaseOpener.closeDialog(popupId);
             } else if (actionOnScroll === 'track') {
-                ManagerController.popupUpdated(popupId);
+                ManagerController.notifyToManager('pageScrolled', []);
             }
         }
     }

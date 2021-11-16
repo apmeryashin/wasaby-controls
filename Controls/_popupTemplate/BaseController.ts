@@ -12,8 +12,6 @@ import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export const RIGHT_PANEL_WIDTH = 54;
 
-export const RIGHT_PANEL_WIDTH = 54;
-
 export const getRightPanelWidth = () => {
     // Вычисляем значение при вызове. Если делать при загрузке модуля,
     // то тема в контроллеры проставиться не успеет и результат будет неверный
@@ -214,7 +212,6 @@ abstract class BaseController implements IPopupController {
     }
 
     workspaceResize(): boolean {
-        DimensionsMeasurer.resetCache(); // После изменения размеров страницы сбросим кэш, т.к. zoom мог поменяться
         return false;
     }
 

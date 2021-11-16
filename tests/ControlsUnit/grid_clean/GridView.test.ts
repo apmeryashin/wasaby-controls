@@ -181,7 +181,9 @@ describe('Controls/grid_clean/GridView', () => {
                                     '}' +
                                     '.controls-GridView__ladderOffset-guid .controls-Grid__row-cell__ladder-spacing_withHeader_withResults_withGroup {' +
                                     'top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + offset + 150px) !important;' +
-                                    '}';
+                                    '}' +
+                                    '.controls-GridView__ladderOffset-guid .controls-Grid__row-cell__ladder-main_spacing_withGroup {' +
+                                    'top: calc(var(--grouping_height_list) + offset + 150px) !important;}';
             gridView._ladderTopOffsetStyles = gridView._getLadderTopOffsetStyles();
             assert.equal(gridView._ladderTopOffsetStyles, expectedStyle);
 

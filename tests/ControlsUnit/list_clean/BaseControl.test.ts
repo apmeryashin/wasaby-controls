@@ -1421,6 +1421,79 @@ describe('Controls/list_clean/BaseControl', () => {
             });
 
         });
+        describe('event handlers', () => {
+            describe('itemClick', () => {
+                it('should ignore checkbox cell click in single cell editing mode', () => {
+                    const e = {
+                        stopPropagation() {/*Mock*/}
+                    };
+                    const originalEvent = {
+                        target: {
+                            closest(selector) {
+                                return selector === '.js-controls-ListView__editingTarget' ? {} : null;
+                            }
+                        }
+                    };
+                    let isEditCalled = false;
+                    baseControl.saveOptions({
+                        ...baseControlCfg,
+                        multiSelectVisibility: 'visible',
+                        editingConfig: {
+                            editOnClick: true
+                        }
+                    });
+                    let editPromiseResolver;
+                    const editPromise = new Promise((resolve) => {
+                        editPromiseResolver = resolve;
+                    });
+                    baseControl._getEditInPlaceController = () => ({
+                        edit(userOptions, editOptions) {
+                            isEditCalled = true;
+                            assert.equal(editOptions.columnIndex, 3);
+                            return editPromise;
+                        }
+                    });
+                    baseControl._editInPlaceInputHelper = {
+                        setClickInfo() {/*Mock*/},
+                        shouldActivate() {/*Mock*/}
+                    };
+                    baseControl._indicatorsController = {
+                        shouldDisplayGlobalIndicator() {/*Mock*/},
+                        shouldHideGlobalIndicator() {/*Mock*/}
+                    };
+                    baseControl._onItemClick(e, {}, originalEvent, 2);
+                    editPromiseResolver();
+                    return editPromise.then(() => {
+                        assert.isTrue(isEditCalled);
+                    });
+                });
+            });
+
+            describe('list enter handler', () => {
+                it('should not handle enter on editing row(dont stop propagation)', () => {
+                    const event = {
+                        nativeEvent: {
+                            ctrlKey: false
+                        },
+                        stopPropagation: () => {
+                            throw Error('Dont stop propagation!');
+                        },
+                        stopImmediatePropagation: () => {
+                            throw Error('Dont stop propagation!');
+                        }
+                    };
+
+                    assert.doesNotThrow(() => {
+                        BaseControl._private.enterHandler({
+                            isEditing: () => true,
+                            getViewModel: () => ({
+                                getCount: () => 1
+                            })
+                        }, event);
+                    });
+                });
+            });
+        });
 
         it('should immediately resolve promise if commit edit called without eipController', () => {
             let isCommitCalled = false;

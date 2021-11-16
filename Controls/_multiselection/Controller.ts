@@ -343,10 +343,6 @@ export class Controller {
     * @void
     */
    onCollectionAdd(addedItems: Array<CollectionItem<Model>>, addIndex: number): ISelection|void {
-      // Если задан лимит, то обрабатывать добавленные элементы нужно, если до добавления их было меньше лимита
-      if (this._limit && (this._model.getCount() - addedItems.length) > this._limit) {
-         return;
-      }
       if (this._limit) {
          const newSelection = clone(this._selection);
          let selectionChanged = false;

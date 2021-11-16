@@ -26,7 +26,7 @@
      on:isPreviewerOpened="_isPreviewerOpenedHandler()"
      on:closePreviewer="_closePreviewerHandler()"
 
-     on:workspaceResize="_popupEventHandler('workspaceResize')"
+     on:workspaceResize="_workspaceResizeHandler()"
      on:pageScrolled="_popupEventHandler('pageScrolled')"
 
      on:registerPending="_registerPendingHandler()"

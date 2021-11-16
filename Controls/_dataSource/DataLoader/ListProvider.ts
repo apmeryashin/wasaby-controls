@@ -20,7 +20,6 @@ import {getState} from 'Controls/_dataSource/Controller/State';
 import {isLoaded, loadAsync, loadSync} from 'WasabyLoader/ModulesLoader';
 import {Logger} from 'UI/Utils';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
-import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
 import {IProperty} from 'Controls/propertyGrid';
 

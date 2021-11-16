@@ -171,14 +171,13 @@ class MenuRender extends Control<IMenuRenderOptions> {
     protected _isHistorySeparatorVisible(treeItem: TreeItem<Model>): boolean {
         let result = false;
         const item = treeItem.getContents();
-        const nextItem = this._getNextItem(treeItem);
+        const nextItem = this._getNextItem(treeItem)?.getContents();
         const isGroupNext = this._isGroupNext(treeItem);
-        if (item instanceof Model) {
+        if (item instanceof Model && nextItem && nextItem instanceof Model) {
             result = !isGroupNext &&
-                nextItem?.getContents() &&
                 this._isHistoryItem(item) &&
-                !this._hasParent(treeItem.getContents(), this._options.historyRoot) &&
-                !this._isHistoryItem(nextItem.getContents());
+                !this._hasParent(item, this._options.historyRoot) &&
+                !this._isHistoryItem(nextItem);
         }
         return result;
     }

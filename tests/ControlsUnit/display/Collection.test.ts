@@ -2404,7 +2404,7 @@ describe('Controls/_display/Collection', () => {
                 group: (item) => item % 2
             });
 
-            assert.strictEqual(display.getFirst('[Controls/_display/IEditableCollectionItem]'), display.at(1));
+            assert.strictEqual(display.getFirst('EditableItem'), display.at(1));
         });
     });
 

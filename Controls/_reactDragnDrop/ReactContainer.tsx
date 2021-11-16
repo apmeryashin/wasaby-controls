@@ -3,7 +3,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from 'Types/entity';
 import {detection} from 'Env/Env';
 import {Bus as EventBus} from 'Env/Event';
-import ControllerClass from 'Controls/_dragnDrop/ControllerClass';
+import {ControllerClass} from 'Controls/dragnDrop';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {Guid} from 'Types/entity';
 import 'css!Controls/dragnDrop';

@@ -5,26 +5,32 @@
       </Controls.spoiler:View>
    </div>
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">fontColorStyle=secondary</div>
-      <Controls.spoiler:View captions="{{_captions}}" fontColorStyle="secondary">
+      <div class="controls-text-label">headingFontColorStyle=secondary</div>
+      <Controls.spoiler:View captions="{{_captions}}" headingFontColorStyle="secondary">
          <div>Контентная область</div>
       </Controls.spoiler:View>
    </div>
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">fontColorStyle=label</div>
-      <Controls.spoiler:View captions="{{_captions}}" fontColorStyle="label">
+      <div class="controls-text-label">headingFontColorStyle=label</div>
+      <Controls.spoiler:View captions="{{_captions}}" headingFontColorStyle="label">
          <div>Контентная область</div>
       </Controls.spoiler:View>
    </div>
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">fontColorStyle=secondary && expanded=true, fontColorStyle=label && expanded=false</div>
-      <Controls.spoiler:View captions="{{_captions}}" fontColorStyle="{{_expanded1 ? 'secondary' : 'label'}}" bind:expanded="_expanded1">
+      <div class="controls-text-label">headingFontColorStyle=default</div>
+      <Controls.spoiler:View captions="{{_captions}}" headingFontColorStyle="default">
          <div>Контентная область</div>
       </Controls.spoiler:View>
    </div>
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">fontColorStyle=label && expanded=true, fontColorStyle=secondary && expanded=false</div>
-      <Controls.spoiler:View captions="{{_captions}}" fontColorStyle="{{_expanded2 ? 'label' : 'secondary'}}" bind:expanded="_expanded2">
+      <div class="controls-text-label">headingFontColorStyle=secondary && expanded=true, headingFontColorStyle=label && expanded=false</div>
+      <Controls.spoiler:View captions="{{_captions}}" headingFontColorStyle="{{_expanded1 ? 'secondary' : 'label'}}" bind:expanded="_expanded1">
+         <div>Контентная область</div>
+      </Controls.spoiler:View>
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">headingFontColorStyle=label && expanded=true, headingFontColorStyle=secondary && expanded=false</div>
+      <Controls.spoiler:View captions="{{_captions}}" headingFontColorStyle="{{_expanded2 ? 'label' : 'secondary'}}" bind:expanded="_expanded2">
          <div>Контентная область</div>
       </Controls.spoiler:View>
    </div>

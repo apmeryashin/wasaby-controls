@@ -163,8 +163,6 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             className += ` ${this._options.popupClassName}`;
         }
 
-        className += ` controls_theme-${this._options.theme}`;
-
         return className;
     }
 

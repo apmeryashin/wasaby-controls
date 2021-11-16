@@ -280,6 +280,77 @@ describe('Controls/list/HoverFreeze', () => {
         });
     });
 
+    describe('unfreezeHover', () => {
+        beforeEach(() => {
+            cfg = {
+                viewContainer: mockViewContainer(itemActionsHeight, hoverContainerRect),
+                stylesContainer: mockStylesContainer(),
+                uniqueClass: 'unique-class',
+                measurableContainerSelector: 'measurable-container-selector',
+                freezeHoverCallback: () => {
+                    isFreezeHoverCallbackCalled = true;
+                },
+                unFreezeHoverCallback: () => {
+                    isUnFreezeHoverCallbackCalled = true;
+                }
+            };
+            hoverFreeze =  new HoverFreeze(cfg);
+        });
+
+        it('should clear getCurrentItemKey', () => {
+            hoverFreeze.startFreezeHoverTimeout('key_1', startEvent, 0, 0);
+
+            // until timer stops it must not be frozen
+            assert.notEqual(hoverFreeze.getCurrentItemKey(), 'key_1');
+            clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+            assert.equal(hoverFreeze.getCurrentItemKey(), 'key_1');
+            hoverFreeze.unfreezeHover();
+            assert.equal(hoverFreeze.getCurrentItemKey(), null);
+        });
+
+        it('should clear freeze timer', () => {
+            hoverFreeze.startFreezeHoverTimeout('key_1', startEvent, 0, 0);
+            hoverFreeze.unfreezeHover();
+            clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+            assert.isFalse(isFreezeHoverCallbackCalled);
+            assert.equal(hoverFreeze.getCurrentItemKey(), null);
+        });
+
+        it('should clear unfreeze timer', () => {
+            // mouse cursor position is in bottom of the moveArea
+            const event = createFakeMouseEvent(100, 80);
+            hoverFreeze.startFreezeHoverTimeout('key_1', startEvent, 0, 0);
+            clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+            hoverFreeze.startUnfreezeHoverTimeout(event);
+            hoverFreeze.unfreezeHover();
+            assert.equal(hoverFreeze.getCurrentItemKey(), null);
+
+            // unfreezeHover напрямую вызывает UnfreezeCallback. Выставим снова в false для проверки колбека.
+            isUnFreezeHoverCallbackCalled = false;
+            clock.tick(TEST_HOVER_UNFREEZE_TIMEOUT);
+            assert.isFalse(isUnFreezeHoverCallbackCalled);
+        });
+
+        it('should unfreeze when item has 0 id', () => {
+            hoverFreeze.startFreezeHoverTimeout(0, startEvent, 0, 0);
+            clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+            hoverFreeze.unfreezeHover();
+            assert.isTrue(isUnFreezeHoverCallbackCalled);
+        });
+
+        it('should call unfreeze callback', () => {
+            hoverFreeze.startFreezeHoverTimeout('key_1', startEvent, 0, 0);
+            clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+            hoverFreeze.unfreezeHover();
+            assert.isTrue(isUnFreezeHoverCallbackCalled);
+        });
+
+        it('shouldn\'t call unfreeze callback when no current key', () => {
+            hoverFreeze.unfreezeHover();
+            assert.isFalse(isUnFreezeHoverCallbackCalled);
+        });
+    });
+
     describe('virtualScroll', () => {
         it('should start freeze timer with correct start index', () => {
             const viewContainer = mockViewContainer(itemActionsHeight, hoverContainerRect);

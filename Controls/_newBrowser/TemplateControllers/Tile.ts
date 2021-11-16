@@ -19,6 +19,14 @@ export default class TileController extends BaseController<ITileConfig, TreeItem
         return this._viewModeConfig.tile.size;
     }
 
+    get imageViewMode(): string {
+        return this._viewModeConfig.leaf.imageViewMode;
+    }
+
+    get nodeImageViewMode(): string {
+        return this._viewModeConfig.node.imageViewMode;
+    }
+
     getGradientColor(item: TreeItem): string {
         const imageGradient = this._isNode(item)
             ? this._viewModeConfig.node.imageGradient
@@ -50,6 +58,7 @@ export default class TileController extends BaseController<ITileConfig, TreeItem
         return null;
     }
 
+    // TODO этот метод нужно будет удалить, когда уберём его использование на онлайне.
     getImageViewMode(item: TreeItem): string {
         return this._isNode(item)
             ? this._viewModeConfig.node.imageViewMode

@@ -96,7 +96,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       } else {
          this._unselectLeaf(cloneSelection, item);
       }
-      if (key !== this._rootId && item && this._selectAncestors) {
+      if (key !== this._rootId && item && this._selectAncestors && !item['[Controls/_display/BreadcrumbsItem]']) {
          this._unselectParentNodes(cloneSelection, item.getParent());
       }
       if (searchValue && this._isAllSelectedInRoot(cloneSelection) && this._isAllChildrenExcluded(cloneSelection, this._getRoot())) {
@@ -295,17 +295,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          selectedItems.get(isSelected).push(item);
       };
 
-      if (items) {
-         items.forEach(handleItem);
-      } else {
-         this._model.each(handleItem);
-      }
+      const handleItems = items || this._model.getItems();
+      handleItems.forEach(handleItem);
 
       return selectedItems;
    }
 
    private _getBreadcrumbsSelected(item: BreadcrumbsItem, selection: ISelection): boolean|null {
-      const keys = item.getContents().map((it) => it.getKey());
+      const keys = (item.getContents() as unknown as Model[]).map((it) => it.getKey());
       // разворачиваем ключи в обратном порядке, т.к. элементы с конца имеют больше приоритет в палне выбранности
       // т.к. если выбрать вложенную папку, то не зависимо от выбранности родителей она будет выбрана
       const reversedKeys = keys.reverse();
@@ -317,13 +314,22 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       const hasSelected = selectedKeyIndex !== -1;
       const hasExcluded = excludedKeyIndex !== -1;
       const isAllChildsExcluded = this._isAllChildrenExcluded(selection, item as unknown as TreeItem);
+      const isSelectedLastCrumb = selectedKeyIndex === 0; // 0 - revers array
 
       let isSelected;
       if (this._isAllSelectedInRoot(selection)) {
          // Если нажали выбрать все, то выбирается все что найдено, то есть сама хлебная крошка не выбрана
          isSelected = !hasExcluded && !isAllChildsExcluded ? null : false;
       } else {
-         isSelected = hasSelected && (!hasExcluded || selectedKeyIndex < excludedKeyIndex) && !isAllChildsExcluded;
+         isSelected = hasSelected && (!hasExcluded || selectedKeyIndex < excludedKeyIndex);
+
+         // Хлебная крошка [1, 2, 3]. Хлебная крошка идентифицируется ключом 3.
+         // Если хлебная крошка выбрана благодаря отметке 2, то это значит,
+         // что хлебная крошка была выбрана еще в виде узла.
+         // Считаем ее частично выбранной, т.к. большинство записей узла 2 могут быть вообще не загружены.
+         if (isSelected && !isSelectedLastCrumb) {
+            isSelected = null;
+         }
       }
       return isSelected;
    }
@@ -491,6 +497,19 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, [parentId]);
          ArraySimpleValuesUtil.removeSubArray(selection.selected, [parentId]);
       }
+
+      if (item['[Controls/_display/BreadcrumbsItem]']) {
+         this._unselectBreadcrumb(selection, item as unknown as BreadcrumbsItem);
+      }
+   }
+
+   private _unselectBreadcrumb(selection: ISelection, breadcrumb: BreadcrumbsItem): void {
+      const breadcrumbKey = this._getKey(breadcrumb);
+      if (selection.selected.includes(breadcrumbKey)) {
+         ArraySimpleValuesUtil.removeSubArray(selection.selected, [breadcrumbKey]);
+      } else {
+         ArraySimpleValuesUtil.addSubArray(selection.excluded, [breadcrumbKey]);
+      }
    }
 
    private _mergeEntryPath(selectedKeys: TKeys): TKeys {
@@ -564,6 +583,25 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       return hasSelectedParent;
+   }
+
+   private _getParentKey(key: CrudEntityKey): CrudEntityKey {
+      const item = this._model.getItemBySourceKey(key);
+      if (!item) {
+         return undefined;
+      }
+
+      // Дле хлебной крошки сперва берем родителей по ее "пути"
+      if (item['[Controls/_display/BreadcrumbsItem]']) {
+         const path = (item.getContents() as Model[]).map((it) => it.getKey());
+         const itemIndex = path.indexOf(key);
+         if (itemIndex > 0) {
+            return path[itemIndex - 1];
+         }
+      }
+
+      const parent = item.getParent();
+      return this._getKey(parent);
    }
 
    private _getStateNode(node: TreeItem<Model>, initialState: boolean, selection: ISelection): boolean|null {
@@ -830,16 +868,6 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _getRoot(): TreeItem<Model> {
       // getRoot возвращает самый верхний узел и его нельзя получить с помощью getItemBySourceKey
       return this._model.getItemBySourceKey(this._rootId) || this._model.getRoot();
-   }
-
-   private _getParentKey(key: CrudEntityKey): CrudEntityKey {
-      const item = this._model.getItemBySourceKey(key);
-      if (!item) {
-         return undefined;
-      }
-
-      const parent = item.getParent();
-      return this._getKey(parent);
    }
 
    /**

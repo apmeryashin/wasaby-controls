@@ -54,6 +54,7 @@ export interface IStickyPositionConfig {
 }
 
 export interface IStickyItem extends IPopupItem {
+    isVisible: boolean;
     popupOptions: IStickyPopupOptions;
     positionConfig: IStickyPositionConfig;
     startPosition: IPopupPosition;
@@ -85,7 +86,11 @@ export class StickyController extends BaseController {
     protected _getStickyTemplateVisibilityClass(item: IStickyItem): string {
         // Не задаем класс controls-StickyTemplate-visibility, так как на нем установлена анимация для скрытия
         // Анимация не нужна в случае, когда окно создается, но при этом, target находится не в видимой области
-        if (item.popupOptions.actionOnScroll === 'track' && !this._isVisibleTarget(item.popupOptions.target)) {
+        const {actionOnScroll} = item.popupOptions;
+        item.isVisible = this._isVisibleTarget(item.popupOptions.target as HTMLElement);
+        const parentItem = Controller.find(item.parentId) as IStickyItem;
+        const isParentVisible = parentItem ? (parentItem.isVisible !== false) : true;
+        if (actionOnScroll === 'track' && (!item.isVisible || !isParentVisible)) {
             return ' controls-StickyTemplate-visibility-hidden';
         }
         return '';

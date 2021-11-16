@@ -151,10 +151,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                     horizontal: 'overflow',
                     vertical: 'overflow'
                 },
-
-                // close нельзя на мобилках, т.к. если там есть инпут,
-                // то при открытии клавы произойдет подскролл и закрытие
-                actionOnScroll: detection.isMobilePlatform ? 'track' : 'close'
+                actionOnScroll: 'close'
             };
             if (this._options.alignment === 'right') {
                 popupOptions.targetPoint = {
@@ -188,6 +185,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                            receivedState: IFilterReceivedState): Promise<IFilterReceivedState> {
         this._configs = {} as IFilterItemConfigs;
         this._displayText = {};
+        this._detailPanelTemplateName = this._getDetailPanelTemplateName(options);
         let resultDef;
 
         if (receivedState) {
@@ -199,7 +197,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             this._resolveItems(options.source);
             resultDef = this._reload(true, !!options.panelTemplateName);
         }
-        this._detailPanelTemplateName = this._getDetailPanelTemplateName(options);
         return resultDef;
     }
 
@@ -440,6 +437,15 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         this._notifyChanges(this._source);
         this._updateText(this._source, this._configs);
     }
+    // В диалоговых окнах отказались от отдельной темы для шапки,поэтому вырезаем тему шапки,которая берется из-за того,
+    // что панель фильтров лежит в шапке стека.
+    protected _prepareTheme(theme: string): string {
+        const containHeader = theme.indexOf('header-');
+        if (containHeader >= 0) {
+            return theme.replace('header-', '');
+        }
+        return theme;
+    }
 
     private _getDetailPanelTemplateName({detailPanelTemplateName, detailPanelOpenMode}: IFilterViewOptions): string {
         return detailPanelOpenMode === 'stack' ? FILTER_PANEL_POPUP_STACK : detailPanelTemplateName;
@@ -470,7 +476,8 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             popupOptions.restrictiveContainer = '.sabyPage-MainLayout__rightPanel_border.sabyPage-MainLayout__rightPanel';
         }
         Merge(popupOptions, panelPopupOptions);
-        popupOptions.className += ` controls_popupTemplate_theme-${this._options.theme} controls_filter_theme-${this._options.theme} controls_filterPopup_theme-${this._options.theme} controls_dropdownPopup_theme-${this._options.theme}`;
+        const theme = this._prepareTheme(this._options.theme);
+        popupOptions.className += ` controls_popupTemplate_theme-${theme} controls_filter_theme-${theme} controls_filterPopup_theme-${theme} controls_dropdownPopup_theme-${theme}`;
         this._getFilterPopupOpener().open(popupOptions);
     }
 
@@ -770,7 +777,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                 (item.viewMode !== 'extended' || item.visibility === true) &&
                  this._isItemChanged(item) &&
                   // Временная проверка, пока не согласовано API отображения фильтров (панель/окно)
-                (item.editorTemplateName !== 'Controls/filterPanel:ListEditor' || this._options?.detailPanelOpenMode === 'stack')) {
+                (item.editorTemplateName !== 'Controls/filterPanel:ListEditor' || this._detailPanelTemplateName === FILTER_PANEL_POPUP_STACK)) {
                 textValue = item.textValue;
                 if (textValue) {
                     textArr.push(textValue);

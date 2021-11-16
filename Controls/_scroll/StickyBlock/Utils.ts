@@ -102,9 +102,12 @@ export function getOffset(parentElement: HTMLElement, element: HTMLElement, posi
    parentElement = (parentElement && parentElement.get) ? parentElement.get(0) : parentElement;
    element = (element && element.get) ? element.get(0) : element;
 
-   const
-       offset = getDimensions(element),
-       parentOffset = getDimensions(parentElement);
+   if (!parentElement || !element) {
+        return 0;
+   }
+
+   const offset = getDimensions(element);
+   const parentOffset = getDimensions(parentElement);
    if (position === 'top') {
       return offset.top - parentOffset.top;
    } else if (position === 'bottom') {
@@ -114,32 +117,6 @@ export function getOffset(parentElement: HTMLElement, element: HTMLElement, posi
    } else {
        return parentOffset.right - offset.right;
    }
-}
-
-export function validateIntersectionEntries(entries: IntersectionObserverEntry[], rootContainer: HTMLElement): IntersectionObserverEntry[] {
-    const newEntries: IntersectionObserverEntry[] = [];
-    for (const entry: IntersectionObserverEntry of entries) {
-        // После создания элемента иногда приходит событие с неправильными нулевыми размерами.
-        // После этого, событий об изменении пересечения не происходит. Считаем размеры самостоятельно.
-        if (entry.boundingClientRect.top === 0 && entry.boundingClientRect.bottom === 0 &&
-            entry.boundingClientRect.height === 0) {
-            const newEntry = {
-                time: entry.time,
-                rootBounds: rootContainer.getBoundingClientRect(),
-                boundingClientRect: entry.target.getBoundingClientRect(),
-                intersectionRect: entry.intersectionRect,
-                intersectionRatio: entry.intersectionRatio,
-                target: entry.target,
-                isVisible: entry.isVisible
-            };
-            newEntry.isIntersecting = Math.max(newEntry.boundingClientRect.top, newEntry.rootBounds.top) <=
-                    Math.min(newEntry.boundingClientRect.bottom, newEntry.rootBounds.bottom);
-            newEntries.push(newEntry);
-        } else {
-            newEntries.push(entry);
-        }
-    }
-    return newEntries;
 }
 
 export function isHidden(element: HTMLElement): boolean {

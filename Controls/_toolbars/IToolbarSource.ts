@@ -108,7 +108,7 @@ export interface IToolBarItem {
  * this._source = new Memory({
  *     keyProperty: 'key',
  *     data: [{
- *         id: '1',
+ *         key: '1',
  *         showType: showType.TOOLBAR,
  *         icon: 'icon-Time',
  *         iconStyle: 'secondary',

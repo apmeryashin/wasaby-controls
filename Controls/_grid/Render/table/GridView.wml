@@ -27,19 +27,19 @@
                 viewColumns="{{ _getViewColumns(_options) }}"/>
 
         <!-- Header -->
-        <Controls.scroll:VirtualScrollContainer if="{{ _listModel.getHeader() }}" position="top">
+        <ws:if data="{{ _listModel.getHeader() }}">
             <thead attr:name="header" class="{{ _listModel.getHeader().getBodyClasses() }}">
-            <ws:for data="headerRow in _listModel.getHeader().getRows()">
-                <ws:partial template="{{ headerRow.getTemplate() }}"
-                            item="{{ headerRow }}"
-                            style="{{ _options.style }}"
-                            backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
-            </ws:for>
+                <ws:for data="headerRow in _listModel.getHeader().getRows()">
+                    <ws:partial template="{{ headerRow.getTemplate() }}"
+                                item="{{ headerRow }}"
+                                style="{{ _options.style }}"
+                                backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
+                </ws:for>
             </thead>
-        </Controls.scroll:VirtualScrollContainer>
+        </ws:if>
 
         <!-- Results (top) -->
-        <Controls.scroll:VirtualScrollContainer if="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'top' }}" position="top">
+        <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'top' }}">
             <thead>
                 <ws:partial template="{{ _listModel.getResults().getTemplate() }}"
                             attr:name="results"
@@ -47,7 +47,7 @@
                             style="{{ _options.style }}"
                             backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
             </thead>
-        </Controls.scroll:VirtualScrollContainer>
+        </ws:if>
 
         <!--Top loading indicator-->
         <tbody>

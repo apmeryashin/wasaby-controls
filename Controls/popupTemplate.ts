@@ -8,7 +8,10 @@
 
 export {default as Stack} from 'Controls/_popupTemplate/Stack/Template/Stack';
 export {default as StackPageWrapper} from 'Controls/_popupTemplate/Stack/Template/StackPageWrapper';
-export {default as StackController} from 'Controls/_popupTemplate/Stack/StackController';
+export {
+    default as StackController,
+    StackController as StackControllerClass
+} from 'Controls/_popupTemplate/Stack/StackController';
 
 export {default as Dialog, IDialogTemplateOptions} from 'Controls/_popupTemplate/Dialog/Template/Dialog';
 export {default as DialogController} from 'Controls/_popupTemplate/Dialog/DialogController';

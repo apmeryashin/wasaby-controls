@@ -33,6 +33,27 @@ function initTest(data: object[], options?: {}, collectionOptions?: {}): {record
 }
 
 describe('ExpandCollapse/Controller', () => {
+    describe('updateOptions', () => {
+        it('update model', () => {
+            const data = [
+                {id: 1, parent: null, node: true, group: groupConstants.hiddenGroup},
+                {id: 2, parent: null, node: true, group: groupConstants.hiddenGroup},
+                {id: 3, parent: null, node: true, group: groupConstants.hiddenGroup}
+            ];
+            const { controller } = initTest(
+                data,
+                {expandedItems: [1, 2, 3]},
+                {nodeFooterTemplate: () => null, groupProperty: 'group'}
+            );
+
+            const {model} = initTest(data);
+            controller.updateOptions({model});
+            assert.isTrue(model.getItemBySourceKey(1).isExpanded());
+            assert.isTrue(model.getItemBySourceKey(2).isExpanded());
+            assert.isTrue(model.getItemBySourceKey(3).isExpanded());
+        });
+    });
+
     describe('setExpandedItems', () => {
         it('with node footers and groups', () => {
             const data = [

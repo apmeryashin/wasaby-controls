@@ -39,8 +39,7 @@ function getIconSize(options) {
          // поэтому необходимо это учесть при сдвиге
          offsetClassName += '_iconSize-' + (getIconSize(options) || 'medium');
       }
-      // FIXME https://online.sbis.ru/opendoc.html?guid=d4a7b33b-51ab-4390-9052-4fbfca343fbb
-      if (options.viewMode === 'toolButton' && options.icon) {
+      if ((options.viewMode === 'toolButton' || options.viewMode === 'functionalButton') && options.icon) {
          offsetClassName += '_iconSize-' + (getIconSize(options) || 'medium');
       }
       if (!options.headerTemplate && !options.showHeader && options.viewMode === 'link') {

@@ -13,7 +13,6 @@ import {
     POSITION,
     SHADOW_VISIBILITY,
     SHADOW_VISIBILITY_BY_CONTROLLER,
-    validateIntersectionEntries,
     IPositionOrientation
 } from './StickyBlock/Utils';
 import fastUpdate from './StickyBlock/FastUpdate';
@@ -43,6 +42,8 @@ export interface IStickyHeaderOptions extends IControlOptions {
     offsetTop: number;
     offsetLeft: number;
 }
+
+const CONTENT_CLASS = '.controls-StickyHeader__content';
 
 /**
  * Обеспечивает прилипание контента к краю родительского контейнера при прокрутке.
@@ -162,6 +163,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     private _syncDomOptimization: boolean = true;
     private _bottomShadowHiddenClassRemovedinJS: boolean = null;
+    private _content: HTMLElement;
 
     private _isHidden: boolean = false;
 
@@ -206,16 +208,21 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             this._container.style.top = '';
             this._container.style.bottom = '';
         }
+        if (!this._isStickyEnabled(options)) {
+            return;
+        }
+        this._register();
+        // name на partial не работает, поэтому контентную область ищем через querySelector.
+        this._content = this._container.querySelector(CONTENT_CLASS);
+        this._subPixelArtifactClass = this._getSubPixelArtifactFixClass();
+        this._topGapFixClass = this._getTopGapFixClass();
     }
 
     protected _afterMount(options: IStickyHeaderOptions): void {
         if (!this._isStickyEnabled(options)) {
             return;
         }
-        this._register();
         this._init();
-        this._subPixelArtifactClass = this._getSubPixelArtifactFixClass();
-        this._topGapFixClass = this._getTopGapFixClass();
     }
 
     getHeaderContainer(): HTMLElement {
@@ -626,7 +633,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
         const fixedPosition: POSITION = this._model.fixedPosition;
 
-        this._model.update(validateIntersectionEntries(entries, this._scroll));
+        this._model.update(entries);
 
         // Не отклеиваем заголовки scrollTop отрицательный.
         if (this._negativeScrollTop && this._model.fixedPosition === '') {
@@ -946,7 +953,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // Этот способ отключения будет описан в статье отладке скролла и стикиблоков:
         // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/debug/scroll-container/ после
         // https://online.sbis.ru/opendoc.html?guid=9e7f5914-3b96-4799-9e1d-9390944b4ab3
-        const artifactFixOff = this._children.content?.classList.contains('controls-StickyBlock__onSideIsBorder');
+        const artifactFixOff = this._content?.classList.contains('controls-StickyBlock__onSideIsBorder');
         if (this._options._subPixelArtifactFix && !artifactFixOff) {
             result = `controls-StickyBlock__subpixelFix-${this._options.backgroundStyle}`;
         }
@@ -960,7 +967,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // Этот способ отключения будет описан в статье отладке скролла и стикиблоков:
         // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/debug/scroll-container/ после
         // https://online.sbis.ru/opendoc.html?guid=9e7f5914-3b96-4799-9e1d-9390944b4ab3
-        const topGapFixOff = this._children.content?.classList.contains('controls-StickyBlock__aboveBorder');
+        const topGapFixOff = this._content?.classList.contains('controls-StickyBlock__aboveBorder');
         if (this._isMobileIOS && this._isPixelRatioBug && !topGapFixOff) {
             result = `controls-StickyBlock__topGapFix-${this._options.backgroundStyle}`;
         }

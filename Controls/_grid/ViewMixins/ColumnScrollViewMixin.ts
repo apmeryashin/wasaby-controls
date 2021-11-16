@@ -549,7 +549,11 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     scrollToColumn(columnIndex: number): void {
         this._doAfterReload(() => {
             this._doOnComponentDidUpdate(() => {
-                if (this._$relativeCellContainers[columnIndex]) {
+                if (
+                    this._$columnScrollController &&
+                    this._$relativeCellContainers &&
+                    this._$relativeCellContainers[columnIndex]
+                ) {
                     this._columnScrollScrollIntoView(this._$relativeCellContainers[columnIndex]);
                 }
             });

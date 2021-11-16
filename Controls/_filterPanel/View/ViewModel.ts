@@ -7,6 +7,8 @@ import {VersionableMixin} from 'Types/entity';
 import {mixin} from 'Types/util';
 import {FilterUtils} from 'Controls/filter';
 import * as coreClone from 'Core/core-clone';
+import {RecordSet} from 'Types/collection';
+import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource';
 
 interface IFilterViewModelOptions {
     source: IFilterItem[];
@@ -54,28 +56,50 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     }
 
     private _getSource(source: IFilterItem[]): IFilterItem[] {
-        const newSource = [];
-        source.forEach((item) => {
-            // Здесь не подходит опция caption PropertyGrid, т.к мы настраиваем отображения заголовка в шаблоне группы
-            // Вместо caption для установки заголовка используем editorCaption
-            item.editorCaption = item.caption || item.group || item.editorCaption;
-            item.caption = '';
-            const editorOptions = {
+        return source.map((item, index) => {
+            const newItem = {...item};
+            // Пока не перешли на предзагрузку фильтров (22.1100)
+            const sourceController = this._source?.[index]?.name === newItem.name ?
+                this._source?.[index]?.editorOptions?.sourceController :
+                null;
+
+            newItem.editorCaption = item.caption || item.group || item.editorCaption;
+            newItem.caption = '';
+            newItem.editorOptions = {
                 ...item.editorOptions,
-                ...{
-                    viewMode: item.viewMode,
-                    filterViewMode: this._options.filterViewMode,
-                    name: item.name,
-                    resetValue: item.resetValue,
-                    style: this._options.style,
-                    emptyText: item.emptyText,
-                    emptyKey: item.emptyKey,
-                    selectedAllText: item.selectedAllText,
-                    selectedAllKey: item.selectedAllKey
-                }};
-            newSource.push({...item, ...{editorOptions}});
+                viewMode: item.viewMode,
+                filterViewMode: this._options.filterViewMode,
+                name: item.name,
+                resetValue: item.resetValue,
+                style: this._options.style,
+                emptyText: item.emptyText,
+                emptyKey: item.emptyKey,
+                selectedAllText: item.selectedAllText,
+                selectedAllKey: item.selectedAllKey,
+                sourceController,
+                dataLoadCallback: (items, direction) => {
+                    if (!direction) {
+                        this._updateEditorOptionsByLoadedItems(index, items);
+                    }
+                }
+            };
+            return newItem;
         });
-        return newSource;
+    }
+
+    private _updateEditorOptionsByLoadedItems(itemIndex: number, items: RecordSet): void {
+        const newItem = {...this._source[itemIndex]};
+
+        if (!newItem.editorOptions?.sourceController) {
+            newItem.editorOptions.sourceController = new NewSourceController({
+                ...newItem.editorOptions,
+                items
+            } as ISourceControllerOptions);
+
+            this._source = [...this._source];
+            this._source[itemIndex] = newItem;
+            this._nextVersion();
+        }
     }
 
     private _getEditingObjectBySource(source: IFilterItem[]): Record<string, unknown> {
@@ -89,10 +113,11 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
 
     private _getGroupItemsBySource(source: IFilterItem[]): Record<string, IFilterGroup> {
         const groupsItems = {};
-        source.forEach((item) => {
+        source.forEach((item, itemIndex) => {
             groupsItems[item.name] = {
                 caption: item.editorCaption,
                 expanderVisible: item.expanderVisible,
+                groupVisible: item.editorCaption || itemIndex,
                 textValue: item.textValue,
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };

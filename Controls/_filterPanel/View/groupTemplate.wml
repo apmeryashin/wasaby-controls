@@ -1,4 +1,4 @@
-<ws:if data="{{item}}">
+<ws:if data="{{item && _options.groupItems[item].groupVisible}}">
    <div class="controls-FilterViewPanel__group-wrapper controls-FilterViewPanel__group-wrapper_style-{{style}}
             {{collapsedGroups[item] ? 'controls-FilterViewPanel__group-wrapper-collapsed'}}">
       <div class="controls-FilterViewPanel__group-header">

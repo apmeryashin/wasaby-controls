@@ -12,6 +12,8 @@ export interface IBody extends IControlOptions {
     path: Path;
     source: ICrudPlus;
     filter: object;
+    sorting: object;
+    navigation: object;
     keyProperty: string;
     nodeProperty: string;
     parentProperty: string;

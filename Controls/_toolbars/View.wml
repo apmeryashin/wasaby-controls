@@ -11,7 +11,7 @@
                         theme="{{_options.theme}}"
                         isFirstItem="{{_firstItem === item}}"
                         type="toolbar"
-                        attr:data-qa="{{item[_options.keyProperty]}}"
+                        attr:data-qa="{{item[_options.keyProperty] || item[_items.getKeyProperty()]}}"
                         on:click="_itemClickHandler(item)"/>
          </ws:if>
       </ws:for>
