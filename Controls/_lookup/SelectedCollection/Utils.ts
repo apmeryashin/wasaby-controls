@@ -22,12 +22,10 @@ export = {
     ): string | void {
         let itemMaxWidth;
 
-        // toDO !KINGO в IE max-width работает по-другому, если ширина родителя задана не явно
         if (
             indexItem === 0 &&
             itemsLength > maxVisibleItems &&
-            (maxVisibleItems === 1 || itemsLayout === 'default') &&
-            !(detection.isIE && detection.IEVersion <= LAST_IE_VERSION)
+            (maxVisibleItems === 1 || itemsLayout === 'default')
         ) {
             itemMaxWidth = 'calc(100% - ' + counterWidth + 'px);';
         }
