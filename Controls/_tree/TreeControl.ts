@@ -830,12 +830,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     reloadItem(key: TKey, options: IReloadItemOptions | object, direction?: boolean | string): Promise<Model> {
         const newArgs = convertReloadItemArgs(...arguments);
-        // Получаем иерархию перезагружаемого итема без корня
-        const itemHierarchy = getItemHierarchy(this.getViewModel() as Tree, newArgs.key as TKey).slice(1);
 
         return newArgs.options.hierarchyReload
             ? _private.reloadItem(key, this.getViewModel() as Tree, this._options.filter, this.getSourceController())
-            : super.reloadItem.apply(this, [itemHierarchy, newArgs.options]);
+            : super.reloadItem.apply(this, [newArgs.key, newArgs.options]);
     }
 
     // region Drag
