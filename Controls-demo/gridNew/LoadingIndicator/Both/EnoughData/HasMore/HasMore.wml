@@ -7,6 +7,7 @@
             <ws:navigation source="page" view="infinity">
                 <ws:sourceConfig pageSize="{{20}}" page="{{5}}" hasMore="{{false}}"/>
             </ws:navigation>
+            <ws:virtualScrollConfig pageSize="{{15}}"/>
             <ws:content>
                 <Controls.grid:View
                         name="list"

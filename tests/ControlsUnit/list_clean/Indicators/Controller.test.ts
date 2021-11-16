@@ -533,8 +533,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
         it('should hide', () => {
             const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true});
             const mockedIndicatorElement = getMockedIndicatorElement();
-            controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
+            controller.displayDrawingIndicator(mockedIndicatorElement, 'top');
             fakeTimer.tick(2001);
+            controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
             assert.equal(mockedIndicatorElement.style.display, 'none');
             assert.equal(mockedIndicatorElement.style.position, '');
             assert.equal(mockedIndicatorElement.style.top, '');
@@ -544,7 +545,6 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true}, {iterative: true});
             const mockedIndicatorElement = getMockedIndicatorElement();
             controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
-            fakeTimer.tick(2001);
             assert.equal(mockedIndicatorElement.style.display, '');
             assert.equal(mockedIndicatorElement.style.position, '');
             assert.equal(mockedIndicatorElement.style.top, '');
@@ -554,7 +554,6 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: false});
             const mockedIndicatorElement = getMockedIndicatorElement();
             controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
-            fakeTimer.tick(2001);
             assert.equal(mockedIndicatorElement.style.display, '');
             assert.equal(mockedIndicatorElement.style.position, '');
             assert.equal(mockedIndicatorElement.style.top, '');

@@ -3864,7 +3864,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
-            this._listViewModel.destroy();
+            if (!newOptions.collection) {
+                this._listViewModel.destroy();
+            }
 
             this._noDataBeforeReload = !(items && items.getCount());
             _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
@@ -3921,7 +3923,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 if (!this._listViewModel || !this._listViewModel.getCount()) {
-                    if (this._listViewModel && !this._listViewModel.destroyed) {
+                    if (this._listViewModel && !this._listViewModel.destroyed && !newOptions.collection) {
                         this._listViewModel.destroy();
                     }
                     _private.initializeModel(this, newOptions, items);
@@ -3933,6 +3935,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             model: this._listViewModel,
                             markerVisibility: newOptions.markerVisibility
                         });
+                    }
+
+                    // TODO после выполнения код будет в одном месте https://online.sbis.ru/opendoc.html?guid=59d99675-6bc4-436e-967a-34b448e8f3a4
+                    // При пересоздании коллекции будет скрыт верхний триггер и индикатор,
+                    // чтобы не было лишней подгрузки при отрисовке нового списка.
+                    // Показываем по необходимости верхний индикатор и триггер
+                    if (this._indicatorsController.shouldDisplayTopIndicator()) {
+                        this._indicatorsController.displayTopIndicator(true);
+                    } else {
+                        this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
                     }
                 }
 
@@ -4192,10 +4204,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (newArgs.options.method === 'query') {
             filter = cClone(this._options.filter);
-            // Массив в newArgs.key может быть если зовут reloadItem из дерева. В этом случае
-            // в newArgs.key будет лежать иерархий итема за исключением корня, информация о корне
-            // будет в фильтре
-            filter[this._keyProperty] = Array.isArray(newArgs.key) ? newArgs.key : [newArgs.key];
+            filter[this._keyProperty] = [newArgs.key];
 
             sourceController.setFilter(filter);
             reloadItemDeferred = sourceController.load().then((items) => {
@@ -4291,7 +4300,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._destroyEditInPlaceController();
         }
 
-        if (this._listViewModel) {
+        if (this._listViewModel && !this._options.collection) {
             this._listViewModel.destroy();
         }
 
@@ -4348,7 +4357,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._notify('doScroll', ['top'], {bubbling: true});
                 this._scrolled = false;
                 this._scrollTop = 0;
-                this._resetScrollAfterReload = false;
             }
         }
 
@@ -4358,7 +4366,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
             directionToRestoreScroll = 'up';
         }
-        if (directionToRestoreScroll) {
+        if (directionToRestoreScroll &&
+            !(this._resetScrollAfterReload && this._shouldNotifyOnDrawItems)) {
             this._scrollController.saveEdgeItem(directionToRestoreScroll,
                 this._getItemsContainer(),
                 this._getItemsContainerUniqueClass());
@@ -4484,6 +4493,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._finishScrollToEdgeOnDrawItems();
             this._finishScrollToEdgeOnDrawItems = null;
         }
+        if (this._shouldNotifyOnDrawItems) {
+            this._resetScrollAfterReload = false;
+        }
         this._notifyOnDrawItems();
 
         //TODO: можно убрать после https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
@@ -4581,6 +4593,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             if (result && this._needScrollCalculation) {
                 _private.handleScrollControllerResult(this, result);
+
+                // Если мы попали в этот иф - это значит что сейчас сдвинулся виртуальный диапазон.
+                // Если больше нет записей скрытых виртуальным скроллом, мы должны показать индикатор.
+                // Проверяем это и если нужно показываем индикатор.
+                if (direction === 'down' && this._indicatorsController.shouldDisplayBottomIndicator()) {
+                    this._indicatorsController.displayBottomIndicator();
+                } else if (direction === 'up' && this._indicatorsController.shouldDisplayTopIndicator()) {
+                    this._indicatorsController.displayTopIndicator(false);
+                }
+
                 this._handleLoadToDirection = false;
                 this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
                 this._indicatorsController.displayDrawingIndicator(

@@ -164,8 +164,15 @@ export default class View extends Control<IViewPanelOptions> {
         target.forEach((targetItem) => {
             source.forEach((sourceItem) => {
                 if (isEqualItems(targetItem, sourceItem)) {
-                    object.setPropertyValue(targetItem, 'value', sourceItem.value);
-                    object.setPropertyValue(targetItem, 'textValue', sourceItem.textValue);
+                    if (targetItem.hasOwnProperty('value')) {
+                        object.setPropertyValue(targetItem, 'value', sourceItem.value);
+                    }
+                    if (targetItem.hasOwnProperty('viewMode')) {
+                        object.setPropertyValue(targetItem, 'viewMode', sourceItem.viewMode);
+                    }
+                    if (targetItem.hasOwnProperty('textValue')) {
+                        object.setPropertyValue(targetItem, 'textValue', sourceItem.textValue);
+                    }
                 }
             });
         });
