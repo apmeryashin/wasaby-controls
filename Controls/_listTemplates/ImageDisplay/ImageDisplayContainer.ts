@@ -108,41 +108,51 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
+    /**
+     * Обновляем состояние hasItemWithImage.
+     * Если текущее значение false, но в новых загруженных элементах вдруг стало true, нужно актуализировать.
+     * @param items RecordSet, в котором мы ищем картинку.
+     * @param imageProperty Свойство записи, в котором содержится картинка.
+     * @param isResetState Флаг, что данные перезагружаются (например, после reload, reloadItem,
+     * при первичной установке данных и при смене imageProperty).
+     * @private
+     */
     private _updateDisplayImage(items: RecordSet, imageProperty: string, isResetState: boolean): void {
         if (imageProperty && (isResetState || !this._hasItemWithImage)) {
-            this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
+            const hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
+            if (hasItemWithImage) {
+                this._hasItemWithImage = hasItemWithImage;
+            }
         }
     }
 
-    private _subscribeToCollectionChange(items: RecordSet): void {
-        items.subscribe('oncollectionitemchange', this._onCollectionItemChange);
+    private _subscribeToCollectionChange(items, onCollectionItemChange) {
+        items.subscribe('oncollectionitemchange', onCollectionItemChange);
     }
 
-    private _unsubscribeToCollectionChange(items: RecordSet): void {
-        items.unsubscribe('oncollectionitemchange', this._onCollectionItemChange);
+    private _unsubscribeToCollectionChange(items, onCollectionItemChange) {
+        items.unsubscribe('oncollectionitemchange', onCollectionItemChange);
     }
 
     protected _beforeUpdate(options?: IImageDisplayContainerOptions, contexts?: any): void {
         if (!isEqual(options.columns, this._options.columns)) {
             this._columns = this._getPatchedColumns(options.columns);
         }
-        // Ресетим показ изображений при проваливании в папку и если поменяли свойство, которое указывает на картинку
-        if (options.imageProperty !== this._options.imageProperty ||
-            options.root !== this._options.root) {
+        if (options.imageProperty !== this._options.imageProperty) {
             this._updateDisplayImage(this._items, options.imageProperty, true);
             if (!options.imageProperty) {
-                this._unsubscribeToCollectionChange(this._items);
+                this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange);
             }
         }
     }
 
     destroy(): void {
-        this._unsubscribeToCollectionChange(this._items);
+        this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange);
     }
 
     private _itemsReadyCallback(items: RecordSet): void {
         this._items = items;
-        this._subscribeToCollectionChange(this._items);
+        this._subscribeToCollectionChange(this._items, this._onCollectionItemChange);
         this._updateDisplayImage(this._items, this._options.imageProperty, true);
 
         if (this._options.itemsReadyCallback) {
@@ -155,11 +165,8 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
             this._items = items;
         }
 
-        // В случае загрузки в каком-либо направлении проверяем, появились ли картинки.
-        // В этом месте нельзя понять, нужно ли ресетить показ изображений, если нет direction.
-        if (direction) {
-            this._updateDisplayImage(items, this._options.imageProperty, false);
-        }
+        const isResetState = !direction;
+        this._updateDisplayImage(items, this._options.imageProperty, isResetState);
 
         if (this._options.dataLoadCallback) {
             this._options.dataLoadCallback(items, direction);
