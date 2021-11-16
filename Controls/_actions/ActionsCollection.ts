@@ -58,6 +58,9 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
         this._childItems = {};
         this._actions = this._createActions(options.actions);
         this._listActions = this._createActions(options.listActions);
+        this._listActions.forEach((action) => {
+            action.showType = showType.MENU;
+        });
     }
 
     update(options: IActionsCollectionOptions): void {

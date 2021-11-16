@@ -68,8 +68,10 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
     // То есть в этой случае мы не должны отображать футер, если нет данных еще, т.к. content не задан
     // При создании футера(в стратегии) это не определить
     shouldDisplayVisibleFooter(content: TemplateFunction): boolean {
-        // Нужно рисовать футер если есть пользовательский контент или нужно рисовать нашу кнопку "Еще" для подгрузки.
-        return !!content || this.needMoreButton();
+        // Нужно рисовать футер если:
+        //  * есть данные для загрузки и нужно показывать нашу кнопку "Ещё"
+        //  * нет данных для загрузки и есть пользовательский контент
+        return this.hasMoreStorage() ? this.needMoreButton() : !!content;
     }
 
     isSticked(): boolean {

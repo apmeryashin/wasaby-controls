@@ -3879,6 +3879,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
 
+            // При пересоздании коллекции будет скрыт верхний триггер и индикатор,
+            // чтобы не было лишней подгрузки при отрисовке нового списка.
+            // Показываем по необходимости верхний индикатор и триггер
+            if (this._indicatorsController.shouldDisplayTopIndicator()) {
+                this._indicatorsController.displayTopIndicator(true);
+            } else {
+                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+            }
+
             this._modelRecreated = true;
 
             _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
@@ -4358,7 +4367,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._notify('doScroll', ['top'], {bubbling: true});
                 this._scrolled = false;
                 this._scrollTop = 0;
-                this._resetScrollAfterReload = false;
             }
         }
 
@@ -4368,7 +4376,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
             directionToRestoreScroll = 'up';
         }
-        if (directionToRestoreScroll) {
+        if (directionToRestoreScroll &&
+            !(this._resetScrollAfterReload && this._shouldNotifyOnDrawItems)) {
             this._scrollController.saveEdgeItem(directionToRestoreScroll,
                 this._getItemsContainer(),
                 this._getItemsContainerUniqueClass());
@@ -4493,6 +4502,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._finishScrollToEdgeOnDrawItems && this._shouldNotifyOnDrawItems) {
             this._finishScrollToEdgeOnDrawItems();
             this._finishScrollToEdgeOnDrawItems = null;
+        }
+        if (this._shouldNotifyOnDrawItems) {
+            this._resetScrollAfterReload = false;
         }
         this._notifyOnDrawItems();
 
@@ -6816,7 +6828,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return;
         }
 
-        if (this._insideDragging) {
+        // dragStart должен вызываться в том списке, в котором он начался.
+        // draggedKey запоминается имеено на таком списке.
+        // Возможна ситуация: событие _documentDragStart бросается из стартового списка, а после того как
+        // событие долетает до всех списков мышка находится уже в другом списке.
+        // (1-ый список insideDragging=false, 2-ой список insideDragging=true)
+        // Из-за этого пытаемся начать днд не в том списке.
+        if (this._draggedKey !== null) {
             this._dragStart(dragObject, this._draggedKey);
         } else {
             this._dragEntity = dragObject.entity;
@@ -6994,6 +7012,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
 
             this._dndListController = null;
+            this._insideDragging = false;
         };
 
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
@@ -7013,7 +7032,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        this._insideDragging = false;
         this._draggedKey = null;
         this._listViewModel.setDragOutsideList(false);
     }

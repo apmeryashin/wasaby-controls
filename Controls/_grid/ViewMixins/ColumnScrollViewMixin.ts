@@ -145,11 +145,19 @@ const createColumnScroll = (self: TColumnScrollViewMixin, options: IAbstractView
     self._notify('toggleHorizontalScroll', [true]);
 };
 
-const destroyColumnScroll = (self: TColumnScrollViewMixin) => {
+export const destroyColumnScroll = (self: TColumnScrollViewMixin) => {
     self._$columnScrollController.destroy();
     self._$columnScrollController = null;
     self._$dragScrollStylesContainer = null;
     self._$columnScrollUseFakeRender = false;
+
+    // Вёрстка гор.скрола(например скроллбар), находящаяся в GridView маунтится 1 раз.
+    // При последующих скрытиях/появлениях, видимость регулируется стилями.
+    // При удалении сролла колонок, нужно предварительно устанавливать размеры в скроллбар,
+    // иначе может произойти ситуация, когда до скрытия и после появления все размеры одинаковы,
+    // тогда платформенный скроллбар не пересчитает свои размеры (которые он уже пересчитал при скрытии).
+    self._children.horizontalScrollBar?.setSizes({scrollWidth: 0});
+
     if (self._$dragScrollController) {
         destroyDragScroll(self);
     }
