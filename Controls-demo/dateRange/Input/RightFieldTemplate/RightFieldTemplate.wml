@@ -4,7 +4,7 @@
                 bind:startValue="_startDate"
                 bind:endValue="_endDate">
             <ws:rightFieldTemplate>
-                <Controls.dateRange:WeekdayFormatter value="{{ rightFieldTemplate.value }}"/>
+                <Controls.date:WeekdayFormatter value="{{ rightFieldTemplate.value }}"/>
                 <ws:if data="{{ rightFieldTemplate.inputPosition === 'left'}}">
                      <span class="controlsDemo__rightFieldTemplate_spacing controls-icon controls-icon_style-unaccented
                         controls-icon_size-s icon-Time"></span>
