@@ -2051,6 +2051,10 @@ const _private = {
         // Кнопка Еще в футере рисуется по навигации, ее пересчет происходит и в onCollectionChanged,
         // который может вызваться до Control::saveOptions и пересчет будет с устаревшей навигацией
         self._navigation = cfg.navigation;
+
+        if (!_private.isDemandNavigation(cfg.navigation) && !_private.isCutNavigation(cfg.navigation)) {
+            self._shouldDrawNavigationButton = false;
+        }
         if (!self._needScrollCalculation) {
             if (self._scrollPagingCtr) {
                 self._scrollPagingCtr.destroy();
