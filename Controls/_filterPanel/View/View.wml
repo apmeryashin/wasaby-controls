@@ -3,7 +3,7 @@
     <Controls.scroll:Container attr:class="controls-FilterViewPanel__scroll">
         <ws:if data="{{_viewModel.hasBasicItems()}}">
             <ws:if data="{{_options.viewMode === 'filterPanelStack'}}">
-                <Controls.scroll:StickyBlock backgroundStyle="transparent">
+                <Controls.scroll:StickyBlock backgroundStyle="transparent" attr:class="controls-FilterViewPanel__header-wrapper">
                     <div class="controls-FilterViewPanel__header
                             controls-FilterViewPanel__header_backgroundStyle-{{_options.backgroundStyle}}">
                         <Controls.icon:Icon icon="icon-FilterNew"
