@@ -32,7 +32,8 @@ define(
                   data: getDefaultItems()
                }),
                itemPadding: {},
-               subMenuLevel: 0
+               subMenuLevel: 0,
+               maxHistoryVisibleItems: 10
             };
          }
 
@@ -481,7 +482,7 @@ define(
             });
 
             it('expandButton visible, history menu', () => {
-               const newMenuOptions = { allowPin: true, root: null };
+               const newMenuOptions = { allowPin: true, root: null, maxHistoryVisibleItems: 10 };
 
                const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
                assert.isTrue(result);
@@ -489,7 +490,7 @@ define(
             });
 
             it('expandButton visible, history menu with fixed item', () => {
-               const newMenuOptions = { allowPin: true, root: null };
+               const newMenuOptions = { allowPin: true, root: null, maxHistoryVisibleItems: 10 };
                items.append([new entity.Model({
                   rawData: { key: 'doNotSaveToHistory', doNotSaveToHistory: true },
                   keyProperty: 'key'
@@ -501,7 +502,7 @@ define(
             });
 
             it('expandButton hidden, visibleItems.length = 11, history menu with fixed item', () => {
-               const newMenuOptions = { allowPin: true, root: null };
+               const newMenuOptions = { allowPin: true, root: null, maxHistoryVisibleItems: 10 };
                const itemsData = [];
                for (let i = 0; i < 11; i++) {
                   itemsData.push({ key: String(i), doNotSaveToHistory: undefined });
@@ -518,7 +519,7 @@ define(
             });
 
             it('expandButton hidden, history menu', () => {
-               const newMenuOptions = { allowPin: true, subMenuLevel: 1 };
+               const newMenuOptions = { allowPin: true, subMenuLevel: 1, maxHistoryVisibleItems: 10 };
 
                const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
                assert.isFalse(result, 'level is not first');
@@ -534,7 +535,7 @@ define(
                   rawData: records,
                   keyProperty: 'key'
                });
-               const newMenuOptions = { allowPin: true, root: null, parentProperty: 'parent' };
+               const newMenuOptions = { allowPin: true, root: null, parentProperty: 'parent', maxHistoryVisibleItems: 10 };
 
                const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
                assert.isFalse(result);
