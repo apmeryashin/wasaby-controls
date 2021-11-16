@@ -741,7 +741,7 @@ export default class ScrollController {
                 }
             }
         }
-        scrollTop = Math.max(0, scrollTop);
+        scrollTop = Math.max(0, Math.floor(scrollTop));
         return scrollTop;
     }
 
