@@ -12,7 +12,6 @@ import Store from 'Controls/Store';
 import MenuSource from './MenuSource';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 import {ControllerClass as FilterController} from 'Controls/filter';
-import {IBaseAction} from 'Controls/_actions/BaseAction';
 
 interface IContainerOptions extends IControlOptions {
     _dataOptionsValue: {
@@ -54,7 +53,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     }
 
     protected _listActionsChanged(e: SyntheticEvent, listActions: IAction[]): void {
-        this._actionsCollection.setListActions(listActions);
+        this._actionsCollection.setListActions(DEFAULT_LIST_ACTIONS.concat(listActions));
     }
 
     protected _actionsChanged(e: SyntheticEvent, actions: IAction[]): void {
@@ -145,6 +144,11 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                 actions: this._prepareActionsOrder(options.actions),
                 prefetch: options.prefetchData
             });
+            this._actionsCollection.setOperationsPanelVisible(false);
+        }
+        if (this._options.prefetchData !== options.prefetchData) {
+            this._unsubscribeFromControllers();
+            this._subscribeControllersChanges(options._dataOptionsValue, options.prefetchData);
         }
     }
 
@@ -212,7 +216,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._operationsController.setOperationsMenuVisible(false);
     }
 
-    protected _beforeUnmount(): void {
+    protected _unsubscribeFromControllers(): void {
         if (this._sourceController) {
             this._sourceController.unsubscribe('itemsChanged', this._updateActions);
         }
@@ -227,6 +231,10 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         if (this._filterController) {
             this._filterController.unsubscribe('filterChanged', this._filterChanged);
         }
+    }
+
+    protected _beforeUnmount(): void {
+        this._unsubscribeFromControllers();
     }
 
     static defaultProps: Partial<IContainerOptions> = {

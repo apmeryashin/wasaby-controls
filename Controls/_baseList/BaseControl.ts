@@ -3880,6 +3880,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
 
+            // При пересоздании коллекции будет скрыт верхний триггер и индикатор,
+            // чтобы не было лишней подгрузки при отрисовке нового списка.
+            // Показываем по необходимости верхний индикатор и триггер
+            if (this._indicatorsController.shouldDisplayTopIndicator()) {
+                this._indicatorsController.displayTopIndicator(true);
+            } else {
+                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+            }
+
             this._modelRecreated = true;
 
             _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
