@@ -11,6 +11,7 @@ import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 import {Model} from 'Types/entity';
 import {TreeItem} from 'Controls/display';
+import {Direction} from 'Controls/interface';
 
 export interface IImageDisplayContainerOptions extends IControlOptions {
     itemsReadyCallback: (items: RecordSet) => void;
@@ -107,13 +108,9 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
-    private _updateDisplayImage(items, imageProperty, isResetState) {
-        if (imageProperty) {
-            if (isResetState) {
-                this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
-            } else if (!this._hasItemWithImage) {
-                this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
-            }
+    private _updateDisplayImage(items: RecordSet, imageProperty: string, isResetState: boolean): void {
+        if (imageProperty && (isResetState || !this._hasItemWithImage)) {
+            this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
         }
     }
 
@@ -151,13 +148,14 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
-    private _dataLoadCallback(items: RecordSet, direction): void {
+    private _dataLoadCallback(items: RecordSet, direction: Direction): void {
         if (!this._items) {
             this._items = items;
         }
 
-        const isResetState = !direction;
-        this._updateDisplayImage(items, this._options.imageProperty, isResetState);
+        if (direction) {
+            this._updateDisplayImage(items, this._options.imageProperty, false);
+        }
 
         if (this._options.dataLoadCallback) {
             this._options.dataLoadCallback(items, direction);
