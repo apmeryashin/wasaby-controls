@@ -17,4 +17,10 @@
     <div class="demo-VirtualScroll__changePosition ws-link controlsDemo__mb1" on:click="_changePosition()">
         Перезагрузить по позиции
     </div>
+    <div class="demo-VirtualScroll__changePosition ws-link controlsDemo__mb1" on:click="_slowDownSource()">
+        Замедлить источник
+    </div>
+    <div class="demo-VirtualScroll__changePosition ws-link controlsDemo__mb1" on:click="_changePosition(-10)">
+        Перезагрузить по позиции на 10 меньше
+    </div>
 </div>
