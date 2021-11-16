@@ -4486,7 +4486,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._notify('doScroll', ['top'], {bubbling: true});
                 this._scrolled = false;
                 this._scrollTop = 0;
-                this._resetScrollAfterReload = false;
             }
         }
 
@@ -4497,7 +4496,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
             directionToRestoreScroll = 'up';
         }
-        if (directionToRestoreScroll) {
+        if (directionToRestoreScroll &&
+            !(this._resetScrollAfterReload && this._shouldNotifyOnDrawItems)) {
             this._scrollController.saveEdgeItem(directionToRestoreScroll,
                 this._getItemsContainer(),
                 this._getItemsContainerUniqueClass());
@@ -4628,6 +4628,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._finishScrollToEdgeOnDrawItems && this._shouldNotifyOnDrawItems) {
             this._finishScrollToEdgeOnDrawItems();
             this._finishScrollToEdgeOnDrawItems = null;
+        }
+        if (this._shouldNotifyOnDrawItems) {
+            this._resetScrollAfterReload = false;
         }
         this._notifyOnDrawItems();
 
