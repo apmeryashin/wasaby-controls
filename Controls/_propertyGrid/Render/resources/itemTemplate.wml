@@ -4,6 +4,7 @@
             <Controls.heading:Title scope="{{_options}}"
                                     readOnly="{{true}}"
                                     fontSize="m"
+                                    fontColorStyle="{{_options.fontColorStyle ? _options.fontColorStyle : 'secondary'}}"
                                     tooltip="{{_options.caption}}"
                                     attr:class="controls-PropertyGrid__editor_nodeCaption"/>
         </div>
@@ -56,6 +57,9 @@
             <ws:if data="{{ !collectionItem.isSwiped() }}">
                 <ws:partial template="{{ itemActionsTemplate }}" />
             </ws:if>
+        </ws:if>
+        <ws:if data="{{ afterEditorTemplate }}">
+            <ws:partial template="{{ afterEditorTemplate }}"/>
         </ws:if>
     </div>
 </ws:else>

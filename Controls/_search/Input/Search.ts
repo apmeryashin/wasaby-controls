@@ -333,6 +333,7 @@ Object.defineProperty(Search, 'defaultProps', {
  * @remark
  * * true - иконка отображается.
  * * false - иконка не отображается.
+ * @demo Controls-demo/Search/Input/SearchButtonVisible/Index
  */
 
 /**

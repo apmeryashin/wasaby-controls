@@ -1,6 +1,7 @@
 <div class="demo-BreadCrumbs__wrapper">
     <div class="demo-BreadCrumbs__example controlsDemo-BreadCrumbs__multilineHeaders">
         <Controls.heading:Title caption="Реестр с многострочными заголовками"
+                                fontColorStyle="secondary"
                                 fontSize="4xl"/>
         <Controls.explorer:View
                 keyProperty="id"
@@ -17,6 +18,7 @@
     </div>
     <div class="demo-BreadCrumbs__example controlsDemo-BreadCrumbs__serviceBlock">
         <Controls.heading:Title caption="Хлебные крошки вынесены в сервисный блок"
+                                fontColorStyle="secondary"
                                 fontSize="4xl"/>
         <Controls.breadcrumbs:HeadingPath items="{{_breadCrumbs6}}"
                                           backButtonFontColorStyle="primary"
@@ -25,6 +27,7 @@
     </div>
     <div class="demo-BreadCrumbs__example controlsDemo-BreadCrumbs__headExitStack">
         <Controls.heading:Title caption="Хлебные крошки в шапке выезжающей панели"
+                                fontColorStyle="secondary"
                                 fontSize="4xl"/>
         <div>
             <Controls.popupTemplate:Stack
@@ -55,6 +58,7 @@
     </div>
     <div class="demo-BreadCrumbs__example controlsDemo-BreadCrumbs__inSearch">
         <Controls.heading:Title caption="Хлебные крошки в результатах поиска"
+                                fontColorStyle="secondary"
                                 fontSize="4xl"/>
         <Controls.browser:Browser source="{{_viewSource8}}" keyProperty="id" bind:filter="_filter8" searchParam="name" minSearchLength="{{3}}">
             <div class="ws-fragment">
@@ -75,6 +79,7 @@
     </div>
     <div class="demo-BreadCrumbs__example controlsDemo-BreadCrumbs__fillAllWidth">
         <Controls.heading:Title caption="Заголовки занимают всю доступную ширину"
+                                fontColorStyle="secondary"
                                 fontSize="4xl"/>
         <Controls.explorer:View
                 keyProperty="id"

@@ -8,7 +8,7 @@ interface IItem {
 export default class Memory extends DefaultMemory {
     query(query?: Query<unknown>): Promise<DataSet> {
         const filter = query.getWhere();
-        const limit = query.getLimit();
+        const limit = query.getLimit() || 15;
 
         const filterFewItems = query.getWhere().filter === 'few-items';
         const isPrepend = typeof filter['key<='] !== 'undefined';

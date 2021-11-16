@@ -1,49 +1,19 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__background">
     <div class="controlsDemo__cell controlsDemo_fixedWidth500">
         <div class="controls__block-wrapper" style="width: 500px; height: 150px">
-            <div class="controls__block-contrast">
-                controls__block-contrast
+            <div class="controls__block-contrast controls__block_backgroundStyle-unaccented">
+                controls__block-contrast controls__block_backgroundStyle-unaccented
             </div>
         </div>
     </div>
 
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
-        <div class="controls__block-wrapper tl" style="width: 500px; height: 150px">
-            <div class="controls__block-contrast">
-                controls__block-contrast tl
+    <ws:for data="gradientStyle in _gradientStyles">
+        <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+            <div class="controls__block-wrapper" style="width: 500px; height: 150px">
+                <div class="controls__block-contrast controls__block_backgroundStyle-gradient-{{gradientStyle}}">
+                    controls__block-contrast controls__block_backgroundStyle-gradient-{{gradientStyle}}
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
-        <div class="controls__block-wrapper tr" style="width: 500px; height: 150px">
-            <div class="controls__block-contrast">
-                controls__block-contrast tr
-            </div>
-        </div>
-    </div>
-
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
-        <div class="controls__block-wrapper tlr" style="width: 500px; height: 150px">
-            <div class="controls__block-contrast">
-                controls__block-contrast tlr
-            </div>
-        </div>
-    </div>
-
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
-        <div class="controls__block-wrapper none" style="width: 500px; height: 150px">
-            <div class="controls__block-contrast">
-                controls__block-contrast none
-            </div>
-        </div>
-    </div>
-
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
-        <div class="controls__block-wrapper without-shadow" style="width: 500px; height: 150px">
-            <div class="controls__block-contrast">
-                controls__block-contrast without-shadow
-            </div>
-        </div>
-    </div>
+    </ws:for>
 </div>

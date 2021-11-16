@@ -1,5 +1,6 @@
 <div class="controls-SelectedCollection__item
             controls-SelectedCollection__item-{{isSingleItem ? 'single' : 'multi'}}
+            {{readOnly ? 'controls-SelectedCollection__item-' + (isSingleItem ? 'single' : 'multi') + '-readOnly'}}
             controls-SelectedCollection__item_layout_{{_options.itemsLayout}}">
    <span class="controls-SelectedCollection__item__caption-wrapper
                 controls-SelectedCollection__item__caption-wrapper-{{itemsLayout}}">
@@ -17,5 +18,7 @@
    <ws:if data="{{!readOnly}}">
       <ws:partial template="{{crossTemplate}}" theme="{{_options.theme}}"/>
    </ws:if>
-   <ws:if data="{{readOnly && !isLastItem && itemsLayout !== 'twoColumns'}}">,</ws:if>
+   <ws:if data="{{readOnly && !isLastItem && itemsLayout !== 'twoColumns'}}">
+      <span class="controls-text-{{(itemsLayout === 'twoColumns' || !style) ? 'default' : style}}">,</span>
+   </ws:if>
 </div>

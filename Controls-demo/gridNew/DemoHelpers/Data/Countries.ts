@@ -31,6 +31,7 @@ export const Countries = {
         {
             key: 0,
             number: 1,
+            ladder: 1,
             country: 'Россия',
             capital: 'Москва',
             population: 143420300,
@@ -41,6 +42,7 @@ export const Countries = {
         {
             key: 1,
             number: 2,
+            ladder: 1,
             country: 'Канада',
             capital: 'Оттава',
             population: 32805000,
@@ -51,6 +53,7 @@ export const Countries = {
         {
             key: 2,
             number: 3,
+            ladder: 1,
             country: 'Соединенные Штаты Америки',
             capital: 'Вашингтон',
             population: 295734100,
@@ -61,6 +64,7 @@ export const Countries = {
         {
             key: 3,
             number: 4,
+            ladder: 1,
             country: 'Китай',
             capital: 'Пекин',
             population: 1306313800,
@@ -71,6 +75,7 @@ export const Countries = {
         {
             key: 4,
             number: 5,
+            ladder: 1,
             country: 'Бразилия',
             capital: 'Бразилиа',
             population: 186112800,
@@ -81,6 +86,7 @@ export const Countries = {
         {
             key: 5,
             number: 6,
+            ladder: 1,
             country: 'Австралия',
             capital: 'Канберра',
             population: 20090400,
@@ -90,6 +96,7 @@ export const Countries = {
         {
             key: 6,
             number: 7,
+            ladder: 2,
             country: 'Индия',
             capital: 'Нью-Дели',
             population: 1080264400,
@@ -99,6 +106,7 @@ export const Countries = {
         {
             key: 7,
             number: 8,
+            ladder: 2,
             country: 'Аргентина',
             capital: 'Буэнос-Айрес',
             population: 39537900,
@@ -108,6 +116,7 @@ export const Countries = {
         {
             key: 8,
             number: 9,
+            ladder: 2,
             country: 'Казахстан',
             capital: 'Нур-Султан',
             population: 15185000,
@@ -117,6 +126,7 @@ export const Countries = {
         {
             key: 9,
             number: 10,
+            ladder: 2,
             country: 'Судан',
             capital: 'Хартум',
             population: 40187500,
@@ -126,6 +136,7 @@ export const Countries = {
         {
             key: 10,
             number: 11,
+            ladder: 2,
             country: 'Алжир',
             capital: 'Алжир',
             population: 32531900,
@@ -135,6 +146,7 @@ export const Countries = {
         {
             key: 11,
             number: 12,
+            ladder: 3,
             country: 'Конго',
             capital: 'Браззавиль',
             population: 60085800,
@@ -144,6 +156,7 @@ export const Countries = {
         {
             key: 12,
             number: 13,
+            ladder: 3,
             country: 'Мексика',
             capital: 'Мехико',
             population: 106202900,
@@ -153,6 +166,7 @@ export const Countries = {
         {
             key: 13,
             number: 14,
+            ladder: 3,
             country: 'Саудовская Аравия',
             capital: 'Эр-Рияд',
             population: 26417600,
@@ -162,6 +176,7 @@ export const Countries = {
         {
             key: 14,
             number: 15,
+            ladder: 3,
             country: 'Индонезия',
             capital: 'Джакарта',
             population: 241973900,
@@ -171,6 +186,7 @@ export const Countries = {
         {
             key: 15,
             number: 16,
+            ladder: 3,
             country: 'Ливия',
             capital: 'Триполи',
             population: 5765600,
@@ -180,6 +196,7 @@ export const Countries = {
         {
             key: 16,
             number: 17,
+            ladder: 3,
             country: 'Иран',
             capital: 'Тегеран',
             population: 68017900,
@@ -189,6 +206,7 @@ export const Countries = {
         {
             key: 17,
             number: 18,
+            ladder: 3,
             country: 'Монголия',
             capital: 'Улан-Батор',
             population: 2791300,
@@ -198,6 +216,7 @@ export const Countries = {
         {
             key: 18,
             number: 19,
+            ladder: 3,
             country: 'Перу',
             capital: 'Лима',
             population: 27925600,

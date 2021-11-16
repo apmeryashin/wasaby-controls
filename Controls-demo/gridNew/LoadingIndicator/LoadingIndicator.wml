@@ -4,7 +4,7 @@
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/LoadingIndicator/Up/Index' }}">
             <a href="{{content.href}}">
-                <Controls.heading:Title caption="Подгрузка вверх" fontSize="2xl"/>
+                <Controls.heading:Title fontColorStyle="secondary" caption="Подгрузка вверх" fontSize="2xl"/>
             </a>
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Up.Index/>
@@ -15,7 +15,7 @@
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/LoadingIndicator/Down/Index' }}">
             <a href="{{content.href}}">
-                <Controls.heading:Title caption="Подгрузка вниз" fontSize="2xl"/>
+                <Controls.heading:Title fontColorStyle="secondary" caption="Подгрузка вниз" fontSize="2xl"/>
             </a>
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Down.Index/>
@@ -26,7 +26,7 @@
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/LoadingIndicator/Both/Index' }}">
             <a href="{{content.href}}">
-                <Controls.heading:Title caption="Подгрузка в обе стороны" fontSize="2xl"/>
+                <Controls.heading:Title fontColorStyle="secondary" caption="Подгрузка в обе стороны" fontSize="2xl"/>
             </a>
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Both.Index/>
@@ -37,7 +37,7 @@
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/LoadingIndicator/Middle/Index' }}">
             <a href="{{content.href}}">
-                <Controls.heading:Title caption="Ромашка по центру" fontSize="2xl"/>
+                <Controls.heading:Title fontColorStyle="secondary" caption="Ромашка по центру" fontSize="2xl"/>
             </a>
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Middle.Index/>

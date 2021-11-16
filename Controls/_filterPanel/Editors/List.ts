@@ -256,6 +256,9 @@ class ListEditor extends Control<IListEditorOptions> {
             selectedKeys.push(item.get(this._options.keyProperty));
         });
         if (selectedKeys.length) {
+            if (this._options.sourceController) {
+                this._items.assign(result);
+            }
             this._setFilter(selectedKeys, this._options);
         }
         this._navigation = this._getNavigation(this._options, selectedKeys);
@@ -303,7 +306,8 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _setColumns(
-        {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions): void {
+        {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions
+    ): void {
         this._columns = [{
             template: ColumnTemplate,
             displayProperty,
@@ -406,7 +410,10 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    private _setMarkedKey(selectedKeys: string[]|number[], {emptyKey, selectedAllKey, multiSelect}: IListEditorOptions): void {
+    private _setMarkedKey(
+        selectedKeys: string[]|number[],
+        {emptyKey, selectedAllKey, multiSelect}: IListEditorOptions
+    ): void {
         const resetKey = emptyKey !== undefined ? emptyKey : selectedAllKey;
         if (selectedKeys && !multiSelect) {
             this._markedKey = !selectedKeys.length || selectedKeys[0] === resetKey ? resetKey : selectedKeys[0];

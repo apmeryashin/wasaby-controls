@@ -12,6 +12,7 @@
       <Controls.heading:Title scope="{{_options}}"
                               readOnly="{{true}}"
                               fontSize="m"
+                              fontColorStyle="{{_options.fontColorStyle ? _options.fontColorStyle : 'secondary'}}"
                               tooltip="{{_options.caption}}"
                               attr:class="controls-PropertyGrid__editor_nodeCaption"/>
     </div>

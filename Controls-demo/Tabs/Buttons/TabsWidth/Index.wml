@@ -14,7 +14,8 @@
             <div class="ws-flexbox">
                 <div attr:class="ControlsDemo-Tabs__configurator-item">
                     <Controls.heading:Title
-                        caption="{{index.toString()}}"
+                            fontColorStyle="secondary"
+                            caption="{{index.toString()}}"
                         />
                 </div>
                 <Controls.propertyGrid:PropertyGrid

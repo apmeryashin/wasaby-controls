@@ -51,6 +51,18 @@ export default interface IBaseDropdown {
  */
 
 /**
+ * @name Controls/_dropdown/interface/IBaseDropdown#maxHistoryVisibleItems
+ * @cfg {String} Максимальное количество записей, которые будут отображены в меню с историей. Остальные записи скрываются под кнопку сворачивания.
+ * @default 10
+ * @demo Controls-demo/dropdown_new/Button/MaxHistoryVisibleItems/Index
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:Button maxHistoryVisibleItems="{{5}}" />
+ * </pre>
+ */
+
+/**
  * @name Controls/_dropdown/interface/IBaseDropdown#menuDraggable
  * @cfg {Boolean} Определяет, может ли меню перемещаться с помощью {@link /doc/platform/developmentapl/interface-development/controls/drag-n-drop/ d'n'd}.
  * @demo Controls-demo/dropdown_new/Button/DragNDrop/Index
@@ -65,7 +77,7 @@ export default interface IBaseDropdown {
  * @name Controls/_dropdown/interface/IBaseDropdown#historyId
  * @cfg {String} Уникальный идентификатор для сохранения истории выбора записей.
  * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/input-elements/dropdown-menu/item-config/#history здесь}.
- * @demo Controls-demo/dropdown_new/Button/HistoryId/Index
+ * @demo Controls-demo/dropdown_new/Button/HistoryId/Simple/Index
  * @example
  * <pre class="brush: html">
  * <!-- WML -->

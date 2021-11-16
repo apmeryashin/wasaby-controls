@@ -3,10 +3,12 @@ import * as template from 'wml!Controls/_filterPanel/View/View';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TemplateFunction} from 'UI/Base';
 import {GroupItem, IItemPadding} from 'Controls/display';
-import {IFilterItem} from 'Controls/filter';
+import {IFilterItem, isEqualItems} from 'Controls/filter';
 import {Model} from 'Types/entity';
 import {default as ViewModel} from './View/ViewModel';
 import Store from 'Controls/Store';
+import {object} from 'Types/util';
+import * as coreClone from 'Core/core-clone';
 import 'css!Controls/filterPanel';
 
 /**
@@ -59,7 +61,7 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _beforeMount(options: IViewPanelOptions): void {
         this._viewModel = new ViewModel({
-            source: options.source,
+            source: coreClone(options.source),
             collapsedGroups: options.collapsedGroups,
             filterViewMode: options.viewMode,
             style: options.style
@@ -74,7 +76,7 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _beforeUpdate(options: IViewPanelOptions): void {
         this._viewModel.update({
-            source: options.source,
+            source: coreClone(options.source),
             collapsedGroups: options.collapsedGroups,
             filterViewMode: options.viewMode,
             style: options.style
@@ -138,17 +140,38 @@ export default class View extends Control<IViewPanelOptions> {
         if (this._options.viewMode === 'default') {
             this._notifyChanges();
         } else {
-            this._notify('sourceChanged', [this._viewModel.getSource()]);
+            const newSource = this._getUpdatedSource(coreClone(this._options.source), this._viewModel.getSource());
+            this._notify('sourceChanged', [newSource]);
         }
     }
 
     private _notifyChanges(): void {
+        const newSource = this._getUpdatedSource(coreClone(this._options.source), this._viewModel.getSource());
         this._notify('sendResult', [{
-            items: this._viewModel.getSource(),
+            items: newSource,
             filter: this._viewModel.getEditingObject()
         }], {bubbling: true});
         this._notify('filterChanged', [this._viewModel.getEditingObject()]);
-        this._notify('sourceChanged', [this._viewModel.getSource()]);
+        this._notify('sourceChanged', [newSource]);
+    }
+
+    private _getUpdatedSource(target: IFilterItem[] = [], source: IFilterItem[] = []): IFilterItem[] {
+        target.forEach((targetItem) => {
+            source.forEach((sourceItem) => {
+                if (isEqualItems(targetItem, sourceItem)) {
+                    if (targetItem.hasOwnProperty('value')) {
+                        object.setPropertyValue(targetItem, 'value', sourceItem.value);
+                    }
+                    if (targetItem.hasOwnProperty('viewMode')) {
+                        object.setPropertyValue(targetItem, 'viewMode', sourceItem.viewMode);
+                    }
+                    if (targetItem.hasOwnProperty('textValue')) {
+                        object.setPropertyValue(targetItem, 'textValue', sourceItem.textValue);
+                    }
+                }
+            });
+        });
+        return target;
     }
 }
 

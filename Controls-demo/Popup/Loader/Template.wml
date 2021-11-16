@@ -6,7 +6,7 @@
             <div>founded: {{_record.founded || 'Не заполнено'}}</div>
 
             <br/><br/>
-            <Controls.heading:Title caption="Вложения" />
+            <Controls.heading:Title fontColorStyle="secondary" caption="Вложения" />
             <ws:for data="item in _attachments">
                 <Controls.spoiler:View captions="{{item.title}}">
                     <img src="{{item.url}}"/>

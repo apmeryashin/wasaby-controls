@@ -30,6 +30,19 @@ export interface ISlidingPanelTemplate {
  */
 
 /**
+ * @name Controls/_popupSliding/interface/ISlidingPanelTemplate#headerContentTemplate
+ * @demo Controls-demo/Popup/SlidingPanel/HeaderContentTemplate/Index
+ * @cfg {string|TemplateFunction} Контент шапки шторки.
+ */
+
+/**
+ * @name Controls/_popupSliding/interface/ISlidingPanelTemplate#toolbarContentTemplate
+ * @demo Controls-demo/Popup/SlidingPanel/HeaderContentTemplate/Index
+ * @cfg {string|TemplateFunction} Шаблон тулбара с набором действий для шторки.
+ * На десктопе работает только для режима выезжающей панели.
+ */
+
+/**
  * @name Controls/_popupSliding/interface/ISlidingPanelTemplate#slidingPanelOptions
  * @cfg {object} Содержит сведения о позиционировании шторки.
  * @remark

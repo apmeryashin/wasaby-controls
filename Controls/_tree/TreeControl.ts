@@ -31,7 +31,7 @@ import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
 import {ExpandController} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
-import {applyReloadedNodes, getRootsForHierarchyReload} from 'Controls/_tree/utils';
+import {applyReloadedNodes, getItemHierarchy, getRootsForHierarchyReload} from 'Controls/_tree/utils';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,

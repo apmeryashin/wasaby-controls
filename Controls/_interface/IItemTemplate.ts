@@ -35,7 +35,7 @@ export interface IItemTemplateOptions {
      * </Controls.list:View>
      * </pre>
      */
-    itemTemplate?: TemplateFunction;
+    itemTemplate?: TemplateFunction|string;
 }
 
 /**

@@ -22,7 +22,8 @@
         displayProperty="true"
         searchParam="title"
         navigation="{{_navigation}}"
-        source="{{_source}}">
+        source="{{_source}}"
+        attr:data-qa="controlsSearchInput__no_fixed_width">
       <ws:suggestTemplate
           templateName="wml!Controls-demo/Suggest_new/SearchInput/DirectoryUnavailable/resources/SuggestTemplate"/>
     </Controls.suggest:SearchInput>

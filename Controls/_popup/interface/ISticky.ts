@@ -127,16 +127,7 @@ export interface IStickyOpener extends IOpener {
  * @variant track  Прилипающий блок движется вместе со своей точкой позиционирования.
  * @variant none Прилипающий блок остается на месте расположения, вне зависимости от движения точки позиционирования.
  * @default none
- * @remark Для работы данной опции необходимо, чтоб контрол {@link Controls/popup:Sticky} находился в верстке.
- */
-
-/*
- * @name Controls/_popup/interface/IStickyOpener#actionOnScroll
- * @cfg {String} Determines the popup action on scroll.
- * @variant close
- * @variant track
- * @variant none
- * @default none
+ * @demo Controls-demo/Popup/Sticky/ActionOnScroll/Index
  */
 
 /**

@@ -497,7 +497,7 @@ export class StickyStrategy {
          const parentStyle = window.getComputedStyle(parent);
          if ((parentStyle.overflowY === 'auto'
              || parentStyle.overflowY === 'scroll'
-             || parent.className.indexOf('controls-Scroll__content_hidden') >= 0)
+             || parent.classList.contains('controls-Scroll__content_hidden'))
              && (parent.scrollHeight > parent.clientHeight)) {
             return parent;
          }

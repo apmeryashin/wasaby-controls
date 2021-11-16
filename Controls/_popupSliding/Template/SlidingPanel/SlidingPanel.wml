@@ -32,7 +32,7 @@
             on:touchstart="_touchStartHandler()"
             on:touchmove="_touchMoveHandler()"
             on:touchend="_touchEndHandler()">
-            <ws:if data="{{ _options.headerContentTemplate }}">
+            <ws:if data="{{ _options.headerContentTemplate || _options.toolbarContentTemplate }}">
                <div class="controls-SlidingPanel__customContent-header">
                   <ws:partial
                       template="{{ _options.headerContentTemplate }}"
@@ -42,6 +42,13 @@
                              template="controller"/>
                      </ws:controllerButtonTemplate>
                   </ws:partial>
+                  <ws:if data="{{_options.toolbarContentTemplate}}">
+                     <ws:partial
+                             template="{{_options.toolbarContentTemplate}}"
+                             direction="horizontal"
+                             scope="{{_options}}"
+                             attr:class="controls-margin_left-l ws-align-self-end"/>
+                  </ws:if>
                </div>
             </ws:if>
             <ws:partial

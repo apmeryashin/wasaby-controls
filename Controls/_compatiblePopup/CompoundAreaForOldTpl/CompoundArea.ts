@@ -33,7 +33,7 @@ function finishResultOk(result) {
 const allProducedPendingOperations = [];
 const invisibleRe = /ws-invisible/ig;
 const hiddenRe = /ws-hidden/ig;
-const popupHiddenClass = 'controls-Popup__hidden';
+const popupHiddenClasses = ['controls-Popup__hidden', 'ws-hidden'];
 let DialogRecord;
 
 /**
@@ -365,7 +365,7 @@ const CompoundArea = CompoundContainer.extend([
       this._options = cfg;
       this._enabled = cfg.hasOwnProperty('enabled') ? cfg.enabled : true;
 
-      this.getContainer().toggleClass('ws-float-area-has-close-button', false);
+      this.getContainer().toggleClass('ws-float-area-has-close-button', !Controller.hasRightPanel());
 
       // wsControl нужно установить до того, как запустим автофокусировку.
       // Потому что она завязана в том числе и на этом свойстве
@@ -469,7 +469,8 @@ const CompoundArea = CompoundContainer.extend([
       if (!this._options.autoShow) {
          const popupContainer = this._container.closest('.controls-Popup');
          if (popupContainer) {
-            return !popupContainer.classList.contains(popupHiddenClass);
+            return !(popupContainer.classList.contains(popupHiddenClasses[0]) ||
+                     popupContainer.classList.contains(popupHiddenClasses[1]));
          }
       }
       return true;
@@ -520,10 +521,12 @@ const CompoundArea = CompoundContainer.extend([
                   if (!this.isDestroyed() && !visibility) {
                      // После правок на шаблон совместимости перестал вешаться класс. Вешается на окно.
                      const parentVdomPopup = $(this._options.target).closest('.controls-Popup');
+                     const hasClass = parentVdomPopup.hasClass(popupHiddenClasses[0]) ||
+                         parentVdomPopup.hasClass(popupHiddenClasses[1]);
                      // Вдомные стековые окна, если перекрыты другими окнами из стека, скрываются через ws-hidden.
                      // PopupMixin реагирует на скритие таргета и закрывается.
                      // Делаю фикс, чтобы в этом случае попап миксин не закрывался
-                     if (!parentVdomPopup.length || !parentVdomPopup.hasClass(popupHiddenClass)) {
+                     if (!parentVdomPopup.length || !hasClass) {
                          this.close();
                      }
                   }
@@ -1140,7 +1143,8 @@ const CompoundArea = CompoundContainer.extend([
    isVisible() {
       if (this._options.autoShow === false) {
          const popupContainer = this._container.parentElement;
-         const isHidden = popupContainer?.classList.contains(popupHiddenClass);
+         const isHidden = popupContainer?.classList.contains(popupHiddenClasses[0]) ||
+                          popupContainer?.classList.contains(popupHiddenClasses[1]);
          return !isHidden && this._isVisible;
       }
       return true;

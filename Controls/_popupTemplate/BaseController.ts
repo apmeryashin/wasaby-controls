@@ -212,7 +212,6 @@ abstract class BaseController implements IPopupController {
     }
 
     workspaceResize(): boolean {
-        DimensionsMeasurer.resetCache(); // После изменения размеров страницы сбросим кэш, т.к. zoom мог поменяться
         return false;
     }
 

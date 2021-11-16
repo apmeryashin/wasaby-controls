@@ -85,6 +85,7 @@ export default class extends Control {
     private _scrollToColumnIdx?: number;
     private _multiSelectVisibility: 'visible' | 'hidden' = 'hidden';
     private _columnScrollViewMode?: 'scrollbar' | 'arrows';
+    private _isPendingScrollToColumn: boolean = false;
 
     protected _beforeMount(): void {
         this._columns[2].width = '1fr';
@@ -100,6 +101,13 @@ export default class extends Control {
             data
         });
         this._viewSource = this._notEmptyViewSource;
+    }
+
+    protected _afterUpdate(): void {
+        if (this._isPendingScrollToColumn) {
+            this._isPendingScrollToColumn = false;
+            this._children.grid.scrollToColumn(this._columns.length - 1);
+        }
     }
 
     protected _afterRender(): void {
@@ -239,6 +247,11 @@ export default class extends Control {
 
     protected _scrollToColumn(): void {
         this._children.grid.scrollToColumn(+this._scrollToColumnIdx);
+    }
+
+    protected _scrollToNewColumn(): void {
+        this._addColumn();
+        this._isPendingScrollToColumn = true;
     }
 
     protected _scrollToLeft(): void {

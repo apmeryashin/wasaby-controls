@@ -1,11 +1,12 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/Search/SearchNavigationMode/Index';
+import * as Template from 'wml!Controls-demo/Search/SearchNavigationMode/Open/Index';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
 import { IColumn } from 'Controls/grid';
 
 export default class Explorer extends Control<IControlOptions> {
    protected _template: TemplateFunction = Template;
    protected _viewSource: MemorySource;
+   protected _root: string = null;
    protected _columns: IColumn[] = [
       {
          displayProperty: 'title',

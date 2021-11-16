@@ -22,7 +22,7 @@
     >
       <div class="ws-fragment">
         <Controls.search:InputContainer>
-          <Controls.search:Input/>
+          <Controls.search:Input placeholder="Введите SATA"/>
         </Controls.search:InputContainer>
         <Controls.list:Remover name="remover"/>
         <Controls.list:Container>

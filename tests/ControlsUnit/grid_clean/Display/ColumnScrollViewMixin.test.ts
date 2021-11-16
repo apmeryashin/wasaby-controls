@@ -1,4 +1,4 @@
-import {isSizeAffectsOptionsChanged} from 'Controls/_grid/ViewMixins/ColumnScrollViewMixin';
+import {isSizeAffectsOptionsChanged, destroyColumnScroll} from 'Controls/_grid/ViewMixins/ColumnScrollViewMixin';
 import {RecordSet} from 'Types/collection';
 import {assert} from 'chai';
 
@@ -21,6 +21,28 @@ describe('Controls/grid_clean/Display/ColumnScrollViewMixin', () => {
             assert.isTrue(
                 isSizeAffectsOptionsChanged({expandedItems: oldExpandedItems}, {expandedItems: newExpandedItems})
             );
+        });
+    });
+
+    describe('destroy scroll controller', () => {
+        it('update sizes in scrollBar', () => {
+            let wasUdated = false;
+            const mixedView = {
+                _$columnScrollController: {
+                    destroy: () => {/* MOCK */}
+                },
+                _children: {
+                    horizontalScrollBar: {
+                        setSizes: (sizes) => {
+                            wasUdated = true;
+                            assert.deepEqual(sizes, {scrollWidth: 0});
+                        }
+                    }
+                },
+                _notify: () => {/* MOCK */}
+            };
+            destroyColumnScroll(mixedView);
+            assert.isTrue(wasUdated);
         });
     });
 });

@@ -433,8 +433,11 @@ export default class IndicatorsController {
         // И в IE из-за его медленной работы индикаторы вызывают прыжки
         const allowByOptions = this._options.attachLoadTopTriggerToNull && position === 'top' ||
             this._options.attachLoadDownTriggerToNull && position === 'bottom';
+        // индикатор отрисовки мы должны показывать, только если не показан обычный индикатор в этом направлении
+        const allowByIndicators = position === 'top' && !this._model.getTopIndicator().isDisplayed() ||
+            position === 'bottom' && !this._model.getBottomIndicator().isDisplayed();
         // при порционном поиске индикатор всегда отрисовать и поэтому индикатор отрисовки не нужен
-        return !this._isPortionedSearch() && allowByOptions;
+        return !this._isPortionedSearch() && allowByOptions && allowByIndicators;
     }
 
     // endregion LoadingIndicator
@@ -482,7 +485,10 @@ export default class IndicatorsController {
     stopDisplayPortionedSearch(): void {
         this.clearDisplayPortionedSearchTimer();
         this._setSearchState(SEARCH_STATES.STOPPED);
-        this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.ContinueSearch);
+        // https://online.sbis.ru/opendoc.html?guid=0be69d45-286d-4f71-af2e-fe8653804da9
+        if (this._model && !this._model.destroyed) {
+            this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.ContinueSearch);
+        }
         this._options.stopDisplayPortionedSearchCallback();
     }
 

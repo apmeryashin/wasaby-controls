@@ -582,12 +582,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _subscribeOnFilterControllerEvents(options: IBrowserOptions): void {
         // Для совместимости, пока контролы вынуждены работать и от опций и от настроек на странице
         // + пока нет виджета filter/View
-        this._dataLoader.getFilterController().subscribe('filterSourceChanged', (event, filterSource) => {
+        this._dataLoader.getFilterController().subscribe('filterSourceChanged', () => {
             this._updateFilterAndFilterItems(options);
-
-            if (options.useStore) {
-                Store.dispatch('filterSource', filterSource);
-            }
         });
     }
 
@@ -747,12 +743,14 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
         this._listsOptions.forEach(({id, filterButtonSource, fastFilterSource}) => {
             if (filterButtonSource || fastFilterSource) {
-                this._dataLoader.getFilterController(id).updateFilterItems(items);
+                const filterController = this._dataLoader.getFilterController(id);
+                filterController.updateFilterItems(items);
+                const filter = filterController.getFilter();
                 this._contextState = {
                     ...this._contextState,
-                    filter: this._filter
+                    filter
                 };
-                this._notify('filterChanged', [this._filter, id]);
+                this._notify('filterChanged', [filter, id]);
             }
         });
     }

@@ -58,6 +58,11 @@ const MIN_IE_VERSION: number = 12;
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления}
  *
+ * Ширина поля ввода может быть ограничена как с помощью css, при задании св-ва width на контейнер, так и с
+ * помощью задания ширины под определенное кол-во символов.Для задания ширины под определенное кол-во символов сделаны
+ * специальные классы controls-Input__width-Nch, где N - количество цифр от 1 до 10
+ * Например, controls-Input__width-5ch, этот класс нужно повесить на корень контрола.
+ *
  * @class Controls/_input/Base
  * @extends UI/Base:Control
  * @implements Controls/interface:IHeight

@@ -9,7 +9,7 @@
                     source="{{_viewSource}}">
                 <ws:navigation source="page" view="infinity">
                     <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
-                    <ws:viewConfig pagingMode="basic"/>
+                    <ws:viewConfig pagingMode="end"/>
                 </ws:navigation>
                 <ws:pagingLeftTemplate>
                     <Controls.buttons:Button iconSize="s"

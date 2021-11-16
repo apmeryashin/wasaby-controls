@@ -20,7 +20,10 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     masterWidth: number | string;
     masterMinWidth: number | string;
     masterMaxWidth: number | string;
+    //TODO: удалить по задаче: https://online.sbis.ru/opendoc.html?guid=59b38808-e604-49a0-8873-bf324655c505
     contrastBackground: boolean;
+    masterContrastBackground: boolean;
+    detailContrastBackground: boolean;
     masterVisibility: TMasterVisibility;
     scrollTop?: number;
     scrollOffsetTop?: number;
@@ -120,8 +123,16 @@ class Base extends Control<IMasterDetail, string> {
      */
 
     /**
-     * @name Controls/_masterDetail/Base#contrastBackground
-     * @cfg {Boolean} Определяет контрастность фона контента detail по отношению к контенту master.
+     * @name Controls/_masterDetail/Base#detailContrastBackground
+     * @cfg {Boolean} Определяет контрастность фона для области detail по отношению к окружению.
+     * @variant true Контрастный фон.
+     * @variant false Фон, гармонично сочетающийся с окружением.
+     * @default true
+     */
+
+    /**
+     * @name Controls/_masterDetail/Base#masterContrastBackground
+     * @cfg {Boolean} Определяет контрастность фона для области master по отношению к окружению.
      * @variant true Контрастный фон.
      * @variant false Фон, гармонично сочетающийся с окружением.
      * @default true
@@ -202,6 +213,7 @@ class Base extends Control<IMasterDetail, string> {
         this._newDesign = options._dataOptionsValue?.newDesign || options.newDesign;
         if (receivedState) {
             this._currentWidth = receivedState;
+            this._savedWidth = parseInt(receivedState, 10);
         } else if (options.propStorageId) {
             return new Promise((resolve) => {
                 this._getSettings(options).then((storage) => {
@@ -504,6 +516,8 @@ class Base extends Control<IMasterDetail, string> {
             masterMinWidth: 30,
             masterMaxWidth: '50%',
             contrastBackground: true,
+            detailContrastBackground: true,
+            masterContrastBackground: true,
             masterPosition: 'left',
             masterVisibility: 'visible'
         };

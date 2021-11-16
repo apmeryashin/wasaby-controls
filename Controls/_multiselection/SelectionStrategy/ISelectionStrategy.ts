@@ -107,15 +107,19 @@ export default interface ISelectionStrategy {
     * @param selection текущее состояние выбранных ключей
     * @param hasMoreData имеются ли в модели еще не загруженные элементы
     * @param itemsCount количество элементов в модели
+    * @param limit
     * @param byEveryItem true - проверять выбранность каждого элемента по отдельности. Иначе проверка происходит по наличию единого признака выбранности всех элементов.
     * @param {CrudEntityKey} rootId Корень, в котором считать признак isAllSelected.
     * @return {boolean}
     */
-   isAllSelected(selection: ISelection,
-                 hasMoreData: boolean,
-                 itemsCount: number,
-                 byEveryItem?: boolean,
-                 rootId?: CrudEntityKey): boolean;
+   isAllSelected(
+       selection: ISelection,
+       hasMoreData: boolean,
+       itemsCount: number,
+       limit: number,
+       byEveryItem?: boolean,
+       rootId?: CrudEntityKey
+   ): boolean;
 
    /**
     * Задает {@link /doc/platform/developmentapl/service-development/service-contract/logic/list/hierarch/calc-entry-path/ ENTRY_PATH} для стратегии.
