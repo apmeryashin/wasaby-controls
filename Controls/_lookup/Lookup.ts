@@ -573,6 +573,12 @@ export default class Lookup extends BaseLookupInput {
  */
 
 /**
+ * @name Controls/_lookup/Lookup#rightFieldTemplate
+ * @cfg {String|TemplateFunction} Строка или шаблон, содержащие прикладной контент, который будет отображаться справа от текста в поле ввода.
+ * @demo Controls-demo/LookupNew/Input/RightFieldTemplate/Index
+ */
+
+/**
  * @event Происходит при клике по дополнительной команде в правой части поля ввода.
  * @name Controls/_lookup/Lookup#toolbarItemClick
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
