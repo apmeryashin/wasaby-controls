@@ -292,7 +292,7 @@ class PositionParamsCalculator implements IParamsCalculator {
                 navPosition.push(item.get(field[i]));
             } else {
                 Logger.error(`QueryParamsController/Position:
-                              знание undefined из поля записи ${field[i]} не может использоваться в качестве курсора.`);
+                              значение undefined из поля записи ${field[i]} не может использоваться в качестве курсора.`);
             }
         }
         return navPosition;
