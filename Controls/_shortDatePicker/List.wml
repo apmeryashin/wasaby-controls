@@ -28,6 +28,7 @@
     </ws:yearHeaderTemplate>
     <ws:yearTemplate>
         <Controls._shortDatePicker.bodyItem
+                errorCallback="{{ errorCallback }}"
                 attr:class="controls-PeriodLiteDialog_calendarBody"
                 attr:data-date="{{_dateToDataString(yearTemplate.date)}}"
                 scope="{{_options}}"
