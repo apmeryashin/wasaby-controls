@@ -98,8 +98,7 @@ export default class Indicator extends CollectionItem<null> {
                 classes += ` controls-BaseControl__loadingIndicator__state-${this._$position}`;
                 break;
             case 'portioned-search':
-                classes += ' controls-BaseControl__portionedSearch';
-                classes += ` controls-BaseControl__portionedSearch__state-${this._$position}`;
+                classes += ` ${this._getPortionedSearchClasses()}`;
                 break;
             case 'continue-search':
                 classes += ' controls-BaseControl__continueSearch';
@@ -164,6 +163,10 @@ export default class Indicator extends CollectionItem<null> {
             }
         }
         return changed;
+    }
+
+    protected _getPortionedSearchClasses(): string {
+        return `controls-BaseControl__portionedSearch controls-BaseControl__portionedSearch__state-${this._$position}`;
     }
 }
 

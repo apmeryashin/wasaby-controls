@@ -1,0 +1,5 @@
+<div class="{{ item.getGridClasses() }}">
+    <div class="controls-Grid__loadingIndicator-content">
+        <ws:partial template="Controls/baseList:IndicatorTemplate" scope="{{ _options }}"/>
+    </div>
+</div>
