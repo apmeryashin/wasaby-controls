@@ -75,10 +75,24 @@ export default class Row<TContents extends Model = Model>
         return classes;
     }
 
+    _hasCheckBoxCell(): boolean {
+        return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
+    }
+
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {
+        const hadCheckBoxCell = this._hasCheckBoxCell();
         const isChangedMultiSelectVisibility = super.setMultiSelectVisibility(multiSelectVisibility);
         if (isChangedMultiSelectVisibility) {
             this._reinitializeColumns();
+        }
+
+        if (this.isEditing() && this.getEditingConfig()?.mode === 'cell') {
+            if (isChangedMultiSelectVisibility) {
+                const hasCheckBoxCell = this._hasCheckBoxCell();
+                if (hadCheckBoxCell !== hasCheckBoxCell) {
+                    this._$editingColumnIndex += hasCheckBoxCell ? 1 : -1;
+                }
+            }
         }
         return isChangedMultiSelectVisibility;
     }
@@ -93,7 +107,6 @@ export default class Row<TContents extends Model = Model>
             this._reinitializeColumns();
         }
     }
-
 
     setMarked(marked: boolean, silent?: boolean): void {
         const changed = marked !== this.isMarked();
