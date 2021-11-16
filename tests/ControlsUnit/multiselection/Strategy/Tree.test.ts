@@ -1658,15 +1658,15 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
    describe('isAllSelected', () => {
       it('all selected', () => {
          const selection = { selected: [null], excluded: [null] };
-         assert.isTrue(strategy.isAllSelected(selection, false, 7));
-         assert.isTrue(strategy.isAllSelected(selection, false, 7, false));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, null));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, null, false));
 
       });
 
       it ('all selected and one excluded', () => {
          const selection = { selected: [null], excluded: [null, 2] };
-         assert.isFalse(strategy.isAllSelected(selection, false, 7));
-         assert.isTrue(strategy.isAllSelected(selection, false, 7, false));
+         assert.isFalse(strategy.isAllSelected(selection, false, 7, null));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, null, false));
       });
 
       it ('selected current root', () => {
@@ -1678,20 +1678,20 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             model: model
          });
          assert.isTrue(strategy._rootChanged);
-         assert.isTrue(strategy.isAllSelected(selection, false, 7));
-         assert.isTrue(strategy.isAllSelected(selection, true, 7, false));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, null));
+         assert.isTrue(strategy.isAllSelected(selection, true, 7, null, false));
       });
 
       it ('selected by one all elements', () => {
          const selection = { selected: [1, 2, 3, 4, 5, 6, 7], excluded: [] };
-         assert.isTrue(strategy.isAllSelected(selection, false, 7));
-         assert.isFalse(strategy.isAllSelected(selection, true, 7, false));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, null));
+         assert.isFalse(strategy.isAllSelected(selection, true, 7, null, false));
       });
 
       it ('selected by one all elements and has more data', () => {
          const selection = { selected: [1, 2, 3, 4, 5, 6, 7], excluded: [] };
-         assert.isFalse(strategy.isAllSelected(selection, true, 7));
-         assert.isFalse(strategy.isAllSelected(selection, true, 7, false));
+         assert.isFalse(strategy.isAllSelected(selection, true, 7, null));
+         assert.isFalse(strategy.isAllSelected(selection, true, 7, null, false));
       });
 
       it('empty model', () => {
@@ -1704,7 +1704,15 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             recursiveSelection: false
          });
          const selection = { selected: [], excluded: [] };
-         assert.isFalse(strategy.isAllSelected(selection, false, 0, true));
+         assert.isFalse(strategy.isAllSelected(selection, false, 0, null, true));
+      });
+
+      it('limit', () => {
+         const selection = { selected: [null], excluded: [null] };
+         assert.isFalse(strategy.isAllSelected(selection, false, 3, 2, true));
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, 3, true));
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, 5, true));
+         assert.isFalse(strategy.isAllSelected(selection, true, 3, 5, true));
       });
 
       it ('pass rootId', () => {
@@ -1716,10 +1724,10 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             model: model
          });
          assert.isTrue(strategy._rootChanged);
-         assert.isTrue(strategy.isAllSelected(selection, false, 7));
-         assert.isTrue(strategy.isAllSelected(selection, true, 7, false));
-         assert.isFalse(strategy.isAllSelected(selection, true, 7, false, 4));
-         assert.isTrue(strategy.isAllSelected({selected: [4], excluded: [4]}, true, 7, false, 4));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, null));
+         assert.isTrue(strategy.isAllSelected(selection, true, 7, null, false));
+         assert.isFalse(strategy.isAllSelected(selection, true, 7, null, false, 4));
+         assert.isTrue(strategy.isAllSelected({selected: [4], excluded: [4]}, true, 7, null, false, 4));
       });
    });
 
