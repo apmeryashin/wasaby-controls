@@ -724,6 +724,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         this._notifyHandler(e, 'arrowClick', item);
     }
 
+    //region proxy methods to TreeControl
     scrollToItem(key: string | number, toBottom?: boolean): void {
         if (this._children.treeControl) {
             this._children.treeControl.scrollToItem(key, toBottom);
@@ -739,6 +740,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         return treeControl.reloadItem.apply(treeControl, arguments);
     }
 
+    //region edit
     beginEdit(options: object): Promise<void | {canceled: true}> {
         return this._children.treeControl.beginEdit(options);
     }
@@ -754,6 +756,7 @@ export default class Explorer extends Control<IExplorerOptions> {
     commitEdit(): Promise<void | { canceled: true }> {
         return this._children.treeControl.commitEdit();
     }
+    //endregion
 
     reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<unknown> {
         return this._children.treeControl.reload(keepScroll, sourceConfig);
@@ -791,11 +794,11 @@ export default class Explorer extends Control<IExplorerOptions> {
 
     // region remover
 
-    removeItems(selection: ISelectionObject): Promise<void> {
+    removeItems(selection: ISelectionObject): Promise<string | void> {
         return this._children.treeControl.removeItems(selection);
     }
 
-    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<string | void> {
         return this._children.treeControl.removeItemsWithConfirmation(selection);
     }
 
@@ -805,6 +808,11 @@ export default class Explorer extends Control<IExplorerOptions> {
     _clearSelection(): void {
         this._children.treeControl.clearSelection();
     }
+
+    getMarkedNodeKey(): TKey {
+        return this._children.treeControl.getMarkedNodeKey();
+    }
+    //endregion
 
     /**
      * Возвращает идентификатор текущего корневого узла
