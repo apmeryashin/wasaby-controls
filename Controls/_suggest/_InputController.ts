@@ -691,7 +691,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          }
       }
 
-      if (filterChanged && (this._showContent || this._sourceController?.isLoading())) {
+      if ((sourceChanged || filterChanged) && (this._showContent || this._sourceController?.isLoading())) {
          if (this._searchValue) {
             this._resolveSearch(this._searchValue, newOptions);
          } else {
