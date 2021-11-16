@@ -190,10 +190,6 @@ export default abstract class Row<T extends Model = Model> {
             classes += ' controls-ListView__itemContent_dragging';
         }
 
-        if (this.EditableItem) {
-            classes += ' js-controls-BaseControl__editableItem__checkBox';
-        }
-
         return classes;
     }
 

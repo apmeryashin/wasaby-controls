@@ -82,9 +82,9 @@ export class InputActivationHelper {
                 Если не удалось найти input, на который нужно навести фокус, то пытаемся найти 1 найденый input
                  */
                 const selectors = this._paramsForFastEdit.selector.split(' ');
-                const selector =
-                    `${selectors[0]} ${selectors[selectors.length - 1]}:not(.js-controls-BaseControl__editableItem__checkBox)`;
-                input = this._paramsForFastEdit.container.querySelector(selector);
+                const selector = `${selectors[0]} ${selectors[selectors.length - 1]}`;
+                const inputs = Array.from(this._paramsForFastEdit.container.querySelectorAll(selector));
+                input = inputs.find((el) => !el.closest('.js-controls-ListView__checkbox'));
             }
             if (input) {
                 if (beforeFocus) {

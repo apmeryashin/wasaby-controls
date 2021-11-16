@@ -19,6 +19,9 @@ export default class extends Control {
     private _longStart: boolean = false;
     private _longEnd: boolean = false;
 
+    private _multiSelectVisibility: 'visible' | 'hidden' | 'onhover' = 'hidden';
+    private _selectedKeys = [];
+
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'key',
@@ -42,6 +45,10 @@ export default class extends Control {
                 setTimeout(() => { resolve(); }, 1000);
             });
         }
+    }
+
+    _toggleMultiSelectVisibility(e, visibility): void {
+        this._multiSelectVisibility = visibility;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

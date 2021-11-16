@@ -538,8 +538,7 @@ describe('Controls/_display/CollectionItem', () => {
         };
 
         const item = new CollectionItem({ owner, multiSelectVisibility: 'onhover' });
-        const requiredClasses = 'js-controls-BaseControl__editableItem__checkBox ' +
-                                'js-controls-ListView__notEditable ' +
+        const requiredClasses = 'js-controls-ListView__notEditable ' +
                                 'js-controls-ListView__checkbox ' +
                                 'js-controls-DragScroll__notDraggable ' +
                                 'controls-List_DragNDrop__notDraggable ' +

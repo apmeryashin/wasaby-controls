@@ -502,10 +502,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             classes += ' controls-ListView__itemContent_dragging';
         }
 
-        if (this.EditableItem) {
-            classes += ' js-controls-BaseControl__editableItem__checkBox';
-        }
-
         return classes;
     }
 
