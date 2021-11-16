@@ -130,6 +130,11 @@ Object.defineProperty(Suggest, 'defaultProps', {
  * @cfg {Boolean} Определяет, показывать ли иконку поиска.
  */
 
+/**
+ * @name Controls/_suggest/Input/Search/Suggest#inputClassName
+ * @cfg {String} Класс для строки поиска.
+ */
+
 /*
  * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
  * @cfg {Boolean} Determines whether to show the search icon.
