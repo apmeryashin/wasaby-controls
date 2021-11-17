@@ -129,6 +129,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     protected _fontColorStyle: string;
     protected _horizontalPadding: string;
     protected _template: TemplateFunction = template;
+    protected _isFieldZIndex: boolean = false;
 
     readonly '[Controls/_interface/IHeight]': boolean = true;
     readonly '[Controls/_interface/IFontSize]': boolean = true;
@@ -180,6 +181,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._fontWeight = Render._getFontWeight(options.fontWeight, options.fontSize);
         this._setState(options);
         this._updateHorizontalPadding(options);
+        this._updateFieldZIndex(options);
     }
 
     protected _beforeUpdate(options: IRenderOptions): void {
@@ -196,6 +198,11 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         }
         this._setState(options);
         this._updateHorizontalPadding(options);
+        this._updateFieldZIndex(options);
+    }
+
+    protected _updateFieldZIndex(options: IRenderOptions): void {
+        this._isFieldZIndex = typeof options.placeholder === 'string';
     }
 
     private _updateHorizontalPadding(options: IRenderOptions): void {
