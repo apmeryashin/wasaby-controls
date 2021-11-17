@@ -450,6 +450,8 @@ class FormController extends ControllerBase<IFormController> {
                 this._startFormOperations('save').then(() => {
                     const res = this._update(config).then(this._getData);
                     updateResult.dependOn(res);
+                }).catch((error) => {
+                    updateResult.errback(error);
                 });
             } else {
                 this._updateIsNewRecord(false);
