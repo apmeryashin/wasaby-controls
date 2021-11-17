@@ -967,11 +967,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     moveWithDialog(selection: ISelectionObject): Promise<void> {
         let movedItems = [];
         let resultTarget = null;
+        const displayProperty = 'caption';
         const source = new Memory({
             keyProperty: this._listModel.getKeyProperty(),
             data: this._listModel.getCollection().getRawData(),
-            filter: (item: Model): boolean => {
-                return !!item.get(this._options.nodeProperty);
+            filter: (item, where): boolean => {
+                const searchFilterValue = where[displayProperty];
+                return !!item.get(this._options.nodeProperty) &&
+                       (!searchFilterValue || item.get(displayProperty)?.toLowerCase().includes(searchFilterValue.toLowerCase()));
             }
         });
         const moveCommand = new MoveCommand({
@@ -986,9 +989,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                     nodeProperty: this._options.nodeProperty,
                     keyProperty: this._listModel.getKeyProperty(),
                     rootVisible: true,
+                    displayProperty,
                     columns: [{
-                        displayProperty: 'caption'
+                        displayProperty
                     }],
+                    searchParam: displayProperty,
                     source
                 },
                 beforeMoveCallback: (currentSelection: ISelectionObject, target: Model): void => {
