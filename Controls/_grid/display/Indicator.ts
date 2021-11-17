@@ -13,7 +13,14 @@ export default class Indicator extends DefaultIndicator {
         if (this._$state === 'portioned-search') {
             classes += ` ${this._getPortionedSearchClasses()}`;
         }
+        if (this._$position === 'global') {
+            classes += ' controls-Grid__loadingIndicator-global';
+        }
         return classes;
+    }
+
+    getGridStyles(): string {
+        return this._getDisplayStyle();
     }
 }
 

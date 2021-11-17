@@ -109,12 +109,7 @@ export default class Indicator extends CollectionItem<null> {
     }
 
     getStyles(): string {
-        let styles = '';
-
-        if (!this._$visible) {
-            styles += ' display: none;';
-        }
-
+        let styles = ` ${this._getDisplayStyle()}`;
         if (this.isGlobalIndicator()) {
             styles += ` top: ${this._topOffset}px;`;
         }
@@ -167,6 +162,10 @@ export default class Indicator extends CollectionItem<null> {
 
     protected _getPortionedSearchClasses(): string {
         return `controls-BaseControl__portionedSearch controls-BaseControl__portionedSearch__state-${this._$position}`;
+    }
+
+    protected _getDisplayStyle(): string {
+        return this._$visible ? '' : 'display: none;';
     }
 }
 
