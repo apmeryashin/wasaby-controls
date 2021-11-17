@@ -13,7 +13,8 @@
                   tooltip="{[Закрыть]}"
                   readOnly="{{false}}"
                   attr:class="controls-StackTemplate__close_button controls-stack-Button__rightPanel__close
-                     {{_options.closeButtonVisibility === false ? 'ws-hidden'}} ws-flex-shrink-0"
+                     {{(_options.closeButtonVisible !== undefined ? _options.closeButtonVisible === false : _options.closeButtonVisibility === false)
+                                                                                       ? 'ws-hidden'}} ws-flex-shrink-0"
                   on:click="_close()"
          />
 
