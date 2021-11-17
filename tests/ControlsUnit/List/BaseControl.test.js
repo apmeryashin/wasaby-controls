@@ -3520,12 +3520,9 @@ define([
                      width: 100,
                      height: 100
                   }),
-                  closest: function(selector) {
-                     return {
-                        className: selector.substr(1),
-                        getBoundingClientRect: this.getBoundingClientRect
-                     };
-                  }
+                  closest: (selector) => ({
+                     className: selector.substr(1)
+                  })
                }
             };
          };

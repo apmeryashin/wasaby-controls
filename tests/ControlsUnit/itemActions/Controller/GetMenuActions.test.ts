@@ -88,9 +88,6 @@ describe('_getMenuActions cases', () => {
 
     beforeEach(() => {
         target = {
-            closest(selector: string): HTMLElement {
-                return this as HTMLElement;
-            },
             getBoundingClientRect(): ClientRect {
                 return {
                     bottom: 1,

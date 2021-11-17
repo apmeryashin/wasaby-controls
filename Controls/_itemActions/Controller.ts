@@ -615,10 +615,9 @@ export class Controller {
     /**
      * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
      * Поэтому заменяем метод getBoundingClientRect так, чтобы он возвращал текущие координаты
-     * @param target
+     * @param realTarget
      */
-    private _cloneMenuTarget(target: HTMLElement): HTMLElement {
-        const realTarget = target.closest('.js-controls-ItemActions__ItemAction');
+    private _cloneMenuTarget(realTarget: HTMLElement): HTMLElement {
         const rect = realTarget.getBoundingClientRect();
         // FIXME: Если отдать клон таргета, то возникает зацикливание при расчетах
         //  https://online.sbis.ru/opendoc.html?guid=d462d4d2-17fe-41e1-9caf-b5087bc246f2
