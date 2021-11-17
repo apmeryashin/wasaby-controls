@@ -24,6 +24,7 @@
                     style="{{_options.style}}"
                     attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
                     on:itemClick="_handleItemClick()"
+                    on:register="_registerHandler()"
                     markedKey="{{_markedKey}}"
                     selectedKeys="{{_selectedKeys}}">
             <ws:itemTemplate>
