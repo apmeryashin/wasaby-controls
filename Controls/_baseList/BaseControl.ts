@@ -1444,6 +1444,14 @@ const _private = {
                     const collectionStartIndex = self._listViewModel.getStartIndex();
                     const collectionStopIndex = self._listViewModel.getStopIndex();
                     let result = null;
+                    const isBottom = (self._viewportSize + self._scrollTop) === self._viewSize;
+                    let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
+                        : (newItemsIndex >= collectionStopIndex && !isBottom ? 'down' : undefined);
+                    if (newItems) {
+                        if (self._listViewModel.getCount() === newItems.length) {
+                            direction = undefined;
+                        }
+                    }
                     switch (action) {
                         case IObservable.ACTION_ADD:
                             // TODO: this._batcher.addItems(newItemsIndex, newItems)
@@ -1451,18 +1459,15 @@ const _private = {
                                 self._addItems.push(...newItems);
                                 self._addItemsIndex = newItemsIndex;
                             } else {
-                                const isBottom = (self._viewportSize + self._scrollTop) === self._viewSize;
-                                let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                                    : (newItemsIndex >= collectionStopIndex && !isBottom ? 'down' : undefined);
-                                if (self._listViewModel.getCount() === newItems.length) {
-                                    direction = undefined;
-                                }
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems, direction);
                             }
                             break;
                         case IObservable.ACTION_MOVE:
-                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems,
-                                newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
+                            result = self._scrollController.handleMoveItems(newItemsIndex,
+                                newItems,
+                                removedItemsIndex,
+                                removedItems,
+                                direction);
                             break;
                         case IObservable.ACTION_REMOVE:
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
