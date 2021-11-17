@@ -11,6 +11,7 @@ import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 import {Model} from 'Types/entity';
 import {TreeItem} from 'Controls/display';
+import {Direction} from 'Controls/interface';
 
 export interface IImageDisplayContainerOptions extends IControlOptions {
     itemsReadyCallback: (items: RecordSet) => void;
@@ -107,12 +108,20 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
-    private _updateDisplayImage(items, imageProperty, isResetState) {
-        if (imageProperty) {
-            if (isResetState) {
-                this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
-            } else if (!this._hasItemWithImage) {
-                this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
+    /**
+     * Обновляем состояние hasItemWithImage.
+     * Если текущее значение false, но в новых загруженных элементах вдруг стало true, нужно актуализировать.
+     * @param items RecordSet, в котором мы ищем картинку.
+     * @param imageProperty Свойство записи, в котором содержится картинка.
+     * @param isResetState Флаг, что данные перезагружаются (например, после reload, reloadItem,
+     * при первичной установке данных и при смене imageProperty).
+     * @private
+     */
+    private _updateDisplayImage(items: RecordSet, imageProperty: string, isResetState: boolean): void {
+        if (imageProperty && (isResetState || !this._hasItemWithImage)) {
+            const hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
+            if (hasItemWithImage) {
+                this._hasItemWithImage = hasItemWithImage;
             }
         }
     }
@@ -151,7 +160,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
-    private _dataLoadCallback(items: RecordSet, direction): void {
+    private _dataLoadCallback(items: RecordSet, direction: Direction): void {
         if (!this._items) {
             this._items = items;
         }
@@ -165,11 +174,12 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     }
 
     private _onCollectionItemChange(event: EventObject,
-                            item: Model,
-                            index: number,
-                            properties?: object): void {
-        // Изменение элемента, поменяли _imageProperty в записи в RecordSet
-        if (this._options.imageProperty && this._options.imageProperty in properties) {
+                                    item: Model,
+                                    index: number,
+                                    properties?: object): void {
+        // Изменение элемента, поменяли _imageProperty в записи в RecordSet.
+        if (this._options.imageProperty && typeof properties === 'object' &&
+            this._options.imageProperty in properties) {
             this._updateDisplayImage(this._items, this._options.imageProperty, false);
         }
     }
