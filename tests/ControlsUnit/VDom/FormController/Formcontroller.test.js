@@ -609,6 +609,48 @@ define([
          FC.destroy();
       });
 
+      it('update width form operation errors', () => {
+         const FC = new form.Controller();
+         let updateResolved = false;
+         let pendingPromiseResolved = false;
+         let timeoutId;
+         const operation = {
+            save() {
+               return Promise.reject('Error');
+            },
+            isDestroyed() {
+               return false;
+            }
+         };
+         const finishTest = () => {
+            assert.isTrue(updateResolved);
+            assert.isTrue(pendingPromiseResolved);
+            clearTimeout(timeoutId);
+            FC.destroy();
+            done();
+         };
+
+         FC._update = () => Promise.resolve(true);
+         FC._getRecordId = () => undefined;
+         FC._notifyToOpener = () => undefined;
+         FC._registerFormOperationHandler(null, operation);
+         const updatePromise = FC.update();
+         const pendingPromise = FC._updatePromise;
+         timeoutId = setTimeout(finishTest, 1000);
+         updatePromise.finally(() => {
+            updateResolved = true;
+            if (pendingPromiseResolved) {
+               finishTest();
+            }
+         });
+         pendingPromise.finally(() => {
+            pendingPromiseResolved = true;
+            if (updateResolved) {
+               finishTest();
+            }
+         });
+      });
+
       it('update with error', (done) => {
          let error = false;
          let FC = new form.Controller();
