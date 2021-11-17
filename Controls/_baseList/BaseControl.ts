@@ -2805,7 +2805,9 @@ const _private = {
         };
         if (options.moveDialogTemplate) {
             if (options.moveDialogTemplate.templateName) {
+                // opener необходим для корректного закрытия окна перемещения в слое совместимости в стековой панели.
                 controllerOptions.popupOptions = {
+                    opener: self,
                     template: options.moveDialogTemplate.templateName,
                     templateOptions: options.moveDialogTemplate.templateOptions,
                     beforeMoveCallback: options.moveDialogTemplate.beforeMoveCallback
