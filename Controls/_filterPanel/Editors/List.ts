@@ -52,6 +52,7 @@ export interface IListEditorOptions extends
     selectedAllText?: string;
     resetValue?: number[]|string[];
     sourceController?: SourceController;
+    expandedItems?: TKey[];
 }
 
 /**
@@ -142,6 +143,7 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _itemActions: IItemAction[];
     protected _itemsReadyCallback: Function = null;
     protected _markedKey: string|number;
+    protected _expandedItems: TKey[] = [];
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
@@ -153,6 +155,10 @@ class ListEditor extends Control<IListEditorOptions> {
 
         if (options.sourceController && this._filter) {
             options.sourceController.setFilter(this._filter);
+        }
+
+        if (options.expandedItems) {
+            this._expandedItems = options.expandedItems;
         }
 
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
