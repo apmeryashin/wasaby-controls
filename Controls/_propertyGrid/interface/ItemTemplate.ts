@@ -1,4 +1,4 @@
-import {TemplateFunction} from "UI/Base";
+import {TemplateFunction} from 'UI/Base';
 
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/propertyGrid:PropertyGrid редакторе свойств}.

@@ -29,7 +29,7 @@ describe('Controls/grid_clean/Display/ColumnScrollViewMixin', () => {
             let wasUdated = false;
             const mixedView = {
                 _$columnScrollController: {
-                    destroy: () => {}
+                    destroy: () => {/* MOCK */}
                 },
                 _children: {
                     horizontalScrollBar: {
@@ -39,7 +39,7 @@ describe('Controls/grid_clean/Display/ColumnScrollViewMixin', () => {
                         }
                     }
                 },
-                _notify: () => {}
+                _notify: () => {/* MOCK */}
             };
             destroyColumnScroll(mixedView);
             assert.isTrue(wasUdated);

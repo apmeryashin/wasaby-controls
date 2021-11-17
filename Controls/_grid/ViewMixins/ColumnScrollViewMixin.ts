@@ -311,7 +311,7 @@ const scrollToColumnEdge = (self): void => {
 const setScrollPosition = (self: TColumnScrollViewMixin,
                            position: number,
                            immediate?: boolean,
-                           useAnimation?: boolean): void => {
+                           useAnimation?: boolean): boolean => {
     const oldScrollPosition = self._$columnScrollController.getScrollPosition();
     const newPosition = self._$columnScrollController.setScrollPosition(position, immediate, useAnimation);
     if (oldScrollPosition !== newPosition) {
@@ -320,7 +320,9 @@ const setScrollPosition = (self: TColumnScrollViewMixin,
             self._$dragScrollController.setScrollPosition(newPosition);
         }
         self._notify('columnScroll', [newPosition], {bubbling: true});
+        return true;
     }
+    return false;
 };
 //#endregion
 
@@ -822,7 +824,19 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
                 scrollToColumnEdge(this);
             }
         }
-    }
+    },
 
+    _onColumnScrollViewArrowKeyDown(direction: 'left' | 'right'): boolean {
+        if (this._$columnScrollController) {
+            const { scrollWidth } = this._$columnScrollController.getSizes();
+            const newScrollPosition =
+                this._$columnScrollController.getScrollPosition() + (direction === 'left' ? -scrollWidth : scrollWidth);
+
+            if (setScrollPosition(this, newScrollPosition, false, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
     //#endregion
 };

@@ -347,6 +347,14 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         this._onColumnScrollViewResized();
     },
 
+    keyDownLeft(): boolean {
+        return this._onColumnScrollViewArrowKeyDown('left');
+    },
+
+    keyDownRight(): boolean {
+        return this._onColumnScrollViewArrowKeyDown('right');
+    },
+
     _isEmpty(): boolean {
         return this._options.needShowEmptyTemplate;
     },

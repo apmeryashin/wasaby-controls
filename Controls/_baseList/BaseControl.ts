@@ -3382,8 +3382,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._keepHorizontalScroll = false;
             _private.setReloadingState(this, false);
             const isEndEditProcessing = this._editInPlaceController &&
-                this._editInPlaceController.isEndEditProcessing &&
-                this._editInPlaceController.isEndEditProcessing();
+                                        this._editInPlaceController.isEndEditProcessing &&
+                                        this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
             _private.executeAfterReloadCallbacks(this, items, this._options);
             if (this._indicatorsController.shouldHideGlobalIndicator()) {
@@ -4084,10 +4084,24 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _keyDownLeft(event): void {
+        // Сначала обрабатываем скролл колонок, если не было проскролено, то двигаем маркер
+        // TODO: Должно уехать в GridControl
+        if (event.nativeEvent.shiftKey) {
+            if (this._options.columnScroll && this._children.listView.keyDownLeft()) {
+                return;
+            }
+        }
         _private.moveMarkerToDirection(this, event, 'Left');
     }
 
     protected _keyDownRight(event): void {
+        // Сначала обрабатываем скролл колонок, если не было проскролено, то двигаем маркер
+        // TODO: Должно уехать в GridControl
+        if (event.nativeEvent.shiftKey) {
+            if (this._options.columnScroll && this._children.listView.keyDownRight()) {
+                return;
+            }
+        }
         _private.moveMarkerToDirection(this, event, 'Right');
     }
 
@@ -4236,7 +4250,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         });
                     }
 
-                    // TODO после выполнения код будет в одном месте https://online.sbis.ru/opendoc.html?guid=59d99675-6bc4-436e-967a-34b448e8f3a4
+                    // TODO после выполнения код будет в одном месте
+                    //  https://online.sbis.ru/opendoc.html?guid=59d99675-6bc4-436e-967a-34b448e8f3a4
                     // При пересоздании коллекции будет скрыт верхний триггер и индикатор,
                     // чтобы не было лишней подгрузки при отрисовке нового списка.
                     // Показываем по необходимости верхний индикатор и триггер
