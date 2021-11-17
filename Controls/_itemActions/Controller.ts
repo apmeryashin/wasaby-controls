@@ -838,10 +838,18 @@ export class Controller {
         const shownAction: IShownItemAction = {
             ...action,
             hasIcon,
+            viewMode: action.viewMode || 'link',
+            iconSize: action.iconSize || this._iconSize,
             fontSize: 'm',
             icon: hasIcon ? action.icon : null,
             caption: Controller._needShowTitle(action) ? action.title : null
         };
+
+        if (shownAction.viewMode && shownAction.viewMode !== 'link' && shownAction.viewMode !== 'functionalButton') {
+            Logger.error('Неподдерживаемый вид кнопки. Используйте viewMode, ' +
+                'описанные в интерфейсе IItemAction', this);
+        }
+
         // ItemActions настраиваются одним размером iconSize, а functionalButton - двумя iconSize + inlineHeight.
         // При этом размеры s и xs отличаются для кнопок и для операций над записью.
         // Конвертируем параметры для functionalButton, подстраивая общий размер кнопки под размеры itemActions.
@@ -876,14 +884,6 @@ export class Controller {
                 // Это нужно чтобы не поддерживать старые стили типа icon-error и ховер по таким кнопкам.
                 action.iconStyle = Utils.getStyleFromIcon(action.iconStyle, action.icon, 'itemActions/Controller');
                 action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
-
-                if (action.viewMode && action.viewMode !== 'link' && action.viewMode !== 'functionalButton') {
-                    Logger.error('Неподдерживаемый вид кнопки. Используйте viewMode, ' +
-                        'описанные в интерфейсе IItemAction', this);
-                }
-
-                action.viewMode = action.viewMode || 'link';
-                action.iconSize = action.iconSize || this._iconSize;
 
                 action.tooltip = Controller._getTooltip(action);
                 return action;
