@@ -23,7 +23,8 @@
                         isEmptyItem="{{_isEmptyItem}}"
                         validationStatus="{{_options.validationStatus}}"
                         readOnly="{{_options.readOnly}}"
-                        footerTemplate="{{_options.footerTemplate || _options.footerContentTemplate}}"/>
+                        footerTemplate="{{_options.footerTemplate || _options.footerContentTemplate}}"
+                        attr:tabindex="0" />
         </div>
     </ws:content>
     <ws:template>
