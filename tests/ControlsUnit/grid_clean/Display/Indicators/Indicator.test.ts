@@ -7,7 +7,7 @@ describe('Controls/grid/Indicator', () => {
     describe('getTemplate', () => {
         it('is full grid support', () => {
             const indicator = new Indicator();
-            assert.equal(indicator.getTemplate('', null), 'Controls/baseList:IndicatorTemplate');
+            assert.equal(indicator.getTemplate('', null), 'Controls/grid:IndicatorTemplate');
         });
 
         it('is not full grid support', () => {
