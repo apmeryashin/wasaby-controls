@@ -51,7 +51,8 @@ import {
     IEditableCollectionItem,
     TItemKey,
     TreeItem,
-    MoreButtonVisibility
+    MoreButtonVisibility,
+    groupConstants
 } from 'Controls/display';
 
 import {default as ItemContainerGetter} from 'Controls/_baseList/itemsStrategy/getItemContainerByIndex';
@@ -7071,7 +7072,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _scrollToFirstItem(): Promise<void> {
         if (!this._finishScrollToEdgeOnDrawItems) {
-            const firstItem = this._listViewModel.getFirst();
+            let firstItem = this._listViewModel.getFirst();
+            // к скрытой группе нельзя скроллить, т.к. ее высота равна 0 и это не добавит отступ для триггера =>
+            // вызовется подгрузка вверх
+            if (firstItem['[Controls/_display/GroupItem]'] && firstItem.key === groupConstants.hiddenGroup) {
+                firstItem = this._listViewModel.getNext(firstItem);
+            }
             const firstItemKey = firstItem && firstItem.key !== undefined ? firstItem.key : null;
             if (firstItemKey !== null) {
                 return _private.scrollToItem(this, firstItemKey, false, true);
