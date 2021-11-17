@@ -8,6 +8,7 @@ export interface IPopupTemplateBaseOptions {
     headingFontSize?: string;
     headingFontColorStyle?: string;
     closeButtonVisibility?: boolean;
+    closeButtonVisible?: boolean;
 }
 
 /**
