@@ -32,6 +32,10 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions, Te
       return '';
    }
 
+   static defaultProps: Partial<IInfoboxTemplateOptions> = {
+       horizontalPadding: 'm'
+   };
+
    private static _needRequireModule(module: string | Function): boolean {
       return typeof module === 'string' && !requirejs.defined(module);
    }
