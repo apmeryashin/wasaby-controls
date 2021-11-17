@@ -7,6 +7,7 @@ import {IPopupOptions} from 'Controls/_popup/interface/IPopup';
 import {RegisterClass} from 'Controls/event';
 import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
+import {delay as runDelayed} from 'Types/function';
 
 import * as template from 'wml!Controls/_popup/Manager/Popup';
 import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
@@ -99,10 +100,24 @@ class Popup extends Control<IPopupControlOptions> {
                 ManagerController.notifyToManager('popupCreated', [this._options.id]);
             });
         } else {
-            ManagerController.notifyToManager('popupCreated', [this._options.id]);
-            this.activatePopup();
+            // Если не реакт сборка, то сразу сообщаем что окно построено, иначе ждем onTemplateMounted
+            if (!this.UNSAFE_isReact) {
+                ManagerController.notifyToManager('popupCreated', [this._options.id]);
+                this.activatePopup();
+            }
         }
         this._checkResizeObserver();
+    }
+
+    // Вызывает Container, когда замаунтится попап
+    onTemplateMounted(): void {
+        ManagerController.notifyToManager('popupCreated', [this._options.id]);
+        // TODO: https://online.sbis.ru/opendoc.html?guid=77f074b4-9e4e-47b4-b56c-de9dfb9a3bef
+        runDelayed(() => {
+            runDelayed(() => {
+                this.activatePopup();
+            });
+        });
     }
 
     protected _beforeUpdate(options: IPopupControlOptions): void {

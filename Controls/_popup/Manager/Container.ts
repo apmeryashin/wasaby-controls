@@ -30,23 +30,26 @@ class Container extends Control<IControlOptions> {
 
     protected _template: TemplateFunction = template;
     protected _overlayId: string;
-    protected _zIndexStep: number = POPUP_ZINDEX_STEP;
-    protected _popupItems: List<IPopupItem>;
+    protected _popupItems: List<IPopupItem> = new List<IPopupItem>();
     protected _removeItems: IRemovedItem[] = [];
     protected _pendingController: PendingClass;
+    protected _mountedPopups: List<string>;
     private _redrawResolve: Function;
     private _redrawPromise: Promise<void>;
 
     protected _beforeMount(): void {
-        this._popupItems = new List();
         const pendingOptions = {
             notifyHandler: (eventName: string, args?: []) => {
                 return this._notify(eventName, args, {bubbling: true});
             }
         };
         this._pendingController = new PendingClass(pendingOptions);
+        this._onTemplateMounted = this._onTemplateMounted.bind(this);
     }
     protected _afterMount(): void {
+        if (this.UNSAFE_isReact) {
+            this._mountedPopups = new List();
+        }
         ManagerController.setContainer(this);
     }
 
@@ -64,6 +67,12 @@ class Container extends Control<IControlOptions> {
         }
     }
 
+    protected _onTemplateMounted(popupId: string): void {
+        this._mountedPopups.add(popupId);
+        const popup = this.getPopupById(popupId);
+        popup.onTemplateMounted();
+    }
+
     /**
      * Set a new set of popups
      * @function Controls/_popup/Manager/Container#setPopupItems
@@ -71,6 +80,7 @@ class Container extends Control<IControlOptions> {
      */
     setPopupItems(popupItems: List<IPopupItem>): Promise<void> {
         this._popupItems = popupItems;
+        this._syncMountedPopups();
         this._calcOverlayId(popupItems);
         if (!this._redrawPromise)  {
             this._redrawPromise = new Promise((resolve) => {
@@ -78,6 +88,18 @@ class Container extends Control<IControlOptions> {
             });
         }
         return this._redrawPromise;
+    }
+
+    private _syncMountedPopups(): void {
+        const deleteIds = [];
+        this._mountedPopups?.each((popupId) => {
+            if (!ManagerController.find(popupId)) {
+                deleteIds.push(popupId);
+            }
+        });
+        for (const id of deleteIds) {
+            this._mountedPopups.remove(id);
+        }
     }
 
     getOverlayId(): string {
