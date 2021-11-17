@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_propertyGrid/PropertyGrid';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
-import {GroupItem, CollectionItem} from 'Controls/display';
+import {GroupItem, CollectionItem, TreeItem} from 'Controls/display';
 import {IObservable, RecordSet} from 'Types/collection';
 import {Model, Record as entityRecord} from 'Types/entity';
 import {factory} from 'Types/chain';
@@ -335,6 +335,12 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             }
         } else {
             this._listModel.setHoveredItem(displayItem);
+        }
+    }
+
+    _itemMouseMove(event, displayItem, nativeEvent) {
+        if (this._dndController && this._dndController.isDragging()) {
+            this._draggingItemMouseMove(displayItem, nativeEvent);
         }
     }
 
@@ -886,6 +892,71 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             }
             this._unprocessedDragEnteredItem = null;
         }
+    }
+
+    private _calculateMouseOffsetInItem(event: SyntheticEvent<MouseEvent>, targetElement: Element): {top: number, bottom: number} {
+        let result = null;
+
+        if (targetElement) {
+            const dragTargetRect = targetElement.getBoundingClientRect();
+            result = { top: null, bottom: null };
+
+            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
+            result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
+            result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
+        }
+
+        return result;
+    }
+
+    private _draggingItemMouseMove(itemData: TreeItem, event: SyntheticEvent<MouseEvent>): void {
+        const dispItem = itemData;
+        const targetIsNotDraggableItem = this._dndController.getDraggableItem()?.getContents() !== dispItem.getContents();
+        if (dispItem['[Controls/_display/TreeItem]'] && dispItem.isNode() !== null && targetIsNotDraggableItem) {
+            const targetElement = this._getTargetRow(event);
+            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event, targetElement);
+            const dragTargetPosition = this._dndController.calculateDragPosition({
+                targetItem: dispItem,
+                mouseOffsetInTargetItem
+            });
+
+            if (dragTargetPosition) {
+                const result = this._notify('changeDragTarget', [
+                    this._dndController.getDragEntity(),
+                    dragTargetPosition.dispItem.getContents(),
+                    dragTargetPosition.position
+                ]);
+
+                if (result !== false) {
+                    this._dndController.setDragPosition(dragTargetPosition);
+                }
+            }
+        }
+    }
+
+    private _getTargetRow(event: SyntheticEvent): Element {
+        if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
+            return event.target;
+        }
+
+        const startTarget = event.target;
+        let target = startTarget;
+
+        const condition = () => {
+            return !target.parentNode.classList.contains('controls-ListView__itemV');
+        };
+
+        while (condition()) {
+            target = target.parentNode;
+
+            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
+            if (!target.classList || !target.parentNode || !target.parentNode.classList
+                || target.classList.contains('controls-BaseControl')) {
+                target = startTarget;
+                break;
+            }
+        }
+        return target;
     }
 
     validate({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
