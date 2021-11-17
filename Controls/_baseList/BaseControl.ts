@@ -4144,18 +4144,28 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                                     newOptions.collection !== this._options.collection ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
-        if (this._editInPlaceController && (shouldReInitCollection || loadStarted)) {
-            if (this.isEditing()) {
-                // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
-                // без возможности отменить закрытие из вне.
-                this._cancelEdit(true).then(() => {
+
+        if (this._editInPlaceController) {
+            let isEditingModeChanged = this._options.editingConfig !== newOptions.editingConfig &&
+                                       this._getEditingConfig().mode !== this._getEditingConfig(newOptions).mode;
+            if (isEditingModeChanged) {
+                this._editInPlaceController.updateOptions({
+                    mode: this._getEditingConfig(newOptions).mode
+                });
+            }
+            if (shouldReInitCollection || loadStarted || isEditingModeChanged) {
+                if (this.isEditing()) {
+                    // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
+                    // без возможности отменить закрытие из вне.
+                    this._cancelEdit(true).then(() => {
+                        if (shouldReInitCollection) {
+                            this._destroyEditInPlaceController();
+                        }
+                    });
+                } else {
                     if (shouldReInitCollection) {
                         this._destroyEditInPlaceController();
                     }
-                });
-            } else {
-                if (shouldReInitCollection) {
-                    this._destroyEditInPlaceController();
                 }
             }
         }
@@ -5954,20 +5964,22 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let columnIndex;
         let next = editingItem;
         let shouldAdd;
+        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
+
         if (eventOptions.isShiftKey) {
             this._continuationEditingDirection = EDIT_IN_PLACE_CONSTANTS.PREV_COLUMN;
             columnIndex = editingItem._$editingColumnIndex - 1;
             if (columnIndex < 0) {
                 next = this._getEditInPlaceController().getPrevEditableItem();
-                columnIndex = this._options.columns.length - 1;
+                columnIndex = this._options.columns.length - 1 + +hasCheckboxes;
             }
             shouldAdd = editingConfig.autoAdd && !next && editingConfig.addPosition === 'top';
         } else {
             this._continuationEditingDirection = EDIT_IN_PLACE_CONSTANTS.NEXT_COLUMN;
             columnIndex = editingItem._$editingColumnIndex + 1;
-            if (columnIndex > this._options.columns.length - 1) {
+            if (columnIndex > this._options.columns.length - 1 + +hasCheckboxes) {
                 next = this._getEditInPlaceController().getNextEditableItem();
-                columnIndex = 0;
+                columnIndex = +hasCheckboxes;
             }
             shouldAdd = editingConfig.autoAdd && !next && editingConfig.addPosition === 'bottom';
         }
