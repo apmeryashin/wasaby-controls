@@ -1640,6 +1640,33 @@ describe('Controls/list_clean/BaseControl', () => {
         });
     });
 
+    it ('initializeNavigation', () => {
+        const fakeInstance = {
+            _shouldDrawNavigationButton: true
+        } as unknown as BaseControl;
+
+        BaseControl._private.initializeNavigation(fakeInstance, {
+            navigation: {
+                view: 'cut'
+            }
+        });
+        assert.isTrue(fakeInstance._shouldDrawNavigationButton, 'button should not be hidden on cut');
+
+        BaseControl._private.initializeNavigation(fakeInstance, {
+            navigation: {
+                view: 'demand'
+            }
+        });
+        assert.isTrue(fakeInstance._shouldDrawNavigationButton, 'button should not be hidden on demand');
+
+        BaseControl._private.initializeNavigation(fakeInstance, {
+            navigation: {
+                view: 'infinity'
+            }
+        });
+        assert.isFalse(fakeInstance._shouldDrawNavigationButton, 'button should be hidden on other navigation.view');
+    });
+
     it('needFooterPadding', () => {
         let editing = false;
         let count = 10;
