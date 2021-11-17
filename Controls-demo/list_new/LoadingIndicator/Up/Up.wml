@@ -8,4 +8,5 @@
         </Controls.list:View>
     </Controls.scroll:Container>
     <a href="#" class="controls-text-link" on:click="_removeTopItem()">Удалить верхнюю запись</a>
+    <a href="#" class="controls-text-link" on:click="_changeTopItem()">Изменить верхнюю запись</a>
 </div>
