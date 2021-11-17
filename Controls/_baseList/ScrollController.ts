@@ -621,6 +621,7 @@ export default class ScrollController {
             getOffsetTop(itemsContainer);
         const scrollTop = this.getScrollTop();
         // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
+        // edgeBorder - направленное расстояние от границы itemsContainer до границы viewport
         let edgeBorder = scrollTop + topCompensation;
         // при скроле вниз - на границе тот элемент, нижняя граница которого больше scrollTop + viewportHeight
         if (direction === 'down') {
@@ -716,6 +717,7 @@ export default class ScrollController {
     }
 
     getScrollTopToEdgeItem(direction: IDirection, itemsContainer: HTMLElement, itemsContainerSelector: string): number {
+        let scrollTop = this._lastScrollTop;
         if (this._edgeItemParams) {
 
             // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
@@ -730,16 +732,24 @@ export default class ScrollController {
                 if (direction === 'up') {
                     const itemDimensions = uDimension(item);
                     if (this._edgeItemParams.border === 'bottom') {
-                        return itemOffsetTop + (itemDimensions.height - this._edgeItemParams.borderDistance);
+                        scrollTop = itemOffsetTop + (itemDimensions.height - this._edgeItemParams.borderDistance);
                     } else {
-                        return itemOffsetTop + this._edgeItemParams.borderDistance;
+                        scrollTop = itemOffsetTop + this._edgeItemParams.borderDistance;
                     }
+                } else {
+                    const viewportHeight = this._viewportHeight;
+                    scrollTop = itemOffsetTop + this._edgeItemParams.borderDistance - viewportHeight - topCompensation;
                 }
-                const viewportHeight = this._viewportHeight;
-                return itemOffsetTop + this._edgeItemParams.borderDistance - viewportHeight - topCompensation;
             }
         }
-        return this._lastScrollTop;
+
+        // Округление нужно, так как размеры элементов бывают дробные, а scrollTop только целый
+        // Отрицательным scrollTop также быть не может. Но при вычислениях мы можем получить тут отрицательное значение.
+        // Это происходит в случае, когда контента нехватает для заполнения viewPort.
+        // Проверяли, можем ли следить за возможеностью скролла, чтобы восстанавливать сколл только когда скролл возможен.
+        // Не вышло: нативный resizeObserver срабатывает позже нашего afterRender, когда мы должны принять решение.
+        scrollTop = Math.max(0, Math.floor(scrollTop));
+        return scrollTop;
     }
 
     beforeRestoreScrollPosition(): void {
