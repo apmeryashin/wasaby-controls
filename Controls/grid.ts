@@ -35,6 +35,7 @@ import * as EmptyTemplate from 'wml!Controls/_grid/Render/EmptyCellContent';
 import * as EmptyColumnTemplate from 'wml!Controls/_grid/Render/EmptyCellContent';
 import * as ItemActionsCellContent from 'wml!Controls/_grid/Render/ItemActionsCellContent';
 import * as ItemEditorTemplate from 'wml!Controls/_grid/Render/ItemEditorTemplate';
+import * as IndicatorTemplate from 'wml!Controls/_grid/Render/IndicatorTemplate';
 import * as TableIndicatorTemplate from 'wml!Controls/_grid/Render/TableIndicatorTemplate';
 
 import * as MoneyTypeRender from 'wml!Controls/_grid/Render/types/money';
@@ -103,6 +104,7 @@ export {
     TableTemplate,
     SortingButton,
     SortingSelector,
+    IndicatorTemplate,
     TableIndicatorTemplate
 };
 
