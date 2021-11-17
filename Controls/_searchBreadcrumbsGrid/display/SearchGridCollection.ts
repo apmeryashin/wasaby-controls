@@ -6,7 +6,6 @@ import {ItemsFactory, itemsStrategy, TreeItem} from 'Controls/display';
 import BreadcrumbsItemRow from './BreadcrumbsItemRow';
 import {IOptions as ITreeGridOptions} from 'Controls/_treeGrid/display/TreeGridCollection';
 import TreeGridDataRow from 'Controls/_treeGrid/display/TreeGridDataRow';
-import AdjacencyListStrategy from 'Controls/_display/itemsStrategy/AdjacencyList';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -160,10 +159,10 @@ export default
       // а экспандер в моделе с хлебными крошками не отображается
    }
 
-   protected _recountHasNode(): void {
-      // В поисковой модели не нужно выставлять флаг hasNode, т.к. это нужно только для экспандера
-      // а экспандер в моделе с хлебными крошками не отображается
-   }
+   // Пересчитывать hasNode нужно, т.к. это знание так же участвует в расчете иерархических отступов,
+   // которые должны быть для дочерних элементов скрытых узлов
+   /*protected _recountHasNode(): void {
+   }*/
 }
 
 Object.assign(SearchGridCollection.prototype, {
