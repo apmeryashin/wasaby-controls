@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/List';
-import * as ColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/ColumnTemplate';
+import * as ImageColumn from 'wml!Controls/_filterPanel/Editors/resources/ImageColumn';
 import * as AdditionalColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/AdditionalColumnTemplate';
 import {StackOpener, DialogOpener} from 'Controls/popup';
 import {Model} from 'Types/entity';
@@ -314,20 +314,26 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _setColumns(
-        {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions): void {
+        {displayProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions): void {
         this._columns = [{
-            template: ColumnTemplate,
             displayProperty,
-            keyProperty,
-            imageProperty,
-            filterViewMode
+            textOverflow: 'ellipsis',
+            fontSize: filterViewMode === 'filterPanelStack' ? 'm' : 'l',
+            width: 'auto'
         }];
+        if (imageProperty) {
+            this._columns.unshift({
+                template: ImageColumn,
+                imageProperty,
+                width: 'min-content'
+            });
+        }
         if (additionalTextProperty) {
             this._columns.push({
                 template: AdditionalColumnTemplate,
                 align: 'right',
                 displayProperty: additionalTextProperty,
-                width: 'auto'
+                width: 'min-content'
             });
         }
     }
