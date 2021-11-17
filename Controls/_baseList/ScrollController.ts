@@ -621,6 +621,7 @@ export default class ScrollController {
             getOffsetTop(itemsContainer);
         const scrollTop = this.getScrollTop();
         // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
+        // edgeBorder - направленное расстояние от границы itemsContainer до границы viewport
         let edgeBorder = scrollTop + topCompensation;
         // при скроле вниз - на границе тот элемент, нижняя граница которого больше scrollTop + viewportHeight
         if (direction === 'down') {
@@ -741,6 +742,12 @@ export default class ScrollController {
                 }
             }
         }
+
+        // Округление нужно, так как размеры элементов бывают дробные, а scrollTop только целый
+        // Отрицательным scrollTop также быть не может. Но при вычислениях мы можем получить тут отрицательное значение.
+        // Это происходит в случае, когда контента нехватает для заполнения viewPort.
+        // Проверяли, можем ли следить за возможеностью скролла, чтобы восстанавливать сколл только когда скролл возможен.
+        // Не вышло: нативный resizeObserver срабатывает позже нашего afterRender, когда мы должны принять решение.
         scrollTop = Math.max(0, Math.floor(scrollTop));
         return scrollTop;
     }
