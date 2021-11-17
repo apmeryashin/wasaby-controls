@@ -3910,6 +3910,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (loadStarted) {
             this._displayGlobalIndicator();
+        } else if (!newOptions.loading && this._indicatorsController.shouldHideGlobalIndicator()) {
+            this._indicatorsController.hideGlobalIndicator();
         }
 
         // endregion Indicators
