@@ -150,16 +150,33 @@ function validAttributesInsertion(targetAttributes: object,
       }
    }
 
-function recursiveMarkup(value, attrsToDecorate, key, parent?, options?) {
+function recursiveMarkup(attr, data, context, isVdom, value, attrsToDecorate, key, parent?, options?) {
       let valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
-         i;
+         i,
+         templateCount = 0;
       if (isString(valueToBuild)) {
          if (!resolver || !resolver.__noNeedEscapeString) {
             valueToBuild = markupGenerator.escape(valueToBuild);
          }
          if (options[valueToBuild]) {
-            return markupGenerator.createControlNew('resolver', options[valueToBuild], {}, {}, {}, {});
+            return markupGenerator.createControlNew('resolver', options[valueToBuild], {}, {}, {}, {
+                attr: attr,
+                data: data,
+                ctx: this,
+                isVdom: isVdom,
+                defCollection:  {
+                    id: [],
+                    def: undefined
+                },
+                depsLocal: {},
+                includedTemplates: {},
+                viewController: this,
+                context: isVdom ? context + 'part_' + (templateCount++) : context,
+                key: key + '0_',
+                internal: {},
+                mergeType: 'attribute'
+            });
          } else {
             return markupGenerator.createText(valueToBuild, key);
          }
@@ -176,7 +193,9 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?, options?) {
       const children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
-            children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', valueToBuild, options));
+            children.push(recursiveMarkup(
+                attr, data, context, isVdom, valueToBuild[i], attrsToDecorate, key + i + '_', valueToBuild, options
+            ));
          }
          resolverMode ^= wasResolved;
          return children;
@@ -202,7 +221,9 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?, options?) {
          validAttributesInsertion(attrs.attributes, valueToBuild[1], additionalValidAttributes);
       }
       for (i = firstChildIndex; i < valueToBuild.length; ++i) {
-         children.push(recursiveMarkup(valueToBuild[i], {}, key + i + '_', valueToBuild, options));
+         children.push(recursiveMarkup(
+             attr, data, context, isVdom, valueToBuild[i], {}, key + i + '_', valueToBuild, options
+         ));
       }
       resolverMode ^= wasResolved;
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
@@ -257,7 +278,9 @@ const template = function(data, attr, context, isVdom, sets, forceCompatible, ge
          };
       }
       try {
-         elements = recursiveMarkup(value, attrsToDecorate, key + '0_', null, control._options);
+         elements = recursiveMarkup(
+             attr, data, context, isVdom, value, attrsToDecorate, key + '0_', null, control._options
+         );
       } catch (e) {
           Logger.error('UI/Executor:TClosure: ' + e.message, undefined, e);
       } finally {

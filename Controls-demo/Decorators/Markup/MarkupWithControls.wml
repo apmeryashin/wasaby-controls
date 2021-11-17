@@ -1,18 +1,21 @@
-<Controls.decorator:Markup value="{{_value}}">
-    <ws:inputControl>
-        <Controls.input:Text
-            attr:class="controlsDemo-Markup__control"
-            maxLength="{{10}}"
-            value="{{_inputValue}}"
-            on:valueChanged="_valueChangedHandler()"/>
-    </ws:inputControl>
-    <ws:dateControl>
-        <Controls.date:Input
-            attr:class="controlsDemo-Markup__control"
-            bind:value="_date"
-            mask="DD.MM.YYYY"/>
-    </ws:dateControl>
-    <ws:listContol>
-        <Controls.list:View source="{{_viewSource}}"/>
-    </ws:listContol>
-</Controls.decorator:Markup>
+<div>
+    <Controls.decorator:Markup value="{{_value}}">
+        <ws:inputControl>
+            <Controls.input:Text
+                attr:class="controlsDemo-Markup__control"
+                maxLength="{{10}}"
+                value="{{_inputValue}}"
+                on:valueChanged="_valueChangedHandler()"/>
+        </ws:inputControl>
+        <ws:dateControl>
+            <Controls.date:Input
+                attr:class="controlsDemo-Markup__control"
+                bind:value="_date"
+                mask="DD.MM.YYYY"/>
+        </ws:dateControl>
+        <ws:listContol>
+            <Controls.list:View source="{{_viewSource}}"/>
+        </ws:listContol>
+    </Controls.decorator:Markup>
+    <div>Значение текстового поля: {{_inputValue}}</div>
+</div>
