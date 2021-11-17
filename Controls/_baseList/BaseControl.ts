@@ -5590,12 +5590,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let columnIndex;
         let next = editingItem;
         let shouldAdd;
+        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
+
         if (eventOptions.isShiftKey) {
             this._continuationEditingDirection = EDIT_IN_PLACE_CONSTANTS.PREV_COLUMN;
             columnIndex = editingItem._$editingColumnIndex - 1;
             if (columnIndex < 0) {
                 next = this._getEditInPlaceController().getPrevEditableItem();
-                columnIndex = this._options.columns.length - 1;
+                columnIndex = this._options.columns.length - 1 + +hasCheckboxes;
             }
             shouldAdd = editingConfig.autoAdd && !next && editingConfig.addPosition === 'top';
         } else {
@@ -5603,7 +5605,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             columnIndex = editingItem._$editingColumnIndex + 1;
             if (columnIndex > this._options.columns.length - 1) {
                 next = this._getEditInPlaceController().getNextEditableItem();
-                columnIndex = 0;
+                columnIndex = +hasCheckboxes;
             }
             shouldAdd = editingConfig.autoAdd && !next && editingConfig.addPosition === 'bottom';
         }
