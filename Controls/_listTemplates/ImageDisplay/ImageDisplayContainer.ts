@@ -137,7 +137,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
-    destroy(): void {
+    _beforeUnmount(): void {
         this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange);
     }
 
