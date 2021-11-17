@@ -1,10 +1,10 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
         <div class="controls-text-label">transliterate=true</div>
-        <Controls.input:Text attr:class="controlsDemo__input"/>
+        <Controls.input:Text attr:class="controlsDemo__input" attr:data-qa="controlsInputText__true"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">transliterate=false</div>
-        <Controls.input:Text attr:class="controlsDemo__input" transliterate="{{false}}"/>
+        <Controls.input:Text attr:class="controlsDemo__input" transliterate="{{false}}" attr:data-qa="controlsInputText__false"/>
     </div>
 </div>
