@@ -93,7 +93,7 @@
 
                             attr:style="max-width:{{_isInputVisible(_options) ? _availableWidthCollection}}px;">
                         <ws:itemTemplate>
-                            <ws:partial template="{{_options.itemTemplate}}" attr:class="{{_itemTemplateClasses}}"/>
+                            <ws:partial template="{{_options.itemTemplate}}" attr:class="{{_itemTemplateClasses + (_options.comment && _options.readOnly ? ' controls-Lookup__collection_item_with_commentInput')}}"/>
                         </ws:itemTemplate>
                     </Controls._lookup.SelectedCollection>
                 </ws:if>
