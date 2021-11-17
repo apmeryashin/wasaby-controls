@@ -510,17 +510,26 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         // и в модели, при этом отрисовка новых состояний будет в следующем цикле.
         // При первом завершении обновления принудительно вызываем повторуную синхронизацию
         // с помощью _forceUpdate(), по завершению которой произойдет пересчет скролла.
+        // При этом, игнорируем, если горизонтального скролл был выключен и до и после всех перерисовок.
+        // Все перерисовки учитываются через отслеживание наличия сохраненных опций. Если их нет, то скролл
+        // всегда был выключен, а не только в последнюю перерисовку.
 
         // FIXME: https://online.sbis.ru/opendoc.html?guid=bc40e794-c5d4-4381-800f-a98f2746750a
         // Данное поведение будет исправлено в рамках проекта по переходу на нативный горизонтальный скролл,
         // посе создания модели горизонтального скролла с поддержкой версионирования. При таком подходе
         // будет возможно добиться честной реактивности, избегая мануальных forceUpdate'ов.
-        if (!this._$oldOptionsForPendingUpdate) {
-            this._forceUpdate();
-            this._$oldOptionsForPendingUpdate = oldOptions;
-        } else {
-            manageControllersOnDidUpdate(this, this._$oldOptionsForPendingUpdate);
-            this._$oldOptionsForPendingUpdate = null;
+        const isScrollDisabled = !this._$oldOptionsForPendingUpdate &&
+                                 !this._options.columnScroll &&
+                                 !this._options.columnScroll === !oldOptions.columnScroll;
+
+        if (!isScrollDisabled) {
+            if (!this._$oldOptionsForPendingUpdate) {
+                this._forceUpdate();
+                this._$oldOptionsForPendingUpdate = oldOptions;
+            } else {
+                manageControllersOnDidUpdate(this, this._$oldOptionsForPendingUpdate);
+                this._$oldOptionsForPendingUpdate = null;
+            }
         }
     },
 
