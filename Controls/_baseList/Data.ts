@@ -238,13 +238,17 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
    protected _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
       let updateResult;
-      const {sourceController, expandedItems} = newOptions;
+      const {sourceController, expandedItems, loading} = newOptions;
       let currentSourceController = this._sourceController;
 
       if (this._options.sourceController !== sourceController) {
          this._sourceController = sourceController;
          this._initSourceController(newOptions);
          currentSourceController = this._sourceController;
+      }
+
+      if (sourceController && this._options.loading !== loading) {
+         this._loading = loading;
       }
 
       if (currentSourceController && (currentSourceController.getItems() !== this._items)) {
