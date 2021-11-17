@@ -283,6 +283,22 @@ export default class VirtualScroll {
             fixedScrollTop = scrollTop;
         }
 
+        // Если выставлена опция feature1183225611, то активный элемент определяем на основании
+        // верхней границы ScrollContainer. Активным является тот, который либо пересек верхнюю
+        // границу либо находится вплотную к ней
+        if (this._options.feature1183225611) {
+            let result;
+            for (let i = 0; i < this._itemsHeightData.itemsOffsets.length; i++) {
+                if (this._itemsHeightData.itemsOffsets[i] <= fixedScrollTop) {
+                    result = i;
+                } else {
+                    break;
+                }
+            }
+
+            return result;
+        }
+
         if (!this._itemsCount) {
             return undefined;
         } else if (this.isRangeOnEdge('up') && fixedScrollTop === 0) {
