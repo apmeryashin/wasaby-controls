@@ -659,7 +659,7 @@ export default class ScrollController {
                 borderDistance = bottomViewportBorder - itemOffsetTop + topCompensation;
             } else {
                 // запись - выше, чем верхняя граница viewPort
-                if (scrollTop >= itemOffsetTop) {
+                if (scrollTop > itemOffsetTop) {
                     border = 'bottom';
                     borderDistance = itemBorderBottom - scrollTop;
                 } else {
