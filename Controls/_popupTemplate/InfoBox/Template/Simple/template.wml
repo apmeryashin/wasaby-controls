@@ -6,7 +6,7 @@
                                  on:mouseleave="_sendResult()"
                                  attr:template="{{_getTemplateName()}}">
    <div class="controls_popupTemplate_theme-{{_options.theme}} controls-InfoBox controls-InfoBox__horizontal-padding-{{_options.horizontalPadding}}">
-      <ws:if data="{{_options.closeButtonVisibility}}">
+      <ws:if data="{{_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility}}">
          <Controls._popupTemplate.CloseButton attr:class="controls-InfoBoxTemplate__closeButton" on:click="_close()" viewMode="link" attr:ws-no-focus="true"/>
          <ws:if data="{{_options.floatCloseButton && _options.horizontalPadding !== 'null'}}">
             <div class="controls-InfoBox_floatElement"></div>
