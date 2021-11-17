@@ -152,6 +152,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
                 floatCloseButton: newCfg.floatCloseButton,
                 closeButtonVisibility: newCfg.closeButtonVisibility,
                 validationStatus: newCfg.validationStatus,
+                horizontalPadding: newCfg.horizontalPadding,
                 theme: newCfg.theme
             },
             template: 'Controls/popupTemplate:templateInfoBox',
