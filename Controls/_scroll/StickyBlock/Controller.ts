@@ -706,7 +706,7 @@ class StickyHeaderController {
         return index === (srcArray.length - 1);
     }
 
-    private _getGeneralParentNode(container0: HTMLElement, container1: HTMLElement, callCounter: number): Node {
+    private _getGeneralParentNode(container0: HTMLElement, container1: HTMLElement, callCounter: number = 0): Node {
         const ctrlTreeOfContainer0 = goUpByControlTree(container0);
         const ctrlTreeOfContainer1 = goUpByControlTree(container1);
 
@@ -716,9 +716,11 @@ class StickyHeaderController {
             }
         }
 
-        // У заголовка#1 дважды возьмем родительские контролы. Доходить у заголовка1 до body нельзя, т.к в скролл
-        // контейнере могут быть несколько независимых гридов со своими стикиблоками, которые не должны учитывать
-        // стикиблоки других гридов (т.е в таком случае общий предок будет скроллконтейнер, а должен быть грид)
+        // У заголовка#1 дважды поднимемся выше по стэку родительских контролов (возьмем родительский контрол,
+        // если он не подошел и не является общим родителем для второго заголовка - возьмем родительский контрол этого
+        // контрола). Доходить у заголовка1 до body нельзя, т.к в скролл контейнере могут быть несколько независимых
+        // гридов со своими стикиблоками, которые не должны учитывать стикиблоки других гридов (т.е в таком случае
+        // общий предок будет скроллконтейнер, а должен быть грид)
         if (callCounter === 1) {
             return document.body;
         } else {

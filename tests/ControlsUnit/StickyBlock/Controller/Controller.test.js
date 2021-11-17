@@ -2,12 +2,14 @@ define([
    'Env/Env',
    'Controls/scroll',
    'Core/core-merge',
-    'Controls/_scroll/StickyBlock/Utils'
+   'Controls/_scroll/StickyBlock/Utils',
+   'UI/Focus'
 ], function(
    Env,
    scroll,
    coreMerge,
-   StickyHeaderUtils
+   StickyHeaderUtils,
+   goUpByControlTree
 ) {
    'use strict';
 
@@ -94,7 +96,7 @@ define([
          };
          component._canScroll = true;
          sinon.stub(StickyHeaderUtils, 'isHidden').returns(false);
-         // sinon.stub(scroll._stickyHeaderController, '_isVisible').returns(true);
+         sinon.stub(goUpByControlTree, 'goUpByControlTree').returns([1,1]);
       });
 
       afterEach(function() {
