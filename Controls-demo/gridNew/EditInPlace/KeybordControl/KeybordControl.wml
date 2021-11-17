@@ -1,17 +1,14 @@
 <Controls-demo.gridNew.DemoLayout.Index>
     <ws:content>
-        <Controls.grid:View name="list"
+        <Controls.grid:View name="grid"
                             keyProperty="key"
                             source="{{_viewSource}}"
                             columns="{{_columns}}"
                             multiSelectVisibility="{{ _multiSelectVisibility }}"
                             bind:selectedKeys="_selectedKeys"
+                            editingConfig="{{ _editingConfig }}"
                             on:beforeBeginEdit="_beforeBeginEdit()"
-                            on:beforeEndEdit="_beforeEndEdit()">
-            <ws:editingConfig>
-                <ws:Object editOnClick="{{true}}"/>
-            </ws:editingConfig>
-        </Controls.grid:View>
+                            on:beforeEndEdit="_beforeEndEdit()"/>
     </ws:content>
     <ws:rightSidebar isExpanded="{{ true }}">
         <ws:items>
@@ -37,6 +34,18 @@
                         </div>
                         <div>
                             <Controls.toggle:Checkbox caption="Долгое завершение редактирования" bind:value="_longEnd"/>
+                        </div>
+                    </ws:template>
+                </ws:Object>
+
+                <ws:Object>
+                    <ws:template>
+                        <h4 class="controlsDemo__mb1">Режим редактирования</h4>
+                        <div>
+                            <Controls.toggle:DoubleSwitch
+                                    on:valueChanged="_isCellEditingModeChanged()"
+                                    value="{{ _isCellEditingMode }}"
+                                    captions="{{ ['Cell', 'Row'] }}"/>
                         </div>
                     </ws:template>
                 </ws:Object>
