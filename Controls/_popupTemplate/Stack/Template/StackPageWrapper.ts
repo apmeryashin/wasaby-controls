@@ -113,8 +113,7 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
 
     protected _maximizeHandler(): void {
         const item = this._generateControllerItem();
-        const maximized = this._getMaximizeState();
-        StackController.elementMaximized(item, false, maximized);
+        StackController.elementMaximized(item, false);
         this._setWorkSpaceWidth(item.popupOptions.width);
         this._updateOffset();
     }
@@ -122,8 +121,8 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     private _getMaximizeState(): boolean {
         return StackController.getMaximizedState(
             this._templateWorkSpaceWidth,
-            this._minSavedWidth,
-            this._maxSavedWidth
+            this._minSavedWidth || this._options.minWidth,
+            this._maxSavedWidth || this._options.maxWidth
         );
     }
 
