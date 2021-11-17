@@ -39,7 +39,7 @@ export default class extends Control<IOperationsPanelOptions> {
     }
 
     protected _shouldOpenMenu(options: IOperationsPanelOptions): boolean {
-        return options.selectedKeysCount !== 0;
+        return options.selectedKeysCount !== undefined && options.selectedKeysCount !== 0;
     }
 
     protected _getPanelOffsetClasses(

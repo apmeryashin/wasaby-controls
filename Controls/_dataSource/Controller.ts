@@ -353,7 +353,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     setItems(items: RecordSet): RecordSet {
         if (this._hasNavigationBySource()) {
             this._destroyNavigationController();
-            this._getNavigationController(this._navigation).updateQueryProperties(items, this._root);
+            this._updateQueryPropertiesByItems(items, this._root);
         }
         this._addItems(items, this._root);
         return this._items;
@@ -745,7 +745,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         let hierarchyRelation;
 
         if (this._hasNavigationBySource()) {
-            const isMultiNavigation = this._isMultiNavigation(navigationConfig, list);
+            const isMultiNavigation = this._isMultiNavigation(navigationConfig);
             const isRoot = this._root === id;
             const resetNavigation = this._deepReload || !direction && isRoot;
             if (resetNavigation && (!isMultiNavigation || !this.getExpandedItems()?.length)) {

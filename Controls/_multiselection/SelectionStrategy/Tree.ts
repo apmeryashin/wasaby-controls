@@ -140,7 +140,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    toggleAll(selection: ISelection, hasMoreData: boolean): ISelection {
       // Если выбраны все дети в узле по одному, то при инвертировании должен получиться пустой selection
-      if (this.isAllSelected(selection, hasMoreData, this._model.getCollection().getCount(), true)) {
+      if (this.isAllSelected(selection, hasMoreData, this._model.getCollection().getCount(), null, true)) {
          return {selected: [], excluded: []};
       }
 
@@ -391,11 +391,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    isAllSelected(selection: ISelection,
                  hasMoreData: boolean,
                  itemsCount: number,
+                 limit: number,
                  byEveryItem: boolean = true,
                  rootId?: CrudEntityKey): boolean {
       let isAllSelected;
 
-      if (byEveryItem) {
+      if (limit) {
+         isAllSelected = this._isAllSelectedInRoot(selection, rootId) && limit >= itemsCount && !hasMoreData;
+      } else if (byEveryItem) {
          isAllSelected = !hasMoreData && itemsCount > 0 && itemsCount === this.getCount(selection, hasMoreData)
             || this._isAllSelectedInRoot(selection, rootId) && selection.excluded.length === 1;
       } else {

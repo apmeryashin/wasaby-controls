@@ -863,6 +863,27 @@ describe('Controls/dataSource:SourceController', () => {
 
         });
 
+        it('setItems with multinavigation', () => {
+            const navigation = getPagingNavigation(true);
+            navigation.sourceConfig.multiNavigation = true;
+            const controller = getControllerWithHierarchy({navigation});
+            const items = new RecordSet();
+            const navRecordSet = new RecordSet({
+                keyProperty: 'id',
+                rawData: [{
+                    id: 'Приход',
+                    nav_result: true
+                }, {
+                    id: 'Расход',
+                    nav_result: false
+                }]
+            });
+            items.setMetaData({more: navRecordSet});
+            controller.setItems(items);
+            ok(controller.hasLoaded('Приход'));
+            ok(controller.hasLoaded('Расход'));
+        });
+
     });
 
     describe('getKeyProperty', () => {

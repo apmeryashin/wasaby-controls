@@ -39,8 +39,6 @@ interface ISourcePropertyConfig {
 
 const SUB_DROPDOWN_DELAY = 400;
 
-const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
-
 /**
  * Контрол меню.
  * @public
@@ -1028,9 +1026,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     }
                 }
             });
-            hasAdditional = this._visibleIds.length > MAX_HISTORY_VISIBLE_ITEMS_COUNT + 1;
+            hasAdditional = this._visibleIds.length > options.maxHistoryVisibleItems + 1;
             if (hasAdditional) {
-                this._visibleIds.splice(MAX_HISTORY_VISIBLE_ITEMS_COUNT);
+                this._visibleIds.splice(options.maxHistoryVisibleItems);
             }
 
             this._addParentIdForSearchMode(options, items);
@@ -1365,7 +1363,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         hoverBackgroundStyle: 'default',
         subMenuDirection: 'right',
         itemAlign: 'right',
-        subMenuLevel: 0
+        subMenuLevel: 0,
+        maxHistoryVisibleItems: 10
     };
 }
 /**
