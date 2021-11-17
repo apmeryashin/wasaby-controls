@@ -53,6 +53,7 @@
             </div>
         </ws:if>
         <div class="controls-PropertyGrid__gridLayout_editor-caption
+                    {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                     {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                     {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
                     {{collectionItem.getItemPaddingClasses(1)}}"
@@ -84,6 +85,7 @@
     </ws:if>
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
        <div class="controls-PropertyGrid__gridLayout_editor
+                   {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                    {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                    {{(!item.caption || _options.captionPosition === 'top') ? 'controls-PropertyGrid__gridLayout_editor-withoutCaption'}}
                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
