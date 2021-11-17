@@ -38,17 +38,22 @@
     </div>
 </ws:if>
 <ws:else>
-    <Controls._operationsPanel.Panel
-            selectedKeys="{{_options.selectedKeys}}"
-            excludedKeys="{{_options.excludedKeys}}"
-            size="{{_options.multiSelectSize}}"
-            fontColorStyle="{{_options.fontColorStyle}}"
-            operationsController="{{_options.operationsController}}"
-            propStorageId="{{_options.propStorageId}}"
-            fontSize="{{_options.multiSelectFontSize}}"
-            selectedKeysCount="{{_options.selectedKeysCount}}"
-            selectionViewMode="{{_options.selectionViewMode}}"
-            selectedCountConfig="{{_options.selectedCountConfig}}"
-            isAllSelected="{{_options.isAllSelected }}"
-            name="toolbarBlock"/>
+    <Controls.Container.Async
+            templateName="Controls/operationsPanel:Panel">
+        <ws:content>
+            <ws:partial template="{{content.resolvedTemplate}}"
+                        selectedKeys="{{_options.selectedKeys}}"
+                        excludedKeys="{{_options.excludedKeys}}"
+                        size="{{_options.multiSelectSize}}"
+                        fontColorStyle="{{_options.fontColorStyle}}"
+                        operationsController="{{_options.operationsController}}"
+                        propStorageId="{{_options.propStorageId}}"
+                        fontSize="{{_options.multiSelectFontSize}}"
+                        selectedKeysCount="{{_options.selectedKeysCount}}"
+                        selectionViewMode="{{_options.selectionViewMode}}"
+                        selectedCountConfig="{{_options.selectedCountConfig}}"
+                        isAllSelected="{{_options.isAllSelected }}"
+                        name="toolbarBlock"/>
+        </ws:content>
+    </Controls.Container.Async>
 </ws:else>
