@@ -292,6 +292,7 @@ export default abstract class Row<T extends Model = Model> {
     getMarkerClasses(markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
         const topPadding = itemPadding.top || this.getTopPadding() || 'l';
         let classes = 'controls-GridView__itemV_marker';
+        const imageMarkerVariants = ['image-xs', 'image-s', 'image-m', 'image-l'];
         classes += ` controls-GridView__itemV_marker-${this.getStyle()} `;
         classes += ` controls-ListView__itemV_marker-${this.getMarkerPosition()} `;
 
@@ -299,15 +300,20 @@ export default abstract class Row<T extends Model = Model> {
             // Маркеру по умолчанию может быть добавлен дополнительный отступ сверху.
             classes += ` controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingTop-${topPadding} `;
             // По умолчанию высота маркера задаётся стилем отображения списка.
-            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_height`;
-            // Маркеру по умолчанию задаётся вертикальное позиционирование согласно стилю отображения списка.
-            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_top`;
-            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_bottom`;
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_height_default`;
         } else {
-            // При указанном markerClassName высота маркера и его позиционирование
-            // задаётся согласно стилю для указанного markerClassName.
-            // От верхнего отступа записи зависит высота маркера для значений text и отступ сверху для значений image.
-            classes += ` controls-GridView__itemV_marker_${this.getStyle()}_padding-${topPadding}_${markerClassName}`;
+            // Высота маркера задаётся согласно markerClassName
+            classes += ` controls-GridView__itemV_marker_${this.getStyle()}_height_` +
+                `${markerClassName}-padding-${topPadding}`;
+        }
+
+        // Вертикальное позиционирование задаётся согласно markerClassName, только для image-маркеров
+        if (imageMarkerVariants.indexOf(markerClassName) !== -1) {
+            classes += ` controls-GridView__itemV_marker_${this.getStyle()}_top_${topPadding}`;
+        } else {
+            // Вертикальное позиционирование по умолчанию задаётся согласно стилю отображения списка.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_top_null`;
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_bottom_null`;
         }
 
         return classes;
