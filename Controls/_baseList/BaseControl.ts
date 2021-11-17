@@ -3460,7 +3460,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
-            this._scrollController.scrollPositionChange({scrollTop}, false);
+            const result = this._scrollController.scrollPositionChange({scrollTop}, false);
+            _private.handleScrollControllerResult(this, result);
             this._observersController?.setScrollTop(
                 this._scrollTop,
                 this._children.listView?.getTopLoadingTrigger(),
@@ -3468,7 +3469,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             );
         }
         if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
-            this._updateHeights(false);
+            this._updateHeights(true);
         }
         if (this._viewportSize >= this._viewSize) {
             this._pagingVisible = false;
