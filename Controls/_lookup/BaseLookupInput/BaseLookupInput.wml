@@ -111,6 +111,9 @@
                                         on:click="_onClickClearRecords()"
                                         attr:class="controls-Lookup__clearRecords_{{_multiLineState ? 'multiLine' : 'singleLine'}}"/>
                         </ws:if>
+                        <ws:if data="{{_options.rightFieldTemplate}}">
+                            <ws:partial template="{{_options.rightFieldTemplate}}" />
+                        </ws:if>
                         <ws:if data="{{_options.toolbarItems}}">
                             <Controls.toolbars:View items="{{_options.toolbarItems}}"
                                                     keyProperty="{{_options.toolbarKeyProperty}}"
