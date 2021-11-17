@@ -16,7 +16,6 @@ export {default as dateRangeQuantum} from './_dateRange/Utils/DateRangeQuantum';
 export {default as IRangeSelectable} from './_dateRange/interfaces/IRangeSelectable';
 export {default as IDayTemplate} from './_interface/IDayTemplate';
 export {default as IPeriodLiteDialog} from './_dateRange/interfaces/IPeriodLiteDialog';
-export {default as WeekdayFormatter} from './_dateRange/WeekdayFormatter';
 export {default as keyboardPeriodController} from './_dateRange/Utils/keyboardPeriodController';
 export {default as DateRangeContextProvider} from './_dateRange/DateRangeContextProvider';
 export {default as ArrowButtonConsumer} from './_dateRange/ArrowButtonConsumer';
