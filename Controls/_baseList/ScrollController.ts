@@ -225,8 +225,9 @@ export default class ScrollController {
         const verticalOffset = scrollTop - topOffset - placeholder + (getStickyHeadersHeight(baseContainer, 'top', 'fixed') || 0);
 
         let firstItemIndex = this._options.collection.getStartIndex();
+        let lastItemIndex = Math.max(0, this._options.collection.getStopIndex() - 1);
         firstItemIndex += this._getFirstVisibleItemIndex(listViewContainer.children, verticalOffset);
-        firstItemIndex = Math.min(firstItemIndex, this._options.collection.getStopIndex());
+        firstItemIndex = Math.min(firstItemIndex, lastItemIndex);
 
         // TODO: Отрефакторить. Задача: https://online.sbis.ru/opendoc.html?guid=0c097079-0143-4b19-9f43-dc38c68ba3bc
         if (this._options.collection.getStartIndex() && this._options.collection.at(0)['[Controls/_display/GroupItem]'] ) {
@@ -259,7 +260,7 @@ export default class ScrollController {
         if (verticalOffset <= 0) {
             return 0;
         }
-        while (itemsHeight < verticalOffset && i < itemsCount) {
+        while (itemsHeight < verticalOffset && i < itemsCount - 1) {
             itemsHeight += uDimension(items[i]).height;
             i++;
         }
