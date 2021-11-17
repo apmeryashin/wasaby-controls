@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IEventHandlers, IPopupItemInfo} from './IPopup';
-import {IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
+import {IInfoBoxOptions} from 'Controls/_popup/interface/IInfoBox';
+import {IValidationStatusOptions} from 'Controls/interface';
 import {List} from 'Types/collection';
 
 /**
@@ -12,23 +13,15 @@ import {List} from 'Types/collection';
  * @author Красильников А.С.
  */
 
-export interface IInfoBoxPopupOptions extends IValidationStatusOptions, IControlOptions {
+export interface IInfoBoxPopupOptions extends IInfoBoxOptions, IValidationStatusOptions, IControlOptions {
     target?: HTMLElement | EventTarget | Control;
     opener?: Control<IControlOptions, unknown>;
     maxWidth?: number;
-    style?: string;
-    targetSide?: string;
-    alignment?: string;
-    floatCloseButton?: boolean;
-    closeButtonVisibility?: boolean;
     closeOnOutsideClick?: boolean;
     eventHandlers?: IEventHandlers;
-    template?: Control<IControlOptions, unknown> | TemplateFunction | string;
-    templateOptions?: any;
-    message?: string;
-    zIndex?: number; // TODO Compatible
-    position?: string; // TODO старое, надо удалить
     zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
+    zIndex?: number; //TODO Compatible
+    position?: string; //TODO старое, надо удалить
 }
 
 export interface IInfoBoxOpener {
