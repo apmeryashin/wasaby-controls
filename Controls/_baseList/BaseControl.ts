@@ -3900,6 +3900,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // scroll и произведет неправильные расчёты, т.к. у него старая collection.
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
+            this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
 
             // При пересоздании коллекции будет скрыт верхний триггер и индикатор,
             // чтобы не было лишней подгрузки при отрисовке нового списка.
