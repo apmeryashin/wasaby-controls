@@ -266,6 +266,10 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     },
 
     _getLadderTopOffsetStyles(): string {
+        if (!this._options.ladderProperties) {
+            return '';
+        }
+
         if (!this._container) {
             return '';
         }
