@@ -150,9 +150,9 @@ export default
    }
 
    protected _reCountHierarchy(): void {
-      super._reCountHierarchy();
       const strategy = this.getStrategyInstance(itemsStrategy.Search);
       strategy.reset();
+      super._reCountHierarchy();
    }
 
    protected _recountHasNodeWithChildren(): void {
