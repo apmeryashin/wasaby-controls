@@ -13,6 +13,7 @@ import {Logger} from 'UI/Utils';
 import {Utils as dateControlsUtils} from 'Controls/dateRange';
 import 'css!Controls/shortDatePicker';
 import {SyntheticEvent} from "Vdom/Vdom";
+import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
 
 const MAX_VISIBLE_YEARS = 14;
 
@@ -62,8 +63,22 @@ class View extends Control<IDateLitePopupOptions> {
     protected _isHeaderContentTemplateString: boolean;
     protected _tabPressed: boolean = false;
     protected _lastYear: boolean;
+    private _errorController: ErrorController;
+    protected _errorViewConfig: ErrorViewConfig;
+
+    protected _errorCallback(event: Event, error: Error): Promise<unknown> {
+        return this._errorController.process({
+            error,
+            mode: ErrorViewMode.dialog
+        }).then((errorViewConfig: ErrorViewConfig) => {
+            this._errorViewConfig = errorViewConfig;
+            return error;
+        });
+    }
 
     protected _beforeMount(options: IDateLitePopupOptions): void {
+        this._errorController = new ErrorController({});
+        this._errorCallback = this._errorCallback.bind(this);
         if (!this._validateDisplayedRanges(options.displayedRanges)) {
             Logger.error('Controls/shortDatePicker:View: интервал отображаемых периодов' +
                 ' в опции displayedRanges должен равняться году');

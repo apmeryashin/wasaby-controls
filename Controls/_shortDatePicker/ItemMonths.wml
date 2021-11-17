@@ -24,7 +24,7 @@
 </ws:template>
 
 <ws:if data="{{ _isMonthsTemplateString }}">
-<Controls.Container.Async templateName="{{ _options.monthTemplate }}">
+<Controls.Container.Async templateName="{{ _options.monthTemplate }}" errorCallback="{{ _options.errorCallback }}">
     <ws:partial template="itemTemplate"
                 monthTemplate="{{ content.resolvedTemplate }}"/>
 </Controls.Container.Async>
