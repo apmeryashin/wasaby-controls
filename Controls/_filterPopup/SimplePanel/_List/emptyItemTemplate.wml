@@ -2,6 +2,7 @@
         mode="replaceable"
         attr:class="controls-SimplePanel-dropdown__emptyItem"
         shadowVisibility="visible"
+        backgroundStyle="menuPopup"
         attr:data-qa="SimplePanel-dropdown__emptyItem">
    <ws:partial template="Controls/dropdown:ItemTemplate"
                itemData="{{itemData}}"
