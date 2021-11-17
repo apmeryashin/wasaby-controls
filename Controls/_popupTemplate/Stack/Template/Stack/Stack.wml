@@ -81,7 +81,10 @@
                         maximizeButtonVisibility="{{_maximizeButtonVisibility}}"
                         maximizeButtonTitle="{{_maximizeButtonTitle}}"
                         maximizeButtonClickCallback="{{_maximizeButtonClickCallback}}"
-                        rightPanelOptions="{{_options.rightPanelOptions}}"/>
+                        rightPanelOptions="{{_options.rightPanelOptions}}"
+                        bodyContentTemplate="{{null}}"
+                        headerContentTemplate="{{null}}"
+                        footerContentTemplate="{{null}}"/>
         </ws:if>
     </div>
 </div>
