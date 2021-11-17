@@ -129,6 +129,10 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
         this._notify('itemMouseEnter', [item, e]);
     }
 
+    protected _mouseMoveHandler(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
+        this._notify('itemMouseMove', [item, e]);
+    }
+
     protected _mouseLeaveHandler(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
         this._notify('itemMouseLeave', [item, e]);
     }
