@@ -11,6 +11,11 @@ interface INoStickyLadderColumn {
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
+    protected _viewSourceImage: Memory;
+    protected _viewSourceImageL: Memory;
+    protected _viewSourceImageM: Memory;
+    protected _viewSourceImageS: Memory;
+    protected _viewSourceImageXS: Memory;
     protected _viewSourceText: Memory;
     protected _columnsImage: INoStickyLadderColumn[] = Tasks.getColumns();
     protected _columnsText: IColumn[] =  [
@@ -41,16 +46,21 @@ export default class extends Control {
                 }
             ]
         });
+        this._viewSourceImage = this._getViewSource();
+        this._viewSourceImageL = this._getViewSource(40, 40);
+        this._viewSourceImageM = this._getViewSource(32, 32);
+        this._viewSourceImageS = this._getViewSource(24, 24);
+        this._viewSourceImageXS = this._getViewSource(16, 16);
     }
 
-    protected _getViewSource(imageWidth?: string, imageHeight?: string): Memory {
+    private _getViewSource(imageWidth?: number, imageHeight?: number): Memory {
         const data = Tasks.getData().map((el) => {
             const newEl = {...el};
             if (imageWidth) {
-                newEl.width = imageWidth;
+                newEl.width = `${imageWidth}px`;
             }
             if (imageHeight) {
-                newEl.height = imageHeight;
+                newEl.height = `${imageHeight}px`;
             }
             return newEl;
         });

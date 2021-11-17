@@ -6,10 +6,10 @@ import {IColspanParams, IColumn, TColumns, TColumnSeparatorSize} from '../interf
 import {THeader} from '../interface/IHeaderCell';
 import {
     Collection,
-    ICollectionItemOptions as IBaseOptions, IEditingConfig,
+    ICollectionItemOptions as IBaseOptions, IEditingConfig, IItemPadding,
     ILadderConfig,
     IStickyLadderConfig,
-    TLadderElement
+    TLadderElement, TMarkerClassName
 } from 'Controls/display';
 import Cell, {IOptions as ICellOptions} from '../Cell';
 import {TResultsPosition} from '../ResultsRow';
@@ -286,6 +286,34 @@ export default abstract class Row<T extends Model = Model> {
     }
 
     //endregion
+
+    // region marker
+
+    getMarkerClasses(markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
+        const topPadding = itemPadding.top || this.getTopPadding() || 'l';
+        let classes = 'controls-GridView__itemV_marker';
+        classes += ` controls-GridView__itemV_marker-${this.getStyle()} `;
+        classes += ` controls-ListView__itemV_marker-${this.getMarkerPosition()} `;
+
+        if (markerClassName === 'default') {
+            // Маркеру по умолчанию может быть добавлен дополнительный отступ сверху.
+            classes += ` controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingTop-${topPadding} `;
+            // По умолчанию высота маркера задаётся стилем отображения списка.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_height`;
+            // Маркеру по умолчанию задаётся вертикальное позиционирование согласно стилю отображения списка.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_top`;
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_bottom`;
+        } else {
+            // При указанном markerClassName высота маркера и его позиционирование
+            // задаётся согласно стилю для указанного markerClassName.
+            // От верхнего отступа записи зависит высота маркера для значений text и отступ сверху для значений image.
+            classes += ` controls-GridView__itemV_marker_${this.getStyle()}_padding-${topPadding}_${markerClassName}`;
+        }
+
+        return classes;
+    }
+
+    // endregion marker
 
     //region Аспект "Ячейки. Создание, обновление, перерисовка, colspan и т.д."
     protected _processStickyLadderCells(
@@ -881,6 +909,8 @@ export default abstract class Row<T extends Model = Model> {
     abstract getEditingConfig(): IEditingConfig;
 
     abstract getShadowVisibility(): string;
+
+    abstract getMarkerPosition(): 'left' | 'right';
 
     protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
 

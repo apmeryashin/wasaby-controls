@@ -64,8 +64,36 @@
    max-height: 100%;
 }
 
-.controls-GridView__itemV_marker_vertical-position-top {
-   top: 0;
+.controls-GridView__itemV_marker_default,
+.controls-GridView__itemV_marker_master {
+   @imageVariants: image-xs, image-s, image-m, image-l;
+   .for(@imageVariants, {
+      &_padding-l_@{_item} {
+         top: var(--item_padding-top_l_grid);
+         height: ~"var(--marker_height_padding-l_@{_item}_list)";
+      }
+      &_padding-default_@{_item},
+      &_padding-s_@{_item} {
+         top: var(--item_padding-top_s_grid);
+         height: ~"var(--marker_height_padding-s_@{_item}_list)";
+      }
+      &_padding-null_@{_item} {
+         height: ~"var(--marker_height_padding-s_@{_item}_list)";
+      }
+   });
+}
+.controls-GridView__itemV_marker_default {
+   @textVariants: text-2xs, text-m, text-l, text-xl, text-2xl;
+   .for(@textVariants, {
+      &_padding-l_@{_item} {
+         height: ~"var(--marker_height_padding-l_@{_item}_list)";
+      }
+      &_padding-default_@{_item},
+      &_padding-null_@{_item},
+      &_padding-s_@{_item} {
+         height: ~"var(--marker_height_padding-s_@{_item}_list)";
+      }
+   });
 }
 
 .controls-Grid__header {
@@ -918,7 +946,7 @@
    height: 100%;
 }
 
-.controls-GridView__itemV_marker-master.controls-ListView__itemV_marker_height::after {
+.controls-ListView__itemV_marker_master_height::after {
    height: var(--master-marker_height_list);
 }
 

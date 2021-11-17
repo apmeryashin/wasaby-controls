@@ -460,17 +460,28 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     getMarkerClasses(markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
-        const topPadding = (itemPadding.top || this.getTopPadding() || 'l');
-        let markerClass = 'controls-ListView__itemV_marker controls-ListView__itemV_marker_';
+        const topPadding = itemPadding.top || this.getTopPadding() || 'l';
+        let classes = 'controls-ListView__itemV_marker';
+        classes += ` controls-ListView__itemV_marker_${this.getStyle()}`;
+        classes += ` controls-ListView__itemV_marker-${this.getMarkerPosition()}`;
+
         if (markerClassName === 'default') {
-            markerClass += 'height';
+            // Маркеру по умолчанию может быть добавлен дополнительный отступ сверху.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_topPadding-${topPadding}`;
+            // По умолчанию высота маркера задаётся стилем отображения списка.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_height`;
+            // Маркеру по умолчанию задаётся вертикальное позиционирование согласно стиля отображения списка.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_top`;
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_bottom`;
+
         } else {
-            markerClass += `padding-${topPadding}_${markerClassName}`;
+            // При указанном markerClassName высота маркера и его позиционирование
+            // задаётся согласно стилю для указанного markerClassName.
+            // От верхнего отступа записи зависит высота маркера для значений text и отступ сверху для значений image.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_padding-${topPadding}_${markerClassName}`;
         }
-        markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}`;
-        markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}_topPadding-${topPadding}`;
-        markerClass += ` controls-ListView__itemV_marker-${this.getMarkerPosition()}`;
-        return markerClass;
+
+        return classes;
     }
 
     getMarkerPosition(): 'left' | 'right' {

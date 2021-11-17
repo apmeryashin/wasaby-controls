@@ -56,25 +56,6 @@ export default class Row<TContents extends Model = Model>
         return changed;
     }
 
-    getMarkerClasses(markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
-        let classes = 'controls-GridView__itemV_marker ';
-        classes += `controls-GridView__itemV_marker-${this.getStyle()} `;
-        const bottomPadding = itemPadding.bottom || this.getBottomPadding();
-        classes += `controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingBottom-${bottomPadding} `;
-        const topPadding = itemPadding.top || this.getTopPadding();
-        classes += `controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingTop-${topPadding} `;
-
-        classes += 'controls-ListView__itemV_marker_';
-        if (markerClassName === 'default') {
-            classes += 'height ';
-            classes += 'controls-GridView__itemV_marker_vertical-position-top ';
-        } else {
-            classes += `${'padding-' + (topPadding || 'l') + '_' + markerClassName} `;
-        }
-        classes += `controls-ListView__itemV_marker-${this.getMarkerPosition()} `;
-        return classes;
-    }
-
     _hasCheckBoxCell(): boolean {
         return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
     }
