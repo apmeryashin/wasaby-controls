@@ -4,9 +4,8 @@ import {factory, RecordSet} from 'Types/collection';
 import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {StickyOpener} from 'Controls/popup';
+import {StickyOpener, IStickyPopupOptions} from 'Controls/popup';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
-import {getMenuItems, needShowMenu} from './Util';
 import {showType} from './interfaces/IShowType';
 import 'css!Controls/toolbars';
 import 'css!Controls/buttons';
@@ -14,12 +13,13 @@ import 'css!Controls/CommonClasses';
 
 import {
     getButtonTemplate,
+    getMenuItems,
+    needShowMenu,
     hasSourceChanged,
     getTemplateByItem,
     loadItems,
     getSimpleButtonTemplateOptionsByItem
 } from 'Controls/_toolbars/Util';
-import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
 import {
     IHierarchy,
@@ -51,16 +51,6 @@ type TItem = Record;
 type TItems = RecordSet<TItem>;
 type TypeItem = 'toolButton' | 'icon' | 'link' | 'list';
 export type TItemsSpacing = 'medium' | 'big';
-
-// Перейти на интерфейс выпадающих списков, когда он появится
-
-export interface IMenuOptions {
-    direction: IStickyPosition;
-    targetPoint: IStickyPosition;
-    eventHandlers: IEventHandlers;
-    templateOptions: any;
-    template: string;
-}
 
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
@@ -145,6 +135,13 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
       * @demo Controls-demo/Toolbar/MenuButtonViewMode/Index
       */
      menuButtonViewMode?: IViewMode;
+
+     /**
+      * @name Controls/toolbars:IToolbar#closeMenuOnOutsideClick
+      * @cfg {Boolean} Определяет возможность закрытия окна по клику вне.
+      * @default true
+      */
+     closeMenuOnOutsideClick: boolean;
 }
 
 /**
@@ -172,7 +169,6 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  *
  * @extends UI/Base:Control
  * @implements Controls/toolbars:IToolbar
- * // TODO: https://online.sbis.ru/opendoc.html?guid=64c95101-d268-4225-9e52-b6398ded5ced
  * @implements Controls/interface:IItems
  * @public
  * @author Красильников А.С.
@@ -225,6 +221,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
         this._resultHandler = this._resultHandler.bind(this);
         this._closeHandler = this._closeHandler.bind(this);
+        this._openHandler = this._openHandler.bind(this);
     }
 
     private _createMemory(items: TItems): Memory {
@@ -381,7 +378,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return config;
     }
 
-    private _getMenuOptions(): IMenuOptions {
+    private _getMenuOptions(): IStickyPopupOptions {
         return {
             direction: {
                 horizontal: 'left',
@@ -393,9 +390,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             },
             eventHandlers: {
                 onResult: this._resultHandler,
-                onClose: () => {
-                    this._closeHandler();
-                }
+                onClose: this._closeHandler,
+                onOpen: this._openHandler
             },
             template: 'Controls/menu:Popup',
             closeOnOutsideClick: this._options.closeMenuOnOutsideClick,
@@ -543,7 +539,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         });
     }
 
+    protected _openHandler(): void {
+        this._notify('dropDownOpen');
+    }
+
     protected _closeHandler(): void {
+        this._notify('dropDownClose');
         this._setStateByItems(this._items, this._options.source);
         this._setMenuSource();
     }
@@ -698,7 +699,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         });
     }
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): IToolbarOptions {
         return {
             menuSource: null,
             popupClassName: '',
@@ -713,7 +714,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         };
     }
 
-    static getOptionTypes() {
+    static getOptionTypes(): object {
         return {
             popupClassName: descriptor(String),
             itemsSpacing: descriptor(String).oneOf([
@@ -732,6 +733,18 @@ Object.defineProperty(Toolbar, 'defaultProps', {
       return Toolbar.getDefaultOptions();
    }
 });
+
+/**
+ * @event Происходит при открытии выпадающего списка.
+ * @name Controls/_toolbars/View#dropDownOpen
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/**
+ * @event Происходит при закрытии выпадающего списка.
+ * @name Controls/_toolbars/View#dropDownClose
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ */
 
 /**
  * @event Происходит при клике по элементу.
