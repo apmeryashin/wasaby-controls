@@ -2161,6 +2161,7 @@ const _private = {
             excludedKeys: options.excludedKeys,
             searchValue: options.searchValue,
             filter: options.filter,
+            rootId: options.root,
             strategy
         });
 
@@ -2190,6 +2191,7 @@ const _private = {
             model: collection,
             searchValue: newOptions.searchValue,
             filter: newOptions.filter,
+            rootId: newOptions.root,
             strategyOptions: _private.getSelectionStrategyOptions(
                 newOptions,
                 collection,
