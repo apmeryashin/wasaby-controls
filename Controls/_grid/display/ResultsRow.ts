@@ -44,6 +44,10 @@ class ResultsRow extends Row<null> {
         return this.isStickyHeader() && this.isStickyResults();
     }
 
+    getStickyHeaderMode() {
+        return 'stackable';
+    }
+
     getStickyHeaderPosition(stickyCallback: Function): {} {
         return {
             vertical: this._$resultsPosition

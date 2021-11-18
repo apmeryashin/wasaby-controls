@@ -104,8 +104,7 @@ export default abstract class Row<T extends Model = Model> {
     }
 
     getStickyHeaderMode(stickyCallback: Function): string {
-        return this.isSticked() ? 'stackable' :
-            (stickyCallback ? 'replaceable' : 'notsticky');
+        return this.isSticked() || stickyCallback ? 'replaceable' : 'notsticky';
     }
 
     getStickyHeaderPosition(stickyCallback: Function): {} {

@@ -42,6 +42,10 @@ export default class HeaderRow extends Row<null> {
         return this._$headerModel.isSticked();
     }
 
+    getStickyHeaderMode() {
+        return 'stackable';
+    }
+
     isMultiline(): boolean {
         return this._$headerModel.isMultiline();
     }
