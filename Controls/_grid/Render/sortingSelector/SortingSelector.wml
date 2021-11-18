@@ -33,7 +33,6 @@
                 footerContentTemplate="{{_options.footerContentTemplate}}"
                 fontColorStyle="{{_options.fontColorStyle}}"
                 emptyTemplate="{{_options.emptyTemplate}}"
-                iconSize="{{_options.iconSize}}"
                 headerTemplate="{{headerTemplate}}"
                 on:dropDownClose="_resetSelectedArrow()"
                 dataLoadCallback="{{_saveLinkToItems}}">
