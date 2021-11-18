@@ -49,7 +49,14 @@ export default class VirtualScroll {
             segmentSize = pageSize ? Math.ceil(pageSize / RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT) : 0;
         }
 
-        this._options = {...this._options, ...{segmentSize, pageSize}};
+        this._options = {
+            ...this._options,
+            ...{
+                segmentSize,
+                pageSize,
+                feature1183225611: options.feature1183225611
+            }
+        };
     }
 
     applyContainerHeightsData(containerData: Partial<IContainerHeights>): void {
@@ -292,7 +299,7 @@ export default class VirtualScroll {
         // границу либо находится вплотную к ней
         if (this._options.feature1183225611) {
             let result;
-            for (let i = 0; i < this._itemsHeightData.itemsOffsets.length; i++) {
+            for (let i = this._range.start ; i < this._range.stop; i++) {
                 if (this._itemsHeightData.itemsOffsets[i] <= fixedScrollTop) {
                     result = i;
                 } else {
