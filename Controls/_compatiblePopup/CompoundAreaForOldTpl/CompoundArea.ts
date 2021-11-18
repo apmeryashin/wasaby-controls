@@ -614,17 +614,18 @@ var CompoundArea = CompoundContainer.extend([
             if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
                customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
             }
+            this.setRoundedClassOnDialogTemplate();
             this._prependCustomHeader(customHeaderContainer);
          } else {
             customHeaderContainer = $('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + (this._options.caption || '') + '</div></div>');
             this.getContainer().prepend(customHeaderContainer);
             this.getContainer().addClass('controls-CompoundArea-headerPadding');
             this._className += headerPaddingClass;
-            this.setClassOnDialogTemplate();
+            this.setRoundedClassOnDialogTemplate();
          }
       } else if (customHeaderContainer.length && this._options.type === 'dialog') {
          this._prependCustomHeader(customHeaderContainer);
-         this.setClassOnDialogTemplate();
+         this.setRoundedClassOnDialogTemplate();
       } else {
          this.getContainer().removeClass('controls-CompoundArea-headerPadding');
          if (this._className.indexOf(headerPaddingClass) >= 0) {
@@ -639,10 +640,11 @@ var CompoundArea = CompoundContainer.extend([
          customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
       }
    },
-   setClassOnDialogTemplate(): void {
+   setRoundedClassOnDialogTemplate(): void {
       // Добавляем класс который каскадом уберет скругления между шапкой и боди, так как Controls.popupTemplate:Dialog
       // внутри себя ничего не знает о customHeader CompoundArea.
-      this.getContainer().addClass('controls-CompoundArea-borderRadius_customHeader');
+      const container = $('.controls-DialogTemplate', this.getContainer());
+      container.addClass('controls-CompoundArea-borderRadius_customHeader');
    },
    // Совместимость может принимать на себя фокус
    canAcceptFocus(): boolean {
