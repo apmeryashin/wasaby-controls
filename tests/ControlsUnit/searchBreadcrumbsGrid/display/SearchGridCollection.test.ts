@@ -211,4 +211,18 @@ describe('Controls/_searchBreadcrumbsGrid/display/SearchGridCollection', () => {
          assert.equal(parent.getContents()[0].getKey(), 1);
       });
    });
+
+   describe('recount expander state', () => {
+      it('not throw error on recount', () => {
+         const collection = createCollectionForTest({
+            header:  [{startColumn: 1, endColumn: 2}, {startColumn: 2, endColumn: 3}]
+         });
+
+         const rs = collection.getCollection() as RecordSet;
+         rs.add(new Model({
+            rawData: {id: 77, hasChildren: false, node: true, pid: 0}
+         }));
+         assert.doesNotThrow(collection.hasNode.bind(collection));
+      });
+   });
 });
