@@ -3,7 +3,6 @@ import * as template from 'wml!Controls/_operationsPanel/Panel/Cloud/Cloud';
 import {Memory} from 'Types/source';
 import 'css!Controls/operationsPanel';
 import {Container, IDragObject} from 'Controls/dragnDrop';
-import 'Controls/menu';
 import {SyntheticEvent} from 'UI/Events';
 
 export interface IOperationsPanelCloudOptions extends IControlOptions {
