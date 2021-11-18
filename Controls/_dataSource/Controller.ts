@@ -747,7 +747,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             const isMultiNavigation = this._isMultiNavigation(navigationConfig);
             const isRoot = this._root === id;
             const resetNavigation = this._deepReload || !direction && isRoot;
-            if (resetNavigation && (!isMultiNavigation || !this.getExpandedItems()?.length)) {
+            if (resetNavigation && (!isMultiNavigation || !this.getExpandedItems()?.length || this.isExpandAll())) {
                 this._destroyNavigationController();
             }
             if (this._options.parentProperty && isMultiNavigation) {
