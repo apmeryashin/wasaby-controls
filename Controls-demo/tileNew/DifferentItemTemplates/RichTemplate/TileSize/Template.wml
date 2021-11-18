@@ -7,7 +7,8 @@
            tileSize="{{tileSize}}"
            imageProperty="image"
            keyProperty="key"
-           source="{{_viewSource}}">
+           source="{{_viewSource}}"
+           attr:class="controlsDemo_fixedWidth850">
       <ws:itemTemplate>
          <ws:partial
                  template="Controls/tile:RichTemplate"
