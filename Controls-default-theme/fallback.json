@@ -1173,7 +1173,7 @@
   "--footer_min-height_dialog": "64px",
   "--header_caption_offset-right_dialog": "var(--offset_m)",
   "--background-color_dialog": "var(--background-color)",
-  "--footer_background-color_dialog": "#f5f5f5",
+  "--footer_background-color_dialog": "var(--unaccented_background-color)",
   "--border-color_dialog": "#bdbdbd",
   "--border-thickness_dialog": "var(--border-thickness)",
   "--border-radius_dialog": "var(--border-radius_s)",
