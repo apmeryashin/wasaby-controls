@@ -20,7 +20,7 @@ export default class extends Control {
         });
     }
 
-    protected _beforeEndEdit(e: SyntheticEvent<null>, item: Model): Promise<void | string> | string {
+    protected _beforeEndEdit(e: SyntheticEvent<null>, item: Model, willSave): Promise<void | string> | string {
         if (item.get('key') === 1 && item.get('beforeEndEditTitle') === '') {
             return constEditing.CANCEL;
         }
@@ -42,15 +42,25 @@ export default class extends Control {
         }
         // tslint:disable-next-line
         if (item.get('key') === 4) {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    if (item.get('beforeEndEditTitle') === '') {
-                        resolve(constEditing.CANCEL);
-                    } else {
-                        resolve();
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        if (item.get('beforeEndEditTitle') === '') {
+                            resolve(constEditing.CANCEL);
+                        } else {
+                            resolve();
+                        }
+                    }, TIMEOUT1000);
+                }).then((res) => {
+                    if (res) {
+                        return res;
                     }
-                }, TIMEOUT1000);
-            });
+
+                    if (willSave) {
+                        return this._viewSource.update(item).then(() => {
+                            return this._children.list.reload();
+                        });
+                    }
+                });
         }
     }
 
