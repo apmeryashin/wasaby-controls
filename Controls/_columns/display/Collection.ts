@@ -16,6 +16,7 @@ export default class Collection<
 > extends BaseCollection<S, T> {
     protected _$columnProperty: string;
     readonly SupportExpand: boolean = false;
+    readonly SupportNodeFooters: boolean = false;
     protected _dragStrategy: ColumnsDragStrategy<S, T> = ColumnsDragStrategy;
     protected _columnsStrategy: IColumnsStrategy;
     protected _addingColumnsCounter: number;
