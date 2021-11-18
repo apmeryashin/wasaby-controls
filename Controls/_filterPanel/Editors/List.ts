@@ -190,7 +190,7 @@ class ListEditor extends Control<IListEditorOptions> {
             this._navigation = this._getNavigation(options);
         }
         if (filterChanged || valueChanged) {
-            this._setFilter(this._selectedKeys, options);
+            this._setFilter(valueChanged ? this._selectedKeys : null, options);
         }
         if (valueChanged) {
             this._setMarkedKey(this._selectedKeys, options);
