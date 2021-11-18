@@ -33,6 +33,7 @@ export default class TreeGridTableHeader extends GridTableHeader {
 }
 
 Object.assign(TreeGridTableHeader.prototype, {
+    'Controls/treeGrid:TreeGridHeader': true,
     'Controls/treeGrid:TreeGridTableHeader': true,
     _moduleName: 'Controls/treeGrid:TreeGridTableHeader',
     _instancePrefix: 'tree-grid-table-header-',

@@ -320,7 +320,7 @@ export default class TreeGridCollection<
         if (this.getFooter()) {
             this.getFooter().setDisplayExpanderPadding(newValue);
         }
-        if (this.hasHeader()) {
+        if (this.hasHeader() && this.getHeader()['Controls/treeGrid:TreeGridHeader']) {
             this.getHeader().setDisplayExpanderPadding(newValue);
         }
     }
