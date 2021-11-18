@@ -230,6 +230,7 @@ abstract class BaseController implements IPopupController {
             width: item.popupOptions.width || containerSizes.width,
             height: item.popupOptions.height || containerSizes.height
         };
+        item.sizes.margins = this._getMargins(item);
         return item.sizes;
     }
 

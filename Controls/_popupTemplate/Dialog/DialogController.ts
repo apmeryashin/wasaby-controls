@@ -150,12 +150,33 @@ class DialogController extends BaseController {
     }
 
     resizeInner(item: IDialogItem, container: HTMLElement): boolean {
+        // Для актуальных размеров нужно снять старые значения
+        const maxHeight = container.style.maxHeight;
+        const height = container.style.height;
+        container.style.maxHeight = '';
+        container.style.height = '';
+        item.sizes = this._getPopupSizes(item, container);
+
+        // Если есть таргет и не было смещения через dnd, то позиционируемся через стики стратегию
+        if (item.popupOptions.target) {
+            if (!item.fixPosition) {
+                this._calcStickyCoords(item, item.sizes);
+            } else {
+                const windowData = this._getRestrictiveContainerSize(item);
+                delete item.position.height; // при драге размеры не пересчитываются. нам же нужно взять с контейнера
+                item.position = DialogStrategy.getPosition(windowData, item.sizes, item);
+            }
+            container.style.maxHeight = item.position.maxHeight + 'px';
+            container.style.height = item.position.height + 'px';
+            return true;
+        }
+
+        container.style.maxHeight = maxHeight;
+        container.style.height = height;
+
         /* Если задан resizeDirection не перепозиционируем,
            т.к. это опция отвечает как раз за ресайз без изменения позиции */
         if (item.popupOptions?.resizeDirection) {
-
-            // Обновляем только размеры попапа
-            item.sizes = this._getPopupSizes(item, container);
             return false;
         }
         return super.resizeInner(item, container);
@@ -191,22 +212,19 @@ class DialogController extends BaseController {
     }
 
     private _prepareConfig(item: IDialogItem, sizes: IPopupSizes): void {
-        // After popup will be transferred to the synchronous change of coordinates,
-        // we need to return the calculation of the position with the keyboard.
-        // Positioning relative to body
-        if (!item.sizes) {
-            item.sizes = {};
-        }
-        item.sizes.margins = this._getMargins(item);
         // Если есть таргет и не было смещения через dnd, то позиционируемся через стики стратегию
         if (item.popupOptions.target && !item.fixPosition) {
-            const targetCoords = this._getTargetCoords(item, sizes);
-            const popupConfig = getStickyConfig(item, sizes);
-            item.position = StickyStrategy.getPosition(popupConfig, targetCoords, this._getTargetNode(item));
+            this._calcStickyCoords(item, sizes);
         } else {
             const windowData = this._getRestrictiveContainerSize(item);
             item.position = DialogStrategy.getPosition(windowData, sizes, item);
         }
+    }
+
+    private _calcStickyCoords(item: IDialogItem, sizes: IPopupSizes = {}): void {
+        const targetCoords = this._getTargetCoords(item, sizes);
+        const popupConfig = getStickyConfig(item, sizes);
+        item.position = StickyStrategy.getPosition(popupConfig, targetCoords, this._getTargetNode(item));
     }
 
     private _getPopupCoords(
