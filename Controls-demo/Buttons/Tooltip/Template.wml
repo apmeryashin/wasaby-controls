@@ -6,7 +6,7 @@
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">auto tooltip</div>
-        <Controls.buttons:Button attr:class="controlsDemo_fixedWidth100" caption="Very long long caption" buttonStyle="primary"/>{{' '}}
+        <Controls.buttons:Button attr:class="controlsDemo_fixedWidth100" caption="Very long long caption" buttonStyle="primary" attr:data-qa="controlsDemo-Buttons_Tooltip__autolong"/>{{' '}}
         <Controls.buttons:Button attr:class="controlsDemo_fixedWidth100" caption="Caption" buttonStyle="secondary"/>
     </div>
 </div>
