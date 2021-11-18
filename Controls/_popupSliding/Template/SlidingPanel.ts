@@ -264,14 +264,13 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         const realHeightOffset = this._position === 'top' ? offsetY : -offsetY;
         const {
             scrollHeight: startScrollHeight,
-            contentHeight: startContentHeight
         } = this._dragStartHeightDimensions;
         const scrollContentOffset = contentHeight - startScrollHeight;
         const popupHeight = this._options.slidingPanelOptions.height;
 
         // Если при старте свайпа нет доступного контента для разворота, то не пытаемся что-то развернуть
         if (
-            popupHeight === startContentHeight &&
+            popupHeight === contentHeight &&
             popupHeight === startScrollHeight &&
             realHeightOffset > 0
         ) {
@@ -287,7 +286,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
                 то не учитываем разницу в скролле и контенте, т.к. шторка всё равно не будет сдвигаться,
                 А если пытаюся свернуть, то вызываем закрытие передавая текущий оффсет
              */
-            if (startContentHeight < startScrollHeight) {
+            if (contentHeight < startScrollHeight) {
                 offsetY = realHeightOffset > 0 ? 0 : offsetY;
             } else {
                 offsetY = this._position === 'top' ? scrollContentOffset : -scrollContentOffset;
