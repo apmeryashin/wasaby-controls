@@ -110,14 +110,23 @@
 .controls-CheckboxMarker__icon-subtract {
    fill: transparent;
 
-   &-checked {
+   &-checked_enabled {
       fill: var(--unaccented_border-color);
+   }
+
+   &-checked_disabled {
+      fill: var(--readonly_marker-box_border-color_checkbox);
    }
 }
 
-.controls-CheckboxMarker__icon-border {
+.controls-CheckboxMarker__icon-border_enabled {
    fill: transparent;
    stroke: var(--unaccented_border-color);
+}
+
+.controls-CheckboxMarker__icon-border_disabled {
+   fill: transparent;
+   stroke: var(--readonly_marker-box_border-color_checkbox);
 }
 
 .controls-CheckboxMarker__icon-border-state-true {
