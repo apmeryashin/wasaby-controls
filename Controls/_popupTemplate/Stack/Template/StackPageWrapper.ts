@@ -1,12 +1,11 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Stack/Template/StackPageWrapper/StackPageWrapper';
 import {getPopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
-import BaseController, {RIGHT_PANEL_WIDTH} from 'Controls/_popupTemplate/BaseController';
-import StackController from 'Controls/_popupTemplate/Stack/StackController';
+import {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
+import {default as StackController, IStackItem} from 'Controls/_popupTemplate/Stack/StackController';
 import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
 import {RegisterClass} from 'Controls/event';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import StackStrategy, {IStackItem} from '../StackStrategy';
 
 interface IPageTemplate extends IControlOptions, IPropStorageOptions {
     minWidth: number;
@@ -40,14 +39,16 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     protected _maxOffset: number;
     protected _canResize: boolean;
     protected _minWidth: number;
+    protected _maximized: boolean = false;
     private _resizeRegister: RegisterClass;
     private _offsetChanged: boolean;
     private _minSavedWidth: number;
     private _maxSavedWidth: number;
-    private _maximized: boolean = false;
+    private _rightPanelWidth: number;
 
     protected _beforeMount(options?: IPageTemplate, context?: object,
                            receivedState?: IReceivedState): void | Promise<IReceivedState> {
+        this._rightPanelWidth = getRightPanelWidth();
         this._setWorkSpaceWidth(receivedState?.width || options.workspaceWidth);
         this._setSavedSizes(receivedState);
         this._updateOffset(options);
@@ -84,12 +85,12 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     }
 
     protected _registerHandler(event: Event, registerType: string,
-                               component: Control, callback: Function, config): void {
+                               component: Control, callback: Function, config: object): void {
         this._resizeRegister.register(event, registerType, component, callback, config);
     }
 
     protected _unregisterHandler(event: Event, registerType: string,
-                                 component: Control, config): void {
+                                 component: Control, config: object): void {
         this._resizeRegister.unregister(event, registerType, component, config);
     }
 
@@ -126,7 +127,7 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         );
     }
 
-    private _generateControllerItem(): object {
+    private _generateControllerItem(): Partial<IStackItem> {
         return {
             minSavedWidth: this._minSavedWidth,
             maxSavedWidth: this._maxSavedWidth,
@@ -160,9 +161,9 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     private _setWorkSpaceWidth(width: number, withRightPanel: boolean = true): void {
         // Ширина складывается из установленной ширины + ширины правой панели
         if (!withRightPanel) {
-            width -= RIGHT_PANEL_WIDTH;
+            width -= this._rightPanelWidth;
         }
-        this._workspaceWidth = width ? (width + RIGHT_PANEL_WIDTH) : undefined;
+        this._workspaceWidth = width ? (width + this._rightPanelWidth) : undefined;
         this._templateWorkSpaceWidth = width;
     }
 
