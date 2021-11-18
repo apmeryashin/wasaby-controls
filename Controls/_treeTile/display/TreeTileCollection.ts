@@ -48,6 +48,7 @@ export default class TreeTileCollection<
     protected _$folderWidth: number;
 
     readonly SupportExpand: boolean = false;
+    readonly SupportNodeFooters: boolean = false;
 
     constructor(options: ITreeTileCollectionOptions<S, T>) {
         super(options);
