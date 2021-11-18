@@ -5243,7 +5243,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         return cancelEditPromise.then(() => {
             if (!this._destroyed) {
-                return this._reload(this._options, sourceConfig, false);
+                // Не дожидаемся применения изменений в модель после обновления списка,
+                // если перезагрузка вызвана в момент завершения редактирования.
+                const isEndEditingProcessing = this.isEditing() &&
+                                               this._getEditInPlaceController().isEndEditProcessing();
+                return this._reload(this._options, sourceConfig, isEndEditingProcessing);
             }
         });
     }
