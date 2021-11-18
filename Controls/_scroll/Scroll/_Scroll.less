@@ -159,3 +159,11 @@
    linear-gradient(to bottom, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll)),
    linear-gradient(to top, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll));
 }
+
+// Класс для css теней скролл контейнера в блоке с контрастным фоном
+.controls-Scroll__background-Shadow_style-contrast {
+   background-image: linear-gradient(var(--contrast_background-color) 25%, rgba(255, 255, 255, 0)),
+   linear-gradient(rgba(255, 255, 255, 0), var(--contrast_background-color) 75%),
+   linear-gradient(to bottom, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll)),
+   linear-gradient(to top, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll));
+}
