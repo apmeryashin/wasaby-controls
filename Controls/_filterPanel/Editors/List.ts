@@ -145,7 +145,13 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _markedKey: string|number;
     protected _expandedItems: TKey[] = [];
 
-    protected _beforeMount(options: IListEditorOptions): void {
+    protected _beforeMount(options: IListEditorOptions): void|Promise<RecordSet> {
+        const {sourceController} = options;
+
+        this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
+        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
+        this._onCollectionChange = this._onCollectionChange.bind(this);
+
         this._selectedKeys = options.propertyValue;
         this._setMarkedKey(this._selectedKeys, options);
         this._setColumns(options);
@@ -153,17 +159,14 @@ class ListEditor extends Control<IListEditorOptions> {
         this._navigation = this._getNavigation(options);
         this._itemActions = this._getItemActions(options.historyId);
 
-        if (options.sourceController && this._filter) {
-            options.sourceController.setFilter(this._filter);
-        }
-
         if (options.expandedItems) {
             this._expandedItems = options.expandedItems;
         }
 
-        this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
-        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
-        this._onCollectionChange = this._onCollectionChange.bind(this);
+        if (sourceController && !isEqual(sourceController.getFilter(), this._filter)) {
+            sourceController.setFilter(this._filter);
+            return sourceController.reload() as Promise<RecordSet>;
+        }
     }
 
     protected _afterMount(): void {
@@ -174,14 +177,15 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
+        const {propertyValue, sourceController} = options;
         const valueChanged =
-            !isEqual(options.propertyValue, this._options.propertyValue) &&
-            !isEqual(options.propertyValue, this._selectedKeys);
+            !isEqual(propertyValue, this._options.propertyValue) &&
+            !isEqual(propertyValue, this._selectedKeys);
         const filterChanged = !isEqual(options.filter, this._options.filter);
         const displayPropertyChanged = options.displayProperty !== this._options.displayProperty;
         const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
-            this._selectedKeys = options.propertyValue;
+            this._selectedKeys = propertyValue;
             this._setColumns(options);
             this._navigation = this._getNavigation(options);
         }
@@ -192,12 +196,12 @@ class ListEditor extends Control<IListEditorOptions> {
             this._setMarkedKey(this._selectedKeys, options);
         }
 
-        if (options.sourceController && filterChanged) {
-            options.sourceController.updateOptions({
+        if (sourceController && filterChanged) {
+            sourceController.updateOptions({
                 ...options,
                 filter: this._filter
             });
-            options.sourceController.reload();
+            sourceController.reload();
         }
     }
 
