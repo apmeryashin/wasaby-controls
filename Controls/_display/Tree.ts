@@ -189,6 +189,8 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  * @author Авраменко А.С.
  */
 export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>> extends Collection<S, T> {
+    readonly SupportNodeFooters: boolean = true;
+
     /**
      * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится
      * по алгоритму Adjacency List (список смежных вершин). Также требуется задать {@link keyProperty}
@@ -380,10 +382,12 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             this._recountHasNode();
         }
 
-        this.appendStrategy(this.getNodeFooterStrategyCtor(), {
-            nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback,
-            nodeFooterModule: this._nodeFooterModule
-        });
+        if (this.SupportNodeFooters) {
+            this.appendStrategy(this.getNodeFooterStrategyCtor(), {
+                nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback,
+                nodeFooterModule: this._nodeFooterModule
+            });
+        }
     }
 
     destroy(): void {
