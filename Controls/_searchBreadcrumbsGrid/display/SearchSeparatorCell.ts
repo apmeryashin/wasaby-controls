@@ -18,7 +18,7 @@ export default class SearchSeparatorCell extends GridCell<string, SearchSeparato
    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
       let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover, templateHoverBackgroundStyle);
 
-      if (!this._$owner.hasMultiSelectColumn()) {
+      if (!this._$owner.shouldDisplayMultiSelectTemplate()) {
          classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}`;
       }
 

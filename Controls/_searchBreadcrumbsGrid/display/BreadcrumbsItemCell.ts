@@ -58,7 +58,7 @@ export default class BreadcrumbsItemCell<S extends Model, TOwner extends Breadcr
       if (this.isFirstColumn() || this.getOwner().hasMultiSelectColumn() && this.getColumnIndex() === 1) {
          let classes = 'controls-Grid__row-cell__content controls-Grid__row-cell__content_colspaned ';
 
-         if (!this.getOwner().hasMultiSelectColumn()) {
+         if (!this.getOwner().shouldDisplayMultiSelectTemplate()) {
             classes += `controls-Grid__cell_spacingFirstCol_${this.getOwner().getLeftPadding()} `;
          }
 

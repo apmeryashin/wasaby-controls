@@ -52,6 +52,16 @@
                     <ws:multiSelectTemplate>
                         <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" />
                     </ws:multiSelectTemplate>
+                    <ws:beforeContentTemplate>
+                        <ws:if data="{{
+                            (item || itemData).shouldDisplayMultiSelectTemplate() &&
+                            (item || itemData).getEditingConfig() &&
+                            (item || itemData).getEditingConfig().mode === 'cell' &&
+                            gridColumn._$isFirstDataCell
+                            }}">
+                            <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" />
+                        </ws:if>
+                    </ws:beforeContentTemplate>
                     <ws:afterContentTemplate>
                         <!-- Стрелка редактирования -->
                         <ws:if data="{{ afterContentTemplate.shouldDisplayEditArrow && editArrowTemplate }} ">

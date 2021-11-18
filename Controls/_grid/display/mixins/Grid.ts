@@ -566,7 +566,9 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     hasMultiSelectColumn(): boolean {
-        return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
+        return this.getMultiSelectVisibility() !== 'hidden' &&
+               this.getMultiSelectPosition() !== 'custom' &&
+               this.getEditingConfig()?.mode !== 'cell';
     }
 
     setColumnScroll(columnScroll: boolean) {

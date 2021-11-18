@@ -5104,10 +5104,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (canEditByClick) {
             e.stopPropagation();
             this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
-            const hasCheckboxes =
-                this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
 
-            this._beginEdit({ item }, { columnIndex: columnIndex + hasCheckboxes }).then((result) => {
+            this._beginEdit({ item }, { columnIndex: columnIndex + +this._hasCheckBoxColumn() }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
@@ -5400,10 +5398,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // В публичном API поьзователь указывает индекс колонки из конфигурации, не зная про множественный выбор.
         // Модель строки работает по индексам своих внутренних колонок (Cell), к которых есть колонка-чекбокс.
         // FIXME: Не должно быть в BaseControl, унести в GridControl.
-        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
         return this._beginEdit(userOptions, {
             shouldActivateInput: userOptions?.shouldActivateInput,
-            columnIndex: (userOptions?.columnIndex || 0) + hasCheckboxes
+            columnIndex: (userOptions?.columnIndex || 0) + +this._hasCheckBoxColumn()
         });
     }
 
@@ -5414,12 +5411,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // В публичном API поьзователь указывает индекс колонки из конфигурации, не зная про множественный выбор.
         // Модель строки работает по индексам своих внутренних колонок (Cell), к которых есть колонка-чекбокс.
         // FIXME: Не должно быть в BaseControl, унести в GridControl.
-        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
         return this._beginAdd(userOptions, {
             addPosition: userOptions?.addPosition || this._getEditingConfig().addPosition,
             targetItem: userOptions?.targetItem,
             shouldActivateInput: userOptions?.shouldActivateInput,
-            columnIndex: (userOptions?.columnIndex || 0) + hasCheckboxes
+            columnIndex: (userOptions?.columnIndex || 0) + +this._hasCheckBoxColumn()
         });
     }
 
@@ -5612,7 +5608,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let columnIndex;
         let next = editingItem;
         let shouldAdd;
-        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
+        const hasCheckboxes = this._hasCheckBoxColumn();
 
         if (eventOptions.isShiftKey) {
             this._continuationEditingDirection = EDIT_IN_PLACE_CONSTANTS.PREV_COLUMN;
@@ -6015,6 +6011,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     isAllSelected(): boolean {
         return _private.getSelectionController(this)?.isAllSelected();
+    }
+
+    private _hasCheckBoxColumn(options = this._options): boolean {
+        return options.multiSelectVisibility !== 'hidden' &&
+               options.multiSelectPosition !== 'custom' &&
+               this._getEditingConfig(options).mode !== 'cell';
     }
 
     // region move
@@ -7134,10 +7136,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // endregion
 
     _getFooterSpacingClasses(options): string {
-        const hasCheckboxes = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
-
         const paddingClassName = `controls__BaseControl__footer-${options.style}__paddingLeft_`;
-        if (hasCheckboxes) {
+        if (this._hasCheckBoxColumn(options)) {
             paddingClassName += 'withCheckboxes';
         } else {
             paddingClassName += (options.itemPadding?.left?.toLowerCase() || 'default');
