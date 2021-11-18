@@ -186,7 +186,7 @@ define(
             let ddl = getDropdown(config);
             ddl.openMenu = () => { isOpened = true; };
 
-            const event = { nativeEvent: { button: 2 } };
+            const event = { nativeEvent: { button: 2 }, stopPropagation: () => {} };
             ddl._handleMouseDown(event);
             assert.isFalse(isOpened);
 
