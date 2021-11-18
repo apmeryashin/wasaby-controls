@@ -40,19 +40,60 @@ describe('Controls/_multiselection/Controller', () => {
       });
    });
 
-   it('updateOptions', () => {
-      model =  new Collection({
-         collection: items,
-         keyProperty: 'id'
-      });
+   describe('updateOptions', () => {
+      it('update model state when changed root', () => {
+         const model = new Tree({
+            collection: new RecordSet({
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: ListData.getItems()
+            }),
+            root: new Model({ rawData: { id: 2 }, keyProperty: ListData.KEY_PROPERTY }),
+            keyProperty: ListData.KEY_PROPERTY,
+            parentProperty: ListData.PARENT_PROPERTY,
+            nodeProperty: ListData.NODE_PROPERTY,
+            hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY
+         });
 
-      controller.updateOptions({
-         model,
-         strategyOptions: { model }
-      });
+         strategy = new TreeSelectionStrategy({
+            model,
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: 2,
+            entryPath: [],
+            selectionType: 'all'
+         });
 
-      assert.equal(controller._model, model);
-      assert.deepEqual(controller._strategy._model, model);
+         controller = new SelectionController({
+            model,
+            strategy,
+            selectedKeys: [],
+            excludedKeys: []
+         });
+
+         controller.setSelection({ selected: [2], excluded: [2] });
+         model.setRoot(new Model({ rawData: { id: null }, keyProperty: ListData.KEY_PROPERTY }));
+
+         controller.updateOptions({
+            model,
+            rootId: null,
+            selectionType: 'all',
+            strategyOptions: {
+               model,
+               selectionType: 'all',
+               rootId: null,
+               selectDescendants: true,
+               selectAncestors: true
+            }
+         });
+
+         assert.isNull(model.getItemBySourceKey(1).isSelected());
+         assert.isNull(model.getItemBySourceKey(2).isSelected());
+         assert.isTrue(model.getItemBySourceKey(3).isSelected());
+         assert.isTrue(model.getItemBySourceKey(4).isSelected());
+         assert.isFalse(model.getItemBySourceKey(5).isSelected());
+         assert.isFalse(model.getItemBySourceKey(6).isSelected());
+         assert.isFalse(model.getItemBySourceKey(7).isSelected());
+      });
    });
 
    describe('toggleItem', () => {
