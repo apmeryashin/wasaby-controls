@@ -3,6 +3,7 @@ import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {ColumnsCollection as Collection, ColumnsCollectionItem as CollectionItem} from 'Controls/columns';
 import ColumnsDrag from 'Controls/_columns/display/itemsStrategy/ColumnsDrag';
+import TreeDrag from 'Controls/_display/itemsStrategy/TreeDrag';
 
 describe('Controls/columns/display/Drag/Collection/AvatarItemColumn', () => {
     let model;
@@ -88,5 +89,11 @@ describe('Controls/columns/display/Drag/Collection/AvatarItemColumn', () => {
         };
         model.setDragPosition(newPosition);
         assert.equal(strategy.avatarItem.getColumn(), 1);
+    });
+
+    it('should set parent for dragged item avatar', () => {
+        model.setDraggedItems(model.getItemBySourceKey(3), [3]);
+        const strategy = model.getStrategyInstance(ColumnsDrag);
+        assert.equal(strategy.avatarItem.getParent(), model.getRoot());
     });
 });
