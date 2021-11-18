@@ -52,6 +52,8 @@ export default class TreeTileCollection<
     constructor(options: ITreeTileCollectionOptions<S, T>) {
         super(options);
 
+        this.removeStrategy(this.getNodeFooterStrategyCtor());
+
         // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новые коллекции.
         //  Если сразу в Tree положим, то все разломаем
         this.addFilter(
