@@ -425,7 +425,10 @@ export default class Explorer extends Control<IExplorerOptions> {
             } else {
                 this._setViewModeSync(this._pendingViewMode, cfg);
             }
-        } else {
+        } else if (VIEW_MODEL_CONSTRUCTORS[cfg.viewMode]) {
+            // Применяем опции только если уже загружен текущий viewMode, иначе в момент попадания в данную точку
+            // мы уже загружаем viewMode и _applyNewVisualOptions будет вызван в каллбеке после его загрузки
+            // https://online.sbis.ru/opendoc.html?guid=2785c4f9-f339-4536-b531-b59e0890d894
             this._applyNewVisualOptions();
         }
     }
