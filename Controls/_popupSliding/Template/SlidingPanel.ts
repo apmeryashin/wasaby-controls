@@ -6,6 +6,11 @@ import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISl
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {detection} from 'Env/Env';
 
+enum DRAG_DIRECTION {
+    TOP = 'top',
+    BOTTOM = 'bottom'
+}
+
 /**
  * Интерфейс для шаблона попапа-шторки.
  *
@@ -238,9 +243,12 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
                 contentHeight: this._getCustomContentHeight()
             };
         }
-        this._notify('popupDragStart', [
-            this._getDragOffsetWithOverflowChecking(offset)
-        ], {bubbling: true});
+        const dragOffset = this._getDragOffsetWithOverflowChecking(offset);
+        this._notify('popupDragStart', [dragOffset], {bubbling: true});
+
+        // dragstart для проикладных программистов, чтобы они могли как-то отреагировать на драг и изменить контент
+        const direction = offset.y > 0 ? DRAG_DIRECTION.BOTTOM : DRAG_DIRECTION.TOP;
+        this._notify('dragStart', [direction, dragOffset]);
     }
 
     protected _notifyDragEnd(): void {
