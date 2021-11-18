@@ -98,6 +98,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--link_hover_text-color_inline': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_hover_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_hover_icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--unaccented_same_background-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.2'),
             '--pale_contrast_background-color': ZenWrapper.getColorWithOpacity(dominantRGB, '0.6'),
             '--pale_border-color': 'transparent',
             '--pale_hover_contrast_background-color': ZenWrapper.getColorWithOpacity(dominantRGB, '0.8'),
