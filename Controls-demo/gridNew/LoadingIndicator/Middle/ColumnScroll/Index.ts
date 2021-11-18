@@ -5,10 +5,44 @@ import { IColumn, IHeaderCell } from 'Controls/grid';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 import {slowDownSource} from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
 
-export default class extends Control {
-    protected _template: TemplateFunction = Template;
-    protected _viewSource: Memory;
-    protected _header: IHeaderCell[] = [
+function getColumnsWithScroll(): IColumn[] {
+    return [
+        {
+            displayProperty: 'number',
+            width: '40px'
+        },
+        {
+            displayProperty: 'country',
+            width: '300px'
+        },
+        {
+            displayProperty: 'capital',
+            width: '700px',
+            compatibleWidth: '98px'
+        },
+        {
+            width: '200px'
+        },
+        {
+            displayProperty: 'population',
+            width: '700px',
+            compatibleWidth: '100px'
+        },
+        {
+            displayProperty: 'square',
+            width: '700px',
+            compatibleWidth: '83px'
+        },
+        {
+            displayProperty: 'populationDensity',
+            width: '700px',
+            compatibleWidth: '175px'
+        }
+    ];
+}
+
+function getHeaderWithColumnScroll(): IHeaderCell[] {
+    return [
         {
             caption: '#',
             startRow: 1,
@@ -75,7 +109,10 @@ export default class extends Control {
             endColumn: 8
         }
     ];
-    protected _columns: IColumn[] = [
+}
+
+function getColumns(): IColumn[] {
+    return [
         {
             displayProperty: 'number',
             width: '40px'
@@ -86,31 +123,38 @@ export default class extends Control {
         },
         {
             displayProperty: 'capital',
-            width: '700px',
-            compatibleWidth: '98px'
-        },
-        {
-            width: '200px'
-        },
-        {
-            displayProperty: 'population',
-            width: '700px',
-            compatibleWidth: '100px'
-        },
-        {
-            displayProperty: 'square',
-            width: '700px',
-            compatibleWidth: '83px'
-        },
-        {
-            displayProperty: 'populationDensity',
-            width: '700px',
-            compatibleWidth: '175px'
+            width: '300px'
         }
     ];
+}
+
+function getHeader(): IHeaderCell[] {
+    return [
+        {
+            caption: '#',
+            startColumn: 1,
+            endColumn: 2
+        },
+        {
+            caption: 'Страна',
+            startColumn: 2,
+            endColumn: 3
+        },
+        {
+            caption: 'Столица',
+            startColumn: 3,
+            endColumn: 4
+        }
+    ];
+}
+
+export default class extends Control {
+    protected _template: TemplateFunction = Template;
+    protected _viewSource: Memory;
+    protected _header: IHeaderCell[] = getHeaderWithColumnScroll();
+    protected _columns: IColumn[] = getColumnsWithScroll();
     protected _selectedKeys: number[] = [];
-    protected _itemsDragNDrop: boolean = true;
-    protected _dragScrolling: boolean = true;
+    protected _columnScroll: boolean = true;
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -120,8 +164,20 @@ export default class extends Control {
     }
 
     protected _reloadList(): void {
-        slowDownSource(this._viewSource, 4000);
+        slowDownSource(this._viewSource, 5000);
         this._children.list.reload();
+    }
+
+    protected _switchColumnScroll(): void {
+        this._columnScroll = !this._columnScroll;
+
+        if (this._columnScroll) {
+            this._columns = getColumnsWithScroll();
+            this._header = getHeaderWithColumnScroll();
+        } else {
+            this._columns = getColumns();
+            this._header = getHeader();
+        }
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
