@@ -3,7 +3,7 @@ import {RecordSet} from 'Types/collection';
 import {NewSourceController} from 'Controls/dataSource';
 import {Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
-import {IHierarchyOptions, ISearchOptions, TKey, ISearchValueOptions} from 'Controls/interface';
+import {IHierarchyOptions, ISearchOptions, TKey, ISearchValueOptions, INavigationOptions, INavigationSourceConfig} from 'Controls/interface';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import * as getSwitcherStrFromData from 'Controls/_search/Misspell/getSwitcherStrFromData';
 import {factory as chainFactory} from 'Types/chain';
@@ -13,7 +13,8 @@ type TViewMode = 'search' | 'tile' | 'table' | 'list';
 export interface ISearchControllerOptions extends ISearchOptions,
    IHierarchyOptions,
    IHierarchySearchOptions,
-   ISearchValueOptions {
+   ISearchValueOptions,
+   INavigationOptions<INavigationSourceConfig> {
    sourceController?: NewSourceController;
    root?: TKey;
    viewMode?: TViewMode;
