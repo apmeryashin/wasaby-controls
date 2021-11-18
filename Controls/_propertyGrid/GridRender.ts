@@ -117,7 +117,7 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     }
 
     private _getPreviousItemIndex(item: PropertyGridItem<Model>): number {
-        return this._getItemIndex(this._options.listModel.getPrevious(item));
+        return this._getItemIndex(item) - 1;
     }
 
     protected _propertyValueChanged(e: SyntheticEvent<Event>, item: Model, value: Record<string, any>): void {
