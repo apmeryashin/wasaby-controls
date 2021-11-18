@@ -1201,6 +1201,49 @@ describe('Controls/suggest', () => {
             inputController._beforeUpdate(options);
             assert.ok(!inputController._searchValue);
          });
+
+         it('navigation is updated', async () => {
+            const navigation = {
+               source: 'page',
+               view: 'page',
+               sourceConfig: {
+                  pageSize: 1,
+                  page: 0,
+                  hasMore: false
+               }
+            };
+            let options = {
+               suggestState: false,
+               value: 'newValue',
+               trim: true,
+               searchParam: 'title',
+               minSearchLength: 3,
+               source: new Memory({
+                  data: [
+                     {
+                        id: 0,
+                        title: 'sasha'
+                     },
+                     {
+                        id: 1,
+                        title: 'sasha'
+                     }
+                  ]
+               })
+            };
+
+            const inputController = getComponentObject(options);
+            await inputController._beforeMount(options);
+            inputController.saveOptions(options);
+            const searchController = await inputController._getSearchController();
+
+            options = {...options};
+            options.navigation = navigation;
+            inputController._beforeUpdate(options);
+
+            const items = await searchController.search('sasha');
+            assert.ok(items.getCount() === 1);
+         });
       });
 
       it('PrefetchProxy source should became to original source type', async () => {

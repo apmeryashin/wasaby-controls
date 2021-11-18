@@ -150,6 +150,8 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
       this._onDataLoad = this._onDataLoad.bind(this);
       this._onDataLoadError = this._onDataLoadError.bind(this);
+      this._dataLoadStart = this._dataLoadStart.bind(this);
+      this._updateBreadcrumbsFromSourceController = this._updateBreadcrumbsFromSourceController.bind(this);
       this._errorController = options.errorController || new ErrorController({});
       this._loadToDirectionRegister = new RegisterClass({register: 'loadToDirection'});
 
@@ -277,12 +279,17 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._fixRootForMemorySource(options);
       // Подпишемся на изменение данных хлебных крошек для того, что бы если пользователь
       // руками меняет path в RecordSet то эти изменения долетели до контролов
-      sourceController.subscribe('breadcrumbsDataChanged', () => {
-         this._updateBreadcrumbsFromSourceController();
-      });
-      sourceController.subscribe('dataLoadError', this._onDataLoadError);
-      sourceController.subscribe('dataLoad', this._onDataLoad);
-      sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
+      this._toggleSourceControllerEvents(true);
+   }
+
+   private _toggleSourceControllerEvents(subscribe: boolean): void {
+      const methodName = subscribe ? 'subscribe' : 'unsubscribe';
+      const sourceController = this._sourceController;
+
+      sourceController[methodName]('breadcrumbsDataChanged', this._updateBreadcrumbsFromSourceController);
+      sourceController[methodName]('dataLoadError', this._onDataLoadError);
+      sourceController[methodName]('dataLoad', this._onDataLoad);
+      sourceController[methodName]('dataLoadStarted', this._dataLoadStart);
    }
 
    _updateWithoutSourceControllerInOptions(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
@@ -400,7 +407,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          this._loadToDirectionRegister = null;
       }
       if (this._sourceController) {
-         this._sourceController.unsubscribe('dataLoad', this._onDataLoad);
+         this._toggleSourceControllerEvents(false);
          if (!this._options.sourceController) {
             this._sourceController.destroy();
          }
