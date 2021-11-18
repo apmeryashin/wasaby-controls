@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="controlsDemo_fixedWidth350 controlsDemo__ml3">
+    <div class="controlsDemo_fixedWidth350 controlsDemo__ml3" attr:data-qa="controlsDemo__not_empty_readOnly_false">
         <div>Кат появится сразу, если при инициализации передать в него непустой value</div>
         <div>readOnly={{ _readOnly ? 'true' : 'false' }}</div>
         <div class="controlsDemo__flex">
