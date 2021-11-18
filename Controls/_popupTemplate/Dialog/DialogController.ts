@@ -211,13 +211,6 @@ class DialogController extends BaseController {
     }
 
     private _prepareConfig(item: IDialogItem, sizes: IPopupSizes): void {
-        // After popup will be transferred to the synchronous change of coordinates,
-        // we need to return the calculation of the position with the keyboard.
-        // Positioning relative to body
-        if (!item.sizes) {
-            item.sizes = {};
-        }
-        item.sizes.margins = this._getMargins(item);
         // Если есть таргет и не было смещения через dnd, то позиционируемся через стики стратегию
         if (item.popupOptions.target && !item.fixPosition) {
             this._calcStickyCoords(item, sizes);
