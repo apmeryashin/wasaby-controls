@@ -1,7 +1,6 @@
 <ws:partial template="{{_options.content}}"
             scope="{{_options}}"
             hasItemWithImage="{{_hasItemWithImage}}"
-            itemsReadyCallback="{{_itemsReadyCallback}}"
             columns="{{ _getPatchedColumns() }}">
    <ws:itemTemplate>
       <ws:partial scope="{{itemTemplate}}"
