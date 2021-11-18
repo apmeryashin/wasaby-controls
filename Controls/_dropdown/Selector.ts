@@ -196,6 +196,7 @@ export default class Selector extends BaseDropdown {
          return;
       }
       this.openMenu();
+      event.stopPropagation();
    }
 
    openMenu(popupOptions?: IStickyPopupOptions): void {
