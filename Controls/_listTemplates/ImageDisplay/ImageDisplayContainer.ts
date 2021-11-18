@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
-import {RecordSet} from 'Types/collection';
+import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
 
 import {TColumns} from 'Controls/grid';
@@ -11,10 +11,8 @@ import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 import {Model} from 'Types/entity';
 import {TreeItem} from 'Controls/display';
-import {Direction} from 'Controls/interface';
 
 export interface IImageDisplayContainerOptions extends IControlOptions {
-    itemsReadyCallback: (items: RecordSet) => void;
     imageProperty: string;
     imagePosition: string;
     imageViewMode: string;
@@ -61,6 +59,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     protected _template: TemplateFunction = Template;
 
     private _columns: TColumns;
+    private _patchedColumns: TColumns;
 
     /**
      * @name Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer#itemTemplate
@@ -86,26 +85,64 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
      * @cfg {String} Режим отображения изображения для узла, если контейнер оборачивает дерево.
      */
     private _nodeImageViewMode: string;
+    private _imageProperty: string;
     private _hasItemWithImage: boolean = false;
     private _items: RecordSet;
 
     constructor(options: IImageDisplayContainerOptions, context?: object) {
         super(options, context);
-        this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
-        this._dataLoadCallback = this._dataLoadCallback.bind(this);
+        this._onCollectionChange = this._onCollectionChange.bind(this);
         this._onCollectionItemChange = this._onCollectionItemChange.bind(this);
     }
 
     protected _beforeMount(options?: IImageDisplayContainerOptions, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._imagePosition = options.imagePosition;
-        this._imageViewMode = options.imageViewMode;
-        this._nodeImageViewMode = options.nodeImageViewMode;
-        this._columns = options.columns;
-        this._itemTemplate = options.itemTemplate;
-        this._tileItemTemplate = options.tileItemTemplate;
         if (!options.sourceController) {
             Logger.error('ImageDisplayContainer should be child of Browser or DataContainer', this);
         }
+        this._imagePosition = options.imagePosition;
+        this._imageViewMode = options.imageViewMode;
+        this._nodeImageViewMode = options.nodeImageViewMode;
+        this._itemTemplate = options.itemTemplate;
+        this._tileItemTemplate = options.tileItemTemplate;
+        this._imageProperty = options.imageProperty;
+        this._columns = options.columns;
+        this._updateItems(options.sourceController.getItems());
+    }
+
+    protected _beforeUpdate(options?: IImageDisplayContainerOptions, contexts?: any): void {
+        if (this._options.imagePosition !== options.imagePosition) {
+            this._imagePosition = options.imagePosition;
+        }
+        if (this._options.imageViewMode !== options.imageViewMode) {
+            this._imageViewMode = options.imageViewMode;
+        }
+        if (this._options.nodeImageViewMode !== options.nodeImageViewMode) {
+            this._nodeImageViewMode = options.nodeImageViewMode;
+        }
+        if (this._options.itemTemplate !== options.itemTemplate) {
+            this._itemTemplate = options.itemTemplate;
+        }
+        if (this._options.tileItemTemplate !== options.tileItemTemplate) {
+            this._tileItemTemplate = options.tileItemTemplate;
+        }
+
+        if (!isEqual(options.columns, this._options.columns)) {
+            this._columns = options.columns;
+            this._patchedColumns = null;
+        }
+        this._updateItems(this._options.sourceController.getItems());
+        if (options.imageProperty !== this._options.imageProperty) {
+            this._imageProperty = options.imageProperty;
+            this._resetHasItemWithImage();
+            this._updateDisplayImage(this._items, this._imageProperty);
+            if (!options.imageProperty) {
+                this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange, this._onCollectionChange);
+            }
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange, this._onCollectionChange);
     }
 
     /**
@@ -113,64 +150,42 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
      * Если текущее значение false, но в новых загруженных элементах вдруг стало true, нужно актуализировать.
      * @param items RecordSet, в котором мы ищем картинку.
      * @param imageProperty Свойство записи, в котором содержится картинка.
-     * @param isResetState Флаг, что данные перезагружаются (например, после reload, reloadItem,
-     * при первичной установке данных и при смене imageProperty).
      * @private
      */
-    private _updateDisplayImage(items: RecordSet, imageProperty: string, isResetState: boolean): void {
-        if (imageProperty && (isResetState || !this._hasItemWithImage)) {
-            const hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
-            if (hasItemWithImage) {
-                this._hasItemWithImage = hasItemWithImage;
+    private _updateDisplayImage(items: RecordSet, imageProperty: string): void {
+        if (imageProperty && !this._hasItemWithImage) {
+            const oldHasItemWithImage = this._hasItemWithImage;
+            this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
+            if (oldHasItemWithImage !== this._hasItemWithImage) {
+                this._patchedColumns = null;
             }
         }
     }
 
-    private _subscribeToCollectionChange(items, onCollectionItemChange) {
-        items.subscribe('oncollectionitemchange', onCollectionItemChange);
-    }
-
-    private _unsubscribeToCollectionChange(items, onCollectionItemChange) {
-        items.unsubscribe('oncollectionitemchange', onCollectionItemChange);
-    }
-
-    protected _beforeUpdate(options?: IImageDisplayContainerOptions, contexts?: any): void {
-        if (!isEqual(options.columns, this._options.columns)) {
-            this._columns = this._getPatchedColumns(options.columns);
-        }
-        if (options.imageProperty !== this._options.imageProperty) {
-            this._updateDisplayImage(this._items, options.imageProperty, true);
-            if (!options.imageProperty) {
-                this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange);
-            }
-        }
-    }
-
-    _beforeUnmount(): void {
-        this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange);
-    }
-
-    private _itemsReadyCallback(items: RecordSet): void {
-        this._items = items;
-        this._subscribeToCollectionChange(this._items, this._onCollectionItemChange);
-        this._updateDisplayImage(this._items, this._options.imageProperty, true);
-
-        if (this._options.itemsReadyCallback) {
-            this._options.itemsReadyCallback(items);
-        }
-    }
-
-    private _dataLoadCallback(items: RecordSet, direction: Direction): void {
-        if (!this._items) {
+    private _updateItems(items) {
+        if (this._items !== items) {
             this._items = items;
+            this._resetHasItemWithImage();
+            if (items) {
+                this._subscribeToCollectionChange(this._items, this._onCollectionItemChange, this._onCollectionChange);
+                this._updateDisplayImage(this._items, this._imageProperty);
+            }
         }
+    }
 
-        const isResetState = !direction;
-        this._updateDisplayImage(items, this._options.imageProperty, isResetState);
+    private _subscribeToCollectionChange(items, onCollectionItemChange, onCollectionChange) {
+        items.subscribe('oncollectionitemchange', onCollectionItemChange);
+        items.subscribe('oncollectionchange', onCollectionChange);
+    }
 
-        if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback(items, direction);
-        }
+    private _unsubscribeToCollectionChange(items, onCollectionItemChange, onCollectionChange) {
+        items.unsubscribe('oncollectionitemchange', onCollectionItemChange);
+        items.unsubscribe('oncollectionchange', onCollectionChange);
+    }
+
+    private _resetHasItemWithImage(): void {
+        this._hasItemWithImage = false;
+        this._patchedColumns = null;
     }
 
     private _onCollectionItemChange(event: EventObject,
@@ -180,7 +195,20 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         // Изменение элемента, поменяли _imageProperty в записи в RecordSet.
         if (this._options.imageProperty && typeof properties === 'object' &&
             this._options.imageProperty in properties) {
-            this._updateDisplayImage(this._items, this._options.imageProperty, false);
+            this._resetHasItemWithImage();
+            this._updateDisplayImage(this._items, this._imageProperty);
+        }
+    }
+
+    private _onCollectionChange(event: EventObject, action: string): void {
+        switch (action) {
+            case IObservable.ACTION_RESET:
+            case IObservable.ACTION_REMOVE:
+                this._resetHasItemWithImage();
+                this._updateDisplayImage(this._items, this._imageProperty);
+                break;
+            case IObservable.ACTION_ADD:
+                this._updateDisplayImage(this._items, this._imageProperty);
         }
     }
 
@@ -204,17 +232,22 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         return this._hasItemWithImage ? this._imagePosition : 'none';
     }
 
-    private _getPatchedColumns(columns: TColumns): TColumns {
-        let newColumns = columns;
-        if (columns) {
-            newColumns = object.clonePlain(columns);
-            newColumns.forEach((column) => {
+    private _getPatchedColumns(): TColumns {
+        if (!this._columns) {
+            return undefined;
+        }
+        if (!this._imageProperty) {
+            return this._columns;
+        }
+        if (!this._patchedColumns) {
+            this._patchedColumns = object.clonePlain(this._columns);
+            this._patchedColumns.forEach((column) => {
                 const templateOptions: { imageViewMode?: string } = column.templateOptions || {};
                 templateOptions.imageViewMode = this._hasItemWithImage ? templateOptions.imageViewMode : 'none';
                 column.templateOptions = templateOptions;
             });
         }
-        return newColumns;
+        return this._patchedColumns;
     }
 
     private static _hasImage(items: RecordSet, imageProperty: string): boolean {
