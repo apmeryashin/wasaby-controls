@@ -829,7 +829,14 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     protected _doScrollHandler(e: SyntheticEvent<null>, scrollParam: number|string, isVirtual: boolean): void {
+        // overflow scrolling на ipad мешает восстановлению скролла. Поэтому перед восстановлением его выключаем.
+        if (detection.isMobileIOS) {
+            this._setOverflowScrolling('hidden');
+        }
         this._doScroll(scrollParam, isVirtual);
+        if (detection.isMobileIOS) {
+            this._setOverflowScrolling('');
+        }
         e.stopPropagation();
     }
 
