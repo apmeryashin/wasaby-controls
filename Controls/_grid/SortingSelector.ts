@@ -323,7 +323,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
 
     private _getIcon(): string {
         if (this._currentIcon) {
-            return this._currentIcon + (this._currentParamName ? ('_' + this._orders[this._currentParamName]) : '');
+            return this._currentIcon + '_' + (this._currentParamName ? (this._orders[this._currentParamName]) : '');
         } else {
             if (this._currentParamName) {
                 return 'Controls/sortIcons:arrow_' + this._orders[this._currentParamName];
@@ -344,7 +344,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     }
 
     private _getIconSize(): string {
-        return this._nocaption ? this._options.iconSize : 's';
+        return this._nocaption ? (iconSizeMap[this._options.iconSize] || 'l') : 's';
     }
 
     private _getInlineHeight(): string {
