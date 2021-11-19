@@ -331,7 +331,9 @@ export default class Cell<
             // Если на списке есть скролл колонок или ячейка застикана, то ей надо выставить backgroundStyle
             // Сюда же попадаем, если backgroundColorStyle = default
             wrapperClasses += ` controls-Grid__row-cell_background_${backgroundColorStyle}`;
-        } else if (hasColumnScroll || this._$isSticked || this.getOwner().isMarked()) {
+        } else if (hasColumnScroll ||
+                   this._$isSticked ||
+                   (this.getOwner().isMarked() && this.getStyle() === 'master')) {
             wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
         }
         return wrapperClasses;
