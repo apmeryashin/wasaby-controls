@@ -370,6 +370,8 @@ export class Controller {
             // @ts-ignore
             target,
             templateOptions,
+            // Этот класс задаёт смещение для popup при расчёте его top/left так,
+            // чтобы иконка в заголовке меню совпадала с иконкой кнопки, по которой это меню открыли
             className: `controls-MenuButton_link_iconSize-medium_popup controls_popupTemplate_theme-${this._theme} controls_dropdownPopup_theme-${this._theme}`,
             closeOnOutsideClick: true,
             autofocus: false,
@@ -389,6 +391,8 @@ export class Controller {
                     vertical: 'top',
                     horizontal: 'right'
                 },
+                // Этот класс задаёт смещение для popup при расчёте его top/left так,
+                // чтобы кнопка закрытия меню совпадала с иконкой кнопки открытия меню
                 className: `controls-ItemActions__popup__list controls_popupTemplate_theme-${this._theme}`,
                 // @ts-ignore
                 nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
