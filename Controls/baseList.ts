@@ -75,6 +75,7 @@ export * from './_baseList/resources/utils/helpers';
 export {getItemsBySelection} from './_baseList/resources/utils/getItemsBySelection';
 export {default as InertialScrolling} from './_baseList/resources/utils/InertialScrolling';
 export {CssClassList, createClassListCollection} from './_baseList/resources/utils/CssClassList';
+export { moveItemsWithDialog } from './_baseList/resources/utils/MoveItemsUtil';
 //endregion
 
 //region controllers
