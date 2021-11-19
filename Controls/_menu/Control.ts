@@ -111,6 +111,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._stack = new StackOpener();
 
         if (options.sourceController) {
+            options.sourceController.setDataLoadCallback(this._updateAfterLoad.bind(this));
             const error = options.sourceController.getLoadError();
             if (error) {
                 this._processError(error);
@@ -189,6 +190,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     protected _beforeUnmount(): void {
+        if (this._options.sourceController) {
+            this._options.sourceController.setDataLoadCallback(null);
+        }
         if (this._options.searchValue) {
             // items dropdown/_Controller'a обновляются по ссылке.
             // если был поиск, то зануляем items, чтобы при след. открытии меню отображались все записи.
@@ -313,6 +317,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }
             }
         }
+    }
+
+    private _updateAfterLoad(items): void {
+        this._setButtonVisibleState(items, this._options);
     }
 
     private _getSelectionController(): SelectionController {
