@@ -103,11 +103,6 @@ export default class Selector extends BaseSelector<IDateSelectorOptions> {
         this._notify('valueChanged', [value]);
     }
 
-    protected _onResult(value: Date): void {
-        this._notify('valueChanged', [value]);
-        super._onResult(value);
-    }
-
     protected _rangeChangedHandler(event: SyntheticEvent, value: Date): void {
         super._notifyValueChanged(value);
     }
