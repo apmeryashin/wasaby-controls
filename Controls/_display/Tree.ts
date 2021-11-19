@@ -1439,7 +1439,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
 Object.assign(Tree.prototype, {
     '[Controls/_display/Tree]': true,
-    SupportNodeFooters: false,
+    SupportNodeFooters: true,
     _moduleName: 'Controls/display:Tree',
     _itemModule: 'Controls/display:TreeItem',
     _nodeFooterModule: 'Controls/display:NodeFooter',
