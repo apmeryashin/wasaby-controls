@@ -15,7 +15,6 @@ import fastUpdate from './FastUpdate';
 import {IPositionOrientation} from './StickyBlock/Utils';
 import SizeAndVisibilityObserver, {STACK_OPERATION} from "Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver";
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {goUpByControlTree} from 'UI/Focus';
 
 // @ts-ignore
 
@@ -706,27 +705,21 @@ class StickyHeaderController {
         return index === (srcArray.length - 1);
     }
 
-    private _getGeneralParentNode(container0: HTMLElement, container1: HTMLElement, callCounter: number = 0): Node {
-        const ctrlTreeOfContainer0 = goUpByControlTree(container0);
-        const ctrlTreeOfContainer1 = goUpByControlTree(container1);
+    private _getGeneralParentNode(header0: TRegisterEventData, header1: TRegisterEventData): Node {
+        let parentElementOfHeader0 = header0.inst.getHeaderContainer().parentElement;
+        const parentElementOfHeader1 = header1.inst.getHeaderContainer().parentElement;
+        while (parentElementOfHeader0 !== parentElementOfHeader1 && parentElementOfHeader0 !== document.body) {
+            parentElementOfHeader0 = parentElementOfHeader0.parentElement;
+        }
 
-        for (let i = 0; i < ctrlTreeOfContainer0.length; i++) {
-            if (ctrlTreeOfContainer0[i] === ctrlTreeOfContainer1[1]) {
-                return ctrlTreeOfContainer0[i];
+        if (parentElementOfHeader0 === document.body) {
+            const group0 = header0.inst.getHeaderContainer().closest('.controls-StickyHeader__isolatedGroup');
+            const group1 = header1.inst.getHeaderContainer().closest('.controls-StickyHeader__isolatedGroup');
+            if (group0 !== null && group1 !== null && group0  === group1) {
+                parentElementOfHeader0 = group0 as HTMLElement;
             }
         }
-
-        // У заголовка#1 дважды поднимемся выше по стэку родительских контролов (возьмем родительский контрол,
-        // если он не подошел и не является общим родителем для второго заголовка - возьмем родительский контрол этого
-        // контрола). Доходить у заголовка1 до body нельзя, т.к в скролл контейнере могут быть несколько независимых
-        // гридов со своими стикиблоками, которые не должны учитывать стикиблоки других гридов (т.е в таком случае
-        // общий предок будет скроллконтейнер, а должен быть грид)
-        if (callCounter === 1) {
-            return document.body;
-        } else {
-            callCounter++;
-            return this._getGeneralParentNode(container0, ctrlTreeOfContainer1[callCounter]._container, callCounter);
-        }
+        return parentElementOfHeader0;
     }
 
     private _updateTopBottomDelayed(): void {
@@ -767,11 +760,7 @@ class StickyHeaderController {
                             for (let j = i; j >= 0; j--) {
                                 prevHeader = this._headers[this._headersStack[position][j]];
                                 let size = this._getHeaderSize(header, position);
-                                const generalParentNode = this._getGeneralParentNode(
-                                    curHeader.inst.getHeaderContainer(),
-                                    prevHeader.inst.getHeaderContainer(),
-                                    0
-                                );
+                                const generalParentNode = this._getGeneralParentNode(curHeader, prevHeader);
                                 if (generalParentNode !== document.body) {
                                     if (position === 'top' || position === 'bottom') {
                                         // Сохраним высоты по которым рассчитали позицию заголовков,
