@@ -25,7 +25,8 @@ describe('Controls/grid/Display/Cell/backgroundColorStyle', () => {
         isEditing: () => false,
 
         // This setting changes behavior
-        hasColumnScroll: () => hasColumnScroll
+        hasColumnScroll: () => hasColumnScroll,
+        isMarked: () => false
     } as undefined as GridRow<Model>;
 
     beforeEach(() => {
