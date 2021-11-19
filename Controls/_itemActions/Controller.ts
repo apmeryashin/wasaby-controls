@@ -358,7 +358,7 @@ export class Controller {
             return;
         }
 
-        const target = isContextMenu ? null : this._cloneMenuTarget(clickEvent.target as HTMLElement);
+        const target = isContextMenu ? null : this._calculateTargetPoint(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(item, isActionMenu, parentAction, menuActions);
 
@@ -620,18 +620,11 @@ export class Controller {
      * Поэтому заменяем метод getBoundingClientRect так, чтобы он возвращал текущие координаты
      * @param realTarget
      */
-    private _cloneMenuTarget(realTarget: HTMLElement): HTMLElement {
+    private _calculateTargetPoint(realTarget: HTMLElement): {x: number, y: number} {
         const rect = realTarget.getBoundingClientRect();
-        // FIXME: Если отдать клон таргета, то возникает зацикливание при расчетах
-        //  https://online.sbis.ru/opendoc.html?guid=d462d4d2-17fe-41e1-9caf-b5087bc246f2
         return {
-            children: [],
-            getBoundingClientRect(): ClientRect {
-                return rect;
-            },
-            closest(): void {
-                return undefined;
-            }
+            x: rect.x,
+            y: rect.y
         };
     }
 
