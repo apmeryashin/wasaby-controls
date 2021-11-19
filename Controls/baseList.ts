@@ -20,7 +20,7 @@ export {IBaseGroupTemplate} from 'Controls/_baseList/interface/BaseGroupTemplate
 export {TCursor, TBackgroundColorStyle} from './_baseList/interface/BaseItemTemplate';
 export {ISiblingStrategy, ISiblingStrategyOptions} from 'Controls/_baseList/interface/ISiblingStrategy';
 export {IListViewOptions} from 'Controls/_baseList/ListView';
-export {IMovableOptions} from 'Controls/_baseList/interface/IMovableList';
+export {IMovableOptions, TBeforeMoveCallback} from 'Controls/_baseList/interface/IMovableList';
 //endregion
 
 //region templates
