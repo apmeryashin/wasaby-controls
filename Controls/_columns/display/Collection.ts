@@ -16,7 +16,6 @@ export default class Collection<
 > extends BaseCollection<S, T> {
     protected _$columnProperty: string;
     readonly SupportExpand: boolean = false;
-    readonly SupportNodeFooters: boolean = false;
     protected _dragStrategy: ColumnsDragStrategy<S, T> = ColumnsDragStrategy;
     protected _columnsStrategy: IColumnsStrategy;
     protected _addingColumnsCounter: number;
@@ -351,6 +350,7 @@ export default class Collection<
 
 Object.assign(Collection.prototype, {
     '[Controls/_columns/display/Collection]': true,
+    SupportNodeFooters: false,
     _moduleName: 'Controls/columns:ColumnsCollection',
     _itemModule: 'Controls/columns:ColumnsCollectionItem',
     // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
