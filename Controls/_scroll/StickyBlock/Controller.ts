@@ -725,6 +725,14 @@ class StickyHeaderController {
         while (parentElementOfHeader0 !== parentElementOfHeader1 && parentElementOfHeader0 !== document.body) {
             parentElementOfHeader0 = parentElementOfHeader0.parentElement;
         }
+
+        if (parentElementOfHeader0 === document.body) {
+            const group0 = header0.inst.getHeaderContainer().closest('.controls-StickyHeader__isolatedGroup');
+            const group1 = header1.inst.getHeaderContainer().closest('.controls-StickyHeader__isolatedGroup');
+            if (group0 !== null && group1 !== null && group0  === group1) {
+                parentElementOfHeader0 = group0 as HTMLElement;
+            }
+        }
         return parentElementOfHeader0;
     }
 
