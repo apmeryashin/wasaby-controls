@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/gridNew/EditInPlace/KeybordControl/KeybordControl';
-import * as EditingCellTmpl from 'wml!Controls-demo/gridNew/EditInPlace/KeybordControl/EditingCellTemplate';
+import * as Template from 'wml!Controls-demo/gridNew/EditInPlace/KeyboardControl/KeyboardControl';
+import * as EditingCellTmpl from 'wml!Controls-demo/gridNew/EditInPlace/KeyboardControl/EditingCellTemplate';
 import {IColumnRes} from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
 import {Editing} from 'Controls-demo/gridNew/DemoHelpers/Data/Editing';
 import {Memory} from 'Types/source';
@@ -67,6 +67,22 @@ export default class extends Control {
             ...this._editingConfig,
             mode
         };
+    }
+
+    _onToggleSequentialEditingMode(e, mode): void {
+        this._setSequentialEditingMode(mode);
+    }
+
+    _setSequentialEditingMode(mode): void {
+        if (mode) {
+            this._editingConfig = {
+                ...this._editingConfig,
+                sequentialEditingMode: mode
+            };
+        } else {
+            delete this._editingConfig.sequentialEditingMode;
+            this._editingConfig = {...this._editingConfig};
+        }
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
