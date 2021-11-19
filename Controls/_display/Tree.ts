@@ -185,7 +185,7 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  * @author Авраменко А.С.
  */
 export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>> extends Collection<S, T> {
-    readonly SupportNodeFooters: boolean = true;
+    readonly SupportNodeFooters: boolean;
 
     /**
      * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится
@@ -1439,6 +1439,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
 Object.assign(Tree.prototype, {
     '[Controls/_display/Tree]': true,
+    SupportNodeFooters: false,
     _moduleName: 'Controls/display:Tree',
     _itemModule: 'Controls/display:TreeItem',
     _nodeFooterModule: 'Controls/display:NodeFooter',
