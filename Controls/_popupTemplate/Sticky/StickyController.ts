@@ -89,7 +89,7 @@ export class StickyController extends BaseController {
         const {actionOnScroll} = item.popupOptions;
         item.isVisible = this._isVisibleTarget(item.popupOptions.target as HTMLElement);
         const parentItem = Controller.find(item.parentId) as IStickyItem;
-        const isParentVisible = parentItem ? parentItem.isVisible : true;
+        const isParentVisible = parentItem ? (parentItem.isVisible !== false) : true;
         if (actionOnScroll === 'track' && (!item.isVisible || !isParentVisible)) {
             return ' controls-StickyTemplate-visibility-hidden';
         }

@@ -2,7 +2,7 @@
    <Controls.dragnDrop:Container
       name="dragNDrop"
       on:dragmove="_dragMoveHandler()"
-      on:documentdragend="_dragEndHandler()">
+      on:dragEnd="_dragEndHandler()">
       <div
          name="controlLine"
          on:mousedown="_startDragNDrop()"

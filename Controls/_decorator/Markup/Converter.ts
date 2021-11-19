@@ -162,8 +162,8 @@ const jsonToHtml = (json, tagResolver?, resolverParams?) => {
             result = template({
                 _options: {
                     value: json,
-                    tagResolver: tagResolver,
-                    resolverParams: resolverParams
+                    tagResolver,
+                    resolverParams
                 },
                 _isMarkupConverter: true,
                 _moduleName: 'Controls/decorator:Converter'

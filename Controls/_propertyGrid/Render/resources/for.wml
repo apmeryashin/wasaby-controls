@@ -15,6 +15,7 @@
             captionPosition="{{captionPosition}}"
             multiSelectVisibility="{{_options.multiSelectVisibility}}"
             on:mouseenter="_mouseEnterHandler(item)"
+            on:mousemove="_mouseMoveHandler(item)"
             on:mouseleave="_mouseLeaveHandler(item)"
             on:click="_itemClick(item)"
             on:mousedown="_itemMouseDown(item)"

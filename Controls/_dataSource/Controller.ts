@@ -82,6 +82,7 @@ export interface IControllerOptions extends
     items?: RecordSet;
     deepScrollLoad?: boolean;
     nodeTypeProperty?: string;
+    error?: Error;
 }
 
 interface ILoadConfig {
@@ -257,6 +258,8 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     constructor(cfg: IControllerOptions) {
         super();
         EventRaisingMixin.call(this, cfg);
+
+        const {root, sorting, dataLoadCallback, error, expandedItems, groupHistoryId, items} = cfg;
         this._resolveNavigationParamsChangedCallback(cfg);
         this._collectionChange = this._collectionChange.bind(this);
         this._onBreadcrumbsCollectionChanged = this._onBreadcrumbsCollectionChanged.bind(this);
@@ -265,25 +268,29 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         this.setFilter(cfg.filter || {});
         this.setNavigation(cfg.navigation);
 
-        if (cfg.root !== undefined) {
-            this._setRoot(cfg.root);
+        if (root !== undefined) {
+            this._setRoot(root);
         }
-        if (cfg.sorting !== undefined) {
-            this._setSorting(cfg.sorting);
+        if (sorting !== undefined) {
+            this._setSorting(sorting);
         }
-        if (cfg.dataLoadCallback !== undefined) {
-            this._setDataLoadCallbackFromOptions(cfg.dataLoadCallback);
+        if (dataLoadCallback !== undefined) {
+            this._setDataLoadCallbackFromOptions(dataLoadCallback);
         }
-        if (cfg.expandedItems !== undefined) {
-            this.setExpandedItems(cfg.expandedItems);
+        if (expandedItems !== undefined) {
+            this.setExpandedItems(expandedItems);
         }
-        if (cfg.groupHistoryId) {
-            this._restoreCollapsedGroups(cfg.groupHistoryId, cfg.collapsedGroups);
+        if (groupHistoryId) {
+            this._restoreCollapsedGroups(groupHistoryId, cfg.collapsedGroups);
         }
         this.setParentProperty(cfg.parentProperty);
 
-        if (cfg.items) {
-            this.setItems(cfg.items);
+        if (items) {
+            this.setItems(items);
+        }
+
+        if (error instanceof Error) {
+            this._loadError = error;
         }
     }
 
@@ -352,7 +359,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     setItems(items: RecordSet): RecordSet {
         if (this._hasNavigationBySource()) {
             this._destroyNavigationController();
-            this._getNavigationController(this._navigation).updateQueryProperties(items, this._root);
+            this._updateQueryPropertiesByItems(items, this._root);
         }
         this._addItems(items, this._root);
         return this._items;
@@ -744,10 +751,10 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         let hierarchyRelation;
 
         if (this._hasNavigationBySource()) {
-            const isMultiNavigation = this._isMultiNavigation(navigationConfig, list);
+            const isMultiNavigation = this._isMultiNavigation(navigationConfig);
             const isRoot = this._root === id;
             const resetNavigation = this._deepReload || !direction && isRoot;
-            if (resetNavigation && (!isMultiNavigation || !this.getExpandedItems()?.length)) {
+            if (resetNavigation && (!isMultiNavigation || !this.getExpandedItems()?.length || this.isExpandAll())) {
                 this._destroyNavigationController();
             }
             if (this._options.parentProperty && isMultiNavigation) {

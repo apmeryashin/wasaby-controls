@@ -24,12 +24,14 @@
                                        attr:style="width: {{_lookupSizes[lookupOptions.name]}}px">
          <ws:placeholder>
              <ws:if data="{{lookupOptions.placeholder}}">
-                 <ws:partial template="{{lookupOptions.placeholder}}" scope="{{lookupOptions}}"/>
+                 <!-- name="{{null}}" нужно, т.к. если передаётся опция с названием name, то контрол/шаблон регистрируется в children-->
+                 <ws:partial template="{{lookupOptions.placeholder}}" scope="{{lookupOptions}}" name="{{null}}"/>
              </ws:if>
          </ws:placeholder>
          <ws:itemTemplate>
              <ws:if data="{{lookupOptions.itemTemplate || _options.itemTemplate}}">
-                 <ws:partial template="{{lookupOptions.itemTemplate || _options.itemTemplate}}" scope="{{lookupOptions}}"/>
+                 <!-- name="{{null}}" нужно, т.к. если передаётся опция с названием name, то контрол/шаблон регистрируется в children-->
+                 <ws:partial template="{{lookupOptions.itemTemplate || _options.itemTemplate}}" scope="{{lookupOptions}}" name="{{null}}"/>
              </ws:if>
              <ws:else>
                  <ws:partial template="wml!Controls/_lookup/SelectedCollection/ItemTemplate"/>

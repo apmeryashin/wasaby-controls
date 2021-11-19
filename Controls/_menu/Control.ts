@@ -39,8 +39,6 @@ interface ISourcePropertyConfig {
 
 const SUB_DROPDOWN_DELAY = 400;
 
-const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
-
 /**
  * Контрол меню.
  * @public
@@ -113,6 +111,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._stack = new StackOpener();
 
         if (options.sourceController) {
+            options.sourceController.setDataLoadCallback(this._updateAfterLoad.bind(this));
             const error = options.sourceController.getLoadError();
             if (error) {
                 this._processError(error);
@@ -191,6 +190,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     protected _beforeUnmount(): void {
+        if (this._options.sourceController) {
+            this._options.sourceController.setDataLoadCallback(null);
+        }
         if (this._options.searchValue) {
             // items dropdown/_Controller'a обновляются по ссылке.
             // если был поиск, то зануляем items, чтобы при след. открытии меню отображались все записи.
@@ -315,6 +317,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }
             }
         }
+    }
+
+    private _updateAfterLoad(items): void {
+        this._setButtonVisibleState(items, this._options);
     }
 
     private _getSelectionController(): SelectionController {
@@ -702,6 +708,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _updateItems(items: RecordSet, options: IMenuControlOptions): void {
+        this._dataLoadCallback(items, options);
         this._setStateByItems(items, options);
         if (this._selectionController) {
             this._updateSelectionController(options);
@@ -1034,9 +1041,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     }
                 }
             });
-            hasAdditional = this._visibleIds.length > MAX_HISTORY_VISIBLE_ITEMS_COUNT + 1;
+            hasAdditional = this._visibleIds.length > options.maxHistoryVisibleItems + 1;
             if (hasAdditional) {
-                this._visibleIds.splice(MAX_HISTORY_VISIBLE_ITEMS_COUNT);
+                this._visibleIds.splice(options.maxHistoryVisibleItems);
             }
 
             this._addParentIdForSearchMode(options, items);
@@ -1310,7 +1317,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         hoverBackgroundStyle: 'default',
         subMenuDirection: 'right',
         itemAlign: 'right',
-        subMenuLevel: 0
+        subMenuLevel: 0,
+        maxHistoryVisibleItems: 10
     };
 
     private static _isPinIcon(target: EventTarget): boolean {

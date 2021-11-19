@@ -104,7 +104,11 @@ export default class FilterControllerClass extends mixin<
         // TODO: storefix207100
         if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
-            this._setFilterItems(state.filterSource, (!state.filterSource && this._options.fastFilterSource) || [], historyItems);
+            this._setFilterItems(
+                state.filterSource,
+                (!state.filterSource && this._options.fastFilterSource) || [],
+                historyItems
+            );
         } else {
             this._setFilterItems(this._options.filterButtonSource, this._options.fastFilterSource, historyItems);
         }
@@ -199,7 +203,10 @@ export default class FilterControllerClass extends mixin<
         this._updateFilterItems(items);
         this._applyItemsToFilter(this._$filter, items);
 
-        if (!isEqual(currentFilterButtonItems, this._$filterButtonItems) || !isEqual(currentFastFilterItems, this._$fastFilterItems)) {
+        if (
+            !isEqual(currentFilterButtonItems, this._$filterButtonItems) ||
+            !isEqual(currentFastFilterItems, this._$fastFilterItems)
+        ) {
             this._notify('filterSourceChanged', this._$filterButtonItems);
         }
 

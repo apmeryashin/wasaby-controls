@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_propertyGrid/PropertyGrid';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
-import {GroupItem, CollectionItem} from 'Controls/display';
+import {GroupItem, CollectionItem, TreeItem} from 'Controls/display';
 import {IObservable, RecordSet} from 'Types/collection';
 import {Model, Record as entityRecord} from 'Types/entity';
 import {factory} from 'Types/chain';
@@ -323,7 +323,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _itemMouseEnter(event: SyntheticEvent<Event>,
-                    displayItem: PropertyGridCollectionItem<Model>): void {
+                              displayItem: PropertyGridCollectionItem<Model>): void {
         if (this._dndController) {
             if (this._dndController.isDragging()) {
                 this._listModel.setHoveredItem(null);
@@ -335,6 +335,12 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             }
         } else {
             this._listModel.setHoveredItem(displayItem);
+        }
+    }
+
+    _itemMouseMove(event, displayItem, nativeEvent) {
+        if (this._dndController && this._dndController.isDragging()) {
+            this._draggingItemMouseMove(displayItem, nativeEvent);
         }
     }
 
@@ -795,7 +801,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _onMove(nativeEvent): void {
         if (this._startEvent) {
             const dragObject = this._getDragObject(nativeEvent, this._startEvent);
-            if ((!this._dndController || !this._dndController.isDragging()) && this._isDragStarted(this._startEvent, nativeEvent)) {
+            if (
+                (!this._dndController || !this._dndController.isDragging()) &&
+                this._isDragStarted(this._startEvent, nativeEvent)
+            ) {
                 this._insideDragging = true;
                 this._notify('_documentDragStart', [dragObject], {bubbling: true});
             }
@@ -807,7 +816,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
                 this._notify('dragMove', [dragObject]);
                 if (this._options.draggingTemplate && this._listModel.isDragOutsideList()) {
-                    this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
+                    this._notify(
+                        '_updateDraggingTemplate',
+                        [dragObject, this._options.draggingTemplate],
+                        {bubbling: true}
+                    );
                 }
             }
         }
@@ -823,8 +836,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _getDragOffset(moveEvent, startEvent): object {
-        const moveEventXY = this._getPageXY(moveEvent),
-            startEventXY = this._getPageXY(startEvent);
+        const moveEventXY = this._getPageXY(moveEvent);
+        const startEventXY = this._getPageXY(startEvent);
 
         return {
             y: moveEventXY.y - startEventXY.y,
@@ -869,13 +882,81 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (this._dndController.isDragging()) {
             dragPosition = this._dndController.calculateDragPosition({targetItem});
             if (dragPosition) {
-                const changeDragTarget = this._notify('changeDragTarget', [this._dndController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
+                const changeDragTarget = this._notify(
+                    'changeDragTarget',
+                    [this._dndController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]
+                );
                 if (changeDragTarget !== false) {
                     this._dndController.setDragPosition(dragPosition);
                 }
             }
             this._unprocessedDragEnteredItem = null;
         }
+    }
+
+    private _calculateMouseOffsetInItem(event: SyntheticEvent<MouseEvent>, targetElement: Element): {top: number, bottom: number} {
+        let result = null;
+
+        if (targetElement) {
+            const dragTargetRect = targetElement.getBoundingClientRect();
+            result = { top: null, bottom: null };
+
+            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
+            result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
+            result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
+        }
+
+        return result;
+    }
+
+    private _draggingItemMouseMove(itemData: TreeItem, event: SyntheticEvent<MouseEvent>): void {
+        const dispItem = itemData;
+        const targetIsNotDraggableItem = this._dndController.getDraggableItem()?.getContents() !== dispItem.getContents();
+        if (dispItem['[Controls/_display/TreeItem]'] && dispItem.isNode() !== null && targetIsNotDraggableItem) {
+            const targetElement = this._getTargetRow(event);
+            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event, targetElement);
+            const dragTargetPosition = this._dndController.calculateDragPosition({
+                targetItem: dispItem,
+                mouseOffsetInTargetItem
+            });
+
+            if (dragTargetPosition) {
+                const result = this._notify('changeDragTarget', [
+                    this._dndController.getDragEntity(),
+                    dragTargetPosition.dispItem.getContents(),
+                    dragTargetPosition.position
+                ]);
+
+                if (result !== false) {
+                    this._dndController.setDragPosition(dragTargetPosition);
+                }
+            }
+        }
+    }
+
+    private _getTargetRow(event: SyntheticEvent): Element {
+        if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
+            return event.target;
+        }
+
+        const startTarget = event.target;
+        let target = startTarget;
+
+        const condition = () => {
+            return !target.parentNode.classList.contains('controls-ListView__itemV');
+        };
+
+        while (condition()) {
+            target = target.parentNode;
+
+            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
+            if (!target.classList || !target.parentNode || !target.parentNode.classList
+                || target.classList.contains('controls-BaseControl')) {
+                target = startTarget;
+                break;
+            }
+        }
+        return target;
     }
 
     validate({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
@@ -957,11 +1038,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     moveWithDialog(selection: ISelectionObject): Promise<void> {
         let movedItems = [];
         let resultTarget = null;
+        const displayProperty = 'caption';
         const source = new Memory({
             keyProperty: this._listModel.getKeyProperty(),
             data: this._listModel.getCollection().getRawData(),
-            filter: (item: Model): boolean => {
-                return !!item.get(this._options.nodeProperty);
+            filter: (item, where): boolean => {
+                const searchFilterValue = where[displayProperty];
+                return !!item.get(this._options.nodeProperty) &&
+                       (!searchFilterValue || item.get(displayProperty)?.toLowerCase().includes(searchFilterValue.toLowerCase()));
             }
         });
         const moveCommand = new MoveCommand({
@@ -976,9 +1060,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                     nodeProperty: this._options.nodeProperty,
                     keyProperty: this._listModel.getKeyProperty(),
                     rootVisible: true,
+                    displayProperty,
                     columns: [{
-                        displayProperty: 'caption'
+                        displayProperty
                     }],
+                    searchParam: displayProperty,
                     source
                 },
                 beforeMoveCallback: (currentSelection: ISelectionObject, target: Model): void => {

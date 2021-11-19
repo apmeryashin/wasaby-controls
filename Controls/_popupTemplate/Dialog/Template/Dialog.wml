@@ -12,7 +12,7 @@
         </ws:if>
         <ws:else>
             <div class="controls-DialogTemplate__close-button_without_head">
-            <ws:if data="{{_options.closeButtonVisibility}}">
+            <ws:if data="{{_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility}}">
                 <Controls._popupTemplate.CloseButton
                     name="closeButton"
                     attr:class="controls-DialogTemplate__close_button
@@ -36,7 +36,8 @@
         <ws:if data="{{ _options.footerContentTemplate }}">
             <ws:partial template="{{ _options.footerContentTemplate}}"
                         attr:class="controls-DialogTemplate__footer
-                                    controls-background-{{_options.backgroundStyle}}
+                                    {{_options.backgroundStyle === 'default' ?
+                                    'controls-DialogTemplate__footerBackgroundColor' : 'controls-background-' + _options.backgroundStyle}}
                                     {{!_options.maximize ? 'controls-DialogTemplate__footer-area_roundBorder'}}"/>
         </ws:if>
     </div>

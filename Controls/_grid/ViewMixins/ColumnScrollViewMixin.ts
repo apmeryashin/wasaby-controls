@@ -146,11 +146,19 @@ const createColumnScroll = (self: TColumnScrollViewMixin, options: IAbstractView
     self._notify('toggleHorizontalScroll', [true]);
 };
 
-const destroyColumnScroll = (self: TColumnScrollViewMixin) => {
+export const destroyColumnScroll = (self: TColumnScrollViewMixin) => {
     self._$columnScrollController.destroy();
     self._$columnScrollController = null;
     self._$dragScrollStylesContainer = null;
     self._$columnScrollUseFakeRender = false;
+
+    // Вёрстка гор.скрола(например скроллбар), находящаяся в GridView маунтится 1 раз.
+    // При последующих скрытиях/появлениях, видимость регулируется стилями.
+    // При удалении сролла колонок, нужно предварительно устанавливать размеры в скроллбар,
+    // иначе может произойти ситуация, когда до скрытия и после появления все размеры одинаковы,
+    // тогда платформенный скроллбар не пересчитает свои размеры (которые он уже пересчитал при скрытии).
+    self._children.horizontalScrollBar?.setSizes({scrollWidth: 0});
+
     if (self._$dragScrollController) {
         destroyDragScroll(self);
     }
@@ -303,7 +311,7 @@ const scrollToColumnEdge = (self): void => {
 const setScrollPosition = (self: TColumnScrollViewMixin,
                            position: number,
                            immediate?: boolean,
-                           useAnimation?: boolean): void => {
+                           useAnimation?: boolean): boolean => {
     const oldScrollPosition = self._$columnScrollController.getScrollPosition();
     const newPosition = self._$columnScrollController.setScrollPosition(position, immediate, useAnimation);
     if (oldScrollPosition !== newPosition) {
@@ -312,7 +320,9 @@ const setScrollPosition = (self: TColumnScrollViewMixin,
             self._$dragScrollController.setScrollPosition(newPosition);
         }
         self._notify('columnScroll', [newPosition], {bubbling: true});
+        return true;
     }
+    return false;
 };
 //#endregion
 
@@ -508,17 +518,26 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         // и в модели, при этом отрисовка новых состояний будет в следующем цикле.
         // При первом завершении обновления принудительно вызываем повторуную синхронизацию
         // с помощью _forceUpdate(), по завершению которой произойдет пересчет скролла.
+        // При этом, игнорируем, если горизонтального скролл был выключен и до и после всех перерисовок.
+        // Все перерисовки учитываются через отслеживание наличия сохраненных опций. Если их нет, то скролл
+        // всегда был выключен, а не только в последнюю перерисовку.
 
         // FIXME: https://online.sbis.ru/opendoc.html?guid=bc40e794-c5d4-4381-800f-a98f2746750a
         // Данное поведение будет исправлено в рамках проекта по переходу на нативный горизонтальный скролл,
         // посе создания модели горизонтального скролла с поддержкой версионирования. При таком подходе
         // будет возможно добиться честной реактивности, избегая мануальных forceUpdate'ов.
-        if (!this._$oldOptionsForPendingUpdate) {
-            this._forceUpdate();
-            this._$oldOptionsForPendingUpdate = oldOptions;
-        } else {
-            manageControllersOnDidUpdate(this, this._$oldOptionsForPendingUpdate);
-            this._$oldOptionsForPendingUpdate = null;
+        const isScrollDisabled = !this._$oldOptionsForPendingUpdate &&
+                                 !this._options.columnScroll &&
+                                 !this._options.columnScroll === !oldOptions.columnScroll;
+
+        if (!isScrollDisabled) {
+            if (!this._$oldOptionsForPendingUpdate) {
+                this._forceUpdate();
+                this._$oldOptionsForPendingUpdate = oldOptions;
+            } else {
+                manageControllersOnDidUpdate(this, this._$oldOptionsForPendingUpdate);
+                this._$oldOptionsForPendingUpdate = null;
+            }
         }
     },
 
@@ -814,7 +833,19 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
                 scrollToColumnEdge(this);
             }
         }
-    }
+    },
 
+    _onColumnScrollViewArrowKeyDown(direction: 'left' | 'right'): boolean {
+        if (this._$columnScrollController) {
+            const { scrollWidth } = this._$columnScrollController.getSizes();
+            const newScrollPosition =
+                this._$columnScrollController.getScrollPosition() + (direction === 'left' ? -scrollWidth : scrollWidth);
+
+            if (setScrollPosition(this, newScrollPosition, false, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
     //#endregion
 };

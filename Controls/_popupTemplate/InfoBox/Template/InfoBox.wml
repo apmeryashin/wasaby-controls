@@ -7,7 +7,7 @@
       <ws:if data="{{_options.content}}">
          <ws:partial template="{{_options.content}}" attr:class="controls-InfoBoxTemplate__content-area"/>
       </ws:if>
-      <ws:if data="{{_options.closeButtonVisibility}}">
+      <ws:if data="{{_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility}}">
          <Controls._popupTemplate.CloseButton attr:class="controls-InfoBoxTemplate__closeButton" on:click="_close()" viewMode="link" attr:ws-no-focus="true" />
       </ws:if>
    </div>

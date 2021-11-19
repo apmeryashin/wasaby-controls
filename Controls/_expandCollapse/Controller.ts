@@ -235,7 +235,9 @@ export class Controller {
 
         if (this._model && (this._options.expandedItems?.length || this._options.collapsedItems?.length)) {
             // обрабатываем только узлы
-            const items = removedItems.filter((it) => it['[Controls/_display/TreeItem]'] && it.Expandable && it.isNode() !== null);
+            const items = removedItems.filter(
+                (it) => it['[Controls/_display/TreeItem]'] && it.Expandable && it.isNode() !== null
+            );
             let removedKeys = items.map((it) => it.getContents().getKey());
             // отфильтровываем скрытые записи
             removedKeys =

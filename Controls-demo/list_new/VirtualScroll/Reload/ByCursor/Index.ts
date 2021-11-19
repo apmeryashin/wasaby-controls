@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/list_new/VirtualScroll/Reload/ByCursor/ByCursor';
 import {DataSet, Memory, Query} from 'Types/source';
+import {slowDownSource} from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
 
 interface IItem {
     key: number;
@@ -47,11 +48,19 @@ export default class extends Control {
         this._source = new PositionSourceMock({keyProperty: 'key'});
     }
 
-    protected _changePosition(): void {
-        // tslint:disable-next-line
-        this._position = 60;
-        // tslint:disable-next-line
-        this._children.list.reload();
+    protected _changePosition(_: Event, correction: number): void {
+
+        if (!correction) {
+            this._position = 60;
+            // tslint:disable-next-line
+            this._children.list.reload();
+        } else {
+            this._position += correction;
+        }
+    }
+
+    protected _slowDownSource(): void {
+        slowDownSource(this._source, 500);
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

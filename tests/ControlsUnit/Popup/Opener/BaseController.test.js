@@ -25,6 +25,7 @@ define(
                }
             };
 
+            BCInstacne._getMargins = sinon.fake();
             BCInstacne._getPopupSizes(config, container);
             assert.equal(config.sizes.width, 150);
             assert.equal(config.sizes.height, 100);

@@ -8,19 +8,22 @@ const _private = {
           * @return {boolean}
           */
          calcHeightFixFn(container) {
-
-            if (detection.firefox) {
-               if (constants.isBrowserPlatform && container) {
-                  /**
-                   * В firefox при высоте дочерних элементав < высоты скролла(34px) и резиновой высоте контейнера
-                   * через max-height, нативный скролл не пропадает.
-                   * В такой ситуации content имеет высоту скролла, а должен быть равен высоте дочерних элементов.
-                   */
-                  return container.scrollHeight === container.offsetHeight && container.scrollHeight < 35;
-               }
-            } else {
-               return false;
+            if (constants.isBrowserPlatform && container) {
+                if (detection.firefox) {
+                    /**
+                     * В firefox при высоте дочерних элементав < высоты скролла(34px) и резиновой высоте контейнера
+                     * через max-height, нативный скролл не пропадает.
+                     * В такой ситуации content имеет высоту скролла, а должен быть равен высоте дочерних элементов.
+                     */
+                    return container.scrollHeight === container.offsetHeight && container.scrollHeight < 35;
+                }
+                if (detection.isIE) {
+                    // Из-за дробных пикселей в IE может появится ненужный скролл в 1px
+                    // Сами выключим скролл через overflow: hidden в таком случае
+                    return container.scrollHeight - container.offsetHeight <= 1;
+                }
             }
+            return false;
          }
       };
 

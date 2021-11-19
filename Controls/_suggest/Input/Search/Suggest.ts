@@ -103,8 +103,15 @@ const Suggest = Control.extend({
          this._suggestState = false;
       }
       this._notify('resetClick');
-   }
+   },
 
+   openSuggest(): void {
+      this._suggestState = true;
+   },
+
+   closeSuggest(): void {
+      this._suggestState = false;
+   }
 });
 
 Suggest.getOptionTypes = getOptionTypes;
@@ -125,6 +132,11 @@ Object.defineProperty(Suggest, 'defaultProps', {
 /**
  * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
  * @cfg {Boolean} Определяет, показывать ли иконку поиска.
+ */
+
+/**
+ * @name Controls/_suggest/Input/Search/Suggest#inputClassName
+ * @cfg {String} Класс для строки поиска.
  */
 
 /*

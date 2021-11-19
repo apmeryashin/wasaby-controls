@@ -1,14 +1,25 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell controlsDemo_fixedWidth350" attr:style="background-color: #F3F5F7">
         <Controls.themes:ContrastWrapper>
-            <Controls.grid:View
-                    keyProperty="key"
-                    source="{{_viewSource}}"
-                    itemActions="{{_itemActions}}"
-                    itemActionsPosition="outside"
-                    columns="{{_columns}}">
-                <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
-            </Controls.grid:View>
+            <div>
+                <Controls.grid:View
+                        keyProperty="key"
+                        source="{{_viewSource}}"
+                        itemActions="{{_itemActions}}"
+                        itemActionsPosition="outside"
+                        columns="{{_columns}}">
+                    <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
+                </Controls.grid:View>
+                <div class="controlsDemo__cell controls-margin_top-l">
+                    <div class="controls-text-label">Кнопки</div>
+                    <ws:for data="buttonStyle in _buttonStyles">
+                        <Controls.buttons:Button attr:class="controls-margin_top-3xs" caption="{{buttonStyle}}" buttonStyle="{{buttonStyle}}"
+                                                 contrastBackground="{{true}}"/>
+                        {{' '}}
+                    </ws:for>
+                    <Controls.buttons:Button attr:class="controls-margin_top-3xs" caption="readonly" buttonStyle="primary" readOnly="{{true}}"/>
+                </div>
+            </div>
         </Controls.themes:ContrastWrapper>
     </div>
 </div>

@@ -1581,7 +1581,14 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.ok(itemsReadyCallbackCalled);
 
             itemsReadyCallbackCalled = false;
+
+            const sandbox = sinon.createSandbox();
+            sandbox.stub(baseControl, '_forceUpdate').callsFake(() => {
+                baseControl._afterUpdate(options);
+            });
+
             await baseControl.reload();
+            sandbox.restore();
             assert.ok(!itemsReadyCallbackCalled);
         });
 
@@ -1590,11 +1597,16 @@ describe('Controls/list_clean/BaseControl', () => {
             const baseControl = new BaseControl(options);
             await baseControl._beforeMount(options);
             baseControl.saveOptions(options);
+
+            const sandbox = sinon.createSandbox();
+            sandbox.stub(baseControl, '_forceUpdate').callsFake(() => {
+                baseControl._afterUpdate(options);
+            });
             return baseControl.reload().then((rs) => {
                 assert.instanceOf(rs, RecordSet);
+                sandbox.restore();
             });
         });
-
     });
 
     describe('getFooterSpacingClasses', () => {
@@ -1626,6 +1638,33 @@ describe('Controls/list_clean/BaseControl', () => {
                 );
             });
         });
+    });
+
+    it ('initializeNavigation', () => {
+        const fakeInstance = {
+            _shouldDrawNavigationButton: true
+        } as unknown as BaseControl;
+
+        BaseControl._private.initializeNavigation(fakeInstance, {
+            navigation: {
+                view: 'cut'
+            }
+        });
+        assert.isTrue(fakeInstance._shouldDrawNavigationButton, 'button should not be hidden on cut');
+
+        BaseControl._private.initializeNavigation(fakeInstance, {
+            navigation: {
+                view: 'demand'
+            }
+        });
+        assert.isTrue(fakeInstance._shouldDrawNavigationButton, 'button should not be hidden on demand');
+
+        BaseControl._private.initializeNavigation(fakeInstance, {
+            navigation: {
+                view: 'infinity'
+            }
+        });
+        assert.isFalse(fakeInstance._shouldDrawNavigationButton, 'button should be hidden on other navigation.view');
     });
 
     it('needFooterPadding', () => {

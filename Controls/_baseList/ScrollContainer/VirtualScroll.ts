@@ -49,7 +49,14 @@ export default class VirtualScroll {
             segmentSize = pageSize ? Math.ceil(pageSize / RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT) : 0;
         }
 
-        this._options = {...this._options, ...{segmentSize, pageSize}};
+        this._options = {
+            ...this._options,
+            ...{
+                segmentSize,
+                pageSize,
+                feature1183225611: options.feature1183225611
+            }
+        };
     }
 
     applyContainerHeightsData(containerData: Partial<IContainerHeights>): void {
@@ -285,6 +292,22 @@ export default class VirtualScroll {
             fixedScrollTop = scroll - viewport;
         } else {
             fixedScrollTop = scrollTop;
+        }
+
+        // Если выставлена опция feature1183225611, то активный элемент определяем на основании
+        // верхней границы ScrollContainer. Активным является тот, который либо пересек верхнюю
+        // границу либо находится вплотную к ней
+        if (this._options.feature1183225611) {
+            let result;
+            for (let i = this._range.start ; i < this._range.stop; i++) {
+                if (this._itemsHeightData.itemsOffsets[i] <= fixedScrollTop) {
+                    result = i;
+                } else {
+                    break;
+                }
+            }
+
+            return result;
         }
 
         if (!this._itemsCount) {

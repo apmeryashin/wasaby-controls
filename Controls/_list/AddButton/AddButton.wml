@@ -1,5 +1,6 @@
 <span class="controls_list_theme-{{_options.theme}} controls-AddButton controls-AddButton" on:click="clickHandler()">
-   <span attr:class="controls-AddButton_state-{{_options.readOnly ? 'disable': 'enable'}} controls-AddButton-wrapper">
+   <span attr:class="controls-AddButton_state-{{_options.readOnly ? 'disable': 'enable'}} controls-AddButton-wrapper"
+         attr:title="{{_options.tooltip}}">
       <span class="controls-AddButton__svgWrapper">
          <div class="controls-AddButton__icon controls-AddButton_icon-{{_options.readOnly ? 'disable': 'enable'}}"></div>
       </span>

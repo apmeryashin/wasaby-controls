@@ -92,6 +92,7 @@ export default class SearchView extends TreeGridView {
 
    static getDefaultOptions(): Object {
       return {
+         breadCrumbsMode: 'row',
          itemPadding: {
             left: 'S'
          }

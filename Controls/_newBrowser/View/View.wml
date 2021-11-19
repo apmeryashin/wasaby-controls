@@ -29,7 +29,6 @@
 </ws:template>
 
 <ws:template name="detailTemplate">
-
     <div class="controls-newBrowser__detail" style="background-color: {{_detailBgColor}};">
         <ws:if data="{{_options.detailHeaderTemplate}}">
             <ws:partial template="{{_options.detailHeaderTemplate}}"/>
@@ -41,6 +40,9 @@
                     tileCfg="{{_tileCfg}}"
                     listCfg="{{_listCfg}}"
                     loading="{{_detailLoading}}"
+                    imageViewMode="{{_getImageViewMode(viewMode)}}"
+                    nodeImageViewMode="{{_getNodeImageViewMode(viewMode)}}"
+                    imagePosition="{{_getImagePosition(viewMode)}}"
                     attr:class="controls-newBrowser__detail-list"
                     on:itemClick="_onExplorerItemClick(false)"
                     on:viewModeChanged="_onDetailExplorerChangedViewMode()"
@@ -52,9 +54,11 @@
                  beforeEndEdit юзают для кастомной логики сохранения записи, т.к не хотят менять БЛ -->
             <Controls.list:Container id="detail">
                 <Controls.list:HotKeysContainer>
-                    <Controls.listTemplates:ImageDisplayContainer
-                        scope="{{_detailExplorerOptions}}"
-                        columns="{{_columns}}">
+                    <Controls.listTemplates:ImageDisplayContainer scope="{{_detailExplorerOptions}}"
+                                                                  imageViewMode="{{_getImageViewMode(viewMode)}}"
+                                                                  nodeImageViewMode="{{_getNodeImageViewMode(viewMode)}}"
+                                                                  imagePosition="{{_getImagePosition(viewMode)}}"
+                                                                  columns="{{_columns}}">
                         <ws:content>
                             <Controls.explorer:View
                                     attr:class="controls-newBrowser__detail-list"
@@ -83,8 +87,7 @@
                                     on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
                                     on:itemClick="_onExplorerItemClick(false)"
                                     on:itemMouseDown="_notifyHandler('detailItemMouseDown')"
-                                    on:viewModeChanged="_onDetailExplorerChangedViewMode()"
-                            />
+                                    on:viewModeChanged="_onDetailExplorerChangedViewMode()"/>
                         </ws:content>
                         <ws:itemTemplate>
                             <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->

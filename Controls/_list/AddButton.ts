@@ -30,7 +30,8 @@ export default class AddButton extends Control<IControlOptions> {
 
     static getOptionTypes(): object {
         return {
-            caption: descriptor(String)
+            caption: descriptor(String),
+            tooltip: descriptor(String)
         };
     }
 }
@@ -42,4 +43,9 @@ export default class AddButton extends Control<IControlOptions> {
  * <pre class="brush: html">
  * <Controls.list:AddButton caption="add record"/>
  * </pre>
+ */
+
+/**
+ * @name Controls/_list/AddButton#tooltip
+ * @cfg @cfg {String} Текст всплывающей подсказки, отображаемой при наведении указателя мыши на кнопку.
  */

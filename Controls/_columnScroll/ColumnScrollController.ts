@@ -41,6 +41,10 @@ const WHEEL_SCROLLING_SMOOTH_COEFFICIENT = 0.6;
 
 type TScrollDirection = 'forward' | 'backward';
 
+function getValueInBounds(value: number, bounds: [number, number]): number {
+    return Math.max(bounds[0], Math.min(value, bounds[1]));
+}
+
 export default class ColumnScrollController {
     protected _options: IControllerOptions;
     private _isDestroyed: boolean = false;
@@ -134,7 +138,10 @@ export default class ColumnScrollController {
      * @private
      */
     private _setScrollPosition(newPosition: number, immediate?: boolean, useAnimation?: boolean): number {
-        const newScrollPosition = Math.round(newPosition);
+        const newScrollPosition = getValueInBounds(
+            Math.round(newPosition),
+            [0, this._contentSize - this._containerSize]
+        );
         if (this._scrollPosition !== newScrollPosition) {
             const oldScrollPosition = this._scrollPosition;
             const oldShadowState = {...this._shadowState};
@@ -467,8 +474,7 @@ export default class ColumnScrollController {
 
         // скроллируем индикаторы загрузки
         // сбрасываем расстягивание на всю ширину контейнера индикатора, чтобы корректно его позиционировать
-        const indicatorPosition = position + this._containerSize / 2;
-        newTransformHTML += `.${transformSelector} .controls-BaseControl__loadingIndicator {display: inline-block; left: auto; right: auto; width: auto; transform: translateX(${indicatorPosition}px);}`;
+        newTransformHTML += `.${transformSelector} .controls-Grid__loadingIndicator-content { width: ${this._containerSize}px; transform: translateX(${position}px); }`;
 
         // Не скроллируем операции над записью и не анимируем пока не перешли на нативный скролл.
         // Отсутствие анимации в реальном кейсе почти невозможно заметить.

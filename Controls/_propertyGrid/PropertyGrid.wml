@@ -24,6 +24,7 @@
     on:propertyValueChanged="_propertyValueChanged()"
     on:toggleEditor="_toggleEditor()"
     on:itemMouseEnter="_itemMouseEnter()"
+    on:itemMouseMove="_itemMouseMove()"
     on:itemMouseLeave="_itemMouseLeave()"
     on:mouseenter="_mouseEnterHandler()"
     on:itemActionMouseDown="_itemActionMouseDown()"

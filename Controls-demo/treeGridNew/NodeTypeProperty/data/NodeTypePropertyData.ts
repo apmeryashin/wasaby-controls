@@ -529,3 +529,115 @@ export const dynamicParentData = [
         nodeType: null
     }
 ];
+
+export const dataForLadder = [
+    {
+        key: 1,
+        title: 'Группа 1',
+        date: '10',
+        parent: null,
+        type: true,
+        hasChild: true,
+        nodeType: 'group'
+    },
+    {
+        key: 2,
+        title: 'Название 2',
+        date: '10.10',
+        parent: 1,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+    {
+        key: 3,
+        title: 'Название 3',
+        date: '10.10',
+        parent: 1,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+    {
+        key: 4,
+        title: 'Название 4',
+        date: '10.10',
+        parent: 1,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+    {
+        key: 5,
+        title: 'Название 5',
+        date: '10.10',
+        parent: 1,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+    {
+        key: 6,
+        title: 'Название 6',
+        date: '11.10',
+        parent: 1,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+    {
+        key: 7,
+        title: 'Группа 7',
+        date: '11',
+        parent: null,
+        type: true,
+        hasChild: true,
+        nodeType: 'group'
+    },
+    {
+        key: 8,
+        title: 'Название 8',
+        date: '12.11',
+        parent: 7,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+    {
+        key: 9,
+        title: 'Название 9',
+        date: '13.11',
+        parent: 7,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+    {
+        key: 10,
+        title: 'Название 10',
+        date: '13.11',
+        parent: 7,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+    {
+        key: 11,
+        title: 'Название 11',
+        date: '13.11',
+        parent: 7,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+    {
+        key: 12,
+        title: 'Название 12',
+        date: '13.10',
+        parent: 7,
+        type: null,
+        hasChild: null,
+        nodeType: null
+    },
+
+]

@@ -213,6 +213,7 @@ class Base extends Control<IMasterDetail, string> {
         this._newDesign = options._dataOptionsValue?.newDesign || options.newDesign;
         if (receivedState) {
             this._currentWidth = receivedState;
+            this._savedWidth = parseInt(receivedState, 10);
         } else if (options.propStorageId) {
             return new Promise((resolve) => {
                 this._getSettings(options).then((storage) => {

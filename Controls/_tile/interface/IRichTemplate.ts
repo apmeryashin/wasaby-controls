@@ -23,7 +23,7 @@ interface ICharacteristicsItem {
  * @variant bottom Изображение отображается снизу.
  * @variant left Изображение отображается слева.
  */
-export type TImagePosition = 'top'|'right'|'bottom'|'left';
+export type TImagePosition = 'top' | 'right' | 'bottom' | 'left';
 
 /**
  * "Богатый" шаблон отображения элементов в {@link Controls/tile:View плитке}.
@@ -276,7 +276,7 @@ export default interface IRichTemplateOptions {
      */
     additionalPanelTemplate?: TemplateFunction;
 
-   /**
+    /**
      * @typedef {String} TAdditionalPanelPosition
      * @variant topRight Верхний правый угол.
      * @variant bottomRight Нижний правый угол.

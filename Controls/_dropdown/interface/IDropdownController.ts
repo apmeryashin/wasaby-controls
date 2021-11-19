@@ -32,6 +32,7 @@ export interface IDropdownControllerOptions extends IControlOptions, IMenuPopupO
     dataLoadErrback?: Function;
     historyId?: string;
     historyNew?: string;
+    maxHistoryVisibleItems: number;
     allowPin?: boolean;
     width?: number;
     popupClassName?: string;

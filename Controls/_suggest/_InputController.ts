@@ -639,15 +639,20 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const footerTemplateChanged = !isEqual(this._options.footerTemplate, newOptions.footerTemplate);
       const filterChanged = !isEqual(this._options.filter, newOptions.filter);
       const sourceChanged = this._options.source !== newOptions.source;
-      const needUpdateSourceController = sourceChanged ||
-                                         this._options.navigation !== newOptions.navigation ||
-                                         this._options.sorting !== newOptions.sorting ||
-                                         filterChanged;
+      const needUpdateControllers = sourceChanged ||
+                                     this._options.navigation !== newOptions.navigation ||
+                                     this._options.sorting !== newOptions.sorting ||
+                                     filterChanged;
       const needUpdateSearchValue = (needSearchOnValueChanged || valueCleared) &&
                                     this._searchValue !== newOptions.value;
 
-      if (needUpdateSourceController && this._sourceController) {
-         this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+      if (needUpdateControllers) {
+         if (this._sourceController) {
+            this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+         }
+         if (this._searchController) {
+            this._searchController.update(this._getSearchControllerOptions(newOptions));
+         }
       }
 
       if (needUpdateSearchValue) {
@@ -693,7 +698,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          }
       }
 
-      if (filterChanged && (this._showContent || this._sourceController?.isLoading())) {
+      if ((sourceChanged || filterChanged) && (this._showContent || this._sourceController?.isLoading())) {
          if (this._searchValue) {
             this._resolveSearch(this._searchValue, newOptions);
          } else {
@@ -917,18 +922,22 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _getSearchController(): Promise<SearchController | void> {
       if (!this._searchController) {
          return this._getSearchLibrary().then((result) => {
-            this._searchController = new result.ControllerClass({
-               sourceController: this._getSourceController(),
-               minSearchLength: this._options.minSearchLength,
-               searchDelay: this._options.searchDelay as number,
-               searchParam: this._options.searchParam,
-               searchValueTrim: this._options.searchValueTrim,
-               navigation: this._options.navigation
-            } as ISearchControllerOptions);
+            this._searchController = new result.ControllerClass(this._getSearchControllerOptions(this._options));
             return this._searchController;
          }).catch((error) => this._searchErrback(error));
       }
       return Promise.resolve(this._searchController);
+   }
+
+   private _getSearchControllerOptions(options: IInputControllerOptions): ISearchControllerOptions {
+      return {
+         sourceController: this._getSourceController(),
+         minSearchLength: options.minSearchLength,
+         searchDelay: options.searchDelay,
+         searchParam: options.searchParam,
+         searchValueTrim: options.searchValueTrim,
+         navigation: options.navigation
+      };
    }
 
    protected _getSourceController(options?: IInputControllerOptions): SourceController {

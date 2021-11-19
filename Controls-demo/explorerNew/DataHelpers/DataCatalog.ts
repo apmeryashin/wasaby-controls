@@ -722,8 +722,8 @@ export const Gadgets = {
         ];
     },
 
-    getSearchData(): IData[] {
-        return [
+    getSearchData(includeHiddenNode: boolean = false): IData[] {
+        const data = [
             {
                 id: 1, parent: null, 'parent@': true, code: null, price: null, title: 'Комплектующие', image: null, SearchResult: false
             },
@@ -827,6 +827,22 @@ export const Gadgets = {
                 image: explorerImages[0], SearchResult: false
             }
         ];
+
+        if (includeHiddenNode) {
+            data.push(
+                {
+                    id: 6, parent: null, 'parent@': false, code: null, price: null, title: 'Цифровое фото и видео',
+                    SearchResult: true, image: null
+                },
+                {
+                    id: 61, parent: 6, 'parent@': null, code: 'FT-13352', price: 112360,
+                    title: 'Canon EOS 5D Mark II Body SATA support',
+                    image: explorerImages[0], SearchResult: false
+                }
+            );
+        }
+
+        return data;
     },
     getSmallSearchData(): IData[] {
         return [

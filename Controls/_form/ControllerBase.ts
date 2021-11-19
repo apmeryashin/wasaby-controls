@@ -185,7 +185,7 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
         if (answer === true) {
             this.update().then(
                 (res) => {
-                    if (!res.validationErrors) {
+                    if (!res?.validationErrors) {
                         // если нет ошибок в валидации, просто завершаем пендинг с результатом
                         if (!def.isReady()) {
                             this._pendingPromise = null;
@@ -261,7 +261,7 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
         this._validateController.removeValidator(control);
     }
 
-    update(): Promise<undefined | Record> {
+    update(): Promise<void> {
         const updatePromise = this._startFormOperations('save').then(() => {
             return this.validate().then((results: IValidateResult) => {
                 if (results.hasErrors) {
@@ -274,8 +274,8 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
                     this._record.acceptChanges();
                     this._notify('updateSuccessed', [this._record]);
                     this._notify('recordChanged', [this._record]);
-                    return results;
                 }
+                return void 0;
             });
         });
         this._notify('registerPending', [updatePromise, { showLoadingIndicator: false }], { bubbling: true });

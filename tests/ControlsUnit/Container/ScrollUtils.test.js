@@ -1,63 +1,88 @@
 define(
    [
       'Env/Env',
-      'Controls/_scroll/Scroll/ScrollHeightFixUtil'
+      'Controls/_scroll/Scroll/ScrollHeightFixUtil',
    ],
    function(Env, ScrollHeightFixUtil) {
-
       'use strict';
 
-      var
-         mockEnv = function(envField) {
-            oldEnvValue = Env.detection[envField];
-            Env.detection[envField] = true;
-         },
-         restoreEnv = function(envField) {
-            if (typeof window === 'undefined') {
-               Env.detection[envField] = undefined;
-            } else {
-               Env.detection[envField] = oldEnvValue;
-            }
-         },
-         oldEnvValue;
+
+      let oldDetectionValue;
+      let oldIsBrowserPlatform;
+      const mockDetection = (envField) => {
+         oldDetectionValue = Env.detection[envField];
+         Env.detection[envField] = true;
+      };
+      const restoreDetection = (envField) => {
+         if (typeof window === 'undefined') {
+            Env.detection[envField] = undefined;
+         } else {
+            Env.detection[envField] = oldDetectionValue;
+         }
+      };
+      const mockIsBrowserPlatform = () => {
+         oldIsBrowserPlatform = Env.constants.isBrowserPlatform;
+         Env.constants.isBrowserPlatform = true;
+      };
+
+      const restoreIsBrowserPlatform = () => {
+         Env.constants.isBrowserPlatform = oldIsBrowserPlatform;
+      };
 
       describe('Controls.Container.Scroll.Utils', function() {
          let result;
 
-         describe('calcOverflow', function() {
+         describe('calcHeightFixFn', function() {
             var container;
             it('chrome', function() {
-               mockEnv('chrome');
+               mockDetection('chrome');
+               mockIsBrowserPlatform();
 
                result = ScrollHeightFixUtil.calcHeightFix();
                assert.equal(result, false);
-               restoreEnv('chrome');
+               restoreDetection('chrome');
+               restoreIsBrowserPlatform();
             });
             it('firefox', function() {
-               mockEnv('firefox');
+               mockDetection('firefox');
+               mockIsBrowserPlatform();
 
                container = {
                   offsetHeight: 10,
                   scrollHeight: 10
                };
                result = ScrollHeightFixUtil.calcHeightFix(container);
-               if (window) {
-                  assert.equal(result, true);
-               } else {
-                  assert.equal(result, undefined);
-               }
+               assert.equal(result, true);
 
                container = {
                   offsetHeight: 40,
                   scrollHeight: 40
                };
                result = ScrollHeightFixUtil.calcHeightFix(container);
-               if (window) {
-                  assert.equal(result, false);
-               } else {
-                  assert.equal(result, undefined);
-               }
-               restoreEnv('firefox');
+               assert.equal(result, false);
+               restoreDetection('firefox');
+               restoreIsBrowserPlatform();
+            });
+
+            it('ie', function() {
+               mockDetection('isIE');
+               mockIsBrowserPlatform();
+
+               container = {
+                  scrollHeight: 101,
+                  offsetHeight: 100
+               };
+               result = ScrollHeightFixUtil.calcHeightFix(container);
+               assert.equal(result, true);
+
+               container = {
+                  scrollHeight: 200,
+                  offsetHeight: 100
+               };
+               result = ScrollHeightFixUtil.calcHeightFix(container);
+               assert.equal(result, false);
+               restoreDetection('isIE');
+               restoreIsBrowserPlatform();
             });
          });
       });

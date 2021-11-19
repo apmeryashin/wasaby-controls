@@ -5,7 +5,11 @@ import {ALL_EXPANDED_VALUE, ExpandController} from 'Controls/expandCollapse';
 import { RecordSet } from 'Types/collection';
 import {Model} from 'Types/entity';
 
-function initTest(data: object[], options?: {}, collectionOptions?: {}): {recordSet: RecordSet, model: Tree, controller: ExpandController} {
+function initTest(
+    data: object[],
+    options?: {},
+    collectionOptions?: {}
+): {recordSet: RecordSet, model: Tree, controller: ExpandController} {
     const recordSet = new RecordSet({
         rawData: data,
         keyProperty: 'id'

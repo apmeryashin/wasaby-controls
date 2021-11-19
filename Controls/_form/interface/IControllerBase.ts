@@ -45,6 +45,7 @@ export interface IUpdateConfig {
  * Вызывает сохранение записи (завершение всех редактирований по месту, валидация).
  * @function Controls/form:IControllerBase#update
  * @param {Controls/form:IControllerBase/UpdateConfig.typedef} config Параметр сохранения.
+ * @return {Promise<void>}
  */
 
 /**

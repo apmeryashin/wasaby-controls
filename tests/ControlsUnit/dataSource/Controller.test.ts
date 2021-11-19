@@ -461,6 +461,7 @@ describe('Controls/dataSource:SourceController', () => {
 
                 return controller.load('down').catch(() => {
                     ok(controller.getItems().getCount() === 1);
+                    ok(controller.getLoadError() instanceof Error);
 
                     // return originSource
                     options = {...options};
@@ -710,6 +711,13 @@ describe('Controls/dataSource:SourceController', () => {
         });
     });
 
+    it('error in options', () => {
+        const sourceControllerOptions = getControllerOptions();
+        sourceControllerOptions.error = new Error();
+        const sourceController =  new NewSourceController(sourceControllerOptions);
+        ok(sourceController.getLoadError() instanceof Error);
+    });
+
     describe('reload', () => {
         it('reload should recreate navigation controller',  async () => {
             const controller = getController({
@@ -862,6 +870,27 @@ describe('Controls/dataSource:SourceController', () => {
                 ok(controller.getItems() === items);
             });
 
+        });
+
+        it('setItems with multinavigation', () => {
+            const navigation = getPagingNavigation(true);
+            navigation.sourceConfig.multiNavigation = true;
+            const controller = getControllerWithHierarchy({navigation});
+            const items = new RecordSet();
+            const navRecordSet = new RecordSet({
+                keyProperty: 'id',
+                rawData: [{
+                    id: 'Приход',
+                    nav_result: true
+                }, {
+                    id: 'Расход',
+                    nav_result: false
+                }]
+            });
+            items.setMetaData({more: navRecordSet});
+            controller.setItems(items);
+            ok(controller.hasLoaded('Приход'));
+            ok(controller.hasLoaded('Расход'));
         });
 
     });

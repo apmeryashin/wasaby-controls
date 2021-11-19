@@ -33,6 +33,7 @@ export class Controller {
    private _filter: any;
    private _filterChanged: boolean;
    private _lastCheckedKey: CrudEntityKey;
+   private _rootId: CrudEntityKey;
 
    private get _selection(): ISelection {
       return {
@@ -40,7 +41,7 @@ export class Controller {
          excluded: this._excludedKeys || []
       };
    }
-   private set _selection(selection: ISelection): void {
+   private set _selection(selection: ISelection) {
       this._selectedKeys = selection.selected;
       this._excludedKeys = selection.excluded;
    }
@@ -52,6 +53,7 @@ export class Controller {
       this._strategy = options.strategy;
       this._searchValue = options.searchValue;
       this._filter = options.filter;
+      this._rootId = options.rootId;
    }
 
    /**
@@ -60,16 +62,20 @@ export class Controller {
     * @void
     */
    updateOptions(options: ISelectionControllerOptions): void {
+      const modelChanged = this._model !== options.model;
+      const rootChanged = this._rootId !== options.rootId;
+
       this._strategy.update(options.strategyOptions);
       this._searchValue = options.searchValue;
+      this._model = options.model;
+      this._rootId = options.rootId;
 
       if (!isEqual(this._filter, options.filter)) {
          this._filter = options.filter;
          this._filterChanged = true;
       }
 
-      if (this._model !== options.model) {
-         this._model = options.model;
+      if (modelChanged || rootChanged) {
          this.setSelection(this.getSelection());
       }
    }
@@ -199,6 +205,7 @@ export class Controller {
          selection || this._selection,
          this._model.hasMoreData(),
          this._model.getCount(),
+         this._limit,
          byEveryItem,
          rootId
       );

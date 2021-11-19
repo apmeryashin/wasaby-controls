@@ -483,14 +483,15 @@ define(
                assert.equal(isMenuClosed, false, 'menu opened if notify click result is false');
             });
             it('_closeHandler', () => {
-               let isMenuClosed = false;
-               toolbar._sticky.isOpened = () => false;
-               toolbar._notify = (e, arr, bubl) => {
-                  assert.equal(e, 'menuClosed', 'closeHandler is uncorrect');
-                  assert.equal(bubl.bubbling, true, 'closeHandler is uncorrect');
-               };
-               toolbar._options.source = config.source;
-               toolbar._closeHandler();
+               const toolbarInst = new toolbars.View(config);
+               const sandbox = sinon.createSandbox();
+
+               sandbox.stub(toolbarInst, '_notify');
+               toolbarInst._setStateByItems = sinon.fake();
+               toolbarInst._setMenuSource = sinon.fake();
+
+               toolbarInst._closeHandler();
+               sinon.assert.calledWith(toolbarInst._notify, 'dropDownClose');
             });
             it('_setMenuSource', async() => {
                let Toolbar = new toolbars.View(config);

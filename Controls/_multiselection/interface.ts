@@ -95,6 +95,7 @@ export interface ISelectionControllerOptions {
    strategy?: ISelectionStrategy;
    strategyOptions?: ITreeSelectionStrategyOptions;
    searchValue?: string;
+   rootId: CrudEntityKey;
 }
 
 export interface ITreeSelectionStrategyOptions extends IFlatSelectionStrategyOptions {

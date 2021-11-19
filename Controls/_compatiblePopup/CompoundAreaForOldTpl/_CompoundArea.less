@@ -35,6 +35,8 @@
    }
    .controls-DialogTemplate .controls-DialogTemplate__content-area .ws-window-titlebar-custom, &.ws-window .ws-window-titlebar {
       z-index: 10;
+      border-top-right-radius: var(--border-radius_dialog);
+      border-top-left-radius: var(--border-radius_dialog);
    }
 
    &.controls-CompoundArea-headerPadding .controls-StackTemplate {
@@ -211,4 +213,11 @@ body:not(.rtl-Body) .controls-CompoundArea {
 
 .controls-Popup.controls-Popup__border-radius {
    border-radius: 8px;
+}
+
+.controls-CompoundArea-borderRadius_customHeader {
+   .controls-DialogTemplate__border-radius {
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+   }
 }

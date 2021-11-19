@@ -41,7 +41,7 @@
 
          <div class="controls-InfoBoxDemo-rows">
             <div class="controls-InfoBoxDemo-heading">Нажмите два раза на иконку</div>
-            <Controls.popup:InfoboxTarget trigger="demand" on:dblclick="_dblClickHandler()" name="demandInfobox">
+            <Controls.popup:InfoboxTarget horizontalPadding="null" trigger="demand" on:dblclick="_dblClickHandler()" name="demandInfobox">
                <ws:content>
                   <div attr:class="ControlsDemo-InfoBox__doubleClick">
                      <Controls.buttons:Button
@@ -53,7 +53,12 @@
                   </div>
                </ws:content>
                <ws:template>
-                  <div>Это всплывающая подсказка, открывающаяся методом open. Закроется через 5 секунд.</div>
+                  <div class="ws-flexbox ws-flex-column">
+                     <span>Всплывающая подсказка</span>
+                     <span>Открыта вручную. Закроется через 5 секунд.</span>
+                     <span>У этого шаблона отсутствуют отступы.</span>
+                  </div>
+
                </ws:template>
             </Controls.popup:InfoboxTarget>
          </div>

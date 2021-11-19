@@ -66,7 +66,8 @@ class Label extends Control<ILabelOptions> implements ICaption, IFontSize, IHref
             ]),
             fontColorStyle: EntityDescriptor(String).oneOf([
                 'label',
-                'unaccented'
+                'unaccented',
+                'readonly'
             ]),
             required: EntityDescriptor(Boolean)
         };

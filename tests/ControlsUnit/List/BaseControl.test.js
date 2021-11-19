@@ -359,6 +359,10 @@ define([
             afterReloadCallbackCalled = true;
          });
 
+         localSandbox.replace(ctrl, '_resolveSourceLoadPromise', (resolver) => {
+             resolver();
+         });
+
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
 
@@ -402,11 +406,17 @@ define([
          await ctrl._beforeMount(cfg);
          ctrl.saveOptions(cfg);
 
+         const localSandbox = sinon.createSandbox();
+         localSandbox.replace(ctrl, '_resolveSourceLoadPromise', (resolver) => {
+             resolver();
+         });
+
          // Empty list
          assert.isUndefined(ctrl._loadedItems);
          await ctrl.reload();
 
          assert.deepEqual(ctrl._loadedItems.getRawData(), data);
+         localSandbox.reset();
       });
 
       it('call itemsReadyCallback on recreation RS', async function () {

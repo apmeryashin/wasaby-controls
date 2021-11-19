@@ -589,7 +589,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         // максимуму растянуть инпут https://online.sbis.ru/opendoc.html?guid=9d278ed9-792c-4287-ad37-0f288fbf63e7
         let result = this._viewModel.displayValue.replace(/[0-9]/g, '0');
         const space = ' ';
-        const regExp = new RegExp('/' + space + '/g');
+        const regExp = new RegExp(space, 'g');
         result = result.replace(regExp, '0');
         return result;
     }

@@ -57,6 +57,7 @@ export default class TreeGridCollection<
 
     protected _$nodeTypeProperty: string;
     protected _$groupNodeVisibility: TGroupNodeVisibility;
+    protected _$hasStickyGroup: boolean = false;
 
     constructor(options: ITreeGridOptions) {
         super(options);
@@ -174,12 +175,6 @@ export default class TreeGridCollection<
         }
     }
 
-    setHasMoreStorage(storage: Record<string, boolean>, reBuildNodeFooters: boolean = false): void {
-        super.setHasMoreStorage(
-            storage, reBuildNodeFooters && (!!this._$nodeFooterTemplate || this.hasNodeFooterColumns())
-        );
-    }
-
     hasNodeFooterColumns(): boolean {
         return !!this._$columns && this._$columns.reduce((acc, column) => acc || !!column.nodeFooterTemplate, false);
     }
@@ -237,7 +232,25 @@ export default class TreeGridCollection<
             this._$headerModel = null;
         }
 
+        this._updateHasStickyGroup();
         this._$results = null;
+    }
+
+    protected _updateHasStickyGroup(): void {
+        const hasStickyGroup = this._hasStickyGroup();
+        if (this._$hasStickyGroup !== hasStickyGroup) {
+            this._$hasStickyGroup = hasStickyGroup;
+            this._updateItemsProperty(
+                'setHasStickyGroup', this._$hasStickyGroup, 'LadderSupport'
+            );
+        }
+    }
+
+    protected _hasStickyGroup(): boolean {
+        return !!(this.at(0)
+            && (this.at(0)['[Controls/_display/GroupItem]'] || this.at(0)['[Controls/treeGrid:TreeGridGroupDataRow]'])
+            && !(this.at(0) as unknown as TreeGridGroupDataRow<S>).isHiddenGroup()
+            && this._$stickyHeader);
     }
 
     protected _handleCollectionChangeAdd(): void {
@@ -307,7 +320,7 @@ export default class TreeGridCollection<
         if (this.getFooter()) {
             this.getFooter().setDisplayExpanderPadding(newValue);
         }
-        if (this.hasHeader()) {
+        if (this.hasHeader() && this.getHeader()['Controls/treeGrid:TreeGridHeader']) {
             this.getHeader().setDisplayExpanderPadding(newValue);
         }
     }

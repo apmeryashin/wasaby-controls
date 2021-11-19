@@ -32,7 +32,10 @@
 }
 
 .controls-Scroll__background-Shadow_style-default {
-   background-image: var(--shadow_thickness_background_scroll);
+   background-image: linear-gradient(var(--background-color) 25%, rgba(255, 255, 255, 0)),
+                     linear-gradient(rgba(255, 255, 255, 0), var(--background-color) 75%),
+                     linear-gradient(to bottom, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll)),
+                     linear-gradient(to top, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll));
 }
 
 .controls-Scroll__background-Shadow_style-unaccented {
