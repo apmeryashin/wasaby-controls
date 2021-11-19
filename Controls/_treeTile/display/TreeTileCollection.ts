@@ -48,7 +48,6 @@ export default class TreeTileCollection<
     protected _$folderWidth: number;
 
     readonly SupportExpand: boolean = false;
-    readonly SupportNodeFooters: boolean = false;
 
     constructor(options: ITreeTileCollectionOptions<S, T>) {
         super(options);
@@ -135,6 +134,7 @@ export default class TreeTileCollection<
 
 Object.assign(TreeTileCollection.prototype, {
     '[Controls/_treeTile/TreeTileCollection]': true,
+    SupportNodeFooters: false,
     _moduleName: 'Controls/treeTile:TreeTileCollection',
     _itemModule: 'Controls/treeTile:TreeTileCollectionItem',
     _$nodesHeight: null,
