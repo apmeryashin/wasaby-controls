@@ -113,9 +113,12 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     }
 
     protected _scrollStateChanged(event: SyntheticEvent<MouseEvent>, scrollState: object): void {
+
         // Состояние _scrollAvailable посчитается еще до того, как придет scrollState, из-за этого может появится лишний
         // скролл. Пересчитаем после первого события scrollStateChanged.
-        if (!this._scrollState) {
+        // Так же нужно пересчитать доступность скролла если размер контента скролла поменялся
+        // (польовательский контент поменял размер)
+        if (!this._scrollState || this._scrollState.scrollHeight !== scrollState.scrollHeight) {
             this._scrollState = scrollState;
             this._scrollAvailable = this._isScrollAvailable(this._options);
         }
