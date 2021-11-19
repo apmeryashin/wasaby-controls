@@ -60,7 +60,8 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
         return {
             fontSize: 'l',
             textTransform: 'none',
-            fontWeight: 'default'
+            fontWeight: 'default',
+            fontColorStyle: 'default'
         };
     }
 
@@ -82,7 +83,7 @@ Object.defineProperty(Header, 'defaultProps', {
 
 /**
  * @name Controls/_heading/Heading#textTransform
- * @cfg
+ * @cfg {String}
  * @default none
  * @demo Controls-demo/Heading/Title/TextTransform/Index
  * @remark
@@ -91,7 +92,7 @@ Object.defineProperty(Header, 'defaultProps', {
 
 /**
  * @name Controls/_heading/Heading#fontSize
- * @cfg
+ * @cfg {String}
  * @default l
  * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
  * @example
@@ -102,8 +103,9 @@ Object.defineProperty(Header, 'defaultProps', {
 
 /**
  * @name Controls/_heading/Heading#fontColorStyle
- * @cfg
+ * @cfg {TFontColorStyle}
  * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @default default
  * @example
  * <pre class="brush: html">
  * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
@@ -112,7 +114,7 @@ Object.defineProperty(Header, 'defaultProps', {
 
 /**
  * @name Controls/_heading/Heading#caption
- * @cfg
+ * @cfg {String}
  * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
  * @example
  * <pre class="brush: html">
