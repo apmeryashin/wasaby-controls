@@ -59,9 +59,13 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
         return source.map((item, index) => {
             const newItem = {...item};
             // Пока не перешли на предзагрузку фильтров (22.1100)
-            const sourceController = this._source?.[index]?.name === newItem.name ?
+            let sourceController = this._source?.[index]?.name === newItem.name ?
                 this._source?.[index]?.editorOptions?.sourceController :
                 null;
+
+            if (!sourceController && newItem.editorOptions?.items) {
+                sourceController = new NewSourceController({...newItem.editorOptions} as ISourceControllerOptions);
+            }
 
             newItem.editorCaption = item.caption || item.group || item.editorCaption;
             newItem.caption = '';
