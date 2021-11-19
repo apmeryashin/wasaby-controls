@@ -989,9 +989,9 @@ describe('Controls/_itemActions/Controller', () => {
                 false
             );
             // @ts-ignore
-            assert.deepEqual(config.target.x, target.getBoundingClientRect().x);
+            assert.equal(config.target.x, target.getBoundingClientRect().x);
             // @ts-ignore
-            assert.deepEqual(config.target.y, target.getBoundingClientRect().y);
+            assert.equal(config.target.y, target.getBoundingClientRect().y);
         });
 
         // T3.5. Если был установлен iconSize он должен примениться к templateOptions
