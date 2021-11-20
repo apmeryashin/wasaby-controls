@@ -27,6 +27,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
    triState?: boolean;
    value?: boolean | null;
    multiline?: boolean;
+   horizontalPadding?: string;
 }
 
 const mapTriState = {false: true, true: null, null: false};
@@ -112,7 +113,8 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
          iconStyle: 'secondary',
          validationStatus: 'valid',
          contrastBackground: false,
-         multiline: true
+         multiline: true,
+         horizontalPadding: 'default'
       };
    }
 
@@ -339,6 +341,14 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @name Controls/_toggle/Checkbox#contrastBackground
  * @cfg
  * @demo Controls-demo/toggle/Checkbox/ContrastBackground/Index
+ */
+/**
+ * @name Controls/_toggle/Checkbox#horizontalPadding
+ * @cfg {String} Конфигурация горизонтальных отступов чекбокса.
+ * @default default
+ * @variant default
+ * @variant null
+ * @demo Controls-demo/toggle/CheckboxMarker/HorizontalPadding/Index
  */
 /**
  * @name Controls/_toggle/Checkbox#resetValue

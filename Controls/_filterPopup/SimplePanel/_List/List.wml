@@ -31,7 +31,7 @@
                                                   {{multiSelectTpl.treeItem.getContents()[_options.parentProperty] ?
                                                    'controls-SimplePanel-List__hierarchyItem-checkbox-rightPadding' : 'controls-Menu__row-checkbox-left'}}
                                                   controls-Menu__row-checkbox_{{multiSelectTpl.treeItem.isSelected() ? 'active' : 'default'}}">
-               <ws:templateOptions value="{{multiSelectTpl.treeItem.isSelected()}}"/>
+               <ws:templateOptions value="{{multiSelectTpl.treeItem.isSelected()}}" horizontalPadding="null"/>
             </Controls.Container.Async>
          </ws:multiSelectTpl>
       </ws:partial>

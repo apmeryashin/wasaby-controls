@@ -12,6 +12,7 @@
                         triState="{{_options.triState}}"
                         contrastBackground="{{_options.contrastBackground}}"
                         resetValue="{{_options.resetValue}}"
+                        horizontalPadding="{{_options.horizontalPadding}}"
                         on:keyup="_keyUpHandler()"/>
             <ws:partial template="wml!Controls/_toggle/Checkbox/resources/CheckboxCaption"
                         readOnly="{{_options.value !== null && !_options.value ? _options.readOnly : false}}"
