@@ -2,6 +2,8 @@ import {ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IV
 import {TimeInterval} from 'Types/entity';
 
 /**
+ * @name Controls/_input/InputCallback/hoursFormat
+ * @function
  * Ограничивает ввод времени с 0:00 до 24:00.
  * @remark
  * Использовать нужно как значение опции inputCallback в {@link Controls.input:TimeInterval поле ввода интервала}

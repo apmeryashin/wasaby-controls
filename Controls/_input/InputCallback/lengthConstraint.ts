@@ -18,6 +18,8 @@ interface IFieldData {
 export type ICallback<T> = (data: IValue<T> & IFieldData) => IFieldData;
 
 /**
+ * @name Controls/_input/InputCallback/lengthConstraint
+ * @function
  * Get the function constraint the length of the number.
  * @param {number} maxLength The maximum length of the integer part of the number including minus.
  * @param {boolean} useGrouping Determines whether to use grouping separators, such as thousands separators.

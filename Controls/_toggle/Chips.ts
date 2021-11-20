@@ -97,9 +97,9 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * Отображение записей со счетчиками
  * JS:
  * <pre>
- * this._items = new Memory({
+ * this._items = new RecordSet({
  *    keyProperty: 'key',
- *    data: [
+ *    rawData: [
  *       {key: 1, caption: 'Element 1', counter: 5},
  *       {key: 2, caption: 'Element 2', counter: 3},
  *       {key: 3, caption: 'Element 3', counter: 7}
