@@ -405,7 +405,7 @@ export default class View extends Control<IOptions, IReceivedState> {
                 return this._tileCfg.nodeImageViewMode;
             case DetailViewMode.list:
             default:
-                return null;
+                return this._listCfg.imageViewMode;
         }
     }
 
