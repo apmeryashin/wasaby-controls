@@ -161,36 +161,36 @@ function recursiveMarkup(attr, data, context, isVdom, value, attrsToDecorate, ke
          }
          return markupGenerator.createText(valueToBuild, key);
       }
-      if (isString(valueToBuild[0]) && valueToBuild[0].includes('component:')) {
-          const valueToBuildPaths = valueToBuild[0].split(':');
-          if (options[valueToBuildPaths[1]]) {
-              return markupGenerator.createControlNew(
-                  'resolver',
-                  options[valueToBuildPaths[1]],
-                  {},
-                  {},
-                  valueToBuild[1], // опции компонента
-                  {
-                  attr: attr,
-                  data: data,
-                  ctx: this,
-                  isVdom: isVdom,
-                  defCollection:  {
-                      id: [],
-                      def: undefined
-                  },
-                  depsLocal: {},
-                  includedTemplates: {},
-                  viewController: this,
-                  context: isVdom ? context + 'part_' + (templateCount++) : context,
-                  key: key + '0_',
-                  internal: {},
-                  mergeType: 'attribute'
-              });
-          }
-      }
       if (!valueToBuild) {
          return [];
+      }
+      if (isString(valueToBuild[0]) && valueToBuild[0].includes('component:')) {
+            const valueToBuildPaths = valueToBuild[0].split(':');
+            if (options[valueToBuildPaths[1]]) {
+                return markupGenerator.createControlNew(
+                    'resolver',
+                    options[valueToBuildPaths[1]],
+                    {},
+                    {},
+                    valueToBuild[1], // опции компонента
+                    {
+                        attr: attr,
+                        data: data,
+                        ctx: this,
+                        isVdom: isVdom,
+                        defCollection:  {
+                            id: [],
+                            def: undefined
+                        },
+                        depsLocal: {},
+                        includedTemplates: {},
+                        viewController: this,
+                        context: isVdom ? context + 'part_' + (templateCount++) : context,
+                        key: key + '0_',
+                        internal: {},
+                        mergeType: 'attribute'
+                    });
+            }
       }
       if (!Array.isArray(valueToBuild)) {
          logError('Узел в JsonML должен быть строкой или массивом', valueToBuild);
