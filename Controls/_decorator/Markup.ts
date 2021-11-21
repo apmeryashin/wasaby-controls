@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import template = require('./Markup/resources/template');
 import * as linkDecorateUtils from './Markup/resources/linkDecorateUtils';
-import {delay} from 'Types/function';
 import 'css!Controls/decorator';
 
    /**
