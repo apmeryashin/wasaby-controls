@@ -6,6 +6,12 @@ import {ITextOptions} from 'Controls/_input/interface/IText';
 
 export interface IBaseTextInputOptions extends ITextOptions, IBaseInputOptions {}
 
+/**
+ * @class Controls/_input/BaseText
+ * @extends Controls/input:Base
+ * @implements Controls/input:ITextOptions
+ * @implements Controls/input:IBaseInputOptions
+ */
 export class BaseText extends Base<IBaseTextInputOptions> {
     _defaultValue: string = '';
     _punycodeToUnicode: Function;

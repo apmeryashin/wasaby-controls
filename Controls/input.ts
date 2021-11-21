@@ -6,6 +6,7 @@
  * @includes IArea Controls/_input/interface/IArea
  * @includes IMaxLength Controls/_input/interface/IMaxLength
  * @includes IBorderVisibility Controls/_input/interface/IBorderVisibility
+ * @includes IFieldTemplate Controls/_input/interface/IFieldTemplate
  * @public
  * @author Крайнов Д.О.
  */
