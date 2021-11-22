@@ -2,7 +2,7 @@
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
    <ws:editorTemplate>
-       <Controls.Container.Async tempalteName="Controls/toggle:Tumbler">
+       <Controls.Container.Async templateName="Controls/toggle:Tumbler">
            <ws:partial template="{{content.resolvedTemplate}}"
                        items="{{_options.items}}"
                        selectedKey="{{_options.propertyValue}}"
