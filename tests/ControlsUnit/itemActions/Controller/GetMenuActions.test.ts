@@ -94,6 +94,9 @@ describe('_getMenuActions cases', () => {
 
     beforeEach(() => {
         target = {
+            closest(): HTMLElement {
+                return this;
+            },
             getBoundingClientRect(): ClientRect {
                 return {
                     bottom: 1,
@@ -104,7 +107,7 @@ describe('_getMenuActions cases', () => {
                     width: 1
                 };
             }
-        } as HTMLElement;
+        } as undefined as HTMLElement;
         const native = {
             target
         };

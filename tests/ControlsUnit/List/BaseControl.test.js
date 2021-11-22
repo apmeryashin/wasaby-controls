@@ -3527,12 +3527,17 @@ define([
                      bottom: 100,
                      left: 100,
                      right: 100,
+                     x: 100,
+                     y: 100,
                      width: 100,
                      height: 100
                   }),
-                  closest: (selector) => ({
-                     className: selector.substr(1)
-                  })
+                  closest: function(selector) {
+                     return {
+                        getBoundingClientRect: this.getBoundingClientRect,
+                        className: selector.substr(1)
+                     };
+                  }
                }
             };
          };

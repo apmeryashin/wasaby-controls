@@ -358,6 +358,7 @@ export class Controller {
             return;
         }
 
+        const target = isContextMenu ? null : this._calculateTargetPoint(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(item, isActionMenu, parentAction, menuActions);
 
@@ -366,6 +367,7 @@ export class Controller {
             opener,
             template: 'Controls/menu:Popup',
             actionOnScroll: 'close',
+            target,
             templateOptions,
             // Этот класс задаёт смещение для popup при расчёте его top/left так,
             // чтобы иконка в заголовке меню совпадала с иконкой кнопки, по которой это меню открыли
@@ -395,8 +397,6 @@ export class Controller {
                 nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
             };
         }
-
-        menuConfig.target = isContextMenu ? null : this._calculateTargetPoint(clickEvent.target as HTMLElement);
         return menuConfig;
     }
 
