@@ -1,4 +1,26 @@
-.controls-breadcrumbsMenuButton__menu {
+.controls-breadcrumbsPathButton {
+   cursor: pointer;
+
+   // inner align
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+
+   // view set up
+   border-radius: 50%;
+   box-sizing: border-box;
+   width: var(--inline_height_m);
+   height: var(--inline_height_m);
+   background-color: var(--unaccented_same_background-color);
+   border: 1px solid var(--unaccented_contrast_background-color);
+}
+
+.controls-breadcrumbsPathButton__icon {
+   width: 70%;
+   fill: var(--label_icon-color);
+}
+
+.controls-breadcrumbsPathButton__menu {
    height: 100%;
    display: flex;
    border-radius: inherit;
@@ -6,7 +28,7 @@
    justify-content: flex-start;
 }
 
-.controls-breadcrumbsMenuButton__menu-header {
+.controls-breadcrumbsPathButton__menu-header {
    display: flex;
    flex-flow: row nowrap;
    align-items: baseline;
@@ -16,12 +38,53 @@
    padding: var(--offset_s) var(--offset_m);
    border-top-right-radius: var(--border-radius_default_block);
    border-top-left-radius: var(--border-radius_default_block);
-   background-color: var(--header_background-color_sticky);
+   background-color: var(--unaccented_background-color);
 }
 
-.controls-breadcrumbsMenuButton__menu-body {
+//region home button
+.controls-breadcrumbsPathButton__home-button {
+   cursor: pointer;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-breadcrumbsPathButton__home-button__icon {
+   width: var(--icon-size_2xs);
+   height: var(--icon-size_2xs);
+   fill: var(--primary_icon-color);
+}
+
+.controls-breadcrumbsPathButton__home-button__caption {
+   margin-left: var(--offset_xs);
+   color: var(--primary_text-color);
+}
+//endregion
+
+.controls-breadcrumbsPathButton__menu-body {
    height: 100%;
    flex-grow: 1;
    border-bottom-left-radius: inherit;
    border-bottom-right-radius: inherit;
+}
+
+.ws-is-hover {
+   .controls-breadcrumbsPathButton:hover {
+      border-color: var(--unaccented_hover_contrast_background-color);
+      background-color: var(--unaccented_hover_same_background-color);
+
+      .controls-breadcrumbsPathButton__icon {
+         fill: var(--label_hover_icon-color);
+      }
+   }
+
+   .controls-breadcrumbsPathButton__home-button:hover {
+      .controls-breadcrumbsPathButton__home-button__icon {
+         fill: var(--primary_hover_icon-color);
+      }
+
+      .controls-breadcrumbsPathButton__home-button__caption {
+         text-decoration: underline;
+         color: var(--primary_hover_text-color);
+      }
+   }
 }
