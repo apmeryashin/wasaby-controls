@@ -1,7 +1,7 @@
 import {TemplateFunction} from 'UI/Base';
 import {mixin} from 'Types/util';
 
-import {CollectionItem, TMarkerClassName, IItemPadding} from 'Controls/display';
+import {CollectionItem} from 'Controls/display';
 
 import Collection from './Collection';
 import GridRowMixin, {IOptions as IGridRowMixinOptions} from './mixins/Row';
@@ -54,25 +54,6 @@ export default class Row<TContents extends Model = Model>
             this._updateSeparatorSizeInColumns('Row');
         }
         return changed;
-    }
-
-    getMarkerClasses(markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
-        let classes = 'controls-GridView__itemV_marker ';
-        classes += `controls-GridView__itemV_marker-${this.getStyle()} `;
-        const bottomPadding = itemPadding.bottom || this.getBottomPadding();
-        classes += `controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingBottom-${bottomPadding} `;
-        const topPadding = itemPadding.top || this.getTopPadding();
-        classes += `controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingTop-${topPadding} `;
-
-        classes += 'controls-ListView__itemV_marker_';
-        if (markerClassName === 'default') {
-            classes += 'height ';
-            classes += 'controls-GridView__itemV_marker_vertical-position-top ';
-        } else {
-            classes += `${'padding-' + (topPadding || 'l') + '_' + markerClassName} `;
-        }
-        classes += `controls-ListView__itemV_marker-${this.getMarkerPosition()} `;
-        return classes;
     }
 
     _hasCheckBoxCell(): boolean {

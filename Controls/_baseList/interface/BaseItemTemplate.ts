@@ -124,5 +124,7 @@ export type TBackgroundColorStyle = 'danger'|'success'|'warning'|'primary'|'seco
  * @name Controls/_list/interface/IBaseItemTemplate#markerClassName
  * @cfg {Controls/_list/interface/IBaseItemTemplate/TMarkerClassName.typedef} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера}.
  * @default default
+ * @remark
+ * Согласно стандарту, в случае размещения маркера радом с текстом его высота равна высоте первой строки текста, включая верхний отступ записи.
  * @see marker
  */

@@ -64,8 +64,33 @@
    max-height: 100%;
 }
 
-.controls-GridView__itemV_marker_vertical-position-top {
-   top: 0;
+// Дефолтные отступы в гриде и в плоском списке разные.
+// Дублирование стилей тут - вынужденная мера, чтобы не было перекрытия стилей.
+.controls-GridView__itemV_marker_default_top_l,
+.controls-GridView__itemV_marker_master_top_l {
+   top: calc(var(--item_padding-top_l_list) + var(--item-separator_s_thickness_list));
+}
+
+.controls-GridView__itemV_marker_default_top_default,
+.controls-GridView__itemV_marker_master_top_default,
+.controls-GridView__itemV_marker_default_top_s,
+.controls-GridView__itemV_marker_master_top_s {
+   top: calc(var(--item_padding-top_s_list) + var(--item-separator_s_thickness_list));
+}
+
+.controls-GridView__itemV_marker_default_height,
+.controls-GridView__itemV_marker_master_height {
+   @variants: image-xs, image-s, image-m, image-l, text-2xs, text-xs, text-m, text-l, text-xl, text-2xl;
+   .for(@variants, {
+      &_@{_item}-padding-l {
+         height: ~"var(--marker_height_padding-l_@{_item}_list)";
+      }
+      &_@{_item}-padding-default,
+      &_@{_item}-padding-s,
+      &_@{_item}-padding-null {
+         height: ~"var(--marker_height_padding-s_@{_item}_list)";
+      }
+   });
 }
 
 .controls-Grid__header {
@@ -918,7 +943,7 @@
    height: 100%;
 }
 
-.controls-GridView__itemV_marker-master.controls-ListView__itemV_marker_height::after {
+.controls-ListView__itemV_marker_master_height_default::after {
    height: var(--master-marker_height_list);
 }
 

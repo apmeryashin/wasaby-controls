@@ -460,17 +460,33 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     getMarkerClasses(markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
-        const topPadding = (itemPadding.top || this.getTopPadding() || 'l');
-        let markerClass = 'controls-ListView__itemV_marker controls-ListView__itemV_marker_';
+        const topPadding = itemPadding.top || this.getTopPadding() || 'l';
+        let classes = 'controls-ListView__itemV_marker';
+        const imageMarkerVariants = ['image-xs', 'image-s', 'image-m', 'image-l'];
+        classes += ` controls-ListView__itemV_marker_${this.getStyle()}`;
+        classes += ` controls-ListView__itemV_marker-${this.getMarkerPosition()}`;
+
         if (markerClassName === 'default') {
-            markerClass += 'height';
+            // Маркеру по умолчанию может быть добавлен дополнительный отступ сверху.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_topPadding-${topPadding}`;
+            // По умолчанию высота маркера задаётся стилем отображения списка.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_height_default`;
         } else {
-            markerClass += `padding-${topPadding}_${markerClassName}`;
+            // Высота маркера задаётся согласно markerClassName
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_height_` +
+                `${markerClassName}-padding-${topPadding}`;
         }
-        markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}`;
-        markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}_topPadding-${topPadding}`;
-        markerClass += ` controls-ListView__itemV_marker-${this.getMarkerPosition()}`;
-        return markerClass;
+
+        // Вертикальное позиционирование задаётся согласно markerClassName, только для image-маркеров
+        if (imageMarkerVariants.indexOf(markerClassName) !== -1) {
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_top_${topPadding}`;
+        } else {
+            // Вертикальное позиционирование по умолчанию задаётся согласно стилю отображения списка.
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_top_null`;
+            classes += ` controls-ListView__itemV_marker_${this.getStyle()}_bottom_null`;
+        }
+
+        return classes;
     }
 
     getMarkerPosition(): 'left' | 'right' {
