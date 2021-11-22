@@ -5959,7 +5959,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _onRowDeactivated(e: SyntheticEvent, eventOptions: any) {
         e.stopPropagation();
 
-        if (eventOptions.isTabPressed) {
+        const pressedKey = eventOptions?.keyPressedData?.key;
+        const shouldEditNextRow = pressedKey && (
+            pressedKey === 'Tab' ||
+            (pressedKey === 'Enter' && this._getEditingConfig().sequentialEditingMode === 'cell')
+        );
+
+        if (shouldEditNextRow) {
             if (this._getEditingConfig()?.mode === 'cell') {
                 this._onEditingCellTabHandler(eventOptions);
             } else {
@@ -6050,7 +6056,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _getEditingConfig(options = this._options): Required<IEditableListOption['editingConfig']> {
         const editingConfig = options.editingConfig || {};
         const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
+
+        // Режим последовательного редактирования (действие по Enter).
         const getSequentialEditingMode = () => {
+            // sequentialEditingMode[row | cell | none] - новая опция, sequentialEditing[boolean?] - старая опция
             if (typeof editingConfig.sequentialEditingMode === 'string') {
                 return editingConfig.sequentialEditingMode;
             } else {
