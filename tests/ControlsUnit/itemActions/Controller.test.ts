@@ -1132,7 +1132,7 @@ describe('Controls/_itemActions/Controller', () => {
                 false
             );
             assert.equal(config.className,
-                'controls-ItemActions__popup__list' +
+                'controls-ItemActions__popup__list ' +
                 'controls_popupTemplate_theme-default controls_dropdownPopup_theme-default');
         });
 
