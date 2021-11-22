@@ -2,21 +2,24 @@
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
     <ws:editorTemplate>
-        <Controls.lookup:Selector name="lookupEditor"
-                                  scope="{{_options}}"
-                                  counterVisibility="hidden"
-                                  fontColorStyle="default"
-                                  selectedKeys="{{_options.propertyValue}}"
-                                  style="filterPanel"
-                                  readOnly="{{true}}"
-                                  on:selectedKeysChanged="_handleSelectedKeysChanged()"
-                                  on:textValueChanged="_handleTextValueChanged()"
-                                  on:itemClick="_handleLookupClick()"
-                                  attr:class="controls-FilterViewPanel__basicEditor-cloud controls-LookupEditor">
-            <ws:itemTemplate>
-                <ws:partial template="Controls/lookup:ItemTemplate"
-                            readOnly="{{true}}"/>
-            </ws:itemTemplate>
-        </Controls.lookup:Selector>
+        <Controls.Container.Async templateName="Controls/lookup:Selector">
+            <ws:partial template="{{content.resolvedTemplate}}"
+                        name="lookupEditor"
+                        scope="{{_options}}"
+                        counterVisibility="hidden"
+                        fontColorStyle="default"
+                        selectedKeys="{{_options.propertyValue}}"
+                        style="filterPanel"
+                        readOnly="{{true}}"
+                        on:selectedKeysChanged="_handleSelectedKeysChanged()"
+                        on:textValueChanged="_handleTextValueChanged()"
+                        on:itemClick="_handleLookupClick()"
+                        attr:class="controls-FilterViewPanel__basicEditor-cloud controls-LookupEditor">
+                <ws:itemTemplate>
+                    <ws:partial template="Controls/lookup:ItemTemplate"
+                                readOnly="{{true}}"/>
+                </ws:itemTemplate>
+            </ws:partial>
+        </Controls.Container.Async>
     </ws:editorTemplate>
 </Controls._filterPanel.BaseEditor>
