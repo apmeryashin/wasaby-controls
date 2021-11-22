@@ -24,7 +24,7 @@
             "></div>
          </ws:if>
          <ws:if data="{{backButtonBeforeCaptionTemplate.item.image}}">
-            <img src="{{backButtonBeforeCaptionTemplate.item.image}}" style="max-width: 100%"/>
+            <img src="{{backButtonBeforeCaptionTemplate.item.image}}" style="width: 1em"/>
          </ws:if>
       </ws:backButtonBeforeCaptionTemplate>
    </Controls.explorer:View>
