@@ -9,7 +9,7 @@
     <Controls.browser:Browser source="{{_viewSource}}" keyProperty="id" bind:filter="_filter" parentProperty="parent" bind:root="_root"
                               searchParam="title" minSearchLength="{{3}}" searchStartingWith="{{_startingWith}}">
         <div class="ws-fragment">
-            <Controls.search:InputContainer>
+            <Controls.search:InputContainer name="search">
                 <Controls.search:Input/>
             </Controls.search:InputContainer>
             <Controls.list:Remover name="remover"/>
@@ -20,8 +20,8 @@
                         bind:selectedKeys="_selectedKeys"
                         bind:excludedKeys="_excludedKeys"
                         attr:class="demo-Explorer ControlsDemo-Explorer"
+                        itemsReadyCallback="{{_itemsReadyCallback}}"
                         keyProperty="id"
-                        itemActions="{{_itemActions}}"
                         displayProperty="title"
                         parentProperty="parent"
                         nodeProperty="parent@"
