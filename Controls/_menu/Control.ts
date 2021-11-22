@@ -871,7 +871,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 nodeProperty: options.nodeProperty,
                 parentProperty: options.parentProperty,
                 root: options.root,
-                filter: options.allowPin ? MenuControl._searchHistoryDisplayFilter.bind(this) : null
+                filter: options.allowPin && options.parentProperty ?
+                    MenuControl._searchHistoryDisplayFilter.bind(this, options, items) : null
             });
         } else {
             const filterFunction = options.parentProperty && options.nodeProperty ? MenuControl._displayFilter.bind(this, options) : null;
@@ -1343,11 +1344,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return isVisible;
     }
 
-    private static _searchHistoryDisplayFilter(item: Model): boolean {
-        if (item && item.get) {
-            return !item.get('recent') && !item.get('frequent');
+    private static _searchHistoryDisplayFilter(options: IMenuControlOptions,
+                                               items: RecordSet,
+                                               item: Model): boolean {
+        let result = true;
+        if (item && item.get && MenuControl._isHistoryItem(item) && !item.get(options.parentProperty)) {
+            const historyKey = item.getKey() + '_history';
+            const historyItem = items.getRecordById(historyKey);
+            result = !historyItem;
         }
-        return true;
+        return result;
     }
 
     private static _isItemCurrentRoot(item: Model, options: IMenuControlOptions): boolean {
