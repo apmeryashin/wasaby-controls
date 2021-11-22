@@ -223,6 +223,8 @@ const lowerValidHtml = {
       var elements = [],
          key = (attr && attr.key) || '_',
          attrsToDecorate = {
+            // _isRootElement ничего не поменяет в инферно, но нужен в реакте.
+            _isRootElement: attr._isRootElement,
             attributes: attr.attributes,
             events: events,
             context: attr.context
