@@ -56,11 +56,11 @@
 }
 
 .controls-Header__caption_style-danger, .controls-Header__caption_style-danger_hovered {
-   color: var(--danger_hover_text-color);
+   color: var(--danger_text-color);
 }
 
 .controls-Header__caption_style-success, .controls-Header__caption_style-success_hovered {
-   color: var(--success_hover_text-color);
+   color: var(--success_text-color);
 }
 
 .controls-Header__caption_style-default, .controls-Header__caption_style-default_hovered {
@@ -68,7 +68,7 @@
 }
 
 .controls-Header__caption_style-warning, .controls-Header__caption_style-warning_hovered {
-   color: var(--warning_hover_text-color);
+   color: var(--warning_text-color);
 }
 
 .controls-Header__caption_style-unaccented, .controls-Header__caption_style-unaccented_hovered {
@@ -79,6 +79,10 @@
    color: var(--link_text-color);
 }
 
+.controls-Header__caption_fontcolor-default_hovered:active {
+   color: var(--default_hover_text-color_heading);
+}
+
 .controls-Header__caption_style-primary_hovered:active {
    color: var(--primary_hover_text-color_heading);
 }
@@ -87,11 +91,39 @@
    color: var(--secondary_hover_text-color_heading);
 }
 
+.controls-Header__caption_style-success_hovered:active {
+   color: var(--success_hover_text-color);
+}
+
+.controls-Header__caption_style-warning_hovered:active {
+   color: var(--warning_hover_text-color);
+}
+
+.controls-Header__caption_style-danger_hovered:active {
+   color: var(--danger_hover_text-color);
+}
+
+.controls-Header__caption_style-unaccented_hovered:active {
+   color: var(--unaccented_hover_text-color);
+}
+
 .controls-Header__caption_style-label_hovered:active {
    color: var(--link_hover_text-color);
 }
 
+.controls-Header__caption_style-default_hovered:active {
+   color: var(--default_hover_text-color_heading);
+}
+
+.controls-Header__caption_style-link_hovered:active {
+   color: var(--link_hover_text-color);
+}
+
 .ws-is-hover {
+   .controls-Header__caption_fontcolor-default_hovered:hover {
+      color: var(--default_hover_text-color_heading);
+   }
+
    .controls-Header__caption_style-primary_hovered:hover {
       color: var(--primary_hover_text-color_heading);
    }
@@ -100,38 +132,42 @@
       color: var(--secondary_hover_text-color_heading);
    }
 
+   .controls-Header__caption_style-success_hovered:hover {
+      color: var(--success_hover_text-color);
+   }
+
+   .controls-Header__caption_style-warning_hovered:hover {
+      color: var(--warning_hover_text-color);
+   }
+
+   .controls-Header__caption_style-danger_hovered:hover {
+      color: var(--danger_hover_text-color);
+   }
+
+   .controls-Header__caption_style-unaccented_hovered:hover {
+      color: var(--unaccented_hover_text-color);
+   }
+
    .controls-Header__caption_style-label_hovered:hover {
       color: var(--link_hover_text-color);
    }
-}
 
-//Классы для прикладников, чтоб когда они собирали из компонентов заголовок который им нужен, то могли повесить любой ховер.
-//Например, заголовок сложный и состоит из заголовка, загловка-разделителя и счетчика. Ховер в таком случае может висеть раздельный, на загловке и заглоовке разделители,
-//а на счетчике ховер по умолчанию, в таком случае прикладник повесит на контейнер с этим сложным компонентом класс: controls-Header_Separator__clickable и все заработает по стандарту.
-
-.controls-Header_Counter__clickable:active {
-   .controls-Header__caption_style-primary_hovered {
-      color: var(--primary_hover_text-color_heading);
+   .controls-Header__caption_style-default_hovered:hover {
+      color: var(--default_hover_text-color_heading);
    }
 
-   .controls-Header__caption_style-secondary_hovered {
-      color: var(--secondary_hover_text-color_heading);
-   }
-
-   .controls-Header__caption_style-label_hovered {
+   .controls-Header__caption_style-link_hovered:hover {
       color: var(--link_hover_text-color);
    }
-
-   .controls-HeaderCounter_style-primary_hovered {
-      color: var(--primary_hover_text-color_headingCounter);
-   }
-
-   .controls-HeaderCounter_style-secondary_hovered {
-      color: var(--secondary_hover_text-color_headingCounter);
-   }
 }
+
+//По стандарту должна обсепечиваться ситуация, чтобы заголовок со счетчиком имел совместный ховер и клик
 
 .controls-Header_all__clickable:active {
+   .controls-Header__caption_fontcolor-default_hovered {
+      color: var(--default_hover_text-color_heading);
+   }
+
    .controls-Header__caption_style-primary_hovered {
       color: var(--primary_hover_text-color_heading);
    }
@@ -140,7 +176,31 @@
       color: var(--secondary_hover_text-color_heading);
    }
 
+   .controls-Header__caption_style-success_hovered {
+      color: var(--success_hover_text-color);
+   }
+
+   .controls-Header__caption_style-warning_hovered {
+      color: var(--warning_hover_text-color);
+   }
+
+   .controls-Header__caption_style-danger_hovered {
+      color: var(--danger_hover_text-color);
+   }
+
+   .controls-Header__caption_style-unaccented_hovered {
+      color: var(--unaccented_hover_text-color);
+   }
+
    .controls-Header__caption_style-label_hovered {
+      color: var(--link_hover_text-color);
+   }
+
+   .controls-Header__caption_style-default_hovered {
+      color: var(--default_hover_text-color_heading);
+   }
+
+   .controls-Header__caption_style-link_hovered {
       color: var(--link_hover_text-color);
    }
 
@@ -150,6 +210,10 @@
 
    .controls-HeaderCounter_style-secondary_hovered {
       color: var(--secondary_hover_text-color_headingCounter);
+   }
+
+   .controls-HeaderCounter_style-unaccented_hovered {
+      color: var(--unaccented_hover_text-color);
    }
 
    .controls-HeaderSeparator__arrow_style-primary {
@@ -173,52 +237,12 @@
    }
 }
 
-.controls-Header_Separator__clickable:active {
-   .controls-Header__caption_style-primary_hovered {
-      color: var(--primary_hover_text-color_heading);
-   }
-
-   .controls-Header__caption_style-secondary_hovered {
-      color: var(--secondary_hover_text-color_heading);
-   }
-
-   .controls-Header__caption_style-label_hovered {
-      color: var(--link_hover_text-color);
-   }
-
-   .controls-HeaderSeparator__arrow_style-primary {
-      fill: var(--primary_hover_icon-color_headingSeparator);
-   }
-
-   .controls-HeaderSeparator__arrow_style-secondary {
-      fill: var(--secondary_hover_icon-color_headingSeparator);
-   }
-}
-
 .ws-is-hover {
-   .controls-Header_Counter__clickable:hover {
-      .controls-Header__caption_style-primary_hovered {
-         color: var(--primary_hover_text-color_heading);
-      }
-
-      .controls-Header__caption_style-secondary_hovered {
-         color: var(--secondary_hover_text-color_heading);
-      }
-
-      .controls-Header__caption_style-label_hovered {
-         color: var(--link_hover_text-color);
-      }
-
-      .controls-HeaderCounter_style-primary_hovered {
-         color: var(--primary_hover_text-color_headingCounter);
-      }
-
-      .controls-HeaderCounter_style-secondary_hovered {
-         color: var(--secondary_hover_text-color_headingCounter);
-      }
-   }
-
    .controls-Header_all__clickable:hover {
+      .controls-Header__caption_fontcolor-default_hovered {
+         color: var(--default_hover_text-color_heading);
+      }
+
       .controls-Header__caption_style-primary_hovered {
          color: var(--primary_hover_text-color_heading);
       }
@@ -227,7 +251,27 @@
          color: var(--secondary_hover_text-color_heading);
       }
 
+      .controls-Header__caption_style-success_hovered {
+         color: var(--success_hover_text-color);
+      }
+
+      .controls-Header__caption_style-warning_hovered {
+         color: var(--warning_hover_text-color);
+      }
+
+      .controls-Header__caption_style-danger_hovered {
+         color: var(--danger_hover_text-color);
+      }
+
       .controls-Header__caption_style-label_hovered {
+         color: var(--link_hover_text-color);
+      }
+
+      .controls-Header__caption_style-default_hovered {
+         color: var(--default_hover_text-color_heading);
+      }
+
+      .controls-Header__caption_style-link_hovered {
          color: var(--link_hover_text-color);
       }
 
@@ -237,6 +281,10 @@
 
       .controls-HeaderCounter_style-secondary_hovered {
          color: var(--secondary_hover_text-color_headingCounter);
+      }
+
+      .controls-HeaderCounter_style-unaccented_hovered {
+         color: var(--unaccented_hover_text-color);
       }
 
       .controls-HeaderSeparator__arrow_style-primary {
@@ -257,27 +305,6 @@
 
       .controls-Separator__icon_style-unaccented {
          color: var(--link_hover_text-color);
-      }
-   }
-   .controls-Header_Separator__clickable:hover {
-      .controls-Header__caption_style-primary_hovered {
-         color: var(--primary_hover_text-color_heading);
-      }
-
-      .controls-Header__caption_style-secondary_hovered {
-         color: var(--secondary_hover_text-color_heading);
-      }
-
-      .controls-Header__caption_style-label_hovered {
-         color: var(--link_hover_text-color);
-      }
-
-      .controls-HeaderSeparator__arrow_style-primary {
-         fill: var(--primary_icon-color_headingSeparator);
-      }
-
-      .controls-HeaderSeparator__arrow_style-secondary {
-         fill: var(--secondary_icon-color_headingSeparator);
       }
    }
 }
