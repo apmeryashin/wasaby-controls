@@ -1,8 +1,7 @@
 import type { IItemsRange } from './ScrollController';
 import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
-import { getOffsetTop } from 'Controls/sizeUtils';
-import getDimensions from 'Controls/_utils/sizeUtils/getDimensions';
+import { getDimensions, getOffsetTop } from 'Controls/sizeUtils';
 
 export interface IItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
