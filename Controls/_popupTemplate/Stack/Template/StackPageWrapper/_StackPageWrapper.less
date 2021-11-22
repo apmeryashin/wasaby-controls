@@ -23,13 +23,10 @@
    overflow: hidden;
    width: var(--shadow-blur_stack);
    top: 0;
+   right: calc((var(--shadow-blur_stack) + var(--border-thickness_stack)) / (-1));
    background: linear-gradient(to left, transparent, var(--shadow-color_stack));
 }
 
-.controls-PageTemplate__shadow-with-panel {
-   right: calc((var(--shadow-blur_stack) + var(--border-thickness_stack) + var(--width_stack-right_panel) + var(--border_width_stack-right_panel)) / (-1));
-}
-
-.controls-PageTemplate__shadow-without-panel {
-   right: calc((var(--shadow-blur_stack) + var(--border-thickness_stack)) / (-1));
+.controls-PageTemplate .controls-StackTemplate__rightPanel {
+   position: static;
 }

@@ -49,7 +49,8 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     protected _beforeMount(options?: IPageTemplate, context?: object,
                            receivedState?: IReceivedState): void | Promise<IReceivedState> {
         this._rightPanelWidth = getRightPanelWidth();
-        this._setWorkSpaceWidth(receivedState?.width || options.workspaceWidth);
+        const width = this._validateWidth(options, receivedState?.width || options.workspaceWidth);
+        this._setWorkSpaceWidth(width);
         this._setSavedSizes(receivedState);
         this._updateOffset(options);
         this._updateProperties(options);
@@ -154,8 +155,18 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
 
     private _updateOffset(options: IPageTemplate = this._options): void {
         // protect against wrong options
-        this._maxOffset = Math.max(options.maxWidth - this._workspaceWidth, 0);
-        this._minOffset = Math.max(this._workspaceWidth - options.minWidth, 0);
+        this._maxOffset = Math.max(options.maxWidth - this._workspaceWidth - this._rightPanelWidth, 0);
+        this._minOffset = Math.max(this._workspaceWidth - options.minWidth - this._rightPanelWidth, 0);
+    }
+
+    private _validateWidth(options: IPageTemplate, width: number): number {
+        if (width < options.minWidth) {
+            width = options.minWidth;
+        }
+        if (width > options.maxWidth) {
+            width = options.maxWidth;
+        }
+        return width;
     }
 
     private _setWorkSpaceWidth(width: number, withRightPanel: boolean = true): void {
@@ -163,6 +174,7 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         if (!withRightPanel) {
             width -= this._rightPanelWidth;
         }
+
         this._workspaceWidth = width ? (width + this._rightPanelWidth) : undefined;
         this._templateWorkSpaceWidth = width;
     }
