@@ -4,6 +4,7 @@ import {detection} from 'Env/Env';
 import {List} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
 import DialogStrategy from 'Controls/_popupTemplate/Dialog/DialogStrategy';
+import * as DialogContent from 'wml!Controls/_popupTemplate/Dialog/DialogContent';
 import StickyStrategy from 'Controls/_popupTemplate/Sticky/StickyStrategy';
 import {getStickyConfig, getStickyDefaultPosition} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
@@ -287,6 +288,7 @@ class DialogController extends BaseController {
             height: 0
         };
         this._prepareConfig(item, sizes);
+        this._setContentTemplate(item);
         let defaultCoordinate: number = -10000;
 
         // Error on ios when position: absolute container is created outside the screen and stretches the page
@@ -303,6 +305,10 @@ class DialogController extends BaseController {
         if (typeof item.position[horizontalPositionProperty] === 'undefined') {
             item.position[horizontalPositionProperty] = defaultCoordinate;
         }
+    }
+
+    private _setContentTemplate(item: IDialogItem): void {
+        item.popupOptions.content = DialogContent;
     }
 
     private _hasMaximizePopup(): boolean {
