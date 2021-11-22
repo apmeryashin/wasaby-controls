@@ -26,6 +26,7 @@ function getViewModel({source, collapsedGroups}: Partial<IViewPanelOptions>): Vi
 describe('Controls/filterPanel:ViewModel', () => {
     describe('resetFilterItem', () => {
         const source = getSource();
+        source[0].textValue = 'Test owner';
         const viewModel = getViewModel({source});
 
         it('editingObject is updated', () => {
@@ -35,7 +36,7 @@ describe('Controls/filterPanel:ViewModel', () => {
 
         it('filterItem textValue is updated', () => {
             viewModel.resetFilterItem('owners');
-            assert.equal(viewModel.getGroupItems().owners.textValue, '');
+            assert.equal(viewModel.getSource()[0].textValue, '');
         });
     });
 
