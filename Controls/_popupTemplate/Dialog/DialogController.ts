@@ -153,6 +153,9 @@ class DialogController extends BaseController {
         // Для актуальных размеров нужно снять старые значения
         const maxHeight = container.style.maxHeight;
         const height = container.style.height;
+        // Если внутри лежит скроллконтейнер, то восстанавливаем позицию скролла после изменения размеров
+        const scroll = container.querySelector('.controls-Scroll__content');
+        const scrollTop = scroll?.scrollTop;
         container.style.maxHeight = '';
         container.style.height = '';
         item.sizes = this._getPopupSizes(item, container);
@@ -173,6 +176,8 @@ class DialogController extends BaseController {
 
         container.style.maxHeight = maxHeight;
         container.style.height = height;
+        //TODO: https://online.sbis.ru/opendoc.html?guid=5ddf9f3b-2d0e-49aa-b5ed-12e943c761d8
+        scroll?.scrollTop = scrollTop;
 
         /* Если задан resizeDirection не перепозиционируем,
            т.к. это опция отвечает как раз за ресайз без изменения позиции */
