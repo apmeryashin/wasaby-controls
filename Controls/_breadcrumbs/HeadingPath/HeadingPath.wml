@@ -75,7 +75,11 @@
                   </div>
                </ws:else>
 
-               <ws:if data="{{_visibleItems}}">
+               <!--
+                Если рисуем кнопку меню под опцией feature1182709671, тогда крошки нужны только в том случае
+                если есть данные и мы не на телефоне.
+               -->
+               <ws:if data="{{_visibleItems && (_options.feature1182709671 ? !_isPhone : true)}}">
                   <Controls._breadcrumbs.View
                      attr:class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
                      items="{{_breadCrumbsItems}}"
@@ -85,7 +89,7 @@
                      displayProperty="{{_options.displayProperty}}"
                      highlighter="{{_options.highlighter}}"
                      fontColorStyle="{{_options.fontColorStyle}}"
-                     fontSize="{{_options.fontSize}}"
+                     fontSize="{{_breadcrumbsSize}}"
                      containerWidth="{{_options.containerWidth}}"
                      on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                      on:itemClick="_notifyHandler('itemClick')"

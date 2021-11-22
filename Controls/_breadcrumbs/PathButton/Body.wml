@@ -1,17 +1,27 @@
-<div class="controls-breadcrumbsMenuButton__menu" data-qa="controls-breadcrumbsMenuButton__menu">
+<div class="controls-breadcrumbsPathButton__menu" data-qa="controls-breadcrumbsMenuButton__menu">
    <!-- Шапка -->
-   <div class="controls-breadcrumbsMenuButton__menu-header" data-qa="controls-breadcrumbsMenuButton__menuHeader">
+   <div class="controls-breadcrumbsPathButton__menu-header" data-qa="controls-breadcrumbsMenuButton__menuHeader">
       <!-- На главную -->
-      <Controls.buttons:Button
-         attr:data-qa="controls-breadcrumbsMenuButton__menuHeaderHome"
-         viewMode="link"
-         icon="icon-Home2"
-         iconSize="s"
-         iconStyle="primary"
-         fontColorStyle="primary"
-         caption="{{_options.caption}}"
+      <div
+         class="controls-breadcrumbsPathButton__home-button"
+         data-qa="controls-breadcrumbsMenuButton__menuHeaderHome"
          on:click="_goToRoot()"
-      />
+      >
+         <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            xmlns="http://www.w3.org/2000/svg"
+            class="controls-breadcrumbsPathButton__home-button__icon"
+         >
+            <path
+               fill-rule="evenodd"
+               clip-rule="evenodd"
+               d="M8.67267 0.260737C8.29125 -0.0869125 7.70875 -0.0869125 7.32733 0.260737L0.32733 4.81806C0.11885 5.00808 0 5.27745 0 5.55993V14.9974C0 15.5511 0.44772 16 1 16H15C15.5523 16 16 15.5511 16 14.9974V5.55993C16 5.27745 15.8811 5.00808 15.6727 4.81806L8.67267 0.260737ZM1 5.55993V14.9974H15V5.55993L8 1.00261L1 5.55993Z"
+            />
+         </svg>
+         <div class="controls-breadcrumbsPathButton__home-button__caption">{{_options.caption}}</div>
+      </div>
 
       <!-- Крестик закрытия -->
       <Controls.popupTemplate:CloseButton
@@ -21,7 +31,7 @@
    </div>
 
    <!-- Список -->
-   <Controls.scroll:Container attr:class="controls-breadcrumbsMenuButton__menu-body" data-qa="controls-breadcrumbsMenuButton__menuBody">
+   <Controls.scroll:Container attr:class="controls-breadcrumbsPathButton__menu-body" data-qa="controls-breadcrumbsMenuButton__menuBody">
       <Controls.treeGrid:View
          name="treeGrid"
          filter="{{_filter}}"
