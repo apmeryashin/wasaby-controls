@@ -5,6 +5,7 @@ import {IDragObject, Container} from 'Controls/dragnDrop';
 import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISlidingPanelTemplate';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {detection} from 'Env/Env';
+import {IScrollState} from 'Controls/scroll';
 
 enum DRAG_DIRECTION {
     TOP = 'top',
@@ -36,7 +37,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     private _isPanelMounted: boolean = false;
     private _currentTouchPosition: { x: number, y: number } = null;
     private _startTouchYPosition: number = null;
-    private _scrollState: object = null;
+    private _scrollState: IScrollState = null;
     private _swipeInProcess: boolean = false;
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
@@ -76,12 +77,14 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     protected _isScrollAvailable(options: ISlidingPanelTemplateOptions): boolean {
         const {slidingPanelOptions} = options;
         const contentHeight = this._getHeight(options);
-        const hasMoreContent = this._scrollState ?
-            this._scrollState.clientHeight < this._scrollState.scrollHeight : false;
 
         return slidingPanelOptions.height > slidingPanelOptions.maxHeight || // см fixIosBug в контроллере
             slidingPanelOptions.height === slidingPanelOptions.maxHeight ||
-            slidingPanelOptions.height === contentHeight && !hasMoreContent;
+            slidingPanelOptions.height === contentHeight && !this._hasContentForScroll();
+    }
+
+    private _hasContentForScroll(): boolean {
+        return this._scrollState ? this._scrollState.clientHeight < this._scrollState.scrollHeight : false;
     }
 
     /**
@@ -112,7 +115,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         this._children.dragNDrop.startDragNDrop(null, event);
     }
 
-    protected _scrollStateChanged(event: SyntheticEvent<MouseEvent>, scrollState: object): void {
+    protected _scrollStateChanged(event: SyntheticEvent<MouseEvent>, scrollState: IScrollState): void {
 
         // Состояние _scrollAvailable посчитается еще до того, как придет scrollState, из-за этого может появится лишний
         // скролл. Пересчитаем после первого события scrollStateChanged.
@@ -174,29 +177,16 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             x: touchData.clientX,
             y: touchData.clientY
         };
+        const offset = this._getDragOffsetByTouchEvent(event);
 
         // Если тач начался со скролла, то оффсет нужно начинать с того момента, как закончился скролл
         if (!this._currentTouchPosition) {
             this._currentTouchPosition = currentTouchPosition;
         }
 
-        const prevTouchPosition = this._currentTouchPosition;
-
         this._currentTouchPosition = currentTouchPosition;
+        this._touchDragOffset = offset;
 
-        const xOffset = currentTouchPosition.x - prevTouchPosition.x;
-        const yOffset = currentTouchPosition.y - prevTouchPosition.y;
-
-        // Аналогичный drag'n'drop функционал. Собираем общий offset относительно начальной точки тача.
-        if (this._touchDragOffset) {
-            this._touchDragOffset.x += xOffset;
-            this._touchDragOffset.y += yOffset;
-        } else {
-            this._touchDragOffset = {
-                x: xOffset,
-                y: yOffset
-            };
-        }
         event.stopPropagation();
         this._notifyDragStart(this._touchDragOffset);
     }
@@ -230,7 +220,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
 
         return this._scrollAvailable &&
             swipeInTopScrollContainer &&
-            (alreadyScrolled || swipeToScrollSide) ||
+            (alreadyScrolled || swipeToScrollSide && this._hasContentForScroll()) ||
             swipeInsideInnerScrollContainer;
     }
 
@@ -265,15 +255,48 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         }
         const dragOffset = this._getDragOffsetWithOverflowChecking(offset);
         this._notify('popupDragStart', [dragOffset], {bubbling: true});
+        this._notifyCustomDragStart(dragOffset);
+    }
 
-        // dragstart для проикладных программистов, чтобы они могли как-то отреагировать на драг и изменить контент
+    /**
+     * dragstart для проикладных программистов,
+     * чтобы они могли как-то отреагировать на драг и изменить контент
+     * @param offset
+     * @private
+     */
+    private _notifyCustomDragStart(offset: IDragObject['offset']): void {
         const direction = offset.y > 0 ? DRAG_DIRECTION.BOTTOM : DRAG_DIRECTION.TOP;
-        this._notify('dragStart', [direction, dragOffset]);
+        this._notify('dragStart', [direction, offset]);
     }
 
     protected _notifyDragEnd(): void {
         this._notify('popupDragEnd', [], {bubbling: true});
         this._dragStartHeightDimensions = null;
+    }
+
+    private _getDragOffsetByTouchEvent(event: SyntheticEvent<TouchEvent>): IDragObject['offset'] {
+        const touchData = event.nativeEvent.changedTouches[0];
+        const currentTouchPosition = {
+            x: touchData.clientX,
+            y: touchData.clientY
+        };
+        const result = {
+            x: 0,
+            y: 0
+        };
+        if (this._currentTouchPosition) {
+            const prevTouchPosition = this._currentTouchPosition;
+            result.x = currentTouchPosition.x - prevTouchPosition.x;
+            result.y = currentTouchPosition.y - prevTouchPosition.y;
+        }
+
+        // Аналогичный drag'n'drop функционал. Собираем общий offset относительно начальной точки тача.
+        if (this._touchDragOffset) {
+            const fullDragOffset = this._touchDragOffset;
+            result.x += fullDragOffset.x;
+            result.y += fullDragOffset.y;
+        }
+        return result;
     }
 
     private _getDragOffsetWithOverflowChecking(dragOffset: IDragObject['offset']): IDragObject['offset'] {
@@ -283,7 +306,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         // В зависимости от позиции высоту шторки увеличивает либо положительный, либо отрицательный сдвиг по оси "y"
         const realHeightOffset = this._position === 'top' ? offsetY : -offsetY;
         const {
-            scrollHeight: startScrollHeight,
+            scrollHeight: startScrollHeight
         } = this._dragStartHeightDimensions;
         const scrollContentOffset = contentHeight - startScrollHeight;
         const popupHeight = this._options.slidingPanelOptions.height;
