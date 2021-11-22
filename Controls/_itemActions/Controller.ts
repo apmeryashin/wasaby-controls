@@ -396,10 +396,7 @@ export class Controller {
             };
         }
 
-        menuConfig.target = isContextMenu ? null : this._calculateTargetPoint(
-            clickEvent.target as HTMLElement,
-            menuConfig.direction?.horizontal
-        );
+        menuConfig.target = isContextMenu ? null : this._calculateTargetPoint(clickEvent.target as HTMLElement);
         return menuConfig;
     }
 
@@ -624,9 +621,8 @@ export class Controller {
      * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
      * Поэтому заменяем метод getBoundingClientRect так, чтобы он возвращал текущие координаты
      * @param realTarget
-     * @param direction
      */
-    private _calculateTargetPoint(realTarget: HTMLElement, direction: string = 'right'): {x: number, y: number} {
+    private _calculateTargetPoint(realTarget: HTMLElement): {x: number, y: number} {
         const button = realTarget?.closest('.js-controls-ItemActions__ItemAction_button');
         const rect = button.getBoundingClientRect();
         return {
