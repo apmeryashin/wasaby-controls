@@ -8,7 +8,7 @@
  * @public
  * @author Мельникова Е.А.
  */
-export {default as View} from './_filterPanel/View';
+export {default as View, IViewPanelOptions} from './_filterPanel/View';
 export {default as ViewModel} from './_filterPanel/View/ViewModel';
 export {default as BaseEditor} from './_filterPanel/BaseEditor';
 export {default as TextEditor} from './_filterPanel/Editors/Text';
