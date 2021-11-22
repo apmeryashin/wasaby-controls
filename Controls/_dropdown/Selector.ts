@@ -119,6 +119,9 @@ export default class Selector extends BaseDropdown {
 
    _beforeUpdate(options: IInputOptions): void {
       this._controller.update(this._getControllerOptions(options));
+      if (this._options.emptyText !== options.emptyText || this._options.selectedAllText !== options.selectedAllText) {
+         this._setCountItems(this._controller.getItems(), options);
+      }
    }
 
    _getControllerOptions(options: IInputOptions): object {
@@ -163,13 +166,7 @@ export default class Selector extends BaseDropdown {
    }
 
    _dataLoadCallback(items: RecordSet<Model>): void {
-      this._countItems = items.getCount();
-      if (this._options.emptyText) {
-         this._countItems += 1;
-      }
-      if (this._options.selectedAllText) {
-         this._countItems += 1;
-      }
+      this._setCountItems(items, this._options);
 
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(items);
@@ -260,6 +257,16 @@ export default class Selector extends BaseDropdown {
    protected _selectorTemplateResult(event: Event, selectedItems: List<Model>): void {
       const result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
       this._selectorResult(result);
+   }
+
+   private _setCountItems(items: RecordSet, options: IInputOptions): void {
+      this._countItems = items.getCount();
+      if (options.emptyText) {
+         this._countItems += 1;
+      }
+      if (options.selectedAllText) {
+         this._countItems += 1;
+      }
    }
 
    private _updateSelectedItems(items: Model[]): void {
