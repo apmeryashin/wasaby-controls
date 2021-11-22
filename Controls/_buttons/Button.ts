@@ -171,6 +171,9 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
 
     protected _beforeUpdate(newOptions: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, newOptions);
+        if (this._options.tooltip !== newOptions.tooltip) {
+            this._tooltip = newOptions.tooltip;
+        }
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
