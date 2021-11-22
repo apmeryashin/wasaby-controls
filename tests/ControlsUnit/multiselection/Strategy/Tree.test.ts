@@ -1679,6 +1679,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          strategy.update({
             selectDescendants: false,
             selectAncestors: false,
+            selectionType: 'all',
+            selectionCountMode: 'all',
             rootId: 5,
             model: model
          });
@@ -1725,6 +1727,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          strategy.update({
             selectDescendants: false,
             selectAncestors: false,
+            selectionType: 'all',
+            selectionCountMode: 'all',
             rootId: 5,
             model: model
          });
@@ -1733,6 +1737,94 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.isTrue(strategy.isAllSelected(selection, true, 7, null, false));
          assert.isFalse(strategy.isAllSelected(selection, true, 7, null, false, 4));
          assert.isTrue(strategy.isAllSelected({selected: [4], excluded: [4]}, true, 7, null, false, 4));
+      });
+
+      it('selected all root items by one', () => {
+         const model = new TreeGridCollection({
+            collection: new RecordSet({
+               keyProperty: 'key',
+               rawData: [{
+                  key: 1,
+                  parent: null,
+                  node: true
+               }, {
+                  key: 2,
+                  parent: null,
+                  node: true
+               }, {
+                  key: 3,
+                  parent: null,
+                  node: true
+               }]
+            }),
+            root: null,
+            keyProperty: 'key',
+            parentProperty: 'parent',
+            nodeProperty: 'node',
+            columns: [],
+            expandedItems: [],
+            collapsedItems: []
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model,
+            selectionType: 'all',
+            selectionCountMode: 'all',
+            recursiveSelection: false,
+            entryPath: []
+         });
+
+         const selection = { selected: [1, 2, 3], excluded: [] };
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, null, true));
+      });
+
+      it('selected all root items by one, one node is expanded', () => {
+         const model = new TreeGridCollection({
+            collection: new RecordSet({
+               keyProperty: 'key',
+               rawData: [{
+                  key: 1,
+                  parent: null,
+                  node: true
+               },{
+                  key: 11,
+                  parent: 1,
+                  node: true
+               }, {
+                  key: 2,
+                  parent: null,
+                  node: true
+               }, {
+                  key: 3,
+                  parent: null,
+                  node: true
+               }]
+            }),
+            root: null,
+            keyProperty: 'key',
+            parentProperty: 'parent',
+            nodeProperty: 'node',
+            columns: [],
+            expandedItems: [1],
+            collapsedItems: []
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model,
+            selectionType: 'all',
+            selectionCountMode: 'all',
+            recursiveSelection: false,
+            entryPath: []
+         });
+
+         const selection = { selected: [1, 2, 3], excluded: [] };
+         assert.isTrue(strategy.isAllSelected(selection, false, 4, null, true));
       });
    });
 
