@@ -421,7 +421,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     // endregion MultiSelectAccessibility
 
     getDisplayProperty(): string {
-        return this.getOwner().getDisplayProperty();
+        return !this.getOwner().isDestroyed() && this.getOwner().getDisplayProperty();
     }
 
     getDisplayValue(): string {
