@@ -42,7 +42,7 @@ import 'css!Controls/filterPanel';
  * @demo Controls-demo/filterPanel/View/Index
  */
 
-interface IViewPanelOptions {
+export interface IViewPanelOptions {
     source: IFilterItem[];
     collapsedGroups: string[] | number[];
     backgroundStyle: string;

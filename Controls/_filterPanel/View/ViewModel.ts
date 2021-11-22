@@ -12,8 +12,8 @@ import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource
 
 interface IFilterViewModelOptions {
     source: IFilterItem[];
-    collapsedGroups: string[] | number[];
-    filterViewMode: string;
+    collapsedGroups?: string[] | number[];
+    filterViewMode?: string;
     style?: string;
 }
 
@@ -57,19 +57,20 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     private _getSource(source: IFilterItem[]): IFilterItem[] {
         return source.map((item, index) => {
             const newItem = {...item};
+            const editorOptions = newItem.editorOptions;
             // Пока не перешли на предзагрузку фильтров (22.1100)
             let sourceController = this._source?.[index]?.name === newItem.name ?
                 this._source?.[index]?.editorOptions?.sourceController :
                 null;
 
-            if (!sourceController && newItem.editorOptions?.items) {
-                sourceController = new NewSourceController({...newItem.editorOptions} as ISourceControllerOptions);
+            if (!sourceController && editorOptions?.items && editorOptions?.items instanceof RecordSet) {
+                sourceController = new NewSourceController({...editorOptions} as ISourceControllerOptions);
             }
 
             newItem.editorCaption = item.caption || item.group || item.editorCaption;
             newItem.caption = '';
             newItem.editorOptions = {
-                ...item.editorOptions,
+                ...editorOptions,
                 viewMode: item.viewMode,
                 filterViewMode: this._options.filterViewMode,
                 name: item.name,
