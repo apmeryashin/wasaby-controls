@@ -8,18 +8,18 @@ import {TRoot} from 'Controls-demo/types';
 import * as explorerImages from 'Controls-demo/explorerNew/ExplorerImagesLayout';
 import {memoryFilter} from 'Controls-demo/treeGridNew/DemoHelpers/Filter/memoryFilter';
 
-// Данные в корне имеют структуру, отличную от данных не в корне.
+// Данные узлов имеют структуру, отличную от данных листов.
 // Это должно приводить к тому, что в корне при проваливании в папку меняется RecordSet и разрушается модель.
 const data = [
     {
         id: 1, parent: null, 'parent@': true, code: null, price: null, title: 'Комплектующие', SearchResult: false
     },
     {
-        id: 11, parent: 1, 'parent@': true, code: null, price: null, title: 'Жесткие диски', image: null,
+        id: 11, parent: 1, 'parent@': true, code: null, price: null, title: 'Жесткие диски',
         SearchResult: false
     },
     {
-        id: 111, parent: 11, 'parent@': true, code: null, price: null, title: 'SATA', image: null, SearchResult: false
+        id: 111, parent: 11, 'parent@': true, code: null, price: null, title: 'SATA', SearchResult: false
     },
     {
         id: 1111, parent: 111, 'parent@': null, code: 'ST1000NC001', price: 2800,
@@ -37,7 +37,7 @@ const data = [
         image: explorerImages[0], SearchResult: false
     },
     {
-        id: 112, parent: 11, 'parent@': true, code: null, price: null, title: 'SAS', image: null, SearchResult: false
+        id: 112, parent: 11, 'parent@': true, code: null, price: null, title: 'SAS', SearchResult: false
     },
     {
         id: 1121, parent: 112, 'parent@': null, code: 'ST1000NC001', price: 3600,
@@ -58,27 +58,24 @@ const data = [
         id: 2, parent: null, 'parent@': true, code: null, price: null, title: 'Компьютеры', SearchResult: false
     },
     {
-        id: 21, parent: 2, 'parent@': true, code: null, price: null, title: 'Аксессуары', image: null,
-        SearchResult: false
+        id: 21, parent: 2, 'parent@': true, code: null, price: null, title: 'Аксессуары', SearchResult: false
     },
     {
-        id: 211, parent: 21, 'parent@': true, code: null, price: null, title: 'Аксессуары для SATA', image: null,
-        SearchResult: false
+        id: 211, parent: 21, 'parent@': true, code: null, price: null, title: 'Аксессуары для SATA', SearchResult: false
     },
     {
         id: 3, parent: null, 'parent@': true, code: null, price: null,
         title: 'Комплектующие для настольных персональных компьютеров фирмы "Формоза компьютерс"', SearchResult: false
     },
     {
-        id: 31, parent: 3, 'parent@': true, code: null, price: null, title: 'Бывшие в употреблении', image: null,
+        id: 31, parent: 3, 'parent@': true, code: null, price: null, title: 'Бывшие в употреблении', SearchResult: false
+    },
+    {
+        id: 311, parent: 31, 'parent@': true, code: null, price: null, title: 'Восстановленные детали',
         SearchResult: false
     },
     {
-        id: 311, parent: 31, 'parent@': true, code: null, price: null, title: 'Восстановленные детали', image: null,
-        SearchResult: false
-    },
-    {
-        id: 3111, parent: 311, 'parent@': true, code: null, price: null, title: 'Жесткие диски SATA', image: null,
+        id: 3111, parent: 311, 'parent@': true, code: null, price: null, title: 'Жесткие диски SATA',
         SearchResult: false
     },
     {
@@ -101,12 +98,10 @@ const data = [
         SearchResult: true
     },
     {
-        id: 41, parent: 4, 'parent@': true, code: null, price: null, title: 'Фотоаппараты', SearchResult: true,
-        image: null
+        id: 41, parent: 4, 'parent@': true, code: null, price: null, title: 'Фотоаппараты', SearchResult: true
     },
     {
-        id: 411, parent: 41, 'parent@': true, code: null, price: null, title: 'Canon', image: null,
-        SearchResult: false
+        id: 411, parent: 41, 'parent@': true, code: null, price: null, title: 'Canon', SearchResult: false
     },
     {
         id: 4111, parent: 411, 'parent@': null, code: 'FR-11434', price: 49500,
@@ -159,7 +154,10 @@ export default class extends Control {
     }
 
     protected _itemsReadyCallback(): void {
-        this._children.search.activate();
+        if (this._children.search) {
+            // Активируем стоку поиска. Список должен потерять фокус
+            this._children.search.activate();
+        }
     }
 
     protected _onToggle(): void {
