@@ -258,7 +258,9 @@ export default class Application extends Control<IApplication> {
    }
    protected _mousedownPage(e: SyntheticEvent<Event>): void {
       this._registers.mousedown.start(e);
-      this._popupManager.mouseDownHandler(e);
+      if (!detection.isMobilePlatform) {
+         this._popupManager.mouseDownHandler(e);
+      }
    }
    protected _mousemovePage(e: SyntheticEvent<Event>): void {
       this._registers.mousemove.start(e);
@@ -287,8 +289,11 @@ export default class Application extends Control<IApplication> {
       /* eslint-enable */
       this._registers.mousemove.start(e);
    }
-   protected _touchStartPage(): void {
+   protected _touchStartPage(event: SyntheticEvent<Event>): void {
       this._updateTouchClass();
+      if (detection.isMobilePlatform) {
+         this._popupManager.mouseDownHandler(event);
+      }
    }
    protected _keyPressHandler(event: SyntheticEvent<KeyboardEvent>): void {
       if (this._isPopupShow) {

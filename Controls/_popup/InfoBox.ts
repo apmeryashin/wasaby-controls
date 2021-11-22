@@ -80,6 +80,8 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
     }
 
     private _getConfig(): IInfoBoxPopupOptions {
+        const closeOnOutsideClick = this._options.trigger === 'click' || this._options.trigger === 'demand' ||
+            this._options.trigger === 'hover|touch' && detection.isMobilePlatform;
         return {
             opener: this,
             target: this._container,
@@ -91,7 +93,7 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
             validationStatus: 'valid',
             horizontalPadding: this._options.horizontalPadding,
             // InfoBox close by outside click only if trigger is set to 'demand' or 'click'.
-            closeOnOutsideClick: this._options.trigger === 'click' || this._options.trigger === 'demand',
+            closeOnOutsideClick,
             floatCloseButton: this._options.floatCloseButton,
             closeButtonVisibility: this._options.closeButtonVisibility,
             eventHandlers: {
