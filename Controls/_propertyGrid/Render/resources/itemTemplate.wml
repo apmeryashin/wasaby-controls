@@ -23,6 +23,7 @@
     </ws:if>
     <ws:else data="{{item.caption !== '' && !item.editorOptions.jumpingLabel}}">
         <ws:partial template="label"
+                    attr:data-qa="controls-PropertyGrid__editor-caption"
                     attr:class="controls-PropertyGrid__editor-caption
                              {{'controls-PropertyGrid__editor-caption_' + (collectionItem.getEditorTemplateName() ? 'withEditor' : 'withoutEditor')}}"
                     attr:tabindex="-1"
@@ -51,6 +52,7 @@
                 {{highlightOnHover ? 'controls-PropertyGrid__row_highlightOnHover'}}
                 {{!!captionPosition  ? ('controls-PropertyGrid__flex-row controls-PropertyGrid__row_captionPosition-' + captionPosition)}}
                 {{collectionItem.getItemPaddingClasses()}}"
+         attr:data-qa="controls-PropertyGrid__editor"
          attr:key="propertyGrid-editor-{{collectionItem.getUid()}}">
         <ws:partial template="itemTemplate" />
         <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
