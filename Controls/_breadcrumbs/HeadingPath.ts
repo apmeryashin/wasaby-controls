@@ -16,6 +16,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Path} from 'Controls/dataSource';
 import {IHeadingPath} from './interface/IHeadingPath';
 import calculateBreadcrumbsUtil, {ARROW_WIDTH, PADDING_RIGHT} from 'Controls/_breadcrumbs/Utils';
+import {detection} from 'Env/Env';
 
 interface IReceivedState {
     items?: Record[];
@@ -79,6 +80,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     protected _indexEdge: number = 0;
     protected _isHomeVisible: boolean = false;
     private _initializingWidth: number;
+    protected _isPhone: boolean = detection.isPhone;
+    protected _breadcrumbsSize: string;
 
     protected _beforeMount(options?: IHeadingPath,
                            contexts?: object,
@@ -114,6 +117,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
             this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
             this._prepareData(options, getTextWidth);
         }
+
+        this._updateBreadcrumbsSize(options.backButtonFontSize, options.fontSize);
     }
 
     protected _beforeUpdate(newOptions: IHeadingPath): void {
@@ -146,6 +151,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
                 }
             }
         }
+
+        this._updateBreadcrumbsSize(newOptions.backButtonFontSize, newOptions.fontSize);
     }
     private _getDotsWidth(fontSize: string, getTextWidth: Function = this._getTextWidth): number {
         const dotsWidth = getTextWidth('...', fontSize) + PADDING_RIGHT;
@@ -272,6 +279,22 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
             this._backButtonCaption = '';
 
             clearCrumbsView();
+        }
+    }
+
+    /**
+     * Обновляет размер шрифта хлебных крошек относительно размера кнопки "Назад"
+     */
+    private _updateBreadcrumbsSize(backButtonSize: string, defaultSize: string): void {
+        let result = defaultSize;
+
+        // Для кнопки "Назад" размером больше '3xl' крошки должны быть размера 'm'
+        if (['3xl', '4xl', '5xl', '6xl', '7xl'].indexOf(backButtonSize) >= 0) {
+            result = 'm';
+        }
+
+        if (this._breadcrumbsSize !== result) {
+            this._breadcrumbsSize = result;
         }
     }
 
