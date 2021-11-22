@@ -4,12 +4,12 @@ import {Gadgets} from '../DataHelpers/DataCatalog';
 import {HierarchicalMemory, Memory} from 'Types/source';
 import {IColumn} from 'Controls/grid';
 import {TRoot} from 'Controls-demo/types';
-import {IItemAction} from 'Controls/_itemActions/interface/IItemAction';
 
 import * as explorerImages from 'Controls-demo/explorerNew/ExplorerImagesLayout';
 import {memoryFilter} from 'Controls-demo/treeGridNew/DemoHelpers/Filter/memoryFilter';
 
-
+// Данные в корне имеют структуру, отличную от данных не в корне.
+// Это должно приводить к тому, что в корне при проваливании в папку меняется RecordSet и разрушается модель.
 const data = [
     {
         id: 1, parent: null, 'parent@': true, code: null, price: null, title: 'Комплектующие', SearchResult: false
@@ -134,19 +134,6 @@ export default class extends Control {
 
     protected _selectedKeys: [] = [];
     protected _excludedKeys: [] = [];
-
-    protected _itemActions: IItemAction[] = [
-        {
-            id: 0,
-            icon: 'icon-Erase',
-            iconStyle: 'danger',
-            title: 'delete pls',
-            showType: 0,
-            handler: (item) => {
-                this._children.remover.removeItems([item.getKey()]);
-            }
-        }
-    ];
 
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
