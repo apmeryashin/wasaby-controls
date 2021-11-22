@@ -832,7 +832,12 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const items = model.getItems();
          items.push(new GroupItem({}));
 
-         const res = strategy.getSelectionForModel(selection, null, items, 'asdas');
+         let res = strategy.getSelectionForModel(selection, null, items, 'asdas');
+         assert.deepEqual(toArrayKeys(res.get(true)), [4, 5, 7]);
+         assert.deepEqual(toArrayKeys(res.get(null)), [1, 2, 3, 6]);
+         assert.deepEqual(toArrayKeys(res.get(false)), []);
+
+         res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection, null, items, 'asdas');
          assert.deepEqual(toArrayKeys(res.get(true)), [4, 5, 7]);
          assert.deepEqual(toArrayKeys(res.get(null)), [1, 2, 3, 6]);
          assert.deepEqual(toArrayKeys(res.get(false)), []);

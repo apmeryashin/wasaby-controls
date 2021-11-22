@@ -617,6 +617,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          if (itemIndex > 0) {
             return path[itemIndex - 1];
          }
+      } else if (item['[Controls/_display/GroupItem]']) {
+         // для группы родителем будет корневой элемент
+         return this._getKey(this._getRoot());
       }
 
       const parent = item.getParent();
