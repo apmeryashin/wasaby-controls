@@ -2,9 +2,12 @@
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
    <ws:editorTemplate>
-      <Controls.toggle:Tumbler items="{{_options.items}}"
-                               selectedKey="{{_options.propertyValue}}"
-                               readOnly="{{_options.readOnly}}"
-                               on:selectedKeyChanged="_selectedKeyChangedHandler()"/>
+       <Controls.Container.Async tempalteName="Controls/toggle:Tumbler">
+           <ws:partial template="{{content.resolvedTemplate}}"
+                       items="{{_options.items}}"
+                       selectedKey="{{_options.propertyValue}}"
+                       readOnly="{{_options.readOnly}}"
+                       on:selectedKeyChanged="_selectedKeyChangedHandler()"/>
+       </Controls.Container.Async>
    </ws:editorTemplate>
 </Controls._filterPanel.BaseEditor>
