@@ -350,6 +350,7 @@ export default class Collection<
 
 Object.assign(Collection.prototype, {
     '[Controls/_columns/display/Collection]': true,
+    SupportNodeFooters: false,
     _moduleName: 'Controls/columns:ColumnsCollection',
     _itemModule: 'Controls/columns:ColumnsCollectionItem',
     // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:

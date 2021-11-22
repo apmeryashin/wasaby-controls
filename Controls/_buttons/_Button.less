@@ -431,11 +431,11 @@
 }
 
 .controls-Button_functionalButton_style-primary {
-   background: var(--primary_contrast_background-color);
+   background: var(--primary_contrast_background-color_button);
 }
 
 .controls-Button_functionalButton_style-secondary {
-   background: var(--secondary_contrast_background-color);
+   background: var(--secondary_contrast_background-color_button);
 }
 
 .controls-Button_functionalButton_style-danger {
@@ -577,6 +577,14 @@
       border-color: transparent;  //если заливка полупрозрачная, то получается наложение
    }
 });
+
+.controls-Button_button_style-secondary.controls-Button_bg-contrast {
+   background: var(--secondary_contrast_background-color_button);
+}
+
+.controls-Button_button_style-primary.controls-Button_bg-contrast {
+   background: var(--primary_contrast_background-color_button);
+}
 
 .controls-Button_button_style-primary.controls-Button_bg-same {
    background: var(--primary_background-color_button);

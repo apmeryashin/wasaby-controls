@@ -17,6 +17,13 @@ if (detection.isMobileIOS && detection.IOSVersion === 12) {
 type TDirection = 'vertical' | 'horizontal';
 type TSizeProperty = 'width' | 'height';
 
+interface IBody {
+   width: number;
+   height: number;
+   scrollHeight: number;
+   scrollWidth: number;
+}
+
 interface IVisualViewport {
    height: number;
    offsetLeft: number;
@@ -172,8 +179,17 @@ export class StickyStrategy {
       const restrictiveContainerCoord = restrictiveContainerPosition?.[popupDirection] || 0;
 
       if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom') && !popupCfg.fixPosition) {
-         if (position[isHorizontal ? 'right' : 'bottom'] < 0) {
-            return -(position[isHorizontal ? 'right' : 'bottom']);
+         const coordinate = position[isHorizontal ? 'right' : 'bottom'];
+         if (coordinate < 0) {
+            // Координата right/bottom может быть отрицательная, если на body находится скролл, т.к. позиция считается
+            // относительно основного контейнера body.
+            const body = this._getBody();
+            // Допустимые отрицательные координаты
+            const negativeOverflowValue = body[isHorizontal ? 'scrollWidth' : 'scrollHeight'] - body[isHorizontal ? 'width' : 'height'];
+            const dif = Math.abs(coordinate) - negativeOverflowValue;
+            if (dif > 0) {
+               return dif;
+            }
          }
          const targetCoord = this._getTargetCoords(
              popupCfg,
@@ -477,11 +493,12 @@ export class StickyStrategy {
       };
    }
 
-   private _getBody(): object {
+   private _getBody(): IBody {
       const bodyDimensions = DimensionsMeasurer.getElementDimensions(document.body);
       return {
          height: bodyDimensions.clientHeight,
          scrollHeight: bodyDimensions.scrollHeight,
+         scrollWidth: bodyDimensions.scrollWidth,
          width: bodyDimensions.clientWidth
       };
    }

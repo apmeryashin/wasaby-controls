@@ -526,6 +526,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             sourceController.unsubscribe('itemsChanged', this._itemsChanged);
         }
 
+        this._dataLoader.each((config, id) => {
+            this._getSourceController(id).unsubscribe('rootChanged', this._rootChanged);
+        });
+
         if (this._errorRegister) {
             this._errorRegister.destroy();
             this._errorRegister = null;

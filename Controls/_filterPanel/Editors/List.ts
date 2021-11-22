@@ -52,6 +52,7 @@ export interface IListEditorOptions extends
     selectedAllText?: string;
     resetValue?: number[]|string[];
     sourceController?: SourceController;
+    expandedItems?: TKey[];
 }
 
 /**
@@ -142,8 +143,15 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _itemActions: IItemAction[];
     protected _itemsReadyCallback: Function = null;
     protected _markedKey: string|number;
+    protected _expandedItems: TKey[] = [];
 
-    protected _beforeMount(options: IListEditorOptions): void {
+    protected _beforeMount(options: IListEditorOptions): void|Promise<RecordSet> {
+        const {sourceController} = options;
+
+        this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
+        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
+        this._onCollectionChange = this._onCollectionChange.bind(this);
+
         this._selectedKeys = options.propertyValue;
         this._setMarkedKey(this._selectedKeys, options);
         this._setColumns(options);
@@ -151,13 +159,14 @@ class ListEditor extends Control<IListEditorOptions> {
         this._navigation = this._getNavigation(options);
         this._itemActions = this._getItemActions(options.historyId);
 
-        if (options.sourceController && this._filter) {
-            options.sourceController.setFilter(this._filter);
+        if (options.expandedItems) {
+            this._expandedItems = options.expandedItems;
         }
 
-        this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
-        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
-        this._onCollectionChange = this._onCollectionChange.bind(this);
+        if (sourceController && !isEqual(sourceController.getFilter(), this._filter)) {
+            sourceController.setFilter(this._filter);
+            return sourceController.reload() as Promise<RecordSet>;
+        }
     }
 
     protected _afterMount(): void {
@@ -168,30 +177,31 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
+        const {propertyValue, sourceController} = options;
         const valueChanged =
-            !isEqual(options.propertyValue, this._options.propertyValue) &&
-            !isEqual(options.propertyValue, this._selectedKeys);
+            !isEqual(propertyValue, this._options.propertyValue) &&
+            !isEqual(propertyValue, this._selectedKeys);
         const filterChanged = !isEqual(options.filter, this._options.filter);
         const displayPropertyChanged = options.displayProperty !== this._options.displayProperty;
         const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
-            this._selectedKeys = options.propertyValue;
+            this._selectedKeys = propertyValue;
             this._setColumns(options);
             this._navigation = this._getNavigation(options);
         }
         if (filterChanged || valueChanged) {
-            this._setFilter(this._selectedKeys, options);
+            this._setFilter(valueChanged ? this._selectedKeys : null, options);
         }
         if (valueChanged) {
             this._setMarkedKey(this._selectedKeys, options);
         }
 
-        if (options.sourceController && filterChanged) {
-            options.sourceController.updateOptions({
+        if (sourceController && filterChanged) {
+            sourceController.updateOptions({
                 ...options,
                 filter: this._filter
             });
-            options.sourceController.reload();
+            sourceController.reload();
         }
     }
 
@@ -303,6 +313,14 @@ class ListEditor extends Control<IListEditorOptions> {
             value,
             textValue: this._getTextValue(this._selectedKeys)
         };
+    }
+
+    protected _registerHandler(event: SyntheticEvent, type: string): void {
+        // Если среди родителей панели фильтров будет Browser, то все команды ПМО, посылаемые через
+        // Register будут долетать до списков внутри панели фильтров
+        if (event.type === 'register' && type === 'selectedTypeChanged') {
+            event.stopPropagation();
+        }
     }
 
     private _getValue(value: string[] | number[]): string[] | number[] {

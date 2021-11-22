@@ -460,6 +460,7 @@ describe('Controls/dataSource:SourceController', () => {
 
                 return controller.load('down').catch(() => {
                     ok(controller.getItems().getCount() === 1);
+                    ok(controller.getLoadError() instanceof Error);
 
                     // return originSource
                     options = {...options};
@@ -707,6 +708,13 @@ describe('Controls/dataSource:SourceController', () => {
             await controller.reload();
             ok(controller.getItems().getCount() === 2);
         });
+    });
+
+    it('error in options', () => {
+        const sourceControllerOptions = getControllerOptions();
+        sourceControllerOptions.error = new Error();
+        const sourceController =  new NewSourceController(sourceControllerOptions);
+        ok(sourceController.getLoadError() instanceof Error);
     });
 
     describe('reload', () => {

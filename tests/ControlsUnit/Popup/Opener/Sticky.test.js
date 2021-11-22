@@ -11,6 +11,7 @@ define(
       'use strict';
 
       const StickyControllerClass = StickyController.StickyController;
+      const StickyStrategyClass = StickyStrategy.StickyStrategy;
       StickyController = StickyController.default;
       StickyStrategy = StickyStrategy.default;
 
@@ -791,20 +792,20 @@ define(
             StickyStrategy._restrictContainer = restrictContainer;
          });
          it('checkOverflow', () => {
+            const StrategyInstance = new StickyStrategyClass();
+            StrategyInstance._getBody = () => {
+               return {...BASE_VIEWPORT, scrollWidth: 1000, scrollHeight: 1000};
+            };
             let position = {
                right: -10,
                bottom: -20
             };
-            let result = 0;
-
-            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
-            let _isMobileDevices = StickyStrategy.__isMobileDevices;
-            StickyStrategy.__isMobileDevices = () => true;
+            let result;
 
             // правый и нижний край не влезли
-            result = StickyStrategy._checkOverflow({direction: {}}, {}, position, 'horizontal');
+            result = StrategyInstance._checkOverflow({direction: {}}, {}, position, 'horizontal');
             assert.strictEqual(result, 10);
-            result = StickyStrategy._checkOverflow({direction: {}}, {}, position, 'vettical');
+            result = StrategyInstance._checkOverflow({direction: {}}, {}, position, 'vertical');
             assert.strictEqual(result, 20);
 
             position = {
@@ -815,10 +816,48 @@ define(
             // левый и верхний край не влезли
             result = StickyStrategy._checkOverflow({direction: {}}, {}, position, 'horizontal');
             assert.strictEqual(result, 10);
-            result = StickyStrategy._checkOverflow({direction: {}}, {}, position, 'vettical');
+            result = StickyStrategy._checkOverflow({direction: {}}, {}, position, 'vertical');
             assert.strictEqual(result, 20);
 
-            StickyStrategy.__isMobileDevices = _isMobileDevices;
+            // Скролл на body
+            StrategyInstance._getBody = () => {
+               return {...BASE_VIEWPORT, scrollWidth: 1200, scrollHeight: 1200};
+            };
+            const popupCfg = {
+               direction: {},
+               targetPoint: {
+                  vertical: 'top',
+                  horizontal: 'left'
+               },
+               sizes: {
+                  width: 15,
+                  height: 25
+               }
+            };
+            const targetCoords = {
+               left: 100,
+               top: 200,
+               leftScroll: 0,
+               topScroll: 0
+            };
+            position = {
+               right: -10,
+               bottom: -20
+            };
+            result = StrategyInstance._checkOverflow(popupCfg, targetCoords, position, 'horizontal');
+            assert.strictEqual(result, -85); // Влезло
+            result = StrategyInstance._checkOverflow(popupCfg, targetCoords, position, 'vertical');
+            assert.strictEqual(result, -175); // влезло
+
+
+            position = {
+               right: -210,
+               bottom: -220
+            };
+            result = StrategyInstance._checkOverflow(popupCfg, targetCoords, position, 'horizontal');
+            assert.strictEqual(result, 10); // Не влезло
+            result = StrategyInstance._checkOverflow(popupCfg, targetCoords, position, 'vertical');
+            assert.strictEqual(result, 20); // Не влезло
          });
 
          it('revertPosition outsideOfWindow', () => {

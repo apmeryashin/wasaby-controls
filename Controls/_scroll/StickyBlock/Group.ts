@@ -78,6 +78,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     protected _headers: IHeadersMap = {};
     protected _isRegistry: boolean = false;
+    protected _isMultilineGroup: boolean = false;
 
     private _delayedHeaders: number[] = [];
 
@@ -90,6 +91,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     protected _beforeMount(options: IControlOptions, context): void {
         this._isStickySupport = isStickySupport();
         this._index = getNextId();
+    }
+
+    protected _afterMount(): void {
+        this._isMultilineGroup = this._container.closest('.controls-StickyBlock-multilineGroup') !== null;
     }
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
@@ -105,6 +110,13 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     get height(): number {
         // Group can be with style display: content. Use the height of the first header as the height of the group.
         const headersIds: number[] = Object.keys(this._headers);
+        if (this._isMultilineGroup) {
+            // Под флагом рассчитываем реальную высоту группы, в которой задают заголовки в несколько строк. Сейчас
+            // используется только в графиках.
+            const firstSticky = this._headers[headersIds[0]].inst.container;
+            const lastSticky = this._headers[headersIds[headersIds.length - 1]].inst.container;
+            return lastSticky.getBoundingClientRect().bottom - firstSticky.getBoundingClientRect().top;
+        }
         return headersIds.length ? this._headers[headersIds[0]].inst.height : 0;
     }
 

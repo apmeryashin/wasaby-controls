@@ -326,12 +326,12 @@ describe('Controls/dataSource:loadData', () => {
         const tasksFilter = filterController.getFilterButtonItems()[0].editorOptions.filter;
         const expectedTasksFilter = {
             myTasks: true,
-            historyIds: ['history']
+            _historyIds: ['history']
         };
         const contactsFilter = filterController.getFilterButtonItems()[1].editorOptions.filter;
         const expectedContactsFilter = {
             myContacts: true,
-            historyIds: ['history'],
+            _historyIds: ['history'],
             id: ['1']
         };
         assert.deepStrictEqual(expectedTasksFilter, tasksFilter);

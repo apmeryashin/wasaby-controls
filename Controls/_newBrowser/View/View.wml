@@ -40,9 +40,9 @@
                     tileCfg="{{_tileCfg}}"
                     listCfg="{{_listCfg}}"
                     loading="{{_detailLoading}}"
-                    imageViewMode="{{_getImageViewMode(_appliedViewMode)}}"
-                    nodeImageViewMode="{{_getNodeImageViewMode(_appliedViewMode)}}"
-                    imagePosition="{{_getImagePosition(_appliedViewMode)}}"
+                    imageViewMode="{{_getImageViewMode(viewMode)}}"
+                    nodeImageViewMode="{{_getNodeImageViewMode(viewMode)}}"
+                    imagePosition="{{_getImagePosition(viewMode)}}"
                     attr:class="controls-newBrowser__detail-list"
                     on:itemClick="_onExplorerItemClick(false)"
                     on:viewModeChanged="_onDetailExplorerChangedViewMode()"
@@ -55,9 +55,9 @@
             <Controls.list:Container id="detail">
                 <Controls.list:HotKeysContainer>
                     <Controls.listTemplates:ImageDisplayContainer scope="{{_detailExplorerOptions}}"
-                                                                  imageViewMode="{{_getImageViewMode(_appliedViewMode)}}"
-                                                                  nodeImageViewMode="{{_getNodeImageViewMode(_appliedViewMode)}}"
-                                                                  imagePosition="{{_getImagePosition(_appliedViewMode)}}"
+                                                                  imageViewMode="{{_getImageViewMode(viewMode)}}"
+                                                                  nodeImageViewMode="{{_getNodeImageViewMode(viewMode)}}"
+                                                                  imagePosition="{{_getImagePosition(viewMode)}}"
                                                                   columns="{{_columns}}">
                         <ws:content>
                             <Controls.explorer:View

@@ -52,7 +52,8 @@ import {
     IEditableCollectionItem,
     TItemKey,
     TreeItem,
-    MoreButtonVisibility
+    MoreButtonVisibility,
+    groupConstants
 } from 'Controls/display';
 
 import {default as ItemContainerGetter} from 'Controls/_baseList/itemsStrategy/getItemContainerByIndex';
@@ -1443,6 +1444,14 @@ const _private = {
                     const collectionStartIndex = self._listViewModel.getStartIndex();
                     const collectionStopIndex = self._listViewModel.getStopIndex();
                     let result = null;
+                    const isBottom = (self._viewportSize + self._scrollTop) === self._viewSize;
+                    let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
+                        : (newItemsIndex >= collectionStopIndex && !isBottom ? 'down' : undefined);
+                    if (newItems) {
+                        if (self._listViewModel.getCount() === newItems.length) {
+                            direction = undefined;
+                        }
+                    }
                     switch (action) {
                         case IObservable.ACTION_ADD:
                             // TODO: this._batcher.addItems(newItemsIndex, newItems)
@@ -1450,18 +1459,15 @@ const _private = {
                                 self._addItems.push(...newItems);
                                 self._addItemsIndex = newItemsIndex;
                             } else {
-                                const isBottom = (self._viewportSize + self._scrollTop) === self._viewSize;
-                                let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                                    : (newItemsIndex >= collectionStopIndex && !isBottom ? 'down' : undefined);
-                                if (self._listViewModel.getCount() === newItems.length) {
-                                    direction = undefined;
-                                }
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems, direction);
                             }
                             break;
                         case IObservable.ACTION_MOVE:
-                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems,
-                                newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
+                            result = self._scrollController.handleMoveItems(newItemsIndex,
+                                newItems,
+                                removedItemsIndex,
+                                removedItems,
+                                direction);
                             break;
                         case IObservable.ACTION_REMOVE:
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
@@ -2155,6 +2161,7 @@ const _private = {
             excludedKeys: options.excludedKeys,
             searchValue: options.searchValue,
             filter: options.filter,
+            rootId: options.root,
             strategy
         });
 
@@ -2184,6 +2191,7 @@ const _private = {
             model: collection,
             searchValue: newOptions.searchValue,
             filter: newOptions.filter,
+            rootId: newOptions.root,
             strategyOptions: _private.getSelectionStrategyOptions(
                 newOptions,
                 collection,
@@ -3454,7 +3462,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
-            this._scrollController.scrollPositionChange({scrollTop}, false);
+            const result = this._scrollController.scrollPositionChange({scrollTop}, false);
+            _private.handleScrollControllerResult(this, result);
             this._observersController?.setScrollTop(
                 this._scrollTop,
                 this._children.listView?.getTopLoadingTrigger(),
@@ -3462,7 +3471,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             );
         }
         if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
-            this._updateHeights(false);
+            this._updateHeights(true);
         }
         if (this._viewportSize >= this._viewSize) {
             this._pagingVisible = false;
@@ -3845,18 +3854,28 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                                     newOptions.collection !== this._options.collection ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
-        if (this._editInPlaceController && (shouldReInitCollection || loadStarted)) {
-            if (this.isEditing()) {
-                // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
-                // без возможности отменить закрытие из вне.
-                this._cancelEdit(true).then(() => {
+
+        if (this._editInPlaceController) {
+            let isEditingModeChanged = this._options.editingConfig !== newOptions.editingConfig &&
+                                       this._getEditingConfig().mode !== this._getEditingConfig(newOptions).mode;
+            if (isEditingModeChanged) {
+                this._editInPlaceController.updateOptions({
+                    mode: this._getEditingConfig(newOptions).mode
+                });
+            }
+            if (shouldReInitCollection || loadStarted || isEditingModeChanged) {
+                if (this.isEditing()) {
+                    // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
+                    // без возможности отменить закрытие из вне.
+                    this._cancelEdit(true).then(() => {
+                        if (shouldReInitCollection) {
+                            this._destroyEditInPlaceController();
+                        }
+                    });
+                } else {
                     if (shouldReInitCollection) {
                         this._destroyEditInPlaceController();
                     }
-                });
-            } else {
-                if (shouldReInitCollection) {
-                    this._destroyEditInPlaceController();
                 }
             }
         }
@@ -3884,6 +3903,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // scroll и произведет неправильные расчёты, т.к. у него старая collection.
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
+            this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
 
             // При пересоздании коллекции будет скрыт верхний триггер и индикатор,
             // чтобы не было лишней подгрузки при отрисовке нового списка.
@@ -3909,6 +3929,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (loadStarted) {
             this._displayGlobalIndicator();
+        } else if (this._options.loading && !newOptions.loading && this._indicatorsController.shouldHideGlobalIndicator()) {
+            this._indicatorsController.hideGlobalIndicator();
         }
 
         // endregion Indicators
@@ -4874,7 +4896,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         return cancelEditPromise.then(() => {
             if (!this._destroyed) {
-                return this._reload(this._options, sourceConfig, false);
+                // Не дожидаемся применения изменений в модель после обновления списка,
+                // если перезагрузка вызвана в момент завершения редактирования.
+                const isEndEditingProcessing = this.isEditing() &&
+                                               this._getEditInPlaceController().isEndEditProcessing();
+                return this._reload(this._options, sourceConfig, isEndEditingProcessing);
             }
         });
     }
@@ -5577,7 +5603,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _onRowDeactivated(e: SyntheticEvent, eventOptions: any) {
         e.stopPropagation();
 
-        if (eventOptions.isTabPressed) {
+        const pressedKey = eventOptions?.keyPressedData?.key;
+        const shouldEditNextRow = pressedKey && (
+            pressedKey === 'Tab' ||
+            (pressedKey === 'Enter' && this._getEditingConfig().sequentialEditingMode === 'cell')
+        );
+
+        if (shouldEditNextRow) {
             if (this._getEditingConfig()?.mode === 'cell') {
                 this._onEditingCellTabHandler(eventOptions);
             } else {
@@ -5592,20 +5624,22 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let columnIndex;
         let next = editingItem;
         let shouldAdd;
+        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
+
         if (eventOptions.isShiftKey) {
             this._continuationEditingDirection = EDIT_IN_PLACE_CONSTANTS.PREV_COLUMN;
             columnIndex = editingItem._$editingColumnIndex - 1;
             if (columnIndex < 0) {
                 next = this._getEditInPlaceController().getPrevEditableItem();
-                columnIndex = this._options.columns.length - 1;
+                columnIndex = this._options.columns.length - 1 + +hasCheckboxes;
             }
             shouldAdd = editingConfig.autoAdd && !next && editingConfig.addPosition === 'top';
         } else {
             this._continuationEditingDirection = EDIT_IN_PLACE_CONSTANTS.NEXT_COLUMN;
             columnIndex = editingItem._$editingColumnIndex + 1;
-            if (columnIndex > this._options.columns.length - 1) {
+            if (columnIndex > this._options.columns.length - 1 + +hasCheckboxes) {
                 next = this._getEditInPlaceController().getNextEditableItem();
-                columnIndex = 0;
+                columnIndex = +hasCheckboxes;
             }
             shouldAdd = editingConfig.autoAdd && !next && editingConfig.addPosition === 'bottom';
         }
@@ -5666,7 +5700,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _getEditingConfig(options = this._options): Required<IEditableListOption['editingConfig']> {
         const editingConfig = options.editingConfig || {};
         const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
+
+        // Режим последовательного редактирования (действие по Enter).
         const getSequentialEditingMode = () => {
+            // sequentialEditingMode[row | cell | none] - новая опция, sequentialEditing[boolean?] - старая опция
             if (typeof editingConfig.sequentialEditingMode === 'string') {
                 return editingConfig.sequentialEditingMode;
             } else {
@@ -6709,7 +6746,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _scrollToFirstItem(): Promise<void> {
         if (!this._finishScrollToEdgeOnDrawItems) {
-            const firstItem = this._listViewModel.getFirst();
+            let firstItem = this._listViewModel.getFirst();
+            // к скрытой группе нельзя скроллить, т.к. ее высота равна 0 и это не добавит отступ для триггера =>
+            // вызовется подгрузка вверх
+            if (firstItem['[Controls/_display/GroupItem]'] && firstItem.key === groupConstants.hiddenGroup) {
+                firstItem = this._listViewModel.getNext(firstItem);
+            }
             const firstItemKey = firstItem && firstItem.key !== undefined ? firstItem.key : null;
             if (firstItemKey !== null) {
                 return _private.scrollToItem(this, firstItemKey, false, true);

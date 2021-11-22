@@ -221,10 +221,6 @@
    height: 100%;
 }
 
-.controls-Slider__point_enabled:hover {
-   background-color: var(--marker_hover_background-color_slider);
-}
-
 .controls-Slider__scale {
    justify-content: space-between;
    align-items: baseline;
@@ -339,10 +335,6 @@
    background-color: var(--marker_background-color_slider);
 }
 
-.controls-Slider__point_tooltip:hover {
-   background-color: var(--marker_background-color_slider);
-}
-
 .controls-Slider__point_hidden,
 .controls-Slider__point_hidden:hover {
    border: var(--marker_border-thickness_slider) solid transparent;
@@ -393,4 +385,14 @@
 
 .controls-Slider__line-roundedEdges {
    border-radius: calc(var(--track_thickness_slider) / 2);
+}
+
+.ws-is-hover {
+   .controls-Slider__point_enabled:hover {
+      background-color: var(--marker_hover_background-color_slider);
+   }
+
+   .controls-Slider__point_tooltip:hover {
+      background-color: var(--marker_background-color_slider);
+   }
 }

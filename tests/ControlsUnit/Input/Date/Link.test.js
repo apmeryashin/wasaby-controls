@@ -48,6 +48,7 @@ define([
             component._onResult(null, value);
 
             sinon.assert.calledWith(component._notify, 'valueChanged');
+            sinon.assert.calledOnce(component._notify);
             sinon.assert.called(component._stickyOpener.close);
             sandbox.restore();
          });

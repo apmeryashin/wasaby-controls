@@ -230,6 +230,7 @@ abstract class BaseController implements IPopupController {
             width: item.popupOptions.width || containerSizes.width,
             height: item.popupOptions.height || containerSizes.height
         };
+        item.sizes.margins = this._getMargins(item);
         return item.sizes;
     }
 
@@ -313,19 +314,19 @@ abstract class BaseController implements IPopupController {
                 Logger.warn('Controls/popup:Sticky: Опция nativeEvent устарела и больше не поддерживается.' +
                     'Используйте опцию target со значением {x: number, y: number} для описания точки позиционирования');
                 position = DimensionsMeasurer.getMouseCoordsByMouseEvent(item.popupOptions.nativeEvent);
+                const positionCfg = {
+                    direction: {
+                        horizontal: 'right',
+                        vertical: 'bottom'
+                    }
+                };
+                cMerge(item.popupOptions, positionCfg);
+                sizes.margins = {top: 0, left: 0};
             } else {
                 position = item.popupOptions.target;
             }
             let {x, y} = position;
             const size = 1;
-            const positionCfg = {
-                direction: {
-                    horizontal: 'right',
-                    vertical: 'bottom'
-                }
-            };
-            cMerge(item.popupOptions, positionCfg);
-            sizes.margins = {top: 0, left: 0};
             return {
                 width: size,
                 height: size,

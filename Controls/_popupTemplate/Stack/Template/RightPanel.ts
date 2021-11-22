@@ -3,6 +3,7 @@ import * as template from 'wml!Controls/_popupTemplate/Stack/Template/RightPanel
 import {Controller as ManagerController} from 'Controls/popup';
 import {StackController} from 'Controls/_popupTemplate/Stack/StackController';
 import {RIGHT_PANEL_WIDTH} from 'Controls/_popupTemplate/BaseController';
+import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/popupTemplate';
 
@@ -40,6 +41,9 @@ export default class RightPanel extends Control<IRightPanelOptions> {
     // есть ли в контретной раскладке правая панель (toolbarContentTemplate).
     // По сути защищаем пользователя от кривого отображения.
     private _hasWidthForRightPanel(): boolean {
+        if (constants.isServerSide) {
+            return false;
+        }
         const fakeItem = {
             popupOptions: {
             }

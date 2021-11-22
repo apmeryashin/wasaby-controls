@@ -8,10 +8,11 @@
                 header="{{_header}}"
                 columns="{{_columns}}"
                 rowSeparatorSize="s"
-                columnScroll="{{true}}"/>
+                columnScroll="{{_columnScroll}}"/>
     </Controls.scroll:Container>
 
     <div class="controlsDemo__cell">
         <Controls.buttons:Button caption="Reload list" on:click="_reloadList()"/>
+        <Controls.buttons:Button caption="{{ _columnScroll ? 'Disable column scroll' : 'Enable column scroll' }}" on:click="_switchColumnScroll()"/>
     </div>
 </div>

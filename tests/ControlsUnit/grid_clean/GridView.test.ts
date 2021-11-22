@@ -156,7 +156,8 @@ describe('Controls/grid_clean/GridView', () => {
             let resultsHeight = 50;
             const options = {
                 columns: [{}],
-                ladderOffset: 'offset'
+                ladderOffset: 'offset',
+                ladderProperties: ['']
             };
             const gridView = new GridView(options);
             gridView._listModel = {
@@ -194,6 +195,10 @@ describe('Controls/grid_clean/GridView', () => {
             resultsHeight = 0;
             gridView._ladderTopOffsetStyles = gridView._getLadderTopOffsetStyles();
             assert.equal(gridView._ladderTopOffsetStyles, expectedStyle);
+        });
+        it('_getLadderTopOffsetStyles should return empty string if ladder disabled', () => {
+            const gridView = new GridView({});
+            assert.equal(gridView._getLadderTopOffsetStyles(), '');
         });
     });
 

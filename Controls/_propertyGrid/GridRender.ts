@@ -117,7 +117,7 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     }
 
     private _getPreviousItemIndex(item: PropertyGridItem<Model>): number {
-        return this._getItemIndex(this._options.listModel.getPrevious(item));
+        return this._getItemIndex(item) - 1;
     }
 
     protected _propertyValueChanged(e: SyntheticEvent<Event>, item: Model, value: Record<string, any>): void {
@@ -127,6 +127,10 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
 
     protected _mouseEnterHandler(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
         this._notify('itemMouseEnter', [item, e]);
+    }
+
+    protected _mouseMoveHandler(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
+        this._notify('itemMouseMove', [item, e]);
     }
 
     protected _mouseLeaveHandler(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {

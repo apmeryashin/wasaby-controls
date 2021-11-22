@@ -258,18 +258,21 @@ define(
 
             it('sourceController don`t return items', () => {
                let isErrorProcessed = false;
+               let isDataLoadCallbackSetted = false;
                menuControl._listModel = {
                   setMarkedKey: () => {},
                   getItemBySourceKey: () => null
                };
                menuOptions.sourceController = {
-                  getLoadError: () => new Error('error')
+                  getLoadError: () => new Error('error'),
+                  setDataLoadCallback: () => {isDataLoadCallbackSetted = true;}
                };
                menuControl._processError = () => {
                   isErrorProcessed = true;
                };
                menuControl._beforeMount(menuOptions);
                assert.isTrue(isErrorProcessed);
+               assert.isTrue(isDataLoadCallbackSetted);
             });
          });
 

@@ -251,7 +251,7 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
                 resultFilter[editorOptions.keyProperty] = property.value;
             }
             if (editorOptions.historyId) {
-                resultFilter.historyIds = [editorOptions.historyId];
+                resultFilter._historyIds = [editorOptions.historyId];
             }
             return resultFilter;
         };
