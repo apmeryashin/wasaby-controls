@@ -56,56 +56,67 @@ describe('Controls/treeGrid_clean/Display/StickyGroup/HasStickyGroup', () => {
     });
 
     it('Initialize with stickyHeader and groups', () => {
-        const gridCollection = new TreeGridCollection({
+        const treeGridCollection = new TreeGridCollection({
             collection,
             parentProperty: 'parent',
             root: null,
             nodeProperty: 'type',
             nodeTypeProperty: 'nodeType',
             keyProperty: 'key',
-            groupProperty: 'group',
             stickyHeader: true,
             columns
         });
-        gridCollection.each((item) => {
+        treeGridCollection.each((item) => {
             if (item.LadderSupport) {
                 assert.isTrue(item.hasStickyGroup());
             }
         });
     });
     it('Initialize without stickyHeader and with groups', () => {
-        const gridCollection = new TreeGridCollection({
+        const treeGridCollection = new TreeGridCollection({
             collection,
+            parentProperty: 'parent',
+            root: null,
+            nodeProperty: 'type',
+            nodeTypeProperty: 'nodeType',
             keyProperty: 'key',
-            groupProperty: 'group',
             columns
         });
-        gridCollection.each((item) => {
+        treeGridCollection.each((item) => {
             if (item.LadderSupport) {
                 assert.isNotTrue(item.hasStickyGroup());
             }
         });
     });
     it('Initialize with stickyHeader and without groups', () => {
-        const gridCollection = new TreeGridCollection({
+        const treeGridCollection = new TreeGridCollection({
             collection,
+            parentProperty: 'parent',
+            root: null,
+            nodeProperty: 'type',
+            nodeTypeProperty: 'type',
             keyProperty: 'key',
             stickyHeader: true,
             columns
         });
-        gridCollection.each((item) => {
+        treeGridCollection.each((item) => {
             if (item.LadderSupport) {
                 assert.isNotTrue(item.hasStickyGroup());
             }
         });
     });
     it('Initialize without stickyHeader and groups', () => {
-        const gridCollection = new TreeGridCollection({
+        const treeGridCollection = new TreeGridCollection({
             collection,
+            parentProperty: 'parent',
+            root: null,
+            nodeProperty: 'type',
+            nodeTypeProperty: 'type',
             keyProperty: 'key',
+            stickyHeader: true,
             columns
         });
-        gridCollection.each((item) => {
+        treeGridCollection.each((item) => {
             if (item.LadderSupport) {
                 assert.isNotTrue(item.hasStickyGroup());
             }
@@ -113,26 +124,31 @@ describe('Controls/treeGrid_clean/Display/StickyGroup/HasStickyGroup', () => {
     });
 
     it('updateHasStickyGroup', () => {
-        const gridCollection = new TreeGridCollection({
+        const treeGridCollection = new TreeGridCollection({
             collection,
+            keyProperty: 'key',
+            parentProperty: 'parent',
+            root: null,
+            nodeProperty: 'type',
+            nodeTypeProperty: 'nodeType',
             keyProperty: 'key',
             stickyHeader: true,
             columns
         });
 
-        assert.strictEqual(gridCollection.getVersion(), 4);
+        assert.strictEqual(treeGridCollection.getVersion(), 4);
 
         const sandbox = sinon.createSandbox();
-        gridCollection.getViewIterator().each((item: TreeGridDataRow<any>) => {
+        treeGridCollection.getViewIterator().each((item: TreeGridDataRow<any>) => {
             if (item.LadderSupport) {
                 sandbox.spy(item, 'setHasStickyGroup');
             }
         });
 
-        gridCollection.setGroupProperty('group');
+        treeGridCollection.setNodeTypeProperty('nodeType');
 
-        assert.strictEqual(gridCollection.getVersion(), 6);
-        gridCollection.getViewIterator().each((item: TreeGridDataRow<any>) => {
+        assert.strictEqual(treeGridCollection.getVersion(), 5);
+        treeGridCollection.getViewIterator().each((item: TreeGridDataRow<any>) => {
             if (item.LadderSupport) {
                 assert(item.setHasStickyGroup.calledOnce, 'setHasStickyGroup must be called on items');
                 assert.isTrue(item.setHasStickyGroup.getCall(0).args[0], 'setHasStickyGroup must be true');
