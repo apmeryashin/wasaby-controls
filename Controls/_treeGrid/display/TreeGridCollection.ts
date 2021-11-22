@@ -336,6 +336,7 @@ export default class TreeGridCollection<
         options.columnSeparatorSize = this._$columnSeparatorSize;
         options.rowSeparatorSize = this._$rowSeparatorSize;
         options.itemActionsPosition = this._$itemActionsPosition;
+        options.hasStickyGroup = this._$hasStickyGroup;
 
         // Строит обычную фабрику
         const CollectionItemsFactory = (factoryOptions?: ITreeGridRowOptions<S>): ItemsFactory<T> => {
