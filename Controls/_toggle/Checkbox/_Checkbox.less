@@ -64,7 +64,6 @@
    position: relative;
    user-select: none;
    flex-shrink: 0;
-   width: var(--click-area_width_checkbox);
 }
 
 .controls-CheckboxMarker__icon-border-color__enabled {
@@ -79,8 +78,11 @@
    width: var(--marker-box_size_checkbox);
    height: var(--marker-box_size_checkbox);
    position: relative;
-   left: var(--true_marker_padding-left_checkbox);
    top: calc(var(--true_marker_padding-top_checkbox) + var(--border-thickness));
+}
+
+.controls-CheckboxMarker__icon-checked-horizontalPadding-default {
+   padding: 0 var(--true_marker_horizontal-padding_checkbox);
 }
 
 .controls-CheckboxMarker__icon-checked-color_enabled {
@@ -134,8 +136,8 @@
 }
 
 .controls-CheckboxMarker_contrast {
-   &.controls-CheckboxMarker__state-null__icon-color__enabled::after {
-      background-color: var(--background-color);
+   .controls-CheckboxMarker__state-null__icon-color__enabled {
+      fill: var(--background-color);
    }
 
    .controls-CheckboxMarker__icon-subtract {

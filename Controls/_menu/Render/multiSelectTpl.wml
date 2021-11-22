@@ -3,5 +3,5 @@
                           attr:class="controls-Menu__row-checkbox
                                       controls-Menu__row-checkbox-{{checkBoxAlign === 'right' ? 'right' : 'left'}}
                                       controls-Menu__row-checkbox_{{treeItem.isSelected() ? 'active' : 'default'}}">
-   <ws:templateOptions value="{{treeItem.isSelected()}}"/>
+   <ws:templateOptions value="{{treeItem.isSelected()}}" horizontalPadding="null"/>
 </Controls.Container.Async>
