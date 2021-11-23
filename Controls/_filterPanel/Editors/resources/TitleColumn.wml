@@ -1,1 +1,4 @@
-<ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}" attr:class="controls-ListEditor__columns"/>
+<ws:partial template="Controls/grid:ColumnTemplate"
+            scope="{{_options}}"
+            attr:class="controls-ListEditor__columns"
+            fontWeight="{{item.contents.get('pinned') ? 'bold' : 'default'}}"/>
