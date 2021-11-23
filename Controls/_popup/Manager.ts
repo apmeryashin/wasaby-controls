@@ -137,7 +137,7 @@ class Manager {
             return options.id;
         }
         const item: IPopupItem = this._createItemConfig(options, controller);
-        const defaultConfigResult: null | Promise<void> = controller.getDefaultConfig(item);
+        const defaultConfigResult: Promise<void> | void | boolean = controller.getDefaultConfig(item);
         if (defaultConfigResult instanceof Promise) {
             defaultConfigResult.then(() => {
                 // Если за время выполнения промиса еще раз позвали открытие, то не нужно второй раз создавать окно
@@ -145,15 +145,14 @@ class Manager {
                 if (this.find(options.id)) {
                     this.update(options.id, options);
                 } else {
-                    this._registerPopupLink(item);
                     this._addElement(item);
                 }
                 this._redrawItems();
             });
         } else if (defaultConfigResult === false) {
+            this._removeFromParentConfig(item);
             this._fireEventHandler(item, 'onClose');
         } else {
-            this._registerPopupLink(item);
             this._addElement(item);
             this._redrawItems();
         }
@@ -331,7 +330,7 @@ class Manager {
 
     private _createItemConfig(options: IPopupOptions, controller: IPopupController): IPopupItem {
         const popupId: string = options.id || randomId('popup-');
-        return {
+        const popupConfig: IPopupItem = {
             id: popupId,
             modal: options.modal,
             controller,
@@ -342,6 +341,9 @@ class Manager {
             popupState: controller.POPUP_STATE_INITIALIZING,
             childs: []
         } as IPopupItem;
+
+        this._registerPopupLink(popupConfig);
+        return popupConfig;
     }
 
     // Register the relationship between the parent and child popup
