@@ -294,6 +294,11 @@ export default class TileView extends ListView {
     }
 
     protected _onItemMouseMove(event: SyntheticEvent<MouseEvent>, item: TileCollectionItem): void {
+        // Событие может сработать между beforeUpdate и afterUpdate, когда старая коллекция разрушена,
+        // а элементы еще не убраны из DOM, тогда item будет принадлежать старой коллекции, к которой обращаться нельзя.
+        if (item?.getOwner()?.destroyed) {
+            return;
+        }
         if (!item['[Controls/_display/GroupItem]'] &&
             this._shouldProcessHover() &&
             !this._listModel.isDragging() &&
