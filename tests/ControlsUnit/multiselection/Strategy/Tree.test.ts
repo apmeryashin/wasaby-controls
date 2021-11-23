@@ -1827,7 +1827,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                   key: 1,
                   parent: null,
                   node: true
-               },{
+               }, {
                   key: 11,
                   parent: 1,
                   node: true

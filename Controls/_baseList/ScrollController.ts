@@ -226,7 +226,7 @@ export default class ScrollController {
             scrollTop - topOffset - placeholder + (getStickyHeadersHeight(baseContainer, 'top', 'fixed') || 0);
 
         let firstItemIndex = this._options.collection.getStartIndex();
-        let lastItemIndex = Math.max(0, this._options.collection.getStopIndex() - 1);
+        const lastItemIndex = Math.max(0, this._options.collection.getStopIndex() - 1);
         firstItemIndex += this._getFirstVisibleItemIndex(listViewContainer.children, verticalOffset);
         firstItemIndex = Math.min(firstItemIndex, lastItemIndex);
 
@@ -753,8 +753,9 @@ export default class ScrollController {
         // Округление нужно, так как размеры элементов бывают дробные, а scrollTop только целый
         // Отрицательным scrollTop также быть не может. Но при вычислениях мы можем получить тут отрицательное значение.
         // Это происходит в случае, когда контента нехватает для заполнения viewPort.
-        // Проверяли, можем ли следить за возможеностью скролла, чтобы восстанавливать сколл только когда скролл возможен.
-        // Не вышло: нативный resizeObserver срабатывает позже нашего afterRender, когда мы должны принять решение.
+        // Проверяли, можем ли следить за возможеностью скролла, чтобы восстанавливать сколл
+        // только когда скролл возможен. Не вышло: нативный resizeObserver срабатывает
+        // позже нашего afterRender, когда мы должны принять решение.
         scrollTop = Math.max(0, Math.floor(scrollTop));
         return scrollTop;
     }

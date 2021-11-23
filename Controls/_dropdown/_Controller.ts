@@ -333,7 +333,7 @@ export default class Controller implements IDropdownController {
       }).then(() => {
          this._setItemsAndMenuSource(this._source.getItems());
          this._open();
-      }).catch(() => {});
+      }).catch(() => {/**/});
    }
 
    getItems(): RecordSet<Model> {

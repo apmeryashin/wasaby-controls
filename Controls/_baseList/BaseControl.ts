@@ -4147,9 +4147,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                                     newOptions.collection !== this._options.collection ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
-
         if (this._editInPlaceController) {
-            let isEditingModeChanged = this._options.editingConfig !== newOptions.editingConfig &&
+            const isEditingModeChanged = this._options.editingConfig !== newOptions.editingConfig &&
                                        this._getEditingConfig().mode !== this._getEditingConfig(newOptions).mode;
             if (isEditingModeChanged) {
                 this._editInPlaceController.updateOptions({
@@ -4224,7 +4223,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (loadStarted) {
             this._displayGlobalIndicator();
-        } else if (this._options.loading && !newOptions.loading && this._indicatorsController.shouldHideGlobalIndicator()) {
+        } else if (
+            this._options.loading &&
+            !newOptions.loading &&
+            this._indicatorsController.shouldHideGlobalIndicator()
+        ) {
             this._indicatorsController.hideGlobalIndicator();
         }
 
@@ -5254,7 +5257,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
-    protected _reload(cfg, sourceConfig?: IBaseSourceConfig, immediateResolve: boolean = true): Promise<RecordSet|null|void> {
+    protected _reload(cfg,
+                      sourceConfig?: IBaseSourceConfig,
+                      immediateResolve: boolean = true): Promise<RecordSet|null|void> {
         return new Promise((resolve) => {
             if (this._sourceController) {
                 this._indicatorsController.endDisplayPortionedSearch();
