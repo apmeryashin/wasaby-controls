@@ -1,5 +1,5 @@
 import BaseController, {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
-import {IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions, IPopupItem} from 'Controls/popup';
+import {Controller, IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions, IPopupItem} from 'Controls/popup';
 import StackStrategy from 'Controls/_popupTemplate/Stack/StackStrategy';
 import {getPopupWidth, savePopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {List} from 'Types/collection';
@@ -468,7 +468,12 @@ export class StackController extends BaseController {
     }
 
     private _getStackParentCoords(item: IStackItem): IPopupPosition {
-        return StackController.calcStackParentCoords(item);
+        const coords = StackController.calcStackParentCoords(item);
+        const parentItem = Controller.find(item.parentId);
+        if (parentItem) {
+            coords.right = parentItem.position.right;
+        }
+        return coords;
     }
 
     private _showPopup(item: IStackItem): void {
