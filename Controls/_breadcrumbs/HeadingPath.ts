@@ -300,6 +300,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
             root: null,
             backButtonIconStyle: 'primary',
             backButtonFontColorStyle: 'secondary',
+            backButtonTextTransform: 'none',
             showActionButton: true,
             displayMode: 'default',
             fontSize: 'xs'
