@@ -1,6 +1,8 @@
 import { assert } from 'chai';
 import { GridCollection } from 'Controls/grid';
 import {TemplateFunction} from 'UI/Base';
+import {Logger} from 'UI/Utils';
+import {ERROR_MSG} from 'Controls/_grid/display/mixins/Grid';
 
 describe('Controls/grid_clean/Display/Collection', () => {
     describe('Update options', () => {
@@ -286,6 +288,38 @@ describe('Controls/grid_clean/Display/Collection', () => {
             assert.equal(gridCollection.getItems()[0].getVersion(), 0);
             gridCollection.setEditingConfig({mode: 'cell'});
             assert.equal(gridCollection.getItems()[0].getVersion(), 1);
+        });
+
+        describe('setStickyColumnsCount', () => {
+            it('stickyColumnsCount should be less then column.length', () => {
+                const gridCollection = new GridCollection({
+                    collection: [{ key: 1 }, { key: 2 }, { key: 3 }],
+                    keyProperty: 'key',
+                    columns: [
+                        { displayProperty: 'id'},
+                        { displayProperty: 'title'}
+                    ]
+                });
+
+                const originLoggerErrorMethod = Logger.error;
+                Logger.error = (msg) => {
+                    throw msg;
+                };
+
+                assert.doesNotThrow(() => {
+                    gridCollection.setStickyColumnsCount(1);
+                });
+
+                assert.throws(() => {
+                    gridCollection.setStickyColumnsCount(2);
+                }, ERROR_MSG.INVALID_STICKY_COLUMNS_COUNT_VALUE);
+
+                assert.throws(() => {
+                    gridCollection.setStickyColumnsCount(3);
+                }, ERROR_MSG.INVALID_STICKY_COLUMNS_COUNT_VALUE);
+
+                Logger.error = originLoggerErrorMethod;
+            });
         });
     });
 });
