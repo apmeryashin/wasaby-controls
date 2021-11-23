@@ -440,7 +440,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         let expanderIconStyle;
 
         if (this.getStyle() === 'master') {
-            expanderIconSize = 'master';
+            expanderIconSize = expanderIcon === 'hiddenNode' ? 'default' : 'master';
             expanderIconStyle = 'unaccented';
 
         } else {
