@@ -1,5 +1,5 @@
 import BaseController, {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
-import {IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions, IPopupItem} from 'Controls/popup';
+import {IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions, IPopupItem, Controller} from 'Controls/popup';
 import StackStrategy from 'Controls/_popupTemplate/Stack/StackStrategy';
 import {getPopupWidth, savePopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {List} from 'Types/collection';
@@ -11,6 +11,7 @@ import {Bus} from 'Env/Event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import * as Deferred from 'Core/Deferred';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import initConstants from 'Controls/_popupTemplate/Util/getThemeConstants';
 
 /**
  * Stack Popup Controller
@@ -21,6 +22,8 @@ import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 const ACCORDEON_MIN_WIDTH = 50;
 const MIN_DISTANCE = 100;
+
+let themeConstants = {};
 
 export interface IStackItem extends IPopupItem {
     containerWidth: number;
@@ -353,14 +356,40 @@ export class StackController extends BaseController {
 
     private _prepareSize(optionsSet: IPopupOptions[], property: string): number | void {
         for (let i = 0; i < optionsSet.length; i++) {
-            // get size, if it's not percentage value
-            if (optionsSet[i][property] &&
-                (typeof optionsSet[i][property] !== 'string' ||
-                    !optionsSet[i][property].includes('%'))) {
-                return parseInt(optionsSet[i][property], 10);
+            if (optionsSet[i][property]) {
+                if (typeof optionsSet[i][property] === 'string') {
+                    this._initializationConstants();
+                    if (Object.keys(themeConstants).indexOf(optionsSet[i][property]) !== -1) {
+                        return themeConstants[optionsSet[i][property]];
+                    } else if (!optionsSet[i][property].includes('%')) {
+                        // get size, if it's not percentage value
+                        return parseInt(optionsSet[i][property], 10);
+                    }
+                } else {
+                    return parseInt(optionsSet[i][property], 10);
+                }
             }
         }
         return undefined;
+    }
+
+    private _initializationConstants(): void {
+        const initConstantConfig = {
+            a: 'margin-right',
+            b: 'margin-left',
+            c: 'margin-bottom',
+            d: 'margin-top',
+            e: 'padding-top',
+            f: 'padding-right',
+            g: 'padding-bottom'
+        };
+        initConstants(
+            `controls-StackTemplate__themeConstants controls_popupTemplate_theme-${Controller.getTheme()}`,
+            initConstantConfig
+        )
+            .then((result) => {
+                themeConstants = result;
+            });
     }
 
     private _getDefaultConfig(item: IStackItem): void {

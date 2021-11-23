@@ -109,9 +109,9 @@ export interface IStackOpener extends IOpener {
  * @property {Boolean} [closeOnOutsideClick=false] Определяет возможность закрытия стекового окна по клику вне.
  * @property {function|String} template Шаблон стекового окна.
  * @property {function|String} templateOptions Опции для контрола, переданного в {@link template}.
- * @property {Number} minWidth Минимально допустимая ширина стекового окна. Значение указывается в px.
- * @property {Number} maxWidth Максимально допустимая ширина стекового окна. Значение указывается в px.
- * @property {Number} width Текущая ширина стекового окна. Значение указывается в px.
+ * @property {Number|Controls/_popup/interface/IStackOpener/BaseSizes.typedef} minWidth Минимально допустимая ширина стекового окна. Значение указывается в px. Так же поддерживается стандартная линейка размеров.
+ * @property {Number|Controls/_popup/interface/IStackOpener/BaseSizes.typedef} maxWidth Максимально допустимая ширина стекового окна. Значение указывается в px. Так же поддерживается стандартная линейка размеров.
+ * @property {Number|Controls/_popup/interface/IStackOpener/BaseSizes.typedef} width Текущая ширина стекового окна. Значение указывается в px. Так же поддерживается стандартная линейка размеров.
  * @property {Node} opener Логический инициатор открытия стекового окна (см. {@link /doc/platform/developmentapl/interface-development/ui-library/focus/activate-control/#control-opener Определение понятия "опенер контрола"}).
  * @property {Controls/_popup/interface/IBaseOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события стекового окна.
  */
@@ -133,6 +133,18 @@ export interface IStackOpener extends IOpener {
  */
 
 /**
+ * @typedef {BaseSizes} Controls/_popup/interface/IStackOpener/BaseSizes
+ * @description Базовая линейка размеров для ширин стековых панелей для дефолтной темы.
+ * @property {String} a Соответствует значению 450.
+ * @property {String} b Соответствует значению 550.
+ * @property {String} c Соответствует значению 650.
+ * @property {String} d Соответствует значению 700.
+ * @property {String} e Соответствует значению 750.
+ * @property {String} f Соответствует значению 900.
+ * @property {String} g Соответствует значению 1200.
+ */
+
+/**
  * @name Controls/_popup/interface/IStackOpener#minimizedWidth
  * @cfg {Number} Ширина стекового окна в свернутом состоянии. Необходимо для работы механизма
  * сворачивания/разворачивания панели.
@@ -144,10 +156,12 @@ export interface IStackOpener extends IOpener {
 
 /**
  * @name Controls/_popup/interface/IStackOpener#minWidth
- * @cfg {Number} Минимально допустимая ширина стекового окна.
+ * @cfg {Number|Controls/_popup/interface/IStackOpener/BaseSizes.typedef} Минимально допустимая ширина стекового окна.
+ * Значение указывается в px. Так же поддерживается стандартная линейка размеров.
  * @remark
  * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
  * Приоритетнее то, которое задано на Controls/popup:Stack.
+ * @demo Controls-demo/Popup/Stack/BaseWidthSizes/Index
  */
 /*
 * @name Controls/_popup/interface/IStackOpener#minWidth
@@ -156,10 +170,12 @@ export interface IStackOpener extends IOpener {
 
 /**
  * @name Controls/_popup/interface/IStackOpener#width
- * @cfg {Number} Текущая ширина стекового окна.
+ * @cfg {Number|Controls/_popup/interface/IStackOpener/BaseSizes.typedef} Текущая ширина стекового окна. Значение
+ * указывается в px. Так же поддерживается стандартная линейка размеров.
  * @remark
  * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
  * Приоритетнее то, которое задано на Controls/popup:Stack.
+ * @demo Controls-demo/Popup/Stack/BaseWidthSizes/Index
  */
 /*
 * @name Controls/_popup/interface/IStackOpener#width
@@ -168,10 +184,12 @@ export interface IStackOpener extends IOpener {
 
 /**
  * @name Controls/_popup/interface/IStackOpener#maxWidth
- * @cfg {Number} Максимально допустимая ширина стекового окна.
+ * @cfg {Number|Controls/_popup/interface/IStackOpener/BaseSizes.typedef} Максимально допустимая ширина стекового окна.
+ * Значение указывается в px. Так же поддерживается стандартная линейка размеров.
  * @remark
  * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
  * Приоритетнее то, которое задано на Controls/popup:Stack.
+ * @demo Controls-demo/Popup/Stack/BaseWidthSizes/Index
  */
 /*
 * @name Controls/_popup/interface/IStackOpener#maxWidth
