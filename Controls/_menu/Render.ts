@@ -153,7 +153,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             }
 
             if (!this._isFixedItem(treeItem) && item.get('pinned') === true &&
-                !this._hasParent(item, this._options.historyRoot)) {
+                (!this._hasParent(item, this._options.historyRoot) || this._options.searchValue)) {
                 classes += ' controls-Menu__row_pinned controls-DropdownList__row_pinned';
             }
 
