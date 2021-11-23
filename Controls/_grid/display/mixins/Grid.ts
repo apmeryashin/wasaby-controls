@@ -29,6 +29,7 @@ import {EnumeratorCallback, RecordSet} from 'Types/collection';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {create} from 'Types/di';
 import {IGridAbstractColumn} from './../interface/IGridAbstractColumn';
+import {Logger} from 'UI/Utils';
 
 export type THeaderVisibility = 'visible' | 'hasdata';
 export type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
@@ -47,6 +48,12 @@ export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => 
 export type TColumnScrollViewMode = IScrollBarOptions['mode'];
 
 export interface IEmptyTemplateColumn extends IGridAbstractColumn {}
+
+export const ERROR_MSG = {
+    INVALID_STICKY_COLUMNS_COUNT_VALUE: 'Неверное значение опции stickyColumnsCount! ' +
+        'Значение опции stickyColumnsCount должно быть меньше чем количество колонок в таблице. ' +
+        'Должна быть хотябы одна скроллируемая колонка.'
+};
 
 export interface IOptions extends ICollectionOptions {
     columns: TColumns;
@@ -596,6 +603,10 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     setStickyColumnsCount(stickyColumnsCount: number): void {
+        if (stickyColumnsCount >= this._$columns.length) {
+            Logger.error(ERROR_MSG.INVALID_STICKY_COLUMNS_COUNT_VALUE, this);
+            return;
+        }
         this._$stickyColumnsCount = stickyColumnsCount;
         this._updateItemsProperty('setStickyColumnsCount', stickyColumnsCount, 'setStickyColumnsCount');
         if (this.getHeader()) {
