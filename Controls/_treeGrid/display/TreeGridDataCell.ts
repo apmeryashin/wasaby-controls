@@ -67,7 +67,7 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
         let classes = super.getContentClasses(backgroundColorStyle, cursor, templateHighlightOnHover,
             tmplIsEditable, templateHoverBackgroundStyle);
 
-        if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn() && isFullGridSupport()) {
+        if (!this._$owner.shouldDisplayMultiSelectTemplate() && this.isFirstColumn() && isFullGridSupport()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}`;
         }
         return classes;

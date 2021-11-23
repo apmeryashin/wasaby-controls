@@ -24,7 +24,7 @@ export default class SearchSeparatorCell extends GridCell<string, SearchSeparato
           backgroundColorStyle, templateHighlightOnHover, templateHoverBackgroundStyle
       );
 
-      if (!this._$owner.hasMultiSelectColumn()) {
+      if (!this._$owner.shouldDisplayMultiSelectTemplate()) {
          classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}`;
       }
 

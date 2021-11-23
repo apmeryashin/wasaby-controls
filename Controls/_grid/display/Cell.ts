@@ -574,7 +574,7 @@ export default class Cell<
         const rightPadding = this._$owner.getRightPadding();
         const isFirstColumnAfterCheckbox = this.getColumnIndex() === 1 && this._$owner.hasMultiSelectColumn();
 
-        if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn()) {
+        if (!this._$owner.shouldDisplayMultiSelectTemplate() && this.isFirstColumn()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}`;
         } else if (!this.isFirstColumn() && !isFirstColumnAfterCheckbox) {
             classes += ' controls-Grid__cell_spacingLeft';

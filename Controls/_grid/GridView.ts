@@ -210,7 +210,8 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         //  https://online.sbis.ru/opendoc.html?guid=09307163-7edb-4423-999d-525271e05586
         // тогда метод можно покрыть нормально юнитом и проблемы с актуализацией колонок на самом grid-элементе не будет
         const columns = this._listModel ? this._listModel.getGridColumnsConfig() : options.columns;
-        const hasMultiSelect = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
+        const hasMultiSelect = options.multiSelectVisibility !== 'hidden' &&
+                               options.multiSelectPosition !== 'custom';
 
         if (!options.columns) {
             Logger.warn('You must set "columns" option to make grid work correctly!', this);
@@ -234,7 +235,13 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             }
         }
         if (hasMultiSelect) {
-            columnsWidths = ['max-content'].concat(columnsWidths);
+            if (options.editingConfig?.mode === 'cell') {
+                if (columnsWidths[0].endsWith('px') || columnsWidths[0].endsWith('%')) {
+                    columnsWidths[0] = `calc(${columnsWidths[0]} + 20px)`;
+                }
+            } else {
+                columnsWidths = ['max-content'].concat(columnsWidths);
+            }
         }
 
         // Дополнительная колонка для отображения застиканных операций над записью при горизонтальном скролле.
@@ -426,8 +433,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
 
         if (this._listModel.getEditingConfig()?.mode === 'cell') {
             const columnIndex = this._getCellIndexByEventTarget(nativeEvent);
-            const multiSelectOffset =
-                +(this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom');
+            const multiSelectOffset = false;
             if (item.getEditingColumnIndex() !== (columnIndex + multiSelectOffset)) {
                 this._notify('itemClick', [item.getContents(), nativeEvent, columnIndex]);
             }
@@ -461,7 +467,11 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         }
         const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
         const currentCell = this._getCellByEventTarget(target);
-        const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+        const multiSelectOffset = +(
+            this._options.multiSelectVisibility !== 'hidden' &&
+            this._options.multiSelectPosition !== 'custom' &&
+            this._options.editingConfig?.mode !== 'cell'
+        );
         return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
     },
 

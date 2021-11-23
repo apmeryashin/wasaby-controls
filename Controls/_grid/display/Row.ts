@@ -57,7 +57,9 @@ export default class Row<TContents extends Model = Model>
     }
 
     _hasCheckBoxCell(): boolean {
-        return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
+        return this.getMultiSelectVisibility() !== 'hidden' &&
+               this.getMultiSelectPosition() !== 'custom' &&
+               this.getEditingConfig()?.mode !== 'cell';
     }
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {

@@ -85,7 +85,9 @@ const getViewHeader = (self) => {
 };
 
 const hasCheckboxColumn = (options: Partial<IAbstractViewOptions>): boolean => {
-    return options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
+    return options.multiSelectVisibility !== 'hidden' &&
+           options.multiSelectPosition !== 'custom' &&
+           options.editingConfig?.mode !== 'cell';
 };
 
 export const isSizeAffectsOptionsChanged = (newOptions: Partial<IAbstractViewOptions>,
@@ -683,7 +685,9 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
      * @private
      */
     _getViewColumns(options: IGridOptions): number {
-        const hasMultiSelect = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
+        const hasMultiSelect = options.multiSelectVisibility !== 'hidden' &&
+                               options.multiSelectPosition !== 'custom' &&
+                               options.editingConfig?.mode !== 'cell';
         let ladderCellsIndexes = [];
 
         if (options.isFullGridSupport) {

@@ -383,7 +383,8 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
 
         const { isAdd = false, addPosition = 'bottom', targetItem, columnIndex } = options;
         const hasCheckBoxColumn = this._options.collection.getMultiSelectVisibility() !== 'hidden' &&
-                                  this._options.collection.getMultiSelectPosition() !== 'custom';
+                                  this._options.collection.getMultiSelectPosition() !== 'custom' &&
+                                  this._options.mode !== 'cell';
 
         this._operationsPromises.begin = new Promise((resolve) => {
             // Ждем результат колбека "до начала редактирования".
