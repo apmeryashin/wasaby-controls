@@ -728,9 +728,9 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     //region proxy methods to TreeControl
-    scrollToItem(key: string | number, toBottom?: boolean): void {
+    scrollToItem(key: string | number, position?: string): void {
         if (this._children.treeControl) {
-            this._children.treeControl.scrollToItem(key, toBottom);
+            this._children.treeControl.scrollToItem(key, position);
         }
     }
 

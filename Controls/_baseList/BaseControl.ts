@@ -471,9 +471,9 @@ const _private = {
         return self._listViewModel?.getCollection().getMetaData().more;
     },
 
-    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
+    scrollToItem(self, key: TItemKey, position?: string, force?: boolean): Promise<void> {
         if (self._useNewScroll) {
-            return self._listVirtualScrollController.scrollToItem(key, toBottom, force);
+            return self._listVirtualScrollController.scrollToItem(key, position, force);
         } else {
             const scrollCallback = (index, result) => {
 
@@ -492,7 +492,7 @@ const _private = {
                 self._doNotScrollToFirtsItem = false;
                 if (itemContainer && needScroll) {
                     self._notify('scrollToElement', [{
-                        itemContainer, toBottom, force
+                        itemContainer, position, force
                     }], {bubbling: true});
                 }
                 if (result) {
@@ -501,7 +501,7 @@ const _private = {
             };
             return new Promise((resolve) => {
                 self._scrollController && self._listViewModel ?
-                    self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
+                    self._scrollController.scrollToItem(key, position, force, scrollCallback).then(() => {
                         resolve();
                     }) : resolve();
             });
@@ -2228,7 +2228,7 @@ const _private = {
 
             // Последняя страница уже загружена но конец списка не обязательно отображается,
             // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
-            return _private.scrollToItem(self, lastItemKey, true, true).then(() => {
+            return _private.scrollToItem(self, lastItemKey, 'bottom', true).then(() => {
 
                 // После того как последний item гарантированно отобразился,
                 // нужно попросить ScrollWatcher прокрутить вниз, чтобы
@@ -2496,7 +2496,7 @@ const _private = {
                     // то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
                     self._doAfterDrawItems = () => {
-                        _private.scrollToItem(self, self._options.activeElement, false, true);
+                        _private.scrollToItem(self, self._options.activeElement, 'bottom', true);
                     };
                 }
             }
@@ -2564,7 +2564,8 @@ const _private = {
                          */
                         result.then((key) => _private.scrollToItem(self, key));
                     } else if (result !== undefined) {
-                        _private.scrollToItem(self, result, isMovingForward, false);
+                        const position = isMovingForward ? 'bottom' : 'top';
+                        _private.scrollToItem(self, result, position, false);
                     }
                 }
             };
@@ -3793,10 +3794,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             totalCount: this._listViewModel.getCount(),
 
-            scrollToElementUtil: (container, toBottom, force): Promise<void> => {
+            scrollToElementUtil: (container, position, force): Promise<void> => {
                 return this._notify(
                     'scrollToElement',
-                    [{ itemContainer: container, toBottom, force }],
+                    [{ itemContainer: container, position, force }],
                     { bubbling: true }
                 ) as Promise<void>;
             },
@@ -3909,7 +3910,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // Не нужно скроллить к первому активному элементу на маунте: его и так видно
                 // https://online.sbis.ru/opendoc.html?guid=8b6716c3-d188-465a-8f5c-b3e51cb0bdb2
                 this._doNotScrollToFirtsItem = true;
-                _private.scrollToItem(this, this._options.activeElement, false, true);
+                _private.scrollToItem(this, this._options.activeElement, 'top', true);
             }
 
             this._scrollController.continueScrollToItemIfNeed();
@@ -4147,9 +4148,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                                     newOptions.collection !== this._options.collection ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
-
         if (this._editInPlaceController) {
-            let isEditingModeChanged = this._options.editingConfig !== newOptions.editingConfig &&
+            const isEditingModeChanged = this._options.editingConfig !== newOptions.editingConfig &&
                                        this._getEditingConfig().mode !== this._getEditingConfig(newOptions).mode;
             if (isEditingModeChanged) {
                 this._editInPlaceController.updateOptions({
@@ -4224,7 +4224,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (loadStarted) {
             this._displayGlobalIndicator();
-        } else if (this._options.loading && !newOptions.loading && this._indicatorsController.shouldHideGlobalIndicator()) {
+        } else if (this._options.loading && !newOptions.loading &&
+            this._indicatorsController.shouldHideGlobalIndicator()) {
             this._indicatorsController.hideGlobalIndicator();
         }
 
@@ -4602,8 +4603,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._items;
     }
 
-    scrollToItem(key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
-        return _private.scrollToItem(this, key, toBottom, force);
+    scrollToItem(key: TItemKey, position?: string, force?: boolean): Promise<void> {
+        return _private.scrollToItem(this, key, position, force);
     }
 
     _onValidateCreated(e: Event, control: ValidateContainer): void {
@@ -5254,7 +5255,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
-    protected _reload(cfg, sourceConfig?: IBaseSourceConfig, immediateResolve: boolean = true): Promise<RecordSet|null|void> {
+    protected _reload(cfg, sourceConfig?: IBaseSourceConfig, immediateResolve: boolean = true):
+        Promise<RecordSet|null|void> {
         return new Promise((resolve) => {
             if (this._sourceController) {
                 this._indicatorsController.endDisplayPortionedSearch();
@@ -7130,7 +7132,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             const firstItemKey = firstItem && firstItem.key !== undefined ? firstItem.key : null;
             if (firstItemKey !== null) {
-                return _private.scrollToItem(this, firstItemKey, false, true);
+                return _private.scrollToItem(this, firstItemKey, 'top', true);
             }
         }
         return Promise.resolve();

@@ -37,7 +37,7 @@ export interface IShadowVisibility {
     forward: boolean;
 }
 
-type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => Promise<void>;
+type IScrollToElementUtil = (container: HTMLElement, position: string, force: boolean) => Promise<void>;
 type IDoScrollUtil = (scrollTop: number) => void;
 type IUpdateShadowsUtil = (hasItems: IHasItemsOutRange) => void;
 type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
@@ -150,7 +150,7 @@ export class ListVirtualScrollController {
         this._keepScrollPosition = false;
     }
 
-    scrollToItem(key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
+    scrollToItem(key: TItemKey, position?: string, force?: boolean): Promise<void> {
         const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
 
         const itemIndex = this._collection.getIndexByKey(key);
@@ -158,10 +158,10 @@ export class ListVirtualScrollController {
         if (rangeChanged) {
             this._scheduleScroll({
                 type: 'scrollToElement',
-                params: { key, toBottom, force }
+                params: { key, position, force }
             });
         } else {
-            this._scrollToElement(key, toBottom, force);
+            this._scrollToElement(key, position, force);
         }
 
         return promise;
@@ -320,7 +320,7 @@ export class ListVirtualScrollController {
                     const scrollToElementParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
                     this._scrollToElement(
                         scrollToElementParams.key,
-                        scrollToElementParams.toBottom,
+                        scrollToElementParams.position,
                         scrollToElementParams.force
                     );
                     break;
@@ -333,11 +333,11 @@ export class ListVirtualScrollController {
         }
     }
 
-    private _scrollToElement(key: CrudEntityKey, toBottom?: boolean, force?: boolean): void {
+    private _scrollToElement(key: CrudEntityKey, position?: string, force?: boolean): void {
         this._inertialScrolling.callAfterScrollStopped(() => {
             const element = this._scrollController.getElement(key);
             if (element) {
-                const promise = this._scrollToElementUtil(element, toBottom, force);
+                const promise = this._scrollToElementUtil(element, position, force);
                 promise.then(() => this._scrollToElementCompletedCallback());
             } else {
                 throw new Error('Controls/_baseList/Controllers/ListVirtualScrollController::_scrollToElement | ' +

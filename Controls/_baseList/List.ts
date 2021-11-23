@@ -132,8 +132,8 @@ implements IMovableList, IRemovableList {
         return this._children.listControl.getItems();
     }
 
-    scrollToItem(key: string|number, toBottom: boolean, force: boolean): Promise<void> {
-        return this._children.listControl.scrollToItem(key, toBottom, force);
+    scrollToItem(key: string|number, position: string, force: boolean): Promise<void> {
+        return this._children.listControl.scrollToItem(key, position, force);
     }
 
     beginEdit(options: object): Promise<void | {canceled: true}> {
