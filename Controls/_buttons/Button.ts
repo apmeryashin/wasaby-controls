@@ -67,7 +67,7 @@ export function simpleCssStyleGeneration(options: IButtonOptions): void {
         if (options.readOnly) {
             this._iconStyle = 'readonly';
         } else {
-            this._iconStyle =  options.translucent ? 'forTranslucent' : options.iconStyle;
+            this._iconStyle = options.translucent ? 'forTranslucent' : options.iconStyle;
         }
     }
     if (this._viewMode === 'linkButton') {
@@ -143,7 +143,7 @@ export function getDefaultOptions(): object {
  * @demo Controls-demo/Buttons/ViewModes/Index
  */
 class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize,
-                                                               IClick, IFontColorStyle, IFontSize, IHeight, IButton {
+    IClick, IFontColorStyle, IFontSize, IHeight, IButton {
     protected _template: TemplateFunction = ButtonTemplate;
 
     // Называть _style нельзя, так как это состояние используется для темизации
@@ -167,10 +167,14 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
 
     protected _beforeMount(options: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, options);
+        this._tooltip = options.tooltip;
     }
 
     protected _beforeUpdate(newOptions: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, newOptions);
+        if (this._options.tooltip !== newOptions.tooltip) {
+            this._tooltip = newOptions.tooltip;
+        }
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
@@ -187,14 +191,11 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
 
     protected _onMouseEnterHandler(): void {
         if (!this._options.readOnly) {
-            if (this._options.tooltip) {
-                this._tooltip = this._options.tooltip;
-            } else {
-                if (typeof this._options.caption === 'string' && this._tooltip !== this._options.caption) {
-                    const captionWidth = getTextWidth(this._options.caption);
-                    if (captionWidth > this._container.clientWidth) {
-                        this._tooltip = this._options.caption;
-                    }
+            if (!this._tooltip && typeof this._options.caption === 'string' &&
+                this._tooltip !== this._options.caption) {
+                const captionWidth = getTextWidth(this._options.caption);
+                if (captionWidth > this._container.clientWidth) {
+                    this._tooltip = this._options.caption;
                 }
             }
         }
@@ -212,12 +213,12 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
 }
 
 Object.defineProperty(Button, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
+    enumerable: true,
+    configurable: true,
 
-   get(): object {
-      return Button.getDefaultOptions();
-   }
+    get(): object {
+        return Button.getDefaultOptions();
+    }
 });
 
 /**
