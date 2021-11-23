@@ -301,7 +301,8 @@ abstract class BaseController implements IPopupController {
             // Проверяем на кол-во св-в, т.к. в target может лежать html-элемент со св-вами x, y.
             // Если не тот формат что мы ожидаем - игнорируем.
             const keys = Object.keys(target);
-            return keys.length === 2 && isNumber(target.x) && isNumber(target.y);
+            const maxKeys = 4;
+            return keys.length <= maxKeys && isNumber(target.x) && isNumber(target.y);
         }
         return false;
     }
@@ -325,11 +326,11 @@ abstract class BaseController implements IPopupController {
             } else {
                 position = item.popupOptions.target;
             }
-            let {x, y} = position;
+            let {x, y, width, height} = position;
             const size = 1;
             return {
-                width: size,
-                height: size,
+                width: width || size,
+                height: height || size,
                 top: y,
                 left: x,
                 bottom: y + size,
