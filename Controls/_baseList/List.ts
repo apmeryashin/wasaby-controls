@@ -109,10 +109,10 @@ implements IMovableList, IRemovableList {
         return 'Controls/display:Collection';
     }
 
-    reload(keepState: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|Error> {
+    reload(keepNavigation: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|Error> {
         // listControl будет не создан, если была ошибка загрузки
         if (this._children.listControl) {
-            return this._children.listControl.reload(keepState, sourceConfig);
+            return this._children.listControl.reload(keepNavigation, sourceConfig);
         } else {
             return this._children.data.reload(sourceConfig);
         }

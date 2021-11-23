@@ -5203,9 +5203,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this.setMarkedKey(key);
     }
 
-    reload(keepState: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
+    reload(keepNavigation: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
 
-        if (keepState) {
+        if (keepNavigation) {
             if (this._useNewScroll) {
                 this._listVirtualScrollController.enableKeepScrollPosition();
             } else {
