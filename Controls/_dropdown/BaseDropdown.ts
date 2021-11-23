@@ -31,6 +31,9 @@ export abstract class BaseDropdown extends Control<IControlOptions, IDropdownRec
         if (event.nativeEvent.keyCode === constants.key.esc && this._isOpened) {
             this._controller.closeMenu();
             event.stopPropagation();
+        } else if (event.nativeEvent.keyCode === constants.key.space && !this._isOpened) {
+            this.openMenu();
+            event.stopPropagation();
         }
     }
 

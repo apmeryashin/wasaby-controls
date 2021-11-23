@@ -1,6 +1,6 @@
 <div class="controls-Dropdown__wrapper
             {{fontSize ? 'controls-fontsize-' + fontSize : 'controls-Dropdown-fontsize' }}">
-   <div class="controls-Dropdown__content-wrapper
+   <div tabindex="0" class="controls-Dropdown__content-wrapper
                {{(validationStatus === 'invalid' || validationStatus === 'invalidAccent') ? ' controls-invalid-container'}}
       {{!readOnly && (countItems === undefined || countItems > 1 || footerTemplate) ? 'controls-Dropdown__text_enabled ' +
       (style && !fontColorStyle ? 'controls-Dropdown__item_style-' + style : (isEmptyItem && !fontColorStyle ? 'controls-Dropdown__emptyItem'
@@ -13,7 +13,8 @@
                      hasMoreText="{{hasMoreText}}"
                      iconSize="{{iconSize}}"
                      icon="{{icon}}"
-                     item="{{item}}"/>
+                     item="{{item}}"
+                     attr:tabindex="0" />
       </ws:if>
       <ws:else>
          <div if="{{icon}}" class="controls-Dropdown__icon
