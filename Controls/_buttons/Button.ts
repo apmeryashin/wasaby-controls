@@ -171,9 +171,6 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
 
     protected _beforeUpdate(newOptions: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, newOptions);
-        if (this._options.tooltip !== newOptions.tooltip) {
-            this._tooltip = newOptions.tooltip;
-        }
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
@@ -198,8 +195,12 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
                     if (captionWidth > this._container.clientWidth) {
                         this._tooltip = this._options.caption;
                     }
+                } else {
+                    this._tooltip = this._options.tooltip;
                 }
             }
+        } else {
+            this._tooltip = '';
         }
     }
 
