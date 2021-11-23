@@ -68,6 +68,12 @@ export default abstract class
         return updateResult;
     }
 
+    protected _afterMount(): void {
+        if (this._options.items && this._options.hasOwnProperty('selectedKeys')) {
+            this._notifySelectedKeysChanged(this._lookupController.getSelectedKeys());
+        }
+    }
+
     protected _updateItems(items: RecordSet|List<Model>): void {
         this._lookupController.setItems(items);
         this._afterItemsChanged();
