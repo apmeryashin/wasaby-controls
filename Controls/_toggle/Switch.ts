@@ -62,8 +62,6 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
     '[Controls/_interface/ITooltip]': true;
     '[Controls/_toggle/interface/ICheckable]': true;
     '[Controls/_interface/IValidationStatus]': true;
-
-    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
     protected _template: TemplateFunction = SwitchTemplate;
     protected _hovered: boolean = false;
 
