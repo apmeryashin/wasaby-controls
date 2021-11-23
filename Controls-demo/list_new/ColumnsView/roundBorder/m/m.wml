@@ -6,7 +6,9 @@
             itemActions="{{_itemActions}}">
         <ws:roundBorder tl="m" tr="m" bl="m" br="m"/>
         <ws:itemTemplate>
-            <ws:partial template="Controls/columns:ItemTemplate" attr:class="controlsDemo__height36_item"/>
+            <ws:partial template="Controls/columns:ItemTemplate"
+                        highlightOnHover="{{false}}"
+                        itemActionsClass="controls-itemActionsV_position_topRight" attr:class="controlsDemo__height36_item"/>
         </ws:itemTemplate>
     </Controls.columns:View>
 </div>
