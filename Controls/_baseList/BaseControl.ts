@@ -6332,7 +6332,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const navigation = this._options.navigation;
         const view = navigation?.view;
         const buttonView = navigation?.viewConfig?.buttonView;
-        return buttonView || view === 'cut' ? 'separator' : 'link';
+        return buttonView || (view === 'cut' ? 'separator' : 'link');
     }
 
     protected _onNavigationButtonClick(e: SyntheticEvent): void {
