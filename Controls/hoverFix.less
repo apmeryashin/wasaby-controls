@@ -1,0 +1,19 @@
+// Chrome with "hardware acceleration" disabled displays artifacts on pages when using more flex layers.
+// Fix this error by creating a new rendering layer. Errors:
+// https://online.sbis.ru/opendoc.html?guid=ef46e66d-25cb-415d-8693-b37e5fa9306b
+// https://online.sbis.ru/opendoc.html?guid=498d117a-479e-4e15-b8f9-cb7ea8ea4e84
+// https://online.sbis.ru/opendoc.html?guid=d851c234-6bd0-475a-a480-40ce2ab73000
+// https://online.sbis.ru/opendoc.html?guid=4f8c80ac-8d5c-4f24-b078-495f5fe18b37
+// https://online.sbis.ru/opendoc.html?guid=cc17df0e-6514-455d-a660-4f82769d2e90
+// https://online.sbis.ru/opendoc.html?guid=c35989ad-81c9-4b94-9ed1-790019504c44
+// https://online.sbis.ru/opendoc.html?guid=37f81d08-2cb8-40b4-b987-c14bbb128d39
+.ws-is-chrome .controls-BaseControl {
+  backface-visibility: hidden;
+}
+
+// Fix this error in tile separately, because composition "backface-visibility" and "perspective" on "BaseControl"
+// fail tile items animation.
+// https://online.sbis.ru/opendoc.html?guid=44a46d1d-cdd4-412c-a0db-bd172a34b873
+.ws-is-chrome .controls-TileView__title {
+  perspective: 1000px;
+}
