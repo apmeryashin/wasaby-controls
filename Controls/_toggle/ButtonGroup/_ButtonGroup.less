@@ -1,3 +1,7 @@
+.controls-ButtonGroup {
+   overflow: hidden;
+}
+
 .controls-Button_buttonGroup {
    min-width: var(--min-width_button_button);
    border-radius: var(--border-radius_button);
@@ -42,7 +46,7 @@
 
 .controls-ButtonGroup__button_withMargin {
    margin-right: var(--offset_m);
-   margin-bottom: var(--offset_m);
+   margin-top: var(--offset_m);
 }
 
 .controls-ButtonGroup__wrapper {
@@ -51,6 +55,7 @@
 
 .controls-ButtonGroup__wrapper-horizontal {
    flex-flow: row wrap;
+   margin-top: calc(-1 * var(--offset_m));
 }
 
 .controls-ButtonGroup__wrapper-vertical {
