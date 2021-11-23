@@ -5,10 +5,19 @@
                     scope="{{ _options }}">
             <ws:editorTemplate>
                 <Controls.input:Text
- contrastBackground="{{true}}"                        attr:class="js-controls-Grid__editInPlace__input-1"
+                        contrastBackground="{{ false }}"
+                        attr:class="js-controls-Grid__editInPlace__input-1"
                         bind:value="item.contents[column.config.displayProperty || 'title']"
+                        horizontalPadding="null"
                         borderVisibility="hidden"/>
             </ws:editorTemplate>
         </ws:partial>
+
+        <ws:if data="{{ column.config.displayProperty === 'title' }}">
+            <ws:partial template="{{editArrowTemplate}}" scope="{{ _options }}"/>
+        </ws:if>
+        <ws:else>
+            <ws:partial template="{{contentTemplate.itemActionsTemplate}}" scope="{{ _options }}" highlightOnHover="{{ false }}"/>
+        </ws:else>
     </ws:contentTemplate>
 </ws:partial>

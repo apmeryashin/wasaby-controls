@@ -35,6 +35,19 @@
                             </div>
                         </ws:template>
                     </ws:Object>
+
+                    <ws:Object>
+                        <ws:template>
+                            <div class="controlsDemo__SingleCellEditable__columnsEditing">
+                                <h4 class="controlsDemo__mb1">Нередактируемые колонки</h4>
+                                <ws:for data="index, column in _columns">
+                                    <div attr:key="{{ index }}" on:click="_toggleEditableColumn(index)">
+                                        {{ column.displayProperty }} - <span style="cursor: pointer; text-decoration: underline;">{{ _readOnlyColumns.has(index) ? 'READONLY' : 'EDITABLE' }}</span>
+                                    </div>
+                                </ws:for>
+                            </div>
+                        </ws:template>
+                    </ws:Object>
                 </ws:Array>
             </ws:items>
         </ws:rightSidebar>
