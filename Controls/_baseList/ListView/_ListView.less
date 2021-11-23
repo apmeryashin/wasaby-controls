@@ -141,10 +141,21 @@
    right: 0;
 }
 
+.controls-ListView__itemV .controls-ListView__checkbox_marginTop_l {
+   margin-top: calc(var(--item_padding-top_l_list) + var(--item-separator_s_thickness_list));
+}
+
+.controls-ListView__itemV .controls-ListView__checkbox_marginTop_s {
+   margin-top: calc(var(--item_padding-top_s_list) + var(--item-separator_s_thickness_list));
+}
+
+.controls-ListView__itemV .controls-ListView__checkbox_marginTop_null {
+   margin-top: 0;
+}
+
 .controls-ListView__itemV .controls-ListView__checkbox_position-default {
    float: left;
    position: absolute;
-   margin-top: var(--checkbox_offset-top_list);
 }
 
 .controls-ListView__itemV .controls-ListView__checkbox_position-custom {
@@ -393,6 +404,14 @@
 
 .controls-ListView__itemContent {
    z-index: 1;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-ListView__itemContent::before {
+   font-size: 17px;
+   content: '\200b';
+   display: inline-block;
 }
 
 .controls-itemActionsV {
