@@ -42,6 +42,7 @@ function validate(args) {
    let isEmpty = false;
 
    switch (typeof args.value) {
+      case 'boolean':
       case 'string':
          isEmpty = !Boolean(args.value);
          break;
