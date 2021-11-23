@@ -23,7 +23,8 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterCell', () => {
             getStickyColumnsCount: () => 0,
             hasMultiSelectColumn: () => false,
             isFullGridSupport: () => true,
-            hasColumnScroll: () => false
+            hasColumnScroll: () => false,
+            isMarked: () => false
         };
     });
 
