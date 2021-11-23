@@ -1330,7 +1330,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
                     this._scrollToLeaf = () => {
-                        this.scrollToItem(itemKey, 'bottom');
+                        this.scrollToItem(itemKey, 'top');
                     };
                     resolve();
                 }

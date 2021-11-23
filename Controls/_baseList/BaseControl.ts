@@ -2496,7 +2496,7 @@ const _private = {
                     // то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
                     self._doAfterDrawItems = () => {
-                        _private.scrollToItem(self, self._options.activeElement, 'bottom', true);
+                        _private.scrollToItem(self, self._options.activeElement, 'top', true);
                     };
                 }
             }
