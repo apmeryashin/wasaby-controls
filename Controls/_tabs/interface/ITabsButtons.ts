@@ -149,42 +149,6 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
      */
     items?: RecordSet<ITabButtonItem>;
     /**
-     * @typedef {String} Controls/_tabs/interface/ITabsButtons/Style
-     * @variant primary
-     * @variant secondary
-     * @variant unaccented
-     */
-    /**
-     * @name Controls/_tabs/interface/ITabsButtons#style
-     * @cfg {Controls/_tabs/interface/ITabsButtons/Style.typedef} Стиль отображения вкладок.
-     * @default primary
-     * @demo Controls-demo/Tabs/Buttons/Style/Index
-     * @remark
-     * Если стандартная тема вам не подходит, вы можете переопределить переменные:
-     *
-     * * @border-color_Tabs-item_selected_primary
-     * * @text-color_Tabs-item_selected_primary
-     * * @border-color_Tabs-item_selected_secondary
-     * * @text-color_Tabs-item_selected_secondary
-     * @example
-     * Вкладки с применением стиля 'secondary'.
-     * <pre class="brush: html; highlight: [5]">
-     * <Controls.tabs:Buttons
-     *     bind:selectedKey='_selectedKey'
-     *     keyProperty="id"
-     *     source="{{_source}}"
-     *     style="secondary"/>
-     * </pre>
-     * Вкладки с применением стиля по умолчанию.
-     * <pre class="brush: html;">
-     * <Controls.tabs:Buttons
-     *     bind:selectedKey="_selectedKey"
-     *     keyProperty="id"
-     *     source="{{_source}}"/>
-     * </pre>
-     */
-    style?: string;
-    /**
      * @name Controls/_tabs/interface/ITabsButtons#separatorVisible
      * @cfg {Boolean} Определяет видимость вертикальных разделителей вкладок.
      * @default true
@@ -233,4 +197,31 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
      * @cfg {Boolean} Определяет могут ли вкладки сжиматься. Если вкладки не могут сжиматься, то при недостатке места они скролятся по горизонтали.
      */
     canShrink: boolean;
+
+    /**
+     * @name Controls/_tabs/interface/ITabsButtons#fontColorStyle
+     * @cfg {Controls/interface:IFontColorStyle/TFontColorStyle.typedef} Устанавливает цвет текста вкладок.
+     * @default secondary
+     * @see IFontColorStyle
+     * @demo Controls-demo/Tabs/Buttons/FontColorStyle/Index
+     */
+    fontColorStyle?: string;
+
+    /**
+     * @name Controls/_tabs/interface/ITabsButtons#selectedStyle
+     * @cfg {Controls/interface:IFontColorStyle/TFontColorStyle.typedef} Устанавливает цвет текста выбранной вкладки.
+     * @default primary
+     * @see IFontColorStyle
+     * @demo Controls-demo/Tabs/Buttons/FontColorStyle/Index
+     */
+    selectedStyle?: string;
+
+    /**
+     * @name Controls/_tabs/interface/ITabsButtons#markerStyle
+     * @cfg {Controls/interface:IFontColorStyle/TFontColorStyle.typedef} Устанавливает цвет маркера.
+     * @default primary
+     * @see IFontColorStyle
+     * @demo Controls-demo/Tabs/Buttons/FontColorStyle/Index
+     */
+    markerStyle?: string;
 }
