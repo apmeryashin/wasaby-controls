@@ -358,7 +358,6 @@ export class Controller {
             return;
         }
 
-        const target = isContextMenu ? null : this._calculateTargetPoint(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(item, isActionMenu, parentAction, menuActions);
 
@@ -367,11 +366,11 @@ export class Controller {
             opener,
             template: 'Controls/menu:Popup',
             actionOnScroll: 'close',
-            target,
             templateOptions,
             // Этот класс задаёт смещение для popup при расчёте его top/left так,
             // чтобы иконка в заголовке меню совпадала с иконкой кнопки, по которой это меню открыли
-            className: `controls-ItemActions__popup__list controls_popupTemplate_theme-${this._theme} controls_dropdownPopup_theme-${this._theme}`,
+            className: `controls-MenuButton_link_iconSize-medium_popup controls_popupTemplate_theme-${this._theme}` +
+                       ` controls_dropdownPopup_theme-${this._theme}`,
             closeOnOutsideClick: true,
             autofocus: false,
             fittingMode: {
@@ -392,11 +391,16 @@ export class Controller {
                 },
                 // Этот класс задаёт смещение для popup при расчёте его top/left так,
                 // чтобы кнопка закрытия меню совпадала с иконкой кнопки открытия меню
-                className: `controls-ItemActions__popup__list_menu controls_popupTemplate_theme-${this._theme}`,
+                className: `controls-ItemActions__popup__list controls_popupTemplate_theme-${this._theme}`,
                 // @ts-ignore
                 nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
             };
         }
+
+        menuConfig.target = isContextMenu ? null : this._calculateTargetPoint(
+            clickEvent.target as HTMLElement,
+            menuConfig.direction?.horizontal
+        );
         return menuConfig;
     }
 
@@ -621,12 +625,13 @@ export class Controller {
      * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
      * Поэтому заменяем метод getBoundingClientRect так, чтобы он возвращал текущие координаты
      * @param realTarget
+     * @param direction
      */
-    private _calculateTargetPoint(realTarget: HTMLElement): {x: number, y: number} {
-        const button = realTarget?.closest('.js-controls-ItemActions__ItemAction_button');
-        const rect = button.getBoundingClientRect();
+    private _calculateTargetPoint(realTarget: HTMLElement, direction: string = 'right'): {x: number, y: number} {
+        // const button = realTarget?.closest('.js-controls-ItemActions__ItemAction_button');
+        const rect = realTarget.getBoundingClientRect();
         return {
-            x: rect.x,
+            x: rect.x + (direction !== 'right' ? rect.width : 0),
             y: rect.y,
             width: rect.width,
             height: rect.height
