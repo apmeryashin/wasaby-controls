@@ -7,6 +7,8 @@
                 controls-Switch__toggle__wrapper{{(_options.captionPosition === 'right' && _options.value) || (_options.captionPosition === 'left' && _options.value) ? '_right' : '_left'}}
                {{_options.readOnly ? 'controls-Switch_disabled' : 'controls-Switch_enabled'}}
                {{_options.value ? ' controls-Switch_checked'}}"
+         on:mouseenter="_mouseEnterHandler()"
+         on:mouseleave="_mouseLeaveHandler()"
          title="{{tooltip}}">
       <ws:partial template="wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{ _options.readOnly }}" attr:class="controls_Switch_SwitchCircle"
                   selected="{{ _options.value }}"
@@ -16,13 +18,16 @@
    </span>
 </ws:template>
 <ws:template name="caption">
-   <ws:partial template="{{_options.captionTemplate}}" scope="{{_options}}"/>
+   <ws:partial template="{{_options.captionTemplate}}"
+               scope="{{_options}}"
+               on:mousemove="_mouseMoveHandler()"
+               on:mouseleave="_mouseLeaveHandler()"/>
 </ws:template>
 
 <span class="controls_toggle_theme-{{_options.theme}} controls-Switch"
             on:click="_clickHandler()"
       title="{{_options.tooltip}}">
-   <div class="controls-invalid-container controls-Switch__wrapper">
+   <div class="controls-invalid-container controls-Switch__wrapper {{_hovered ? 'controls-Switch__wrapper_hovered'}}">
       <ws:if data="{{_options.captionPosition === 'left'}}">
          <ws:partial template="caption"/>
          <ws:partial template="toggle"/>

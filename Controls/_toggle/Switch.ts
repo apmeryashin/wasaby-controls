@@ -2,25 +2,27 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {
-   IContrastBackgroundOptions,
-   IResetValueOptions,
-   ITooltip,
-   ITooltipOptions,
-   IValidationStatus,
-   IValidationStatusOptions
+    IContrastBackgroundOptions,
+    IResetValueOptions,
+    ITooltip,
+    ITooltipOptions,
+    IValidationStatus,
+    IValidationStatusOptions
 } from 'Controls/interface';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 import * as CaptionTemplate from 'wml!Controls/_toggle/Switch/resources/CaptionTemplate';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
     ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
-   caption: string;
-   captionPosition: string;
-   size?: string;
-   captionTemplate?: TemplateFunction;
+    caption: string;
+    captionPosition: string;
+    size?: string;
+    captionTemplate?: TemplateFunction;
 }
+
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
  *
@@ -57,47 +59,74 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
  */
 
 class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IValidationStatus {
-   '[Controls/_interface/ITooltip]': true;
-   '[Controls/_toggle/interface/ICheckable]': true;
-   '[Controls/_interface/IValidationStatus]': true;
+    '[Controls/_interface/ITooltip]': true;
+    '[Controls/_toggle/interface/ICheckable]': true;
+    '[Controls/_interface/IValidationStatus]': true;
 
-   // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: TemplateFunction = SwitchTemplate;
+    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+    protected _template: TemplateFunction = SwitchTemplate;
+    protected _hovered: boolean = false;
 
-   protected _clickHandler(): void {
-      if (!this._options.readOnly) {
-         this._notify('valueChanged', [!this._options.value]);
-      }
-   }
+    protected _setHovered(hovered: boolean): void {
+        if (!this._options.readOnly) {
+            this._hovered = hovered;
+        }
+    }
 
-   static getDefaultOptions(): object {
-      return {
-         value: false,
-         captionPosition: 'right',
-         validationStatus: 'valid',
-         contrastBackground: true,
-         size: 'l',
-         captionTemplate: CaptionTemplate
-      };
-   }
-   static getOptionTypes(): object {
-      return {
-         value: EntityDescriptor(Boolean),
-         captionPosition: EntityDescriptor(String).oneOf([
-            'left',
-            'right'
-         ])
-      };
-   }
+    protected _mouseEnterHandler(): void {
+        this._setHovered(true);
+    }
+
+    protected _mouseLeaveHandler(): void {
+        this._setHovered(false);
+    }
+
+    protected _mouseMoveHandler(event: SyntheticEvent): void {
+        if (!this._options.readOnly) {
+            const target = event.nativeEvent.target as Element;
+            if (target && target.closest('.controls-Switch__text-decoration')) {
+                this._setHovered(true);
+            } else {
+                this._setHovered(false);
+            }
+        }
+    }
+
+    protected _clickHandler(): void {
+        if (!this._options.readOnly) {
+            this._notify('valueChanged', [!this._options.value]);
+        }
+    }
+
+    static getDefaultOptions(): object {
+        return {
+            value: false,
+            captionPosition: 'right',
+            validationStatus: 'valid',
+            contrastBackground: true,
+            size: 'l',
+            captionTemplate: CaptionTemplate
+        };
+    }
+
+    static getOptionTypes(): object {
+        return {
+            value: EntityDescriptor(Boolean),
+            captionPosition: EntityDescriptor(String).oneOf([
+                'left',
+                'right'
+            ])
+        };
+    }
 }
 
 Object.defineProperty(Switch, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
+    enumerable: true,
+    configurable: true,
 
-   get(): object {
-      return Switch.getDefaultOptions();
-   }
+    get(): object {
+        return Switch.getDefaultOptions();
+    }
 });
 
 /**
