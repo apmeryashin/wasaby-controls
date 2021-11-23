@@ -41,6 +41,7 @@ export = function (args) {
    var isEmpty = false;
 
    switch (typeof args.value) {
+      case 'boolean':
       case 'string':
          isEmpty = !Boolean(args.value);
          break;
