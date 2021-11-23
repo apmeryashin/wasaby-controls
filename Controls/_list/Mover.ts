@@ -328,6 +328,7 @@ const _private = {
         };
         return new Promise((resolve) => {
             self._children.dialogOpener.open({
+                _keepMaxHeight: true,
                 templateOptions,
                 eventHandlers: {
                     onResult: (target: Model) => {
