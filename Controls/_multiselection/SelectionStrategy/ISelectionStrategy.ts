@@ -90,9 +90,10 @@ export default interface ISelectionStrategy {
     * @param selection текущее состояние выбранных ключей
     * @param hasMoreData имеются ли в модели еще не загруженные элементы
     * @param limit ограничивает максимальное число выбранных элементов
+    * @param searchValue
     * @return {number|null} Количество или null, если невозможно определить точное значение
     */
-   getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null;
+   getCount(selection: ISelection, hasMoreData: boolean, limit?: number, searchValue?: string): number|null;
 
    /**
     * Обновляет опции
