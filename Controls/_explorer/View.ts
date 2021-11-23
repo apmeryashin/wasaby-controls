@@ -761,8 +761,8 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
     //endregion
 
-    reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<unknown> {
-        return this._children.treeControl.reload(keepScroll, sourceConfig);
+    reload(keepState: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<unknown> {
+        return this._children.treeControl.reload(keepState, sourceConfig);
     }
 
     getItems(): RecordSet {

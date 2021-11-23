@@ -5203,15 +5203,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this.setMarkedKey(key);
     }
 
-    reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
-        // При перезагрузке через public-метод полностью сбрасываем состояние cut-навигации
-        // https://online.sbis.ru/opendoc.html?guid=73d5765b-598a-4e2c-a867-91a54150ae9e
-        if (this._cutExpanded) {
-            this._cutExpanded = false;
-            this._sourceController.setNavigation(this._options.navigation);
-        }
+    reload(keepState: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
 
-        if (keepScroll) {
+        if (keepState) {
             if (this._useNewScroll) {
                 this._listVirtualScrollController.enableKeepScrollPosition();
             } else {
@@ -5230,6 +5224,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     );
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
                 }
+            }
+        } else {
+
+            // При перезагрузке через public-метод полностью сбрасываем состояние cut-навигации
+            // https://online.sbis.ru/opendoc.html?guid=73d5765b-598a-4e2c-a867-91a54150ae9e
+            if (this._cutExpanded) {
+                this._cutExpanded = false;
+                this._sourceController.setNavigation(this._options.navigation);
             }
         }
 

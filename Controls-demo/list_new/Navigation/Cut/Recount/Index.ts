@@ -87,5 +87,13 @@ export default class Index extends Control {
         this._source.update(firstItem);
     }
 
+    protected _updateItems(): void {
+        this._items.each((item) => {
+            item.set('title', item.get('title') + ' reloaded');
+        });
+        this._source.update(this._items)
+            .then(() => this._children.list.reload(true));
+    }
+
    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
