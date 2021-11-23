@@ -81,6 +81,9 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
 
     protected _afterRender(): void {
        if (this._offsetChanged) {
+           this._notify('controlResize', [], { bubbling: true });
+           // Так же как в реестрах, сообщаем про смену разxмеров рабочей области.
+           this._notify('workspaceResize', [this._workspaceWidth], { bubbling: true });
            this._resizeRegister.start(new SyntheticEvent({}));
        }
     }
@@ -109,8 +112,6 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
 
         this._updateOffset();
         this._offsetChanged = true;
-        // Так же как в реестрах, сообщаем про смену размеров рабочей области.
-        this._notify('workspaceResize', [this._workspaceWidth], {bubbling: true});
     }
 
     protected _maximizeHandler(): void {
