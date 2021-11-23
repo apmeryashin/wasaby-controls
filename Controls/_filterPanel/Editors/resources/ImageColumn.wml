@@ -1,0 +1,7 @@
+<ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}" attr:class="controls-ListEditor__columns">
+    <ws:contentTemplate>
+        <ws:if data="{{item.contents[column.config.imageProperty]}}">
+            <img class="controls-ListEditor__column-img" src="{{item.contents[column.config.imageProperty]}}"/>
+        </ws:if>
+    </ws:contentTemplate>
+</ws:partial>
