@@ -358,12 +358,14 @@ export class Controller {
             return;
         }
 
+        const target = isContextMenu ? null : this._calculateTargetPoint(clickEvent.target as HTMLElement;
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(item, isActionMenu, parentAction, menuActions);
 
         let menuConfig: IStickyPopupOptions = {
             // @ts-ignore
             opener,
+            target,
             template: 'Controls/menu:Popup',
             actionOnScroll: 'close',
             templateOptions,
@@ -396,11 +398,6 @@ export class Controller {
                 nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
             };
         }
-
-        menuConfig.target = isContextMenu ? null : this._calculateTargetPoint(
-            clickEvent.target as HTMLElement,
-            menuConfig.direction?.horizontal
-        );
         return menuConfig;
     }
 
@@ -623,15 +620,13 @@ export class Controller {
 
     /**
      * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
-     * Поэтому заменяем метод getBoundingClientRect так, чтобы он возвращал текущие координаты
+     * Поэтому необходимо передавать координаты таргета для popup
      * @param realTarget
-     * @param direction
      */
-    private _calculateTargetPoint(realTarget: HTMLElement, direction: string = 'right'): {x: number, y: number} {
-        // const button = realTarget?.closest('.js-controls-ItemActions__ItemAction_button');
+    private _calculateTargetPoint(realTarget: HTMLElement): {x: number, y: number, width: number, height: number} {
         const rect = realTarget.getBoundingClientRect();
         return {
-            x: rect.x + (direction !== 'right' ? rect.width : 0),
+            x: rect.x,
             y: rect.y,
             width: rect.width,
             height: rect.height
