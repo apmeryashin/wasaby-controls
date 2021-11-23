@@ -626,8 +626,10 @@ export class Controller {
         const button = realTarget?.closest('.js-controls-ItemActions__ItemAction_button');
         const rect = button.getBoundingClientRect();
         return {
-            x: rect.x + rect.width / 2,
-            y: rect.y
+            x: rect.x,
+            y: rect.y,
+            width: rect.width,
+            height: rect.height
         };
     }
 
