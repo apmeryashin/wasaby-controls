@@ -59,6 +59,12 @@ export const ERROR_MSG = {
         'Должна быть хотябы одна скроллируемая колонка.'
 };
 
+export const ERROR_MSG = {
+    INVALID_STICKY_COLUMNS_COUNT_VALUE: 'Неверное значение опции stickyColumnsCount! ' +
+        'Значение опции stickyColumnsCount должно быть меньше чем количество колонок в таблице. ' +
+        'Должна быть хотябы одна скроллируемая колонка.'
+};
+
 export interface IOptions extends ICollectionOptions {
     columns: TColumns;
     // TODO: Написать интерфейс и доку для TFooter
