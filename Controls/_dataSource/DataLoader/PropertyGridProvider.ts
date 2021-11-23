@@ -50,7 +50,8 @@ class PropertyGridProvider implements IDataLoadProvider<ILoadPropertyGridDataCon
                 filter: property.editorOptions.filter,
                 keyProperty: property.editorOptions.keyProperty,
                 navigation: property.editorOptions.navigation,
-                parentProperty: property.editorOptions.parentProperty
+                parentProperty: property.editorOptions.parentProperty,
+                expandedItems: property.editorOptions.expandedItems
             }).load().then((loadResult) => {
                 property.editorOptions.items = loadResult;
                 return property;
