@@ -230,12 +230,8 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
 
     private _resetHistoryFields(item: Model, keyProperty: string): Model {
         if (item.has(COPY_ORIG_ID)) {
-            const origItem = item.clone();
-            if (origItem.getFormat().getFieldIndex(COPY_ORIG_ID) !== -1) {
-                origItem.removeField(COPY_ORIG_ID);
-            }
-            origItem.setKeyProperty(keyProperty);
-            return origItem;
+            item.setKeyProperty(keyProperty);
+            return item;
         } else {
             return item;
         }
@@ -400,11 +396,11 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
         }
     }
 
-    private _updatePinned(item: Model, meta: Record<string, any>): any {
+    private _updatePinned(item: Model, meta: Record<string, any>): Promise {
         const pinned = this._$history.pinned;
         if (!item.get('pinned') && !this._checkPinnedAmount(pinned)) {
             this._showNotification();
-            return false;
+            return Promise.reject();
         }
 
         return this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(item, meta).then(() => {

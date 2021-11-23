@@ -320,7 +320,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _updateAfterLoad(items): void {
-        this._setButtonVisibleState(items, this._options);
+        this._updateItems(items, this._options);
     }
 
     private _getSelectionController(): SelectionController {
@@ -870,17 +870,21 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
         let listModel: Search<Model> | Collection<Model>;
 
-        if (options.searchParam && options.searchValue) {
+        const isSearchModel = options.searchParam && options.searchValue;
+        if (isSearchModel) {
             listModel = new Search({...collectionConfig,
                 nodeProperty: options.nodeProperty,
                 parentProperty: options.parentProperty,
-                root: options.root
+                root: options.root,
+                filter: options.allowPin && options.parentProperty ?
+                    MenuControl._searchHistoryDisplayFilter.bind(this, options, items) : null
             });
         } else {
+            const filterFunction = options.parentProperty && options.nodeProperty ? MenuControl._displayFilter.bind(this, options) : null;
             // В дереве не работает группировка,
             // ждем решения по ошибке https://online.sbis.ru/opendoc.html?guid=f4a3be79-5ec5-45d2-b742-2d585c5c069d
             listModel = new Collection({...collectionConfig,
-                filter: MenuControl._displayFilter.bind(this, options)
+                filter: filterFunction
             });
 
             if (options.groupProperty) {
@@ -896,7 +900,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         if (options.additionalProperty) {
             listModel.addFilter(this._additionalFilter);
-        } else if (options.allowPin && !options.subMenuLevel && !this._expander) {
+        } else if (!isSearchModel && options.allowPin && !options.subMenuLevel && !this._expander) {
             listModel.addFilter(this._limitHistoryFilter);
         }
         return listModel;
@@ -1029,11 +1033,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     hasAdditional = item.get(options.additionalProperty) && !MenuControl._isHistoryItem(item);
                 }
             });
-        } else if (options.allowPin && !options.subMenuLevel) {
+        } else if (!(options.searchParam && options.searchValue) && options.allowPin && !options.subMenuLevel) {
             this._visibleIds = [];
             const fixedIds = [];
             factory(items).each((item) => {
-                if (options.searchParam && options.searchValue || MenuControl._isItemCurrentRoot(item, options))  {
+                if (MenuControl._isItemCurrentRoot(item, options))  {
                     if (item.get('doNotSaveToHistory')) {
                         fixedIds.push(item.getKey());
                     } else {
@@ -1046,8 +1050,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 this._visibleIds.splice(options.maxHistoryVisibleItems);
             }
 
-            this._addParentIdForSearchMode(options, items);
-
             fixedIds.forEach((fixedId) => {
                 if (!this._visibleIds.includes(fixedId)) {
                     this._visibleIds.push(fixedId);
@@ -1055,18 +1057,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             });
         }
         return hasAdditional;
-    }
-
-    private _addParentIdForSearchMode(options, items): void {
-        if (options.searchParam && options.searchValue) {
-            const ids = this._visibleIds.slice();
-            ids.forEach((id) => {
-                const parent = items.getRecordById(id).get(options.parentProperty);
-                if (parent) {
-                    this._visibleIds.push(parent);
-                }
-            });
-        }
     }
 
     private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: string): void {
@@ -1361,7 +1351,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private static _displayFilter(options: IMenuControlOptions, item: Model): boolean {
         let isVisible: boolean = true;
         const isStringType = typeof options.root === 'string';
-        if (item && item.get && options.parentProperty && options.nodeProperty) {
+        if (item && item.get) {
             let parent: TKey = item.get(options.parentProperty);
             if (parent === undefined) {
                 parent = null;
@@ -1375,6 +1365,18 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             isVisible = parent === options.root;
         }
         return isVisible;
+    }
+
+    private static _searchHistoryDisplayFilter(options: IMenuControlOptions,
+                                               items: RecordSet,
+                                               item: Model): boolean {
+        let result = true;
+        if (item && item.get && MenuControl._isHistoryItem(item) && !item.get(options.parentProperty)) {
+            const historyKey = item.getKey() + '_history';
+            const historyItem = items.getRecordById(historyKey);
+            result = !historyItem;
+        }
+        return result;
     }
 
     private static _isItemCurrentRoot(item: Model, options: IMenuControlOptions): boolean {

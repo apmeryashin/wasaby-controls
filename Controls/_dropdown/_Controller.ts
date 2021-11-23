@@ -328,12 +328,12 @@ export default class Controller implements IDropdownController {
 
    pinClick(item): void {
       const preparedItem = this._prepareItem(item, this._options.keyProperty, this._source);
-      this._source.update(preparedItem.clone(), {
+      this._source.update(preparedItem, {
          $_pinned: !preparedItem.get('pinned')
       }).then(() => {
-         this._setItemsAndMenuSource(null);
+         this._setItemsAndMenuSource(this._source.getItems());
          this._open();
-      });
+      }).catch(() => {});
    }
 
    getItems(): RecordSet<Model> {
