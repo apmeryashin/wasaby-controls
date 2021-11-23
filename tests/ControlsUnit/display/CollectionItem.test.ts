@@ -548,17 +548,21 @@ describe('Controls/_display/CollectionItem', () => {
         // multiselect onhover + not selected
         item.setMultiSelectVisibility('onhover');
         const onhoverMultiSelectClasses = item.getMultiSelectClasses('default');
-        CssClassesAssert.isSame(onhoverMultiSelectClasses, requiredClasses + ' controls-ListView__checkbox_position-default controls-ListView__checkbox-onhover');
+        CssClassesAssert.isSame(onhoverMultiSelectClasses, requiredClasses +
+            ' controls-ListView__checkbox_marginTop_default controls-ListView__checkbox_position-default' +
+            ' controls-ListView__checkbox-onhover');
 
         // multiselect onhover + selected
         item.setSelected(true, true);
         const selectedMultiSelectClasses = item.getMultiSelectClasses('default');
-        CssClassesAssert.isSame(selectedMultiSelectClasses, requiredClasses + ' controls-ListView__checkbox_position-default');
+        CssClassesAssert.isSame(selectedMultiSelectClasses, requiredClasses +
+            ' controls-ListView__checkbox_marginTop_default controls-ListView__checkbox_position-default');
 
         // custom position
         owner.getMultiSelectPosition = () => 'custom';
         const customMultiSelectClasses = item.getMultiSelectClasses('default');
-        CssClassesAssert.isSame(customMultiSelectClasses, requiredClasses + ' controls-ListView__checkbox_position-custom ');
+        CssClassesAssert.isSame(customMultiSelectClasses, requiredClasses +
+            ' controls-ListView__checkbox_marginTop_default controls-ListView__checkbox_position-custom ');
     });
 
     describe('.setEditing()', () => {
