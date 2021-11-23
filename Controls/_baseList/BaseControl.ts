@@ -531,9 +531,14 @@ const _private = {
             const markedKey = markerController.getMarkedKey();
             if (markedKey !== null) {
                 const markedItem = self.getItems().getRecordById(markedKey);
+
+                const selector = `.${self._getItemsContainerUniqueClass()} > ${self._options.itemsSelector}[attr-data-qa="key-${markedKey}"]`;
+                const targetItem = self._getItemsContainer().querySelector(selector) as HTMLElement;
+
                 self._notifyItemClick([event, markedItem, event]);
+
                 if (event && !event.isStopped()) {
-                    self._notify('itemActivate', [markedItem, event], {bubbling: true});
+                    self._notify('itemActivate', [markedItem, event, targetItem], {bubbling: true});
                 }
             }
         }
@@ -5134,7 +5139,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             const eventResult = this._notifyItemClick([e, item, originalEvent, columnIndex]);
             if (eventResult !== false) {
-                this._notify('itemActivate', [item, originalEvent], {bubbling: true});
+                this._notify('itemActivate', [item, originalEvent, originalEvent.target], {bubbling: true});
             }
         }
     }
