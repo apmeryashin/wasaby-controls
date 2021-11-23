@@ -3,6 +3,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/List';
 import * as ImageColumn from 'wml!Controls/_filterPanel/Editors/resources/ImageColumn';
 import * as AdditionalColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/AdditionalColumnTemplate';
+import * as TitleColumn from 'wml!Controls/_filterPanel/Editors/resources/TitleColumn';
 import {StackOpener, DialogOpener} from 'Controls/popup';
 import {Model} from 'Types/entity';
 import {
@@ -338,7 +339,8 @@ class ListEditor extends Control<IListEditorOptions> {
             keyProperty,
             textOverflow: 'ellipsis',
             fontSize: filterViewMode === 'filterPanelStack' ? 'm' : 'l',
-            width: 'auto'
+            width: 'auto',
+            template: TitleColumn
         }];
         if (imageProperty) {
             this._columns.unshift({
