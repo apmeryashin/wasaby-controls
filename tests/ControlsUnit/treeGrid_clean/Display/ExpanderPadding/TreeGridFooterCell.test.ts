@@ -15,6 +15,7 @@ describe('Controls/treeGrid_clean/Display/ExpanderPadding/TreeGridFooterCell', (
             getExpanderVisibility: () => 'hasChildren',
             getActionsTemplateConfig: () => {},
             hasMultiSelectColumn: () => false,
+            shouldDisplayMultiSelectTemplate: () => false,
             getMultiSelectVisibility: () => 'visible',
             hasColumnScroll: () => false,
             getLeftPadding: () => '',

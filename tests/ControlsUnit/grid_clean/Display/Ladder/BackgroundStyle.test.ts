@@ -1,7 +1,7 @@
 import {GridDataCell} from 'Controls/grid';
 import {CssClassesAssert as cAssert} from 'ControlsUnit/CustomAsserts';
 
-describe('Controls/grid_clean/Display/DataCell/BackgroundStyle.test.ts', () => {
+describe('Controls/grid_clean/Display/DataCell/BackgroundStyle', () => {
 
     const mockedOwner = {
         getHoverBackgroundStyle: () => 'default',
@@ -19,6 +19,7 @@ describe('Controls/grid_clean/Display/DataCell/BackgroundStyle.test.ts', () => {
         getColumnsCount: () => 0,
         getMultiSelectVisibility: () => 'hidden',
         hasMultiSelectColumn: () => false,
+        shouldDisplayMultiSelectTemplate: () => false,
         isAnimatedForSelection: () => false
     };
 

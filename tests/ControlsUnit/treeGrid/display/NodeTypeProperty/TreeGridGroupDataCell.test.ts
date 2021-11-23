@@ -20,6 +20,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
         getColumnsCount: () => 0,
         getMultiSelectVisibility: () => multiSelectVisibility,
         hasMultiSelectColumn: () => multiSelectVisibility !== 'hidden',
+        shouldDisplayMultiSelectTemplate: () => multiSelectVisibility !== 'hidden',
         hasColumnScroll: () => false,
         isDragTargetNode: () => false,
         isEditing: () => false,

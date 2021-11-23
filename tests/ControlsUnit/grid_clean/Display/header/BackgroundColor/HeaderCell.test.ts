@@ -16,6 +16,7 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
         isActive: () => false,
         getRowSeparatorSize: () => 's',
         hasMultiSelectColumn: () => false,
+        shouldDisplayMultiSelectTemplate: () => false,
         getColumnIndex: () => 1,
         isMultiline: () => false,
         getColumnsCount: () => 1,
