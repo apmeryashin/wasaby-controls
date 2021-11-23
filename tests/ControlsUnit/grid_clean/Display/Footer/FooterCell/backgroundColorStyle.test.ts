@@ -19,6 +19,7 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
         hasColumnScroll: () => false,
         getActionsTemplateConfig: () => {/* FIXME: sinon mock */},
         getMultiSelectVisibility: () => 'hidden',
+        shouldDisplayMultiSelectTemplate: () => false,
         getColumnsCount: () => 1,
         hasItemActionsSeparatedCell: () => {/* FIXME: sinon mock */}
     } as undefined as GridFooterRow<Model>;

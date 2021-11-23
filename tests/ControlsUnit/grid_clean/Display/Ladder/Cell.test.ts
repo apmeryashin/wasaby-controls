@@ -19,6 +19,7 @@ describe('Controls/grid_clean/Display/Ladder/Cell', () => {
         getColumnsCount: () => 0,
         getMultiSelectVisibility: () => 'hidden',
         hasMultiSelectColumn: () => false,
+        shouldDisplayMultiSelectTemplate: () => false,
         isAnimatedForSelection: () => false
     };
 

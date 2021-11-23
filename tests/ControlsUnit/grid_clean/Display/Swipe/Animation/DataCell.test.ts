@@ -1,7 +1,7 @@
 import {GridDataCell} from 'Controls/grid';
 import {CssClassesAssert as cAssert} from 'ControlsUnit/CustomAsserts';
 
-describe('Controls/grid_clean/Display/Swipe/Animation/DataCell.test.ts', () => {
+describe('Controls/grid_clean/Display/Swipe/Animation/DataCell', () => {
     let isAnimatedForSelection;
     const mockedOwner = {
         getHoverBackgroundStyle: () => 'default',
@@ -18,7 +18,8 @@ describe('Controls/grid_clean/Display/Swipe/Animation/DataCell.test.ts', () => {
         getColumnIndex: () => 0,
         getColumnsCount: () => 0,
         getMultiSelectVisibility: () => 'hidden',
-        isAnimatedForSelection: () => isAnimatedForSelection
+        isAnimatedForSelection: () => isAnimatedForSelection,
+        shouldDisplayMultiSelectTemplate: () => false
     };
 
     it('.getContentClasses() should contain animation classes when animated', () => {

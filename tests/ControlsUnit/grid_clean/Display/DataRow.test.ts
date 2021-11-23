@@ -14,6 +14,8 @@ let multiSelectVisibility = 'hidden';
 const mockedCollection = {
     getStickyColumnsCount: () => 2,
     hasMultiSelectColumn: () => multiSelectVisibility === 'visible',
+    shouldDisplayMultiSelectTemplate: () => multiSelectVisibility === 'visible',
+    getEditingConfig: () => ({}),
     hasItemActionsSeparatedCell: () => false,
     getGridColumnsConfig: () => columns,
     getIndex: () => 0,

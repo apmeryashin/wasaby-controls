@@ -9,6 +9,7 @@ describe('Controls/grid_clean/Display/HeaderCell', () => {
                 column: {},
                 owner: {
                     hasMultiSelectColumn: () => true,
+                    shouldDisplayMultiSelectTemplate: () => true,
                     getHeaderConfig: () => [{}, {}],
                     isFullGridSupport: () => true
                 }
@@ -27,6 +28,7 @@ describe('Controls/grid_clean/Display/HeaderCell', () => {
             column: headerConfig[1],
             owner: {
                 hasMultiSelectColumn: () => false,
+                shouldDisplayMultiSelectTemplate: () => false,
                 getHeaderConfig: () => headerConfig,
                 isFullGridSupport: () => true,
                 hasColumnScroll: () => hasColumnScroll,
