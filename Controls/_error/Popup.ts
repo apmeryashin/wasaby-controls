@@ -84,11 +84,17 @@ export default class Popup implements IPopupHelper {
         const { template } = config;
 
         if (typeof template === 'undefined') {
-            return this.openConfirmation({
+            const confirmationOptions: IConfirmationOptions = {
                 type: 'ok',
                 style: 'danger',
                 message: config.options.message
-            });
+            };
+
+            if (dialogOptions.eventHandlers?.onClose) {
+                confirmationOptions.closeHandler = dialogOptions.eventHandlers.onClose;
+            }
+
+            return this.openConfirmation(confirmationOptions);
         }
 
         const preloadTemplate: Promise<void | TemplateFunction> = typeof template === 'string'
