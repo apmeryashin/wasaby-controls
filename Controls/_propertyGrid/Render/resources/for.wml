@@ -18,6 +18,7 @@
             on:mousemove="_mouseMoveHandler(item)"
             on:mouseleave="_mouseLeaveHandler(item)"
             on:click="_itemClick(item)"
+            on:contextmenu="_itemContextMenu(item)"
             on:mousedown="_itemMouseDown(item)"
             on:mouseup="_itemMouseUp(item)"
             on:propertyValueChanged="_propertyValueChanged(item.getContents())">
