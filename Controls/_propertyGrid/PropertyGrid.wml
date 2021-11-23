@@ -19,6 +19,7 @@
     captionPosition="{{_options.captionPosition}}"
     multiSelectVisibility="{{_options.multiSelectVisibility}}"
     on:itemMouseDown="_itemMouseDown()"
+    on:itemContextMenu="_itemContextMenu()"
     on:itemMouseUp="_itemMouseUp()"
     on:groupClick="_groupClick()"
     on:propertyValueChanged="_propertyValueChanged()"

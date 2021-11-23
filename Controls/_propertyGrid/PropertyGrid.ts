@@ -377,6 +377,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
+    protected _itemContextMenu(event: SyntheticEvent<Event>,
+                               item: CollectionItem<Model>,
+                               clickEvent: SyntheticEvent<MouseEvent>): void {
+        clickEvent.stopPropagation();
+        this._openItemActionMenu(item, null, clickEvent);
+    }
+
     protected _toggleEditor(event: SyntheticEvent, item: Model, value: boolean): void {
         this._toggledEditors = {...this._toggledEditors};
         this._toggledEditors[item.get(this._listModel.getKeyProperty())] = value;
@@ -387,9 +394,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _openItemActionMenu(item: CollectionItem<Model>,
                                 action: IItemAction,
                                 clickEvent: SyntheticEvent<MouseEvent>): void {
+        const isContextMenu = !action;
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent,
-            action, this, false);
+            action, this, isContextMenu);
         if (menuConfig) {
+            if (isContextMenu) {
+                clickEvent.preventDefault();
+            }
             if (!this._itemActionSticky) {
                 this._itemActionSticky = new StickyOpener();
             }

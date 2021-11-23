@@ -5,7 +5,7 @@ import * as itemTemplate from 'wml!Controls/_propertyGrid/Render/resources/itemT
 import * as toggleEditorsTemplate from 'wml!Controls/_propertyGrid/Render/resources/toggleEditorsGroupTemplate';
 import PropertyGridCollectionItem, {default as PropertyGridItem } from './PropertyGridCollectionItem';
 import PropertyGridCollection from './PropertyGridCollection';
-import {isFullGridSupport} from 'Controls/display';
+import {CollectionItem, isFullGridSupport} from 'Controls/display';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
@@ -158,6 +158,12 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
 
     protected _onItemActionClick(e: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
+    }
+
+    protected _itemContextMenu(e: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
+        if (!item['[Controls/_display/GroupItem]']) {
+            this._notify('itemContextMenu', [item, e]);
+        }
     }
 
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: PropertyGridItem<Model>): void {
