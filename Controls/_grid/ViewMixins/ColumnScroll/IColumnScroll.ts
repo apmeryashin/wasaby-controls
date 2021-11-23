@@ -94,7 +94,6 @@ interface IColumnScrollViewMixin {
     scrollToRight(): void;
     _resetColumnScroll(position: IViewOptions['columnScrollStartPosition']): void;
     _isDragScrollEnabledByOptions(options: IViewOptions): boolean;
-    _getColumnScrollEmptyViewMaxWidth(): number;
     _getColumnScrollThumbStyles(options: IViewOptions): string;
     _getColumnScrollWrapperClasses(options: IViewOptions): string;
     _getColumnScrollContentClasses(options: IViewOptions, columnScrollPartName?: 'fixed' | 'scrollable'): string;
