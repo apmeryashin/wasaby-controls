@@ -35,13 +35,7 @@ export class DialogStrategy {
         const {minWidth, maxWidth, minHeight, maxHeight} = limitedSizes;
 
         const positionCoordinates = this._getPositionCoordinates(windowData, containerSizes, item);
-        const position = this._validateCoordinate(
-            positionCoordinates,
-            maxHeight,
-            maxWidth,
-            windowData,
-            containerSizes
-        );
+        const position = this._validateCoordinate(positionCoordinates, maxHeight, maxWidth, windowData, containerSizes);
 
         this._resetMargins(item, position);
 
@@ -144,8 +138,8 @@ export class DialogStrategy {
         }
 
         const topOffset = (popupItem.sizes?.margins?.top || 0) + (popupItem.popupOptions.offset?.vertical || 0);
-        const horizontalOffset =
-            (popupItem.sizes?.margins?.left || 0) + (popupItem.popupOptions.offset?.horizontal || 0);
+        const horizontalOffset = (popupItem.sizes?.margins?.left || 0) +
+            (popupItem.popupOptions.offset?.horizontal || 0);
         const top = (topCoordinate || 0) + topOffset;
         const horizontalPosition = (horizontalCoordinate || 0) + horizontalOffset;
 
@@ -183,8 +177,8 @@ export class DialogStrategy {
         horizontalPositionProperty: string
     ): IDialogPosition {
         const popupOptions = item.popupOptions;
-        const height = this._calculateHeight(
-            item,
+        const height = this._calculateValue(
+            popupOptions,
             containerSizes.height,
             windowData.height,
             parseInt(popupOptions.height, 10),
@@ -251,7 +245,7 @@ export class DialogStrategy {
         horizontalPositionProperty: string
     ): IDialogPosition {
         const width = popupPosition.width;
-        const height = this._validateHeightByPreviousValue(popupItem, popupPosition.height);
+        const height = popupPosition.height;
         const horizontalPosition = typeof popupPosition[horizontalPositionProperty] !== 'undefined' ?
             popupPosition[horizontalPositionProperty] : popupItem.popupOptions[horizontalPositionProperty];
         const verticalPosition = typeof popupPosition[verticalPositionProperty] !== 'undefined' ?
@@ -302,35 +296,6 @@ export class DialogStrategy {
             maxHeight: Math.min(maxHeight, windowData.height),
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
         };
-    }
-
-    private _validateHeightByPreviousValue(popupItem: IDialogItem, heightValue: number): number {
-        if (popupItem.popupOptions?._keepMaxHeight) {
-            const newHeight = heightValue || popupItem.sizes.height;
-            if (newHeight < popupItem.previousHeight) {
-                return popupItem.previousHeight;
-            }
-        }
-        return heightValue;
-    }
-
-    private _calculateHeight(
-        popupItem: IDialogItem,
-        containerValue: number,
-        windowValue: number,
-        popupValue: number,
-        maxValue: number,
-        minValue: number
-    ): number {
-        const heigth = this._calculateValue(
-            popupItem.popupOptions,
-            containerValue,
-            windowValue,
-            popupValue,
-            maxValue,
-            minValue
-        );
-        return this._validateHeightByPreviousValue(popupItem, heigth);
     }
 
     private _calculateValue(

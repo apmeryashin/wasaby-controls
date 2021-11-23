@@ -1,9 +1,8 @@
-<div class="controls-MoveDialog controls_popupTemplate_theme-{{_options.theme}}">
-   <Controls.popupTemplate:Dialog
-           headingCaption="{{_headingCaption}}"
-           headerContentTemplate="{{_options.headerContentTemplate}}">
-      <ws:bodyContentTemplate>
-         <ws:partial template="{{_options.bodyContentTemplate}}" containerWidth="{{_containerWidth}}"/>
-      </ws:bodyContentTemplate>
-   </Controls.popupTemplate:Dialog>
-</div>
+<Controls.popupTemplate:Dialog
+        attr:class="controls-MoveDialog"
+        headingCaption="{{_headingCaption}}"
+        headerContentTemplate="{{_options.headerContentTemplate}}">
+   <ws:bodyContentTemplate>
+      <ws:partial template="{{_options.bodyContentTemplate}}" containerWidth="{{_containerWidth}}"/>
+   </ws:bodyContentTemplate>
+</Controls.popupTemplate:Dialog>
