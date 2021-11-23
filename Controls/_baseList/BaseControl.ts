@@ -3807,8 +3807,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             updatePlaceholdersUtil: (placeholders) => {
                 const convertedPlaceholders = {
-                    up: placeholders.backward,
-                    down: placeholders.forward
+                    top: placeholders.backward,
+                    bottom: placeholders.forward
                 };
                 this._notify('updatePlaceholdersSize', [convertedPlaceholders], {bubbling: true});
             },

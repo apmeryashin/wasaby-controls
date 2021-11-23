@@ -117,7 +117,8 @@ export class ScrollController {
 
         this._itemsSizesController = new ItemsSizesController({
             itemsContainer: options.itemsContainer,
-            itemsQuerySelector: options.itemsQuerySelector
+            itemsQuerySelector: options.itemsQuerySelector,
+            itemSizeGetterType: options.itemSizeGetterType
         });
 
         this._observersController = new ObserversController({
@@ -128,7 +129,8 @@ export class ScrollController {
             triggersVisibility: options.triggersVisibility,
             topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
             bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
-            observersCallback: this._observersCallback.bind(this)
+            observersCallback: this._observersCallback.bind(this),
+            triggerOffsetType: options.triggerOffsetType
         });
 
         this._calculator = new Calculator({

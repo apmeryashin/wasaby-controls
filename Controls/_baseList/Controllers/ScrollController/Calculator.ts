@@ -90,7 +90,7 @@ export class Calculator {
         this._viewportSize = options.viewportSize;
         this._contentSize = options.contentSize;
         this._virtualScrollConfig = options.virtualScrollConfig;
-        this.resetItems(this._totalCount, false);
+        this._resetItems(this._totalCount, false, true);
     }
 
     // region Getters/Setters
@@ -438,6 +438,10 @@ export class Calculator {
      * @param keepPosition Нужно ли сохранить текущию позицию
      */
     resetItems(totalCount: number, keepPosition: boolean): ICalculatorResult {
+        return this._resetItems(totalCount, keepPosition);
+    }
+
+    _resetItems(totalCount: number, keepPosition: boolean, initial: boolean = false): ICalculatorResult {
         const oldRange = this._range;
 
         this._totalCount = totalCount;
@@ -458,8 +462,10 @@ export class Calculator {
             });
         }
 
-        const placeholdersChanged = this._updatePlaceholders();
-
+        let placeholdersChanged = false;
+        if (!initial) {
+            placeholdersChanged = this._updatePlaceholders();
+        }
         return this._getRangeChangeResult(oldRange, 'forward', placeholdersChanged);
     }
 

@@ -3,9 +3,28 @@ import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
 import { getDimensions, getOffsetTop } from 'Controls/sizeUtils';
 
+export enum ItemSizeGetterType {
+    VERTICAL = 'VERTICAL',
+    HORIZONTAL = 'HORIZONTAL'
+}
+
+type TItemSizeGetter = (element: HTMLElement) => IItemSize;
+
+const ItemSizeGetters: Record<ItemSizeGetterType, TItemSizeGetter> = {
+    [ItemSizeGetterType.VERTICAL]: (element: HTMLElement) => ({
+        size: getDimensions(element).height,
+        offset: getOffsetTop(element)
+    }),
+    [ItemSizeGetterType.HORIZONTAL]: (element: HTMLElement) => ({
+        size: getDimensions(element).width,
+        offset: element.offsetLeft
+    })
+};
+
 export interface IItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
     itemsQuerySelector: string;
+    itemSizeGetterType: ItemSizeGetterType;
 }
 
 export interface IItemSize {
@@ -22,10 +41,12 @@ export class ItemsSizesController {
     private _itemsQuerySelector: string;
     private _itemsContainer: HTMLElement;
     private _itemsSizes: IItemsSizes = [];
+    private _itemSizeGetter: TItemSizeGetter;
 
     constructor(options: IItemsSizesControllerOptions) {
         this._itemsContainer = options.itemsContainer;
         this._itemsQuerySelector = options.itemsQuerySelector;
+        this._itemSizeGetter = ItemSizeGetters[options.itemSizeGetterType];
     }
 
     getItemsSizes(): IItemsSizes {
@@ -47,7 +68,7 @@ export class ItemsSizesController {
     getBeforeItemsContentSize(): number {
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
         return scrollContent ?
-            scrollContent.getBoundingClientRect().top - this._itemsContainer.getBoundingClientRect().top :
+            scrollContent.getBoundingClientRect().top - getDimensions(this._itemsContainer, true).top :
             getOffsetTop(this._itemsContainer);
     }
 
@@ -112,10 +133,8 @@ export class ItemsSizesController {
                     hiddenItemsOffset = lastHiddenItem.offset + lastHiddenItem.size;
                 }
                 itemsElements.forEach((element: HTMLElement) => {
-                    this._itemsSizes[position] = {
-                        size: getDimensions(element).height,
-                        offset: getOffsetTop(element) + hiddenItemsOffset
-                    };
+                    this._itemsSizes[position] = this._itemSizeGetter(element);
+                    this._itemsSizes[position].offset += hiddenItemsOffset;
                     position++;
                 });
             }

@@ -30,7 +30,9 @@ import {
     IActiveElementChangedChangedCallback
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
-import type { ITriggersVisibility } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import { ItemSizeGetterType } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
+import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import {TriggerOffsetType} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
 
 export interface IShadowVisibility {
     backward: boolean;
@@ -209,6 +211,8 @@ export class ListVirtualScrollController {
             listContainer: options.listContainer,
 
             itemsQuerySelector: options.itemsQuerySelector,
+            itemSizeGetterType: ItemSizeGetterType.VERTICAL,
+            triggerOffsetType: TriggerOffsetType.VERTICAL,
             triggersQuerySelector: options.triggersQuerySelector,
 
             triggersVisibility: options.triggersVisibility,
