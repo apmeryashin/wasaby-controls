@@ -470,7 +470,7 @@ export class StackController extends BaseController {
     private _getStackParentCoords(item: IStackItem): IPopupPosition {
         const coords = StackController.calcStackParentCoords(item);
         const parentItem = Controller.find(item.parentId);
-        if (parentItem) {
+        if (parentItem && parentItem.controller.TYPE === this.TYPE) {
             coords.right = parentItem.position.right;
         }
         return coords;
