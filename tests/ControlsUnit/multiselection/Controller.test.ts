@@ -283,6 +283,45 @@ describe('Controls/_multiselection/Controller', () => {
          const result = controller.selectRange(1);
          assert.deepEqual(result, { selected: [1, 2], excluded: [] });
       });
+
+      it('expand and collapse node, then select range', () => {
+         const tree = new TreeGridCollection({
+            collection: new RecordSet({
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: ListData.getItems()
+            }),
+            root: new Model({ rawData: { id: null }, keyProperty: ListData.KEY_PROPERTY }),
+            keyProperty: ListData.KEY_PROPERTY,
+            parentProperty: ListData.PARENT_PROPERTY,
+            nodeProperty: ListData.NODE_PROPERTY
+         });
+
+         const controller = new SelectionController({
+            model: tree,
+            strategy: new TreeSelectionStrategy({
+               model: tree,
+               selectDescendants: true,
+               selectAncestors: true,
+               rootId: null,
+               entryPath: [],
+               selectionType: 'all',
+               selectionCountMode: 'all',
+               recursiveSelection: true
+            }),
+            selectedKeys: [],
+            excludedKeys: [],
+            filter: {},
+            searchValue: '',
+            rootId: null
+         });
+
+         tree.setExpandedItems([1]);
+         tree.setExpandedItems([]);
+
+         controller.toggleItem(6);
+         const result = controller.selectRange(7);
+         assert.deepEqual(result, { selected: [6, 7], excluded: [] });
+      });
    });
 
    describe('isAllSelected', () => {

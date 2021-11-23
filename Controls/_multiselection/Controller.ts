@@ -292,7 +292,11 @@ export class Controller {
          const secondIndex = this._model.getIndexByKey(this._lastCheckedKey);
          const sliceStart = secondIndex > firstIndex ? firstIndex : secondIndex;
          const sliceEnd = sliceStart === secondIndex ? firstIndex + 1 : secondIndex + 1;
-         const items = this._model.getItems().slice(sliceStart, sliceEnd);
+         const items = [];
+         for (let i = sliceStart; i < sliceEnd; i++) {
+            // нельзя использовать ::getItems, т.к. он не учитывает фильтрацию, а ::getIndexByKey учитывает
+            items.push(this._model.at(i));
+         }
 
          newSelection = this._strategy.selectRange(items);
       }
