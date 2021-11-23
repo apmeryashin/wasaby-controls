@@ -369,9 +369,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
             if (this._model.getHasMoreStorage()[nodeKey]) {
                 countItemsSelectedInNode = null;
             } else {
-               const countChildes = this._selectDescendants || this._isAllSelectedInRoot(selection);
                const node = this._getItem(nodeKey);
-               countItemsSelectedInNode = this._getSelectedChildrenCount(node, selection, countChildes);
+               countItemsSelectedInNode = this._getSelectedChildrenCount(node, selection);
             }
 
             if (countItemsSelectedInNode === null) {
@@ -399,7 +398,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       if (limit) {
          isAllSelected = this._isAllSelectedInRoot(selection, rootId) && limit >= itemsCount && !hasMoreData;
       } else if (byEveryItem) {
-         isAllSelected = !hasMoreData && itemsCount > 0 && itemsCount === this.getCount(selection, hasMoreData)
+         // считаем кол-во выбранных только среди загруженных элементов, т.к. allSelected считаем под опцией byEveryItem
+         const selectionForModel = this.getSelectionForModel(selection, limit);
+         const selectedCount = selectionForModel.get(true).length + selectionForModel.get(null).length;
+
+         isAllSelected = !hasMoreData && itemsCount > 0 && itemsCount === selectedCount
             || this._isAllSelectedInRoot(selection, rootId) && selection.excluded.length === 1;
       } else {
          isAllSelected = this._isAllSelectedInRoot(selection, rootId);
@@ -766,7 +769,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return item.hasChildren() || item.getChildren(false).getCount() > 0;
    }
 
-   private _getSelectedChildrenCount(node: TreeItem<Model>, selection: ISelection, deep: boolean): number|null {
+   private _getSelectedChildrenCount(node: TreeItem<Model>, selection: ISelection): number|null {
       if (!node) {
          // Если узла нет, это значит что он не загружен, соответственно мы не можем посчитать кол-во выбранных детей
          return null;
@@ -794,7 +797,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                   }
 
                   if (this._isNode(childItem) && this._hasChildren(childItem)) {
-                     childNodeSelectedCount = this._getSelectedChildrenCount(childItem, selection, deep);
+                     childNodeSelectedCount = this._getSelectedChildrenCount(childItem, selection);
 
                      if (childNodeSelectedCount === null) {
                         selectedChildrenCount = null;
