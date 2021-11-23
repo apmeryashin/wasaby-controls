@@ -30,6 +30,7 @@ export default class Demo extends Control<IControlOptions> {
                     caption: 'URL',
                     name: 'siteUrl',
                     editorOptions: {
+                        placeholder: 'URL',
                         jumpingLabel: true
                     },
                     type: 'string'
