@@ -127,7 +127,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return selectedItems;
    }
 
-   getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null {
+   getCount(selection: ISelection, hasMoreData: boolean, limit?: number, searchValue?: string): number|null {
       let countItemsSelected: number|null;
 
       if (this._isAllSelected(selection)) {
