@@ -538,7 +538,7 @@ const _private = {
                 self._notifyItemClick([event, markedItem, event]);
 
                 if (event && !event.isStopped()) {
-                    self._notify('itemActivate', [markedItem, event, null, target], {bubbling: true});
+                    self._notify('itemActivate', [markedItem, event, undefined, target], {bubbling: true});
                 }
             }
         }
@@ -5114,7 +5114,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         );
         if (canEditByClick) {
             e.stopPropagation();
-            this._savedItemClickArgs = [e, item, originalEvent, columnIndex, originalEvent.target];
+            this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
             const hasCheckboxes =
                 this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
 
@@ -5140,7 +5140,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const eventResult = this._notifyItemClick([e, item, originalEvent, columnIndex]);
             if (eventResult !== false) {
                 const target = originalEvent.target.closest('.controls-ListView__itemV');
-                this._notify('itemActivate', [item, originalEvent, null, target], {bubbling: true});
+                this._notify('itemActivate', [item, originalEvent, columnIndex, target], {bubbling: true});
             }
         }
     }
@@ -5208,7 +5208,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         // Запись становится активной по клику, если не началось редактирование.
                         // Аргументы itemClick сохранены в состояние и используются для нотификации об активации
                         // элемента.
-                        this._notify('itemActivate', this._savedItemClickArgs.slice(1), {bubbling: true});
+                        const args = this._savedItemClickArgs.slice(1);
+                        if (args[1].target) {
+                            args.push(args[1].target.closest('.controls-ListView__itemV'));
+                        }
+                        this._notify('itemActivate', args, {bubbling: true});
                     }
                     return result;
                 }
