@@ -100,11 +100,13 @@ describe('_getMenuActions cases', () => {
                     height: 1,
                     left: 1,
                     right: 1,
+                    x: 1,
+                    y: 1,
                     top: 1,
                     width: 1
                 };
             }
-        } as HTMLElement;
+        } as undefined as HTMLElement;
         const native = {
             target
         };

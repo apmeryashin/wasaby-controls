@@ -783,11 +783,13 @@ describe('Controls/_itemActions/Controller', () => {
                         height: 1,
                         left: 1,
                         right: 1,
+                        x: 1,
+                        y: 1,
                         top: 1,
                         width: 1
                     };
                 }
-            } as HTMLElement;
+            } as undefined as HTMLElement;
             const native = {
                 target
             };
@@ -989,7 +991,9 @@ describe('Controls/_itemActions/Controller', () => {
                 false
             );
             // @ts-ignore
-            assert.deepEqual(config.target.getBoundingClientRect(), target.getBoundingClientRect());
+            assert.equal(config.target.x, target.getBoundingClientRect().x);
+            // @ts-ignore
+            assert.equal(config.target.y, target.getBoundingClientRect().y);
         });
 
         // T3.5. Если был установлен iconSize он должен примениться к templateOptions
@@ -1091,16 +1095,16 @@ describe('Controls/_itemActions/Controller', () => {
 
         // T3.9. Для Контекстного меню нужно обязательно добавлять CSS класс controls-ItemActions__popup__list
         // tslint:disable-next-line:max-line-length
-        it('should set config.className with value controls-ItemActions__popup__list when parentAction isn\'t set', () => {
+        it('-parentAction, =config.className=controls-ItemActions__popup__list', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const actionsOf3 = item3.getActions();
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, true);
-            assert.equal(config.className, 'controls-ItemActions__popup__list controls_popupTemplate_theme-default');
+            assert.equal(config.className,
+                'controls-ItemActions__popup__list controls_popupTemplate_theme-default');
         });
 
         // T3.10. Для Дополнительного меню нужно обязательно добавлять CSS класс controls-ItemActions__popup__list
         // tslint:disable-next-line:max-line-length
-        it('should set config.className with value controls-ItemActions__popup__list when parentAction.isMenu===true', () => {
+        it('+parentAction.isMenu===true, =config.className=controls-ItemActions__popup__list', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
             const config = itemActionsController.prepareActionsMenuConfig(
@@ -1110,11 +1114,12 @@ describe('Controls/_itemActions/Controller', () => {
                 null,
                 false
             );
-            assert.equal(config.className, 'controls-ItemActions__popup__list controls_popupTemplate_theme-default');
+            assert.equal(config.className,
+                'controls-ItemActions__popup__list controls_popupTemplate_theme-default');
         });
 
         // T3.11. Для Обычного Меню нужно обязательно добавлять CSS класс controls-MenuButton_link_iconSize-medium_popup
-        it('should set config.className with value controls-MenuButton_link_iconSize-medium_popup when parentAction.isMenu!==true', () => {
+        it('+parentAction.isMenu!==true, =config.className=controls-MenuButton_link_iconSize-medium_popup', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(
                 item3,
@@ -1123,7 +1128,9 @@ describe('Controls/_itemActions/Controller', () => {
                 null,
                 false
             );
-            assert.equal(config.className, 'controls-MenuButton_link_iconSize-medium_popup controls_popupTemplate_theme-default controls_dropdownPopup_theme-default');
+            assert.equal(config.className,
+                'controls-MenuButton_link_iconSize-medium_popup ' +
+                'controls_popupTemplate_theme-default controls_dropdownPopup_theme-default');
         });
 
         // T3.12. Если в метод передан contextMenu=true, то будет расчитан config.targetPoint
