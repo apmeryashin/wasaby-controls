@@ -435,18 +435,17 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         const expanderIcon = this.getExpanderIcon(tmplExpanderIcon) || (this.isNode() ? 'node' : 'hiddenNode');
         const expanderSize = this.getExpanderSize(tmplExpanderSize) || 'default';
         const expanderPosition = this._$owner.getExpanderPosition();
+        let expanderIconSize: TExpanderIconSize | 'master' = this.getExpanderIconSize(tmplExpanderIconSize);
+        let expanderIconStyle = this.getExpanderIconStyle(tmplExpanderIconStyle);
 
-        let expanderIconSize: TExpanderIconSize | 'master';
-        let expanderIconStyle;
-
+        // по умолчанию для мастера оставляем текущее поведение (согласно рекомендациям из стандарта),
+        // но позволяем настроить размер и стиль иконки через опции.
         if (this.getStyle() === 'master') {
-            expanderIconSize = expanderIcon === 'hiddenNode' ? 'default' : 'master';
-            expanderIconStyle = 'unaccented';
-
+            expanderIconSize = (expanderPosition === 'default' && expanderIconSize === 'default' ?
+                'master' : expanderIconSize);
+            expanderIconStyle = expanderIconStyle === 'default' ? 'unaccented' : expanderIconStyle
         } else {
-            expanderIconSize = this.getExpanderIconSize(tmplExpanderIconSize);
-            expanderIconStyle = expanderIcon === 'hiddenNode' ? 'unaccented' :
-                this.getExpanderIconStyle(tmplExpanderIconStyle);
+            expanderIconStyle = expanderIcon === 'hiddenNode' ? 'unaccented' : expanderIconStyle;
         }
 
         let expanderClasses = 'js-controls-Tree__row-expander controls-TreeGrid__row-expander';
