@@ -272,14 +272,14 @@
    }
 }
 
-.controls-Tabs_style_default__item-marker_state_selected {
+.controls-Tabs_style_unaccented__item-marker_state_selected {
    &::after {
       background: var(--text-color);
    }
 }
 
 .controls-Tabs_style_ {
-   @variants: primary, unaccented, secondary, link, label, danger, warning, success, info, readonly;
+   @variants: primary, secondary, link, label, danger, warning, success, info, readonly;
    .for(@variants, { &@{_item}__item-marker_state_selected {
       &::after {
          background: ~"var(--@{_item}_text-color)";
