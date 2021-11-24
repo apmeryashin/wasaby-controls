@@ -1,5 +1,5 @@
 <div class="controls-StickyTemplate__top-area
-            {{_options.roundBorder !== false ? 'controls-StickyTemplate__top-area_roundBorder'}}
+            {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder_top'}}
             {{_options.headerBackgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
                                                              'controls-background-' + _options.headerBackgroundStyle}}
             controls-StickyTemplate__top-area-{{_options.closeButtonVisibility ? 'withClose' : 'withoutClose'}}">
