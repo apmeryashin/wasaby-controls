@@ -210,10 +210,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       selectedItems.set(null, []);
       let selectedItemsCountByPack = 0;
 
-      const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected);
-
       const selectionWithEntryPath = {
-         selected: selectedKeysWithEntryPath,
+         selected: this._mergeEntryPath(selection.selected),
          excluded: selection.excluded
       };
 
@@ -239,52 +237,17 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          doNotSelectNodes = this._isAllSelected(selectionWithEntryPath, this._rootId) && !isOnlyNodesInItems;
       }
 
-      const handleItem = (item) => {
+      const handleItems = items || this._model.getItems();
+      handleItems.forEach((item) => {
          if (!item.SelectableItem) {
             return;
          }
 
-         const key = this._getKey(item);
-         const parent = item.getParent();
-         const parentId = this._getKey(parent);
-         const inSelected = selectionWithEntryPath.selected.includes(key);
-         const inExcluded = selectionWithEntryPath.excluded.includes(key);
-
-         let isSelected;
-         if (item['[Controls/_display/BreadcrumbsItem]']) {
-            isSelected = this._getBreadcrumbsSelected(item, selectionWithEntryPath);
-            if (isSelected === false) {
-               isSelected = this._getStateNode(item, isSelected, selectionWithEntryPath);
-               // хлебная крошка не модет быть полностью выбрана исходя из выбора детей
-               if (isSelected === true) {
-                  isSelected = null;
-               }
-            }
-         } else if (parent['[Controls/_display/BreadcrumbsItem]'] && !inSelected) {
-            const parentIsSelected = this._getBreadcrumbsSelected(parent, selectionWithEntryPath);
-            isSelected = parentIsSelected !== false && !inExcluded;
-         } else {
-            const isNode = this._isNode(item);
-            if (!this._selectAncestors && !this._selectDescendants) {
-               // В этом случае мы вообще не смотри на узлы, т.к. выбранность элемента не зависит от выбора родительского узла
-               // или выбранность узла не зависит от его детей
-               isSelected = this._canBeSelected(item, false) && !inExcluded && (inSelected || this._isAllSelectedInRoot(selectionWithEntryPath));
-            } else {
-               isSelected = this._canBeSelected(item, false) && (!inExcluded && (inSelected || this._isAllSelected(selectionWithEntryPath, parentId)) || isNode && this._isAllSelected(selectionWithEntryPath, key));
-
-               if ((this._selectAncestors || searchValue) && isNode) {
-                  isSelected = this._getStateNode(item, isSelected, selectionWithEntryPath);
-               }
-            }
-
-            if (isSelected && isNode && doNotSelectNodes) {
-               isSelected = null;
-            }
-         }
+         let isSelected = this._getItemSelected(item, selectionWithEntryPath, doNotSelectNodes, searchValue);
 
          // Проверяем на лимит, если он уже превышен, то остальные элементы нельзя выбрать
          // считаем только элементы выбранные пачкой, отдельно выбранные элементы не должны на это влиять
-         if (isSelected !== false && limit && !inSelected) {
+         if (isSelected !== false && limit && !selectionWithEntryPath.selected.includes(this._getKey(item))) {
             if (selectedItemsCountByPack >= limit) {
                isSelected = false;
             }
@@ -293,12 +256,56 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          }
 
          selectedItems.get(isSelected).push(item);
-      };
-
-      const handleItems = items || this._model.getItems();
-      handleItems.forEach(handleItem);
+      });
 
       return selectedItems;
+   }
+
+   private _getItemSelected(
+       item: TreeItem,
+       selection: ISelection,
+       doNotSelectNodes: boolean,
+       searchValue?: string
+   ): boolean|null {
+      const key = this._getKey(item);
+      const parent = item.getParent();
+      const parentId = this._getKey(parent);
+      const inSelected = selection.selected.includes(key);
+      const inExcluded = selection.excluded.includes(key);
+
+      let isSelected = false;
+      if (item['[Controls/_display/BreadcrumbsItem]']) {
+         isSelected = this._getBreadcrumbsSelected(item, selection);
+         if (isSelected === false) {
+            isSelected = this._getStateNode(item, isSelected, selection);
+            // хлебная крошка не модет быть полностью выбрана исходя из выбора детей
+            if (isSelected === true) {
+               isSelected = null;
+            }
+         }
+      } else if (parent['[Controls/_display/BreadcrumbsItem]'] && !inSelected) {
+         const parentIsSelected = this._getBreadcrumbsSelected(parent, selection);
+         isSelected = parentIsSelected !== false && !inExcluded;
+      } else {
+         const isNode = this._isNode(item);
+         if (!this._selectAncestors && !this._selectDescendants) {
+            // В этом случае мы вообще не смотри на узлы, т.к. выбранность элемента не зависит от выбора родительского узла
+            // или выбранность узла не зависит от его детей
+            isSelected = this._canBeSelected(item, false) && !inExcluded && (inSelected || this._isAllSelectedInRoot(selection));
+         } else {
+            isSelected = this._canBeSelected(item, false) && (!inExcluded && (inSelected || this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key));
+
+            if ((this._selectAncestors || searchValue) && isNode) {
+               isSelected = this._getStateNode(item, isSelected, selection);
+            }
+         }
+
+         if (isSelected && isNode && doNotSelectNodes) {
+            isSelected = null;
+         }
+      }
+
+      return isSelected;
    }
 
    private _getBreadcrumbsSelected(item: BreadcrumbsItem, selection: ISelection): boolean|null {
@@ -334,7 +341,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return isSelected;
    }
 
-   getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null {
+   getCount(selection: ISelection, hasMoreData: boolean, limit?: number, searchValue?: string): number|null {
       if (limit) {
          const countItems = this._model.getCount();
          return !hasMoreData && limit > countItems ? countItems : limit;
@@ -370,7 +377,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                 countItemsSelectedInNode = null;
             } else {
                const node = this._getItem(nodeKey);
-               countItemsSelectedInNode = this._getSelectedChildrenCount(node, selection);
+               countItemsSelectedInNode = this._getSelectedChildrenCount(node, selection, searchValue);
             }
 
             if (countItemsSelectedInNode === null) {
@@ -769,7 +776,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return item.hasChildren() || item.getChildren(false).getCount() > 0;
    }
 
-   private _getSelectedChildrenCount(node: TreeItem<Model>, selection: ISelection): number|null {
+   private _getSelectedChildrenCount(node: TreeItem<Model>, selection: ISelection, searchValue?: string): number|null {
       if (!node) {
          // Если узла нет, это значит что он не загружен, соответственно мы не можем посчитать кол-во выбранных детей
          return null;
@@ -779,31 +786,30 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       let selectedChildrenCount = 0;
 
       if (children.getCount()) {
-         let childId;
-         let childNodeSelectedCount;
-
          children.each((childItem) => {
             if (childItem && childItem['[Controls/_display/BreadcrumbsItem]'] && this._isAllSelectedInRoot(selection)) {
                selectedChildrenCount = null;
             }
 
             if (selectedChildrenCount !== null) {
-               childId = this._getKey(childItem);
+               const childId = this._getKey(childItem);
+               const childIsNode = this._isNode(childItem);
+               const childInSelected = selection.selected.includes(childId);
+               const childInExcluded = selection.excluded.includes(childId);
 
-               if (!selection.excluded.includes(childId)) {
+               if (!childInExcluded) {
                   const canBeCounted = this._canBeCounted(childItem);
-                  if (!selection.selected.includes(childId) && canBeCounted) {
+                  const allowCountByState = this._getItemSelected(childItem, selection, false, searchValue);
+                  // не считаем записи в selected, т.к. они будут посчитаны в методе выше
+                  if (!childInSelected && canBeCounted && allowCountByState) {
                      selectedChildrenCount++;
                   }
 
-                  if (this._isNode(childItem) && this._hasChildren(childItem)) {
-                     childNodeSelectedCount = this._getSelectedChildrenCount(childItem, selection);
-
-                     if (childNodeSelectedCount === null) {
-                        selectedChildrenCount = null;
-                     } else {
-                        selectedChildrenCount += childNodeSelectedCount;
-                     }
+                  if (childIsNode) {
+                     const nextChildSelectedCount = this._getSelectedChildrenCount(childItem, selection, searchValue);
+                     selectedChildrenCount = nextChildSelectedCount === null
+                        ? null
+                        : selectedChildrenCount + nextChildSelectedCount;
                   }
                }
             }

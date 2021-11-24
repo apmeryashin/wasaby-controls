@@ -189,7 +189,12 @@ export class Controller {
     * Если не передан то будет считать по состоянию контроллера
     */
    getCountOfSelected(selection?: ISelection): number|null {
-      return this._strategy.getCount(selection || this._selection, this._model.hasMoreData(), this._limit);
+      return this._strategy.getCount(
+          selection || this._selection,
+          this._model.hasMoreData(),
+          this._limit,
+          this._searchValue
+      );
    }
 
    /**
