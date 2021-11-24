@@ -380,6 +380,7 @@ describe('Controls/scroll:Container', () => {
     describe('_keydownHandler', () => {
         it('should scroll top 40px when key up', () => {
             const component = createComponent(Container, {});
+            sinon.stub(component, '_updateStateAndGenerateEvents');
             const result = 960;
             component._topPlaceholderSize = 0;
             component._scrollModel = {
@@ -402,9 +403,11 @@ describe('Controls/scroll:Container', () => {
             };
             component._keydownHandler(event);
             assert.strictEqual(component._children.content.scrollTop, result);
+            sinon.restore();
         });
         it('should scroll down 40px when key down', () => {
             const component = createComponent(Container, {});
+            sinon.stub(component, '_updateStateAndGenerateEvents');
             const result = 1040;
             component._topPlaceholderSize = 0;
             component._scrollModel = {
@@ -429,6 +432,7 @@ describe('Controls/scroll:Container', () => {
             };
             component._keydownHandler(event);
             assert.strictEqual(component._children.content.scrollTop, result);
+            sinon.restore();
         });
         it('should not scroll down 40px when key down', () => {
             const component = createComponent(Container, {});

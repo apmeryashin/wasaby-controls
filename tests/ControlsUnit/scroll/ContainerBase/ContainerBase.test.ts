@@ -470,6 +470,7 @@ describe('Controls/scroll:ContainerBase', () => {
    describe('scrollTo', () => {
       it('should scroll vertical', () => {
          const control: ContainerBase = new ContainerBase(options);
+         sinon.stub(control, '_updateStateAndGenerateEvents');
          const newPosition: number = 10;
          control._beforeMount(options);
 
@@ -482,10 +483,12 @@ describe('Controls/scroll:ContainerBase', () => {
          control.scrollTo(newPosition);
 
          assert.strictEqual(control._children.content.scrollTop, newPosition);
+         sinon.restore();
       });
 
       it('should scroll horizontal', () => {
          const control: ContainerBase = new ContainerBase(options);
+         sinon.stub(control, '_updateStateAndGenerateEvents');
          const newPosition: number = 10;
          control._beforeMount(options);
 
@@ -498,6 +501,7 @@ describe('Controls/scroll:ContainerBase', () => {
          control.scrollTo(newPosition, SCROLL_DIRECTION.HORIZONTAL);
 
          assert.strictEqual(control._children.content.scrollLeft, newPosition);
+         sinon.restore();
       });
    });
 
@@ -537,6 +541,7 @@ describe('Controls/scroll:ContainerBase', () => {
    describe('Scroll Smooth', () => {
       it('should instant scroll if browser is IE', () => {
          const control = new ContainerBase(options);
+         sinon.stub(control, '_updateStateAndGenerateEvents');
          const originalDetection = Env.detection.isIE11;
          Env.detection.isIE11 = true;
          const scrollToSpy = sinon.spy();
@@ -549,12 +554,14 @@ describe('Controls/scroll:ContainerBase', () => {
          control._scrollTo(0, true);
          sinon.assert.notCalled(scrollToSpy);
          Env.detection.isIE11 = originalDetection;
+         sinon.restore();
       });
    });
 
    describe('horizontalScrollTo', () => {
       it('should scroll', () => {
          const control: ContainerBase = new ContainerBase(options);
+         sinon.stub(control, '_updateStateAndGenerateEvents');
          const newPosition: number = 10;
          control._beforeMount(options);
 
@@ -567,6 +574,7 @@ describe('Controls/scroll:ContainerBase', () => {
          control.horizontalScrollTo(newPosition);
 
          assert.strictEqual(control._children.content.scrollLeft, newPosition);
+         sinon.restore();
       });
    });
 
