@@ -38,6 +38,7 @@
                                                                    'controls-background-' + _options.backgroundStyle}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
                             attr:class="{{_getRoundClass()}}"
+                            borderStyle="{{undefined}}"
                             isDragging="{{_dragging}}"
                             scope="{{_options}}"></ws:partial>
             </div>
