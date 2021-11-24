@@ -713,8 +713,8 @@ export interface IReloadItemOptions {
  * @param {UICommon/Events:SyntheticEvent} event Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому кликнули.
  * @param {Object} nativeEvent Объект нативного события браузера.
- * @param {HTMLElement} target DOM объект элемента.
  * @param {Number} columnIndex Индекс колонки, по которой кликнули. Параметр актуален только для {@link Controls/grid:View} и {@link Controls/treeGrid:View}.
+ * @param {HTMLElement} target DOM объект элемента.
  * @remark
  * Активация происходит при клике по элементу.
  * Событие не происходит, если:
