@@ -61,7 +61,7 @@ describe('treeGrid/Display/ExpanderIcon/TreeGridCollection', () => {
         it('should also affect when style=master', () => {
             const itemAt0 = getTreeGridCollection({ style: 'master', expanderIconSize: '2xs' }).at(0);
             CssClassesAssert.include(itemAt0.getExpanderClasses('node'),
-                'controls-TreeGrid__row-expander_node_iconSize_master');
+                'controls-TreeGrid__row-expander_node_iconSize_2xs');
         });
     });
 });
