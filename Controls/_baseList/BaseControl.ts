@@ -806,6 +806,8 @@ const _private = {
                 }
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
                 if (!error.canceled && !error.isCanceled) {
+                    // скрываем индикатор в заданном направлении, чтобы он не перекрывал ошибку
+                    self._indicatorsController.hideIndicator(DIRECTION_COMPATIBILITY[direction]);
                     _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
                 }
             });
