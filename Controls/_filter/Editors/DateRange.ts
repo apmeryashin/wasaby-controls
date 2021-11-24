@@ -25,7 +25,7 @@ class DateRangeEditor extends Control<IControlOptions> {
     protected _dateRangeModule: Record<string, any> = null;
     protected _emptyCaption: string;
 
-    protected _beforeMount(options: IControlOptions): Promise<void>|void {=
+    protected _beforeMount(options: IControlOptions): Promise<void>|void {
         this._datePopupType = options.editorMode === 'Selector' ? 'datePicker' : 'shortDatePicker';
         return import('Controls/dateRange').then((dateRange) => {
             this._dateRangeModule = dateRange;
