@@ -3,31 +3,35 @@
       <div class="PageBlock__title"></div>
       <div class="PageBlock__content">
          <div class="PageBlock__componentWrap">
-            <Controls.dateRange:RangeShortSelector
+            <Controls.dateRange:Selector
+                    datePopupType="shortDatePicker"
                attr:test_name="default_range"/>
          </div>
          <div class="PageBlock__componentWrap ControlsDemo-RangeLinkLite_capture">
-            <Controls.dateRange:RangeShortSelector
+            <Controls.dateRange:Selector
                prevArrowVisibility="{{true}}"
                nextArrowVisibility="{{true}}"
+               datePopupType="shortDatePicker"
                bind:startValue="_startValueHalfYear"
                bind:endValue="_endValueHalfYear"
                attr:test_name="show_arrow_range"
             />
          </div>
          <div class="PageBlock__componentWrap">
-            <Controls.dateRange:RangeShortSelector
+            <Controls.dateRange:Selector
                bind:startValue="_startValueBind"
                bind:endValue="_endValueBind"
+               datePopupType="shortDatePicker"
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
                fontColorStyle="link" viewMode="link"
                attr:test_name="months_range"/>
          </div>
          <div class="PageBlock__componentWrap">
-            <Controls.dateRange:RangeShortSelector
+            <Controls.dateRange:Selector
                bind:startValue="_startValueQuarter"
                bind:endValue="_endValueQuarter"
+               datePopupType="shortDatePicker"
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
                viewMode="link"
@@ -37,16 +41,18 @@
 
          </div>
          <div class="PageBlock__componentWrap">
-            <Controls.dateRange:RangeShortSelector
+            <Controls.dateRange:Selector
                viewMode="label"
+               datePopupType="shortDatePicker"
                emptyCaption="не задан"
                attr:test_name="range_not_value"
             />
          </div>
          <div class="PageBlock__componentWrap">
-            <Controls.dateRange:RangeShortSelector
+            <Controls.dateRange:Selector
                bind:startValue="_startValue2"
                bind:endValue="_endValue2"
+               datePopupType="shortDatePicker"
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
                chooseQuarters="{{false}}"
@@ -55,9 +61,10 @@
          </div>
       </div>
       <div class="PageBlock__componentWrap">
-         <Controls.dateRange:RangeShortSelector
+         <Controls.dateRange:Selector
             bind:startValue="_startValueYear"
             bind:endValue="_endValueYear"
+            datePopupType="shortDatePicker"
             prevArrowVisibility="{{true}}"
             nextArrowVisibility="{{true}}"
             readOnly="{{true}}"

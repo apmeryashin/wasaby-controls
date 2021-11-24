@@ -15,7 +15,7 @@ export default interface IOpenPopup {
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.dateRange:RangeSelector name='dateRange'/>
+ * <Controls.dateRange:Selector name='dateRange'/>
  * <Controls.Button on:click="_openPopup()" />
  * </pre>
  * <pre class="brush: js">

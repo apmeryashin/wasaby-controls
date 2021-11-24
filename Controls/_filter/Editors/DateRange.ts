@@ -21,12 +21,12 @@ import {EventUtils} from 'UI/Events';
 class DateRangeEditor extends Control<IControlOptions> {
     protected _template: TemplateFunction = DateRangeTemplate;
     protected _tmplNotify: Function = EventUtils.tmplNotify;
-    protected _templateName: string;
+    protected _datePopupType: string;
     protected _dateRangeModule: Record<string, any> = null;
     protected _emptyCaption: string;
 
-    protected _beforeMount(options: IControlOptions): Promise<void>|void {
-        this._templateName = 'Controls/dateRange:' + (options.editorMode === 'Selector' ? 'RangeSelector' : 'RangeShortSelector');
+    protected _beforeMount(options: IControlOptions): Promise<void>|void {=
+        this._datePopupType = options.editorMode === 'Selector' ? 'datePicker' : 'shortDatePicker';
         return import('Controls/dateRange').then((dateRange) => {
             this._dateRangeModule = dateRange;
             if (options.emptyCaption) {
@@ -93,8 +93,8 @@ Object.defineProperty(DateRangeEditor, 'defaultProps', {
 /**
  * @name Controls/_filter/Editors/DateRange#editorMode
  * @cfg {String} Режим отображения редактора.
- * @variant Selector В качестве редактора используется {@link Controls/dateRange:RangeSelector}.
- * @variant Lite В качестве редактора используется {@link Controls/dateRange:RangeShortSelector}.
+ * @variant Selector В качестве редактора используется {@link Controls/dateRange:Selector}.
+ * @variant Lite В качестве редактора используется {@link Controls/dateRange:Selector} с опцией datePopupType="shortDatePicker".
  * @default Lite
  */
 export default DateRangeEditor;
