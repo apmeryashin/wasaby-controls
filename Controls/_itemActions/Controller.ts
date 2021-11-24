@@ -358,7 +358,7 @@ export class Controller {
             return;
         }
 
-        const target = isContextMenu ? null : this._calculateTargetPoint(clickEvent.target as HTMLElement;
+        const target = isContextMenu ? null : this._calculateTargetPoint(clickEvent.target);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(item, isActionMenu, parentAction, menuActions);
 
