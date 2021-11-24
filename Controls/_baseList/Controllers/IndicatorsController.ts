@@ -232,6 +232,10 @@ export default class IndicatorsController {
         }
     }
 
+    hideIndicator(direction: TIndicatorPosition): void {
+        this._model.hideIndicator(direction);
+    }
+
     shouldDisplayGlobalIndicator(): boolean {
         return !this._displayIndicatorTimer && !this._isPortionedSearch();
     }
