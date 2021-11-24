@@ -85,6 +85,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--link_text-color': ZenWrapper.getMonochromeColor(brightness),
             '--unaccented_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
             '--unaccented_icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--unaccented_border-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.6'),
             '--readonly_color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3'),
             '--primary_text-color': ZenWrapper.getColor(complementaryRGB),
             '--primary_icon-color': ZenWrapper.getColor(complementaryRGB),
