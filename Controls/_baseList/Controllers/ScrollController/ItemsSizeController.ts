@@ -54,7 +54,7 @@ export class ItemsSizesController {
 
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
         return scrollContent
-            ? scrollContent.getBoundingClientRect().top - this._itemsContainer.getBoundingClientRect().top
+            ? scrollContent.getBoundingClientRect().top - getDimensions(this._itemsContainer, true).top
             : getOffsetTop(this._itemsContainer);
     }
 
