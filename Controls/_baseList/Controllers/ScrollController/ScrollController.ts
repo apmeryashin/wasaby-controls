@@ -19,6 +19,7 @@ export interface IItemsRange {
 
 export interface IIndexesChangedParams extends IItemsRange {
     shiftDirection: IDirection;
+    edgeVisibleItem: IEdgeItem;
 }
 
 export interface IActiveElementIndex {
@@ -27,18 +28,11 @@ export interface IActiveElementIndex {
 
 export type IScheduledScrollType = 'restoreScroll' | 'scrollToElement';
 
-interface IBaseEdgeItem {
+export interface IEdgeItem {
+    index: number;
     direction: IDirection;
     border: IDirection;
     borderDistance: number;
-}
-
-export interface IEdgeItem extends IBaseEdgeItem {
-    index: number;
-}
-
-export interface IScheduledRestoreScrollParams extends IBaseEdgeItem {
-    key: CrudEntityKey;
 }
 
 export interface IScheduledScrollToElementParams {
@@ -49,7 +43,7 @@ export interface IScheduledScrollToElementParams {
 
 export interface IScheduledScrollParams {
     type: IScheduledScrollType;
-    params: IScheduledRestoreScrollParams | IScheduledScrollToElementParams;
+    params: IEdgeItem | IScheduledScrollToElementParams;
 }
 
 export interface IPlaceholders {
@@ -117,7 +111,8 @@ export class ScrollController {
 
         this._itemsSizesController = new ItemsSizesController({
             itemsContainer: options.itemsContainer,
-            itemsQuerySelector: options.itemsQuerySelector
+            itemsQuerySelector: options.itemsQuerySelector,
+            totalCount: options.totalCount
         });
 
         this._observersController = new ObserversController({
@@ -139,6 +134,7 @@ export class ScrollController {
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
             contentSize: options.contentSize,
+            beforeContentSize: this._itemsSizesController.getBeforeItemsContentSize(),
             givenItemsSizes: options.givenItemsSizes
         });
 
@@ -177,6 +173,7 @@ export class ScrollController {
 
         const newItemsSizes = this._itemsSizesController.updateItemsSizes(this._calculator.getRange());
         this._calculator.updateItemsSizes(newItemsSizes);
+        this._calculator.setBeforeContentSize(this._itemsSizesController.getBeforeItemsContentSize());
     }
 
     /**
@@ -222,6 +219,7 @@ export class ScrollController {
     contentResized(contentSize: number): void {
         this._updateItemsSizes();
         this._calculator.setContentSize(contentSize);
+        this._calculator.setBeforeContentSize(this._itemsSizesController.getBeforeItemsContentSize());
     }
 
     private _updateItemsSizes(itemsRange?: IItemsRange): void {
@@ -296,12 +294,11 @@ export class ScrollController {
     // region Scroll
 
     getEdgeVisibleItem(direction: IDirection): IEdgeItem {
-        const topOffset = this._itemsSizesController.getBeforeItemsContentSize();
-        return this._calculator.getEdgeVisibleItem(direction, topOffset);
+        return this._calculator.getEdgeVisibleItem(direction);
     }
 
-    getScrollTopToEdgeItem(edgeItem: IEdgeItem): number {
-        return this._calculator.getScrollTopToEdgeItem(edgeItem);
+    getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
     }
 
     /**
@@ -372,6 +369,8 @@ export class ScrollController {
             triggerOffsets = this._observersController.setResetBackwardTriggerOffset(false);
         }
         this._calculator.setTriggerOffsets(triggerOffsets);
+        // TODO триггер может сразу стать виден, но это вызовет точно 2 перерисовки.
+        //  нужно подумать, можно ли исправить. По идее мы не знаем размеры элементов.
 
         // itemsEndedCallback должен вызываться ТОЛЬКО ТУТ, загрузка осуществляется ТОЛЬКО по достижению триггера
         if (!result.indexesChanged) {
@@ -415,7 +414,8 @@ export class ScrollController {
             this._indexesChangedCallback({
                 startIndex: result.startIndex,
                 endIndex: result.endIndex,
-                shiftDirection: result.shiftDirection
+                shiftDirection: result.shiftDirection,
+                edgeVisibleItem: result.edgeVisibleItem
             });
         }
     }
