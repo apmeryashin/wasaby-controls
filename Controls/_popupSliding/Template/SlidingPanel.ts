@@ -36,7 +36,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     };
     private _isPanelMounted: boolean = false;
     private _currentTouchPosition: { x: number, y: number } = null;
-    private _startTouchYPosition: number = null;
+    private _startTouchPosition: { x: number, y: number } = null;
     private _scrollState: IScrollState = null;
     private _swipeInProcess: boolean = false;
 
@@ -147,7 +147,10 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         if (this._touchOnController(event)) {
             return;
         }
-        this._startTouchYPosition = event.nativeEvent.targetTouches[0].clientY;
+        this._startTouchPosition = {
+            x: event.nativeEvent.targetTouches[0].clientX,
+            y: event.nativeEvent.targetTouches[0].clientY
+        };
         this._swipeInProcess = true;
     }
 
@@ -161,7 +164,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         if (this._touchOnController(event)) {
             return;
         }
-        if (this._scrollAvailable && this._isSwipeForScroll(event)) {
+        if (this._scrollAvailable && this._isSwipeForScroll(event) || this._horizontalScrollSwipe(event)) {
             // Расчет оффсета тача должен начинаться только с того момента как закончится скролл, а не со старта тача
             this._currentTouchPosition = null;
             return;
@@ -197,7 +200,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             this._touchDragOffset = null;
         }
         this._currentTouchPosition = null;
-        this._startTouchYPosition = null;
+        this._startTouchPosition = null;
         this._swipeInProcess = false;
     }
 
@@ -216,12 +219,21 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         const swipeInTopScrollContainer = scrollContainers.length === 1;
         const swipeInsideInnerScrollContainer = scrollContainers.length > 1;
         const alreadyScrolled = this._getScrollTop() !== 0;
-        const swipeToScrollSide = this._startTouchYPosition - event.nativeEvent.changedTouches[0].clientY > 0;
+        const swipeToScrollSide = this._startTouchPosition.y - event.nativeEvent.changedTouches[0].clientY > 0;
 
         return this._scrollAvailable &&
             swipeInTopScrollContainer &&
             (alreadyScrolled || swipeToScrollSide && this._hasContentForScroll()) ||
             swipeInsideInnerScrollContainer;
+    }
+
+    private _horizontalScrollSwipe(event: SyntheticEvent<TouchEvent>): boolean {
+        const scrollContainers = this._getParentScrollContainerElements(event.target as HTMLElement);
+        const swipeInsideInnerScrollContainer = scrollContainers.length > 1;
+        const touchData = event.nativeEvent.changedTouches[0];
+        const verticalOffset = Math.abs(this._startTouchPosition.y - touchData.clientY);
+        const horizontalOffset = Math.abs(this._startTouchPosition.x - touchData.clientX);
+        return swipeInsideInnerScrollContainer && verticalOffset < horizontalOffset;
     }
 
     private _getParentScrollContainerElements(element: HTMLElement): HTMLElement[] {
