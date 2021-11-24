@@ -69,12 +69,6 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     private _tileItemTemplate: TemplateFunction;
 
     /**
-     * @name Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer#imagePosition
-     * @cfg {String} Текущая позиция изображения.
-     */
-    private _imagePosition: string;
-
-    /**
      * @name Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer#imageViewMode
      * @cfg {String} Режим отображения изображения.
      */
@@ -101,7 +95,6 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         if (!options.sourceController) {
             Logger.error('ImageDisplayContainer should be child of Browser or DataContainer', this);
         }
-        this._imagePosition = options.imagePosition;
         this._imageViewMode = options.imageViewMode;
         this._nodeImageViewMode = options.nodeImageViewMode;
         this._itemTemplate = options.itemTemplate;
@@ -112,9 +105,6 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     }
 
     protected _beforeUpdate(options?: IImageDisplayContainerOptions, contexts?: any): void {
-        if (this._options.imagePosition !== options.imagePosition) {
-            this._imagePosition = options.imagePosition;
-        }
         if (this._options.imageViewMode !== options.imageViewMode) {
             this._imageViewMode = options.imageViewMode;
         }
@@ -223,15 +213,6 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         let imageViewMode;
         imageViewMode = item.isNode && item.isNode() ? this._nodeImageViewMode : this._imageViewMode;
         return this._hasItemWithImage ? imageViewMode : 'none';
-    }
-
-    /**
-     * Возвращает положение картинки для текущего элемента
-     * @param item
-     * @private
-     */
-    protected _getImagePosition(item: TreeItem): string {
-        return this._hasItemWithImage ? this._imagePosition : 'none';
     }
 
     private _getPatchedColumns(): TColumns {
