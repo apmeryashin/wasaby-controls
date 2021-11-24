@@ -1,4 +1,4 @@
-<div class="controlsDemo__dropdown-button__footerContentTemplate">
+<div class="controls-Menu__footer__padding-horizontal">
     <Controls.buttons:Button caption="Задача"
                              scope="{{footerItemData}}"
                              viewMode="linkButton"/>

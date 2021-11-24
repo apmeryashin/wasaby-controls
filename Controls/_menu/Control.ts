@@ -56,6 +56,9 @@ const SUB_DROPDOWN_DELAY = 400;
  *
  * @demo Controls-demo/Menu/Control/Source/Index
  *
+ * @cssModifier controls-Menu__footer__padding-horizontal__withMarker Класс для футера меню с маркером. Добавляет отступы слева и справа для выравнивания по базовой линии с пунктами меню.
+ * @cssModifier controls-Menu__footer__padding-horizontal Класс для футера меню. Добавляет отступы слева и справа для выравнивания по базовой линии с пунктами меню.
+ *
  * @author Герасимов А.М.
  */
 export default class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
