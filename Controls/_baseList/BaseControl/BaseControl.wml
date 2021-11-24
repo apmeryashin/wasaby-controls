@@ -131,6 +131,8 @@
                 on:saveScrollPosition="_stopBubblingEvent()"
                 on:enableVirtualNavigation="_stopBubblingEvent()"
                 on:disableVirtualNavigation="_stopBubblingEvent()"
+                on:intersectionObserverRegister="_stopBubblingEvent()"
+                on:intersectionObserverUnregister="_stopBubblingEvent()"
                 on:restoreScrollPosition="_stopBubblingEvent()"
                 on:loadMore="_onloadMore()"
                 on:toggleHorizontalScroll="_onToggleHorizontalScroll()"
