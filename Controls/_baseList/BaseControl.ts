@@ -6937,7 +6937,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _dragLeave(): void {
         this._insideDragging = false;
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (this._dndListController && this._dndListController.isDragging()) {
+        if (this._dndListController && this._dndListController.isDragging() && this._documentDragging) {
             const draggableItem = this._dndListController.getDraggableItem();
             if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
                 const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
@@ -6946,6 +6946,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // если перетаскиваемого элемента нет в модели, значит мы перетащили элемент в другой список
                 this._dndListController.endDrag();
             }
+
+            this._unregisterMouseMove();
+            this._unregisterMouseUp();
         }
         const hasSorting = this._options.sorting && this._options.sorting.length;
         if (!hasSorting) {
@@ -6969,6 +6972,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._documentDragging) {
+            this._registerMouseMove();
+            this._registerMouseUp();
+
             if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
                 const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
@@ -7010,7 +7016,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let dragPosition;
         const targetItem = itemData;
         const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
-        if (this._dndListController.isDragging() && !targetIsNode) {
+        if (this._dndListController.isDragging() && !targetIsNode && this._documentDragging) {
             dragPosition = this._dndListController.calculateDragPosition({targetItem});
             if (dragPosition) {
                 const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
@@ -7040,13 +7046,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return;
         }
 
-        let dragEndResult: Promise<any> | undefined;
         if (this._insideDragging && this._dndListController) {
-            const targetPosition = this._dndListController.getDragPosition();
-            if (targetPosition && targetPosition.dispItem) {
-                dragEndResult = this._notifyDragEnd(dragObject, targetPosition);
-            }
-
             // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
             // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
             _private.removeShowActionsClass(this);
@@ -7083,9 +7083,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // endDrag нужно вызывать только после события dragEnd,
         // чтобы не было прыжков в списке, если асинхронно меняют порядок элементов
         if (this._dndListController) {
-            if (dragEndResult instanceof Promise) {
+            if (dragObject.dragEndResult instanceof Promise) {
                 this._displayGlobalIndicator();
-                dragEndResult.finally(() => {
+                dragObject.dragEndResult.then(() => {
                     endDrag();
                     if (this._indicatorsController.shouldHideGlobalIndicator()) {
                         this._indicatorsController.hideGlobalIndicator();
@@ -7116,6 +7116,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _dragNDropEnded(event: SyntheticEvent): void {
         if (this._dndListController && this._dndListController.isDragging()) {
             const dragObject = this._getDragObject(event.nativeEvent, this._startEvent);
+            if (this._insideDragging && this._dndListController) {
+                const targetPosition = this._dndListController.getDragPosition();
+                if (targetPosition && targetPosition.dispItem) {
+                    dragObject.dragEndResult = this._notifyDragEnd(dragObject, targetPosition);
+                }
+            }
             this._notify('_documentDragEnd', [dragObject], {bubbling: true});
         }
         if (this._startEvent && this._startEvent.target) {
