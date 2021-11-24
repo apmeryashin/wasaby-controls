@@ -5,6 +5,7 @@
         <ws:if data="{{_options.headingCaption || _options.headerContentTemplate }}">
             <ws:partial template="Controls/_popupTemplate/Dialog/Template/Header"
                         scope="{{_options}}"
+                        attr:class="{{_getRoundClass('header')}}"
                         on:mousedown="_onMouseDown()"
                         on:mouseup="_onMouseUp()"
                         on:touchstart="_onMouseDown()"
@@ -24,9 +25,9 @@
             </div>
         </ws:else>
         <ws:if data="{{ _options.bodyContentTemplate }}">
-            <div class="controls-DialogTemplate__content-area controls-background-{{_options.backgroundStyle}} {{_getRoundClass()}}">
+            <div class="controls-DialogTemplate__content-area controls-background-{{_options.backgroundStyle}} {{_getRoundClass('body')}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
-                            attr:class="{{_getRoundClass()}}"
+                            attr:class="{{_getRoundClass('body')}}"
                             scope="{{_options.contentAreaOptions}}"
                             bodyContentTemplate="{{null}}"
                             headerContentTemplate="{{null}}"

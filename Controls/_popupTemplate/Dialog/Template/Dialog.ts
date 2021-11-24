@@ -77,17 +77,23 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         this._setDragStateByOptions(this._options);
     }
 
-    protected _getRoundClass(): string {
+    protected _getRoundClass(type: string): string {
         if (!this._options.maximize) {
-            if (!(this._options.headingCaption || this._options.headerContentTemplate)) {
-                if (this._options.footerContentTemplate) {
-                    return 'controls-DialogTemplate__top-area_roundBorder';
-                } else {
-                    return 'controls-DialogTemplate__border-radius';
-                }
-            } else {
-                if (!this._options.footerContentTemplate) {
+            if (type === 'header') {
+                if (!(this._options.bodyContentTemplate || this._options.footerContentTemplate)) {
                     return 'controls-DialogTemplate__footer-area_roundBorder';
+                }
+            } else if (type === 'body') {
+                if (!(this._options.headingCaption || this._options.headerContentTemplate)) {
+                    if (this._options.footerContentTemplate) {
+                        return 'controls-DialogTemplate__top-area_roundBorder';
+                    } else {
+                        return 'controls-DialogTemplate__border-radius';
+                    }
+                } else {
+                    if (!this._options.footerContentTemplate) {
+                        return 'controls-DialogTemplate__footer-area_roundBorder';
+                    }
                 }
             }
         }
