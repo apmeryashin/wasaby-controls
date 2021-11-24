@@ -381,3 +381,20 @@
 .controls-Input_negativeOffset_theme_@{themeName} {
   margin-left: -(@padding-horizontal_inputText);
 }
+
+// Классы для изменения отступов добавляющих "воздух" в контролы
+.controls-air-null {
+  --content_air: 0;
+}
+
+.controls-air-s {
+  --content_air: var(--offset_3xs);
+}
+
+.controls-air-m {
+  --content_air: 5px;
+}
+
+.controls-air-l {
+  --content_air: var(--offset_s);
+}
