@@ -42,6 +42,7 @@
                <ws:if data="{{_options.feature1182709671}}">
                   <div class="
                      controls-BreadCrumbsPath__pathButton-wrapper
+                     controls-fontsize-{{_options.backButtonFontSize}}
                      {{
                         (_backButtonCaption && !_options.withoutBackButton)
                            ? 'controls-BreadCrumbsPath__pathButton-wrapper_offset-left'
@@ -50,6 +51,7 @@
                   ">
                      <Controls._breadcrumbs.PathButton
                         path="{{_items}}"
+                        inlineHeight="{{_getPathButtonHeight()}}"
                         source="{{_options.pathButtonSource}}"
                         filter="{{_options.pathButtonFilter}}"
                         sorting="{{_options.pathButtonSorting}}"

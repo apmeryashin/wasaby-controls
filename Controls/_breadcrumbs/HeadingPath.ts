@@ -199,6 +199,29 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     }
 
     /**
+     * На основании размера шрифта кнопки "Назад" возвращает необходимый размер для кнопки меню.
+     */
+    protected _getPathButtonHeight(): string {
+        switch (this._options.backButtonFontSize) {
+            case 's':
+            case 'm':
+                return 's';
+            case 'l':
+            case 'xl':
+            case '2xl':
+            case '3xl':
+            case '4xl':
+                return 'm';
+            case '5xl':
+            case '6xl':
+            case '7xl':
+                return 'l';
+            default:
+                return 'm';
+        }
+    }
+
+    /**
      * Вернет true, если иконка действия (шеврон) в кнопке "Назад" должна показываться дез наезда на её заголовок.
      * Шеврон показыватется без наезда только если полсе кнопки нет никакого содерхимого (иконка "домик",
      * хлебные крошки или кнопка меню).
