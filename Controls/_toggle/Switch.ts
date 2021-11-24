@@ -13,7 +13,6 @@ import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 import * as CaptionTemplate from 'wml!Controls/_toggle/Switch/resources/CaptionTemplate';
-import {SyntheticEvent} from 'Vdom/Vdom';
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
     ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
@@ -63,32 +62,6 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
     '[Controls/_toggle/interface/ICheckable]': true;
     '[Controls/_interface/IValidationStatus]': true;
     protected _template: TemplateFunction = SwitchTemplate;
-    protected _hovered: boolean = false;
-
-    protected _setHovered(hovered: boolean): void {
-        if (!this._options.readOnly) {
-            this._hovered = hovered;
-        }
-    }
-
-    protected _mouseEnterHandler(): void {
-        this._setHovered(true);
-    }
-
-    protected _mouseLeaveHandler(): void {
-        this._setHovered(false);
-    }
-
-    protected _mouseMoveHandler(event: SyntheticEvent): void {
-        if (!this._options.readOnly) {
-            const target = event.nativeEvent.target as Element;
-            if (target && target.closest('.controls-Switch__text-decoration')) {
-                this._setHovered(true);
-            } else {
-                this._setHovered(false);
-            }
-        }
-    }
 
     protected _clickHandler(): void {
         if (!this._options.readOnly) {

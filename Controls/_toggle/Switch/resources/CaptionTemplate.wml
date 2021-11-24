@@ -1,7 +1,7 @@
 <ws:if data="{{caption}}">
       <span class="controls-Switch__text_{{captionPosition}}Caption controls-Switch__text_{{captionPosition}}Caption
                   controls-Switch__text_{{readOnly ? 'disabled' : 'enabled'}}_{{value ? 'selected' : 'unselected'}} ws-ellipsis">
-         <span class="{{!readOnly ? 'controls-Switch__text-decoration'}}">
+         <span class="{{!readOnly && !additionalCaption ? 'controls-Switch__text-decoration'}}">
              <ws:partial template="{{caption}}"/>
          </span>
           <ws:if data="{{additionalCaption}}">
