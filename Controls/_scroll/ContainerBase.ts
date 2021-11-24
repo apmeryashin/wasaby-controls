@@ -1095,6 +1095,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         } else {
             scrollOrientation = direction === SCROLL_DIRECTION.VERTICAL ? 'scrollTop' : 'scrollLeft';
             scrollContainer[scrollOrientation] = scrollPosition;
+            this._updateStateAndGenerateEvents({
+                [scrollOrientation]: scrollPosition
+            });
         }
     }
 
