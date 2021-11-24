@@ -291,7 +291,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
 
     protected _updateMarkerCssClass(options: ITabsButtonsOptions): void {
         const style = TabsButtons._prepareStyle(options.style);
-        this._markerCssClass = `controls-Tabs__marker_style-${style} controls-Tabs__marker_thickness`;
+        this._markerCssClass = `controls-Tabs__marker_style-${this._options.markerStyle || style || this._defaultSelectedStyle} controls-Tabs__marker_thickness`;
     }
 
     protected _onItemClick(event: SyntheticEvent<MouseEvent>, key: string): void {

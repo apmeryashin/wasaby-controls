@@ -313,6 +313,15 @@
    background: var(--secondary_marker_color_tabs);
 }
 
+.controls-Tabs__marker_style- {
+   @variants: primary, secondary, link, label, danger, warning, success, info, readonly;
+   .for(@variants, { &@{_item} {
+      &::after {
+         background: ~"var(--@{_item}_text-color)";
+      }
+   } });
+}
+
 .controls-Tabs__main-marker {
    &::after {
       content: '';
