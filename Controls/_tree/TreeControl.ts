@@ -172,7 +172,7 @@ const _private = {
                     self._notify('collapsedItemsChanged', [expandController.getCollapsedItems()]);
                     self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [item]);
                     if (self._fixedItem && self._fixedItem.key === nodeKey && expanded) {
-                        return self.scrollToItem(self._fixedItem.key, false, false);
+                        return self.scrollToItem(self._fixedItem.key, 'top', false);
                     }
                     //endregion
                 });
@@ -1277,7 +1277,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                         const itemKey = this._tempItem;
                         this._applyMarkedLeaf(this._tempItem, model, markerController);
                         this._scrollToLeaf = () => {
-                            this.scrollToItem(itemKey, true);
+                            this.scrollToItem(itemKey, 'bottom');
                         };
                         resolve();
                     }
@@ -1330,7 +1330,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
                     this._scrollToLeaf = () => {
-                        this.scrollToItem(itemKey, false);
+                        this.scrollToItem(itemKey, 'top');
                     };
                     resolve();
                 }

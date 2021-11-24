@@ -43,7 +43,7 @@ export interface IScheduledRestoreScrollParams extends IBaseEdgeItem {
 
 export interface IScheduledScrollToElementParams {
     key: CrudEntityKey;
-    toBottom: boolean;
+    position: string;
     force: boolean;
 }
 
