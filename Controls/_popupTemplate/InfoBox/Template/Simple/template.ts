@@ -22,7 +22,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions, Te
       this._notify('close');
    }
    protected _sendResult(event: SyntheticEvent<MouseEvent>): void {
-      this._notify('sendResult', [event], { bubbling: true });
+      this._notify('sendResult', [event, this], { bubbling: true });
    }
 
    protected _getTemplateName(): string {

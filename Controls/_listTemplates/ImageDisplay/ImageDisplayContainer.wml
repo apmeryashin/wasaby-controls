@@ -6,12 +6,12 @@
       <ws:partial scope="{{itemTemplate}}"
                   template="{{_itemTemplate}}"
                   imageViewMode="{{_getImageViewMode(itemTemplate.item)}}"
-                  imagePosition="{{_getImagePosition(itemTemplate.item)}}"/>
+                  imagePosition="{{_options.imagePosition}}"/>
    </ws:itemTemplate>
    <ws:tileItemTemplate>
       <ws:partial scope="{{tileItemTemplate}}"
                   template="{{_tileItemTemplate}}"
                   imageViewMode="{{_getImageViewMode(tileItemTemplate.item)}}"
-                  imagePosition="{{_getImagePosition(tileItemTemplate.item)}}"/>
+                  imagePosition="{{_options.imagePosition}}"/>
    </ws:tileItemTemplate>
 </ws:partial>

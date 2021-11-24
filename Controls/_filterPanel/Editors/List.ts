@@ -1,8 +1,9 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/List';
-import * as ColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/ColumnTemplate';
+import * as ImageColumn from 'wml!Controls/_filterPanel/Editors/resources/ImageColumn';
 import * as AdditionalColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/AdditionalColumnTemplate';
+import * as TitleColumn from 'wml!Controls/_filterPanel/Editors/resources/TitleColumn';
 import {StackOpener, DialogOpener} from 'Controls/popup';
 import {Model} from 'Types/entity';
 import {
@@ -262,17 +263,90 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _handleSelectorResult(result: Model[]): void {
         const selectedKeys = [];
+        const {sourceController} = this._options;
         result.forEach((item) => {
             selectedKeys.push(item.get(this._options.keyProperty));
         });
         if (selectedKeys.length) {
-            if (this._options.sourceController) {
-                this._items.assign(result);
-            }
             this._setFilter(selectedKeys, this._options);
         }
         this._navigation = this._getNavigation(this._options, selectedKeys);
+
+        if (this._options.navigation) {
+            this._addItemsFromSelector(result);
+        } else if (sourceController) {
+            sourceController.updateOptions({
+                ...this._options,
+                filter: this._filter
+            });
+            sourceController.reload();
+        }
+
         this._processPropertyValueChanged(selectedKeys);
+    }
+
+    /**
+     * Добавляет элементы, выбранные из окна выбора в список
+     * @param items
+     * @protected
+     */
+    protected _addItemsFromSelector(items: RecordSet): void {
+        const maxItemsCount = this._getMaxItemsCount();
+        // Выбранные элементы надо добавлять после запиненных записей
+        let addIndex = this._getLastHistoryItemIndex();
+        const itemsCount = this._items.getCount();
+        let itemIndex;
+
+        if (maxItemsCount) {
+            this._items.setEventRaising(false, true);
+            items.each((item) => {
+                // Логика добавление записей следующая:
+                // Если запись уже есть в списке, она просто перемещается вверх списка, но после запиненых записей
+                // Если записи нет, она добавляется в начало списка, запись внизу списка удаляется, если она вышла за пределы навигации
+                itemIndex = this._items.getIndexByValue(this._items.getKeyProperty(), item.getKey());
+                if (itemIndex !== -1) {
+                    if (itemIndex > addIndex) {
+                        this._items.move(itemIndex, addIndex);
+                    }
+                } else {
+                    this._items.add(item, addIndex);
+                    addIndex++;
+
+                    if ((itemsCount + 1) > maxItemsCount && addIndex < maxItemsCount) {
+                        this._items.removeAt(itemsCount);
+                    }
+                }
+            });
+            this._items.setEventRaising(true, true);
+        } else {
+            this._items.assign(items);
+        }
+    }
+
+    protected _getMaxItemsCount(): number|void {
+        const navigation = this._options.navigation;
+        let pageSize;
+
+        if (navigation?.source === 'page') {
+            pageSize = navigation.sourceConfig?.pageSize;
+        }
+        return pageSize;
+    }
+
+    protected _getLastHistoryItemIndex(): number {
+        let lastHistoryItemIndex;
+
+        if (this._options.historyId) {
+            this._items.each((item, index) => {
+                if (typeof lastHistoryItemIndex !== 'number' && !item.get('pinned')) {
+                    lastHistoryItemIndex = index;
+                }
+            });
+        } else {
+            lastHistoryItemIndex = 0;
+        }
+
+        return lastHistoryItemIndex;
     }
 
     protected _handleFooterClick(event: SyntheticEvent): void {
@@ -334,18 +408,26 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _setColumns(
         {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions): void {
         this._columns = [{
-            template: ColumnTemplate,
             displayProperty,
             keyProperty,
-            imageProperty,
-            filterViewMode
+            textOverflow: 'ellipsis',
+            fontSize: filterViewMode === 'filterPanelStack' ? 'm' : 'l',
+            width: 'auto',
+            template: TitleColumn
         }];
+        if (imageProperty) {
+            this._columns.unshift({
+                template: ImageColumn,
+                imageProperty,
+                width: 'min-content'
+            });
+        }
         if (additionalTextProperty) {
             this._columns.push({
                 template: AdditionalColumnTemplate,
                 align: 'right',
                 displayProperty: additionalTextProperty,
-                width: 'auto'
+                width: 'min-content'
             });
         }
     }
@@ -357,6 +439,7 @@ class ListEditor extends Control<IListEditorOptions> {
 
         if (this._items) {
             this._items.unsubscribe('onCollectionChange', this._onCollectionChange);
+            this._items = null;
         }
     }
 
