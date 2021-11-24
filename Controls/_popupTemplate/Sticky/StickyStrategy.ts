@@ -70,7 +70,7 @@ export class StickyStrategy {
       const property = direction === 'horizontal' ? 'width' : 'height';
       const position = this._getPosition(popupCfg, targetCoords, direction, targetElement, zoom);
       let resultPosition = position;
-      let positionOverflow = this._checkOverflow(popupCfg, targetCoords, position, direction, targetElement, zoom);
+      let positionOverflow = this._checkOverflow(popupCfg, targetCoords, position, direction, targetElement);
 
       /*
          При масштабировании иногда браузер криво считает размеры контейнера,
@@ -87,14 +87,14 @@ export class StickyStrategy {
          } else {
             this._invertPosition(popupCfg, direction);
             const revertPosition = this._getPosition(popupCfg, targetCoords, direction, targetElement, zoom);
-               let revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition,
-                                                                direction, targetElement, zoom);
+            let revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition,
+                                                             direction, targetElement);
             if (revertPositionOverflow > 0) {
                if ((positionOverflow <= revertPositionOverflow)) {
                   this._invertPosition(popupCfg, direction);
-                  this._fixPosition(position, targetCoords, zoom);
+                  this._fixPosition(position, targetCoords, targetElement);
                   positionOverflow = this._checkOverflow(popupCfg, targetCoords, position,
-                                                         direction, targetElement, zoom);
+                                                         direction, targetElement);
                   if (positionOverflow > 0 ) {
                      this._restrictContainer(position, property, popupCfg, positionOverflow);
                   }
@@ -102,9 +102,9 @@ export class StickyStrategy {
                } else {
                   // Fix position and overflow, if the revert position is outside of the window,
                   // but it can be position in the visible area
-                  this._fixPosition(revertPosition, targetCoords, zoom);
+                  this._fixPosition(revertPosition, targetCoords, targetElement);
                   revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition,
-                                                               direction, targetElement, zoom);
+                                                               direction, targetElement);
                   if (revertPositionOverflow > 0 ) {
                      this._restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
                   }
@@ -115,8 +115,8 @@ export class StickyStrategy {
             }
          }
       }
-      this._fixPosition(resultPosition, targetCoords, zoom);
-      this._calculateRestrictionContainerCoords(popupCfg, resultPosition, zoom);
+      this._fixPosition(resultPosition, targetCoords, targetElement);
+      this._calculateRestrictionContainerCoords(popupCfg, resultPosition, targetElement);
       return resultPosition;
    }
 
@@ -152,7 +152,7 @@ export class StickyStrategy {
             const viewportPage: number = visualViewport[isHorizontal ? 'pageLeft' : 'pageTop'];
             const viewportSize: number = visualViewport[isHorizontal ? 'width' : 'height'];
             const topSpacing: number = viewportSize + viewportPage + viewportOffset;
-            const bottomSpacing: number = this._getBody(zoom)[isHorizontal ? 'width' : 'height'] - topSpacing;
+            const bottomSpacing: number = this._getBody(targetElement)[isHorizontal ? 'width' : 'height'] - topSpacing;
             const targetCoord: number = this._getTargetCoords(popupCfg, targetCoords, coord, direction);
             const margins: number = this._getMargins(popupCfg, direction, zoom);
             position[coord] = bottomSpacing + (topSpacing - targetCoord) - margins;
@@ -174,8 +174,7 @@ export class StickyStrategy {
        targetCoords: ITargetCoords,
        position: IPopupPosition,
        direction: TDirection,
-       targetElement: HTMLElement,
-       zoom: number
+       targetElement: HTMLElement
    ): number {
       const isHorizontal = direction === 'horizontal';
       const popupDirection = popupCfg.direction[direction];
@@ -187,7 +186,7 @@ export class StickyStrategy {
          if (coordinate < 0) {
             // Координата right/bottom может быть отрицательная, если на body находится скролл, т.к. позиция считается
             // относительно основного контейнера body.
-            const body = this._getBody(zoom);
+            const body = this._getBody(targetElement);
             // Допустимые отрицательные координаты
             const negativeOverflowValue = body[isHorizontal ? 'scrollWidth' : 'scrollHeight'] - body[isHorizontal ? 'width' : 'height'];
             const dif = Math.abs(coordinate) - negativeOverflowValue;
@@ -301,12 +300,12 @@ export class StickyStrategy {
    private _calculateRestrictionContainerCoords(
        popupCfg: IStickyPositionConfig,
        position: IPopupPosition,
-       zoom: number
+       targetElement: HTMLElement
    ): void {
       const coords = popupCfg.restrictiveContainerCoords;
       const height = position.height > 0 ? position.height : popupCfg.sizes?.height;
       const width = position.width || popupCfg.sizes?.width;
-      const body = this._getBody(zoom);
+      const body = this._getBody(targetElement);
       if (coords) {
          if (coords.top > position.top) {
             position.top = coords.top;
@@ -350,11 +349,11 @@ export class StickyStrategy {
       return targetCoords[popupCfg.targetPoint[direction]];
    }
 
-   private _fixPosition(position: IPopupPosition, targetCoords: ITargetCoords, zoom: number): void {
+   private _fixPosition(position: IPopupPosition, targetCoords: ITargetCoords, targetElement: HTMLElement): void {
       if (this._isMobileIOS()) {
          this._fixBottomPositionForIos(position, targetCoords);
       }
-      const body = this._getBody(zoom);
+      const body = this._getBody(targetElement);
 
 
       // Проблема: body не всегда прилегает к нижней границе окна браузера.
@@ -411,7 +410,7 @@ export class StickyStrategy {
          if (position.top) {
             verticalScroll = this._getVisualViewport(targetElement).pageTop;
          } else {
-            verticalScroll = this._getBody(zoom).height - this._getViewportHeight(targetElement) -
+            verticalScroll = this._getBody(targetElement).height - this._getViewportHeight(targetElement) -
                 this._getVisualViewport(targetElement).pageTop;
          }
 
@@ -507,10 +506,12 @@ export class StickyStrategy {
 
    /**
     * Координаты боди нужно скейлить к зуму самого попапа, чтобы считать в одной координатной сетке
-    * @param popupZoom
+    * @param targetElement
     * @private
     */
-   private _getBody(popupZoom: number): IBody {
+   private _getBody(targetElement: HTMLElement): IBody {
+      const targetZoom = DimensionsMeasurer.getZoomValue(targetElement);
+      const popupZoom = this._getPopupZoom(targetZoom);
 
       // relative тут потому, что мы уже посчитали свой зум с учетом компенсации зума боди
       // и нам надо его размеры подскалирвоать под нашу координатную сетку
