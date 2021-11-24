@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/filterPanel/View/Index';
 import * as stackTemplate from 'wml!Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate';
 import {isEqual} from 'Types/object';
 import {Memory} from 'Types/source';
-import 'Controls-demo/filterPanel/View/HistorySource';
+import 'Controls-demo/Filter_new/resources/HistorySourceDemo';
 import {departments, filterItems} from 'Controls-demo/filterPanel/resources/DataStorage';
 
 export default class extends Control {
