@@ -25,6 +25,12 @@ class WorkWithSelection<TCallbackResult> {
                 this._skipCall++;
             }
             field.setSelectionRange(selection.start, selection.end);
+            // Когда в поле ввода веден большой текст, не срабатывает авто подскролл к нужному месту
+            // Поэтому если каретка находится в самом конце, то скролим самостоятельно
+            // https://online.sbis.ru/opendoc.html?guid=c01d9df0-618b-4a0f-897b-2fc1e5f51f88
+            if (field.value.length === selection.start && field.value.length === selection.end) {
+                field.scrollLeft = field.scrollWidth;
+            }
             return true;
         }
         return false;
