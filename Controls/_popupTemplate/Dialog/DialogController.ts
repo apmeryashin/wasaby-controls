@@ -208,11 +208,9 @@ class DialogController extends BaseController {
 
     private _updateSizes(item: IDialogItem, container: HTMLElement): void {
         item.sizes = this._getPopupSizes(item, container);
-        if (item.popupOptions._keepMaxHeight) {
-            const minHeight = item.popupOptions.minHeight;
-            if (!minHeight || minHeight < item.sizes.height) {
-                item.popupOptions.minHeight = item.sizes.height;
-            }
+        const minHeight = item.popupOptions.minHeight;
+        if (!minHeight || minHeight < item.sizes.height) {
+            item.popupOptions.minHeight = item.sizes.height;
         }
     }
 

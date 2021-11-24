@@ -19,7 +19,6 @@ export interface IDialogPopupOptions extends IBasePopupOptions {
     offset?: IStickyPositionOffset;
     propStorageId?: string;
     isCentered?: boolean;
-    _keepMaxHeight?: boolean;
 }
 
 /**
