@@ -37,7 +37,6 @@
    color: var(--label_text-color);
    font-size: var(--font-size_m);
    margin-right: var(--offset_2xs);
-   flex-shrink: 0;
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;
@@ -47,8 +46,7 @@
    background-color: var(--separator_color);
    align-self: center;
    height: var(--border-thickness);
-   width: 100%;
-   flex-shrink: 1;
+   flex-grow: 1;
    white-space: nowrap;
 }
 
@@ -79,6 +77,7 @@
    align-self: center;
    margin-left: var(--offset_2xs);
    font-size: var(--font-size_xs);
+   flex-shrink: 0;
 }
 
 .controls-FilterViewPanel__groupReset {
