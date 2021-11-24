@@ -54,7 +54,7 @@ export class StickyStrategy {
       this._prepareRestrictiveCoords(popupCfg, targetCoords);
       cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'horizontal', targetElement, position.zoom));
       cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'vertical', targetElement, position.zoom));
-      this._setMaxSizes(popupCfg, position, targetElement, position.zoom);
+      this._setMaxSizes(popupCfg, position, targetElement);
       this._resetMargins(position);
       this._scalePositionToZoom(position);
       return position;
@@ -378,8 +378,7 @@ export class StickyStrategy {
    private _setMaxSizes(
        popupCfg: IStickyPositionConfig,
        position: IPopupPosition,
-       targetElement: HTMLElement,
-       zoom: number
+       targetElement: HTMLElement
    ): void {
       const windowSizes = this._getWindowSizes(targetElement);
 
