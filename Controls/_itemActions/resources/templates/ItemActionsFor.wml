@@ -23,7 +23,7 @@
             _height="{{ action.inlineHeight }}"
             _captionPosition="right"
             readOnly="{{ false }}"
-            attr:class="js-controls-ItemActions__ItemAction_button"
+            attr:class="controls-itemActionsV__Button_iconSize_{{ action.iconSize }}"
             attr:ws-no-focus="true"/>
     </div>
 </ws:template>

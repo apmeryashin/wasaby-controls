@@ -777,9 +777,6 @@ describe('Controls/_itemActions/Controller', () => {
 
         beforeEach(() => {
             target = {
-                closest(): HTMLElement {
-                    return this;
-                },
                 getBoundingClientRect(): ClientRect {
                     return {
                         bottom: 1,
