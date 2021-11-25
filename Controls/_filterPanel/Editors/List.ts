@@ -509,7 +509,8 @@ class ListEditor extends Control<IListEditorOptions> {
 
     private _setFilter(selectedKeys: string[]|number[], {filter, historyId, keyProperty, resetValue}: IListEditorOptions): void {
         this._filter = {...filter};
-        if (selectedKeys && selectedKeys.length && !isEqual(resetValue, selectedKeys)) {
+        const isFilterReseted = !selectedKeys?.length && !isEqual(this._filter[keyProperty], selectedKeys);
+        if (selectedKeys && (selectedKeys.length && !isEqual(resetValue, selectedKeys) || isFilterReseted) ) {
             this._filter[keyProperty] = selectedKeys;
         }
         if (historyId) {
