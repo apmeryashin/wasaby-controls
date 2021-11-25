@@ -315,12 +315,6 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             classes += ` controls-Grid_support-ladder ${this._ladderOffsetSelector}`;
         }
 
-        // Удалено в 22.1000. Быстрый фикс неправильной высоты результатов, чтобы не протягивать
-        // таску через всю коллекцию до ячейки.
-        if (options.task1183453766) {
-            classes += ' controls-Grid__fixResultsHeight';
-        }
-
         if (options._needBottomPadding) {
             classes += ' controls-GridView__paddingBottom__itemActionsV_outside';
         }
