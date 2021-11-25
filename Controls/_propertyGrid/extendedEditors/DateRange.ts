@@ -11,7 +11,7 @@ interface IDateRangeEditorOptions extends IEditorOptions, IControlOptions {
 }
 
 /**
- * Редактор для поля ввода номера телефона.
+ * Редактор для поля выбора периода дат.
  * @extends UI/Base:Control
  * @implements Controls/propertyGrid:IEditor
  * @author Аверкиев П.А.
@@ -38,13 +38,7 @@ class DateRangeEditor extends Control<IDateRangeEditorOptions> implements IEdito
     }
 
     protected _handleInputCompleted(event: SyntheticEvent, startDate: Date, endDate: Date): void {
-        if (DateRangeEditor._isValidDate(startDate) && DateRangeEditor._isValidDate(endDate)) {
-            this._notify('propertyValueChanged', [[startDate, endDate]], {bubbling: true});
-        }
-    }
-
-    private static _isValidDate(value: Date | null): boolean {
-        return value === null || dateUtils.isValidDate(value);
+        this._notify('propertyValueChanged', [[startDate, endDate]], {bubbling: true});
     }
 }
 export default DateRangeEditor;
