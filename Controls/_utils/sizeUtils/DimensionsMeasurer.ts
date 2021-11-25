@@ -92,9 +92,10 @@ class DimensionsMeasurer {
      * Нужно для получаения размеров и смещений элемента,
      * которые нужны для позиционирования элементов в body(пример - popup)
      * @param {HTMLElement} element
+     * @param {number} calculatedZoomValue предрасчитанное значение зума для расчетов
      */
-    getElementDimensions(element: HTMLElement): IElementDimensions {
-        return this._getElementDimensions(element, true);
+    getElementDimensions(element: HTMLElement, calculatedZoomValue?: number): IElementDimensions {
+        return this._getElementDimensions(element, true, calculatedZoomValue);
     }
 
     /**
@@ -102,9 +103,10 @@ class DimensionsMeasurer {
      * Значения не скалируются к основной координатной сетке в body,
      * а возвращаются с учетом локального значения zoom на элементе
      * @param {HTMLElement} element
+     * @param {number} calculatedZoomValue предрасчитанное значение зума для расчетов
      */
-    getRelativeElementDimensions(element: HTMLElement): IElementDimensions {
-        return this._getElementDimensions(element, false);
+    getRelativeElementDimensions(element: HTMLElement, calculatedZoomValue?: number): IElementDimensions {
+        return this._getElementDimensions(element, false, calculatedZoomValue);
     }
 
     /**
@@ -223,9 +225,11 @@ class DimensionsMeasurer {
         };
     }
 
-    protected _getMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent,
-                                          scaleToBodyZoom: boolean,
-                                          zoom?: number): IMouseCoords {
+    protected _getMouseCoordsByMouseEvent(
+        event: MouseEvent | TouchEvent,
+        scaleToBodyZoom: boolean,
+        zoom?: number
+    ): IMouseCoords {
         const eventType = event.type;
         const target = scaleToBodyZoom ? document?.body : event.target;
         const zoomValue = zoom || this.getZoomValue(target);
@@ -272,11 +276,19 @@ class DimensionsMeasurer {
      * Получение размеров и смещений элемента с учетом зума
      * @param element
      * @param scaleToBodyZoom
+     * @param calculatedZoomValue
      * @protected
      */
-    protected _getElementDimensions(element: HTMLElement, scaleToBodyZoom: boolean): IElementDimensions {
-        const zoomValue = this.getZoomValue(element);
-        if (this._needScaleByZoom(element, zoomValue, scaleToBodyZoom)) {
+    protected _getElementDimensions(
+        element: HTMLElement,
+        scaleToBodyZoom: boolean,
+        calculatedZoomValue?: number
+    ): IElementDimensions {
+        const zoomValue = calculatedZoomValue === undefined ? this.getZoomValue(element) : calculatedZoomValue;
+
+        // Если передали расчитанный зум, то надо скейлить
+        const forcedScale = scaleToBodyZoom || calculatedZoomValue !== undefined;
+        if (this._needScaleByZoom(element, zoomValue, forcedScale)) {
             return this._getScaledElementDimensions<IElementDimensions>(
                 element,
                 ELEMENT_DIMENSIONS,
@@ -309,11 +321,11 @@ class DimensionsMeasurer {
      * Всё что выше body должно скейлиться, т.к. zoom на body
      * @param element
      * @param zoomValue
-     * @param scaleToBodyZoom
+     * @param forcedScale
      * @private
      */
-    protected _needScaleByZoom(element: HTMLElement, zoomValue: number, scaleToBodyZoom: boolean): boolean {
-        return scaleToBodyZoom || zoomValue !== DEFAULT_ZOOM_VALUE &&
+    protected _needScaleByZoom(element: HTMLElement, zoomValue: number, forcedScale: boolean): boolean {
+        return forcedScale || zoomValue !== DEFAULT_ZOOM_VALUE &&
             (element === document.documentElement || !element.closest('body'));
     }
 
