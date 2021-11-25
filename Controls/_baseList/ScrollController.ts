@@ -678,6 +678,12 @@ export default class ScrollController {
                 return false;
             }
 
+            // Группа может менять свое расположение отностильно других элементов списка
+            // https://online.sbis.ru/opendoc.html?guid=b7b43adb-a680-4d48-9314-75fb3c3cc998
+            if (item.className.includes('controls-ListView__group')) {
+                return false;
+            }
+
             // Если элемент застикан, то пропускаем его, граничным будет элемент следующий за ним
             // https://online.sbis.ru/opendoc.html?guid=9a0d939d-a08b-478b-b981-ccd1577fb184
             if (window.getComputedStyle(item).position === 'sticky' ||
