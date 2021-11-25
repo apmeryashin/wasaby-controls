@@ -309,10 +309,9 @@ class ListEditor extends Control<IListEditorOptions> {
                         this._items.move(itemIndex, addIndex);
                     }
                 } else {
-                    this._items.add(item, addIndex);
-                    addIndex++;
-
                     if ((itemsCount + 1) > maxItemsCount && addIndex < maxItemsCount) {
+                        this._items.add(item, addIndex);
+                        addIndex++;
                         this._items.removeAt(itemsCount);
                     }
                 }
