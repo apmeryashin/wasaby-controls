@@ -77,7 +77,7 @@ export default interface IBaseDropdown {
  * @name Controls/_dropdown/interface/IBaseDropdown#historyId
  * @cfg {String} Уникальный идентификатор для сохранения истории выбора записей.
  * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/input-elements/dropdown-menu/item-config/#history здесь}.
- * @demo Controls-demo/dropdown_new/Button/HistoryId/Simple/Index
+ * @demo Controls-demo/dropdown_new/Button/HistoryId/Index
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
