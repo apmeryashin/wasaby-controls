@@ -662,7 +662,7 @@ const _private = {
         self._onFooterPrepared(options);
     },
 
-    loadToDirection(self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet|void> | void {
+    loadToDirection: function (self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet | void> | void {
         // Нужно сбросить сосояние resetTriggerOffset, чтобы последующие загрузки начинались заранее,
         // а первая загрузка в сторону непосредственно при скролле к краю
         if (self._observersController) {
@@ -750,6 +750,8 @@ const _private = {
 
                 if (!_private.isPortionedLoad(self, addedItems)) {
                     self._indicatorsController.recountIndicators(direction);
+                } else if (!hasMoreData[direction]) {
+                    self._indicatorsController.hideIndicator(DIRECTION_COMPATIBILITY[direction]);
                 }
 
                 return addedItems;
