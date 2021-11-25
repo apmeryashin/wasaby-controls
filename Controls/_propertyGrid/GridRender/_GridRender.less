@@ -21,14 +21,19 @@
 .controls-PropertyGrid__gridLayout_editor {
    position: relative;
    display: flex;
-   flex-direction: column;
-   justify-content: center;
    min-width: 0;
    max-width: 100%;
 }
 
+// TODO убрать костыль после https://online.sbis.ru/opendoc.html?guid=5fdfb03c-5a9a-4a1c-9387-1b61ca40f9b0
+.controls-PropertyGrid__gridLayout_editor_column {
+   flex-direction: column;
+   justify-content: center;
+}
+
 .controls-PropertyGrid__gridLayout_editor-withoutCaption {
    flex-direction: row;
+   justify-content: center;
 }
 
 .controls-PropertyGrid__gridLayout_editor-caption-baseline {
