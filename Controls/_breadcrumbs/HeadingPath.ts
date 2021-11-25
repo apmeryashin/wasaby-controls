@@ -348,7 +348,7 @@ Object.defineProperty(BreadCrumbsPath, 'defaultProps', {
 
 /**
  * @name Controls/_breadcrumbs/HeadingPath#displayMode
- * @cfg {Boolean} Отображение крошек в несколько строк
+ * @cfg {String} Отображение крошек в несколько строк
  * @variant default
  * @variant multiline
  * @default default
