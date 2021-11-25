@@ -195,6 +195,27 @@ describe('Controls/_source/NavigationController', () => {
                 assert.equal(3, params[0].page, 'Wrong query properties');
                 assert.equal(1, params[0].prevPage, 'Wrong query properties');
             });
+            it('updateQueryProperties config and empty result', () => {
+                const START_PAGE = 0;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: false
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: [],
+                    keyProperty: 'id'
+                });
+                rs.setMetaData({more: 0});
+                const params = nc.updateQueryProperties(rs, null, {page: 0, pageSize: TEST_PAGE_SIZE }, null);
+                assert.equal(1, params[0].nextPage, 'Wrong query properties');
+                assert.equal(0, params[0].page, 'Wrong query properties');
+                assert.equal(-1, params[0].prevPage, 'Wrong query properties');
+            });
 
             it('hasMoreData undefined false root', () => {
                 const START_PAGE = 0;
