@@ -96,7 +96,7 @@
 /**
  * @name Controls/_dropdown/interface/IHeaderTemplate#headingCaptionProperty
  * @cfg {String} Название свойства, которое содержит заголовок шапки для подменю.
- * @demo Controls-demo/dropdown_new/Button/headingCaptionProperty/Index
+ * @demo Controls-demo/dropdown_new/Button/HeadingCaptionProperty/Index
  * @example
  * <pre class="brush: html; highlight: [8-12];">
  * <!-- WML -->
