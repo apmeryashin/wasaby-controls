@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {List} from 'Types/collection';
 import {IPopupItem} from 'Controls/_popup/interface/IPopup';
 import {dispatcherHandler} from 'UI/HotKeys';
+import {detection} from 'Env/Env';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import Popup from 'Controls/_popup/Manager/Popup';
 import {PendingClass, IPendingConfig} from 'Controls/Pending';
@@ -130,6 +131,15 @@ class Container extends Control<IControlOptions> {
             removedItem,
             removeCallback
         });
+
+        // Баг в IE, скорее всего связан с ядром: При удалении абсолютных элементов (окон),
+        // сначала удаляются внутренности потом само окно. почему то элементы с overflow: hidden подтормаживают
+        // визуально удаление элемента (в DOM окна уже нет, но оно висит с пустым контентом перед пользователем ~1с).
+        // Скрываю окно перед циклом синхронизации на удаление, чтобы для пользователя окно скрылось сразу целиком.
+        const popup = this.getPopupById(removedItem.id);
+        if (detection.isIE && popup) {
+            popup._container.classList.add('ws-invisible');
+        }
         this.setPopupItems(popupItems);
     }
 
