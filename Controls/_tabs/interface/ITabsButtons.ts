@@ -209,7 +209,7 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
 
     /**
      * @name Controls/_tabs/interface/ITabsButtons#selectedStyle
-     * @cfg {Controls/interface:IFontColorStyle/TFontColorStyle.typedef} Устанавливает цвет текста выбранной вкладки.
+     * @cfg {Controls/interface:IFontColorStyle/TFontColorStyle.typedef} Устанавливает цвет текста и маркера выбранной вкладки.
      * @default primary
      * @see IFontColorStyle
      * @demo Controls-demo/Tabs/Buttons/FontColorStyle/Index

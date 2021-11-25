@@ -274,15 +274,16 @@
 
 .controls-Tabs_style_unaccented__item-marker_state_selected {
    &::after {
-      background: var(--text-color);
+      background-color: var(--item_selected_color);
    }
 }
 
+// Маркеры красятся под цвет текста
 .controls-Tabs_style_ {
    @variants: primary, secondary, link, label, danger, warning, success, info, readonly;
    .for(@variants, { &@{_item}__item-marker_state_selected {
       &::after {
-         background: ~"var(--@{_item}_text-color)";
+         background-color: ~"var(--@{_item}_text-color)";
       }
    } });
 }
@@ -301,24 +302,15 @@
    height: var(--marker_thickness_tabs);
 }
 
-.controls-Tabs__marker_style-primary {
-   background: var(--primary_marker_color_tabs);
-}
-
 .controls-Tabs__marker_style-unaccented {
-   background: var(--text-color);
+   background-color: var(--item_selected_color);
 }
 
-.controls-Tabs__marker_style-secondary {
-   background: var(--secondary_marker_color_tabs);
-}
-
+// Маркеры красятся под цвет текста
 .controls-Tabs__marker_style- {
    @variants: primary, secondary, link, label, danger, warning, success, info, readonly;
    .for(@variants, { &@{_item} {
-      &::after {
-         background: ~"var(--@{_item}_text-color)";
-      }
+      background-color: ~"var(--@{_item}_text-color)";
    } });
 }
 

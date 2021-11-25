@@ -467,7 +467,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
                 // Если маркеры которые рисуются с абсолютной позицией не инициализированы, то нарисуем маркер
                 // внутри вкладки. Это можно сделать быстрее. Но невозможно анимировано передвигать его между вкладками.
                 // Инициализируем и переключимся на другой механизм маркеров после ховера.
-                classes.push(`controls-Tabs_style_${this._options.markerStyle || style || this._defaultSelectedStyle}__item-marker_state_selected`);
+                classes.push(`controls-Tabs_style_${this._options.markerStyle || this._options.selectedStyle || style || this._defaultSelectedStyle}__item-marker_state_selected`);
             } else {
                 classes.push('controls-Tabs__item-marker_state_default');
             }
