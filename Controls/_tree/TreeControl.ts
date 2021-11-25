@@ -830,8 +830,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
-    reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<unknown> {
-        return super.reload(keepScroll, sourceConfig);
+    reload(keepNavigation: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<unknown> {
+        return super.reload(keepNavigation, sourceConfig);
     }
 
     reloadItem(key: TKey, options: IReloadItemOptions | object, direction?: boolean | string): Promise<Model> {
