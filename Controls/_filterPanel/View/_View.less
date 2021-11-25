@@ -106,7 +106,11 @@
 
 .controls-FilterViewPanel__group-wrapper {
    position: relative;
-   margin-top: var(--offset_m);
+}
+
+.controls-FilterViewPanel__group-wrapper-collapsed,
+.controls-FilterViewPanel__propertyGrid_itemTemplate {
+   margin-bottom: var(--offset_m);
 }
 
 .controls-FilterViewPanel__group-header {
@@ -133,6 +137,10 @@
    font-size: var(--font-size_m);
    text-overflow: ellipsis;
    overflow: hidden;
+}
+
+.controls-FilterViewPanel__propertyGrid_viewMode-default.controls-PropertyGrid {
+   padding-bottom: 0;
 }
 
 .controls-FilterEditors__list-item {
