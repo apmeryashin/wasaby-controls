@@ -5,7 +5,7 @@ import 'css!Controls-demo/Controls-demo';
 
 class RoundMode extends Control<IControlOptions> {
     protected _value = '12345.67890';
-    protected _fractionSize = 2;
+    protected _precision = 2;
     protected _template: TemplateFunction = controlTemplate;
 }
 

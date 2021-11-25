@@ -12,19 +12,19 @@
       <Controls.decorator:Number value="{{123456}}" useGrouping="{{true}}"/>
    </div>
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">value = 123456 fractionSize = 3 roundMode = trunc</div>
-      <Controls.decorator:Number value="{{123456}}" fractionSize="{{3}}" roundMode="trunc"/>
+      <div class="controls-text-label">value = 123456 precision = 3 roundMode = trunc</div>
+      <Controls.decorator:Number value="{{123456}}" precision="{{3}}" roundMode="trunc"/>
    </div>
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">value = 123456 fractionSize = 3 roundMode = round</div>
-      <Controls.decorator:Number value="{{123456}}" fractionSize="{{3}}" showEmptyDecimals="{{true}}" roundMode="round" />
+      <div class="controls-text-label">value = 123456 precision = 3 roundMode = round</div>
+      <Controls.decorator:Number value="{{123456}}" precision="{{3}}" showEmptyDecimals="{{true}}" roundMode="round" />
    </div>
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">value = 1.2349 fractionSize = 3 roundMode = trunc</div>
-      <Controls.decorator:Number value="{{1.2349}}" fractionSize="{{3}}" roundMode="trunc"/>
+      <div class="controls-text-label">value = 1.2349 precision = 3 roundMode = trunc</div>
+      <Controls.decorator:Number value="{{1.2349}}" precision="{{3}}" roundMode="trunc"/>
    </div>
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">value = 1.2349 fractionSize = 3 roundMode = round</div>
-      <Controls.decorator:Number value="{{1.2349}}" fractionSize="{{3}}" roundMode="round"/>
+      <div class="controls-text-label">value = 1.2349 precision = 3 roundMode = round</div>
+      <Controls.decorator:Number value="{{1.2349}}" precision="{{3}}" roundMode="round"/>
    </div>
 </div>
