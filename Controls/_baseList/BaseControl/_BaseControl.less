@@ -6,6 +6,27 @@
    left: 50%;
    width: 1px;
    height: 1px;
+   // Chrome с выключенным аппаратным ускорением отображает различные артефакты при ховере на списках.
+   // Предположительно, они возникают из-за большого количество стилей/слоёв рендера.
+   // https://online.sbis.ru/opendoc.html?guid=ef46e66d-25cb-415d-8693-b37e5fa9306b
+   // https://online.sbis.ru/opendoc.html?guid=498d117a-479e-4e15-b8f9-cb7ea8ea4e84
+   // https://online.sbis.ru/opendoc.html?guid=d851c234-6bd0-475a-a480-40ce2ab73000
+   // https://online.sbis.ru/opendoc.html?guid=4f8c80ac-8d5c-4f24-b078-495f5fe18b37
+   // https://online.sbis.ru/opendoc.html?guid=cc17df0e-6514-455d-a660-4f82769d2e90
+   // https://online.sbis.ru/opendoc.html?guid=c35989ad-81c9-4b94-9ed1-790019504c44
+   // https://online.sbis.ru/opendoc.html?guid=37f81d08-2cb8-40b4-b987-c14bbb128d39
+   //
+   // Использование "backface-visibility: hidden" приводит к лагам при скроле. Пример ошибки:
+   // https://online.sbis.ru/opendoc.html?guid=7c95e76d-432b-41c9-94c3-42e92c8b11d6
+   //
+   // Использование "transform: translate3d(0,0,0)" и аналогичных хаков с трансформацией - ломает анимацию
+   // (например, увеличение плитки).
+   //
+   //
+   // Методом "деления пополам", обнаружено что элемент с "position: fixed" приводит к данным артефактам. Установка
+   // данному элементу "tabindex: 1." исправляет артефакты, а "pointer-events: none" - предотвращает клик по нему.
+   z-index: 1;
+   pointer-events: none;
 }
 
 .controls-BaseControl__viewContainer {
