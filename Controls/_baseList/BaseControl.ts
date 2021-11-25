@@ -6897,6 +6897,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._getItemsContainer();
     }
 
+    _viewUnmount(): void {
+        this._viewReady = false;
+    }
+
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         this._viewReady = true;
