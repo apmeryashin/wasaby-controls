@@ -177,6 +177,7 @@ const ListView = Control.extend(
         },
 
         _beforeUnmount: function() {
+            this._notify('viewUnmount', []);
             if (this._listModel && !this._listModel.destroyed) {
                 this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
                 this._listModel.unsubscribe('indexesChanged', this._onIndexesChanged);
