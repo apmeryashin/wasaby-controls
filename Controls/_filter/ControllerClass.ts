@@ -20,6 +20,8 @@ import {RecordSet} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
 import {ICrud, PrefetchProxy, Rpc} from 'Types/source';
 
+import {updateUrlByFilter, getFilterFromUrl} from 'Controls/_filter/Utils/Url';
+
 export interface IFilterHistoryData {
     items: IFilterItem[];
     prefetchParams?: IPrefetchHistoryParams;
@@ -101,16 +103,23 @@ export default class FilterControllerClass extends mixin<
     }
 
     setFilterItems(historyItems: THistoryData): void {
+        const filterFromUrl = getFilterFromUrl();
         // TODO: storefix207100
         if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
             this._setFilterItems(
                 state.filterSource,
                 (!state.filterSource && this._options.fastFilterSource) || [],
-                historyItems
+                historyItems,
+                filterFromUrl
             );
         } else {
-            this._setFilterItems(this._options.filterButtonSource, this._options.fastFilterSource, historyItems);
+            this._setFilterItems(
+                this._options.filterButtonSource,
+                this._options.fastFilterSource,
+                historyItems,
+                filterFromUrl
+            );
         }
         this._applyItemsToFilter(Prefetch.applyPrefetchFromHistory(this._$filter, historyItems),
             this._$filterButtonItems, this._$fastFilterItems);
@@ -209,6 +218,8 @@ export default class FilterControllerClass extends mixin<
         ) {
             this._notify('filterSourceChanged', this._$filterButtonItems);
         }
+
+        this._addToUrl(this._$filterButtonItems);
 
         if (this._options.historyId) {
             if (this._options.prefetchParams) {
@@ -317,7 +328,8 @@ export default class FilterControllerClass extends mixin<
             options.historyItems,
             options.prefetchParams
         ).then((history) => {
-            this._setFilterItems(options.filterButtonSource, options.fastFilterSource, history);
+            const filterFromUrl = getFilterFromUrl();
+            this._setFilterItems(options.filterButtonSource, options.fastFilterSource, history, filterFromUrl);
             this._applyItemsToFilter(
                 Prefetch.applyPrefetchFromHistory(filter, history),
                 this._$filterButtonItems,
@@ -501,6 +513,16 @@ export default class FilterControllerClass extends mixin<
         }
     }
 
+    private _addToUrl(filterButtonItems: IFilterItem[]): void {
+        const items: IFilterItem[] = filterButtonItems/*.filter((item) => {
+            return item.saveToUrl || (this._options.saveToUrl && !item.hasOwnProperty('saveToUrl'));
+        })*/;
+
+        if (items.length) {
+            updateUrlByFilter(items);
+        }
+    }
+
     private _getHistoryData(filterButtonItems: IFilterItem[],
                             fastFilterItems: IFilterItem[],
                             prefetchParams?: IPrefetchHistoryParams): THistoryData {
@@ -578,14 +600,19 @@ export default class FilterControllerClass extends mixin<
     // мержит историю в итемы кнопки и итемы быстрых фильтров.
     private _setFilterItems(filterButtonOption: IFilterItem[],
                             fastFilterOption: IFilterItem[],
-                            history?: THistoryData): void {
+                            history?: THistoryData,
+                            filterFromUrl?: IFilterItem[]): void {
         let historyItems;
 
         if (history) {
             historyItems = history.items || (Array.isArray(history) ? history : []);
         }
 
-        this._$filterButtonItems = FilterControllerClass._getItemsByOption(filterButtonOption, historyItems);
+        this._$filterButtonItems = FilterControllerClass._getItemsByOption(
+            filterButtonOption,
+            historyItems,
+            filterFromUrl
+        );
         this._$fastFilterItems = FilterControllerClass._getItemsByOption(fastFilterOption, historyItems);
         this._setIsFastProperty(this._$filterButtonItems, this._$fastFilterItems);
     }
@@ -805,12 +832,15 @@ export default class FilterControllerClass extends mixin<
 
     // Возвращает итемы смерженнные с историей.
     private static _getItemsByOption(option: IFilterItem[] | Function,
-                                     history?: IFilterItem[]): IFilterItem[] {
+                                     history?: IFilterItem[],
+                                     filterFromUrl?: IFilterItem[]): IFilterItem[] {
         let result;
 
         if (option) {
             if (typeof option === 'function') {
                 result = option(history);
+            } else if (filterFromUrl) {
+                result = mergeSource(FilterControllerClass._cloneItems(option), filterFromUrl);
             } else if (history) {
                 result = mergeSource(FilterControllerClass._cloneItems(option), history);
             } else {
