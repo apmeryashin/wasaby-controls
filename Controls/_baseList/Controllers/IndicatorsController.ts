@@ -327,7 +327,9 @@ export default class IndicatorsController {
                 this._recountTopIndicator(scrollToFirstItem);
                 this._recountBottomIndicator();
                 // после перезагрузки скрываем глобальный индикатор
-                this.hideGlobalIndicator();
+                if (this.shouldHideGlobalIndicator()) {
+                    this.hideGlobalIndicator();
+                }
                 break;
         }
     }
