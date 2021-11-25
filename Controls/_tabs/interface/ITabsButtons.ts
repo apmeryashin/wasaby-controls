@@ -116,11 +116,11 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
      * </pre>
      * <pre class="brush: js; highlight: [5-22]">
      * // TS
-     * _selectedKey: null,
-     * _items: null,
-     * _beforeMount: function() {
-     *    this._selectedKey: '1',
-     *    this._items: new RecordSet({
+     * protected _selectedKey: string = null;
+     * protected _items: RecordSet = null;
+     * protected _beforeMount(options: ITabsOptions) {
+     *    this._selectedKey = '1';
+     *    this._items = new RecordSet({
      *       keyProperty: 'key',
      *       rawData: [
      *          {
