@@ -6,6 +6,8 @@ import { mixin } from 'Types/util';
 import {IOptions as ITileItemOptions} from './mixins/TileItem';
 import InvisibleStrategy from './strategies/Invisible';
 import {ITileAspectOptions} from '../TileView';
+import AddingTileStrategy from 'Controls/_tile/display/strategies/AddingTile';
+import {StrategyConstructor} from 'Controls/_display/Collection';
 
 export interface ITileCollectionOptions<
     S extends Model = Model,
@@ -20,6 +22,7 @@ export default class TileCollection<
     S extends Model = Model,
     T extends TileCollectionItem<S> = TileCollectionItem<S>
 > extends mixin<Collection, Tile>(Collection, Tile) {
+    protected _addingTileStrategy: StrategyConstructor<AddingTileStrategy> = AddingTileStrategy;
     constructor(options: ITileCollectionOptions<S, T>) {
         super(options);
         Tile.call(this, options);
@@ -44,11 +47,25 @@ export default class TileCollection<
     protected _createComposer(): itemsStrategy.Composer<S, CollectionItem<Model>> {
         const composer = super._createComposer();
 
+        composer.append(AddingTileStrategy, {
+            display: this
+        });
+
         composer.append(InvisibleStrategy, {
             display: this
         });
 
         return composer;
+    }
+
+    showAddingItem(): void {
+        this.appendStrategy(this._addingTileStrategy as StrategyConstructor<any>);
+        this._reIndex();
+    }
+
+    hideAddingItem(): void {
+        this.removeStrategy(this._addingTileStrategy);
+        this._reIndex();
     }
 }
 

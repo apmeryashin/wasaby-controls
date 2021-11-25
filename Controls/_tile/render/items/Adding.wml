@@ -1,0 +1,7 @@
+<div
+        attr:class="{{ (item || itemData).getWrapperClasses((item || itemData).getItemType(itemType, nodeContentTemplate), shadowVisibility, false, highlightOnHover, backgroundColorStyle, height, false, titleStyle) }}"
+        attr:style="{{ (item || itemData).getItemStyles('adding', width || itemWidth, staticHeight, imagePosition, imageViewMode) }}"
+        data-qa="controls-TileView__item_adding"
+>
+    <Controls.icons:Icon icon="icon-RoundPlus"/>
+</div>
