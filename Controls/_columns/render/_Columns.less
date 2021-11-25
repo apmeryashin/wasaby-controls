@@ -26,8 +26,11 @@
 }
 
 .controls-ColumnsView__itemActionsV_inside {
-   padding-right: var(--offset-right_itemActions);
-   height: var(--height_itemActions_columns);
+   min-width: var(--inline_height_l);
+   height: var(--inline_height_l);
+   padding: 0;
+   display: flex;
+   justify-content: center;
 }
 
 .ws-is-hover .controls-ColumnsView__item_shadow.controls-ColumnsView__item_hovering:hover {
