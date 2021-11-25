@@ -20,7 +20,6 @@ import {
     ISiblingStrategy
 } from 'Controls/baseList';
 import {Collection, CollectionItem, Tree, TreeItem} from 'Controls/display';
-import {selectionToRecord} from 'Controls/operations';
 import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
 import {MouseButtons, MouseUp} from 'Controls/popup';
 import 'css!Controls/list';
@@ -31,7 +30,11 @@ import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
 import {ExpandController} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
-import {applyReloadedNodes, getItemHierarchy, getRootsForHierarchyReload} from 'Controls/_tree/utils';
+import {
+    applyReloadedNodes,
+    getReloadItemsHierarchy,
+    getRootsForHierarchyReload
+} from 'Controls/_tree/utils';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -241,6 +244,15 @@ const _private = {
         return true;
     },
 
+    updateHaseMoreStorage(collection: Tree, sourceController: NewSourceController): void {
+        const hasMore = _private.prepareHasMoreStorage(
+            sourceController,
+            collection.getExpandedItems(),
+            collection.getHasMoreStorage()
+        );
+        collection.setHasMoreStorage(hasMore);
+    },
+
     prepareHasMoreStorage(
         sourceController: NewSourceController,
         expandedItems: TKey[],
@@ -253,19 +265,6 @@ const _private = {
         });
 
         return hasMore;
-    },
-
-    getEntries(selectedKeys: string|number[], excludedKeys: string|number[], source) {
-        let entriesRecord;
-
-        if (selectedKeys && selectedKeys.length) {
-            entriesRecord = selectionToRecord({
-                selected: selectedKeys || [],
-                excluded: excludedKeys || []
-            }, _private.getOriginalSource(source).getAdapter());
-        }
-
-        return entriesRecord;
     },
 
     loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey): Promise<RecordSet> {
@@ -355,22 +354,20 @@ const _private = {
                     collection.setMetaResults(meta.results);
                 }
 
-                collection.setHasMoreStorage(
-                    _private.prepareHasMoreStorage(
-                        sourceController, collection.getExpandedItems(), collection.getHasMoreStorage()
-                    )
-                );
+                _private.updateHaseMoreStorage(collection, sourceController);
 
                 return items;
             });
     },
 
-    getOriginalSource(source) {
-        while (source.getOriginal) {
-            source = source.getOriginal();
+    getOriginalSource<T = unknown>(source: T & {getOriginal?: () => T}): T {
+        let src = source;
+
+        while (src.getOriginal) {
+            src = source.getOriginal();
         }
 
-        return source;
+        return src;
     },
 
     /**
@@ -843,6 +840,32 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return newArgs.options.hierarchyReload
             ? _private.reloadItem(key, this.getViewModel() as Tree, this._options.filter, this.getSourceController())
             : super.reloadItem.apply(this, [newArgs.key, newArgs.options]);
+    }
+
+    /**
+     * Перезагружает указанные записи списка. Для этого отправляет запрос query-методом
+     * со значением текущего фильтра в поле [parentProperty] которого передаются идентификаторы
+     * родительских узлов.
+     */
+    reloadItems(ids: TKey[]): Promise<RecordSet | Error> {
+        const filter = cClone(this._options.filter);
+        const collection = this.getViewModel() as Tree;
+        const sourceController = this.getSourceController();
+
+        filter[this._options.parentProperty] = getReloadItemsHierarchy(collection, ids);
+
+        return sourceController
+            .load(undefined, undefined, filter)
+            .then((items: RecordSet) => {
+                const meta = items.getMetaData();
+                if (meta.results) {
+                    collection.setMetaResults(meta.results);
+                }
+
+                _private.updateHaseMoreStorage(collection, sourceController);
+
+                return items;
+            });
     }
 
     // region Drag
