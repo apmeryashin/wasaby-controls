@@ -23,7 +23,8 @@ define('Controls-demo/explorerNew/Search', [
             this._viewColumns = [
                {
                   displayProperty: 'title',
-                  width: 'auto'
+                  width: 'auto',
+                  compatibleWidth: '280px'
                },
                {
                   displayProperty: 'code',
