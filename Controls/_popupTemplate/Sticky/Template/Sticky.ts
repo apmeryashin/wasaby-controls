@@ -8,6 +8,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDragObject} from 'Controls/dragnDrop';
 import 'css!Controls/popupTemplate';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import {getRoundClass} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
 
 const enum POSITION {
     RIGHT = 'right',
@@ -20,6 +21,7 @@ interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions,
     stickyPosition?: object;
     borderStyle?: string;
     borderSize?: string;
+    roundBorder?: boolean;
 }
 
 /**
@@ -60,6 +62,14 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             this._options.stickyPosition.direction !== options.stickyPosition.direction) {
             this._verticalDirection = options.stickyPosition.direction.vertical;
         }
+    }
+
+    protected _getRoundedClass(options: IStickyTemplateOptions, type: string): string {
+        return getRoundClass({
+            options,
+            type,
+            hasRoundedBorder: options.roundBorder
+        });
     }
 
     protected _getCloseButtonWidth(): number {
@@ -135,20 +145,6 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         this._notify(eventName, [event]);
     }
 
-    protected _getRoundClass(): string {
-        if (!(this._options.headingCaption || this._options.headerContentTemplate)) {
-            if (this._options.footerContentTemplate) {
-                return 'controls-StickyTemplate__top-area_roundBorder';
-            } else {
-                return 'controls-StickyTemplate_roundBorder';
-            }
-        } else {
-            if (!this._options.footerContentTemplate) {
-                return 'controls-StickyTemplate__bottom_roundBorder';
-            }
-        }
-    }
-
     private static _getTheme(): string {
         return ManagerController.getPopupHeaderTheme();
     }
@@ -163,7 +159,8 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             headerBackgroundStyle: 'default',
             closeButtonViewMode: 'link',
             borderStyle: 'default',
-            borderSize: 'default'
+            borderSize: 'default',
+            roundBorder: true
         };
     }
 }
@@ -199,6 +196,12 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @name Controls/_popupTemplate/Sticky#headingFontSize
  * @cfg {String}
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#roundBorder
+ * @cfg {Boolean} Определяет будут ли скруглены углы окна.
+ * @default true
  */
 
 /**
