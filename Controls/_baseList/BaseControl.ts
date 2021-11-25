@@ -7085,7 +7085,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._dndListController) {
             if (dragEndResult instanceof Promise) {
                 this._displayGlobalIndicator();
-                dragEndResult.then(() => {
+                dragEndResult.finally(() => {
                     endDrag();
                     if (this._indicatorsController.shouldHideGlobalIndicator()) {
                         this._indicatorsController.hideGlobalIndicator();
