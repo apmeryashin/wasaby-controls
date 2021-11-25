@@ -1,6 +1,6 @@
 import {Model} from 'Types/entity';
 import {Tree} from 'Controls/display';
-import {TKey} from 'Controls/_interface/IItems';
+import {TKey} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 
 /**
@@ -20,6 +20,31 @@ export function getRootsForHierarchyReload(viewModel: Tree, nodeKey: TKey): TKey
     });
 
     return items;
+}
+
+/**
+ * Относительно переданного набора ids возвращает массив который содержит
+ * все идентификаторы их родительских узлов включая root.
+ * Результирующий массив содержит только уникальные значения.
+ */
+export function getReloadItemsHierarchy(collection: Tree, ids: TKey[]): TKey[] {
+    const result = [];
+
+    // Для каждого id из ids получаем его иерархию
+    // и в результирующий массив добавляем только уникальные значения
+    for (let i = 0; i < ids.length; i++) {
+        getItemHierarchy(collection, ids[i])
+            // Последний элемент это id самого итема, нам его не надо
+            .slice(0, -1)
+            // Оставляем только уникальные значения
+            .forEach((id) => {
+                if (result.indexOf(id) < 0) {
+                    result.push(id);
+                }
+            });
+    }
+
+    return result;
 }
 
 /**
@@ -88,8 +113,9 @@ export function nodeChildrenIterator(
 }
 
 /**
- * После перезагрузки записи, её родительских в дочерних узлов удаляет удаляет из коллекции записи, отсутствующие
- * в новом наборе.
+ * Ф-ия предназначена для обработки результата глубокой перезагрузки узла дерева.
+ * Удаляет из коллекции старые данные, которые отсутствуют в newItems.
+ * Поиск старых идет вглубь относительно указанного nodeKey.
  */
 export function applyReloadedNodes(
     viewModel: Tree,
