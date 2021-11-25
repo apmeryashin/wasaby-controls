@@ -20,7 +20,11 @@
                         class="controls-demo-pg-highlightOnHover-editor-padding"
                         scope="{{itemTemplate}}"
                         highlightOnHover="{{true}}"
-            />
+            >
+                <ws:afterEditorTemplate>
+                    <Controls.buttons:Button buttonStyle="pale" iconSize="s" icon="icon-Question2" viewMode="functionalButton"/>
+                </ws:afterEditorTemplate>
+            </ws:partial>
         </ws:itemTemplate>
     </Controls.propertyGrid:PropertyGrid>
 </div>

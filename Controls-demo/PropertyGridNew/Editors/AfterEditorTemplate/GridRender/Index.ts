@@ -1,10 +1,12 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls-demo/PropertyGridNew/PropertyGrid/Index';
 import {showType} from 'Controls/toolbars';
 import {IItemAction} from 'Controls/itemActions';
 import {Enum, RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {default as IPropertyGridItem} from 'Controls/_propertyGrid/IProperty';
+import {Memory} from 'Types/source';
+
+import * as template from 'wml!Controls-demo/PropertyGridNew/Editors/AfterEditorTemplate/GridRender/GridRender';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -17,7 +19,7 @@ export default class Demo extends Control<IControlOptions> {
         this._editingObject = new Model<IPropertyGridItem>({
             rawData: {
                 description: 'This is http://mysite.com',
-                tileView: true,
+                checkboxGroup: [1],
                 showBackgroundImage: true,
                 siteUrl: 'http://mysite.com',
                 videoSource: 'http://youtube.com/video',
@@ -43,9 +45,29 @@ export default class Demo extends Control<IControlOptions> {
                     type: 'text'
                 },
                 {
-                    name: 'tileView',
-                    caption: 'Список плиткой',
-                    group: 'boolean'
+                    name: 'checkboxGroup',
+                    caption: 'CheckboxGroup',
+                    editorTemplateName: 'Controls/propertyGrid:CheckboxGroupEditor',
+                    editorOptions: {
+                        source: new Memory({
+                            keyProperty: 'key',
+                            data: [
+                                {
+                                    key: 1,
+                                    title: 'First option'
+                                },
+                                {
+                                    key: 2,
+                                    title: 'Second option'
+                                },
+                                {
+                                    key: 3,
+                                    title: 'Third option'
+                                }
+                            ]
+                        }),
+                        keyProperty: 'key'
+                    }
                 },
                 {
                     caption: 'URL',
