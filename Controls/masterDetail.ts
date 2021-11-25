@@ -19,4 +19,4 @@ export {
     Base
 };
 export {default as List} from 'Controls/_masterDetail/List';
-export {TMasterVisibility} from 'Controls/_masterDetail/Base';
+export {TMasterVisibility, IMasterWidth} from 'Controls/_masterDetail/Base';
