@@ -6945,7 +6945,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _dragLeave(): void {
         this._insideDragging = false;
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (this._dndListController && this._dndListController.isDragging()) {
+        if (this._dndListController && this._dndListController.isDragging() && this._documentDragging) {
             const draggableItem = this._dndListController.getDraggableItem();
             if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
                 const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
@@ -7018,7 +7018,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let dragPosition;
         const targetItem = itemData;
         const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
-        if (this._dndListController.isDragging() && !targetIsNode) {
+        if (this._dndListController.isDragging() && !targetIsNode && this._documentDragging) {
             dragPosition = this._dndListController.calculateDragPosition({targetItem});
             if (dragPosition) {
                 const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
