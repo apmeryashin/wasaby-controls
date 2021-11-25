@@ -1,5 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {Base as dateUtils} from 'Controls/dateUtils';
 import IEditor from 'Controls/_propertyGrid/IEditor';
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 
@@ -37,7 +38,13 @@ class DateRangeEditor extends Control<IDateRangeEditorOptions> implements IEdito
     }
 
     protected _handleInputCompleted(event: SyntheticEvent, startDate: Date, endDate: Date): void {
-        this._notify('propertyValueChanged', [[startDate, endDate]], {bubbling: true});
+        if (DateRangeEditor._isValidDate(startDate) && DateRangeEditor._isValidDate(endDate)) {
+            this._notify('propertyValueChanged', [[startDate, endDate]], {bubbling: true});
+        }
+    }
+
+    private static _isValidDate(value: Date | null): boolean {
+        return value === null || dateUtils.isValidDate(value);
     }
 }
 export default DateRangeEditor;
