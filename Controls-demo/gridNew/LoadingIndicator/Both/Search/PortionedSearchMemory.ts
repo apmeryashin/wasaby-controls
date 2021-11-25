@@ -11,8 +11,15 @@ const DEFAULT_DELAY = 1000;
 export default class PositionSourceMemory extends Memory {
     private _littleDataToDown: boolean = false;
 
+    private _moreUpTrueAndWithoutData: boolean = false;
+    private _loadToUpCounterWhenSearch: number = 0;
+
     setLittleData(newValue: boolean): void {
         this._littleDataToDown = newValue;
+    }
+
+    setMoreUpTrueAndWithoutData(newValue: boolean): void {
+        this._moreUpTrueAndWithoutData = newValue;
     }
 
     query(query?: Query<unknown>): Promise<DataSet> {
@@ -30,6 +37,14 @@ export default class PositionSourceMemory extends Memory {
             position--;
         }
 
+        if (!isSearch) {
+            this._loadToUpCounterWhenSearch = 0;
+        }
+
+        if (isSearch && isPrepend) {
+            this._loadToUpCounterWhenSearch++;
+        }
+
         const delay = isSearch ? SEARCH_DELAY : DEFAULT_DELAY;
         let total = isPosition ? {before: true, after: true} : true;
         let more = isPosition ? {before: true, after: true} : true;
@@ -38,6 +53,8 @@ export default class PositionSourceMemory extends Memory {
         if (isSearch) {
             if (this._littleDataToDown && isAppend) {
                 limit = 1;
+            } else if (this._moreUpTrueAndWithoutData && isPrepend) {
+                limit = 0;
             } else {
                 limit = 3;
             }
@@ -56,7 +73,9 @@ export default class PositionSourceMemory extends Memory {
                 more = { before: true, after: true };
             } else if (this._littleDataToDown && isAppend) {
                 more = position < 5;
-            } else {
+            } else if (this._moreUpTrueAndWithoutData && isPrepend) {
+                more = this._loadToUpCounterWhenSearch < 1;
+            }  else {
                 more = isPrepend ? position > -60 : position < 60;
             }
 
