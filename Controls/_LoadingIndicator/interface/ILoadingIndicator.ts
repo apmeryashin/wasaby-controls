@@ -42,7 +42,7 @@ export default interface ILoadingIndicator {
  */
 
 /**
- * @typedef {String} Controls/LoadingIndicator/interface/ILoadingIndicator/Scroll.typedef
+ * @typedef {String} Controls/LoadingIndicator/interface/ILoadingIndicator/Scroll
  * @description Значения, которыми настраивается градиент для прокручивания объекта привязки.
  * @variant '' Без градиента.
  * @variant left Градиент слева направо (увелечение цветового наполнения).
