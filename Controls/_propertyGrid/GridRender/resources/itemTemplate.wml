@@ -85,7 +85,9 @@
         </div>
     </ws:if>
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
+        <!--TODO убрать условие afterEditorTemplate в классе после https://online.sbis.ru/opendoc.html?guid=5fdfb03c-5a9a-4a1c-9387-1b61ca40f9b0 -->
        <div class="controls-PropertyGrid__gridLayout_editor
+                   {{afterEditorTemplate ? 'controls-PropertyGrid__gridLayout_editor_column'}}
                    {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                    {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                    {{(!item.caption || _options.captionPosition === 'top') ? 'controls-PropertyGrid__gridLayout_editor-withoutCaption'}}
@@ -96,9 +98,10 @@
            <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">
                <ws:partial template="levelPadding"/>
            </ws:if>
+           <!--TODO убрать условие в классе после https://online.sbis.ru/opendoc.html?guid=5fdfb03c-5a9a-4a1c-9387-1b61ca40f9b0 -->
           <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
                       caption="{{item.caption}}"
-                      attr:class="controls-PropertyGrid__editor_control"
+                      attr:class="{{ afterEditorTemplate && options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control'}}"
                       scope="{{_options}}"/>
             <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
