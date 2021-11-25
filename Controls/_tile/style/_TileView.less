@@ -1,5 +1,13 @@
 @import 'Controls/_scroll/Scroll/_contentEnvironmentZIndex';
 
+// Fix this error in tile separately, because composition "backface-visibility" and "perspective" on "BaseControl"
+// fail tile items animation.
+// https://online.sbis.ru/opendoc.html?guid=44a46d1d-cdd4-412c-a0db-bd172a34b873
+.ws-is-chrome .controls-TileView__richTemplate_title,
+.ws-is-chrome .controls-TileView__title {
+   perspective: 1000px;
+}
+
 .controls-TileView_new {
    height: 100%;
 }
