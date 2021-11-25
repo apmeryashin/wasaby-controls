@@ -15,7 +15,7 @@
                     navigation="{{_navigation}}"
                     columns="{{_columns}}"
                     footerTemplate="{{footerTemplate}}"
-                    multiSelectVisibility="{{_options.multiSelect ? 'visible' : (_options.markerStyle !== 'primary' ? 'onhover' : 'hidden')}}"
+                    multiSelectVisibility="{{_options.multiSelect || _options.markerStyle !== 'primary' ? 'onhover' : 'hidden'}}"
                     markerVisibility="{{_options.multiSelect ? 'hidden' : 'onactivated'}}"
                     itemsReadyCallback="{{_itemsReadyCallback}}"
                     itemActions="{{_itemActions}}"
