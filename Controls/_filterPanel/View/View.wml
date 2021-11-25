@@ -43,7 +43,7 @@
                  on:groupClick="_groupClick()"
                  attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}
                           controls-FilterViewPanel__propertyGrid_viewMode-{{_options.viewMode}}">
-             <ws:itemsContainerPadding top="{{_options.viewMode === 'filterPanelStack' ? 'm' : 'null'}}" left="xl" right="xl" bottom="null"/>
+             <ws:itemsContainerPadding top="'null'" left="xl" right="xl" bottom="m"/>
              <ws:itemTemplate>
                <ws:partial template="Controls/propertyGrid:ItemTemplate"
                            attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
