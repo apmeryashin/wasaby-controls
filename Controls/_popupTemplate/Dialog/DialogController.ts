@@ -153,8 +153,14 @@ class DialogController extends BaseController {
         // Для актуальных размеров нужно снять старые значения
         const maxHeight = container.style.maxHeight;
         const height = container.style.height;
+
+        const getScrollContainer = () => {
+            const scrolls = container.querySelectorAll('.controls-Scroll__content');
+            // ScrollContainer может быть несколько (например в переключаемых областях), возьмем тот что виден.
+            return Array.prototype.filter.call(scrolls, (node) => node.clientWidth > 0)[0];
+        };
         // Если внутри лежит скроллконтейнер, то восстанавливаем позицию скролла после изменения размеров
-        const scroll = container.querySelector('.controls-Scroll__content');
+        const scroll = getScrollContainer();
         const scrollTop = scroll?.scrollTop;
         container.style.maxHeight = '';
         container.style.height = '';
