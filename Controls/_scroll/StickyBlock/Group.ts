@@ -97,6 +97,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     }
 
     protected _afterMount(): void {
+        this._checkMultilineGroup();
+    }
+
+    protected _checkMultilineGroup(): void {
         this._isMultilineGroup = this._container.closest('.controls-StickyBlock-multilineGroup') !== null;
     }
 
@@ -115,6 +119,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     get height(): number {
         // Group can be with style display: content. Use the height of the first header as the height of the group.
         const headersIds: number[] = Object.keys(this._headers);
+        // Дополнительно вызовем проверку на существование контейнера с классом, так как есть кейсы где при обновлении
+        // метод get height вызывается раньше чем _afterMount контрола.
+        this._checkMultilineGroup();
         if (this._isMultilineGroup) {
             // Под флагом рассчитываем реальную высоту группы, в которой задают заголовки в несколько строк. Сейчас
             // используется только в графиках.
