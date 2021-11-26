@@ -11,6 +11,7 @@ import {Bus} from 'Env/Event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import * as Deferred from 'Core/Deferred';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import initConstants from 'Controls/_popupTemplate/Util/getThemeConstants';
 
 /**
  * Stack Popup Controller
@@ -21,6 +22,9 @@ import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 const ACCORDEON_MIN_WIDTH = 50;
 const MIN_DISTANCE = 100;
+
+let themeConstants = {};
+const BASE_WIDTH_SIZES = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
 
 export interface IStackItem extends IPopupItem {
     containerWidth: number;
@@ -116,14 +120,24 @@ export class StackController extends BaseController {
     }
 
     getDefaultConfig(item: IStackItem): void|Promise<void> {
+        const promiseArray = [];
         this._preparePropStorageId(item);
-        if (item.popupOptions.propStorageId) {
-            return this._getPopupWidth(item).then(() => {
-                this._getDefaultConfig(item);
-            });
-        } else {
-            this._getDefaultConfig(item);
+        if (
+            (typeof item.popupOptions.width === 'string' && BASE_WIDTH_SIZES.includes(item.popupOptions.width)) ||
+            (typeof item.popupOptions.minWidth === 'string' && BASE_WIDTH_SIZES.includes(item.popupOptions.minWidth)) ||
+            (typeof item.popupOptions.maxWidth === 'string' && BASE_WIDTH_SIZES.includes(item.popupOptions.maxWidth))
+            ) {
+            promiseArray.push(this._initializationConstants());
         }
+        if (item.popupOptions.propStorageId) {
+            promiseArray.push(this._getPopupWidth(item));
+        }
+        if (promiseArray.length !== 0) {
+            return  Promise.all([promiseArray]).then((res) => {
+                return this._getDefaultConfig(item);
+            });
+        }
+        this._getDefaultConfig(item);
     }
 
     elementMaximized(item: IStackItem, container?: HTMLElement, maximized?: boolean): boolean {
@@ -138,6 +152,24 @@ export class StackController extends BaseController {
         this._update();
         this._savePopupWidth(item, item.popupOptions.width);
         return true;
+    }
+
+    private _initializationConstants(): Promise<void|object> {
+        const initConstansConfig = {
+            a: 'margin-right',
+            b: 'margin-left',
+            c: 'margin-bottom',
+            d: 'margin-top',
+            e: 'padding-top',
+            f: 'padding-right',
+            g: 'padding-bottom'
+        };
+        const constansClassName =
+            `controls-StackTemplate__themeConstants controls_popupTemplate_theme-${Controller.getTheme()}`;
+        return initConstants(constansClassName, initConstansConfig).then(
+            (result) => {
+                themeConstants = result;
+            });
     }
 
     private _updateMaximizedState(item: IStackItem, state?: boolean): void {
@@ -353,11 +385,17 @@ export class StackController extends BaseController {
 
     private _prepareSize(optionsSet: IPopupOptions[], property: string): number | void {
         for (let i = 0; i < optionsSet.length; i++) {
-            // get size, if it's not percentage value
-            if (optionsSet[i][property] &&
-                (typeof optionsSet[i][property] !== 'string' ||
-                    !optionsSet[i][property].includes('%'))) {
-                return parseInt(optionsSet[i][property], 10);
+            if (optionsSet[i][property]) {
+                if (typeof optionsSet[i][property] === 'string') {
+                    if (Object.keys(themeConstants).indexOf(optionsSet[i][property]) !== -1) {
+                        return themeConstants[optionsSet[i][property]];
+                    } else if (!optionsSet[i][property].includes('%')) {
+                        // get size, if it's not percentage value
+                        return parseInt(optionsSet[i][property], 10);
+                    }
+                } else {
+                    return parseInt(optionsSet[i][property], 10);
+                }
             }
         }
         return undefined;
