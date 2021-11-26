@@ -90,7 +90,7 @@ export default class Popup implements IPopupHelper {
                 message: config.options.message
             };
 
-            if (dialogOptions.eventHandlers?.onClose) {
+            if (dialogOptions?.eventHandlers?.onClose) {
                 confirmationOptions.closeHandler = dialogOptions.eventHandlers.onClose;
             }
 
