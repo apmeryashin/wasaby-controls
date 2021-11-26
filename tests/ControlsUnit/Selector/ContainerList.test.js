@@ -79,8 +79,8 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
 
       it('getItemActionVisibilityCallback', function() {
          var actionVisibility = true;
-         var visibilityCallback = function() {
-            return actionVisibility;
+         var visibilityCallback = function(action, item, isEditing) {
+            return actionVisibility || isEditing;
          };
          var itemNode = new entity.Model({
             keyProperty: 'id',
@@ -105,14 +105,17 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
          //With user callback
          assert.isTrue(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}));
          actionVisibility = false;
-         assert.isFalse(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}));
+         assert.isFalse(!!lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}));
 
          //With user callback and selector action
          actionVisibility = true;
-         assert.isTrue(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}, itemNode));
+         assert.isTrue(!!lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}, itemNode));
          actionVisibility = false;
-         assert.isFalse(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}, itemLeaf));
+         assert.isFalse(!!lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}, itemLeaf));
          actionVisibility = true;
+
+         actionVisibility = false;
+         assert.isTrue(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}, itemLeaf, true));
 
          assert.isTrue(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({
             itemActionVisibilityCallback: visibilityCallback,
