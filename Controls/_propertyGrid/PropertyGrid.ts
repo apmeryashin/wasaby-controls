@@ -960,7 +960,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return target;
     }
 
-    validate({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
+    startValidation({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
         const validatorArgs = {

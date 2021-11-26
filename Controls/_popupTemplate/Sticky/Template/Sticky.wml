@@ -1,7 +1,7 @@
 <Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
     <div class="controls_popupTemplate_theme-{{_options.theme}}
                 controls-StickyTemplate
-                {{_options.roundBorder !== false ? 'controls-StickyTemplate_roundBorder'}}
+                {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder'}}
                 controls-StickyTemplate-borderStyle-{{_options.borderStyle}}
                 controls-StickyTemplate-borderSize-{{_options.borderSize}}
                 {{_options.shadowVisible ? 'controls-StickyTemplate-shadow'}}
@@ -18,6 +18,7 @@
                         verticalDirection="{{_verticalDirection}}"
                         closeBtnPosition="{{_closeBtnPosition}}"
                         stickyOptions="{{_options}}"
+                        attr:class="{{_getRoundedClass(_options, 'header')}}"
                         on:mouseenter="_proxyEvent('headerMouseEnter')"
                         on:click="_proxyEvent('headerClick')"/>
         </ws:if>
@@ -33,11 +34,12 @@
             </ws:if>
         </ws:else>
         <ws:if data="{{_options.bodyContentTemplate}}">
-            <div class="controls-StickyTemplate__content-area {{_getRoundClass()}}
+            <div class="controls-StickyTemplate__content-area {{_getRoundedClass(_options, 'body')}}
                         {{_options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
                                                                    'controls-background-' + _options.backgroundStyle}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
-                            attr:class="{{_getRoundClass()}}"
+                            attr:class="{{_getRoundedClass(_options, 'body')}}"
+                            borderStyle="{{undefined}}"
                             isDragging="{{_dragging}}"
                             scope="{{_options}}"></ws:partial>
             </div>
@@ -46,7 +48,7 @@
             <ws:partial template="{{_options.footerContentTemplate}}"
                         scope="{{_options}}"
                         attr:class="controls-StickyTemplate__footer
-                                    controls-StickyTemplate__bottom_roundBorder
+                                    controls-PopupTemplate__roundBorder_bottom
                                     {{_options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
                                                                    'controls-background-' + _options.backgroundStyle}}"
                         on:click="_proxyEvent('footerClick')"></ws:partial>

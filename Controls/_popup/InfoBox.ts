@@ -137,8 +137,17 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
     protected _contentTouchStartHandler(event: Event): void {
         if (this._options.trigger === 'hover|touch') {
             this._startOpeningPopup();
-            event.preventDefault();
-            event.stopPropagation();
+            const {target} = event;
+            const isInput = target?.tagName === 'INPUT';
+            const isTextArea = target?.tagName === 'TEXTAREA';
+            const isContentEditable = target?.getAttribute('contenteditable') === 'true';
+
+            // Если тачнули в поле ввода, то не останавливаем событие, иначе не покажется клавиатура
+            const needPrevent = !isInput && !isTextArea && !isContentEditable;
+            if (needPrevent) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
         }
     }
 
@@ -162,14 +171,14 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
         }
     }
 
-    private _mouseLeaveHandler(relatedTarget?: HTMLElement): void {
+    private _mouseLeaveHandler(relatedTarget?: EventTarget, infoboxTemplate?: Control): void {
         const upTree = relatedTarget ? goUpByControlTree(relatedTarget) : [];
-        if (!relatedTarget || !upTree.includes(this)) {
+        if (!relatedTarget || !upTree.includes(infoboxTemplate)) {
             this._closeCalmTimer.start(300);
         }
     }
 
-    private _resultHandler(event: SyntheticEvent<MouseEvent>): void {
+    private _resultHandler(event: SyntheticEvent<MouseEvent>, infoboxTemplate: Control): void {
         switch (event.type) {
             case 'mouseenter':
                 this._openCalmTimer.stop();
@@ -179,7 +188,7 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
                 if (this._options.trigger === 'hover' || this._options.trigger === 'hover|touch') {
                     this._openCalmTimer.stop();
                     const {relatedTarget} = event.nativeEvent;
-                    this._mouseLeaveHandler(relatedTarget);
+                    this._mouseLeaveHandler(relatedTarget, infoboxTemplate);
                 }
                 break;
             case 'mousedown':

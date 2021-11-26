@@ -1,6 +1,8 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls-demo/list_new/ColumnsView/roundBorder/l/l');
 import {Memory as MemorySource, Memory} from 'Types/source';
+import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
+
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 
 const NUMBER_OF_ITEMS = 10;
@@ -10,7 +12,7 @@ export default class RenderDemo extends Control {
     protected _viewSource: Memory;
     private _dataArray: Array<{key: number, title: string}>;
 
-    protected _itemActions: [object];
+    protected _itemActions: IItemAction[];
 
     protected _beforeMount(): void {
         this._dataArray = generateData<{key: number, title: string}>({
@@ -24,13 +26,21 @@ export default class RenderDemo extends Control {
             data: this._dataArray,
             keyProperty: 'key'
         });
-        this._itemActions = [{
-            id: 1,
-            icon: 'icon-Erase',
-            iconStyle: 'danger',
-            title: 'delete',
-            showType: 2
-        }];
+        this._itemActions = [
+            {
+                id: 1,
+                icon: 'icon-EmptyMessage',
+                title: 'message',
+                showType: TItemActionShowType.MENU
+            },
+            {
+                id: 2,
+                icon: 'icon-Erase',
+                iconStyle: 'danger',
+                title: 'delete',
+                showType: TItemActionShowType.MENU
+            }
+        ];
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

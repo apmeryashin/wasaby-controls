@@ -1,10 +1,11 @@
 <Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
     <div class="controls_popupTemplate_theme-{{_options.theme}} controls-DialogTemplate
-                {{!_options.maximize ? 'controls-DialogTemplate__border-radius'}}
+                {{!_options.maximize ? 'controls-PopupTemplate__roundBorder'}}
                 {{_options.draggable ? 'ws-window-draggable'}}" ws-tab-cycling="true">
         <ws:if data="{{_options.headingCaption || _options.headerContentTemplate }}">
             <ws:partial template="Controls/_popupTemplate/Dialog/Template/Header"
                         scope="{{_options}}"
+                        attr:class="{{_getRoundedClass(_options, 'header')}}"
                         on:mousedown="_onMouseDown()"
                         on:mouseup="_onMouseUp()"
                         on:touchstart="_onMouseDown()"
@@ -24,9 +25,10 @@
             </div>
         </ws:else>
         <ws:if data="{{ _options.bodyContentTemplate }}">
-            <div class="controls-DialogTemplate__content-area controls-background-{{_options.backgroundStyle}} {{_getRoundClass()}}">
+            <div class="controls-DialogTemplate__content-area controls-background-{{_options.backgroundStyle}}
+                                                                                {{_getRoundedClass(_options, 'body')}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
-                            attr:class="{{_getRoundClass()}}"
+                            attr:class="{{_getRoundedClass(_options, 'body')}}"
                             scope="{{_options.contentAreaOptions}}"
                             bodyContentTemplate="{{null}}"
                             headerContentTemplate="{{null}}"
@@ -38,7 +40,7 @@
                         attr:class="controls-DialogTemplate__footer
                                     {{_options.backgroundStyle === 'default' ?
                                     'controls-DialogTemplate__footerBackgroundColor' : 'controls-background-' + _options.backgroundStyle}}
-                                    {{!_options.maximize ? 'controls-DialogTemplate__footer-area_roundBorder'}}"/>
+                                    {{!_options.maximize ? 'controls-PopupTemplate__roundBorder_bottom'}}"/>
         </ws:if>
     </div>
 </Controls.dragnDrop:Container>

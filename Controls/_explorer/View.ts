@@ -743,6 +743,15 @@ export default class Explorer extends Control<IExplorerOptions> {
         return treeControl.reloadItem.apply(treeControl, arguments);
     }
 
+    /**
+     * Перезагружает указанные записи списка. Для этого отправляет запрос query-методом
+     * со значением текущего фильтра в поле [parentProperty] которого передаются идентификаторы
+     * родительских узлов.
+     */
+    reloadItems(ids: TKey[]): Promise<RecordSet | Error> {
+        return this._children.treeControl.reloadItems(ids);
+    }
+
     //region edit
     beginEdit(options: object): Promise<void | {canceled: true}> {
         return this._children.treeControl.beginEdit(options);

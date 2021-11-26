@@ -6,7 +6,8 @@ import {ItemsFactory, itemsStrategy, ITreeOptions, Tree, TreeItem} from 'Control
 import InvisibleStrategy from './strategy/Invisible';
 
 /**
- * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
+ * Проверяет видимость элементов коллекции.
+ * Элемент виден если это корневой элемент, запись группы или крошек, или дочерний элемент относительно крошек.
  * @param {TreeItem} item
  */
 function itemIsVisible(item: TreeItem): boolean  {
@@ -15,14 +16,7 @@ function itemIsVisible(item: TreeItem): boolean  {
     }
 
     const parent = item.getParent();
-    // корневой узел не может быть свернут
-    if (!parent || parent['[Controls/_display/BreadcrumbsItem]'] || parent.isRoot()) {
-        return true;
-    } else if (!parent.isExpanded()) {
-        return false;
-    }
-
-    return itemIsVisible(parent);
+    return !parent || parent['[Controls/_display/BreadcrumbsItem]'] || parent.isRoot();
 }
 
 export interface ITreeTileCollectionOptions<

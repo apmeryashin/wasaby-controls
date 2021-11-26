@@ -6,6 +6,7 @@ import * as firstCellTemplate from 'wml!Controls-demo/gridNew/EditInPlace/Single
 import { IItemAction, TItemActionShowType } from 'Controls/itemActions';
 import { IColumnRes } from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
 import { Editing } from 'Controls-demo/gridNew/DemoHelpers/Data/Editing';
+import {Record as entityRecord} from 'Types/entity';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -13,18 +14,38 @@ export default class extends Control {
     private _itemActions: IItemAction[];
     private _columns: IColumnRes[];
     private _multiSelectVisibility: 'visible' | 'hidden' | 'onhover' = 'hidden';
+    private _fakeId = 0;
     private _selectedKeys = [];
+    private _isEmptySource = false;
 
     protected _beforeMount(): void {
-        this._setViewSource();
+        this._setViewSource(this._isEmptySource);
         this._setColumns();
         this._setItemActions();
     }
 
-    private _setViewSource(): void {
+    private _setViewSource(isEmpty: boolean): void {
         this._viewSource = new Memory({
             keyProperty: 'key',
-            data: Editing.getEditingData()
+            data: isEmpty ? [] : Editing.getEditingData()
+        });
+    }
+
+    protected _beginAdd(): void {
+        this._children.grid.beginAdd({
+            columnIndex: 0,
+            item: new entityRecord({
+                rawData: {
+                    key: ++this._fakeId,
+                    title: '',
+                    description: '',
+                    price: '',
+                    balance: '',
+                    balanceCostSumm: '',
+                    reserve: '',
+                    costPrice: ''
+                }
+            })
         });
     }
 
@@ -54,6 +75,13 @@ export default class extends Control {
 
     _toggleMultiSelectVisibility(e, visibility): void {
         this._multiSelectVisibility = visibility;
+    }
+
+    _toggleSource(e, isEmptySource): void {
+        if (this._isEmptySource !== isEmptySource) {
+            this._isEmptySource = isEmptySource;
+            this._setViewSource(isEmptySource);
+        }
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

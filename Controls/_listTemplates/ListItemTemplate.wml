@@ -89,7 +89,7 @@
                   item="{{_options.item || _options.itemData}}"
                   isEditing="{{item.isEditing()}}"
                   imageProperty="{{_options.imageProperty}}"
-                  imagePosition="{{_options.imagePosition}}"
+                  imagePosition="{{_options.imageViewMode === 'none' ? 'none' : _options.imagePosition}}"
                   imageFit="{{_options.imageFit}}"
                   imageGradientColor="{{_options.imageGradientColor}}"
                   afterImageTemplate="{{_options.afterImageTemplate}}"

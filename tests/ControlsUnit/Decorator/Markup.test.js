@@ -1644,7 +1644,7 @@ define([
                   'class': 'asLink',
                   rel: 'noreferrer noopener',
                   href: src,
-                  target: '_blank'  
+                  target: '_blank'
                },
                src
             ]];

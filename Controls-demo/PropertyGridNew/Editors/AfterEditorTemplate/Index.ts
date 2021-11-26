@@ -1,17 +1,8 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import { Control, TemplateFunction } from 'UI/Base';
 import * as template from 'wml!Controls-demo/PropertyGridNew/Editors/AfterEditorTemplate/AfterEditorTemplate';
-import {getEditingObject, getSource} from 'Controls-demo/PropertyGridNew/resources/Data';
 
-export default class Demo extends Control<IControlOptions> {
+export default class Demo extends Control {
     protected _template: TemplateFunction = template;
-    protected _editingObject: object;
-    protected _typeDescription: object[];
 
-    protected _beforeMount(): void {
-        this._editingObject = getEditingObject();
-        this._typeDescription = getSource();
-    }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo',
-        'Controls-demo/PropertyGridNew/PropertyGrid'];
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
