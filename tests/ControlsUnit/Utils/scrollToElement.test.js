@@ -158,7 +158,7 @@ define([
                },
                closest: () => {}
             };
-            scroll.scrollToElement(element, false, true);
+            scroll.scrollToElement(element, 'top', true);
             assert.equal(element.parentElement.scrollTop, 5);
          });
 
@@ -226,7 +226,7 @@ define([
                },
                closest: () => {}
             };
-            scroll.scrollToElement(element, true);
+            scroll.scrollToElement(element, 'bottom');
             assert.equal(element.parentElement.scrollTop, 55);
          });
 
@@ -275,7 +275,7 @@ define([
                },
                closest: () => []
             };
-            scroll.scrollToElement(element, false, true);
+            scroll.scrollToElement(element, 'top', true);
             assert.equal(element.parentElement.parentElement.scrollTop, 0);
             assert.equal(element.parentElement.scrollTop, 10);
          });
@@ -310,7 +310,7 @@ define([
                },
                closest: () => {}
             };
-            scroll.scrollToElement(element, true);
+            scroll.scrollToElement(element, 'bottom');
             assert.equal(element.parentElement.scrollTop, 54);
          });
 
@@ -348,7 +348,7 @@ define([
                },
                closest: () => {}
             };
-            scroll.scrollToElement(element, true);
+            scroll.scrollToElement(element, 'bottom');
             assert.equal(element.parentElement.scrollTop, 64);
          })
 
@@ -391,7 +391,7 @@ define([
                   className: '',
                   closest: () => {}
                };
-               scroll.scrollToElement(element, true);
+               scroll.scrollToElement(element, 'bottom');
                assert.equal(element.parentElement.scrollTop, 75);
             });
 
@@ -412,7 +412,7 @@ define([
                   className: '',
                   closest: () => {}
                };
-               scroll.scrollToElement(element, true);
+               scroll.scrollToElement(element, 'bottom');
                assert.equal(element.parentElement.scrollTop, 75);
             });
          });
@@ -531,7 +531,7 @@ define([
                },
                closest: () => {}
             };
-            scroll.scrollToElement(element, false, true);
+            scroll.scrollToElement(element, 'top', true);
             assert.equal(element.parentElement.scrollTop, -5);
          });
 
@@ -569,7 +569,7 @@ define([
                   top: 5
                }
             };
-            scroll.scrollToElement(element, false, true);
+            scroll.scrollToElement(element, 'top', true);
             assert.equal(element.parentElement.scrollTop, 25);
          });
 
@@ -605,7 +605,7 @@ define([
                },
                closest: () => {}
             };
-            scroll.scrollToElement(element, false, true);
+            scroll.scrollToElement(element, 'top', true);
             assert.equal(element.parentElement.scrollTop, 15);
          });
 
@@ -639,7 +639,7 @@ define([
                },
                closest: () => {}
             };
-            scroll.scrollToElement(element, true);
+            scroll.scrollToElement(element, 'bottom');
             assert.equal(element.parentElement.scrollTop, -55);
          });
 
@@ -682,7 +682,7 @@ define([
                   },
                   closest: () => {}
                };
-               scroll.scrollToElement(element, true);
+               scroll.scrollToElement(element, 'bottom');
                assert.equal(element.parentElement.scrollTop, -25);
             });
          });
