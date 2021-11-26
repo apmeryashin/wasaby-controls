@@ -4,8 +4,8 @@
                     on:itemClick="_select()"
                     on:markedKeyChanged="_markedKeyChangedHandler()"
                     suggestDirectionChangedCallback="{{_suggestDirectionChangedCallback}}"
-                    templateName="{{_options.suggestTemplate.templateName}}"
-                    templateOptions="{{_options.suggestTemplate.templateOptions}}"
+                    templateName="{{_suggestTemplate.templateName}}"
+                    templateOptions="{{_suggestTemplate.templateOptions}}"
                     emptyTemplate="{{_emptyTemplate}}"
                     source="{{_options.source}}"
                     navigation="{{_options.navigation}}"
@@ -33,7 +33,7 @@
                     </ws:caption>
                 </ws:partial>
             </ws:if>
-            <ws:if data="{{_options.suggestTemplate}}">
+            <ws:if data="{{_suggestTemplate}}">
                 <Controls.LoadingIndicator attr:class="controls-Suggest__indicator" isGlobal="{{false}}" useSpinner="{{true}}" name="indicator">
                     <Controls.event:Register name="inputKeydown" register="inputKeydown">
                         <ws:partial template="suggestTpl" attr:style="{{_getSuggestPopupStyles(content.suggestWidth)}}"/>
