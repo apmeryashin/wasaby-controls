@@ -48,17 +48,19 @@
                 </div>
             </ws:else>
 
-            <div class="controls-StackTemplate__content-area
+            <ws:if data="{{ _options.bodyContentTemplate }}">
+                <div class="controls-StackTemplate__content-area
                         {{_options.backgroundStyle === 'default' ? 'controls-StackTemplate_backgroundColor' : 'controls-background-' + _options.backgroundStyle}}">
-                <ws:partial template="{{_options.bodyContentTemplate}}"
-                            scope="{{_options}}"
-                            hasRightTemplate="{{_hasRightPanel}}"
-                            bodyContentTemplate="{{null}}"
-                            headerContentTemplate="{{null}}"
-                            footerContentTemplate="{{null}}">  <!-- Опция с тем же названием есть на выпадающем списке.
+                    <ws:partial template="{{_options.bodyContentTemplate}}"
+                                scope="{{_options}}"
+                                hasRightTemplate="{{_hasRightPanel}}"
+                                bodyContentTemplate="{{null}}"
+                                headerContentTemplate="{{null}}"
+                                footerContentTemplate="{{null}}">  <!-- Опция с тем же названием есть на выпадающем списке.
                                                                     Чтобы опция не пролетала до выпадающего списка, который лежит в стеке -->
-                </ws:partial>
-            </div>
+                    </ws:partial>
+                </div>
+            </ws:if>
 
             <ws:if data="{{_options.footerContentTemplate }}">
                 <div class="controls-StackTemplate__bottomArea
