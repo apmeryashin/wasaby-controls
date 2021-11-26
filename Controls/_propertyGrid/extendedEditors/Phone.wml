@@ -1,0 +1,6 @@
+<Controls.Container.Async templateName="Controls/input:Phone">
+    <ws:partial template="{{content.resolvedTemplate}}"
+                scope="{{_options}}"
+                bind:value="_value"
+                on:inputCompleted="_handleInputCompleted()"/>
+</Controls.Container.Async>
