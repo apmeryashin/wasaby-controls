@@ -1,11 +1,14 @@
 import type { IItemsRange } from './ScrollController';
 import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
-import { getDimensions, getOffsetTop } from 'Controls/sizeUtils';
+import { getOffsetTop } from 'Controls/sizeUtils';
+
+export type TItemSizeGetter = (element: HTMLElement) => IItemSize;
 
 export interface IItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
     itemsQuerySelector: string;
+    itemSizeGetter: TItemSizeGetter;
 }
 
 export interface IItemSize {
@@ -22,10 +25,12 @@ export class ItemsSizesController {
     private _itemsQuerySelector: string;
     private _itemsContainer: HTMLElement;
     private _itemsSizes: IItemsSizes = [];
+    private _itemSizeGetter: TItemSizeGetter;
 
     constructor(options: IItemsSizesControllerOptions) {
         this._itemsContainer = options.itemsContainer;
         this._itemsQuerySelector = options.itemsQuerySelector;
+        this._itemSizeGetter = options.itemSizeGetter;
     }
 
     getItemsSizes(): IItemsSizes {
@@ -112,10 +117,8 @@ export class ItemsSizesController {
                     hiddenItemsOffset = lastHiddenItem.offset + lastHiddenItem.size;
                 }
                 itemsElements.forEach((element: HTMLElement) => {
-                    this._itemsSizes[position] = {
-                        size: getDimensions(element).height,
-                        offset: getOffsetTop(element) + hiddenItemsOffset
-                    };
+                    this._itemsSizes[position] = this._itemSizeGetter(element);
+                    this._itemsSizes[position].offset += hiddenItemsOffset;
                     position++;
                 });
             }

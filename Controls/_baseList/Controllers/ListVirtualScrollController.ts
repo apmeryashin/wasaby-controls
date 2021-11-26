@@ -27,10 +27,13 @@ import {
     IIndexesChangedParams,
     IItemsEndedCallback,
     IScheduledRestoreScrollParams,
-    IActiveElementChangedChangedCallback
+    IActiveElementChangedChangedCallback,
+    IDirection
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
-import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
-import type { ITriggersVisibility } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import type { IItemsSizes, IItemSize } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
+import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import {TriggerOffsetType} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import {getDimensions, getOffsetTop} from 'Controls/sizeUtils';
 
 export interface IShadowVisibility {
     backward: boolean;
@@ -209,6 +212,9 @@ export class ListVirtualScrollController {
             listContainer: options.listContainer,
 
             itemsQuerySelector: options.itemsQuerySelector,
+            itemSizeGetter: ListVirtualScrollController._itemSizeGetter,
+            triggerOffsetType: TriggerOffsetType.VERTICAL,
+            applyTriggerOffsetCallback: ListVirtualScrollController._applyTriggerOffsetCallback,
             triggersQuerySelector: options.triggersQuerySelector,
 
             triggersVisibility: options.triggersVisibility,
@@ -240,6 +246,21 @@ export class ListVirtualScrollController {
         });
 
         this._scrollController.resetItems(totalCount, false);
+    }
+
+    private static _itemSizeGetter(element: HTMLElement): IItemSize {
+        return {
+            size: getDimensions(element).height,
+            offset: getOffsetTop(element)
+        };
+    }
+
+    private static _applyTriggerOffsetCallback(element: HTMLElement, direction: IDirection, offset: number): void {
+        if (direction === 'backward') {
+            element.style.top = `${offset}px`;
+        } else {
+            element.style.bottom = `${offset}px`;
+        }
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {

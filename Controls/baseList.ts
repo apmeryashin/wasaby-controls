@@ -86,6 +86,16 @@ export {default as VirtualScroll} from './_baseList/ScrollContainer/VirtualScrol
 export {MoveController, IMoveControllerOptions}  from 'Controls/_baseList/Controllers/MoveController';
 //endregion
 
+//region new scroll
+export {
+    ScrollController as NewScrollController,
+    IDirection as IDirectionNew,
+    IPlaceholders
+} from './_baseList/Controllers/ScrollController/ScrollController';
+export {IItemSize} from './_baseList/Controllers/ScrollController/ItemsSizeController';
+export {TriggerOffsetType} from './_baseList/Controllers/ScrollController/ObserversController';
+//endregion
+
 // region Indicators
 export * as IndicatorTemplate from 'wml!Controls/_baseList/indicators/IndicatorTemplate';
 export * as LoadingIndicatorItemTemplate from 'wml!Controls/_baseList/indicators/LoadingIndicatorTemplate';
