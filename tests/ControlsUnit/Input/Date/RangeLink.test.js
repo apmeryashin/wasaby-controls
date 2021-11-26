@@ -19,13 +19,13 @@ define([
       theme: 'default'
    };
 
-   describe('Controls/_dateRange/RangeSelector', function() {
+   describe('Controls/_dateRange/Selector', function() {
       describe('initialization', function() {
          it('should set endValue if selectionType is equal "single"', function() {
             const
                date = new Date(2019, 0),
                component = calendarTestUtils.createComponent(
-                  dateRange.RangeSelector, { startValue: date, selectionType: 'single' });
+                  dateRange.Selector, { startValue: date, selectionType: 'single' });
 
             assert.equal(component._rangeModel.startValue, date);
             assert.equal(component._rangeModel.endValue, date);
@@ -36,10 +36,10 @@ define([
          it('should set endValue if selectionType is equal "single"', function() {
             const
                date = new Date(2019, 0),
-               component = calendarTestUtils.createComponent(dateRange.RangeSelector, {});
+               component = calendarTestUtils.createComponent(dateRange.Selector, {});
 
             component._beforeUpdate(
-               calendarTestUtils.prepareOptions(dateRange.RangeSelector, { startValue: date, selectionType: 'single' }));
+               calendarTestUtils.prepareOptions(dateRange.Selector, { startValue: date, selectionType: 'single' }));
 
             assert.equal(component._rangeModel.startValue, date);
             assert.equal(component._rangeModel.endValue, date);
@@ -54,7 +54,7 @@ define([
                   theme: 'default',
                   endValue: new Date(2019, 0, 1)
                }, options),
-               component = calendarTestUtils.createComponent(dateRange.RangeSelector, opts),
+               component = calendarTestUtils.createComponent(dateRange.Selector, opts),
                TARGET = 'value';
             component._options.nextArrowVisibility = true;
             component._children = {
@@ -88,7 +88,7 @@ define([
                   captionFormatter: function(){},
                   readOnly: true
                },
-               component = calendarTestUtils.createComponent(dateRange.RangeSelector, cMerge(cClone(extOptions), options));
+               component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(extOptions), options));
             component._children = {
                linkView: {
                    getPopupTarget: sinon.fake()
@@ -133,7 +133,7 @@ define([
             }].forEach(function (test) {
                it(`${JSON.stringify(test)}`, function () {
                   const
-                     component = calendarTestUtils.createComponent(dateRange.RangeSelector, cMerge(cClone(test), options));
+                     component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(test), options));
                   component._children = {
                      linkView: {
                          getPopupTarget: sinon.fake()
@@ -163,7 +163,7 @@ define([
             }].forEach(function (test) {
                it(`${JSON.stringify(test)}`, function () {
                   const
-                     component = calendarTestUtils.createComponent(dateRange.RangeSelector, cMerge(cClone(test), options));
+                     component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(test), options));
                   component._children = {
                      linkView: {
                          getPopupTarget: sinon.fake()
@@ -186,7 +186,7 @@ define([
          it('should generate valueChangedEvent and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(dateRange.RangeSelector, options),
+               component = calendarTestUtils.createComponent(dateRange.Selector, options),
                startValue = new Date(2018, 11, 10),
                endValue = new Date(2018, 11, 13);
 
@@ -208,7 +208,7 @@ define([
          it('should set range on model', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(dateRange.RangeSelector, options),
+               component = calendarTestUtils.createComponent(dateRange.Selector, options),
                startValue = new Date(2018, 11, 10),
                endValue = new Date(2018, 11, 13);
 
@@ -226,7 +226,7 @@ define([
       describe('_getPopupOptions', () => {
          it('should set undefined instead of null if selectionType="single"', () => {
             const component = calendarTestUtils.createComponent(
-               dateRange.RangeSelector,
+               dateRange.Selector,
                {
                   ...options,
                   selectionType: 'single'
