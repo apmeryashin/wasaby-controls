@@ -135,3 +135,8 @@
    perspective: 1000;
    backface-visibility: hidden;
 }
+
+.controls-Scroll-Container_smoothing {
+   // Необходимо с целью решения баги на MacOS, когда уголки тени скролл-контейнера выходят за контейнер.
+   will-change: transform;
+}

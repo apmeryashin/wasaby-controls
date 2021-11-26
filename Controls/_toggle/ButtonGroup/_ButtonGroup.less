@@ -14,8 +14,8 @@
 }
 
 .controls-Button_buttonGroup_style-readOnly-buttonGroupSelected {
-   background: var(--readonly_marker_color_switcher);
-   border-color: var(--readonly_marker_color_switcher);
+   background: var(--readonly_contrast_background-color);
+   border-color: var(--readonly_contrast_background-color);
    color: var(--contrast_text-color);
 }
 
@@ -42,7 +42,7 @@
 
 .controls-ButtonGroup__button_withMargin {
    margin-right: var(--offset_m);
-   margin-bottom: var(--offset_m);
+   margin-top: var(--offset_m);
 }
 
 .controls-ButtonGroup__wrapper {
@@ -51,6 +51,7 @@
 
 .controls-ButtonGroup__wrapper-horizontal {
    flex-flow: row wrap;
+   margin-top: calc(-1 * var(--offset_m));
 }
 
 .controls-ButtonGroup__wrapper-vertical {

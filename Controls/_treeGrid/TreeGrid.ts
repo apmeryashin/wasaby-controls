@@ -9,6 +9,8 @@ import TreeGridViewTable from 'Controls/_treeGrid/TreeGridViewTable';
 import { Model } from 'Types/entity';
 import { isFullGridSupport } from 'Controls/display';
 import ITreeGrid, {IOptions as ITreeGridOptions} from 'Controls/_treeGrid/interface/ITreeGrid';
+import {TKey} from 'Controls/interface';
+import {RecordSet} from 'Types/collection';
 import 'css!Controls/grid';
 import 'css!Controls/treeGrid';
 
@@ -91,6 +93,15 @@ export default class TreeGrid extends Grid implements ITreeGrid {
 
     getPrevItem(key: CrudEntityKey): Model {
         return this._children.listControl.getPrevItem(key);
+    }
+
+    /**
+     * Перезагружает указанные записи списка. Для этого отправляет запрос query-методом
+     * со значением текущего фильтра в поле [parentProperty] которого передаются идентификаторы
+     * родительских узлов.
+     */
+    reloadItems(ids: TKey[]): Promise<RecordSet | Error> {
+        return this._children.listControl.reloadItems(ids);
     }
 
     protected _getModelConstructor(): string {

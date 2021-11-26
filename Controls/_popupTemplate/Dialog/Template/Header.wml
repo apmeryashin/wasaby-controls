@@ -1,7 +1,7 @@
 <div class="controls-DialogTemplate__top-area controls-background-{{_options.headerBackgroundStyle}}
             {{_options.draggable ? 'controls-DialogTemplate__top-area-' + _options.dragState }}
             {{_options.headerBorderVisible ? 'controls-DialogTemplate__top-area-border'}}
-            {{!_options.maximize ? 'controls-DialogTemplate__top-area_roundBorder'}}">
+            {{!_options.maximize ? 'controls-PopupTemplate__roundBorder_top'}}">
    <div class="controls-DialogTemplate__top-area-content">
       <ws:if data="{{_options.headingCaption}}">
          <div class="controls-DialogTemplate__caption">

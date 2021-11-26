@@ -214,6 +214,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         this._register();
         // name на partial не работает, поэтому контентную область ищем через querySelector.
         this._content = this._container.querySelector(CONTENT_CLASS);
+        this._updateIsPixelRatioBug();
         this._subPixelArtifactClass = this._getSubPixelArtifactFixClass();
         this._topGapFixClass = this._getTopGapFixClass();
     }
@@ -545,7 +546,11 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _updateIsPixelRatioBug(): void {
         const DESKTOP_PIXEL_RATIOS_BUG = [0.75, 1.25, 1.75];
         let result = false;
-        if (!detection.isMobilePlatform) {
+        if (detection.isMobilePlatform) {
+            if (!detection.isMobileAndroid) {
+                result = true;
+            }
+        } else {
             // Щель над прилипающим заголовком появляется на десктопах на масштабе 75%, 125% и 175%
             if (DESKTOP_PIXEL_RATIOS_BUG.indexOf(this._getDevicePixelRatio()) !== -1) {
                 result = true;
@@ -968,7 +973,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/debug/scroll-container/ после
         // https://online.sbis.ru/opendoc.html?guid=9e7f5914-3b96-4799-9e1d-9390944b4ab3
         const topGapFixOff = this._content?.classList.contains('controls-StickyBlock__aboveBorder');
-        if (this._isMobileIOS && this._isPixelRatioBug && !topGapFixOff) {
+        if (this._isPixelRatioBug && !topGapFixOff) {
             result = `controls-StickyBlock__topGapFix-${this._options.backgroundStyle}`;
         }
         return result;

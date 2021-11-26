@@ -676,7 +676,7 @@ define(
                DialogController._getPopupSizes = () => newPopupSizes;
                DialogController.resizeInner(item, {
                   style: {},
-                  querySelector: () => null
+                  querySelectorAll: () => []
                });
                DialogController._getPopupSizes = originGetPopupSizes;
                assert.equal(item.sizes.height, newPopupSizes.height);

@@ -12,13 +12,20 @@ export default class Explorer extends Control<IControlOptions> {
    protected _position: number = 0;
 
    protected _littleData: boolean = false;
+   protected _moreUpTrueAndWithoutData: boolean = false;
 
    protected _beforeMount(): void {
       this._viewSource = new PortionedSearchMemory({keyProperty: 'key'});
    }
 
    protected _littleDataChangedHandler(event: SyntheticEvent, newValue: boolean): void {
+      this._moreUpTrueAndWithoutData = false;
       this._viewSource.setLittleData(newValue);
+   }
+
+   protected _moreUpTrueAndWithoutDataChangedHandler(event: SyntheticEvent, newValue: boolean): void {
+      this._littleData = false;
+      this._viewSource.setMoreUpTrueAndWithoutData(newValue);
    }
 
    static _styles: string[] = ['Controls-demo/Controls-demo'];

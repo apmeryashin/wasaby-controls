@@ -81,6 +81,25 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
     getItemActionClasses(itemActionsPosition: string): string {
         return `controls-ColumnsView__itemActionsV_${itemActionsPosition}`;
     }
+
+    getItemActionPositionClasses(itemActionsPosition: string,
+                                 templateItemActionClass: string,
+                                 itemPadding: {top?: string, bottom?: string}): string {
+        let classes = super.getItemActionPositionClasses(itemActionsPosition, templateItemActionClass, itemPadding);
+        let itemActionClass: string;
+        itemActionClass = templateItemActionClass || 'controls-itemActionsV_position_bottomRight';
+        if (this._$roundBorder) {
+            // Если располагаем ItemActions снизу, то скругляем им верхний левый угол.
+            if (itemActionClass === 'controls-itemActionsV_position_bottomRight') {
+                classes += ` controls-itemActionsV_roundBorder_topLeft_${this.getTopRightRoundBorder()}`;
+
+                // Если располагаем ItemActions вверху, то скругляем им нижний левый угол
+            } else if (itemActionClass === 'controls-itemActionsV_position_topRight') {
+                classes += ` controls-itemActionsV_roundBorder_bottomLeft_${this.getBottomRightRoundBorder()}`;
+            }
+        }
+        return classes;
+    }
 }
 
 Object.assign(CollectionItem.prototype, {

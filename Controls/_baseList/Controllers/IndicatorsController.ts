@@ -232,6 +232,10 @@ export default class IndicatorsController {
         }
     }
 
+    hideIndicator(direction: TIndicatorPosition): void {
+        this._model.hideIndicator(direction);
+    }
+
     shouldDisplayGlobalIndicator(): boolean {
         return !this._displayIndicatorTimer && !this._isPortionedSearch();
     }
@@ -323,7 +327,9 @@ export default class IndicatorsController {
                 this._recountTopIndicator(scrollToFirstItem);
                 this._recountBottomIndicator();
                 // после перезагрузки скрываем глобальный индикатор
-                this.hideGlobalIndicator();
+                if (this.shouldHideGlobalIndicator()) {
+                    this.hideGlobalIndicator();
+                }
                 break;
         }
     }

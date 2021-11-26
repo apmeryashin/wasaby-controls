@@ -662,7 +662,7 @@ const _private = {
         self._onFooterPrepared(options);
     },
 
-    loadToDirection(self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet|void> | void {
+    loadToDirection: function (self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet | void> | void {
         // Нужно сбросить сосояние resetTriggerOffset, чтобы последующие загрузки начинались заранее,
         // а первая загрузка в сторону непосредственно при скролле к краю
         if (self._observersController) {
@@ -750,6 +750,8 @@ const _private = {
 
                 if (!_private.isPortionedLoad(self, addedItems)) {
                     self._indicatorsController.recountIndicators(direction);
+                } else if (!hasMoreData[direction]) {
+                    self._indicatorsController.hideIndicator(DIRECTION_COMPATIBILITY[direction]);
                 }
 
                 return addedItems;
@@ -771,6 +773,8 @@ const _private = {
                 }
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
                 if (!error.canceled && !error.isCanceled) {
+                    // скрываем индикатор в заданном направлении, чтобы он не перекрывал ошибку
+                    self._indicatorsController.hideIndicator(DIRECTION_COMPATIBILITY[direction]);
                     _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
                 }
             });
@@ -5971,7 +5975,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const navigation = this._options.navigation;
         const view = navigation?.view;
         const buttonView = navigation?.viewConfig?.buttonView;
-        return buttonView || view === 'cut' ? 'separator' : 'link';
+        return buttonView || (view === 'cut' ? 'separator' : 'link');
     }
 
     protected _onNavigationButtonClick(e: SyntheticEvent): void {
@@ -6521,6 +6525,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._getItemsContainer();
     }
 
+    _viewUnmount(): void {
+        this._viewReady = false;
+    }
+
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         this._viewReady = true;
@@ -6937,7 +6945,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _dragLeave(): void {
         this._insideDragging = false;
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (this._dndListController && this._dndListController.isDragging()) {
+        if (this._dndListController && this._dndListController.isDragging() && this._documentDragging) {
             const draggableItem = this._dndListController.getDraggableItem();
             if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
                 const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
@@ -7010,7 +7018,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let dragPosition;
         const targetItem = itemData;
         const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
-        if (this._dndListController.isDragging() && !targetIsNode) {
+        if (this._dndListController.isDragging() && !targetIsNode && this._documentDragging) {
             dragPosition = this._dndListController.calculateDragPosition({targetItem});
             if (dragPosition) {
                 const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);

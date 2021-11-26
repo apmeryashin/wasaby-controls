@@ -10,6 +10,8 @@ export default class RenderDemo extends Control {
     protected _viewSource: Memory;
     private _dataArray: Array<{key: number, title: string}>;
 
+    protected _itemActions: [object];
+
     protected _beforeMount(): void {
         this._dataArray = generateData<{key: number, title: string}>({
             count: NUMBER_OF_ITEMS,
@@ -22,6 +24,13 @@ export default class RenderDemo extends Control {
             data: this._dataArray,
             keyProperty: 'key'
         });
+        this._itemActions = [{
+            id: 1,
+            icon: 'icon-Erase',
+            iconStyle: 'danger',
+            title: 'delete',
+            showType: 2
+        }];
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

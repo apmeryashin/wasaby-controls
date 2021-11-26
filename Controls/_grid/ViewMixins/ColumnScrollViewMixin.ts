@@ -596,10 +596,6 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         }
     },
 
-    _getColumnScrollEmptyViewMaxWidth(): number {
-        return this._$columnScrollEmptyViewMaxWidth;
-    },
-
     _getColumnScrollThumbStyles(options: IAbstractViewOptions): string {
         // TODO: Посмотреть на экшены, если не custom то добавить.
         const hasMultiSelectColumn = hasCheckboxColumn(options);
@@ -740,44 +736,48 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     },
 
     _onColumnScrollViewResized(): void {
-        if (this._options.columnScroll && canShowColumnScroll(this, this._options)) {
+        if (this._options.columnScroll) {
+            if (canShowColumnScroll(this, this._options)) {
 
-            // Считаем размеры, если горизонтальный скролл не нужен, то удаляем.
-            // Если нужен, то запомним размеры, они пригодятся для обновления.
-            // Подсчет производится:
-            //  + простым сравнением размеров, если горизонтального скролла нет в данный момент.
-            //  + с предварительным сбросом текущего состояния прокрутки, если скролл есть.
-            const shouldDrawResult = (this._$columnScrollController || ColumnScrollController).shouldDrawColumnScroll(
-                this._children,
-                getFixedPartWidth,
-                this._options.isFullGridSupport
-            );
+                // Считаем размеры, если горизонтальный скролл не нужен, то удаляем.
+                // Если нужен, то запомним размеры, они пригодятся для обновления.
+                // Подсчет производится:
+                //  + простым сравнением размеров, если горизонтального скролла нет в данный момент.
+                //  + с предварительным сбросом текущего состояния прокрутки, если скролл есть.
+                const shouldDrawResult = (this._$columnScrollController || ColumnScrollController).shouldDrawColumnScroll(
+                    this._children,
+                    getFixedPartWidth,
+                    this._options.isFullGridSupport
+                );
 
-            if (!shouldDrawResult.status) {
-                if (this._$columnScrollController) {
-                    destroyColumnScroll(this);
+                if (!shouldDrawResult.status) {
+                    if (this._$columnScrollController) {
+                        destroyColumnScroll(this);
+                    }
+                    return;
                 }
-                return;
-            }
 
-            let shouldResetColumnScroll: boolean = false;
-            if (!this._$columnScrollController) {
-                shouldResetColumnScroll = true;
-                createColumnScroll(this, this._options);
-            }
+                let shouldResetColumnScroll: boolean = false;
+                if (!this._$columnScrollController) {
+                    shouldResetColumnScroll = true;
+                    createColumnScroll(this, this._options);
+                }
 
-            if (this._isDragScrollEnabledByOptions(this._options) && !this._$dragScrollController) {
-                createDragScroll(this, this._options);
-            }
+                if (this._isDragScrollEnabledByOptions(this._options) && !this._$dragScrollController) {
+                    createDragScroll(this, this._options);
+                }
 
-            recalculateSizes(this, this._options, shouldDrawResult.sizes);
+                recalculateSizes(this, this._options, shouldDrawResult.sizes);
 
-            if (shouldResetColumnScroll) {
-                this._resetColumnScroll(this._options.columnScrollStartPosition);
-            }
+                if (shouldResetColumnScroll) {
+                    this._resetColumnScroll(this._options.columnScrollStartPosition);
+                }
 
-            if (this._$pendingMouseEnterForActivate) {
-                disablePendingMouseEnterActivation(this);
+                if (this._$pendingMouseEnterForActivate) {
+                    disablePendingMouseEnterActivation(this);
+                }
+            } else if (this._options.needShowEmptyTemplate) {
+                this._$columnScrollEmptyViewMaxWidth = ColumnScrollController.getEmptyViewMaxWidth(this._children, this._options);
             }
         }
     },

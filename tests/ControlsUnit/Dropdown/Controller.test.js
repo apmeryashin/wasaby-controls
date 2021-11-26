@@ -118,7 +118,7 @@ define(
                }
             });
             dropdownController.pinClick(expectedItem);
-            assert.isFalse(expectedItem.get('pinned'));
+            assert.isTrue(expectedItem.get('pinned'));
             assert.deepEqual(actualMeta, { '$_pinned': true });
          });
 
