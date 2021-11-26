@@ -34,8 +34,8 @@ export class DialogStrategy {
         const limitedSizes = this._calculateLimitOfSizes(popupOptions, windowData);
         const {minWidth, maxWidth, minHeight, maxHeight} = limitedSizes;
 
-        const positionCoordinates = this._getPositionCoordinates(windowData, containerSizes, item);
-        const position = this._validateCoordinate(positionCoordinates, maxHeight, maxWidth, windowData, containerSizes);
+        const positionCoordinates = this._getPositionCoordinates(windowData, containerSizes, item, limitedSizes);
+        const position = this._validateCoordinate(positionCoordinates, limitedSizes, windowData, containerSizes);
 
         this._resetMargins(item, position);
 
@@ -46,8 +46,9 @@ export class DialogStrategy {
         };
     }
 
-    private _validateCoordinate(position: IDialogPosition, maxHeight: number, maxWidth: number,
+    private _validateCoordinate(position: IDialogPosition, limitedSizes: ILimitingSizes,
                                 windowData: IPopupPosition = {}, containerSizes: IPopupSizes): IDialogPosition {
+        const {maxWidth, maxHeight} = limitedSizes;
         const height = position.height || containerSizes.height;
         const outsideBottomBorderValue = position.top + height - windowData.height;
         if (outsideBottomBorderValue > 0) {
@@ -76,13 +77,15 @@ export class DialogStrategy {
      * @param {IPopupPosition} windowData
      * @param {IPopupSizes} containerSizes
      * @param {IDialogItem} popupItem
+     * @param {ILimitingSizes} limitedSizes
      * @return {IDialogPosition}
      * @private
      */
     private _getPositionCoordinates(
         windowData: IPopupPosition,
         containerSizes: IPopupSizes,
-        popupItem: IDialogItem
+        popupItem: IDialogItem,
+        limitedSizes: ILimitingSizes
     ): IDialogPosition {
         const popupOptions = popupItem?.popupOptions || {};
 
@@ -110,7 +113,8 @@ export class DialogStrategy {
                 containerSizes,
                 popupItem,
                 properties.vertical,
-                properties.horizontal
+                properties.horizontal,
+                limitedSizes
             );
 
             this._updateCoordsByOptions(windowData, popupItem, position);
@@ -166,6 +170,7 @@ export class DialogStrategy {
      * @param {IDialogItem} item
      * @param {string} verticalPositionProperty
      * @param {string} horizontalPositionProperty
+     * @param {ILimitingSizes} limitedSizes
      * @return {IDialogPosition}
      * @private
      */
@@ -174,7 +179,8 @@ export class DialogStrategy {
         containerSizes: IPopupSizes,
         item: IDialogItem,
         verticalPositionProperty: string,
-        horizontalPositionProperty: string
+        horizontalPositionProperty: string,
+        limitedSizes: ILimitingSizes
     ): IDialogPosition {
         const popupOptions = item.popupOptions;
         const height = this._calculateValue(
@@ -182,16 +188,16 @@ export class DialogStrategy {
             containerSizes.height,
             windowData.height,
             parseInt(popupOptions.height, 10),
-            popupOptions.maxHeight,
-            popupOptions.minHeight
+            limitedSizes.maxHeight,
+            limitedSizes.minHeight
         );
         const width = this._calculateValue(
             popupOptions,
             containerSizes.width,
             windowData.width,
             parseInt(popupOptions.width, 10),
-            popupOptions.maxWidth,
-            popupOptions.minWidth
+            limitedSizes.maxWidth,
+            limitedSizes.minWidth
         );
         const position = {height, width};
 
@@ -289,11 +295,12 @@ export class DialogStrategy {
                 maxHeight = windowData.height - popupOptions.top;
             }
         }
+        maxHeight = Math.min(maxHeight, windowData.height);
 
         return {
             minWidth: popupOptions.minWidth,
-            minHeight: popupOptions.minHeight,
-            maxHeight: Math.min(maxHeight, windowData.height),
+            minHeight: Math.min(popupOptions.minHeight, maxHeight),
+            maxHeight,
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
         };
     }
