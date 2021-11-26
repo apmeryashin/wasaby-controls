@@ -136,6 +136,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _sourceController: SourceController = null;
    private _searchController: SearchController = null;
    private _searchLibraryLoader: CancelablePromise<typeof import('Controls/search')> = null;
+   private _suggestTemplate: ISuggestTemplateProp = null;
 
    private _dependenciesTimer: DependencyTimer = null;
 
@@ -602,6 +603,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._emptyTemplate = this._getEmptyTemplate(options.emptyTemplate);
       this._searchValue = options.value || '';
       this._suggestOpened = options.suggestState;
+      this._suggestTemplate = options.suggestTemplate;
       this._setFilter(options.filter, options);
 
       if (this._searchValue && options.suggestState) {
@@ -633,6 +635,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _beforeUpdate(newOptions: IInputControllerOptions): void {
       const valueChanged = this._options.value !== newOptions.value;
       const valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
+      const suggestTemplateChanged = !isEqual(this._options.suggestTemplate, newOptions.suggestTemplate);
       const needSearchOnValueChanged = valueChanged &&
          this._isValueLengthLongerThenMinSearchLength(newOptions.value, newOptions);
       const emptyTemplateChanged = !isEqual(this._options.emptyTemplate, newOptions.emptyTemplate);
@@ -653,6 +656,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          if (this._searchController) {
             this._searchController.update(this._getSearchControllerOptions(newOptions));
          }
+      }
+
+      if (!(filterChanged || needSearchOnValueChanged || sourceChanged) && suggestTemplateChanged) {
+         this._suggestTemplate = newOptions.suggestTemplate;
       }
 
       if (needUpdateSearchValue) {
@@ -1068,6 +1075,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._options.searchEndCallback) {
          this._options.searchEndCallback();
       }
+      this._suggestTemplate = this._options.suggestTemplate;
    }
 
    _showIndicator(): void {
