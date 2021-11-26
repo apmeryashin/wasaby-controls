@@ -242,7 +242,7 @@ export interface IItemActionsOptions {
 
     /**
      * @name Controls/_itemActions/interface/IItemActions#itemActionVisibilityCallback
-     * @cfg {TItemActionVisibilityCallback} Функция обратного вызова для определения видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
+     * @cfg {Controls/_itemActions/interface/IItemActions/TItemActionVisibilityCallback.typedef} Функция обратного вызова для определения видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
      * @remark
      * Подробнее об использовании функции читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/separate-set-options/#visibility здесь}.
      * @demo Controls-demo/list_new/ItemActions/ItemActionVisibilityCallback/Index
