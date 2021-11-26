@@ -17,7 +17,8 @@ import {ITextCounterTabTemplate} from 'Controls/_tabs/interface/ITextCounterTabT
  *                 * src {String} — Url картинки.
  *                 * srcSet {String} — Значение для аттрибута srcset.
  *                 * tooltip {String} — Значение для тултипа.
- * @class Controls/_tabs/interface/IIconCounterTabTemplate
+ * @class Controls/_tabs/interface/IconCounterTabTemplate
+ * @implements Controls/_tabs/interface/TextCounterTabTemplate
  * @author Красильников А.С.
  * @example
  * Вкладки с использованием шаблона IconCounterTabTemplate.
@@ -50,18 +51,18 @@ import {ITextCounterTabTemplate} from 'Controls/_tabs/interface/ITextCounterTabT
  */
 export interface IIconCounterTabTemplate extends ITextCounterTabTemplate {
     /**
-     * @name Controls/_tabs/interface/IIconCounterTabTemplate#image
+     * @name Controls/_tabs/interface/IconCounterTabTemplate#image
      * @cfg {Controls/_tabs/interface/ITabsButtons/image.typedef} Конфигурация для отображения картинки.
      */
     image?: object;
     /**
-     * @name Controls/_tabs/interface/IIconCounterTabTemplate#imageSize
-     * @cfg {String} Размер картинки.тзь
+     * @name Controls/_tabs/interface/IconCounterTabTemplate#imageSize
+     * @cfg {String} Размер картинки
      */
     imageSize?: string;
 }
 /**
- * @typedef {Object} Controls/_tabs/interface/IIconCounterTabTemplate/image
+ * @typedef {Object} Controls/_tabs/interface/IconCounterTabTemplate/image
  * @property {String} [image.src] Url картинки.
  * @property {Number} [image.srcSet] Значение аттрибута srcset.
  * @property {String} [image.tooltip] Значение тултипа.
