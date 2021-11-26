@@ -36,7 +36,7 @@
                     itemActionsTemplate="{{ itemActionsTemplate }}"
                     swipeTemplate="{{ swipeTemplate }}">
                <ws:multiSelectTemplate>
-                  <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" itemPadding="{{itemPadding}}"/>
+                  <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" />
                </ws:multiSelectTemplate>
             </ws:partial>
          </div>

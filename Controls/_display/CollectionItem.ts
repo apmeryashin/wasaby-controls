@@ -489,6 +489,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         let checkboxMargin: string;
         let classes = '';
 
+        // Если контент в записи плоского списка выравнивается по базовой линии 17px (default),
+        // То у чекбокса добавляется отступ записи списка.
+        // Если не выравнивается (по умолчанию), то в зависимости от отступа списка:
+        // для l добавляется отступ s, а для s вообще не добавляеься отступ.
+        // Это поведение исправится в рамках работ по отступам записей.
         if (baseLine === 'none') {
             checkboxMargin = topPadding === 's' || topPadding === 'null' ? 'null' : 's';
         } else {
