@@ -1,7 +1,7 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls-demo/list_new/ColumnsView/roundBorder/l/l');
 import {Memory as MemorySource, Memory} from 'Types/source';
-import {IItemAction, TItemActionShowType} from 'Controls/_itemActions/interface/IItemAction';
+import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
 
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 
