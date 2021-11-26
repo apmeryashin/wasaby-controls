@@ -2,7 +2,7 @@
     <ws:if data="{{content}}">
         <ws:partial template="{{content}}"
                     attr:tabindex="-1"
-                    attr:class="{{ multiSelectClasses || item.getMultiSelectClasses(itemPadding, backgroundColorStyle, cursor, highlightOnHover) }}"
+                    attr:class="{{ multiSelectClasses || item.getMultiSelectClasses(backgroundColorStyle, cursor, highlightOnHover, itemPadding, baseLine) }}"
                     triState="{{ true }}"
                     readOnly="{{ item.isReadonlyCheckbox() || false}}"
                     value="{{ item.isSelected() }}"/>
@@ -11,7 +11,7 @@
         <Controls.Container.Async templateName="Controls/toggle:CheckboxMarker" item="{{ item }}">
             <ws:partial template="{{ content.resolvedTemplate }}"
                         attr:tabindex="-1"
-                        attr:class="{{ multiSelectClasses || item.getMultiSelectClasses(itemPadding, backgroundColorStyle, cursor, highlightOnHover) }}"
+                        attr:class="{{ multiSelectClasses || item.getMultiSelectClasses(backgroundColorStyle, cursor, highlightOnHover, itemPadding, baseLine) }}"
                         triState="{{ true }}"
                         readOnly="{{ item.isReadonlyCheckbox() || false}}"
                         value="{{ item.isSelected() }}"/>

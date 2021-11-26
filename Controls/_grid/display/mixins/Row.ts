@@ -6,7 +6,7 @@ import {IColspanParams, IColumn, TColumns, TColumnSeparatorSize} from '../interf
 import {THeader} from '../interface/IHeaderCell';
 import {
     Collection,
-    ICollectionItemOptions as IBaseOptions, IEditingConfig, IItemPadding,
+    ICollectionItemOptions as IBaseOptions, IEditingConfig,
     ILadderConfig,
     IStickyLadderConfig,
     TLadderElement
@@ -163,7 +163,6 @@ export default abstract class Row<T extends Model = Model> {
     }
 
     getMultiSelectClasses(
-        itemPadding: IItemPadding = {},
         backgroundColorStyle: string,
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true

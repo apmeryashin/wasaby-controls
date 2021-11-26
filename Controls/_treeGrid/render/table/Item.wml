@@ -50,7 +50,7 @@
                                     attr:class="{{ (item || itemData).getLadderWrapperClasses(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"/>
                     </ws:ladderWrapper>
                     <ws:multiSelectTemplate>
-                        <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" itemPadding="{{itemPadding}}"/>
+                        <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" />
                     </ws:multiSelectTemplate>
                     <ws:beforeContentTemplate>
                         <ws:if data="{{item.shouldDisplayExpanderBlock(gridColumn)}}">

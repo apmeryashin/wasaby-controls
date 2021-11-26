@@ -484,20 +484,31 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._counters;
     }
 
-    getMultiSelectOffsetClass(itemPadding: IItemPadding = {}): string {
+    getMultiSelectOffsetClass(itemPadding: IItemPadding = {}, baseLine: 'none' | 'default' = 'none'): string {
         const topPadding = (itemPadding.top || this.getTopPadding() || 'l');
+        let checkboxMargin: string;
         let classes = '';
 
-        classes += `controls-ListView__checkbox_marginTop_${topPadding}`;
+        if (baseLine === 'none') {
+            checkboxMargin = topPadding === 's' || topPadding === 'null' ? 'null' : 's';
+        } else {
+            checkboxMargin = topPadding;
+        }
+
+        classes += `controls-ListView__checkbox_marginTop_${checkboxMargin}`;
         classes += ` controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()} `;
         return classes;
     }
 
-    getMultiSelectClasses(itemPadding: IItemPadding = {}): string {
+    getMultiSelectClasses(backgroundColorStyle: string = 'default',
+                          cursor: string = 'pointer',
+                          templateHighlightOnHover: boolean = true,
+                          itemPadding: IItemPadding = {},
+                          baseLine: 'none' | 'default' = 'none'): string {
         let classes = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
         classes += 'js-controls-ListView__checkbox js-controls-DragScroll__notDraggable ';
         classes += 'controls-CheckboxMarker_inList controls-ListView__checkbox ';
-        classes += this.getMultiSelectOffsetClass(itemPadding);
+        classes += this.getMultiSelectOffsetClass(itemPadding, baseLine);
 
         if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += 'controls-ListView__checkbox-onhover';
