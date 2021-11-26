@@ -56,6 +56,11 @@ export function simpleCssStyleGeneration(options: IButtonOptions): void {
         this._textAlign = 'none';
     }
 
+    if (this._buttonStyle === 'unaccented' && this._contrastBackground &&
+        (!this._fontColorStyle || this._fontColorStyle === 'contrast')) {
+        this._fontColorStyle = 'default';
+    }
+
     this._caption = options.caption;
     // На сервере rk создает инстанс String'a, проверки на typeof недостаточно
     this._stringCaption = typeof options.caption === 'string' || options.caption instanceof String;
