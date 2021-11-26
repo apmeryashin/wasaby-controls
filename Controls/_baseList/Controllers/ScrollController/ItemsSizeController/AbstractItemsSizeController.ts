@@ -1,14 +1,10 @@
 import type { IItemsRange } from './ScrollController';
 import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
-import { getOffsetTop } from 'Controls/sizeUtils';
 
-export type TItemSizeGetter = (element: HTMLElement) => IItemSize;
-
-export interface IItemsSizesControllerOptions {
+export interface IAbstarctItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
     itemsQuerySelector: string;
-    itemSizeGetter: TItemSizeGetter;
 }
 
 export interface IItemSize {
@@ -21,16 +17,14 @@ export type IItemsSizes = IItemSize[];
 /**
  * Класс предназначен для получения, хранения и актуализации размеров записей.
  */
-export class ItemsSizesController {
+export class AbstractItemsSizesController {
     private _itemsQuerySelector: string;
     private _itemsContainer: HTMLElement;
     private _itemsSizes: IItemsSizes = [];
-    private _itemSizeGetter: TItemSizeGetter;
 
-    constructor(options: IItemsSizesControllerOptions) {
+    constructor(options: IAbstarctItemsSizesControllerOptions) {
         this._itemsContainer = options.itemsContainer;
         this._itemsQuerySelector = options.itemsQuerySelector;
-        this._itemSizeGetter = options.itemSizeGetter;
     }
 
     getItemsSizes(): IItemsSizes {
@@ -51,9 +45,7 @@ export class ItemsSizesController {
      */
     getBeforeItemsContentSize(): number {
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
-        return scrollContent ?
-            scrollContent.getBoundingClientRect().top - this._itemsContainer.getBoundingClientRect().top :
-            getOffsetTop(this._itemsContainer);
+        return this._getBeforeItemsContentSize(this._itemsContainer, scrollContent);
     }
 
     // region on DOM references update
@@ -71,7 +63,7 @@ export class ItemsSizesController {
     // region on collection change
 
     addItems(position: number, count: number): IItemsSizes {
-        const addedItemsSize = Array(count).fill(ItemsSizesController._getEmptyItemSize());
+        const addedItemsSize = Array(count).fill(AbstractItemsSizesController._getEmptyItemSize());
         this._itemsSizes.splice(position, 0, ...addedItemsSize);
 
         return this.getItemsSizes();
@@ -89,7 +81,7 @@ export class ItemsSizesController {
     }
 
     resetItems(count: number): IItemsSizes {
-        this._itemsSizes = Array(count).fill(ItemsSizesController._getEmptyItemSize());
+        this._itemsSizes = Array(count).fill(AbstractItemsSizesController._getEmptyItemSize());
         return this.getItemsSizes();
     }
 
@@ -117,17 +109,21 @@ export class ItemsSizesController {
                     hiddenItemsOffset = lastHiddenItem.offset + lastHiddenItem.size;
                 }
                 itemsElements.forEach((element: HTMLElement) => {
-                    this._itemsSizes[position] = this._itemSizeGetter(element);
+                    this._itemsSizes[position] = this._getItemSize(element);
                     this._itemsSizes[position].offset += hiddenItemsOffset;
                     position++;
                 });
             }
         } else {
             for (let position = itemsRange.startIndex; position <= itemsRange.endIndex; position++) {
-                this._itemsSizes[position] = ItemsSizesController._getEmptyItemSize();
+                this._itemsSizes[position] = AbstractItemsSizesController._getEmptyItemSize();
             }
         }
     }
+
+    protected abstract _getBeforeItemsContentSize(itemsContainer: HTMLElement, scrollContent: Element): number;
+
+    protected abstract _getItemSize(element: HTMLElement): IItemSize;
 
     private static _getEmptyItemSize(): IItemSize {
         return {

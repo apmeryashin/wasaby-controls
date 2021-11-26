@@ -126,7 +126,7 @@ import ObserversController, {
 } from 'Controls/_baseList/Controllers/ObserversController';
 import { selectionToRecord } from './resources/utils/getItemsBySelection';
 import {convertReloadItemArgs} from 'Controls/_baseList/resources/utils/helpers';
-import { DEFAULT_TRIGGER_OFFSET } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import { DEFAULT_TRIGGER_OFFSET } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 
 //#endregion
 
@@ -695,7 +695,7 @@ const _private = {
         self._onFooterPrepared(options);
     },
 
-    loadToDirection: function (self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet | void> | void {
+    loadToDirection(self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet | void> | void {
         // Нужно сбросить сосояние resetTriggerOffset, чтобы последующие загрузки начинались заранее,
         // а первая загрузка в сторону непосредственно при скролле к краю
         if (self._observersController) {
@@ -3240,7 +3240,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _popupOptions = null;
     private _scrollController: ScrollController;
     private _listVirtualScrollController: ListVirtualScrollController;
-    private _useNewScroll: boolean = false;
+    private _useNewScroll: boolean = true;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;

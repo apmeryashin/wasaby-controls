@@ -92,8 +92,16 @@ export {
     IDirection as IDirectionNew,
     IPlaceholders
 } from './_baseList/Controllers/ScrollController/ScrollController';
-export {IItemSize} from './_baseList/Controllers/ScrollController/ItemsSizeController';
-export {TriggerOffsetType} from './_baseList/Controllers/ScrollController/ObserversController';
+export {
+    IItemSize,
+    AbstractItemsSizesController,
+    IAbstarctItemsSizesControllerOptions
+} from './_baseList/Controllers/ScrollController/ItemsSizeController/AbstractItemsSizeController';
+export {
+    AbstractObserversController,
+    IAbstractObserversControllerOptions,
+    TIntersectionEvent
+} from './_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 //endregion
 
 // region Indicators

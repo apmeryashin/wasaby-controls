@@ -31,8 +31,9 @@ import {
     IDirection
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import type { IItemsSizes, IItemSize } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
-import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
-import {TriggerOffsetType} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
+import {ObserversController} from 'Controls/_baseList/Controllers/ScrollController/ObserverController/ObserversController';
+import {ItemsSizeController} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
 import {getDimensions, getOffsetTop} from 'Controls/sizeUtils';
 
 export interface IShadowVisibility {
@@ -212,9 +213,8 @@ export class ListVirtualScrollController {
             listContainer: options.listContainer,
 
             itemsQuerySelector: options.itemsQuerySelector,
-            itemSizeGetter: ListVirtualScrollController._itemSizeGetter,
-            triggerOffsetType: TriggerOffsetType.VERTICAL,
-            applyTriggerOffsetCallback: ListVirtualScrollController._applyTriggerOffsetCallback,
+            itemsSizeControllerConstructor: ItemsSizeController,
+            observerControllerConstructor: ObserversController,
             triggersQuerySelector: options.triggersQuerySelector,
 
             triggersVisibility: options.triggersVisibility,
@@ -246,21 +246,6 @@ export class ListVirtualScrollController {
         });
 
         this._scrollController.resetItems(totalCount, false);
-    }
-
-    private static _itemSizeGetter(element: HTMLElement): IItemSize {
-        return {
-            size: getDimensions(element).height,
-            offset: getOffsetTop(element)
-        };
-    }
-
-    private static _applyTriggerOffsetCallback(element: HTMLElement, direction: IDirection, offset: number): void {
-        if (direction === 'backward') {
-            element.style.top = `${offset}px`;
-        } else {
-            element.style.bottom = `${offset}px`;
-        }
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {

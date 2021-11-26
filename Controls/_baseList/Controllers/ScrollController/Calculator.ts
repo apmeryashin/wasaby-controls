@@ -8,7 +8,7 @@ import {
 
 import type {IVirtualScrollConfig} from 'Controls/_baseList/interface/IVirtualScroll';
 import type {IItemsSizes} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
-import type {ITriggersOffsets} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import type {ITriggersOffsets} from 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
 import type {
     IActiveElementIndex,
     IDirection,

@@ -2,14 +2,12 @@ import {Control} from 'UI/Base';
 
 import {
     NewScrollController as ScrollController,
-    IDirectionNew as IDirection,
-    IPlaceholders,
-    IItemSize,
-    TriggerOffsetType
+    IPlaceholders
 } from 'Controls/baseList';
 
+import {ObserversController} from './ObserversController';
+import {ItemsSizeController} from './ItemsSizeController';
 import type {GridCollection} from 'Controls/grid';
-import {getDimensions} from 'Controls/sizeUtils';
 
 export interface IControllerOptions {
     listControl: Control;
@@ -43,9 +41,8 @@ export class Controller {
             virtualScrollConfig: options.virtualScrollConfig,
             listControl: options.listControl,
             totalCount: options.columns.length,
-            itemSizeGetter: Controller._itemSizeGetter,
-            triggerOffsetType: TriggerOffsetType.HORIZONTAL,
-            applyTriggerOffsetCallback: Controller._applyTriggerOffsetCallback,
+            itemsSizeControllerConstructor: ItemsSizeController,
+            observerControllerConstructor: ObserversController,
 
             indexesChangedCallback: ({startIndex, endIndex}) => {
                 this._collection.setColumns(options.columns.slice(startIndex, endIndex));
@@ -93,21 +90,6 @@ export class Controller {
 
     viewportResized(viewportSize: number): void {
         this._scrollController.viewportResized(viewportSize);
-    }
-
-    private static _itemSizeGetter(element: HTMLElement): IItemSize {
-        return {
-            size: getDimensions(element).width,
-            offset: element.offsetLeft
-        };
-    }
-
-    private static _applyTriggerOffsetCallback(element: HTMLElement, direction: IDirection, offset: number): void {
-        if (direction === 'backward') {
-            element.style.left = `${offset}px`;
-        } else {
-            element.style.right = `${offset}px`;
-        }
     }
 }
 
