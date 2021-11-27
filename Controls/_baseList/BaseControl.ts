@@ -3619,6 +3619,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (this._listVirtualScrollController) {
             this._listVirtualScrollController.viewportResized(viewportHeight);
+            // TODO SCROLL во viewportResizeHandler не должно быть scrollTop
+            if (scrollTop !== undefined) {
+                this._listVirtualScrollController.scrollPositionChange(scrollTop);
+            }
         }
         this._observersController?.setViewportHeight(
             this._viewportSize,
