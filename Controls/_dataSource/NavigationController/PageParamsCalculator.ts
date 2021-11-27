@@ -84,7 +84,7 @@ class PageParamsCalculator implements IParamsCalculator {
                     let newCurrentPage = (config.page + 1) * pageSizeCoef - 1;
                     const newPrevPage = config.page * pageSizeCoef - 1;
                     if (typeof metaMore === 'number') {
-                        const maxPage = Math.ceil(metaMore / storeParams.pageSize) - 1;
+                        const maxPage = Math.max(0, Math.ceil(metaMore / storeParams.pageSize) - 1);
                         newCurrentPage = Math.min(maxPage, newCurrentPage);
                     }
                     store.setCurrentPage(newCurrentPage);

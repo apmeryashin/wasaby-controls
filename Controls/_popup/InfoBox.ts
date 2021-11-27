@@ -139,8 +139,17 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
     protected _contentTouchStartHandler(event: Event): void {
         if (this._options.trigger === 'hover|touch') {
             this._startOpeningPopup();
-            event.preventDefault();
-            event.stopPropagation();
+            const {target} = event;
+            const isInput = target?.tagName === 'INPUT';
+            const isTextArea = target?.tagName === 'TEXTAREA';
+            const isContentEditable = target?.getAttribute('contenteditable') === 'true';
+
+            // Если тачнули в поле ввода, то не останавливаем событие, иначе не покажется клавиатура
+            const needPrevent = !isInput && !isTextArea && !isContentEditable;
+            if (needPrevent) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
         }
     }
 

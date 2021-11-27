@@ -79,7 +79,7 @@ export class BaseText extends Base<IBaseTextInputOptions> {
     }
 
     private static _validateConstraint(constraint: string): boolean {
-        if (constraint && !/^\[[\s\S]+?\]$/.test(constraint)) {
+        if (constraint && !/^\[[\s\S]+?\]\*?$/.test(constraint)) {
             Logger.error('Controls/_input/Text', 'В опцию "constraint" передано не корректное значение. Подробнее тут: https://wi.sbis.ru/docs/js/Controls/_input/Text/options/constraint/');
             return false;
         }

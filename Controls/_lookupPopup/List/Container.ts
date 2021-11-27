@@ -95,7 +95,7 @@ const _private = {
    },
 
    getItemActionVisibilityCallback(options) {
-      return (action, item) => {
+      return (action, item, isEditing) => {
          let showByOptions;
          let showByItemType;
 
@@ -104,7 +104,9 @@ const _private = {
             showByItemType = options.selectionType === 'node' ? true : item.get(options.nodeProperty);
             return showByOptions && showByItemType;
          } else {
-            return options.itemActionVisibilityCallback ? options.itemActionVisibilityCallback(action, item) : true;
+            return options.itemActionVisibilityCallback ?
+                options.itemActionVisibilityCallback(action, item, isEditing) :
+                true;
          }
       };
    },

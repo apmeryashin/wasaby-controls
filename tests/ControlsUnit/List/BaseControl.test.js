@@ -3034,6 +3034,7 @@ define([
          assert.isFalse(notifyCalled);
 
          ctrl._dndListController.isDragging = () => { return true; };
+         ctrl._documentDragging = true;
          ctrl._processItemMouseEnterWithDragNDrop(itemData);
          assert.isTrue(notifyCalled);
          assert.isFalse(setDragPositionCalled);
@@ -3527,12 +3528,17 @@ define([
                      bottom: 100,
                      left: 100,
                      right: 100,
+                     x: 100,
+                     y: 100,
                      width: 100,
                      height: 100
                   }),
-                  closest: (selector) => ({
-                     className: selector.substr(1)
-                  })
+                  closest: function(selector) {
+                     return {
+                        getBoundingClientRect: this.getBoundingClientRect,
+                        className: selector.substr(1)
+                     };
+                  }
                }
             };
          };
@@ -5424,6 +5430,7 @@ define([
                assert.equal(baseControl._unprocessedDragEnteredItem, itemData, 'should save itemData');
 
                baseControl._dndListController.isDragging = function() { return true; }
+               baseControl._documentDragging = true;
                baseControl._dragStart(dragEvent, dragObject);
                assert.isNull(baseControl._unprocessedDragEnteredItem, 'should reset itemData after processing');
                baseControl._dndListController = null;
@@ -5776,6 +5783,7 @@ define([
                endDrag: () => undefined,
                isDragging: () => true
             };
+            baseControl._documentDragging = true;
 
             const setDragPositionSpy = sinon.spy(baseControl._dndListController, 'setDragPosition');
             baseControl._dragLeave();
@@ -5857,11 +5865,11 @@ define([
 
             baseControl._insideDragging = true;
             baseControl._dndListController = dndController;
+            baseControl._documentDragging = true;
 
             baseControl._documentDragEnd({ entity: {} });
 
             assert.isTrue(endDragSpy.called);
-            assert.isTrue(notifySpy.withArgs('dragEnd').called);
             assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
             assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
 

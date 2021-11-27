@@ -1,10 +1,10 @@
 <div class="controlsDemo__wrapper">
    <div class="controlsDemo__cell">
       <div class="controls-text-label">roundMode=trunc</div>
-      <Controls.decorator:Number value="{{_value}}" fractionSize="{{_fractionSize}}" roundMode="trunc"/>
+      <Controls.decorator:Number value="{{_value}}" precision="{{_precision}}" roundMode="trunc"/>
    </div>
    <div class="controlsDemo__cell">
       <div class="controls-text-label">roundMode=round</div>
-      <Controls.decorator:Number value="{{_value}}" fractionSize="{{_fractionSize}}" roundMode="round"/>
+      <Controls.decorator:Number value="{{_value}}" precision="{{_precision}}" roundMode="round"/>
    </div>
 </div>

@@ -51,7 +51,7 @@ export interface IEdgeItemCalculatingParams {
 
 export interface IScheduledScrollToElementParams {
     key: CrudEntityKey;
-    toBottom: boolean;
+    position: string;
     force: boolean;
 }
 

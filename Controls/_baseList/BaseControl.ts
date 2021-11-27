@@ -471,9 +471,9 @@ const _private = {
         return self._listViewModel?.getCollection().getMetaData().more;
     },
 
-    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
+    scrollToItem(self, key: TItemKey, position?: string, force?: boolean): Promise<void> {
         if (self._useNewScroll) {
-            return self._listVirtualScrollController.scrollToItem(key, toBottom, force);
+            return self._listVirtualScrollController.scrollToItem(key, position, force);
         } else {
             const scrollCallback = (index, result) => {
 
@@ -492,7 +492,7 @@ const _private = {
                 self._doNotScrollToFirtsItem = false;
                 if (itemContainer && needScroll) {
                     self._notify('scrollToElement', [{
-                        itemContainer, toBottom, force
+                        itemContainer, position, force
                     }], {bubbling: true});
                 }
                 if (result) {
@@ -501,7 +501,7 @@ const _private = {
             };
             return new Promise((resolve) => {
                 self._scrollController && self._listViewModel ?
-                    self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
+                    self._scrollController.scrollToItem(key, position, force, scrollCallback).then(() => {
                         resolve();
                     }) : resolve();
             });
@@ -695,7 +695,7 @@ const _private = {
         self._onFooterPrepared(options);
     },
 
-    loadToDirection(self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet|void> | void {
+    loadToDirection(self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet | void> | void {
         // Нужно сбросить сосояние resetTriggerOffset, чтобы последующие загрузки начинались заранее,
         // а первая загрузка в сторону непосредственно при скролле к краю
         if (self._observersController) {
@@ -785,6 +785,8 @@ const _private = {
 
                 if (!_private.isPortionedLoad(self, addedItems)) {
                     self._indicatorsController.recountIndicators(direction);
+                } else if (!hasMoreData[direction]) {
+                    self._indicatorsController.hideIndicator(DIRECTION_COMPATIBILITY[direction]);
                 }
 
                 return addedItems;
@@ -806,6 +808,8 @@ const _private = {
                 }
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
                 if (!error.canceled && !error.isCanceled) {
+                    // скрываем индикатор в заданном направлении, чтобы он не перекрывал ошибку
+                    self._indicatorsController.hideIndicator(DIRECTION_COMPATIBILITY[direction]);
                     _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
                 }
             });
@@ -2228,7 +2232,7 @@ const _private = {
 
             // Последняя страница уже загружена но конец списка не обязательно отображается,
             // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
-            return _private.scrollToItem(self, lastItemKey, true, true).then(() => {
+            return _private.scrollToItem(self, lastItemKey, 'bottom', true).then(() => {
 
                 // После того как последний item гарантированно отобразился,
                 // нужно попросить ScrollWatcher прокрутить вниз, чтобы
@@ -2496,7 +2500,7 @@ const _private = {
                     // то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
                     self._doAfterDrawItems = () => {
-                        _private.scrollToItem(self, self._options.activeElement, false, true);
+                        _private.scrollToItem(self, self._options.activeElement, 'top', true);
                     };
                 }
             }
@@ -2564,7 +2568,8 @@ const _private = {
                          */
                         result.then((key) => _private.scrollToItem(self, key));
                     } else if (result !== undefined) {
-                        _private.scrollToItem(self, result, isMovingForward, false);
+                        const position = isMovingForward ? 'bottom' : 'top';
+                        _private.scrollToItem(self, result, position, false);
                     }
                 }
             };
@@ -3795,10 +3800,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             totalCount: this._listViewModel.getCount(),
 
-            scrollToElementUtil: (container, toBottom, force): Promise<void> => {
+            scrollToElementUtil: (container, position, force): Promise<void> => {
                 return this._notify(
                     'scrollToElement',
-                    [{ itemContainer: container, toBottom, force }],
+                    [{ itemContainer: container, position, force }],
                     { bubbling: true }
                 ) as Promise<void>;
             },
@@ -3911,7 +3916,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // Не нужно скроллить к первому активному элементу на маунте: его и так видно
                 // https://online.sbis.ru/opendoc.html?guid=8b6716c3-d188-465a-8f5c-b3e51cb0bdb2
                 this._doNotScrollToFirtsItem = true;
-                _private.scrollToItem(this, this._options.activeElement, false, true);
+                _private.scrollToItem(this, this._options.activeElement, 'top', true);
             }
 
             this._scrollController.continueScrollToItemIfNeed();
@@ -4225,11 +4230,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (loadStarted) {
             this._displayGlobalIndicator();
-        } else if (
-            this._options.loading &&
-            !newOptions.loading &&
-            this._indicatorsController.shouldHideGlobalIndicator()
-        ) {
+        } else if (this._options.loading && !newOptions.loading &&
+            this._indicatorsController.shouldHideGlobalIndicator()) {
             this._indicatorsController.hideGlobalIndicator();
         }
 
@@ -4607,8 +4609,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._items;
     }
 
-    scrollToItem(key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
-        return _private.scrollToItem(this, key, toBottom, force);
+    scrollToItem(key: TItemKey, position?: string, force?: boolean): Promise<void> {
+        return _private.scrollToItem(this, key, position, force);
     }
 
     _onValidateCreated(e: Event, control: ValidateContainer): void {
@@ -5212,15 +5214,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this.setMarkedKey(key);
     }
 
-    reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
-        // При перезагрузке через public-метод полностью сбрасываем состояние cut-навигации
-        // https://online.sbis.ru/opendoc.html?guid=73d5765b-598a-4e2c-a867-91a54150ae9e
-        if (this._cutExpanded) {
-            this._cutExpanded = false;
-            this._sourceController.setNavigation(this._options.navigation);
-        }
+    reload(keepNavigation: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
 
-        if (keepScroll) {
+        if (keepNavigation) {
             if (this._useNewScroll) {
                 this._listVirtualScrollController.enableKeepScrollPosition();
             } else {
@@ -5239,6 +5235,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     );
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
                 }
+            }
+        } else {
+
+            // При перезагрузке через public-метод полностью сбрасываем состояние cut-навигации
+            // https://online.sbis.ru/opendoc.html?guid=73d5765b-598a-4e2c-a867-91a54150ae9e
+            if (this._cutExpanded) {
+                this._cutExpanded = false;
+                this._sourceController.setNavigation(this._options.navigation);
             }
         }
 
@@ -5263,11 +5267,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
-    protected _reload(
-        cfg,
-        sourceConfig?: IBaseSourceConfig,
-        immediateResolve: boolean = true
-    ): Promise<RecordSet|null|void> {
+    protected _reload(cfg, sourceConfig?: IBaseSourceConfig, immediateResolve: boolean = true):
+        Promise<RecordSet|null|void> {
         return new Promise((resolve) => {
             if (this._sourceController) {
                 this._indicatorsController.endDisplayPortionedSearch();
@@ -6906,6 +6907,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._getItemsContainer();
     }
 
+    _viewUnmount(): void {
+        this._viewReady = false;
+    }
+
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         this._viewReady = true;
@@ -7143,7 +7148,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             const firstItemKey = firstItem && firstItem.key !== undefined ? firstItem.key : null;
             if (firstItemKey !== null) {
-                return _private.scrollToItem(this, firstItemKey, false, true);
+                return _private.scrollToItem(this, firstItemKey, 'top', true);
             }
         }
         return Promise.resolve();
@@ -7327,7 +7332,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _dragLeave(): void {
         this._insideDragging = false;
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (this._dndListController && this._dndListController.isDragging()) {
+        if (this._dndListController && this._dndListController.isDragging() && this._documentDragging) {
             const draggableItem = this._dndListController.getDraggableItem();
             if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
                 const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
@@ -7403,7 +7408,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let dragPosition;
         const targetItem = itemData;
         const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
-        if (this._dndListController.isDragging() && !targetIsNode) {
+        if (this._dndListController.isDragging() && !targetIsNode && this._documentDragging) {
             dragPosition = this._dndListController.calculateDragPosition({targetItem});
             if (dragPosition) {
                 const changeDragTarget = this._notify(

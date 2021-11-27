@@ -358,19 +358,21 @@ export class Controller {
             return;
         }
 
-        const target = isContextMenu ? null : this._cloneMenuTarget(clickEvent.target as HTMLElement);
+        const target = isContextMenu ? null : this._calculateTargetPoint(clickEvent.target);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(item, isActionMenu, parentAction, menuActions);
 
         let menuConfig: IStickyPopupOptions = {
             // @ts-ignore
             opener,
+            target,
             template: 'Controls/menu:Popup',
             actionOnScroll: 'close',
-            // @ts-ignore
-            target,
             templateOptions,
-            className: `controls-MenuButton_link_iconSize-medium_popup controls_popupTemplate_theme-${this._theme} controls_dropdownPopup_theme-${this._theme}`,
+            // Этот класс задаёт смещение для popup при расчёте его top/left так,
+            // чтобы иконка в заголовке меню совпадала с иконкой кнопки, по которой это меню открыли
+            className: `controls-MenuButton_link_iconSize-medium_popup controls_popupTemplate_theme-${this._theme}` +
+                       ` controls_dropdownPopup_theme-${this._theme}`,
             closeOnOutsideClick: true,
             autofocus: false,
             fittingMode: {
@@ -389,6 +391,8 @@ export class Controller {
                     vertical: 'top',
                     horizontal: 'right'
                 },
+                // Этот класс задаёт смещение для popup при расчёте его top/left так,
+                // чтобы кнопка закрытия меню совпадала с иконкой кнопки открытия меню
                 className: `controls-ItemActions__popup__list controls_popupTemplate_theme-${this._theme}`,
                 // @ts-ignore
                 nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
@@ -485,7 +489,6 @@ export class Controller {
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
-            dropdownClassName: 'controls-itemActionsV__popup',
             ...this._contextMenuConfig,
             root,
             // @ts-ignore
@@ -617,21 +620,16 @@ export class Controller {
 
     /**
      * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
-     * Поэтому заменяем метод getBoundingClientRect так, чтобы он возвращал текущие координаты
+     * Поэтому необходимо передавать координаты таргета для popup
      * @param realTarget
      */
-    private _cloneMenuTarget(realTarget: HTMLElement): HTMLElement {
+    private _calculateTargetPoint(realTarget: HTMLElement): {x: number, y: number, width: number, height: number} {
         const rect = realTarget.getBoundingClientRect();
-        // FIXME: Если отдать клон таргета, то возникает зацикливание при расчетах
-        //  https://online.sbis.ru/opendoc.html?guid=d462d4d2-17fe-41e1-9caf-b5087bc246f2
         return {
-            children: [],
-            getBoundingClientRect(): ClientRect {
-                return rect;
-            },
-            closest(): void {
-                return undefined;
-            }
+            x: rect.x,
+            y: rect.y,
+            width: rect.width,
+            height: rect.height
         };
     }
 

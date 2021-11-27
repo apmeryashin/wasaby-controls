@@ -1,5 +1,5 @@
 /**
- * Шаблон ITextCounterTabTemplate для отображения вкладки, используется для вывода содержимого:
+ * Шаблон TextCounterTabTemplate для отображения вкладки, используется для вывода содержимого:
  * * <текст> - <счетчик>
  * * <текст> - <иконка>
  * * <текст> - <иконка> - <счетчик>
@@ -11,7 +11,7 @@
  *       * mainCounterStyle {String} — Стиль отображения счетчика.
  *       * caption {String} — Подпись вкладки.
  *       * additionalCaption {String} - Дополнительная подпись вкладки.
- * @class Controls/_tabs/interface/ITextCounterTabTemplate
+ * @class Controls/_tabs/interface/TextCounterTabTemplate
  * @author Красильников А.С.
  * @example
  * Вкладки с использованием шаблона TextCounterTabTemplate.
@@ -45,37 +45,37 @@
  */
 export interface ITextCounterTabTemplate {
     /**
-     * @name Controls/_tabs/interface/ITextCounterTabTemplate#icon
+     * @name Controls/_tabs/interface/TextCounterTabTemplate#icon
      * @cfg {String} Название иконки.
      */
     icon?: string;
     /**
-     * @name Controls/_tabs/interface/ITextCounterTabTemplate#iconStyle
+     * @name Controls/_tabs/interface/TextCounterTabTemplate#iconStyle
      * @cfg {String} Стиль отображения иконки.
      */
     iconStyle?: string;
     /**
-     * @name Controls/_tabs/interface/ITextCounterTabTemplate#iconSize
+     * @name Controls/_tabs/interface/TextCounterTabTemplate#iconSize
      * @cfg {String} Размер иконки.
      */
     iconSize?: string;
     /**
-     * @name Controls/_tabs/interface/ITextCounterTabTemplate#mainCounter
+     * @name Controls/_tabs/interface/TextCounterTabTemplate#mainCounter
      * @cfg {String} Значение счетчика.
      */
     mainCounter?: string;
     /**
-     * @name Controls/_tabs/interface/ITextCounterTabTemplate#mainCounterStyle
+     * @name Controls/_tabs/interface/TextCounterTabTemplate#mainCounterStyle
      * @cfg {String} Стиль отображения счетчика.
      */
     mainCounterStyle?: string;
     /**
-     * @name Controls/_tabs/interface/ITextCounterTabTemplate#caption
+     * @name Controls/_tabs/interface/TextCounterTabTemplate#caption
      * @cfg {String} Подпись вкладки.
      */
     caption?: string;
     /**
-     * @name Controls/_tabs/interface/ITextCounterTabTemplate#additionalCaption
+     * @name Controls/_tabs/interface/TextCounterTabTemplate#additionalCaption
      * @cfg {String} Дополнительная подпись вкладки.
      */
     additionalCaption?: string;

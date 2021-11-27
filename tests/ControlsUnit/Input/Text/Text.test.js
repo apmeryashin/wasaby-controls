@@ -189,6 +189,22 @@ define(
 
                assert.equal(calls.length, 1);
             });
+            it('[^\\\\/]', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  constraint: '[^\\\\/]'
+               });
+
+               assert.equal(calls.length, 0);
+            });
+            it('[^\\\\/]*', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  constraint: '[^\\\\/]*'
+               });
+
+               assert.equal(calls.length, 0);
+            });
          });
       });
    }

@@ -349,6 +349,34 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.destroy(); // уничтожаем все таймеры
         });
 
+        it('recount indicators not stop display portioned search', async () => {
+            const options = {
+                isInfinityNavigation: true,
+                attachLoadTopTriggerToNull: true,
+                attachLoadDownTriggerToNull: true,
+                hasMoreDataToTop: true,
+                hasMoreDataToBottom: true,
+                hasHiddenItemsByVirtualScroll: () => false,
+                scrollToFirstItem: (afterScroll) => afterScroll()
+            } as unknown as IIndicatorsControllerOptions;
+            const {collection, controller} = initTest([{id: 1}], options);
+            controller.setViewportFilled(true);
+            collection.getCollection().setMetaData({iterative: true});
+            controller.startDisplayPortionedSearch('bottom');
+
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
+            assert.isFalse(collection.getBottomIndicator().isDisplayed());
+
+            controller.recountIndicators('all');
+
+            // ждем пока отобразится индикатор порционного поиска
+            fakeTimer.tick(2001);
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
         it('display portioned search in not infinity navigation', () => {
             const {collection, controller} = initTest([{id: 1}], {
                 isInfinityNavigation: false,

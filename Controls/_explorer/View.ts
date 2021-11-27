@@ -728,9 +728,9 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     //region proxy methods to TreeControl
-    scrollToItem(key: string | number, toBottom?: boolean): void {
+    scrollToItem(key: string | number, position?: string): void {
         if (this._children.treeControl) {
-            this._children.treeControl.scrollToItem(key, toBottom);
+            this._children.treeControl.scrollToItem(key, position);
         }
     }
 
@@ -741,6 +741,15 @@ export default class Explorer extends Control<IExplorerOptions> {
     reloadItem(): Promise<unknown> {
         const treeControl = this._children.treeControl;
         return treeControl.reloadItem.apply(treeControl, arguments);
+    }
+
+    /**
+     * Перезагружает указанные записи списка. Для этого отправляет запрос query-методом
+     * со значением текущего фильтра в поле [parentProperty] которого передаются идентификаторы
+     * родительских узлов.
+     */
+    reloadItems(ids: TKey[]): Promise<RecordSet | Error> {
+        return this._children.treeControl.reloadItems(ids);
     }
 
     //region edit
@@ -761,8 +770,8 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
     //endregion
 
-    reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<unknown> {
-        return this._children.treeControl.reload(keepScroll, sourceConfig);
+    reload(keepNavigation: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<unknown> {
+        return this._children.treeControl.reload(keepNavigation, sourceConfig);
     }
 
     getItems(): RecordSet {

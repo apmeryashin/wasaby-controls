@@ -308,7 +308,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             // Position option is the initial position from which control is initially drawn.
             // TODO: Удалить по https://online.sbis.ru/opendoc.html?guid=775879fd-5eb6-4449-ac95-c27a4107c52d
             if (this._options._shouldUseScrollToItem) {
-                this._children.months.scrollToItem(this._startPositionId, false);
+                this._children.months.scrollToItem(this._startPositionId, 'top');
             } else {
                 if (oldPositionId === this._startPositionId && this._children.months) {
                     this._children.months.reload();
@@ -467,7 +467,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         const containerToScroll: HTMLElement = this._findElementByDate(date);
 
         if (containerToScroll) {
-            scrollToElement(containerToScroll, false, true);
+            scrollToElement(containerToScroll, 'top', true);
             return true;
         }
         return false;

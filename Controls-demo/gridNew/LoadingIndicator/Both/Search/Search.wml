@@ -30,5 +30,8 @@
     <Controls.toggle:Checkbox caption="Загрузить мало данных вниз при поиске"
                               bind:value="_littleData"
                               on:valueChanged="_littleDataChangedHandler()"/>
+    <Controls.toggle:Checkbox caption="Вернуть вверх more: true, но при подгрузке не загрузить данные"
+                              bind:value="_moreUpTrueAndWithoutData"
+                              on:valueChanged="_moreUpTrueAndWithoutDataChangedHandler()"/>
   </div>
 </div>

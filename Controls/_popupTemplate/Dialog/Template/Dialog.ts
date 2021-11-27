@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/Dialog/Template/Dialog');
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Controller as ManagerController} from 'Controls/popup';
+import {getRoundClass} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
 import {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 import 'css!Controls/popupTemplate';
 
@@ -48,6 +49,14 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         }
     }
 
+    protected _getRoundedClass(options: IDialogTemplateOptions, type: string): string {
+        return getRoundClass({
+            options,
+            type,
+            hasRoundedBorder: !options.maximize
+        });
+    }
+
     protected _onDragEnd(): void {
         this._setDragStateByOptions(this._options);
         this._notify('popupDragEnd', [], {bubbling: true});
@@ -75,22 +84,6 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
 
     protected _onMouseUp(): void {
         this._setDragStateByOptions(this._options);
-    }
-
-    protected _getRoundClass(): string {
-        if (!this._options.maximize) {
-            if (!(this._options.headingCaption || this._options.headerContentTemplate)) {
-                if (this._options.footerContentTemplate) {
-                    return 'controls-DialogTemplate__top-area_roundBorder';
-                } else {
-                    return 'controls-DialogTemplate__border-radius';
-                }
-            } else {
-                if (!this._options.footerContentTemplate) {
-                    return 'controls-DialogTemplate__footer-area_roundBorder';
-                }
-            }
-        }
     }
 
     private _needStartDrag(event: SyntheticEvent<MouseEvent>): boolean {

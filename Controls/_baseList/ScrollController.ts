@@ -226,7 +226,7 @@ export default class ScrollController {
             scrollTop - topOffset - placeholder + (getStickyHeadersHeight(baseContainer, 'top', 'fixed') || 0);
 
         let firstItemIndex = this._options.collection.getStartIndex();
-        let lastItemIndex = Math.max(0, this._options.collection.getStopIndex() - 1);
+        const lastItemIndex = Math.max(0, this._options.collection.getStopIndex() - 1);
         firstItemIndex += this._getFirstVisibleItemIndex(listViewContainer.children, verticalOffset);
         firstItemIndex = Math.min(firstItemIndex, lastItemIndex);
 
@@ -285,19 +285,25 @@ export default class ScrollController {
     /**
      * Функция подскролла к элементу
      * @param {string | number} key
-     * @param {boolean} toBottom
+     * @param {string} position
      * @param {boolean} force
      * @remark Функция подскролливает к записи, если это возможно, в противном случае вызовется перестроение
      * от элемента
      */
     scrollToItem(key: string | number,
-                 toBottom: boolean = true,
+                 position: string = 'bottom',
                  force: boolean = false,
                  scrollCallback: Function): Promise<IScrollControllerResult | void> {
         const index = this._options.collection.getIndexByKey(key);
 
         if (index !== -1) {
             return new Promise((resolve) => {
+                let toBottom;
+                if (typeof position === 'boolean') {
+                    toBottom = position;
+                } else {
+                    toBottom = position === 'bottom';
+                }
                 if (!this._virtualScroll || !this._options.needScrollCalculation
                             || this._virtualScroll.canScrollToItem(index, toBottom, force)
                             && !this._virtualScroll.rangeChanged) {
@@ -312,7 +318,7 @@ export default class ScrollController {
                             // Для этого используем _scrollToItemAfterRender.
                             // https://online.sbis.ru/opendoc.html?guid=2a97761f-e25a-4a10-9735-ded67e36e527
                             this._continueScrollToItem = () => {
-                                this.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
+                                this.scrollToItem(key, position, force, scrollCallback).then(() => {
                                     resolve();
                                 });
                             };
@@ -684,6 +690,12 @@ export default class ScrollController {
                 return false;
             }
 
+            // Группа может менять свое расположение отностильно других элементов списка
+            // https://online.sbis.ru/opendoc.html?guid=b7b43adb-a680-4d48-9314-75fb3c3cc998
+            if (item.className.includes('controls-ListView__group')) {
+                return false;
+            }
+
             // Если элемент застикан, то пропускаем его, граничным будет элемент следующий за ним
             // https://online.sbis.ru/opendoc.html?guid=9a0d939d-a08b-478b-b981-ccd1577fb184
             if (window.getComputedStyle(item).position === 'sticky' ||
@@ -753,7 +765,8 @@ export default class ScrollController {
         // Округление нужно, так как размеры элементов бывают дробные, а scrollTop только целый
         // Отрицательным scrollTop также быть не может. Но при вычислениях мы можем получить тут отрицательное значение.
         // Это происходит в случае, когда контента нехватает для заполнения viewPort.
-        // Проверяли, можем ли следить за возможеностью скролла, чтобы восстанавливать сколл только когда скролл возможен.
+        // Проверяли, можем ли следить за возможеностью скролла, чтобы восстанавливать сколл
+        // только когда скролл возможен.
         // Не вышло: нативный resizeObserver срабатывает позже нашего afterRender, когда мы должны принять решение.
         scrollTop = Math.max(0, Math.floor(scrollTop));
         return scrollTop;

@@ -109,10 +109,10 @@ implements IMovableList, IRemovableList {
         return 'Controls/display:Collection';
     }
 
-    reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|Error> {
+    reload(keepNavigation: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|Error> {
         // listControl будет не создан, если была ошибка загрузки
         if (this._children.listControl) {
-            return this._children.listControl.reload(keepScroll, sourceConfig);
+            return this._children.listControl.reload(keepNavigation, sourceConfig);
         } else {
             return this._children.data.reload(sourceConfig);
         }
@@ -132,8 +132,8 @@ implements IMovableList, IRemovableList {
         return this._children.listControl.getItems();
     }
 
-    scrollToItem(key: string|number, toBottom: boolean, force: boolean): Promise<void> {
-        return this._children.listControl.scrollToItem(key, toBottom, force);
+    scrollToItem(key: string|number, position: string, force: boolean): Promise<void> {
+        return this._children.listControl.scrollToItem(key, position, force);
     }
 
     beginEdit(options: object): Promise<void | {canceled: true}> {

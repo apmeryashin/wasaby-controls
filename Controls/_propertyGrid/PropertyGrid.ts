@@ -905,7 +905,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
-    private _calculateMouseOffsetInItem(event: SyntheticEvent<MouseEvent>, targetElement: Element): {top: number, bottom: number} {
+    private _calculateMouseOffsetInItem(event: SyntheticEvent<MouseEvent>, targetElement: Element)
+        : {top: number, bottom: number} {
         let result = null;
 
         if (targetElement) {
@@ -922,7 +923,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     private _draggingItemMouseMove(itemData: TreeItem, event: SyntheticEvent<MouseEvent>): void {
         const dispItem = itemData;
-        const targetIsNotDraggableItem = this._dndController.getDraggableItem()?.getContents() !== dispItem.getContents();
+        const targetIsNotDraggableItem
+            = this._dndController.getDraggableItem()?.getContents() !== dispItem.getContents();
         if (dispItem['[Controls/_display/TreeItem]'] && dispItem.isNode() !== null && targetIsNotDraggableItem) {
             const targetElement = this._getTargetRow(event);
             const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event, targetElement);
@@ -946,7 +948,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _getTargetRow(event: SyntheticEvent): Element {
-        if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
+        if (
+            !event.target || !event.target.classList ||
+            !event.target.parentNode || !event.target.parentNode.classList
+        ) {
             return event.target;
         }
 
@@ -970,7 +975,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return target;
     }
 
-    validate({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
+    startValidation({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
         const validatorArgs = {
@@ -1056,7 +1061,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             filter: (item, where): boolean => {
                 const searchFilterValue = where[displayProperty];
                 return !!item.get(this._options.nodeProperty) &&
-                       (!searchFilterValue || item.get(displayProperty)?.toLowerCase().includes(searchFilterValue.toLowerCase()));
+                       (!searchFilterValue ||
+                           item.get(displayProperty)?.toLowerCase().includes(searchFilterValue.toLowerCase()));
             }
         });
         const moveCommand = new MoveCommand({

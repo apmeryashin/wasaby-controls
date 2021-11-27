@@ -125,6 +125,7 @@
                 on:editingRowKeyDown="_onEditingRowKeyDown()"
                 on:rowDeactivated="_onRowDeactivated()"
                 on:itemsContainerReady="_itemsContainerReadyHandler()"
+                on:viewUnmount="_viewUnmount()"
                 on:controlResize="_viewResize()"
                 on:doScroll="_stopBubblingEvent()"
                 on:updatePlaceholdersSize="_stopBubblingEvent()"

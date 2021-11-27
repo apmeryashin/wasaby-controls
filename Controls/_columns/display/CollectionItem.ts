@@ -85,9 +85,10 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
     getItemActionPositionClasses(itemActionsPosition: string,
                                  templateItemActionClass: string,
                                  itemPadding: {top?: string, bottom?: string}): string {
-        let classes = super.getItemActionPositionClasses(itemActionsPosition, templateItemActionClass, itemPadding);
+        let classes: string;
         let itemActionClass: string;
         itemActionClass = templateItemActionClass || 'controls-itemActionsV_position_bottomRight';
+        classes = `${itemActionClass} `;
         if (this._$roundBorder) {
             // Если располагаем ItemActions снизу, то скругляем им верхний левый угол.
             if (itemActionClass === 'controls-itemActionsV_position_bottomRight') {
