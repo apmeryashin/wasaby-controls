@@ -8,25 +8,26 @@ import { IObservable } from 'Types/collection';
 import InertialScrolling from 'Controls/_baseList/resources/utils/InertialScrolling';
 
 import {
-    CollectionItem,
     Collection,
+    CollectionItem,
     TItemKey,
-    VirtualScrollHideController,
-    VirtualScrollController
+    VirtualScrollController,
+    VirtualScrollHideController
 } from 'Controls/display';
 import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 import {
-    ScrollController,
-    IItemsRange,
-    IPageDirection,
-    IScheduledScrollParams,
-    IScheduledScrollToElementParams,
+    IActiveElementChangedChangedCallback,
     IEdgeItem,
-    IPlaceholders,
+    IEdgeItemCalculatingParams,
     IHasItemsOutRange,
     IIndexesChangedParams,
     IItemsEndedCallback,
-    IActiveElementChangedChangedCallback
+    IItemsRange,
+    IPageDirection,
+    IPlaceholders,
+    IScheduledScrollParams,
+    IScheduledScrollToElementParams,
+    ScrollController
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
 import type { ITriggersVisibility } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
@@ -126,10 +127,25 @@ export class ListVirtualScrollController {
         this._scrollController.setListContainer(listContainer);
     }
 
-    afterRenderListControl(hasNotRenderedChanges: boolean): void {
+    beforeRenderListControl(hasNotRenderedChanges: boolean): void {
+        if (hasNotRenderedChanges && !this._scheduledScrollParams) {
+            // Планируем восстановление скролла, если
+            // не было запланировано восстановления скролла и у нас есть неотрендеренные изменения,
+            // которые могут повлиять на скролл
+            const edgeItem = this._scrollController.getEdgeVisibleItem('forward');
+            this._scheduleScroll({
+                type: 'restoreScroll',
+                params: edgeItem
+            });
+        } else {
+            this._handleScheduledScroll();
+        }
+    }
+
+    afterRenderListControl(): void {
         this._updateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
-        this._handleScheduledScroll(hasNotRenderedChanges);
+        this._handleScheduledScroll();
     }
 
     virtualScrollPositionChange(position: number): void {
@@ -220,7 +236,6 @@ export class ListVirtualScrollController {
             scrollPosition: 0,
             viewportSize: options.virtualScrollConfig.viewportHeight || 0,
             contentSize: 0,
-            beforeContentSize: 0,
             totalCount,
             givenItemsSizes: this._getGivenItemsSizes(),
 
@@ -246,23 +261,21 @@ export class ListVirtualScrollController {
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
-        this._scheduleUpdateItemsSizes({
-            startIndex: params.startIndex,
-            endIndex: params.endIndex
-        });
-        this._collection.setIndexes(params.startIndex, params.endIndex);
+        this._scheduleUpdateItemsSizes(params.range);
+        this._collection.setIndexes(params.range.startIndex, params.range.endIndex);
 
-        if (params.edgeVisibleItem) {
-            const item = this._collection.at(params.edgeVisibleItem.index);
-            if (!item) {
-                Logger.error(`${ERROR_PATH}::_indexesChangedCallback | ` +
-                    'Внутренняя ошибка списков! Крайний видимый элемент не найден в Collection.');
-            }
-            this._scheduleScroll({
-                type: 'restoreScroll',
-                params: params.edgeVisibleItem
-            });
-        }
+        // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
+        // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
+        // и мы будем знать актуальную scrollPosition.
+        // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
+        this._scheduleScroll({
+            type: 'calculateRestoreScrollParams',
+            params: {
+                direction: params.shiftDirection,
+                range: params.oldRange,
+                placeholders: params.oldPlaceholders
+            } as IEdgeItemCalculatingParams
+        });
     }
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
@@ -292,21 +305,28 @@ export class ListVirtualScrollController {
         this._scheduledScrollParams = scrollParams;
     }
 
-    private _handleScheduledScroll(hasNotRenderedChanges: boolean): void {
+    private _handleScheduledScroll(): void {
         if (this._scheduledScrollParams) {
             switch (this._scheduledScrollParams.type) {
+                case 'calculateRestoreScrollParams':
+                    const params = this._scheduledScrollParams.params as IEdgeItemCalculatingParams;
+                    const edgeItem = this._scrollController.getEdgeVisibleItem(
+                        params.direction,
+                        params.range,
+                        params.placeholders
+                    );
+                    this._scheduledScrollParams = null;
+
+                    this._scheduleScroll({
+                        type: 'restoreScroll',
+                        params: edgeItem
+                    });
+                    break;
                 case 'restoreScroll':
                     const restoreScrollParams = this._scheduledScrollParams.params as IEdgeItem;
-                    let directionToRestoreScroll;
-                    if (!restoreScrollParams && hasNotRenderedChanges) {
-                        directionToRestoreScroll = 'backward';
-                    } else {
-                        directionToRestoreScroll = restoreScrollParams.direction;
-                    }
-                    if (directionToRestoreScroll) {
-                        const scrollPosition = this._scrollController.getScrollPositionToEdgeItem(restoreScrollParams);
-                        this._doScrollUtil(scrollPosition);
-                    }
+                    const scrollPosition = this._scrollController.getScrollPositionToEdgeItem(restoreScrollParams);
+                    this._doScrollUtil(scrollPosition);
+                    this._scheduledScrollParams = null;
                     break;
                 case 'scrollToElement':
                     const scrollToElementParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
@@ -315,13 +335,12 @@ export class ListVirtualScrollController {
                         scrollToElementParams.toBottom,
                         scrollToElementParams.force
                     );
+                    this._scheduledScrollParams = null;
                     break;
                 default:
                     Logger.error(`${ERROR_PATH}::_handleScheduledScroll | ` +
                         'Внутренняя ошибка списков! Неопределенный тип запланированного скролла.');
             }
-
-            this._scheduledScrollParams = null;
         }
     }
 
@@ -451,3 +470,23 @@ export class ListVirtualScrollController {
         }
     }
 }
+
+// Как работает pageDown/pageUp:
+// 1. Обрабатывается нажатие клавиши
+// 2. Получаем крайний видимый элемент
+// 3. Скроллим к нему
+// 4. Возвращаем промис с ключом записи, к которой проскролили
+// 5. Ставим маркер на эту запись
+
+// Как работает восстановление скролла:
+// 1. Срабатывает trigger, вызываем shiftToDirection, смещаем диапазон
+// 2. Вызываем indexesChangedCallback
+// 3. Планируем восстановление скролла. Для этого запоминаем текущий(не новый) range, плейсхолдеры и shiftDirection
+// 4. На beforeRender считаем крайний видимый элемент по параметрам из шага 3.
+// 5. На afterRender считаем новый scrollPosition до крайнего видимого элемента
+// EdgeItem можно запоминать ТОЛЬКО на beforeRender, т.к. после срабатывания триггера может произойти скролл.
+// beforeRender - это точка после которой гарантированно не будет меняться scrollPosition.
+// Но т.к. мы считаем EdgeItem на beforeRender, нам нужно прокидывать старый range и плейсхолдер, чтобы EdgeItem
+// посчитать по состоянию до смещения диапазона.
+// Плейсхолдер нужны, чтобы из ItemSizes посчитать актуальный offset
+// (ItemSize.offset = placeholders.backward + element.offset(настоящий оффсет в DOM)

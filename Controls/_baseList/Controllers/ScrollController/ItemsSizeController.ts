@@ -47,14 +47,14 @@ export class ItemsSizesController {
     /**
      * Возвращает размер контента, расположенного в этом же ScrollContainer-е до списка.
      */
-    getBeforeItemsContentSize(): number {
+    getBeforeContentSize(): number {
         if (!this._itemsContainer) {
             return null;
         }
 
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
         return scrollContent
-            ? scrollContent.getBoundingClientRect().top - getDimensions(this._itemsContainer, true).top
+            ? getDimensions(this._itemsContainer, true).top - scrollContent.getBoundingClientRect().top
             : getOffsetTop(this._itemsContainer);
     }
 

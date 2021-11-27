@@ -973,6 +973,19 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 rect: this._scrollModel.viewPortRect
             }
         );
+
+        // О позиции скролла в списках должны узнавать в одной точке. Эта точка scrollMoveSync.
+        // viewportResize должен говорить только о размере вьюпорта.
+        this._sendByListScrollRegistrarToComponent(
+            component,
+            'scrollMoveSync',
+            {
+                scrollTop: this._scrollModel.scrollTop,
+                position: this._scrollModel.verticalPosition,
+                clientHeight: this._scrollModel.clientHeight,
+                scrollHeight: this._scrollModel.scrollHeight
+            }
+        );
     }
 
     _sendByListScrollRegistrar(eventType: string, params: object): void {
