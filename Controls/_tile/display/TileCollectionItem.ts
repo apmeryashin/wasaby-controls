@@ -35,9 +35,6 @@ export default class TileCollectionItem<T extends Model = Model>
 
     getMultiSelectClasses(): string {
         let classes = super.getMultiSelectClasses();
-
-        const checkboxPositionClass = `controls-ListView__checkbox_position-${this.getMultiSelectPosition()}`;
-        classes = classes.replace(checkboxPositionClass, '');
         classes += ' controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom';
 
         return classes;
