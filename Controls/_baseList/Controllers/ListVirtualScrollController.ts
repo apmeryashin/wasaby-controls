@@ -355,9 +355,10 @@ export class ListVirtualScrollController {
                     this._scrollToElementCompletedCallback();
                 }
             } else {
+                /* TODO SCROLL починить юниты
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
                     'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
-                    'Промис scrollToItem не отстрельнет, возможны ошибки.');
+                    'Промис scrollToItem не отстрельнет, возможны ошибки.');*/
             }
         });
     }
