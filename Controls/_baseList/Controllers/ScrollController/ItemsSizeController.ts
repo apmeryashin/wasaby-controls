@@ -41,7 +41,7 @@ export class ItemsSizesController {
 
     getElement(key: CrudEntityKey): HTMLElement {
         const selector = `${this._itemsQuerySelector}[item-key="${key}"]`;
-        return this._itemsContainer.querySelector(selector) as HTMLElement;
+        return this._itemsContainer?.querySelector(selector) as HTMLElement;
     }
 
     /**
