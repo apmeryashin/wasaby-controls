@@ -1,0 +1,20 @@
+<div class="controls-Demo__wide-propertyGrid">
+    <Controls.propertyGrid:PropertyGrid
+            name="propertyGrid"
+            bind:editingObject="_editingObject"
+            itemActions="{{_itemActions}}"
+            typeDescription="{{_typeDescription}}">
+        <ws:captionColumnOptions width="50%"/>
+        <ws:itemTemplate>
+            <ws:partial template="Controls/propertyGrid:ItemTemplate"
+                        class="controls-demo-pg-highlightOnHover-editor-padding"
+                        scope="{{itemTemplate}}"
+                        highlightOnHover="{{true}}">
+                <ws:afterEditorTemplate>
+                    <Controls.buttons:Button buttonStyle="pale" iconSize="s" icon="icon-Question2" viewMode="functionalButton"/>
+                </ws:afterEditorTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls.propertyGrid:PropertyGrid>
+    <Controls.list:AddButton caption="Характеристика" on:click="_beginAdd()" class="padding-left"/>
+</div>
