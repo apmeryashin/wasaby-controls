@@ -1,6 +1,8 @@
+import {TItemBaseLine} from 'Controls/display';
+
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/list:View плоском списке}.
- * 
+ *
  * @class Controls/_list/interface/ItemTemplate
  * @implements Controls/list:IBaseItemTemplate
  * @implements Controls/list:IContentTemplate
@@ -14,7 +16,7 @@
  * <!-- WML -->
  * <Controls.list:View source="{{_viewSource}}">
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}"> 
+ *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}">
  *          <ws:contentTemplate>
  *             {{contentTemplate.item.contents.title}}
  *          </ws:contentTemplate>
@@ -26,6 +28,7 @@
  * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/list/item/ здесь}.
  * @public
  */
+
 export default interface IItemTemplateOptions {
    /**
     * @name Controls/_list/interface/ItemTemplate#displayProperty
@@ -35,4 +38,13 @@ export default interface IItemTemplateOptions {
     * @default title
     */
    displayProperty?: string;
+
+   /**
+    * @name Controls/_list/interface/ItemTemplate#baseLine
+    * @cfg {Controls/_display/CollectionItem/TItemBaseLine.typedef} Настройка базовой линии записи плоского списка
+    * @remark
+    * Необходимо указывать эту опцию, если надо выровнять содержимое записи и чекбокс при multiSelectVisibility="visible" по базовой линии 17px
+    * @default none
+    */
+   baseLine?: TItemBaseLine;
 }
