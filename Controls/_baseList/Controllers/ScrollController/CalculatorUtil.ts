@@ -57,6 +57,13 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
     const { direction, segmentSize, totalCount, pageSize, currentRange } = params;
     let { startIndex, endIndex } = currentRange;
 
+    if (!pageSize) {
+        return {
+            startIndex: 0,
+            endIndex: totalCount
+        };
+    }
+
     if (segmentSize && totalCount >= pageSize) {
         if (direction === 'backward') {
             startIndex = Math.max(0, startIndex - segmentSize);

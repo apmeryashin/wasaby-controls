@@ -317,10 +317,12 @@ export class ListVirtualScrollController {
                     );
                     this._scheduledScrollParams = null;
 
-                    this._scheduleScroll({
-                        type: 'restoreScroll',
-                        params: edgeItem
-                    });
+                    if (edgeItem) {
+                        this._scheduleScroll({
+                            type: 'restoreScroll',
+                            params: edgeItem
+                        });
+                    }
                     break;
                 case 'restoreScroll':
                     const restoreScrollParams = this._scheduledScrollParams.params as IEdgeItem;
