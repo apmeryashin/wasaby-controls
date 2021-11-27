@@ -101,8 +101,7 @@
            <!--TODO убрать условие в классе после https://online.sbis.ru/opendoc.html?guid=5fdfb03c-5a9a-4a1c-9387-1b61ca40f9b0 -->
           <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
                       caption="{{item.caption}}"
-                      attr:class="controls-PropertyGrid__editor_control
-                                  {{ afterEditorTemplate && options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control_withAfterEditorTemplate' }}"
+                      attr:class="{{ afterEditorTemplate && options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control'}}"
                       scope="{{_options}}"/>
             <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
