@@ -170,7 +170,7 @@ export class Calculator {
         const scrollPosition = this._scrollPosition;
         let edgeItemParams: IEdgeItem;
 
-        for (let index = range.startIndex; index <= range.endIndex; index++) {
+        for (let index = range.startIndex; index < range.endIndex; index++) {
             const item = this._itemsSizes[index];
             const nextItem = this._itemsSizes[index + 1];
             const itemOffset = item.offset - placeholders.backward;
@@ -185,7 +185,7 @@ export class Calculator {
             }
 
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
-            const isLastItem = index === range.endIndex || item && !nextItem;
+            const isLastItem = index === range.endIndex - 1 || item && !nextItem;
             if (itemBorderBottom >= viewportBorderPosition || isLastItem) {
                 let borderDistance;
                 let border;
@@ -266,7 +266,7 @@ export class Calculator {
             direction = index > this._range.endIndex ? 'forward' : 'backward';
             this._range = getRangeByIndex({
                 pageSize: this._virtualScrollConfig.pageSize,
-                start: 0,
+                start: index,
                 totalCount: this._totalCount
             });
 

@@ -40,7 +40,7 @@ export interface IShadowVisibility {
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/ListVirtualScrollController';
 
-type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => Promise<void>;
+type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => Promise<void>|void;
 type IDoScrollUtil = (scrollTop: number) => void;
 type IUpdateShadowsUtil = (hasItems: IHasItemsOutRange) => void;
 type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
@@ -348,8 +348,12 @@ export class ListVirtualScrollController {
         this._inertialScrolling.callAfterScrollStopped(() => {
             const element = this._scrollController.getElement(key);
             if (element) {
-                const promise = this._scrollToElementUtil(element, toBottom, force);
-                promise.then(() => this._scrollToElementCompletedCallback());
+                const result = this._scrollToElementUtil(element, toBottom, force);
+                if (result instanceof Promise) {
+                    result.then(() => this._scrollToElementCompletedCallback());
+                } else {
+                    this._scrollToElementCompletedCallback();
+                }
             } else {
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
                     'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
