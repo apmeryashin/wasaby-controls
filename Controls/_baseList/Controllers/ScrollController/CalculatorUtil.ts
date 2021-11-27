@@ -278,7 +278,7 @@ function getItemsSizesSum(params: IGetSizesByRangeParams): number {
     let result = 0;
 
     for (let idx = fixedStartIndex; idx < fixedEndIndex; idx++) {
-        result += itemsSizes[idx].size || 0;
+        result += itemsSizes[idx]?.size || 0;
     }
 
     return result;
