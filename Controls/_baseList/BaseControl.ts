@@ -3875,7 +3875,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             itemsEndedCallback: (direction): void => {
                 const compatibleDirection = direction === 'forward' ? 'down' : 'up';
-                _private.loadToDirectionIfNeed(this, compatibleDirection);
+                if (this._shouldLoadOnScroll(compatibleDirection)) {
+                    this._loadMore(compatibleDirection);
+                }
             }
         });
     }
