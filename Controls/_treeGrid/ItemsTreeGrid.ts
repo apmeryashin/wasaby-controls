@@ -2,7 +2,7 @@ import {Logger} from 'UI/Utils';
 import {IItemsViewOptions} from 'Controls/baseList';
 import {isFullGridSupport} from 'Controls/display';
 import {ItemsView as ItemsGrid} from 'Controls/grid';
-import { TreeControl } from 'Controls/tree';
+import { TreeGridControl } from './TreeGridControl';
 import TreeGridView from 'Controls/_treeGrid/TreeGridView';
 import TreeGridViewTable from 'Controls/_treeGrid/TreeGridViewTable';
 import {default as ITreeGrid, IOptions as ITreeGridOptions} from 'Controls/_treeGrid/interface/ITreeGrid';
@@ -45,7 +45,7 @@ export interface IItemsTreeGridOptions extends IItemsViewOptions, ITreeGridOptio
 export default class ItemsTreeGrid extends ItemsGrid<IItemsTreeGridOptions> implements ITreeGrid {
     //region override base template props
     protected _viewName: Function = null;
-    protected _viewTemplate: Function = TreeControl;
+    protected _viewTemplate: Function = TreeGridControl;
     protected _viewModelConstructor: string = 'Controls/treeGrid:TreeGridCollection';
     //endregion
 

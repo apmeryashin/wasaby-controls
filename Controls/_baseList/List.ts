@@ -79,11 +79,11 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @demo Controls-demo/list_new/Base/Index
  */
 
-export default class List extends Control /** @lends Controls/_list/List.prototype */
+export default class List<TControl extends ListControl> extends Control /** @lends Controls/_list/List.prototype */
 implements IMovableList, IRemovableList {
     protected _template: TemplateFunction = template;
     protected _viewName = viewName;
-    protected _viewTemplate: unknown = ListControl;
+    protected _viewTemplate: TControl = ListControl;
     protected _viewModelConstructor = null;
     protected _itemsSelector: string = '.controls-ListView__itemV';
     protected _children: {
