@@ -17,6 +17,8 @@ import type {
     IItemsRange,
     IPlaceholders
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import {IEdgeItemCalculatingParams} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import { isEqual } from 'Types/object';
 
 export interface IActiveElementIndexChanged extends IActiveElementIndex {
     activeElementIndexChanged: boolean;
@@ -70,6 +72,7 @@ const RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT = 4;
  */
 export class Calculator {
     private _itemsSizes: IItemsSizes;
+    private _oldItemsSizes: IItemsSizes;
     private _givenItemsSizes: IItemsSizes;
     private _triggersOffsets: ITriggersOffsets;
     private _virtualScrollConfig: IVirtualScrollConfig;
@@ -124,7 +127,10 @@ export class Calculator {
      * @param itemsSizes
      */
     updateItemsSizes(itemsSizes: IItemsSizes): void {
-        this._itemsSizes = itemsSizes;
+        if (!isEqual) {
+            this._oldItemsSizes = this._itemsSizes;
+            this._itemsSizes = itemsSizes;
+        }
     }
 
     updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
@@ -138,12 +144,8 @@ export class Calculator {
     /**
      * Считает и возвращает крайний видимый элемент.
      */
-    getEdgeVisibleItem(
-        direction: IDirection,
-        range: IItemsRange = this._range,
-        placeholders: IPlaceholders = this._placeholders
-    ): IEdgeItem {
-        return this._getEdgeVisibleItem(direction, range, placeholders);
+    getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
+        return this._getEdgeVisibleItem(params);
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
@@ -165,14 +167,18 @@ export class Calculator {
         return scrollPosition;
     }
 
-    private _getEdgeVisibleItem(direction: IDirection, range: IItemsRange, placeholders: IPlaceholders): IEdgeItem {
+    private _getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
         const viewportHeight = this._viewportSize;
         const scrollPosition = this._scrollPosition;
-        let edgeItemParams: IEdgeItem;
+        const direction = params.direction;
+        const range = params.range || this._range;
+        const placeholders = params.placeholders || this._placeholders;
+        const itemsSizes = params.itemsSizes || this._itemsSizes;
+        let edgeItemParams: IEdgeItem = null;
 
         for (let index = range.startIndex; index < range.endIndex; index++) {
-            const item = this._itemsSizes[index];
-            const nextItem = this._itemsSizes[index + 1];
+            const item = itemsSizes[index];
+            const nextItem = itemsSizes[index + 1];
             const itemOffset = item.offset - placeholders.backward;
             const itemBorderBottom = Math.round(itemOffset) + Math.round(item.size);
 
@@ -509,6 +515,7 @@ export class Calculator {
         return {
             range: this._range,
             oldRange,
+            oldItemsSizes: this._oldItemsSizes,
             oldPlaceholders,
             indexesChanged,
             shiftDirection,

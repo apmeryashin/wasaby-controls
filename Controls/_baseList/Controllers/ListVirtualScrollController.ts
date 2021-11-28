@@ -132,7 +132,7 @@ export class ListVirtualScrollController {
             // Планируем восстановление скролла, если
             // не было запланировано восстановления скролла и у нас есть неотрендеренные изменения,
             // которые могут повлиять на скролл
-            const edgeItem = this._scrollController.getEdgeVisibleItem('forward');
+            const edgeItem = this._scrollController.getEdgeVisibleItem({ direction: 'forward' });
             this._scheduleScroll({
                 type: 'restoreScroll',
                 params: edgeItem
@@ -273,6 +273,7 @@ export class ListVirtualScrollController {
             params: {
                 direction: params.shiftDirection,
                 range: params.oldRange,
+                itemsSizes: params.oldItemsSizes,
                 placeholders: params.oldPlaceholders
             } as IEdgeItemCalculatingParams
         });
@@ -310,11 +311,7 @@ export class ListVirtualScrollController {
             switch (this._scheduledScrollParams.type) {
                 case 'calculateRestoreScrollParams':
                     const params = this._scheduledScrollParams.params as IEdgeItemCalculatingParams;
-                    const edgeItem = this._scrollController.getEdgeVisibleItem(
-                        params.direction,
-                        params.range,
-                        params.placeholders
-                    );
+                    const edgeItem = this._scrollController.getEdgeVisibleItem(params);
                     this._scheduledScrollParams = null;
 
                     if (edgeItem) {
@@ -369,16 +366,16 @@ export class ListVirtualScrollController {
      * Скроллит к переданной странице.
      * Скроллит так, чтобы было видно последний элемент с предыдущей страницы, чтобы не потерять "контекст".
      * Смещает диапазон, возвращает промис с индексами крайних видимых полностью элементов.
-     * @param page Условная страница, к которой нужно скроллить. (Следующая, предыдущая, начальная, конечная)
+     * @param pageDirection Условная страница, к которой нужно скроллить. (Следующая, предыдущая, начальная, конечная)
      * @private
      */
-    private _scrollToPage(page: IPageDirection): Promise<CrudEntityKey> {
+    private _scrollToPage(pageDirection: IPageDirection): Promise<CrudEntityKey> {
         let itemIndex;
-        if (page === 'forward' || page === 'backward') {
-            const edgeItem = this._scrollController.getEdgeVisibleItem(page);
+        if (pageDirection === 'forward' || pageDirection === 'backward') {
+            const edgeItem = this._scrollController.getEdgeVisibleItem({direction: pageDirection});
             itemIndex = edgeItem.index;
         } else {
-            itemIndex = page === 'start' ? 0 : this._collection.getCount() - 1;
+            itemIndex = pageDirection === 'start' ? 0 : this._collection.getCount() - 1;
         }
 
         const item = this._collection.getItemBySourceIndex(itemIndex);
