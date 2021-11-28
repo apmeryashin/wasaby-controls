@@ -753,7 +753,8 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
                 // Подсчет производится:
                 //  + простым сравнением размеров, если горизонтального скролла нет в данный момент.
                 //  + с предварительным сбросом текущего состояния прокрутки, если скролл есть.
-                const shouldDrawResult = (this._$columnScrollController || ColumnScrollController).shouldDrawColumnScroll(
+                const controller = (this._$columnScrollController || ColumnScrollController);
+                const shouldDrawResult = controller.shouldDrawColumnScroll(
                     this._children,
                     getFixedPartWidth,
                     this._options.isFullGridSupport
@@ -786,7 +787,8 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
                     disablePendingMouseEnterActivation(this);
                 }
             } else if (this._options.needShowEmptyTemplate) {
-                this._$columnScrollEmptyViewMaxWidth = ColumnScrollController.getEmptyViewMaxWidth(this._children, this._options);
+                this._$columnScrollEmptyViewMaxWidth =
+                    ColumnScrollController.getEmptyViewMaxWidth(this._children, this._options);
             }
         }
     },

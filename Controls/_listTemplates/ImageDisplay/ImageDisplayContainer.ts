@@ -128,7 +128,11 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
             this._resetHasItemWithImage();
             this._updateDisplayImage(this._items, this._imageProperty);
             if (!options.imageProperty) {
-                this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange, this._onCollectionChange);
+                this._unsubscribeToCollectionChange(
+                    this._items,
+                    this._onCollectionItemChange,
+                    this._onCollectionChange
+                );
             }
         }
     }

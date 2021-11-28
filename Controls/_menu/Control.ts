@@ -880,7 +880,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     MenuControl._searchHistoryDisplayFilter.bind(this, options, items) : null
             });
         } else {
-            const filterFunction = options.parentProperty && options.nodeProperty ? MenuControl._displayFilter.bind(this, options) : null;
+            const filterFunction = options.parentProperty &&
+                                   options.nodeProperty ? MenuControl._displayFilter.bind(this, options) : null;
             // В дереве не работает группировка,
             // ждем решения по ошибке https://online.sbis.ru/opendoc.html?guid=f4a3be79-5ec5-45d2-b742-2d585c5c069d
             listModel = new Collection({...collectionConfig,
