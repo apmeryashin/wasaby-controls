@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_propertyGrid/PropertyGrid';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
-import {GroupItem, CollectionItem, TreeItem} from 'Controls/display';
+import {GroupItem, CollectionItem, TreeItem, IEditableCollectionItem} from 'Controls/display';
 import {IObservable, RecordSet} from 'Types/collection';
 import {Model, Record as entityRecord} from 'Types/entity';
 import {factory} from 'Types/chain';
@@ -17,7 +17,7 @@ import {
     PROPERTY_GROUP_FIELD,
     PROPERTY_TOGGLE_BUTTON_ICON_FIELD
 } from './Constants';
-import {groupConstants as constView, IList} from '../list';
+import {groupConstants as constView, IEditingConfig, IList} from '../list';
 import PropertyGridCollection from './PropertyGridCollection';
 import PropertyGridCollectionItem from './PropertyGridCollectionItem';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
@@ -40,17 +40,40 @@ import {TouchDetect} from 'Env/Touch';
 import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
 import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Controls/listDragNDrop';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import {Logger} from 'UI/Utils';
+import {
+    Controller as EditInPlaceController,
+    IBeforeBeginEditCallbackParams, IBeforeEndEditCallbackParams,
+    InputHelper as EditInPlaceInputHelper
+} from 'Controls/editInPlace';
+import {process} from "Controls/error";
+import {LIST_EDITING_CONSTANTS} from "Controls/_baseList/BaseControl";
 
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
 const IE_MOUSEMOVE_FIX_DELAY = 50;
 const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
+const ERROR_MSG = {
+    CANT_USE_IN_READ_ONLY: (methodName: string): string => `List is in readOnly mode. Cant use ${methodName}() in readOnly!`
+};
+
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
 
 interface IPropertyGridValidatorArguments {
     item: PropertyGridCollectionItem<Model>;
+}
+
+interface IBeginAddOptions {
+    shouldActivateInput?: boolean;
+    addPosition?: 'top' | 'bottom';
+    targetItem?: Model;
+    columnIndex?: number;
+}
+
+interface IBeginEditUserOptions extends IBeginAddOptions {
+    item?: Model;
 }
 
 /**
@@ -99,6 +122,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _collapsedGroupsChanged: boolean = false;
     private _editingObject: TEditingObject = null;
     private _dndController: DndController;
+    private _editInPlaceController: EditInPlaceController;
+    private _editInPlaceInputHelper: EditInPlaceInputHelper;
+    private _isMounted: boolean;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
         const {selectedKeys} = options;
@@ -162,6 +188,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _afterMount(): void {
+        this._isMounted = true;
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
     }
@@ -1078,6 +1105,306 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             this._getMoveViewCommand(movedItems, LOCAL_MOVE_POSITION.On, resultTarget).execute();
         });
     }
+
+    // region editinplace
+
+    beginAdd(userOptions: IBeginEditUserOptions): Promise<void | { canceled: true }> {
+        if (this._options.readOnly) {
+            return PropertyGridView._rejectEditInPlacePromise('beginAdd');
+        }
+        return this._beginAdd(userOptions, {
+            addPosition: userOptions?.addPosition || this._getEditingConfig(this._options).addPosition,
+            targetItem: userOptions?.targetItem,
+            shouldActivateInput: userOptions?.shouldActivateInput,
+            columnIndex: (userOptions?.columnIndex || 0)
+        });
+    }
+
+    private _getEditingConfig(options?: IPropertyGridOptions): IEditingConfig & {mode: 'row' | 'cell'} {
+        const editingConfig = options.editingConfig || {};
+        const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
+
+        // Режим последовательного редактирования (действие по Enter).
+        const getSequentialEditingMode = () => {
+            // sequentialEditingMode[row | cell | none] - новая опция, sequentialEditing[boolean?] - старая опция
+            if (typeof editingConfig.sequentialEditingMode === 'string') {
+                return editingConfig.sequentialEditingMode;
+            } else {
+                return editingConfig.sequentialEditing !== false ? 'row' : 'none';
+            }
+        };
+        let autoAddByApplyButton: boolean = false;
+        if (editingConfig.autoAddByApplyButton !== false) {
+            autoAddByApplyButton = !!(editingConfig.autoAddByApplyButton || editingConfig.autoAdd);
+        }
+        return {
+            mode: editingConfig.mode || 'row',
+            editOnClick: !!editingConfig.editOnClick,
+            sequentialEditingMode: getSequentialEditingMode(),
+            addPosition,
+            item: editingConfig.item,
+            autoAdd: !!editingConfig.autoAdd,
+            autoAddOnInit: !!editingConfig.autoAddOnInit,
+            backgroundStyle: editingConfig.backgroundStyle || 'default',
+            autoAddByApplyButton,
+            toolbarVisibility: !!editingConfig.toolbarVisibility
+        };
+    }
+
+    private _beginAdd(userOptions: IBeginEditUserOptions, {
+        shouldActivateInput = true,
+        addPosition = 'bottom',
+        targetItem,
+        columnIndex}: IBeginAddOptions = {}): Promise<void | {canceled: true}> {
+        return this._getEditInPlaceController()
+            .add(userOptions, {addPosition, targetItem, columnIndex})
+            .then((addResult) => {
+                if (addResult && addResult.canceled) {
+                    return addResult;
+                }
+                if (shouldActivateInput) {
+                    this._editInPlaceInputHelper.shouldActivate();
+                    // нужно вручную вызвать перерисовку, чтобы поставить фокус на инпут, который уже точно отрисовался
+                    this._forceUpdate();
+                }
+                if (!this._isMounted) {
+                    return addResult;
+                }
+                if (this._selectionController) {
+                    this._selectionController.setSelection(this._selectionController.getSelection());
+                }
+            });
+    }
+
+    private _getEditInPlaceController(): EditInPlaceController {
+        if (!this._editInPlaceController) {
+            this._createEditInPlaceController();
+        }
+        return this._editInPlaceController;
+    }
+
+    private _createEditInPlaceController(options = this._options): void {
+        this._editInPlaceInputHelper = new EditInPlaceInputHelper();
+        this._editInPlaceController = new EditInPlaceController({
+            mode: this._getEditingConfig(options).mode,
+            collection: this._listModel,
+            onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
+            onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
+            onBeforeEndEdit: this._beforeEndEditCallback.bind(this),
+            onAfterEndEdit: this._afterEndEditCallback.bind(this)
+        });
+    }
+
+    private static _rejectEditInPlacePromise(fromWhatMethod: string): Promise<void> {
+        const msg = ERROR_MSG.CANT_USE_IN_READ_ONLY(fromWhatMethod);
+        Logger.warn(msg);
+        return Promise.reject(msg);
+    }
+
+    private _beforeBeginEditCallback(params: IBeforeBeginEditCallbackParams) {
+        return new Promise((resolve) => {
+            const eventResult = this._notify('beforeBeginEdit', params.toArray());
+            if (this._savedItemClickArgs && this._isMounted) {
+                // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
+                // обязательно должен случиться после события beforeBeginEdit.
+                this._notifyItemClick(this._savedItemClickArgs);
+            }
+
+            resolve(eventResult);
+        }).then((result) => {
+
+            if (result === LIST_EDITING_CONSTANTS.CANCEL) {
+                if (this._continuationEditingDirection) {
+                    return this._continuationEditingDirection;
+                } else {
+                    if (this._savedItemClickArgs && this._isMounted) {
+                        // Запись становится активной по клику, если не началось редактирование.
+                        // Аргументы itemClick сохранены в состояние и используются для нотификации об активации
+                        // элемента.
+                        this._notify('itemActivate', this._savedItemClickArgs.slice(1), {bubbling: true});
+                    }
+                    return result;
+                }
+            }
+
+            // Если запускается редактирование существующей записи,
+            // то сразу переходим к следующему блоку
+            if (!params.isAdd) {
+                return result;
+            }
+
+            //region Обработка добавления записи
+            const sourceController = this.getSourceController();
+            // Добавляемы итем берем либо из результата beforeBeginEdit
+            // либо из параметров запуска редактирования
+            const addedItem = result?.item || params.options?.item;
+
+            // Если нет источника и к нам не пришел новый добавляемый итем, то ругаемся
+            if (!sourceController && !addedItem) {
+                throw new Error('You use list without source. So you need to manually create new item when processing an event beforeBeginEdit');
+            }
+
+            // Если есть источник и сверху не пришел добавляемый итем, то выполним запрос на создание новой записи
+            if (sourceController && !(addedItem instanceof Model)) {
+                return sourceController
+                    .create(!this._isMounted ? params.options.filter : undefined)
+                    .then((item) => {
+                        if (item instanceof Model) {
+                            return {item};
+                        }
+
+                        throw Error('BaseControl::create before add error! Source returned non Model.');
+                    })
+                    .catch((error: Error) => {
+                        return process({error});
+                    });
+            }
+            //endregion
+
+            return result;
+        }).then((result) => {
+            const editingConfig = this._getEditingConfig();
+
+            // Скролим к началу/концу списка. Данная операция может и скорее всего потребует перезагрузки списка.
+            // Не вся бизнес логика поддерживает загрузку первой/последней страницы при курсорной навигации.
+            // TODO: Поддержать везде по задаче
+            //  https://online.sbis.ru/opendoc.html?guid=000ff88b-f37e-4aa6-9bd3-3705bb721014
+            if (editingConfig.task1181625554 && params.isAdd) {
+                return _private
+                    .scrollToEdge(this, editingConfig.addPosition === 'top' ? 'up' : 'down')
+                    .then(() => {
+                        return result;
+                    });
+            } else {
+                return result;
+            }
+        }).finally(() => {
+            this._savedItemClickArgs = null;
+        });
+    }
+
+    private _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
+        // Завершение запуска редактирования по месту проиходит после построения редактора.
+        // Исключение - запуск редактирования при построении списка. В таком случае,
+        // уведомлений о запуске редактирования происходить не должно, а дождаться построение
+        // редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
+        return new Promise((resolve) => {
+            // Принудительно прекращаем заморозку ховера
+            if (_private.hasHoverFreezeController(this)) {
+                this._hoverFreezeController.unfreezeHover();
+            }
+            // Операции над записью должны быть обновлены до отрисовки строки редактирования,
+            // иначе будет "моргание" операций.
+            _private.removeShowActionsClass(this);
+            _private.updateItemActions(this, this._options, item);
+            this._continuationEditingDirection = null;
+
+            if (this._isMounted) {
+                this._resolveAfterBeginEdit = resolve;
+            } else {
+                resolve();
+            }
+        }).then(() => {
+            this._editingItem = item;
+            // Редактирование может запуститься при построении.
+            if (this._isMounted) {
+                this._notify('afterBeginEdit', [item.contents, isAdd]);
+
+                if (this._listViewModel.getCount() > 1 && !isAdd) {
+                    this.setMarkedKey(item.contents.getKey());
+                }
+            }
+
+            if (this._pagingVisible && this._options.navigation.viewConfig.pagingMode === 'edge') {
+                this._pagingVisible = false;
+            }
+
+            item.contents.subscribe('onPropertyChange', this._resetValidation);
+        }).then(() => {
+            // Подскролл к редактору
+            if (this._isMounted) {
+                return _private.scrollToItem(this, item.contents.getKey(), false, false);
+            }
+        });
+    }
+
+    _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<void> {
+        if (params.force) {
+            this._notify('beforeEndEdit', params.toArray());
+            return;
+        }
+
+        return Promise.resolve().then(() => {
+            if (!params.willSave) {
+                return ;
+            }
+
+            // Валидация запускается не моментально, а после заказанного для нее цикла синхронизации.
+            // Такая логика необходима, если синхронно поменяли реактивное состояние, которое будет валидироваться
+            // и позвали валидацию. В таком случае, первый цикл применит все состояния и только после него произойдет
+            // валидация.
+            // _forceUpdate гарантирует, что цикл синхронизации будет, т.к. невозможно понять поменялось ли какое-то
+            // реактивное состояние.
+            const submitPromise = this._validateController.deferSubmit();
+            this._isPendingDeferSubmit = true;
+            this._forceUpdate();
+            return submitPromise.then((validationResult) => {
+                for (const key in validationResult) {
+                    if (validationResult.hasOwnProperty(key) && validationResult[key]) {
+                        return LIST_EDITING_CONSTANTS.CANCEL;
+                    }
+                }
+            });
+        }).then((result) => {
+            if (result === LIST_EDITING_CONSTANTS.CANCEL) {
+                return result;
+            }
+
+            const eventResult = this._notify('beforeEndEdit', params.toArray());
+
+            // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
+            // Пользовательское сохранение потенциально может начаться только если вернули Promise
+            const shouldUseDefaultSaving =
+                params.willSave &&
+                (params.isAdd || params.item.isChanged()) &&
+                (
+                    !eventResult ||
+                    (eventResult !== LIST_EDITING_CONSTANTS.CANCEL && !(eventResult instanceof Promise))
+                );
+
+            return shouldUseDefaultSaving
+                ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex)
+                : Promise.resolve(eventResult);
+        }).catch((error: Error) => {
+            return process({error}).then(() => {
+                return LIST_EDITING_CONSTANTS.CANCEL;
+            });
+        });
+    }
+
+    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
+        this._notify('afterEndEdit', [item.contents, isAdd]);
+        this._editingItem = null;
+
+        if (this._listViewModel.getCount() > 1) {
+            if (this._markedKeyAfterEditing) {
+                // если закрыли добавление записи кликом по другой записи, то маркер должен встать на 'другую' запись
+                this.setMarkedKey(this._markedKeyAfterEditing);
+                this._markedKeyAfterEditing = null;
+            } else if (isAdd && willSave) {
+                this.setMarkedKey(item.contents.getKey());
+            } else if (_private.hasMarkerController(this)) {
+                const controller = _private.getMarkerController(this);
+                controller.setMarkedKey(controller.getMarkedKey());
+            }
+        }
+
+        item.contents.unsubscribe('onPropertyChange', this._resetValidation);
+        _private.removeShowActionsClass(this);
+        _private.updateItemActions(this, this._options);
+    }
+
+    // endregion editInPlace
 
     static defaultProps: Partial<IPropertyGridOptions> = {
         keyProperty: 'name',

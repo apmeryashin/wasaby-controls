@@ -23,9 +23,7 @@ export default class Demo extends Control<IControlOptions> {
                 {
                     caption: 'URL',
                     name: 'dynamicString',
-                    editorOptions: {
-                        editable: true
-                    }
+                    isDynamic: true
                 }
             ],
             keyProperty: 'name'

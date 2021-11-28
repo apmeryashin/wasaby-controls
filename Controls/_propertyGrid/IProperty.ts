@@ -300,4 +300,13 @@ export default interface IProperty {
      * @see validateTemplateName
      */
     validators?: TValidator[];
+
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#isDynamic
+     * @cfg {Boolean} Свойство было добавлено по месту. Возможно редактирование caption и значения в редакторе.
+     * @demo Controls-demo/PropertyGridNew/Validators/Index
+     * @see caption
+     * @see editorOption
+     */
+    isDynamic?: boolean;
 }
