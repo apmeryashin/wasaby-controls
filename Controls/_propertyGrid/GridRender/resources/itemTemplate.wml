@@ -93,7 +93,8 @@
              data-qa="controls-PropertyGrid__editor"
              style="{{getEditorStyles(collectionItem, captionPosition, !item.caption)}}">
            <div class="controls-PropertyGrid__gridLayout_editor_control_wrapper
-                       controls-PropertyGrid__gridLayout_editor_direction_{{ (!item.caption || _options.captionPosition === 'top') ? 'row' : 'column' }}">
+                       controls-PropertyGrid__gridLayout_editor_direction_{{ (!item.caption || _options.captionPosition === 'top') ? 'row' : 'column' }}
+                       controls-PropertyGrid__gridLayout_editor_justify_{{ !afterEditorTemplate || options.captionPosition === 'top' ? 'center' }} ">
                <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">
                    <ws:partial template="levelPadding"/>
                </ws:if>
