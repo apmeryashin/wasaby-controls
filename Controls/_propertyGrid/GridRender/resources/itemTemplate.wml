@@ -99,7 +99,6 @@
                </ws:if>
                <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
                            caption="{{item.caption}}"
-                           afterEditorTemplate="{{afterEditorTemplate}}"
                            scope="{{_options}}"/>
                <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
                    <ws:if data="{{ !collectionItem.isSwiped() }}">
