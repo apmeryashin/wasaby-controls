@@ -25,10 +25,11 @@
    max-width: 100%;
 }
 
-// TODO убрать костыль после https://online.sbis.ru/opendoc.html?guid=5fdfb03c-5a9a-4a1c-9387-1b61ca40f9b0
-.controls-PropertyGrid__gridLayout_editor_column {
+.controls-PropertyGrid__gridLayout_editor_control_wrapper {
+   display: inline-flex;
    flex-direction: column;
-   justify-content: center;
+   width: 100%;
+   min-width: 0;
 }
 
 .controls-PropertyGrid__gridLayout_editor-withoutCaption {
