@@ -109,11 +109,9 @@
                    </ws:if>
                </ws:if>
            </div>
-           <Controls.buttons:Button buttonStyle="pale" iconSize="s" icon="icon-Question2"
-                                    viewMode="functionalButton"/>
-           <!--           <ws:if data="{{afterEditorTemplate && options.captionPosition !== 'top'}}">-->
-           <!--               <ws:partial template="{{afterEditorTemplate}}"/>-->
-           <!--           </ws:if>-->
+           <ws:if data="{{afterEditorTemplate && options.captionPosition !== 'top'}}">
+               <ws:partial template="{{afterEditorTemplate}}"/>
+           </ws:if>
         </div>
     </ws:if>
 </ws:else>
