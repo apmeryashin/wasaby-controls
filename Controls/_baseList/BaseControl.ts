@@ -6777,7 +6777,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
         let itemActionsController: ItemActionsController;
-
+        if (this._itemActionsMenuId) {
+            _private.closeActionsMenu(this);
+        }
         if (swipeEvent.nativeEvent.direction === 'left') {
             this.setMarkedKey(key);
             _private.updateItemActionsOnce(this, this._options);
