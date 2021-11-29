@@ -78,7 +78,6 @@ interface IResultPopup {
 }
 
 const DEFAULT_FILTER_NAME = 'all_frequent';
-const FILTER_PANEL_POPUP_STACK = 'Controls/filterPanelPopup:Stack';
 const FILTER_PANEL_POPUP = 'Controls/filterPanelPopup';
 
 /**
@@ -164,9 +163,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             }
             popupOptions = Merge(popupOptions, this._options.detailPanelPopupOptions || {});
             popupOptions.template = this._detailPanelTemplateName;
-            if (this._detailPanelTemplateName !== FILTER_PANEL_POPUP_STACK) {
-                popupOptions.className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
-            }
+            popupOptions.className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
             popupOptions.templateOptions = this._options.detailPanelTemplateOptions || {};
             this._open(panelItems, popupOptions);
         } else {
@@ -448,7 +445,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
     }
 
     private _getDetailPanelTemplateName({detailPanelTemplateName, detailPanelOpenMode}: IFilterViewOptions): string {
-        return detailPanelOpenMode === 'stack' ? FILTER_PANEL_POPUP_STACK : detailPanelTemplateName;
+        return detailPanelTemplateName;
     }
 
     private _open(items: RecordSet, panelPopupOptions: IPopupOptions): void {
@@ -787,10 +784,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                 (item.viewMode !== 'extended' || item.visibility === true) &&
                  this._isItemChanged(item) &&
                   // Временная проверка, пока не согласовано API отображения фильтров (панель/окно)
-                (
-                    item.editorTemplateName !== 'Controls/filterPanel:ListEditor' ||
-                    this._detailPanelTemplateName === FILTER_PANEL_POPUP_STACK
-                )
+                item.editorTemplateName !== 'Controls/filterPanel:ListEditor'
             ) {
                 textValue = item.textValue;
                 if (textValue) {

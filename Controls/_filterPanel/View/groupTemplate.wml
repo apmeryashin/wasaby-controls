@@ -5,23 +5,27 @@
          <div class="controls-FilterViewPanel__group {{_options.groupItems[item].expanderVisible ?
          'controls-PropertyGrid__groupExpander'}}"
               attr:key="group-{{item}}">
-            <div class="controls-FilterViewPanel__group-content_container ws-flexbox">
-               <ws:if data="{{_options.groupItems[item].caption}}">
-                  <div class="controls-FilterViewPanel__group-content
+            <ws:if data="{{_options.groupItems[item].caption || _options.groupItems[item].expanderVisible}}">
+               <div class="controls-FilterViewPanel__group-content_container ws-flexbox">
+                  <ws:if data="{{_options.groupItems[item].caption}}">
+                     <div class="controls-FilterViewPanel__group-content
                               {{_options.groupItems[item].expanderVisible ? 'controls-FilterViewPanel__group-content-expandable'}}"
-                       title="{{_options.groupItems[item].caption}}">
-                     {{_options.groupItems[item].caption}}
-                  </div>
-               </ws:if>
-               <ws:if data="{{_options.groupItems[item].expanderVisible}}">
-                  <div title="{{!collapsedGroups[item] ? 'Свернуть' : 'Развернуть'}}"
-                       class="controls-FilterViewPanel__groupExpander controls-icon controls-icon_size-s
+                          title="{{_options.groupItems[item].caption}}">
+                        {{_options.groupItems[item].caption}}
+                     </div>
+                  </ws:if>
+                  <ws:if data="{{_options.groupItems[item].expanderVisible}}">
+                     <div title="{{!collapsedGroups[item] ? 'Свернуть' : 'Развернуть'}}"
+                          class="controls-FilterViewPanel__groupExpander controls-icon controls-icon_size-s
                            {{!collapsedGroups[item] ? 'icon-CollapseLight' : 'icon-ExpandLight'}}">
-                  </div>
-               </ws:if>
-               <div class="controls-FilterViewPanel__group-separator"> </div>
-            </div>
-            <ws:if data="{{!collapsedGroups[item] && _options.groupItems[item].resetButtonVisible}}">
+                     </div>
+                  </ws:if>
+                  <ws:if data="{{_options.viewMode !== 'sticky'}}">
+                     <div class="controls-FilterViewPanel__group-separator"> </div>
+                  </ws:if>
+               </div>
+            </ws:if>
+            <ws:if data="{{!collapsedGroups[item] && _options.groupItems[item].resetButtonVisible && _options.viewMode !== 'sticky'}}">
                <div class="controls-FilterViewPanel__group-content_reset controls-FilterViewPanel__groupReset" title="{[Сбросить фильтр]}">{{rk('Сбросить')}}</div>
             </ws:if>
          </div>
