@@ -418,7 +418,6 @@ class ListEditor extends Control<IListEditorOptions> {
             displayProperty,
             keyProperty,
             imageProperty,
-
             additionalTextProperty,
             markerStyle
         }: IListEditorOptions
