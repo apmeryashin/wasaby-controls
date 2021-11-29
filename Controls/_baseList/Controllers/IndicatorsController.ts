@@ -585,6 +585,10 @@ export default class IndicatorsController {
      */
     clearDisplayPortionedSearchTimer(): void {
         this._clearDisplayIndicatorTimer();
+        this._clearPortionedSearchTimer();
+    }
+
+    private _clearPortionedSearchTimer(): void {
         if (this._portionedSearchTimer) {
             clearTimeout(this._portionedSearchTimer);
             this._portionedSearchTimer = null;
@@ -592,6 +596,7 @@ export default class IndicatorsController {
     }
 
     private _startDisplayPortionedSearchTimer(duration: number): void {
+        this._clearPortionedSearchTimer();
         this._portionedSearchTimer = setTimeout(() => {
             this.stopDisplayPortionedSearch();
         }, duration);
