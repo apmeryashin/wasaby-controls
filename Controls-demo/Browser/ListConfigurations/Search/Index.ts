@@ -1,14 +1,12 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {object} from 'Types/util';
-import controlTemplate = require('wml!Controls-demo/Browser/ListConfigurations/ListConfigurations');
+import controlTemplate = require('wml!Controls-demo/Browser/ListConfigurations/Search/ListConfigurations');
 import {Memory} from 'Types/source';
-import {TKey} from 'Controls/interface';
+import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 
 class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
-    protected _selectedKeys: TKey[] = [];
-    protected _excludedKeys: TKey[] = [];
 
     protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
         const firstListSource = new Memory({
@@ -16,34 +14,36 @@ class Demo extends Control<IControlOptions> {
             data: [
                 {
                     id: 0,
-                    title: 'Sasha'
+                    title: 'Александр'
                 },
                 {
                     id: 1,
-                    title: 'Sergey'
+                    title: 'Сергей'
                 },
                 {
                     id: 2,
-                    title: 'Dmitry'
+                    title: 'Дмитрий'
                 }
-            ]
+            ],
+            filter: MemorySourceFilter()
         });
         const secondListSource = new Memory({
             keyProperty: 'key',
             data: [
                 {
                     id: 3,
-                    title: 'Yaroslavl'
+                    title: 'Андрей'
                 },
                 {
                     id: 4,
-                    title: 'Moscow'
+                    title: 'Алексей'
                 },
                 {
                     id: 5,
-                    title: 'Kostroma'
+                    title: 'Александр'
                 }
-            ]
+            ],
+            filter: MemorySourceFilter()
         });
         this._listConfigurations = [
             {
