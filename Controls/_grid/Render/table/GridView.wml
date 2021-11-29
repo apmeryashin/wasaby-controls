@@ -1,3 +1,35 @@
+<ws:template name="SCROLLBAR_IN_POSITION">
+    <ws:if data="{{ renderPosition === 'beforeTable' && _options.columnScrollViewMode !== 'arrows' }}">
+        <Controls.columnScroll:ScrollBar
+                name="horizontalScrollBar"
+                attr:style="{{ _getColumnScrollThumbStyles(_options) }}"
+                mode="{{ _options.columnScrollViewMode || 'scrollbar' }}"
+                readOnly="{{ _options.columnScrollViewMode === 'arrows' && (_$pendingMouseEnterForActivate || !_$columnScrollController) }}"
+                stickyHeader="{{ false }}"
+                backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
+                on:positionChanged="_onColumnScrollThumbPositionChanged()"
+                on:dragEnd="_onColumnScrollThumbDragEnd()"/>
+    </ws:if>
+    <ws:else data="{{ renderPosition === 'beforeTableBody' && _options.columnScrollViewMode === 'arrows' }}">
+        <thead>
+            <td colspan="{{ _getViewColumns(_options).length }}">
+                <div style="{{ _getTableColumnScrollThumbWrapperStyles(_$columnScrollEmptyViewMaxWidth) }}"
+                     class="{{ _getTableColumnScrollThumbWrapperClasses() }}">
+                    <Controls.columnScroll:ScrollBar
+                            name="horizontalScrollBar"
+                            attr:style="{{ _getColumnScrollThumbStyles(_options) }}"
+                            mode="{{ _options.columnScrollViewMode || 'scrollbar' }}"
+                            readOnly="{{ _options.columnScrollViewMode === 'arrows' && (_$pendingMouseEnterForActivate || !_$columnScrollController) }}"
+                            stickyHeader="{{ false }}"
+                            backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
+                            on:positionChanged="_onColumnScrollThumbPositionChanged()"
+                            on:dragEnd="_onColumnScrollThumbDragEnd()"/>
+                </div>
+            </td>
+        </thead>
+    </ws:else>
+</ws:template>
+
 <ws:template name="gridView">
     <table class="{{ _getGridViewClasses(_options) }}"
            style="{{ _getGridViewStyles(_options) }}">
@@ -36,6 +68,11 @@
                                 backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
                 </ws:for>
             </thead>
+        </ws:if>
+
+        <!-- Скроллбар горизонтального скролла. -->
+        <ws:if data="{{ _options.columnScroll }}">
+            <ws:partial template="SCROLLBAR_IN_POSITION" renderPosition="beforeTableBody"/>
         </ws:if>
 
         <!-- Results (top) -->
@@ -177,15 +214,7 @@
 
     <!-- Скроллбар горизонтального скролла. -->
     <ws:if data="{{ _options.columnScroll }}">
-        <Controls.columnScroll:ScrollBar
-                name="horizontalScrollBar"
-                attr:style="{{ _getColumnScrollThumbStyles(_options) }}"
-                mode="{{ _options.columnScrollViewMode || 'scrollbar' }}"
-                readOnly="{{ _options.columnScrollViewMode === 'arrows' && (_$pendingMouseEnterForActivate || !_$columnScrollController) }}"
-                stickyHeader="{{ false }}"
-                backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
-                on:positionChanged="_onColumnScrollThumbPositionChanged()"
-                on:dragEnd="_onColumnScrollThumbDragEnd()"/>
+        <ws:partial template="SCROLLBAR_IN_POSITION" renderPosition="beforeTable"/>
     </ws:if>
 
     <!-- Контент таблицы -->

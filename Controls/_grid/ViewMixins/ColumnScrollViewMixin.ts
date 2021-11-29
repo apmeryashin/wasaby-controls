@@ -713,6 +713,18 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
             }
         });
     },
+
+    _getTableColumnScrollThumbWrapperStyles(contentWidth?: number): string {
+        let styles = '';
+        if (contentWidth) {
+            styles += `max-width: ${contentWidth}px;`;
+        }
+        return styles;
+    },
+
+    _getTableColumnScrollThumbWrapperClasses(): string {
+        return `${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} controls-Grid__columnScrollBar__wrapper_table`;
+    },
     //#endregion
 
     //#region EVENT HANDLERS
