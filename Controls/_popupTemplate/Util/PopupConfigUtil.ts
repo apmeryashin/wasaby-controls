@@ -158,7 +158,7 @@ export function getRoundClass({hasRoundedBorder, options, type}): string {
         } else if (type === 'body') {
             if (!(options.headingCaption || options.headerContentTemplate)) {
                 if (options.footerContentTemplate) {
-                    return options.top;
+                    return 'controls-PopupTemplate__roundBorder_top';
                 } else {
                     return 'controls-PopupTemplate__roundBorder';
                 }
