@@ -3893,12 +3893,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
             this._listVirtualScrollController.setListContainer(this._container);
 
-            if (
-                !this._listViewModel.getCount() ||
-                !this._hasMoreData('down') && this._hasMoreData('up')
-            ) {
-                this._listVirtualScrollController.setTriggersVisibility({ backward: true, forward: true });
-            }
+            const backwardTriggerVisibility = !this._listViewModel.getCount() ||
+                !this._hasMoreData('up') ||
+                !this._options.attachLoadTopTriggerToNull ||
+                this._hasHiddenItemsByVirtualScroll('up');
+
+            this._listVirtualScrollController.setTriggersVisibility({
+                backward: backwardTriggerVisibility,
+                forward: true
+            });
         }
 
         if (constants.isBrowserPlatform) {
@@ -7124,6 +7127,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _hasHiddenItemsByVirtualScroll(direction: 'up'|'down'): boolean {
+        // TODO SCROLL
         return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
     }
 
