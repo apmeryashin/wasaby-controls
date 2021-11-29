@@ -6,6 +6,7 @@ import {VersionableMixin} from 'Types/entity';
 import {IDateConstructorOptions} from 'Controls/interface';
 import {IMaskOptions} from 'Controls/decorator';
 import IValueOptions from 'Controls/_date/interface/IValue';
+import {IExtendedTimeFormatOptions} from 'Controls/_date/interface/IExtendedTimeFormat';
 import {mixin} from 'Types/util';
 
 const ALL_SPACES_REGEXP = /[ ]/g;
@@ -13,7 +14,8 @@ const SPACE = ' ';
 const VALID_PARTIAL_DATE_REGEXP = new RegExp('/^[0 ' + SPACE + ']{2}\.[0 ' + SPACE + '/s]{2}\.\d{2,4}$/');
 const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
 
-interface IModelOptions extends IInputDisplayValueOptions, IMaskOptions, IDateConstructorOptions, IValueOptions {
+interface IModelOptions extends IInputDisplayValueOptions, IMaskOptions,
+    IExtendedTimeFormatOptions, IDateConstructorOptions, IValueOptions {
 
 }
 
@@ -50,7 +52,8 @@ export default class Model extends mixin<VersionableMixin, ObservableMixin>(Vers
       this._stringValueConverter.update({
          replacer: this._replacer,
          mask: options.mask,
-         dateConstructor: options.dateConstructor
+         dateConstructor: options.dateConstructor,
+         extendedTimeFormat: options.extendedTimeFormat
       });
       this._mask = options.mask;
       this._inputMode = options.inputMode;
@@ -73,7 +76,8 @@ export default class Model extends mixin<VersionableMixin, ObservableMixin>(Vers
          replacer: this._replacer,
          mask: options.mask,
          dateConstructor: options.dateConstructor,
-         yearSeparatesCenturies: options._yearSeparatesCenturies
+         yearSeparatesCenturies: options._yearSeparatesCenturies,
+         extendedTimeFormat: options.extendedTimeFormat
       });
       if (this._mask !== options.mask || !dateUtils.isDatesEqual(this._value, options.value)) {
          this._mask = options.mask;

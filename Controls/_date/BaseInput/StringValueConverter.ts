@@ -7,6 +7,7 @@ import {getMaskType, DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, TIME_MASK_TYPE} from '
 import {INPUT_MODE} from 'Controls/input';
 import {IDateConstructorOptions} from 'Controls/interface';
 import {IMaskOptions} from 'Controls/decorator';
+import {IExtendedTimeFormatOptions} from 'Controls/_date/interface/IExtendedTimeFormat';
 
 const MASK_MAP = {
     YY: 'year',
@@ -17,6 +18,11 @@ const MASK_MAP = {
     mm: 'minutes',
     ss: 'seconds'
 };
+
+const MAX_MONTH  = 11;
+const MAX_HOURS = 23;
+const MAX_MINUTES = 59;
+const MAX_SECONDS = 59;
 
 interface IValueModelItem {
     str: string;
@@ -36,7 +42,7 @@ interface IValueModel {
 const RE_NUMBERS: RegExp = /\d/;
 const RE_MASK: RegExp = /^(?:(\d{1,2})(?:[./](\d{1,2})(?:[./]((?:\d{2})|(?:\d{4})))?)?)?(?: ?(\d{2}):(\d{2})(?::(\d{2})(?:[./](\d{3}))?)?)?$/;
 
-export interface IStringValueConverter extends IDateConstructorOptions, IMaskOptions {
+export interface IStringValueConverter extends IDateConstructorOptions, IMaskOptions, IExtendedTimeFormatOptions {
     yearSeparatesCenturies?: DateTime;
 }
 
@@ -47,6 +53,7 @@ export default class StringValueConverter {
     private _replacerBetweenCharsRegExp: RegExp;
     private _dateConstructor: Function;
     private _yearSeparatesCenturies: DateTime;
+    private _extendedTimeFormat: boolean;
 
     constructor(options?: IStringValueConverter) {
         this.update(options);
@@ -59,6 +66,7 @@ export default class StringValueConverter {
     update(options: IStringValueConverter = {}): void {
         this._yearSeparatesCenturies = options.yearSeparatesCenturies;
         this._mask = options.mask;
+        this._extendedTimeFormat = options.extendedTimeFormat;
         this._dateConstructor = options.dateConstructor || Date;
         if (this._replacer !== options.replacer) {
             this._replacer = options.replacer;
@@ -87,9 +95,22 @@ export default class StringValueConverter {
             if (constants.isServerSide &&
                 !(instanceOfModule(value, 'Types/entity:Date') || instanceOfModule(value, 'Types/entity:Time'))) {
                 const tzOffset: number = DateTime.getClientTimezoneOffset();
-                dateString = DateFormatter(value, actualMask, tzOffset);
+                dateString = this._getFormatedStringByValue(value, actualMask, tzOffset);
             } else {
-                dateString = DateFormatter(value, actualMask);
+                dateString = this._getFormatedStringByValue(value, actualMask);
+            }
+        }
+        return dateString;
+    }
+
+    private _getFormatedStringByValue(value: Date, mask: string, tzOffset?: number): string {
+        let dateString = DateFormatter(value, mask, tzOffset);
+        if (this._extendedTimeFormat) {
+            // В расширенном режиме используются только часы и минуты и для значения '24:00' используется 23:59:59.
+            // Проверим количество секунд, чтобы узнать что ввели 24:00
+            const seconds = value.getSeconds();
+            if (seconds === MAX_SECONDS) {
+                dateString = '24:00';
             }
         }
         return dateString;
@@ -457,15 +478,17 @@ export default class StringValueConverter {
     private _createDate(year: number, month: number, date: number, hours: number, minutes: number, seconds: number,
                         autoCorrect: boolean, dateConstructor: Function): DateTime | Date {
         let endDateOfMonth;
+        if (this._extendedTimeFormat) {
+            // В расширенном режиме используются только часы и минуты и для значения '24:00' используется 23:59:59.
+            // Обнулим секунды на случай, если до этого ввели 24:00.
+            seconds = 0;
+        }
 
         if (autoCorrect) {
             endDateOfMonth = dateUtils.getEndOfMonth(new dateConstructor(year, month, 1)).getDate();
-            const maxMonth = 11;
-            const maxHours = 23;
-            const maxMinutes = 59;
-            const maxSeconds = 59;
-            if (month > maxMonth) {
-                month = maxMonth;
+            const maxHours = this._extendedTimeFormat ? 24 : MAX_HOURS;
+            if (month > MAX_MONTH) {
+                month = MAX_MONTH;
             }
             if (date > endDateOfMonth) {
                 date = endDateOfMonth;
@@ -473,11 +496,18 @@ export default class StringValueConverter {
             if (hours > maxHours) {
                 hours = maxHours;
             }
-            if (minutes > maxMinutes) {
-                minutes = maxMinutes;
+            if (minutes > MAX_MINUTES) {
+                minutes = MAX_MINUTES;
             }
-            if (seconds > maxSeconds) {
-                seconds = maxSeconds;
+            if (seconds > MAX_SECONDS) {
+                seconds = MAX_SECONDS;
+            }
+            if (this._extendedTimeFormat) {
+                if (hours === 24) {
+                    hours = 23;
+                    minutes = 59;
+                    seconds = 59;
+                }
             }
         }
 
@@ -491,7 +521,7 @@ export default class StringValueConverter {
     private _isValidDate(year: number, month: number, date: number, hours: number,
                          minutes: number, seconds: number): boolean {
         const lastMonthDay = dateUtils.getEndOfMonth(new Date(year, month)).getDate();
-        return seconds < 60 && minutes < 60 && hours < 24 && month < 12 && month >= 0 &&
-            date <= lastMonthDay && date > 0;
+        return seconds <= MAX_SECONDS && minutes <= MAX_MINUTES && hours <= MAX_HOURS &&
+            month <= MAX_MONTH && month >= 0 && date <= lastMonthDay && date > 0;
     }
 }
