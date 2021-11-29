@@ -298,12 +298,7 @@ export default class ScrollController {
 
         if (index !== -1) {
             return new Promise((resolve) => {
-                let toBottom;
-                if (typeof position === 'boolean') {
-                    toBottom = position;
-                } else {
-                    toBottom = position === 'bottom';
-                }
+                const toBottom = position === 'bottom';
                 if (!this._virtualScroll || !this._options.needScrollCalculation
                             || this._virtualScroll.canScrollToItem(index, toBottom, force)
                             && !this._virtualScroll.rangeChanged) {

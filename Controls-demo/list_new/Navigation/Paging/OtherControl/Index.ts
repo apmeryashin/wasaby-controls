@@ -84,12 +84,12 @@ export default class extends Control {
     protected _onPagingArrowClick(event: SyntheticEvent, arrow: string): boolean {
         switch (arrow) {
             case 'Begin':
-                this._children.list.scrollToItem(0, true, true);
+                this._children.list.scrollToItem(0, 'bottom', true);
                 this._arrowState.begin = 'readonly';
                 this._arrowState.end = 'visible';
                 break;
             case 'End':
-                this._children.list.scrollToItem(MAX_ELEMENTS_COUNT - 1, true, true);
+                this._children.list.scrollToItem(MAX_ELEMENTS_COUNT - 1, 'bottom', true);
                 this._arrowState.begin = 'visible';
                 this._arrowState.end = 'readonly';
                 break;

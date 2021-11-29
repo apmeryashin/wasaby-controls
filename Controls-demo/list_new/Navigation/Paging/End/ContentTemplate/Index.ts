@@ -61,7 +61,7 @@ export default class extends Control {
                 this._textInfo = `Нажали кнопку "в конец" скролим к ${SCROLL_TO_ITEM} элементу`;
                 break;
         }
-        this._children.list.scrollToItem(SCROLL_TO_ITEM, true, true);
+        this._children.list.scrollToItem(SCROLL_TO_ITEM, 'bottom', true);
         return false;
     }
 
