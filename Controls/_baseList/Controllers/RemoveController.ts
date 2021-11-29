@@ -70,7 +70,9 @@ export class RemoveController {
         return Confirmation.openPopup({
             type: 'yesno',
             style: 'default',
-            message: selectedKeysCount === 1 ? rk('Удалить выбранную запись?') : rk('Удалить выбранные записи?')
+            message: selectedKeysCount === 1 ?
+                rk('Удалить текущую запись?', 'ОперацииНадЗаписями') :
+                rk('Удалить выбранные записи?', 'ОперацииНадЗаписями')
         }).then((result) => result ? this._removeFromSource(selection, filter) : Promise.reject());
     }
 

@@ -61,7 +61,7 @@
   "Нет записей для обработки команды": "No records to process the command",
   "Некорректно заполнены обязательные поля": "Incorrect values in required fields",
   "ОК": "OK",
-  "ОперацииНадЗаписями@@Удалить записи?": "Remove items?",
+  "ОперацииНадЗаписями@@Удалить выбранные записи?": "Remove selected items?",
   "ОперацииНадЗаписями@@Удалить текущую запись?": "Delete current record?",
   "Операция займет продолжительное время. Провести операцию?": "Operation will take long time. Perform operation?",
   "Отбираются": "Selected",
