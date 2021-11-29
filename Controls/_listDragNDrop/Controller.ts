@@ -146,22 +146,25 @@ export default class Controller<P> {
     * @param itemsDragNDrop
     * @param canStartDragNDropOption
     * @param event
+    * @param isDragging
     */
    static canStartDragNDrop(
        readOnly: boolean,
        itemsDragNDrop: boolean,
        canStartDragNDropOption: boolean | Function,
-       event: SyntheticEvent<MouseEvent>
+       event: SyntheticEvent<MouseEvent>,
+       isDragging: boolean
    ): boolean {
       const target = event.target;
       const allowByTarget = target instanceof Element &&
               !target.closest('.controls-List_DragNDrop__notDraggable');
-      return !readOnly
-          && itemsDragNDrop
-          && (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
-          && allowByTarget
-          && (!event.nativeEvent || !event.nativeEvent.button)
-          && !TouchDetect.getInstance().isTouch();
+      return !readOnly &&
+          !isDragging &&
+          itemsDragNDrop &&
+          (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption()) &&
+          allowByTarget &&
+          (!event.nativeEvent || !event.nativeEvent.button) &&
+          !TouchDetect.getInstance().isTouch();
    }
 
    /**

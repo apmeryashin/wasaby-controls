@@ -706,7 +706,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _startDragNDrop(event: SyntheticEvent<MouseEvent>, draggableItem: PropertyGridCollectionItem<Model>): void {
         if (
             DndController.canStartDragNDrop(
-                this._options.readOnly, this._options.itemsDragNDrop, undefined, event
+                this._options.readOnly, this._options.itemsDragNDrop, undefined, event,
+                this._dndController && this._dndController.isDragging()
             )
         ) {
             const draggableKey = draggableItem.getContents().getKey();

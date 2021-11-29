@@ -2775,8 +2775,11 @@ const _private = {
     startDragNDrop(self: BaseControl, domEvent: SyntheticEvent, draggableItem: CollectionItem): Promise<void> {
         if (
             DndController.canStartDragNDrop(
-                self._options.readOnly, self._options.itemsDragNDrop,
-                self._options.canStartDragNDrop, domEvent
+                self._options.readOnly,
+                self._options.itemsDragNDrop,
+                self._options.canStartDragNDrop,
+                domEvent,
+                self._dndListController && self._dndListController.isDragging()
             )
         ) {
             const draggableKey = draggableItem.getContents().getKey();
@@ -6400,7 +6403,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._options.readOnly,
             this._options.itemsDragNDrop,
             this._options.canStartDragNDrop,
-            event
+            event,
+            this._dndListController && this._dndListController.isDragging()
         )) {
             event.preventDefault();
         }
