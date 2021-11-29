@@ -638,6 +638,5 @@ export const dataForLadder = [
         type: null,
         hasChild: null,
         nodeType: null
-    },
-
-]
+    }
+];
