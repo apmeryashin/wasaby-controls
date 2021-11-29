@@ -96,7 +96,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         this._index = getNextId();
     }
 
-    protected _afterMount(): void {
+    protected _componentDidMount(): void {
         this._isMultilineGroup = this._container.closest('.controls-StickyBlock-multilineGroup') !== null;
     }
 
