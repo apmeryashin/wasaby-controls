@@ -42,8 +42,6 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
      */
     getItemPaddingClasses(): string {
         let classes = '';
-        // classes += ` controls-ColumnsView__item_spacingLeft_${this.getLeftPadding()}`;
-        // classes += ` controls-ColumnsView__item_spacingRight_${this.getRightPadding()}`;
         classes += ` controls-ColumnsView__item_spacingTop_${this.getTopPadding()}`;
         classes += ` controls-ColumnsView__item_spacingBottom_${this.getBottomPadding()}`;
 
