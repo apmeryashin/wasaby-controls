@@ -24,7 +24,7 @@ export default class extends Control {
 
     protected _afterMount(): void {
         setTimeout(() => {
-            this._children.list.scrollToItem(MAX_ELEMENTS_COUNT - 1, true, true);
+            this._children.list.scrollToItem(MAX_ELEMENTS_COUNT - 1, 'bottom', true);
         }, TIMEOUT);
     }
 

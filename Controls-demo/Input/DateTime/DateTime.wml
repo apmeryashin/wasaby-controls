@@ -58,10 +58,16 @@
         <div class="controlsDemo-Input-DateTime__toggleButton" attr:style="padding:15px 0">
             <Controls.toggle:DoubleSwitch bind:value="_inputReadOnly" captions="{{ ['readOnly=true', 'readOnly=false'] }}"/>
         </div>
-            <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
-                <div style="width: 100px">
-                    <Controls.input:Area attr:class="controlsDemo-Input-DateTime__Area" minLines="{{5}}"/>
-                </div>
+        <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
+            <div style="width: 100px">
+                <Controls.input:Area attr:class="controlsDemo-Input-DateTime__Area" minLines="{{5}}"/>
             </div>
+        </div>
+        <Controls.date:BaseInput
+                extendedTimeFormat="{{ true }}"
+                value="{{_extendedTimeFormatValue}}"
+                on:inputCompleted="_extendedTimeFormatInputCompleted()"
+                mask="HH:mm"/>
+        <div>{{ _extendedTimeFormatValue }}</div>
     </div>
 </div>

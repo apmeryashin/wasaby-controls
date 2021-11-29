@@ -42,12 +42,6 @@ function validate(args) {
    let isEmpty = false;
 
    switch (typeof args.value) {
-      case 'boolean':
-         // TODO: https://online.sbis.ru/opendoc.html?guid=5695d923-21f0-4e07-b8aa-bed5ae5d1d10
-         if (args.triState) {
-            isEmpty = false;
-            break;
-         }
       case 'string':
          isEmpty = !Boolean(args.value);
          break;

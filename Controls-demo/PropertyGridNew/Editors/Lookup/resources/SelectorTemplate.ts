@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls-demo/PropertyGridNew/Editors/Lookup/resources/SelectorTemplate');
 import {Memory} from 'Types/source';
+import {names as data} from './LookupData';
 
 export default class SelectorTemplate extends Control {
     protected _template: TemplateFunction = template;
@@ -11,20 +12,7 @@ export default class SelectorTemplate extends Control {
     protected _beforeMount(): void {
         this._typeDescription = new Memory({
             keyProperty: 'id',
-            data: [
-                {
-                    key: 1,
-                    title: 'First option'
-                },
-                {
-                    key: 2,
-                    title: 'Second option'
-                },
-                {
-                    key: 3,
-                    title: 'Third option'
-                }
-            ]
+            data
         });
     }
 }

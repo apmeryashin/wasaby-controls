@@ -90,6 +90,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     // Виртуальный скролл
     private _topPlaceholderSize: number = 0;
     private _bottomPlaceholderSize: number = 0;
+    private _leftPlaceholderSize: number = 0;
+    private _rightPlaceholderSize: number = 0;
 
     private _savedScrollTop: number = 0;
     private _savedScrollPosition: number = 0;
@@ -1074,12 +1076,19 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     // Виртуальный скролл
 
     private _isVirtualPlaceholderMode(): boolean {
-        return !!this._topPlaceholderSize || !!this._bottomPlaceholderSize;
+        return !!this._topPlaceholderSize ||
+               !!this._bottomPlaceholderSize ||
+               !!this._leftPlaceholderSize ||
+               !!this._rightPlaceholderSize;
     }
 
     updatePlaceholdersSize(placeholdersSizes: object): void {
-        this._topPlaceholderSize = placeholdersSizes.top;
-        this._bottomPlaceholderSize = placeholdersSizes.bottom;
+        const getValue = (newValue, oldValue) => typeof newValue !== 'undefined' ? newValue : oldValue;
+
+        this._topPlaceholderSize = getValue(placeholdersSizes.top, this._topPlaceholderSize);
+        this._bottomPlaceholderSize = getValue(placeholdersSizes.bottom, this._bottomPlaceholderSize);
+        this._leftPlaceholderSize = getValue(placeholdersSizes.left, this._leftPlaceholderSize);
+        this._rightPlaceholderSize = getValue(placeholdersSizes.right, this._rightPlaceholderSize);
     }
 
     private _scrollTo(scrollPosition: number,
@@ -1181,8 +1190,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {
-        this._topPlaceholderSize = placeholdersSizes.top;
-        this._bottomPlaceholderSize = placeholdersSizes.bottom;
+        this.updatePlaceholdersSize(placeholdersSizes);
     }
 
     private _setOverflowScrolling(value: string): void {

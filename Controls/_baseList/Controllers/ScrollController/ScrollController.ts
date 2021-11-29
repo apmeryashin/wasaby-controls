@@ -1,9 +1,15 @@
-import {IItemsSizes, IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeController';
 import {
+    IItemsSizes,
+    IAbstarctItemsSizesControllerOptions,
+    AbstractItemsSizesController
+} from './ItemsSizeController/AbstractItemsSizeController';
+import {
+    IAbstractObserversControllerBaseOptions,
+    IAbstractObserversControllerOptions,
+    AbstractObserversController,
     TIntersectionEvent,
-    IObserversControllerBaseOptions,
-    ObserversController, ITriggersVisibility
-} from './ObserversController';
+    ITriggersVisibility
+} from './ObserverController/AbstractObserversController';
 import {
     Calculator,
     IActiveElementIndexChanged,
@@ -96,9 +102,11 @@ export type IHasItemsOutRangeChangedCallback = (hasItems: IHasItemsOutRange) => 
 export type IPlaceholdersChangedCallback = (placeholders: IPlaceholders) => void;
 
 export interface IScrollControllerOptions extends
-    IItemsSizesControllerOptions,
-    IObserversControllerBaseOptions,
+    IAbstarctItemsSizesControllerOptions,
+    IAbstractObserversControllerBaseOptions,
     ICalculatorBaseOptions {
+    observerControllerConstructor: new (options: IAbstractObserversControllerOptions) => AbstractObserversController;
+    itemsSizeControllerConstructor: new (options: IAbstarctItemsSizesControllerOptions) => AbstractItemsSizesController;
     indexesInitializedCallback: IIndexesInitializedCallback;
     indexesChangedCallback: IIndexesChangedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
@@ -114,8 +122,8 @@ export interface IScrollControllerOptions extends
  *   - сохранение / восстановление позиции scroll.
  */
 export class ScrollController {
-    private readonly _itemsSizesController: ItemsSizesController;
-    private readonly _observersController: ObserversController;
+    private readonly _itemsSizesController: AbstractItemsSizesController;
+    private readonly _observersController: AbstractObserversController;
     private readonly _calculator: Calculator;
     private readonly _indexesChangedCallback: IIndexesChangedCallback;
     private readonly _activeElementChangedCallback: IActiveElementChangedChangedCallback;
@@ -132,13 +140,13 @@ export class ScrollController {
         this._itemsEndedCallback = options.itemsEndedCallback;
         this._indexesInitializedCallback = options.indexesInitializedCallback;
 
-        this._itemsSizesController = new ItemsSizesController({
+        this._itemsSizesController = new options.itemsSizeControllerConstructor({
             itemsContainer: options.itemsContainer,
             itemsQuerySelector: options.itemsQuerySelector,
             totalCount: options.totalCount
         });
 
-        this._observersController = new ObserversController({
+        this._observersController = new options.observerControllerConstructor({
             listControl: options.listControl,
             listContainer: options.listContainer,
             triggersQuerySelector: options.triggersQuerySelector,

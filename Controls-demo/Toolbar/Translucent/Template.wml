@@ -1,5 +1,5 @@
-<div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell" data-qa="controlsDemo_Toolbar__translucent-false">
         <div class="controls-text-label">translucent=false</div>
         <Controls.toolbars:View
                 source="{{_buttonsSource}}"
@@ -9,7 +9,7 @@
                 menuIconStyle="contrast"
         />
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell" data-qa="controlsDemo_Toolbar__translucent-true">
         <div class="controls-text-label">translucent=true</div>
         <Controls.toolbars:View
                 source="{{_buttonsSource}}"

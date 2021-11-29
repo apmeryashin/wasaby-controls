@@ -29,7 +29,7 @@ export default class extends Control {
     }
 
     protected _scrollToItem(event: SyntheticEvent, key: number): void {
-        this._children.list.scrollToItem(key, false, true);
+        this._children.list.scrollToItem(key, 'top', true);
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

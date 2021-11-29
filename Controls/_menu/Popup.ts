@@ -97,7 +97,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
         if (newOptions.stickyPosition && newOptions.stickyPosition.direction &&
             this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
-            this._verticalDirection = newOptions.footerContentTemplate ? 'bottom' :
+            this._verticalDirection = newOptions.footerContentTemplate || newOptions.searchParam ? 'bottom' :
                 newOptions.stickyPosition.direction.vertical;
             this._horizontalDirection = newOptions.stickyPosition.direction.horizontal;
         }
