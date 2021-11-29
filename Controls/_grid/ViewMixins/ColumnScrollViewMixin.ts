@@ -493,6 +493,11 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
             destroyColumnScroll(this);
         }
 
+        // Снимаем ограничитель ширины пустого представления, если горизонтальный скролл выключился по опции
+        if (!newOptions.columnScroll && this._$columnScrollEmptyViewMaxWidth) {
+            this._$columnScrollEmptyViewMaxWidth = null;
+        }
+
         // FIXME: Удалить, при следующем этапе рефакторинга, когда пойду внутрь контроллера, нужно от этого избавиться,
         //  как и от большинства стейтов. #should_refactor
         if (this._$columnScrollController && this._options.needShowEmptyTemplate !== newOptions.needShowEmptyTemplate) {
@@ -753,7 +758,8 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
                 // Подсчет производится:
                 //  + простым сравнением размеров, если горизонтального скролла нет в данный момент.
                 //  + с предварительным сбросом текущего состояния прокрутки, если скролл есть.
-                const shouldDrawResult = (this._$columnScrollController || ColumnScrollController).shouldDrawColumnScroll(
+                const controller = (this._$columnScrollController || ColumnScrollController);
+                const shouldDrawResult = controller.shouldDrawColumnScroll(
                     this._children,
                     getFixedPartWidth,
                     this._options.isFullGridSupport
@@ -786,7 +792,8 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
                     disablePendingMouseEnterActivation(this);
                 }
             } else if (this._options.needShowEmptyTemplate) {
-                this._$columnScrollEmptyViewMaxWidth = ColumnScrollController.getEmptyViewMaxWidth(this._children, this._options);
+                this._$columnScrollEmptyViewMaxWidth =
+                    ColumnScrollController.getEmptyViewMaxWidth(this._children, this._options);
             }
         }
     },
