@@ -22,7 +22,9 @@
                     itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                     style="{{_options.style}}"
                     backgroundStyle="master"
-                    attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
+                    attr:class="controls_toggle_theme-{{_options.theme}}
+                                controls-EditorList_style-{{_options.style}}
+                                {{_options.markerStyle !== 'primary' ? 'controls-EditorList_secondaryFilter'}}"
                     on:itemClick="_handleItemClick()"
                     on:register="_registerHandler()"
                     markedKey="{{_markedKey}}"
