@@ -1,4 +1,4 @@
-<Controls-demo.gridNew.DemoLayout.Index>
+<Controls-demo.DemoLayout.Index>
     <ws:content>
         <Controls.grid:View name="grid"
                             keyProperty="key"
@@ -78,4 +78,4 @@
             </ws:Array>
         </ws:items>
     </ws:rightSidebar>
-</Controls-demo.gridNew.DemoLayout.Index>
+</Controls-demo.DemoLayout.Index>

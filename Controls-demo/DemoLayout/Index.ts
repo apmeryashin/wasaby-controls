@@ -1,5 +1,5 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/gridNew/DemoLayout/DemoLayout';
+import * as Template from 'wml!Controls-demo/DemoLayout/DemoLayout';
 
 type TSidebarItems = Array<{ template: TemplateFunction }>;
 
@@ -37,5 +37,5 @@ export default class extends Control<IOptions> {
         }
     }
 
-    static _styles: string[] = ['Controls-demo/gridNew/DemoLayout/DemoLayout'];
+    static _styles: string[] = ['Controls-demo/DemoLayout/DemoLayout'];
 }

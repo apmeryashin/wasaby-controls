@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-    <Controls-demo.gridNew.DemoLayout.Index>
+    <Controls-demo.DemoLayout.Index>
         <ws:content>
             <Controls.grid:View
                     keyProperty="key"
@@ -71,5 +71,5 @@
                 </ws:Array>
             </ws:items>
         </ws:rightSidebar>
-    </Controls-demo.gridNew.DemoLayout.Index>
+    </Controls-demo.DemoLayout.Index>
 </div>

@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-    <Controls-demo.gridNew.DemoLayout.Index>
+    <Controls-demo.DemoLayout.Index>
         <ws:content>
             <Controls.event:Register name="resizeDetect" register="controlResize">
                 <Controls.scroll:Container attr:class="controlsDemo__mr4"
@@ -175,5 +175,5 @@
                 </ws:Array>
             </ws:items>
         </ws:rightSidebar>
-    </Controls-demo.gridNew.DemoLayout.Index>
+    </Controls-demo.DemoLayout.Index>
 </div>

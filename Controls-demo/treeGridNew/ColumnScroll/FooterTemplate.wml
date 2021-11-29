@@ -1,0 +1,6 @@
+<ws:partial template="Controls/grid:FooterTemplate" scope="{{ _options }}">
+    <div class="ws-flexbox ws-flex-grow-1 ws-justify-content-between">
+        <div>Контент подвала дурева</div>
+        <div>Конец контента подвала</div>
+    </div>
+</ws:partial>
