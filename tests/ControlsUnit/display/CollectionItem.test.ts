@@ -561,7 +561,7 @@ describe('Controls/_display/CollectionItem', () => {
         owner.getMultiSelectPosition = () => 'custom';
         const customMultiSelectClasses = item.getMultiSelectClasses('default');
         CssClassesAssert.isSame(customMultiSelectClasses, requiredClasses +
-            ' controls-ListView__checkbox_marginTop_s controls-ListView__checkbox_position-custom ');
+            ' controls-ListView__checkbox_position-custom ');
     });
 
     describe('.setEditing()', () => {
