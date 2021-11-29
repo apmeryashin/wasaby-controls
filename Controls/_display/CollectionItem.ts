@@ -512,7 +512,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._counters;
     }
 
-    getMultiSelectPositionClasses(itemPadding: IItemPadding = {}, baseLine: TItemBaseLine = 'none'): string {
+    getMultiSelectPositionClasses(itemPadding: IItemPadding = {}, baseline: TItemBaseLine = 'none'): string {
         const topPadding = (itemPadding.top || this.getTopPadding() || 'l').toLowerCase();
         const position = this.getOwner().getMultiSelectPosition();
         let checkboxMargin: string;
@@ -524,7 +524,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             // Если не выравнивается (по умолчанию), то в зависимости от отступа списка:
             // для l добавляется отступ s, а для s добавляеься отступ равный разделительной линии.
             // Это поведение исправится в рамках работ по отступам записей.
-            if (baseLine === 'none') {
+            if (baseline === 'none') {
                 checkboxMargin = topPadding === 's' || topPadding === 'null' ? 'null' : 's';
             } else {
                 checkboxMargin = topPadding;
@@ -539,9 +539,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
                           cursor: string = 'pointer',
                           templateHighlightOnHover: boolean = true,
                           itemPadding: IItemPadding = {},
-                          baseLine: 'none' | 'default' = 'none'): string {
+                          baseline: 'none' | 'default' = 'none'): string {
         let classes = this._getMultiSelectBaseClasses();
-        classes += this.getMultiSelectPositionClasses(itemPadding, baseLine);
+        classes += this.getMultiSelectPositionClasses(itemPadding, baseline);
         return classes;
     }
 
@@ -1049,7 +1049,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
-    getContentClasses(baseLine: TItemBaseLine = 'none'): string {
+    getContentClasses(baseline: TItemBaseLine = 'none'): string {
         const isAnimatedForSelection = this.isAnimatedForSelection();
         const rowSeparatorSize = this.getRowSeparatorSize();
         let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses()}`;

@@ -40,11 +40,11 @@ export default interface IItemTemplateOptions {
    displayProperty?: string;
 
    /**
-    * @name Controls/_list/interface/ItemTemplate#baseLine
+    * @name Controls/_list/interface/ItemTemplate#baseline
     * @cfg {Controls/_display/CollectionItem/TItemBaseLine.typedef} Настройка базовой линии записи плоского списка
     * @remark
     * Необходимо указывать эту опцию, если надо выровнять содержимое записи и чекбокс при multiSelectVisibility="visible" по базовой линии 17px
     * @default none
     */
-   baseLine?: TItemBaseLine;
+   baseline?: TItemBaseLine;
 }

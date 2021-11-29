@@ -1,6 +1,6 @@
 <ws:template name="localItemTemplateContent">
     <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && multiSelectPosition !== 'custom' }}">
-        <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" itemPadding="{{itemPadding}}"  baseLine="{{baseLine}}"/>
+        <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" itemPadding="{{itemPadding}}"  baseline="{{baseline}}"/>
     </ws:if>
     <ws:if data="{{ (item || itemData).shouldDisplayMarker(marker) }}">
         <div attr:data-qa="marker" class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
@@ -18,7 +18,7 @@
                     itemActionsTemplate="{{ itemActionsTemplate }}"
                     swipeTemplate="{{ swipeTemplate }}">
                 <ws:multiSelectTemplate>
-                    <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" itemPadding="{{itemPadding}}" baseLine="{{baseLine}}"/>
+                    <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" itemPadding="{{itemPadding}}" baseline="{{baseline}}"/>
                 </ws:multiSelectTemplate>
             </ws:partial>
         </div>
