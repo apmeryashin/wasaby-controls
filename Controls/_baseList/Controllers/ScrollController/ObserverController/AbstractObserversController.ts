@@ -1,9 +1,9 @@
-import { EdgeIntersectionObserver } from 'Controls/scroll';
+import type { EdgeIntersectionObserver } from 'Controls/scroll';
 import { Control } from 'UI/Base';
 import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { Logger } from 'UI/Utils';
 
-const ERROR_PATH = 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+const ERROR_PATH = 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
 
 export type TIntersectionEvent = 'bottomIn' | 'bottomOut' | 'topIn' | 'topOut';
 
@@ -19,7 +19,7 @@ export interface ITriggersVisibility {
 
 export type TObserversCallback = (event: TIntersectionEvent) => void;
 
-export interface IObserversControllerBaseOptions {
+export interface IAbstractObserversControllerBaseOptions {
     listControl: Control;
     listContainer: HTMLElement;
     viewportSize: number;
@@ -29,7 +29,7 @@ export interface IObserversControllerBaseOptions {
     bottomTriggerOffsetCoefficient: number;
 }
 
-export interface IObserversControllerOptions extends IObserversControllerBaseOptions {
+export interface IAbstractObserversControllerOptions extends IAbstractObserversControllerBaseOptions {
     observersCallback: TObserversCallback;
 }
 
@@ -38,7 +38,7 @@ export const DEFAULT_TRIGGER_OFFSET = 0.3;
 /**
  * Класс предназначен для управления observer, срабатывающим при достижении границ контента списка.
  */
-export class ObserversController {
+export abstract class AbstractObserversController {
     private _listControl: Control;
     private _listContainer: HTMLElement;
     private _triggers: HTMLElement[] = [];
@@ -65,7 +65,7 @@ export class ObserversController {
     private _observer: EdgeIntersectionObserver;
     private _observersCallback: TObserversCallback;
 
-    constructor(options: IObserversControllerOptions) {
+    constructor(options: IAbstractObserversControllerOptions) {
         this._listControl = options.listControl;
         this._listContainer = options.listContainer;
         this._viewportSize = options.viewportSize;
@@ -190,9 +190,8 @@ export class ObserversController {
         };
 
         if (this._triggers && this._triggers.length) {
-            // Для горизонтального скролла нужно будет поправить этот код (поодержка left, right)
-            this._triggers[0].style.top = `${this._triggersOffsets.backward}px`;
-            this._triggers[1].style.bottom = `${this._triggersOffsets.forward}px`;
+            this._applyTriggerOffset(this._triggers[0], 'backward', this._triggersOffsets.backward);
+            this._applyTriggerOffset(this._triggers[1], 'forward', this._triggersOffsets.forward);
         }
     }
 
@@ -204,13 +203,13 @@ export class ObserversController {
         this._triggers[0].style.display = this._triggersVisibility.backward ? '' : 'none';
         this._triggers[1].style.display = this._triggersVisibility.forward ? '' : 'none';
 
-        this._observer = new EdgeIntersectionObserver(
-            this._listControl,
-            (eventName: TIntersectionEvent) => {
-                this._observersCallback(eventName);
-            },
-            this._triggers[0],
-            this._triggers[1]
-        );
+        this._observer = this._createTriggersObserver(this._listControl, this._observersCallback, ...this._triggers);
     }
+
+    protected abstract _createTriggersObserver(component: Control,
+                                               handler: Function,
+                                               backwardTriggerElement?: HTMLElement,
+                                               forwardTriggerElement?: HTMLElement): EdgeIntersectionObserver;
+
+    protected abstract _applyTriggerOffset(element: HTMLElement, direction: IDirection, offset: number): void;
 }

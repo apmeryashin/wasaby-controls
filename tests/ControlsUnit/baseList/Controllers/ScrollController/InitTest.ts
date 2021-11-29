@@ -2,6 +2,12 @@ import {
     IScrollControllerOptions,
     ScrollController
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import {
+    ObserversController
+} from 'Controls/_baseList/Controllers/ScrollController/ObserverController/ObserversController';
+import {
+    ItemsSizeController
+} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
 import { JSDOM } from 'jsdom';
 
 export function initTest(options: Partial<IScrollControllerOptions>): ScrollController {
@@ -11,6 +17,8 @@ export function initTest(options: Partial<IScrollControllerOptions>): ScrollCont
         scrollPosition: 0,
         totalCount: 0,
         givenItemsSizes: null,
+        itemsSizeControllerConstructor: ItemsSizeController,
+        observerControllerConstructor: ObserversController,
         topTriggerOffsetCoefficient: 0.3,
         bottomTriggerOffsetCoefficient: 0.3,
         indexesChangedCallback: (result) => null,
