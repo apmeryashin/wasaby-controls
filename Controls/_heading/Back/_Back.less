@@ -28,12 +28,10 @@
 //region icon view
 .controls-Back__icon_view-button {
    // view
-   width: 1em;
-   height: 1em;
    border-radius: 50%;
    box-sizing: border-box;
    background-color: var(--unaccented_same_background-color);
-   border: 1px solid var(--unaccented_contrast_background-color);
+   border: 1px solid var(--unaccented_hover_same_background-color);
 
    // inner align
    display: flex;
@@ -43,6 +41,19 @@
    .controls-Back__icon {
       height: 50%;
    }
+}
+
+.controls-Back__icon_view-button_size-s {
+   width: var(--icon-size_s);
+   height: var(--icon-size_s);
+}
+.controls-Back__icon_view-button_size-m {
+   width: var(--icon-size_m);
+   height: var(--icon-size_m);
+}
+.controls-Back__icon_view-button_size-l {
+   width: var(--icon-size_l);
+   height: var(--icon-size_l);
 }
 //endregion
 
@@ -64,12 +75,13 @@
    display: flex;
    align-items: center;
 
-   &::before {
-      content: '\200b';
-   }
+   .baseline-fix();
 }
 
-.controls-Back__icon-wrapper {
+.controls-Back__icon-wrapper_offset-2xs {
+   padding-right: var(--offset_2xs);
+}
+.controls-Back__icon-wrapper_offset-xs {
    padding-right: var(--offset_xs);
 }
 
@@ -84,12 +96,22 @@
 }
 
 .controls-Back__middle {
-   // Делаем через max т.к. в этот элемент прикладники могут положить иконки, а у них фиксированная сетка размеров
-   // и она ни как не сочетается с размером шрифта. И получается что иконка будет либо много меньше чем 1em либо много
-   // больше и из-за этого она криво выравнивается.
-   // При таких стилях контейнер ужмется под иконку и она адекватно встанет по центру.
-   max-width: 1em;
-   max-height: 1em;
+   display: flex;
+}
+
+.controls-Back__middle_size-s {
+   max-width: var(--icon-size_s);
+   max-height: var(--icon-size_s);
+}
+
+.controls-Back__middle_size-m {
+   max-width: var(--icon-size_m);
+   max-height: var(--icon-size_m);
+}
+
+.controls-Back__middle_size-l {
+   max-width: var(--icon-size_l);
+   max-height: var(--icon-size_l);
 }
 
 //region Caption styles
@@ -145,7 +167,6 @@
       }
 
       .controls-Back__icon_view-button {
-         border-color: var(--unaccented_hover_contrast_background-color);
          background-color: var(--unaccented_hover_same_background-color);
       }
 
