@@ -2,10 +2,10 @@ import {AbstractItemsSizesController, IItemSize} from './AbstractItemsSizeContro
 import {getDimensions, getOffsetTop} from 'Controls/sizeUtils';
 
 export class ItemsSizeController extends AbstractItemsSizesController {
-    protected _getBeforeItemsContentSize(itemsContainer: HTMLElement, scrollContent: Element): number {
-        return scrollContent ?
-            scrollContent.getBoundingClientRect().top - itemsContainer.getBoundingClientRect().top :
-            getOffsetTop(itemsContainer);
+    protected _getBeforeContentSize(itemsContainer: HTMLElement, scrollContent: Element): number {
+        return scrollContent
+            ? getDimensions(itemsContainer, true).top - scrollContent.getBoundingClientRect().top
+            : getOffsetTop(itemsContainer);
     }
 
     protected _getItemSize(element: HTMLElement): IItemSize {

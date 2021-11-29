@@ -30,11 +30,10 @@ import {
     IScheduledScrollToElementParams,
     ScrollController
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
-import type { IItemsSizes, IItemSize } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
+import type { IItemsSizes, IItemSize } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/AbstractItemsSizeController';
 import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
 import {ObserversController} from 'Controls/_baseList/Controllers/ScrollController/ObserverController/ObserversController';
 import {ItemsSizeController} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
-import {getDimensions, getOffsetTop} from 'Controls/sizeUtils';
 import { Logger } from 'UI/Utils';
 
 export interface IShadowVisibility {

@@ -52,7 +52,7 @@ export class AbstractItemsSizesController {
         }
 
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
-        return this._getBeforeItemsContentSize(this._itemsContainer, scrollContent);
+        return this._getBeforeContentSize(this._itemsContainer, scrollContent);
     }
 
     // region on DOM references update
@@ -128,7 +128,7 @@ export class AbstractItemsSizesController {
         }
     }
 
-    protected abstract _getBeforeItemsContentSize(itemsContainer: HTMLElement, scrollContent: Element): number;
+    protected abstract _getBeforeContentSize(itemsContainer: HTMLElement, scrollContent: Element): number;
 
     protected abstract _getItemSize(element: HTMLElement): IItemSize;
 

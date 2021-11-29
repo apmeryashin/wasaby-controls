@@ -6,10 +6,10 @@ import {
 import {getDimensions} from 'Controls/sizeUtils';
 
 export class ItemsSizeController extends AbstractItemsSizesController {
-    protected _getBeforeItemsContentSize(itemsContainer: HTMLElement, scrollContent: Element): number {
-        return scrollContent ?
-            scrollContent.getBoundingClientRect().left - itemsContainer.getBoundingClientRect().left :
-            itemsContainer.getBoundingClientRect().left;
+    protected _getBeforeContentSize(itemsContainer: HTMLElement, scrollContent: Element): number {
+        return scrollContent
+            ? getDimensions(itemsContainer, true).left - scrollContent.getBoundingClientRect().left
+            : getDimensions(itemsContainer, true).left;
     }
 
     protected _getItemSize(element: HTMLElement): IItemSize {
