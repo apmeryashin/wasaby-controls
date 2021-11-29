@@ -47,6 +47,20 @@ describe('Controls/grid_clean/Display/ColumnScrollViewMixin', () => {
         });
     });
 
+    describe('_beforeUpdate', () => {
+        it('remove max-width from content if column scroll was disabled by options', () => {
+            const view = {
+                _options: {},
+                _$columnScrollEmptyViewMaxWidth: 350
+            };
+
+            ColumnScrollViewMixin._columnScrollOnViewBeforeUpdate.apply(view, [
+                {columnScroll: false}
+            ]);
+            assert.isNull(view._$columnScrollEmptyViewMaxWidth);
+        });
+    });
+
     describe('_didUpdate', () => {
         it('should not force update if scroll is disabled', () => {
             const View = Control.extend([ColumnScrollViewMixin], {

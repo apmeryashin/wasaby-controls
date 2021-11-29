@@ -493,6 +493,11 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
             destroyColumnScroll(this);
         }
 
+        // Снимаем ограничитель ширины пустого представления, если горизонтальный скролл выключился по опции
+        if (!newOptions.columnScroll && this._$columnScrollEmptyViewMaxWidth) {
+            this._$columnScrollEmptyViewMaxWidth = null;
+        }
+
         // FIXME: Удалить, при следующем этапе рефакторинга, когда пойду внутрь контроллера, нужно от этого избавиться,
         //  как и от большинства стейтов. #should_refactor
         if (this._$columnScrollController && this._options.needShowEmptyTemplate !== newOptions.needShowEmptyTemplate) {
