@@ -30,6 +30,12 @@ export default class TreeItem<T extends Model = Model>
         return classes;
     }
 
+    getContentClasses(): string {
+        let classes = super.getContentClasses();
+        classes += ' controls-Tree__itemContent';
+        return classes;
+    }
+
     protected _getLeftSpacingContentClasses(): string {
         return '';
     }
