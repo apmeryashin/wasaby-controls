@@ -130,7 +130,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
 
         if (options.style) {
             Logger.warn('Controls/tabs:Buttons: Опции style устарела.' +
-                ' Используйте опции: fontColorStyle, selectedStyle и markerStyle.', this);
+                ' Используйте опции: fontColorStyle, selectedStyle.', this);
         }
     }
 
@@ -291,7 +291,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
 
     protected _updateMarkerCssClass(options: ITabsButtonsOptions): void {
         const style = TabsButtons._prepareStyle(options.style);
-        this._markerCssClass = `controls-Tabs__marker_style-${this._options.markerStyle || style || this._defaultSelectedStyle} controls-Tabs__marker_thickness`;
+        this._markerCssClass = `controls-Tabs__marker_style-${this._options.selectedStyle || style || this._defaultSelectedStyle} controls-Tabs__marker_thickness`;
     }
 
     protected _onItemClick(event: SyntheticEvent<MouseEvent>, key: string): void {
@@ -467,7 +467,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
                 // Если маркеры которые рисуются с абсолютной позицией не инициализированы, то нарисуем маркер
                 // внутри вкладки. Это можно сделать быстрее. Но невозможно анимировано передвигать его между вкладками.
                 // Инициализируем и переключимся на другой механизм маркеров после ховера.
-                classes.push(`controls-Tabs_style_${this._options.markerStyle || this._options.selectedStyle || style || this._defaultSelectedStyle}__item-marker_state_selected`);
+                classes.push(`controls-Tabs_style_${this._options.selectedStyle || style || this._defaultSelectedStyle}__item-marker_state_selected`);
             } else {
                 classes.push('controls-Tabs__item-marker_state_default');
             }

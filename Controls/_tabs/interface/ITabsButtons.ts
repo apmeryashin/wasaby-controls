@@ -215,13 +215,4 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
      * @demo Controls-demo/Tabs/Buttons/FontColorStyle/Index
      */
     selectedStyle?: string;
-
-    /**
-     * @name Controls/_tabs/interface/ITabsButtons#markerStyle
-     * @cfg {Controls/interface:IFontColorStyle/TFontColorStyle.typedef} Устанавливает цвет маркера.
-     * @default primary
-     * @see IFontColorStyle
-     * @demo Controls-demo/Tabs/Buttons/FontColorStyle/Index
-     */
-    markerStyle?: string;
 }

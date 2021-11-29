@@ -25,14 +25,13 @@
                 items="{{_items1}}"
         />
     </div>
-    <div class="separator">fontColorStyle='success' selectedStyle='warning' markerStyle='warning'</div>
+    <div class="separator">fontColorStyle='success' selectedStyle='warning'</div>
     <div class="demo-TabButtons ControlsDemo-Tabs__mainSeparate">
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey4'
                 keyProperty="id"
                 fontColorStyle="success"
                 selectedStyle='warning'
-                markerStyle='warning'
                 items="{{_items1}}"
         />
     </div>
