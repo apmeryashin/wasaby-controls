@@ -632,4 +632,11 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(controller.shouldDisplayTopIndicator());
         });
     });
+
+    describe('shouldContinueDisplayPortionedSearch', () => {
+        it('return false because not started search', () => {
+            const {controller} = initTest([{id: 1}], {});
+            assert.isFalse(controller.shouldContinueDisplayPortionedSearch());
+        });
+    });
 });

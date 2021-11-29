@@ -561,7 +561,9 @@ export default class IndicatorsController {
         // Либо мы при остановке пытаемся подгрузить в другую сторону, либо поиск не приостановле
         const allowByStoppedState = direction && this.getPortionedSearchDirection() !== direction ||
             this._getSearchState() !== SEARCH_STATES.STOPPED;
-        return allowByStoppedState && this._getSearchState() !== SEARCH_STATES.ABORTED;
+        return allowByStoppedState &&
+            this._getSearchState() !== SEARCH_STATES.ABORTED &&
+            this._getSearchState() !== SEARCH_STATES.NOT_STARTED;
     }
 
     /**
