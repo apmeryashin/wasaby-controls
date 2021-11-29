@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth800">
     <Controls.scroll:Container attr:class="controlsDemo__height200">
         <Controls.list:View keyProperty="key" source="{{_viewSource}}" stickyCallback="{{_stickyCallback}}">
             <ws:itemTemplate>

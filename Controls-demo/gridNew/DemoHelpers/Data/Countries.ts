@@ -1,6 +1,7 @@
 // @ts-ignore
 import * as numberResultTpl from 'wml!Controls-demo/gridNew/resources/ResultCellTemplates/Number';
 import * as coloredNumberResultTpl from 'wml!Controls-demo/gridNew/resources/ResultCellTemplates/ColoredNumber';
+import * as multilineNumberResultTpl from 'wml!Controls-demo/gridNew/resources/ResultCellTemplates/MultilineNumber';
 
 import {IColumnRes, IData} from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
 import {IColumn, IHeaderCell} from 'Controls/grid';
@@ -334,7 +335,9 @@ export const Countries = {
         {
             displayProperty: 'capital',
             width: 'max-content',
-            compatibleWidth: setCompatibleWidths ? '98px' : undefined
+            compatibleWidth: setCompatibleWidths ? '98px' : undefined,
+            result: 5,
+            resultTemplate: multilineNumberResultTpl
         },
         {
             displayProperty: 'population',

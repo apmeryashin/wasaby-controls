@@ -23,28 +23,36 @@ export interface IItemsRange {
     endIndex: number;
 }
 
-export interface IIndexesChangedParams extends IItemsRange {
+/**
+ * Интерфейс, описывающий параметры колбэка об изменении индексов(диапазона отображаемых элементов)
+ * @remark
+ * oldRange, oldPlaceholders - нужны чтобы правильно посчитать крайний видимый элемент
+ * на _beforeRender для восстановления скролла
+ */
+export interface IIndexesChangedParams {
     shiftDirection: IDirection;
+    range: IItemsRange;
+    oldRange: IItemsRange;
+    oldPlaceholders: IPlaceholders;
 }
 
 export interface IActiveElementIndex {
     activeElementIndex: number;
 }
 
-export type IScheduledScrollType = 'restoreScroll' | 'scrollToElement';
+export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement';
 
-interface IBaseEdgeItem {
+export interface IEdgeItem {
+    index: number;
     direction: IDirection;
     border: IDirection;
     borderDistance: number;
 }
 
-export interface IEdgeItem extends IBaseEdgeItem {
-    index: number;
-}
-
-export interface IScheduledRestoreScrollParams extends IBaseEdgeItem {
-    key: CrudEntityKey;
+export interface IEdgeItemCalculatingParams {
+    direction: IDirection;
+    range: IItemsRange;
+    placeholders: IPlaceholders;
 }
 
 export interface IScheduledScrollToElementParams {
@@ -55,7 +63,7 @@ export interface IScheduledScrollToElementParams {
 
 export interface IScheduledScrollParams {
     type: IScheduledScrollType;
-    params: IScheduledRestoreScrollParams | IScheduledScrollToElementParams;
+    params: IEdgeItem | IScheduledScrollToElementParams | IEdgeItemCalculatingParams;
 }
 
 export interface IPlaceholders {
@@ -125,7 +133,8 @@ export class ScrollController {
 
         this._itemsSizesController = new options.itemsSizeControllerConstructor({
             itemsContainer: options.itemsContainer,
-            itemsQuerySelector: options.itemsQuerySelector
+            itemsQuerySelector: options.itemsQuerySelector,
+            totalCount: options.totalCount
         });
 
         this._observersController = new options.observerControllerConstructor({
@@ -139,10 +148,16 @@ export class ScrollController {
             observersCallback: this._observersCallback.bind(this)
         });
 
+        // корректируем скролл на размер контента до списка
+        const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
+        // если скролл меньше размера контента до списка, то это значит что сам список еще не проскроллен
+        const scrollPosition = options.scrollPosition < beforeContentSize
+            ? 0
+            : options.scrollPosition - beforeContentSize;
         this._calculator = new Calculator({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
-            scrollPosition: options.scrollPosition,
+            scrollPosition,
             totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
@@ -303,13 +318,23 @@ export class ScrollController {
 
     // region Scroll
 
-    getEdgeVisibleItem(direction: IDirection): IEdgeItem {
-        const topOffset = this._itemsSizesController.getBeforeItemsContentSize();
-        return this._calculator.getEdgeVisibleItem(direction, topOffset);
+    /**
+     * Возвращает крайний видимый элемент
+     * @param direction Направление
+     * @param range Диапазон отображаемых записей
+     * @param placeholders Плейсхолдер(размер скрытых записей до и после текущего диапазона)
+     * @remark
+     * range, placeholders - не обязательные параметры. Если они не заданы, то используются текущие значение.
+     * Текущие значения нужно для pageDown/pageUp.
+     */
+    getEdgeVisibleItem(direction: IDirection, range?: IItemsRange, placeholders?: IPlaceholders): IEdgeItem {
+        return this._calculator.getEdgeVisibleItem(direction, range, placeholders);
     }
 
-    getScrollTopToEdgeItem(edgeItem: IEdgeItem): number {
-        return this._calculator.getScrollTopToEdgeItem(edgeItem);
+    getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
+        const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
+        const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
+        return edgeItem.direction === 'forward' ? scrollPosition + beforeContentSize : scrollPosition;
     }
 
     /**
@@ -360,6 +385,11 @@ export class ScrollController {
             return;
         }
 
+        // НЕЛЬЗЯ делать рассчеты связанные со scrollPosition.
+        // Т.к. в момент срабатывания триггера scrollPosition может быть не актуален.
+        // Актуальное значение прийдет только после триггера в событии scrollMoveSync.
+        // Выходит след-ая цепочка вызовов: scrollMoveSync -> observerCallback -> scrollMoveSync.
+
         let direction: IDirection;
         if (eventName === 'bottomIn') {
             direction = 'forward';
@@ -380,6 +410,8 @@ export class ScrollController {
             triggerOffsets = this._observersController.setResetBackwardTriggerOffset(false);
         }
         this._calculator.setTriggerOffsets(triggerOffsets);
+        // TODO триггер может сразу стать виден, но это вызовет точно 2 перерисовки.
+        //  нужно подумать, можно ли исправить. По идее мы не знаем размеры элементов.
 
         // itemsEndedCallback должен вызываться ТОЛЬКО ТУТ, загрузка осуществляется ТОЛЬКО по достижению триггера
         if (!result.indexesChanged) {
@@ -421,8 +453,9 @@ export class ScrollController {
 
         if (result.indexesChanged) {
             this._indexesChangedCallback({
-                startIndex: result.startIndex,
-                endIndex: result.endIndex,
+                range: result.range,
+                oldRange: result.oldRange,
+                oldPlaceholders: result.oldPlaceholders,
                 shiftDirection: result.shiftDirection
             });
         }

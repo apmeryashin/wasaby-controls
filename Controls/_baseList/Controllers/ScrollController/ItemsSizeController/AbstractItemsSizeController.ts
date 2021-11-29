@@ -5,6 +5,7 @@ import { CrudEntityKey } from 'Types/source';
 export interface IAbstarctItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
     itemsQuerySelector: string;
+    totalCount: number;
 }
 
 export interface IItemSize {
@@ -25,6 +26,7 @@ export class AbstractItemsSizesController {
     constructor(options: IAbstarctItemsSizesControllerOptions) {
         this._itemsContainer = options.itemsContainer;
         this._itemsQuerySelector = options.itemsQuerySelector;
+        this.resetItems(options.totalCount);
     }
 
     getItemsSizes(): IItemsSizes {
@@ -37,13 +39,18 @@ export class AbstractItemsSizesController {
     }
 
     getElement(key: CrudEntityKey): HTMLElement {
-        return this._itemsContainer.querySelector(`[item-key="${key}"]`) as HTMLElement;
+        const selector = `${this._itemsQuerySelector}[item-key="${key}"]`;
+        return this._itemsContainer.querySelector(selector) as HTMLElement;
     }
 
     /**
      * Возвращает размер контента, расположенного в этом же ScrollContainer-е до списка.
      */
-    getBeforeItemsContentSize(): number {
+    getBeforeContentSize(): number {
+        if (!this._itemsContainer) {
+            return null;
+        }
+
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
         return this._getBeforeItemsContentSize(this._itemsContainer, scrollContent);
     }

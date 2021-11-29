@@ -135,6 +135,7 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _columns: object[] = null;
     protected _popupOpener: StackOpener|DialogOpener = null;
     protected _items: RecordSet = null;
+    private _selectedItems: RecordSet = null;
     protected _selectedKeys: string[]|number[] = [];
     protected _filter: TFilter = {};
     protected _navigation: INavigationOptionValue<unknown> = null;
@@ -294,32 +295,40 @@ class ListEditor extends Control<IListEditorOptions> {
         const maxItemsCount = this._getMaxItemsCount();
         // Выбранные элементы надо добавлять после запиненных записей
         let addIndex = this._getLastHistoryItemIndex();
-        const itemsCount = this._items.getCount();
+        let itemsCount = this._items.getCount();
         let itemIndex;
 
         if (maxItemsCount) {
             this._items.setEventRaising(false, true);
             items.each((item) => {
+                if (addIndex > maxItemsCount) {
+                    return;
+                }
                 // Логика добавление записей следующая:
                 // Если запись уже есть в списке, она просто перемещается вверх списка, но после запиненых записей
-                // Если записи нет, она добавляется в начало списка, запись внизу списка удаляется, если она вышла за пределы навигации
+                // Если записи нет, она добавляется в начало списка, запись внизу списка удаляется,
+                // если она вышла за пределы навигации
                 itemIndex = this._items.getIndexByValue(this._items.getKeyProperty(), item.getKey());
                 if (itemIndex !== -1) {
                     if (itemIndex > addIndex) {
                         this._items.move(itemIndex, addIndex);
                     }
                 } else {
-                    if ((itemsCount + 1) > maxItemsCount && addIndex < maxItemsCount) {
-                        this._items.add(item, addIndex);
-                        addIndex++;
+                    this._items.add(item, addIndex);
+
+                    if ((itemsCount + 1) > maxItemsCount) {
                         this._items.removeAt(itemsCount);
+                    } else {
+                        itemsCount++;
                     }
                 }
+                addIndex++;
             });
             this._items.setEventRaising(true, true);
         } else {
             this._items.assign(items);
         }
+        this._selectedItems = items;
     }
 
     protected _getMaxItemsCount(): number|void {
@@ -405,13 +414,20 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _setColumns(
-        {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions
+        {
+            displayProperty,
+            keyProperty,
+            imageProperty,
+            filterViewMode,
+            additionalTextProperty,
+            markerStyle
+        }: IListEditorOptions
     ): void {
         this._columns = [{
             displayProperty,
             keyProperty,
             textOverflow: 'ellipsis',
-            fontSize: filterViewMode === 'filterPanelStack' ? 'm' : 'l',
+            fontSize: (filterViewMode === 'filterPanelStack' || markerStyle !== 'primary') ? 'm' : 'l',
             width: 'auto',
             template: TitleColumn
         }];
@@ -539,8 +555,13 @@ class ListEditor extends Control<IListEditorOptions> {
 
     private _getSelectedItems(): List<Model> {
         const selectedItems = [];
+        const getItemById = (id, items) => {
+            return items?.at(items?.getIndexByValue(this._items.getKeyProperty(), id));
+        };
+
         factory(this._selectedKeys).each((key) => {
-            const record = this._items.getRecordById(key);
+            const record = getItemById(key, this._items) ||
+                           getItemById(key, this._selectedItems);
             if (record) {
                 selectedItems.push(record);
             }

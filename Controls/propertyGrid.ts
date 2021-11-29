@@ -35,6 +35,8 @@ import {default as CheckboxGroupEditor} from 'Controls/_propertyGrid/extendedEdi
 import {default as TimeIntervalEditor} from 'Controls/_propertyGrid/extendedEditors/TimeInterval';
 import {default as InputMaskEditor} from 'Controls/_propertyGrid/extendedEditors/InputMask';
 import {default as LogicEditor} from 'Controls/_propertyGrid/extendedEditors/Logic';
+import {default as PhoneEditor} from 'Controls/_propertyGrid/extendedEditors/Phone';
+import {default as DateRangeEditor} from 'Controls/_propertyGrid/extendedEditors/DateRange';
 
 import {default as TabbedView} from 'Controls/_propertyGrid/TabbedView';
 
@@ -61,6 +63,8 @@ export {
     DropdownEditor,
     LookupEditor,
     LogicEditor,
+    PhoneEditor,
+    DateRangeEditor,
     IPropertyGrid,
     IEditor,
     IProperty,

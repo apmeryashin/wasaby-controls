@@ -14,19 +14,27 @@ type TViewMode = 'ellipsis' | 'arrow';
 
 export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions, IIconSizeOptions {
     /**
-     * Режим отображения иконки открытия.
+     * @name Controls/_toggle/BigSeparator#viewMode
+     * @cfg {String} Режим отображения иконки открытия.
+     * @variant ellipsis
+     * @variant arrow
      * @default ellipsis
      * @demo Controls-demo/toggle/BigSeparator/ViewMode/Index
      */
    viewMode?: TViewMode;
     /**
-     * Определяет контрастность фона кнопки по отношению к ее окружению.
+     * @name Controls/_toggle/BigSeparator#contrastBackground
+     * @cfg {Boolean} Определяет контрастность фона кнопки по отношению к ее окружению.
      * @default true
      * @demo Controls-demo/toggle/BigSeparator/ContrastBackground/Index
      */
     contrastBackground?: boolean;
     /**
-     * Размер кнопки.
+     * @name Controls/_toggle/BigSeparator#iconSize
+     * @cfg {String} Размер кнопки.
+     * @variant s
+     * @variant m
+     * @variant l
      * @default 'm'
      * @demo Controls-demo/toggle/BigSeparator/SeparatorSize/Index
      */

@@ -59,7 +59,7 @@ export default class extends Control {
         switch (arrow) {
             case 'End':
                 this._textInfo = `Нажали кнопку "в конец" скролим к ${SCROLL_TO_ITEM} элементу`;
-                this._children.list.scrollToItem(SCROLL_TO_ITEM, true, true);
+                this._children.list.scrollToItem(SCROLL_TO_ITEM, 'bottom', true);
                 this._updateCount(null, SCROLL_TO_ITEM);
                 return false;
             case 'Begin':

@@ -8,40 +8,43 @@ import { IObservable } from 'Types/collection';
 import InertialScrolling from 'Controls/_baseList/resources/utils/InertialScrolling';
 
 import {
-    CollectionItem,
     Collection,
+    CollectionItem,
     TItemKey,
-    VirtualScrollHideController,
-    VirtualScrollController
+    VirtualScrollController,
+    VirtualScrollHideController
 } from 'Controls/display';
 import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 import {
-    ScrollController,
-    IItemsRange,
-    IPageDirection,
-    IScheduledScrollParams,
-    IScheduledScrollToElementParams,
+    IActiveElementChangedChangedCallback,
     IEdgeItem,
-    IPlaceholders,
+    IEdgeItemCalculatingParams,
     IHasItemsOutRange,
     IIndexesChangedParams,
     IItemsEndedCallback,
-    IScheduledRestoreScrollParams,
-    IActiveElementChangedChangedCallback,
-    IDirection
+    IItemsRange,
+    IDirection,
+    IPageDirection,
+    IPlaceholders,
+    IScheduledScrollParams,
+    IScheduledScrollToElementParams,
+    ScrollController
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import type { IItemsSizes, IItemSize } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
 import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
 import {ObserversController} from 'Controls/_baseList/Controllers/ScrollController/ObserverController/ObserversController';
 import {ItemsSizeController} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
 import {getDimensions, getOffsetTop} from 'Controls/sizeUtils';
+import { Logger } from 'UI/Utils';
 
 export interface IShadowVisibility {
     backward: boolean;
     forward: boolean;
 }
 
-type IScrollToElementUtil = (container: HTMLElement, position: string, force: boolean) => Promise<void>;
+const ERROR_PATH = 'Controls/_baseList/Controllers/ListVirtualScrollController';
+
+type IScrollToElementUtil = (container: HTMLElement, position: string, force: boolean) => Promise<void>|void;
 type IDoScrollUtil = (scrollTop: number) => void;
 type IUpdateShadowsUtil = (hasItems: IHasItemsOutRange) => void;
 type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
@@ -128,10 +131,25 @@ export class ListVirtualScrollController {
         this._scrollController.setListContainer(listContainer);
     }
 
-    afterRenderListControl(hasNotRenderedChanges: boolean): void {
+    beforeRenderListControl(hasNotRenderedChanges: boolean): void {
+        if (hasNotRenderedChanges && !this._scheduledScrollParams) {
+            // Планируем восстановление скролла, если
+            // не было запланировано восстановления скролла и у нас есть неотрендеренные изменения,
+            // которые могут повлиять на скролл
+            const edgeItem = this._scrollController.getEdgeVisibleItem('forward');
+            this._scheduleScroll({
+                type: 'restoreScroll',
+                params: edgeItem
+            });
+        } else {
+            this._handleScheduledScroll();
+        }
+    }
+
+    afterRenderListControl(): void {
         this._updateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
-        this._handleScheduledScroll(hasNotRenderedChanges);
+        this._handleScheduledScroll();
     }
 
     virtualScrollPositionChange(position: number): void {
@@ -249,27 +267,20 @@ export class ListVirtualScrollController {
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
-        this._scheduleUpdateItemsSizes({
-            startIndex: params.startIndex,
-            endIndex: params.endIndex
-        });
-        this._collection.setIndexes(params.startIndex, params.endIndex);
+        this._scheduleUpdateItemsSizes(params.range);
+        this._collection.setIndexes(params.range.startIndex, params.range.endIndex);
 
-        const edgeVisibleItem = this._scrollController.getEdgeVisibleItem(params.shiftDirection);
-        const item = this._collection.at(edgeVisibleItem.index);
-        if (!item) {
-            throw new Error('Controls/_baseList/BaseControl::_indexesChangedCallback | ' +
-                'Внутренняя ошибка списков! Крайний видимый элемент не найден в Collection.');
-        }
-        const restoreScrollParams: IScheduledRestoreScrollParams = {
-            key: item.getContents().getKey(),
-            border: edgeVisibleItem.border,
-            borderDistance: edgeVisibleItem.borderDistance,
-            direction: edgeVisibleItem.direction
-        };
+        // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
+        // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
+        // и мы будем знать актуальную scrollPosition.
+        // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
         this._scheduleScroll({
-            type: 'restoreScroll',
-            params: restoreScrollParams
+            type: 'calculateRestoreScrollParams',
+            params: {
+                direction: params.shiftDirection,
+                range: params.oldRange,
+                placeholders: params.oldPlaceholders
+            } as IEdgeItemCalculatingParams
         });
     }
 
@@ -300,27 +311,28 @@ export class ListVirtualScrollController {
         this._scheduledScrollParams = scrollParams;
     }
 
-    private _handleScheduledScroll(hasNotRenderedChanges: boolean): void {
+    private _handleScheduledScroll(): void {
         if (this._scheduledScrollParams) {
             switch (this._scheduledScrollParams.type) {
+                case 'calculateRestoreScrollParams':
+                    const params = this._scheduledScrollParams.params as IEdgeItemCalculatingParams;
+                    const edgeItem = this._scrollController.getEdgeVisibleItem(
+                        params.direction,
+                        params.range,
+                        params.placeholders
+                    );
+                    this._scheduledScrollParams = null;
+
+                    this._scheduleScroll({
+                        type: 'restoreScroll',
+                        params: edgeItem
+                    });
+                    break;
                 case 'restoreScroll':
-                    const restoreScrollParams = this._scheduledScrollParams.params as IScheduledRestoreScrollParams;
-                    let directionToRestoreScroll;
-                    if (!restoreScrollParams && hasNotRenderedChanges) {
-                        directionToRestoreScroll = 'backward';
-                    } else {
-                        directionToRestoreScroll = restoreScrollParams.direction;
-                    }
-                    if (directionToRestoreScroll) {
-                        const edgeItem: IEdgeItem = {
-                            index: this._collection.getIndexByKey(restoreScrollParams.key),
-                            border: restoreScrollParams.border,
-                            borderDistance: restoreScrollParams.borderDistance,
-                            direction: restoreScrollParams.direction
-                        };
-                        const newScrollTop = this._scrollController.getScrollTopToEdgeItem(edgeItem);
-                        this._doScrollUtil(newScrollTop);
-                    }
+                    const restoreScrollParams = this._scheduledScrollParams.params as IEdgeItem;
+                    const scrollPosition = this._scrollController.getScrollPositionToEdgeItem(restoreScrollParams);
+                    this._doScrollUtil(scrollPosition);
+                    this._scheduledScrollParams = null;
                     break;
                 case 'scrollToElement':
                     const scrollToElementParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
@@ -329,13 +341,12 @@ export class ListVirtualScrollController {
                         scrollToElementParams.position,
                         scrollToElementParams.force
                     );
+                    this._scheduledScrollParams = null;
                     break;
                 default:
-                    throw new Error('Controls/_baseList/Controllers/ListVirtualScrollController::_handleScheduledScroll | ' +
+                    Logger.error(`${ERROR_PATH}::_handleScheduledScroll | ` +
                         'Внутренняя ошибка списков! Неопределенный тип запланированного скролла.');
             }
-
-            this._scheduledScrollParams = null;
         }
     }
 
@@ -343,10 +354,14 @@ export class ListVirtualScrollController {
         this._inertialScrolling.callAfterScrollStopped(() => {
             const element = this._scrollController.getElement(key);
             if (element) {
-                const promise = this._scrollToElementUtil(element, position, force);
-                promise.then(() => this._scrollToElementCompletedCallback());
+                const result = this._scrollToElementUtil(element, position, force);
+                if (result instanceof Promise) {
+                    result.then(() => this._scrollToElementCompletedCallback());
+                } else {
+                    this._scrollToElementCompletedCallback();
+                }
             } else {
-                throw new Error('Controls/_baseList/Controllers/ListVirtualScrollController::_scrollToElement | ' +
+                Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
                     'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
                     'Промис scrollToItem не отстрельнет, возможны ошибки.');
             }
@@ -402,7 +417,8 @@ export class ListVirtualScrollController {
                 };
 
                 if (!itemSize.size) {
-                    throw new Error(`Controls/baseList:BaseControl | Задана опция itemHeightProperty, но для записи с ключом "${it.getContents().getKey()}" высота не определена!`);
+                    Logger.error('Controls/baseList:BaseControl | Задана опция itemHeightProperty, ' +
+                                `но для записи с ключом "${it.getContents().getKey()}" высота не определена!`);
                 }
 
                 return itemSize;
@@ -464,3 +480,23 @@ export class ListVirtualScrollController {
         }
     }
 }
+
+// Как работает pageDown/pageUp:
+// 1. Обрабатывается нажатие клавиши
+// 2. Получаем крайний видимый элемент
+// 3. Скроллим к нему
+// 4. Возвращаем промис с ключом записи, к которой проскролили
+// 5. Ставим маркер на эту запись
+
+// Как работает восстановление скролла:
+// 1. Срабатывает trigger, вызываем shiftToDirection, смещаем диапазон
+// 2. Вызываем indexesChangedCallback
+// 3. Планируем восстановление скролла. Для этого запоминаем текущий(не новый) range, плейсхолдеры и shiftDirection
+// 4. На beforeRender считаем крайний видимый элемент по параметрам из шага 3.
+// 5. На afterRender считаем новый scrollPosition до крайнего видимого элемента
+// EdgeItem можно запоминать ТОЛЬКО на beforeRender, т.к. после срабатывания триггера может произойти скролл.
+// beforeRender - это точка после которой гарантированно не будет меняться scrollPosition.
+// Но т.к. мы считаем EdgeItem на beforeRender, нам нужно прокидывать старый range и плейсхолдер, чтобы EdgeItem
+// посчитать по состоянию до смещения диапазона.
+// Плейсхолдер нужны, чтобы из ItemSizes посчитать актуальный offset
+// (ItemSize.offset = placeholders.backward + element.offset(настоящий оффсет в DOM)

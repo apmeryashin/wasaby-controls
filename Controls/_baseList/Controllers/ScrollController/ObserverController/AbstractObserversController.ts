@@ -1,6 +1,9 @@
 import type { EdgeIntersectionObserver } from 'Controls/scroll';
 import { Control } from 'UI/Base';
 import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import { Logger } from 'UI/Utils';
+
+const ERROR_PATH = 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
 
 export type TIntersectionEvent = 'bottomIn' | 'bottomOut' | 'topIn' | 'topOut';
 
@@ -147,7 +150,7 @@ export abstract class AbstractObserversController {
         const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
 
         if (trigger.style.display !== 'none' && trigger.style.display !== '') {
-            throw new Error('Controls/_baseList/Controllers/ScrollController/AbstractObserversController::_setTriggerVisibility | ' +
+            Logger.error(`${ERROR_PATH}::_setTriggerVisibility | ` +
                 'В стиле триггера невозможное значение display. ' +
                 'Нужно проверить стили и классы навешанные на триггеры.');
         }

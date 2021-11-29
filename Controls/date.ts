@@ -5,7 +5,8 @@
  * @includes BaseInput Controls/_date/BaseInput
  * @includes IBaseInputMask Controls/_date/interface/IBaseInputMask
  * @includes IDatePopupType Controls/_date/interface/IDatePopupType
- * @includes ICaption Controls/_date/interfaces/ICaption
+ * @includes ICaption Controls/_date/interface/ICaption
+ * @includes IExtendedTimeFormat Controls/_date/interface/IExtendedTimeFormat
  */
 
 export {default as Input} from 'Controls/_date/Input';

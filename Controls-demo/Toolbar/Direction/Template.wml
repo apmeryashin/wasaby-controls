@@ -1,5 +1,5 @@
-<div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth350">
+    <div class="controlsDemo__cell" data-qa="controlsDemo_Toolbar__horizontal">
         <div class="controls-text-label">direction=horizontal</div>
         <Controls.toolbars:View
                 direction="horizontal"
@@ -10,7 +10,7 @@
                 keyProperty="id"
         />
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell" data-qa="controlsDemo_Toolbar__vertical">
         <div class="controls-text-label">direction=vertical</div>
         <Controls.toolbars:View
                 attr:style="margin-left: 250px"

@@ -13,6 +13,8 @@ enum SCROLL_POSITION {
    center = 'center'
 }
 
+type TScrollPosition = 'top' | 'bottom' | 'center';
+
 function getScrollableParents(element: HTMLElement, stickyHeaderElement: Element): HTMLElement[] {
    const scrollableParents: HTMLElement[] = [];
    let currentElement = element.parentElement;
@@ -154,7 +156,7 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
 /**
  * Позволяет проскроллить содержимое, находящееся внутри родительского скролл-контейнера, к выбранному элементу, сделав его видимым.
  * @param {HTMLElement} element DOM-элемент, к которому нужно проскроллить содержимое.
- * @param {boolean|String} toBottomOrPosition Определяет, должен ли быть виден нижний край контейнера. Допустимые значения: top, bottom, center.
+ * @param {String} position Определяет, должен ли быть виден нижний край контейнера. Допустимые значения: top, bottom, center.
  * @param {boolean} force
  * * true — позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
  * * false — элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
@@ -170,11 +172,8 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
  * </pre>
  */
 
-export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boolean | SCROLL_POSITION,
+export function scrollToElement(element: HTMLElement, position?: TScrollPosition,
                                 force?: Boolean, waitInitialization: boolean = false): Promise<void> {
-   // TODO: переделать аргумент toBottom в position
-   //  https://online.sbis.ru/opendoc.html?guid=4693dfce-f11d-4792-b62d-9faf54564553
-   const position: SCROLL_POSITION = toBottomOrPosition === true ? SCROLL_POSITION.bottom : toBottomOrPosition;
    const stickyHeaderClass = 'controls-StickyHeader';
    // Элемент, к которому нужно подскролить, может находиться в стики блоке.
    const outerStickyHeaderElement = element.closest(`.${stickyHeaderClass}`);
@@ -199,7 +198,7 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
             } else {
                return new Promise(() => {
                   scrollContainer.containerLoaded.then(() => {
-                     scrollToElement(element, toBottomOrPosition, force, waitInitialization);
+                     scrollToElement(element, position, force, waitInitialization);
                   });
                });
             }
@@ -207,7 +206,7 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
       }
       if (promises.length) {
          return Promise.all(promises).then(() => {
-            scrollToElement(element, toBottomOrPosition, force, waitInitialization);
+            scrollToElement(element, position, force, waitInitialization);
          });
       }
    }

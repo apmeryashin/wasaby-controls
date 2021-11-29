@@ -45,3 +45,10 @@
    display: flex;
    align-items: center;
 }
+
+
+// По стандару панели фильтров, если редактор-список не является основным (primary) фильтром,
+// то между элементами такого списка не должно быть дополнительных отступов
+.controls-EditorList_secondaryFilter .controls-Grid_master {
+   grid-row-gap: 0;
+}

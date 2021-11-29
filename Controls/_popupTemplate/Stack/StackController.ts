@@ -396,11 +396,11 @@ export class StackController extends BaseController {
                 this._stack.replace(item, itemIndex);
             }
             item.position = this._getItemPosition(item);
+            if (StackStrategy.isMaximizedPanel(item)) {
+                this._updateMaximizedState(item);
+                this._prepareMaximizedState(item);
+            }
             if (this._stack.getCount() <= 1) {
-                if (StackStrategy.isMaximizedPanel(item)) {
-                    this._updateMaximizedState(item);
-                    this._prepareMaximizedState(item);
-                }
                 this._updatePopupOptions(item);
                 this._addLastStackClass(item);
             }

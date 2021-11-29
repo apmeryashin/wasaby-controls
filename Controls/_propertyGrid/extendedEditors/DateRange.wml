@@ -1,0 +1,7 @@
+<Controls.Container.Async templateName="Controls/dateRange:Input">
+    <ws:partial template="{{content.resolvedTemplate}}"
+                scope="{{_options}}"
+                bind:startValue="_startDate"
+                bind:endValue="_endDate"
+                on:inputCompleted="_handleInputCompleted()"/>
+</Controls.Container.Async>

@@ -10,6 +10,7 @@
    --border-color: #4d535e;
    --separator_color: #6b6b6b;
    --readonly_marker-color: var(--readonly_color);
+   --readonly_border-color: #6b6b6b;
    --page_background-image: url('/cdn/OnlineCDN/themes/1.0.0/background-dark.jpg');
    --page_background-color: #575e64;
 
@@ -28,7 +29,7 @@
 
    // Цвета иконок
    --icon-color: #ccc;
-   --hover_text-color: #e4e4e4;
+   --hover_icon-color: #e4e4e4;
    --contrast_icon-color: #383d44;
    --label_icon-color: #909aa9;
    --label_hover_icon-color: #ff7033;
@@ -124,6 +125,7 @@
    --unaccented_icon-color: #999;
    --unaccented_hover_icon-color: #797979;
    --unaccented_border-color: #797979;
+   --unaccented_hover_border-color: #6ed4d0;
    --pale_same_background-color: #4d535e;
    --pale_hover_same_background-color: #535c68;
    --pale_active_same_background-color: #535c68;
@@ -159,13 +161,13 @@
    --background-color_ToolbarBox: #30343b;
 
    //input
-   --border-color_inputText: #4d535e #4d535e #797979 #4d535e;
-   --border-color_hover_inputText: #4d535e #4d535e #6ed4d0 #4d535e;
-   --border-color_focus_inputText: #4d535e #4d535e #6ed4d0 #4d535e;
-   --border-contrast-color_inputText: #4d535e #4d535e #797979 #4d535e;
-   --border-contrast-color_hover_inputText: #4d535e #4d535e #6ed4d0 #4d535e;
-   --border-contrast-color_focus_inputText: #4d535e #4d535e #6ed4d0 #4d535e;
-   --readonly_border-color_inputText: transparent transparent #424851 transparent;
+   --border-color_inputText: #4d535e #4d535e var(--unaccented_border-color) #4d535e;
+   --border-color_hover_inputText: #4d535e #4d535e var(--unaccented_hover_border-color) #4d535e;
+   --border-color_focus_inputText: #4d535e #4d535e var(--unaccented_hover_border-color) #4d535e;
+   --border-contrast-color_inputText: #4d535e #4d535e var(--unaccented_border-color) #4d535e;
+   --border-contrast-color_hover_inputText: #4d535e #4d535e var(--unaccented_hover_border-color) #4d535e;
+   --border-contrast-color_focus_inputText: #4d535e #4d535e var(--unaccented_hover_border-color) #4d535e;
+   --readonly_border-color_inputText: transparent transparent var(--readonly_border-color) transparent;
    --placeholder-color_inputText: #6b6b6b;
    --invalid_focus_background-color_inputText: var(--background-color);
    --invalid_focus_background-color: transparent;
@@ -208,7 +210,6 @@
 
    // Controls/tabs:Buttons
    --separator_color_tabs: #6b6b6b;
-   --border-color_tabs: #535C68;
    --primary_item_text-color_tabs: var(--primary_text-color);
    --primary_marker_color_tabs: var(--primary_text-color);
    --marker_hover_color_tabs: #6b6b6b;
