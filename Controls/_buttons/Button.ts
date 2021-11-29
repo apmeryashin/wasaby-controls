@@ -56,6 +56,7 @@ export function simpleCssStyleGeneration(options: IButtonOptions): void {
         this._textAlign = 'none';
     }
 
+    // todo Будет поправлено после https://online.sbis.ru/opendoc.html?guid=fe814684-f63f-4f72-8244-54e3ed7091de
     if (this._buttonStyle === 'unaccented' && this._contrastBackground &&
         (!this._fontColorStyle || this._fontColorStyle === 'contrast')) {
         this._fontColorStyle = 'default';
