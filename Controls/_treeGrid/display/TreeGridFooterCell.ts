@@ -27,6 +27,13 @@ export default class TreeGridFooterCell<TOwner extends TreeGridFooterRow> extend
        return `${super.getContentClasses()} ${this._getExpanderPaddingClasses('contentWrapper')}`;
     }
 
+    protected _getWrapperMaxWidthStyle(containerSize?: number): string {
+        if (containerSize && this._$isActsAsRowTemplate) {
+            return `max-width: ${containerSize}px;`;
+        }
+        return '';
+    }
+
    // region HasNodeWithChildren
 
    setDisplayExpanderPadding(displayExpanderPadding: boolean): void {

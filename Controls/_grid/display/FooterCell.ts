@@ -37,11 +37,14 @@ class FooterCell<TOwner extends FooterRow> extends Cell<null, FooterRow> {
     }
 
     getWrapperStyles(containerSize?: number): string {
-        let styles = this.getColspanStyles();
+        return `${this.getColspanStyles()} ${this._getWrapperMaxWidthStyle(containerSize)}`;
+    }
+
+    protected _getWrapperMaxWidthStyle(containerSize?: number): string {
         if (containerSize && this._$isActsAsRowTemplate) {
-            styles += ` width: ${containerSize}px;`;
+            return `width: ${containerSize}px;`;
         }
-        return styles;
+        return '';
     }
 
     getContentClasses(): string {
