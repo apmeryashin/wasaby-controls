@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper controlsDemo_fixedWidth1700 controlsDemo__flexRow">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth1700 controlsDemo__flexRow controlsDemo__childMaxWidth500">
     <div class="controlsDemo__cell">
         <div class="controls-text-label">default</div>
         <Controls.treeGrid:View
