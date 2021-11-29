@@ -135,12 +135,24 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         if (this._calmTimer) {
             switch (event.type) {
                 case 'mouseenter':
+                    this._ignoreMouseLeave = false;
                     this._calmTimer.stop();
                     break;
                 case 'mouseleave':
-                    this._calmTimer.start();
+                    if (!this._ignoreMouseLeave) {
+                        this._calmTimer.start();
+                    }
+                    break;
+                case 'mousemove':
+                    this._ignoreMouseLeave = false;
                     break;
             }
+        }
+    }
+
+    protected _expanderClick(event: SyntheticEvent<MouseEvent>, state: boolean): void {
+        if (!state) {
+            this._ignoreMouseLeave = true;
         }
     }
 
