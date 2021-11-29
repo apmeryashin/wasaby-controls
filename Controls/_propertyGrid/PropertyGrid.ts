@@ -42,12 +42,12 @@ import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Co
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {Logger} from 'UI/Utils';
 import {
+    CONSTANTS as EDIT_IN_PLACE_CONSTANTS,
     Controller as EditInPlaceController,
     IBeforeBeginEditCallbackParams, IBeforeEndEditCallbackParams,
     InputHelper as EditInPlaceInputHelper
 } from 'Controls/editInPlace';
 import {process} from "Controls/error";
-import {LIST_EDITING_CONSTANTS} from "Controls/_baseList/BaseControl";
 
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
@@ -1106,7 +1106,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
-    // region editinplace
+    // region editInPlace
 
     beginAdd(userOptions: IBeginEditUserOptions): Promise<void | { canceled: true }> {
         if (this._options.readOnly) {
@@ -1201,85 +1201,56 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return Promise.reject(msg);
     }
 
-    private _beforeBeginEditCallback(params: IBeforeBeginEditCallbackParams) {
+    private _beforeBeginEditCallback(params: IBeforeBeginEditCallbackParams): Promise<unknown> {
         return new Promise((resolve) => {
             const eventResult = this._notify('beforeBeginEdit', params.toArray());
-            if (this._savedItemClickArgs && this._isMounted) {
-                // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
-                // обязательно должен случиться после события beforeBeginEdit.
-                this._notifyItemClick(this._savedItemClickArgs);
-            }
-
             resolve(eventResult);
         }).then((result) => {
-
-            if (result === LIST_EDITING_CONSTANTS.CANCEL) {
-                if (this._continuationEditingDirection) {
-                    return this._continuationEditingDirection;
-                } else {
-                    if (this._savedItemClickArgs && this._isMounted) {
-                        // Запись становится активной по клику, если не началось редактирование.
-                        // Аргументы itemClick сохранены в состояние и используются для нотификации об активации
-                        // элемента.
-                        this._notify('itemActivate', this._savedItemClickArgs.slice(1), {bubbling: true});
-                    }
-                    return result;
-                }
+            if (result === EDIT_IN_PLACE_CONSTANTS.CANCEL) {
+                return result;
             }
 
             // Если запускается редактирование существующей записи,
             // то сразу переходим к следующему блоку
             if (!params.isAdd) {
                 return result;
+            } else {
+                const recordSet: RecordSet = this._listModel.getCollection() as undefined as RecordSet;
+                const item = recordSet.add();
+                return {item};
             }
 
             //region Обработка добавления записи
-            const sourceController = this.getSourceController();
+            // const sourceController = this.getSourceController();
             // Добавляемы итем берем либо из результата beforeBeginEdit
             // либо из параметров запуска редактирования
-            const addedItem = result?.item || params.options?.item;
+            // const addedItem = result?.item || params.options?.item;
 
             // Если нет источника и к нам не пришел новый добавляемый итем, то ругаемся
-            if (!sourceController && !addedItem) {
-                throw new Error('You use list without source. So you need to manually create new item when processing an event beforeBeginEdit');
-            }
+            // if (!sourceController && !addedItem) {
+            //     throw new Error('You use list without source. So you need to manually create new item when processing an event beforeBeginEdit');
+            // }
 
             // Если есть источник и сверху не пришел добавляемый итем, то выполним запрос на создание новой записи
-            if (sourceController && !(addedItem instanceof Model)) {
-                return sourceController
-                    .create(!this._isMounted ? params.options.filter : undefined)
-                    .then((item) => {
-                        if (item instanceof Model) {
-                            return {item};
-                        }
-
-                        throw Error('BaseControl::create before add error! Source returned non Model.');
-                    })
-                    .catch((error: Error) => {
-                        return process({error});
-                    });
-            }
+            // if (sourceController && !(addedItem instanceof Model)) {
+            //     return sourceController
+            //         .create(!this._isMounted ? params.options.filter : undefined)
+            //         .then((item) => {
+            //             if (item instanceof Model) {
+            //                 return {item};
+            //             }
+            //
+            //             throw Error('BaseControl::create before add error! Source returned non Model.');
+            //         })
+            //         .catch((error: Error) => {
+            //             return process({error});
+            //         });
+            // }
             //endregion
 
             return result;
         }).then((result) => {
-            const editingConfig = this._getEditingConfig();
-
-            // Скролим к началу/концу списка. Данная операция может и скорее всего потребует перезагрузки списка.
-            // Не вся бизнес логика поддерживает загрузку первой/последней страницы при курсорной навигации.
-            // TODO: Поддержать везде по задаче
-            //  https://online.sbis.ru/opendoc.html?guid=000ff88b-f37e-4aa6-9bd3-3705bb721014
-            if (editingConfig.task1181625554 && params.isAdd) {
-                return _private
-                    .scrollToEdge(this, editingConfig.addPosition === 'top' ? 'up' : 'down')
-                    .then(() => {
-                        return result;
-                    });
-            } else {
-                return result;
-            }
-        }).finally(() => {
-            this._savedItemClickArgs = null;
+            return result;
         });
     }
 
@@ -1289,46 +1260,24 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         // уведомлений о запуске редактирования происходить не должно, а дождаться построение
         // редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
         return new Promise((resolve) => {
-            // Принудительно прекращаем заморозку ховера
-            if (_private.hasHoverFreezeController(this)) {
-                this._hoverFreezeController.unfreezeHover();
-            }
-            // Операции над записью должны быть обновлены до отрисовки строки редактирования,
-            // иначе будет "моргание" операций.
-            _private.removeShowActionsClass(this);
-            _private.updateItemActions(this, this._options, item);
-            this._continuationEditingDirection = null;
-
-            if (this._isMounted) {
-                this._resolveAfterBeginEdit = resolve;
-            } else {
+            // this._continuationEditingDirection = null;
+            //
+            // if (this._isMounted) {
+            //     this._resolveAfterBeginEdit = resolve;
+            // } else {
                 resolve();
-            }
+            // }
         }).then(() => {
-            this._editingItem = item;
+            // this._editingItem = item;
             // Редактирование может запуститься при построении.
             if (this._isMounted) {
                 this._notify('afterBeginEdit', [item.contents, isAdd]);
-
-                if (this._listViewModel.getCount() > 1 && !isAdd) {
-                    this.setMarkedKey(item.contents.getKey());
-                }
             }
-
-            if (this._pagingVisible && this._options.navigation.viewConfig.pagingMode === 'edge') {
-                this._pagingVisible = false;
-            }
-
-            item.contents.subscribe('onPropertyChange', this._resetValidation);
-        }).then(() => {
-            // Подскролл к редактору
-            if (this._isMounted) {
-                return _private.scrollToItem(this, item.contents.getKey(), false, false);
-            }
+            // item.contents.subscribe('onPropertyChange', this._resetValidation);
         });
     }
 
-    _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<void> {
+    _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<unknown> {
         if (params.force) {
             this._notify('beforeEndEdit', params.toArray());
             return;
@@ -1345,18 +1294,19 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             // валидация.
             // _forceUpdate гарантирует, что цикл синхронизации будет, т.к. невозможно понять поменялось ли какое-то
             // реактивное состояние.
-            const submitPromise = this._validateController.deferSubmit();
-            this._isPendingDeferSubmit = true;
+            // const submitPromise = this._validateController.deferSubmit();
+            // this._isPendingDeferSubmit = true;
             this._forceUpdate();
-            return submitPromise.then((validationResult) => {
-                for (const key in validationResult) {
-                    if (validationResult.hasOwnProperty(key) && validationResult[key]) {
-                        return LIST_EDITING_CONSTANTS.CANCEL;
-                    }
-                }
-            });
-        }).then((result) => {
-            if (result === LIST_EDITING_CONSTANTS.CANCEL) {
+            // return submitPromise.then((validationResult) => {
+            //     for (const key in validationResult) {
+            //         if (validationResult.hasOwnProperty(key) && validationResult[key]) {
+            //             return LIST_EDITING_CONSTANTS.CANCEL;
+            //         }
+            //     }
+            // });
+            return;
+        }).then((result: EDIT_IN_PLACE_CONSTANTS | void) => {
+            if (result === EDIT_IN_PLACE_CONSTANTS.CANCEL) {
                 return result;
             }
 
@@ -1369,7 +1319,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 (params.isAdd || params.item.isChanged()) &&
                 (
                     !eventResult ||
-                    (eventResult !== LIST_EDITING_CONSTANTS.CANCEL && !(eventResult instanceof Promise))
+                    (eventResult !== EDIT_IN_PLACE_CONSTANTS.CANCEL && !(eventResult instanceof Promise))
                 );
 
             return shouldUseDefaultSaving
@@ -1377,31 +1327,31 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 : Promise.resolve(eventResult);
         }).catch((error: Error) => {
             return process({error}).then(() => {
-                return LIST_EDITING_CONSTANTS.CANCEL;
+                return EDIT_IN_PLACE_CONSTANTS.CANCEL;
             });
+        });
+    }
+
+    _saveEditingInSource(item: Model, isAdd: boolean, sourceIndex?: number): Promise<void> {
+        // const updateResult = this._options.source ? this.getSourceController().update(item) : Promise.resolve();
+        const updateResult = Promise.resolve();
+        return updateResult.then(() => {
+            // После выделения слоя логики работы с источником данных в отдельный контроллер,
+            // код ниже должен переехать в него.
+            if (isAdd) {
+                // if (typeof sourceIndex === 'number') {
+                //     this._items.add(item, sourceIndex);
+                // } else {
+                //     this._items.append([item]);
+                // }
+            }
         });
     }
 
     _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
         this._notify('afterEndEdit', [item.contents, isAdd]);
-        this._editingItem = null;
-
-        if (this._listViewModel.getCount() > 1) {
-            if (this._markedKeyAfterEditing) {
-                // если закрыли добавление записи кликом по другой записи, то маркер должен встать на 'другую' запись
-                this.setMarkedKey(this._markedKeyAfterEditing);
-                this._markedKeyAfterEditing = null;
-            } else if (isAdd && willSave) {
-                this.setMarkedKey(item.contents.getKey());
-            } else if (_private.hasMarkerController(this)) {
-                const controller = _private.getMarkerController(this);
-                controller.setMarkedKey(controller.getMarkedKey());
-            }
-        }
-
-        item.contents.unsubscribe('onPropertyChange', this._resetValidation);
-        _private.removeShowActionsClass(this);
-        _private.updateItemActions(this, this._options);
+        // this._editingItem = null;
+        // item.contents.unsubscribe('onPropertyChange', this._resetValidation);
     }
 
     // endregion editInPlace

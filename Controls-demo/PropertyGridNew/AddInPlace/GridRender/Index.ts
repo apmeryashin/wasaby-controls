@@ -43,7 +43,7 @@ export default class Demo extends Control<IControlOptions> {
         ];
     }
 
-    protected _beginAddEmpty(): void {
+    protected _beginAdd(): void {
         this._children.propertyGrid.beginAdd();
     }
 
