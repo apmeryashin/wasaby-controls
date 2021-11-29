@@ -160,7 +160,7 @@ export default class Controller<P> {
           && itemsDragNDrop
           && (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
           && allowByTarget
-          && !event.nativeEvent.button
+          && (!event.nativeEvent || !event.nativeEvent.button)
           && !TouchDetect.getInstance().isTouch();
    }
 
