@@ -32,6 +32,7 @@
               searchDelay="{{_options.searchDelay}}"
               headerBackgroundStyle="transparent"
               markerVisibility="{{_options.markerVisibility}}"
+              verticalDirection="{{_verticalDirection}}"
               on:mouseenter="_mouseEnterHandler()"
               on:headerMouseEnter="_headerMouseEnter()"
               on:headerClick="_headerClick()"
