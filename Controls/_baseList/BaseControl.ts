@@ -695,7 +695,7 @@ const _private = {
         self._onFooterPrepared(options);
     },
 
-    loadToDirection: function (self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet | void> | void {
+    loadToDirection(self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet | void> | void {
         // Нужно сбросить сосояние resetTriggerOffset, чтобы последующие загрузки начинались заранее,
         // а первая загрузка в сторону непосредственно при скролле к краю
         if (self._observersController) {
@@ -3588,6 +3588,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     scrollMoveSyncHandler(params: IScrollParams): void {
         if (this._useNewScroll) {
+            // TODO SCROLL избавиться от scrollTop в BaseControl
+            this._scrollTop = params.scrollTop > 0 ? params.scrollTop : 0;
             this._listVirtualScrollController.scrollPositionChange(params.scrollTop);
         } else {
             _private.handleListScrollSync(this, params.scrollTop);
@@ -3617,6 +3619,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (this._listVirtualScrollController) {
             this._listVirtualScrollController.viewportResized(viewportHeight);
+            // TODO SCROLL во viewportResizeHandler не должно быть scrollTop
+            if (scrollTop !== undefined) {
+                this._listVirtualScrollController.scrollPositionChange(scrollTop);
+            }
         }
         this._observersController?.setViewportHeight(
             this._viewportSize,
@@ -3812,8 +3818,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             updatePlaceholdersUtil: (placeholders) => {
                 const convertedPlaceholders = {
-                    up: placeholders.backward,
-                    down: placeholders.forward
+                    top: placeholders.backward,
+                    bottom: placeholders.forward
                 };
                 this._notify('updatePlaceholdersSize', [convertedPlaceholders], {bubbling: true});
             },
@@ -4727,26 +4733,30 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        // save scroll
-        let directionToRestoreScroll = this._scrollController &&
-            this._scrollController.getParamsToRestoreScrollPosition();
-        if (!directionToRestoreScroll &&
-            (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
-            directionToRestoreScroll = 'up';
-        }
-        if (directionToRestoreScroll &&
-            !(this._resetScrollAfterReload && this._shouldNotifyOnDrawItems)) {
-            this._scrollController.saveEdgeItem(directionToRestoreScroll,
-                this._getItemsContainer(),
-                this._getItemsContainerUniqueClass());
+        if (this._useNewScroll) {
+            const hasNotRenderedChanges = this._hasItemWithImageChanged ||
+                this._indicatorsController.hasNotRenderedChanges();
+            this._listVirtualScrollController.beforeRenderListControl(hasNotRenderedChanges);
+        } else {
+            // save scroll
+            let directionToRestoreScroll = this._scrollController &&
+                this._scrollController.getParamsToRestoreScrollPosition();
+            if (!directionToRestoreScroll &&
+                (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+                directionToRestoreScroll = 'up';
+            }
+            if (directionToRestoreScroll &&
+                !(this._resetScrollAfterReload && this._shouldNotifyOnDrawItems)) {
+                this._scrollController.saveEdgeItem(directionToRestoreScroll,
+                    this._getItemsContainer(),
+                    this._getItemsContainerUniqueClass());
+            }
         }
     }
 
     _afterRender(): void {
         if (this._useNewScroll) {
-            const hasNotRenderedChanges = this._hasItemWithImageChanged ||
-                this._indicatorsController.hasNotRenderedChanges();
-            this._listVirtualScrollController.afterRenderListControl(hasNotRenderedChanges);
+            this._listVirtualScrollController.afterRenderListControl();
             this._hasItemWithImageChanged = false;
         }
 
@@ -4791,7 +4801,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             positionRestored = true;
         }
 
-        if (this._scrollController) {
+        if (this._scrollController && !this._useNewScroll) {
             let correctingHeight = 0;
 
             // correctingHeight предназначен для предотвращения проблемы с восстановлением позиции скролл в случае,
@@ -4814,14 +4824,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             );
             this._scrollController.setRendering(false);
 
-            if (this._drawingIndicatorDirection) {
-                this._indicatorsController.hideDrawingIndicator(
-                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
-                    this._drawingIndicatorDirection
-                );
-                this._drawingIndicatorDirection = null;
-            }
-
             // restore scroll
             let directionToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (!directionToRestoreScroll &&
@@ -4835,8 +4837,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._hasItemWithImageChanged = false;
                 this._notify('doScroll', [newScrollTop, true], { bubbling: true });
             }
-
-            this._indicatorsController.afterRenderCallback();
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
@@ -4854,6 +4854,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this.checkTriggerVisibilityAfterRedraw();
             }
         }
+
+        if (this._drawingIndicatorDirection) {
+            this._indicatorsController.hideDrawingIndicator(
+                this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                this._drawingIndicatorDirection
+            );
+            this._drawingIndicatorDirection = null;
+        }
+        this._indicatorsController.afterRenderCallback();
+
         this._actualPagingVisible = this._pagingVisible;
 
         if (this._updateShadowModeBeforePaint) {

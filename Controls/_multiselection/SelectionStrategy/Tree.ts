@@ -293,7 +293,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       } else {
          const isNode = this._isNode(item);
          if (!this._selectAncestors && !this._selectDescendants) {
-            // В этом случае мы вообще не смотри на узлы, т.к. выбранность элемента не зависит от выбора родительского узла
+            // В этом случае мы вообще не смотри на узлы,
+            // т.к. выбранность элемента не зависит от выбора родительского узла
             // или выбранность узла не зависит от его детей
             isSelected = this._canBeSelected(item, false) && !inExcluded &&
                 (inSelected || this._isAllSelectedInRoot(selection));

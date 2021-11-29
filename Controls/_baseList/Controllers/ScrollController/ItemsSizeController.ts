@@ -6,6 +6,7 @@ import { getDimensions, getOffsetTop } from 'Controls/sizeUtils';
 export interface IItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
     itemsQuerySelector: string;
+    totalCount: number;
 }
 
 export interface IItemSize {
@@ -26,6 +27,7 @@ export class ItemsSizesController {
     constructor(options: IItemsSizesControllerOptions) {
         this._itemsContainer = options.itemsContainer;
         this._itemsQuerySelector = options.itemsQuerySelector;
+        this.resetItems(options.totalCount);
     }
 
     getItemsSizes(): IItemsSizes {
@@ -38,17 +40,22 @@ export class ItemsSizesController {
     }
 
     getElement(key: CrudEntityKey): HTMLElement {
-        return this._itemsContainer.querySelector(`[item-key="${key}"]`) as HTMLElement;
+        const selector = `${this._itemsQuerySelector}[item-key="${key}"]`;
+        return this._itemsContainer.querySelector(selector) as HTMLElement;
     }
 
     /**
      * Возвращает размер контента, расположенного в этом же ScrollContainer-е до списка.
      */
-    getBeforeItemsContentSize(): number {
+    getBeforeContentSize(): number {
+        if (!this._itemsContainer) {
+            return null;
+        }
+
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
-        return scrollContent ?
-            scrollContent.getBoundingClientRect().top - this._itemsContainer.getBoundingClientRect().top :
-            getOffsetTop(this._itemsContainer);
+        return scrollContent
+            ? getDimensions(this._itemsContainer, true).top - scrollContent.getBoundingClientRect().top
+            : getOffsetTop(this._itemsContainer);
     }
 
     // region on DOM references update
