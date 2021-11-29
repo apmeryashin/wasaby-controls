@@ -9,7 +9,7 @@ import {
     IFontSize,
     IFontSizeOptions,
     IIconStyle,
-    IIconStyleOptions
+    IIconStyleOptions, TFontSize
 } from 'Controls/interface';
 
 /**
@@ -113,9 +113,49 @@ export interface IBackOptions extends IControlOptions, IFontColorStyleOptions, I
 export default class Back extends Control<IBackOptions> implements IFontColorStyle, IFontSize, IIconStyle {
     protected _template: TemplateFunction = backTemplate;
 
+    protected _iconSize: string;
+    protected _offsetSize: string;
+
     readonly '[Controls/_interface/IFontSize]': boolean = true;
     readonly '[Controls/_interface/IIconStyle]': boolean = true;
     readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
+
+    protected _beforeMount(options: IBackOptions): void {
+        this._updateSizes(options.fontSize);
+    }
+
+    protected _beforeUpdate(newOptions: IBackOptions): void {
+        if (this._options.fontSize !== newOptions.fontSize) {
+            this._updateSizes(newOptions.fontSize);
+        }
+    }
+
+    private _updateSizes(fontSize: TFontSize): void {
+        switch (fontSize) {
+            case 's':
+            case 'm':
+                this._iconSize = 's';
+                this._offsetSize = '2xs';
+                break;
+            case 'l':
+            case 'xl':
+            case '2xl':
+            case '3xl':
+            case '4xl':
+                this._iconSize = 'm';
+                this._offsetSize = 'xs';
+                break;
+            case '5xl':
+            case '6xl':
+            case '7xl':
+                this._iconSize = 'l';
+                this._offsetSize = 'xs';
+                break;
+            default:
+                this._iconSize = 'm';
+                this._offsetSize = 'xs';
+        }
+    }
 
     static defaultProps: IBackOptions = {
         fontSize: '3xl',
