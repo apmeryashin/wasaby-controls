@@ -8,7 +8,8 @@ import {Popup as PopupUtil, Base as dateUtils} from 'Controls/dateUtils';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 import {MonthCaptionTemplate} from 'Controls/date';
-import {getDatePopupName, IDatePopupTypeOptions} from 'Controls/date';
+import {getDatePopupName} from 'Controls/date';
+import {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
 import IPeriodLiteDialog from 'Controls/_dateRange/interfaces/IPeriodLiteDialog';
 import 'css!Controls/dateRange';
 
@@ -39,7 +40,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @implements Controls/interface:IDateRangeValidators
  * @implements Controls/interface:IMonthCaptionTemplate
  * @implements Controls/interface:IDateConstructor
- * @implements Controls/date:IDatePopupType
+ * @implements Controls/dateRange:IDatePopupType
  *
  * @public
  * @author Красильников А.С.
@@ -65,11 +66,6 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @name Controls/_dateRange/RangeSelector#fontWeight
  * @demo Controls-demo/dateRange/LinkView/FontWeight/Index
  * @default bold
- */
-
-/**
- * @name Controls/_dateRange/RangeSelector#datePopupType
- * @variant shortDatePicker Быстрый выбор периода
  */
 
 export default class RangeSelector extends BaseSelector<IRangeSelector> {
