@@ -143,7 +143,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             } else {
                 className = 'controls-DateRangeSelectorLite__picker-normal';
             }
-            className += ` controls_shortDatePicker_theme-${this._options.theme}`;
+            className += ` controls_shortDatePicker_theme-${this._options.theme} controls_theme-${this._options.theme}`;
         } else if (this._options.datePopupType === 'compactDatePicker') {
             className += `controls_compactDatePicker_theme-${ this._options.theme } ` +
                 'controls-CompactDatePicker__selector-margin';
