@@ -418,7 +418,7 @@ class ListEditor extends Control<IListEditorOptions> {
             displayProperty,
             keyProperty,
             imageProperty,
-            filterViewMode,
+
             additionalTextProperty,
             markerStyle
         }: IListEditorOptions
@@ -427,7 +427,7 @@ class ListEditor extends Control<IListEditorOptions> {
             displayProperty,
             keyProperty,
             textOverflow: 'ellipsis',
-            fontSize: (filterViewMode === 'filterPanelStack' || markerStyle !== 'primary') ? 'm' : 'l',
+            fontSize: markerStyle !== 'primary' ? 'm' : 'l',
             width: 'auto',
             template: TitleColumn
         }];

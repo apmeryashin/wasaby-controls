@@ -13,6 +13,9 @@ import 'css!Controls/filterPanel';
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
+const MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS = 5;
+const MAX_EXPANDED_COUNT_OF_VISIBLE_ITEMS = 10;
+
 interface IHistoryOptions {
     source: IFilterItem[];
     historyId: string;
@@ -21,6 +24,9 @@ interface IHistoryOptions {
 export default class History extends Control<IHistoryOptions> {
     protected _template: TemplateFunction = template;
     protected _historyItems: RecordSet | List<IFilterItem[]>;
+    protected _expandButtonVisible: boolean;
+    protected _historyListExpanded: boolean;
+    protected _maxHistoryCount: number = MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
 
     protected _beforeMount(
         options: IHistoryOptions,
@@ -29,15 +35,22 @@ export default class History extends Control<IHistoryOptions> {
     ): Promise<RecordSet | List<IFilterItem[]>> {
         if (receivedState) {
             this._historyItems = receivedState;
+            this._expandButtonVisible = this._historyItems.getCount() > MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
         } else {
             return this._loadHistoryItems(options.historyId, options.source);
         }
     }
 
-    protected _beforeUpdate(options: IHistoryOptions): void | Promise<RecordSet | List<IFilterItem[]>> {
+    protected _beforeUpdate(options: IHistoryOptions): void {
         if (options.historyId !== this._options.historyId) {
-            return this._loadHistoryItems(options.historyId, options.source);
+            this._loadHistoryItems(options.historyId, options.source);
+            this._expandButtonVisible = this._historyItems.getCount() > MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
         }
+    }
+
+    protected _handleExpanderClick(): void {
+        this._historyListExpanded = !this._historyListExpanded;
+        this._maxHistoryCount = this._historyListExpanded ? MAX_EXPANDED_COUNT_OF_VISIBLE_ITEMS : MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
     }
 
     protected _onPinClick(event: Event, item: Model): void {
@@ -116,7 +129,7 @@ export default class History extends Control<IHistoryOptions> {
     private _filterHistoryItems(items: RecordSet, source: IFilterItem[]): RecordSet {
         let result;
         if (items) {
-            result = chain.factory(items).filter((item) => {
+            result = chain.factory(items).filter((item, index) => {
                 let validResult = false;
 
                 const objectData = JSON.parse(item.get('ObjectData'));

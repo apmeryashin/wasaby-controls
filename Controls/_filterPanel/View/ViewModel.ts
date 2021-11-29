@@ -21,6 +21,8 @@ interface IFilterGroup {
     afterEditorTemplate: TemplateFunction | string;
 }
 
+const MAX_COUNT_OF_COLUMN_VISIBLE_ITEMS = 5;
+
 export default class FilterViewModel extends mixin<VersionableMixin>(VersionableMixin) {
     protected _source: IFilterItem[] = null;
     protected _editingObject: Record<string, unknown> = {};
@@ -155,6 +157,31 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             this._collapsedGroups = this._collapsedGroups.filter((item) => group !== item);
             this._nextVersion();
         }
+    }
+
+    getAdditionalColumns(isAdditionalListExpanded: boolean): object {
+        const extendedItems = this.getExtendedFilterItems();
+        const countColumnItems = extendedItems.length / 2;
+        const maxCountVisibleItems = isAdditionalListExpanded ? countColumnItems : MAX_COUNT_OF_COLUMN_VISIBLE_ITEMS;
+        const columns = {
+            right: [],
+            left: []
+        };
+
+        extendedItems.forEach((item, index) => {
+            if (columns.left.length < maxCountVisibleItems && !(index % 2)) {
+                columns.left.push(item);
+            } else if (columns.right.length < maxCountVisibleItems) {
+                columns.right.push(item);
+            }
+        });
+
+        return columns;
+    }
+
+    needToCutColumnItems(): boolean {
+        const extendedItems = this.getExtendedFilterItems();
+        return extendedItems.length / 2 > MAX_COUNT_OF_COLUMN_VISIBLE_ITEMS;
     }
 
     getBasicFilterItems(): IFilterItem[] {

@@ -49,6 +49,7 @@ export interface IViewPanelOptions {
     viewMode: string;
     useStore?: boolean;
     style?: string;
+    orientation: string;
 }
 
 export default class View extends Control<IViewPanelOptions> {
@@ -58,6 +59,9 @@ export default class View extends Control<IViewPanelOptions> {
     };
     protected _viewModel: ViewModel = null;
     private _resetCallbackId: string;
+    protected _expandButtonVisible: boolean;
+    protected _additionalListExpanded: boolean;
+    protected _additionalColumns: object;
 
     protected _beforeMount(options: IViewPanelOptions): void {
         this._viewModel = new ViewModel({
@@ -66,6 +70,9 @@ export default class View extends Control<IViewPanelOptions> {
             filterViewMode: options.viewMode,
             style: options.style
         });
+        this._additionalListExpanded = false;
+        this._additionalColumns = this._viewModel.getAdditionalColumns(this._additionalListExpanded);
+        this._expandButtonVisible = this._viewModel.needToCutColumnItems();
     }
 
     protected _afterMount(options: IViewPanelOptions): void {
@@ -81,6 +88,8 @@ export default class View extends Control<IViewPanelOptions> {
             filterViewMode: options.viewMode,
             style: options.style
         });
+        this._additionalColumns = this._viewModel.getAdditionalColumns(this._additionalListExpanded);
+        this._expandButtonVisible = this._viewModel.needToCutColumnItems();
     }
 
     protected _beforeUnmount(): void {
@@ -91,31 +100,17 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _handleHistoryItemClick(event: SyntheticEvent, filterValue: object): void {
         this._viewModel.setEditingObjectValue(filterValue.name, filterValue.editorValue);
-        if (this._options.viewMode === 'default') {
-            this._notifyChanges();
-        }
-    }
-
-    protected _resetFilter(): void {
-        this._viewModel.resetFilter();
         this._notifyChanges();
     }
 
-    protected _applyFilter(editorGroup: string): void {
-        this._notifyChanges();
-        this._notify('filterApplied');
+    protected _handleExpanderClick(): void {
+        this._additionalListExpanded = !this._additionalListExpanded;
+        this._additionalColumns = this._viewModel.getAdditionalColumns(this._additionalListExpanded);
     }
 
     protected _editingObjectChanged(event: SyntheticEvent, editingObject: Record<string, any>): void {
         this._viewModel.setEditingObject(editingObject);
-        this._notifyFilterItemChanged();
-    }
-
-    protected _propertyValueChanged(event: SyntheticEvent, filterItem: IFilterItem, itemValue: object): void {
-        this._viewModel.setEditingObjectValue(filterItem.name, itemValue);
-        if (this._options.viewMode === 'default') {
-            this._notifyChanges();
-        }
+        this._notifyChanges();
     }
 
     protected _groupClick(e: SyntheticEvent, dispItem: GroupItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
@@ -130,27 +125,19 @@ export default class View extends Control<IViewPanelOptions> {
         this._notify('collapsedGroupsChanged', [this._viewModel.getCollapsedGroups()]);
     }
 
+    protected _extendedValueChanged(event: SyntheticEvent, filterItem: IFilterItem, itemValue: object): void {
+        this._viewModel.setEditingObjectValue(filterItem.name, itemValue);
+        this._notifyChanges();
+    }
+
     private _resetFilterItem(dispItem: GroupItem<Model>): void {
         const itemContent = dispItem.getContents();
         this._viewModel.resetFilterItem(itemContent);
-        this._notifyFilterItemChanged();
-    }
-
-    private _notifyFilterItemChanged(): void {
-        if (this._options.viewMode === 'default') {
-            this._notifyChanges();
-        } else {
-            const newSource = this._getUpdatedSource(coreClone(this._options.source), this._viewModel.getSource());
-            this._notify('sourceChanged', [newSource]);
-        }
+        this._notifyChanges();
     }
 
     private _notifyChanges(): void {
         const newSource = this._getUpdatedSource(coreClone(this._options.source), this._viewModel.getSource());
-        this._notify('sendResult', [{
-            items: newSource,
-            filter: this._viewModel.getEditingObject()
-        }], {bubbling: true});
         this._notify('filterChanged', [this._viewModel.getEditingObject()]);
         this._notify('sourceChanged', [newSource]);
     }
@@ -173,6 +160,11 @@ export default class View extends Control<IViewPanelOptions> {
         });
         return target;
     }
+
+    resetFilter(): void {
+        this._viewModel.resetFilter();
+        this._notifyChanges();
+    }
 }
 
 Object.defineProperty(View, 'defaultProps', {
@@ -183,7 +175,8 @@ Object.defineProperty(View, 'defaultProps', {
         return {
             backgroundStyle: 'default',
             viewMode: 'default',
-            style: 'default'
+            style: 'default',
+            orientation: 'vertical'
         };
     }
 });
