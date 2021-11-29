@@ -88,7 +88,6 @@
                 template="{{ _options.viewName }}"
                 itemsContainerClass="{{_getItemsContainerUniqueClass()}}"
                 scope="{{_options}}"
-                loadingState="{{_showLoadingIndicator ? _loadingIndicatorState}}"
                 _needBottomPadding="{{_needBottomPadding}}"
                 needShowEmptyTemplate="{{ __needShowEmptyTemplate() }}"
                 listModel="{{_listViewModel}}"
