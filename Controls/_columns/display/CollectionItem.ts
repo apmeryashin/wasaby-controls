@@ -69,7 +69,7 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
         return result;
     }
 
-    getMultiSelectOffsetClass(): string {
+    getMultiSelectPositionClasses(): string {
         return `controls-ColumnsView__checkbox_position-${this.getOwner().getMultiSelectPosition()} `;
     }
 

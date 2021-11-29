@@ -1503,10 +1503,6 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getMultiSelectOffsetClass(itemPadding: IItemPadding = {}, baseLine: TItemBaseLine = 'none'): string {
-        return '';
-    }
-
     /**
      * Возвращает стили для чекбоксов
      * @param {TTileItem} itemType Тип элемента

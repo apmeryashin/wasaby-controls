@@ -34,7 +34,7 @@ export default class TileCollectionItem<T extends Model = Model>
     }
 
     getMultiSelectClasses(): string {
-        let classes = super.getMultiSelectClasses();
+        let classes = this._getMultiSelectBaseClasses();
         classes += ' controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom';
 
         return classes;

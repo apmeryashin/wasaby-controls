@@ -512,7 +512,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._counters;
     }
 
-    getMultiSelectOffsetClass(itemPadding: IItemPadding = {}, baseLine: TItemBaseLine = 'none'): string {
+    getMultiSelectPositionClasses(itemPadding: IItemPadding = {}, baseLine: TItemBaseLine = 'none'): string {
         const topPadding = (itemPadding.top || this.getTopPadding() || 'l').toLowerCase();
         const position = this.getOwner().getMultiSelectPosition();
         let checkboxMargin: string;
@@ -529,7 +529,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             } else {
                 checkboxMargin = topPadding;
             }
-            classes += `controls-ListView__checkbox_marginTop_${checkboxMargin}`;
+            classes += ` controls-ListView__checkbox_marginTop_${checkboxMargin}`;
         }
         classes += ` controls-ListView__checkbox_position-${position} `;
         return classes;
@@ -540,11 +540,19 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
                           templateHighlightOnHover: boolean = true,
                           itemPadding: IItemPadding = {},
                           baseLine: 'none' | 'default' = 'none'): string {
+        let classes = this._getMultiSelectBaseClasses();
+        classes += this.getMultiSelectPositionClasses(itemPadding, baseLine);
+        return classes;
+    }
+
+    /**
+     * Базовые классы для чекбокса мультивыбора.
+     * @private
+     */
+    protected _getMultiSelectBaseClasses(): string {
         let classes = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
         classes += 'js-controls-ListView__checkbox js-controls-DragScroll__notDraggable ';
         classes += 'controls-CheckboxMarker_inList controls-ListView__checkbox ';
-        classes += this.getMultiSelectOffsetClass(itemPadding, baseLine);
-
         if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += 'controls-ListView__checkbox-onhover';
         }
@@ -552,7 +560,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         if (this.isDragged()) {
             classes += ' controls-ListView__itemContent_dragging';
         }
-
         return classes;
     }
 
