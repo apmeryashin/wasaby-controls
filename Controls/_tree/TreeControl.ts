@@ -948,6 +948,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         options.expandedItems = this._expandController.getExpandedItems();
         options.root = this._root;
 
+        // Нам не нужен multiNavigation, т.к. мы хотим получить записи именно по selection, независимо от развернутости.
+        delete options.multiNavigation;
+
         return options;
     }
 
