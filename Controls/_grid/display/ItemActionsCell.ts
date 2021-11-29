@@ -28,15 +28,14 @@ export default class ItemActionsCell extends Cell<null, Row<null>> implements II
         if (!this._$owner.DisplayItemActions) {
             return this._$owner.isFullGridSupport() ? 'controls-Grid__itemAction__emptyContainer' : '';
         }
+        let classes = `${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
         if (this._$owner.isFullGridSupport()) {
-            let classes = 'controls-itemActionsV__container controls-Grid__itemAction';
-            classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
-            return classes;
+            classes += ' controls-itemActionsV__container controls-Grid__itemAction';
         } else {
-            let classes = `${super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover, templateHoverBackgroundStyle)}`;
+            classes += ` ${super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover, templateHoverBackgroundStyle)}`;
             classes += ' controls-Grid-table-layout__itemActions__container';
-            return classes;
         }
+        return classes;
     }
 
     getWrapperStyles(): string {
