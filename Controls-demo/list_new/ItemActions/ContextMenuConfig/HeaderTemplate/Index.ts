@@ -18,10 +18,7 @@ const itemActions: IItemAction[] = [
       icon: 'icon-Erase',
       iconStyle: 'danger',
       title: 'Remove',
-      showType: TItemActionShowType.MENU,
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action delete Click');
-      }
+      showType: TItemActionShowType.MENU
    }
 ];
 
