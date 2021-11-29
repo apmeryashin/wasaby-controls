@@ -414,13 +414,20 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _setColumns(
-        {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions
+        {
+            displayProperty,
+            keyProperty,
+            imageProperty,
+            filterViewMode,
+            additionalTextProperty,
+            markerStyle
+        }: IListEditorOptions
     ): void {
         this._columns = [{
             displayProperty,
             keyProperty,
             textOverflow: 'ellipsis',
-            fontSize: filterViewMode === 'filterPanelStack' ? 'm' : 'l',
+            fontSize: (filterViewMode === 'filterPanelStack' || markerStyle !== 'primary') ? 'm' : 'l',
             width: 'auto',
             template: TitleColumn
         }];

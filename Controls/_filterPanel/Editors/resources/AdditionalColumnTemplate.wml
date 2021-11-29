@@ -14,7 +14,8 @@
                 <Controls.Container.Async templateName="Controls/decorator:Number">
                     <ws:partial template="{{ content.resolvedTemplate }}"
                                 value="{{item.contents[column.config.displayProperty]}}"
-                                precision="{{3}}"/>
+                                precision="{{3}}"
+                                fontSize="m"/>
                 </Controls.Container.Async>
             </div>
         </ws:else>
