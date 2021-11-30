@@ -30,5 +30,7 @@
     on:itemClick="_itemClick()"
     on:mouseenter="_mouseEnterHandler()"
     on:itemActionMouseDown="_itemActionMouseDown()"
+    on:commitEdit="_commitEditActionHandler()"
+    on:cancelEdit="_cancelEditActionHandler()"
     on:checkboxClick="_checkboxClick()"
 />

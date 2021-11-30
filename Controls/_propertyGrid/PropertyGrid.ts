@@ -366,7 +366,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._processItemMouseEnterWithDragNDrop(displayItem);
             }
         } else {
-            this._listModel.setHoveredItem(displayItem);
+            if (!this._editInPlaceController || !this._editInPlaceController.isEditing()) {
+                this._listModel.setHoveredItem(displayItem);
+            }
         }
     }
 
@@ -377,7 +379,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _itemMouseLeave() {
-        this._listModel.setHoveredItem(null);
+        if (!this._editInPlaceController || !this._editInPlaceController.isEditing()) {
+            this._listModel.setHoveredItem(null);
+        }
         if (this._dndController) {
             this._unprocessedDragEnteredItem = null;
         }
@@ -1118,6 +1122,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     // region editInPlace
 
+    _commitEditActionHandler(): TAsyncOperationResult {
+        return this._commitEdit();
+    }
+
+    _cancelEditActionHandler(): TAsyncOperationResult {
+        return this._cancelEdit();
+    }
+
     protected _itemClick(e: SyntheticEvent, item: Model, originalEvent: SyntheticEvent): void {
         const canEditByClick = !this._options.readOnly && this._getEditingConfig(this._options).editOnClick && (
             originalEvent.target.closest('.js-controls-ListView__editingTarget') && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`)
@@ -1145,6 +1157,18 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return this._beginEdit(userOptions, {
             shouldActivateInput: userOptions?.shouldActivateInput,
             columnIndex: (userOptions?.columnIndex || 0) + hasCheckboxes
+        });
+    }
+
+    _cancelEdit(force: boolean = false): TAsyncOperationResult {
+        if (!this._editInPlaceController) {
+            return Promise.resolve();
+        }
+        return this._getEditInPlaceController().cancel(force).finally(() => {
+            if (this._selectionController) {
+                const controller = this._selectionController;
+                controller.setSelection(controller.getSelection());
+            }
         });
     }
 
@@ -1281,82 +1305,46 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
-        // Завершение запуска редактирования по месту проиходит после построения редактора.
-        // Исключение - запуск редактирования при построении списка. В таком случае,
-        // уведомлений о запуске редактирования происходить не должно, а дождаться построение
-        // редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
         return new Promise((resolve) => {
+            this._listModel.setHoveredItem(item);
             this._updateItemActions(this._listModel, this._options, item);
-            // this._continuationEditingDirection = null;
-            //
-            // if (this._isMounted) {
-            //     this._resolveAfterBeginEdit = resolve;
-            // } else {
-                resolve();
-            // }
-        }).then(() => {
-            // this._editingItem = item;
-            // Редактирование может запуститься при построении.
-            if (this._isMounted) {
-                this._notify('afterBeginEdit', [item.contents, isAdd]);
-            }
-            // item.contents.subscribe('onPropertyChange', this._resetValidation);
+            resolve();
         });
     }
 
-    _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<unknown> {
+    private _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<unknown> {
         if (params.force) {
             this._notify('beforeEndEdit', params.toArray());
             return;
         }
 
-        return Promise.resolve().then(() => {
-            if (!params.willSave) {
-                return ;
-            }
+        return Promise.resolve()
+            .then((result: EDIT_IN_PLACE_CONSTANTS | void) => {
+                if (result === EDIT_IN_PLACE_CONSTANTS.CANCEL) {
+                    return result;
+                }
 
-            // Валидация запускается не моментально, а после заказанного для нее цикла синхронизации.
-            // Такая логика необходима, если синхронно поменяли реактивное состояние, которое будет валидироваться
-            // и позвали валидацию. В таком случае, первый цикл применит все состояния и только после него произойдет
-            // валидация.
-            // _forceUpdate гарантирует, что цикл синхронизации будет, т.к. невозможно понять поменялось ли какое-то
-            // реактивное состояние.
-            // const submitPromise = this._validateController.deferSubmit();
-            // this._isPendingDeferSubmit = true;
-            this._forceUpdate();
-            // return submitPromise.then((validationResult) => {
-            //     for (const key in validationResult) {
-            //         if (validationResult.hasOwnProperty(key) && validationResult[key]) {
-            //             return LIST_EDITING_CONSTANTS.CANCEL;
-            //         }
-            //     }
-            // });
-            return;
-        }).then((result: EDIT_IN_PLACE_CONSTANTS | void) => {
-            if (result === EDIT_IN_PLACE_CONSTANTS.CANCEL) {
-                return result;
-            }
+                const eventResult = this._notify('beforeEndEdit', params.toArray());
 
-            const eventResult = this._notify('beforeEndEdit', params.toArray());
+                // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
+                // Пользовательское сохранение потенциально может начаться только если вернули Promise
+                const shouldUseDefaultSaving =
+                    params.willSave &&
+                    (params.isAdd || params.item.isChanged()) &&
+                    (
+                        !eventResult ||
+                        (eventResult !== EDIT_IN_PLACE_CONSTANTS.CANCEL && !(eventResult instanceof Promise))
+                    );
 
-            // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
-            // Пользовательское сохранение потенциально может начаться только если вернули Promise
-            const shouldUseDefaultSaving =
-                params.willSave &&
-                (params.isAdd || params.item.isChanged()) &&
-                (
-                    !eventResult ||
-                    (eventResult !== EDIT_IN_PLACE_CONSTANTS.CANCEL && !(eventResult instanceof Promise))
-                );
-
-            return shouldUseDefaultSaving
-                ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex)
-                : Promise.resolve(eventResult);
-        }).catch((error: Error) => {
-            return process({error}).then(() => {
-                return EDIT_IN_PLACE_CONSTANTS.CANCEL;
+                return shouldUseDefaultSaving
+                    ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex)
+                    : Promise.resolve(eventResult);
+            })
+            .catch((error: Error) => {
+                return process({error}).then(() => {
+                    return EDIT_IN_PLACE_CONSTANTS.CANCEL;
+                });
             });
-        });
     }
 
     _saveEditingInSource(item: Model, isAdd: boolean, sourceIndex?: number): Promise<void> {

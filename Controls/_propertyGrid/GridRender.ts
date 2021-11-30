@@ -8,6 +8,7 @@ import PropertyGridCollection from './PropertyGridCollection';
 import {CollectionItem, isFullGridSupport} from 'Controls/display';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {TAsyncOperationResult} from "Controls/_editInPlace/Controller";
 
 interface IColumnOptions {
     width: string;
@@ -164,6 +165,14 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
         if (!item['[Controls/_display/GroupItem]']) {
             this._notify('itemContextMenu', [item, e]);
         }
+    }
+
+    _commitEditActionHandler(e: SyntheticEvent<MouseEvent>, item: PropertyGridItem<Model>): void {
+        this._notify('commitEdit', [item, e]);
+    }
+
+    _cancelEditActionHandler(e: SyntheticEvent<MouseEvent>, item: PropertyGridItem<Model>): void {
+        this._notify('cancelEdit', [item, e]);
     }
 
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: PropertyGridItem<Model>): void {
