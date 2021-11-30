@@ -86,8 +86,8 @@
     </ws:if>
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
         <div class="controls-PropertyGrid__gridLayout_editor
-                   controls-PropertyGrid__gridLayout_editor_direction_{{ !!afterEditorTemplate || !item.caption || _options.captionPosition === 'top' ? 'row' : 'column'}}
-                   {{ !item.caption || _options.captionPosition === 'top' ? 'controls-PropertyGrid__gridLayout_editor_justify_center' }}
+                   controls-PropertyGrid__gridLayout_editor_direction_row
+                   controls-PropertyGrid__gridLayout_editor_{{ !item.caption || _options.captionPosition === 'top' ? 'justify' : 'align' }}_center
                    {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                    {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
@@ -99,7 +99,8 @@
             </ws:if>
             <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
                         caption="{{item.caption}}"
-                        attr:class="{{ !!afterEditorTemplate && item.caption && _options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control' }}"
+                        attr:class="controls-PropertyGrid__editor_control
+                                    {{ item.caption && _options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control_stretch' }}"
                         scope="{{_options}}"/>
             <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
