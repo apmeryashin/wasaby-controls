@@ -14,12 +14,15 @@ const RESIZE_DELAY = 50;
 
 export type TMasterVisibility = 'visible' | 'hidden';
 
-interface IMasterDetail extends IControlOptions, IPropStorageOptions {
-    master: TemplateFunction;
-    detail: TemplateFunction;
+export interface IMasterWidth {
     masterWidth: number | string;
     masterMinWidth: number | string;
     masterMaxWidth: number | string;
+}
+
+interface IMasterDetail extends IControlOptions, IPropStorageOptions, IMasterWidth {
+    master: TemplateFunction;
+    detail: TemplateFunction;
     //TODO: удалить по задаче: https://online.sbis.ru/opendoc.html?guid=59b38808-e604-49a0-8873-bf324655c505
     contrastBackground: boolean;
     masterContrastBackground: boolean;
