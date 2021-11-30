@@ -2774,9 +2774,12 @@ const _private = {
     // возвращаем промис для юнитов
     startDragNDrop(self: BaseControl, domEvent: SyntheticEvent, draggableItem: CollectionItem): Promise<void> {
         if (
-            !self._options.readOnly && self._options.itemsDragNDrop
-            && DndController.canStartDragNDrop(
-                self._options.canStartDragNDrop, domEvent, TouchDetect.getInstance().isTouch()
+            DndController.canStartDragNDrop(
+                self._options.readOnly,
+                self._options.itemsDragNDrop,
+                self._options.canStartDragNDrop,
+                domEvent,
+                self._dndListController && self._dndListController.isDragging()
             )
         ) {
             const draggableKey = draggableItem.getContents().getKey();
@@ -3334,6 +3337,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         options = options || {};
         this._validateController = new ControllerClass();
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
+        this._nativeDragStart = this._nativeDragStart.bind(this);
         this._resetValidation = this._resetValidation.bind(this);
         this._onWindowResize = this._onWindowResize.bind(this);
         this._scrollToFirstItemAfterDisplayTopIndicator = this._scrollToFirstItemAfterDisplayTopIndicator.bind(this);
@@ -6390,12 +6394,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     // endregion Cut
 
-    _nativeDragStart(event) {
+    private _nativeDragStart(event: SyntheticEvent): void {
         // preventDefault нужно делать именно на нативный dragStart:
         // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
         //    preventDefault в startDragNDrop сработает слишком поздно, браузер уже включит нативное перетаскивание
         // 2. На mouseDown ставится фокус, если на нём сделать preventDefault - фокус не будет устанавливаться
-        event.preventDefault();
+        if (DndController.canStartDragNDrop(
+            this._options.readOnly,
+            this._options.itemsDragNDrop,
+            this._options.canStartDragNDrop,
+            event,
+            this._dndListController && this._dndListController.isDragging()
+        )) {
+            event.preventDefault();
+        }
     }
 
     handleKeyDown(event): void {

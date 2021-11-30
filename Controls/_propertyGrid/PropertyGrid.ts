@@ -308,9 +308,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (this._unprocessedDragEnteredItem) {
             this._unprocessedDragEnteredItem = null;
         }
-        if (!this._options.readOnly && this._options.itemsDragNDrop) {
-            this._startDragNDrop(clickEvent, displayItem);
-        }
+        this._startDragNDrop(clickEvent, displayItem);
     }
 
     protected _itemMouseUp(e, displayItem, domEvent): void {
@@ -706,7 +704,12 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _startDragNDrop(event: SyntheticEvent<MouseEvent>, draggableItem: PropertyGridCollectionItem<Model>): void {
-        if (DndController.canStartDragNDrop(undefined, event, TouchDetect.getInstance().isTouch())) {
+        if (
+            DndController.canStartDragNDrop(
+                this._options.readOnly, this._options.itemsDragNDrop, undefined, event,
+                this._dndController && this._dndController.isDragging()
+            )
+        ) {
             const draggableKey = draggableItem.getContents().getKey();
 
             this._dndController = this._createDndController(this._listModel, draggableItem, this._options);
