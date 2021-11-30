@@ -24,7 +24,8 @@ export default class Demo extends Control<IControlOptions> {
                 {
                     caption: 'URL',
                     name: 'dynamicString',
-                    isDynamic: true
+                    isDynamic: true,
+                    editorTemplateName: 'Controls/propertyGrid:StringEditor'
                 }
             ],
             keyProperty: 'name'

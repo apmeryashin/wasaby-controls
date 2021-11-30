@@ -61,11 +61,12 @@
                     item="{{ collectionItem }}"
                     scope="{{ collectionItem.getEditorOptions() }}">
             <ws:viewTemplate>
-                <ws:partial template="editorTemplate" />
+                <ws:partial template="editorTemplate" item="{{ item }}"/>
             </ws:viewTemplate>
             <ws:editorTemplate>
                 <Controls.input:Text contrastBackground="{{true}}"
-                                     value="{{ collectionItem.getPropertyValue() }}"/>
+                                     value="{{ collectionItem.getPropertyValue() }}"
+                                     on:valueChanged="_propertyValueChanged()"/>
             </ws:editorTemplate>
         </ws:partial>
     </Controls.Container.Async>
@@ -108,9 +109,11 @@
                     </ws:defaultCaptionTemplate>
                 </ws:partial>
             </ws:if>
+            <ws:else data="{{item.isDynamic}}">
+                <ws:partial template="editingCaptionTemplate" item="{{ item }}"/>
+            </ws:else>
             <ws:else>
-                <ws:partial template="editingCaptionTemplate" item="{{item}}"/>
-<!--                <ws:partial template="defaultCaptionTemplate" item="{{item}}"/>-->
+                <ws:partial template="defaultCaptionTemplate" item="{{ item }}"/>
             </ws:else>
             <ws:if data="{{!collectionItem.getEditorTemplateName() && collectionItem.shouldDisplayActions()}}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
@@ -133,14 +136,19 @@
                        {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                        {{(!item.caption || _options.captionPosition === 'top') ? 'controls-PropertyGrid__gridLayout_editor-withoutCaption'}}
                        {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
-                       {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}"
+                       {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}
+                       js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor"
              style="{{getEditorStyles(collectionItem, captionPosition, !item.caption)}}">
             <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">
                 <ws:partial template="levelPadding"/>
             </ws:if>
-    <!--        <ws:partial template="editorTemplate" item="{{ item }}"/>-->
-            <ws:partial template="editingEditorTemplate" item="{{ item }}"/>
+            <ws:if data="{{item.isDynamic}}">
+                <ws:partial template="editingEditorTemplate" item="{{ item }}"/>
+            </ws:if>
+            <ws:else>
+                <ws:partial template="editorTemplate" item="{{ item }}"/>
+            </ws:else>
             <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
                     <ws:partial

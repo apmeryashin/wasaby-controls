@@ -1164,6 +1164,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (!this._editInPlaceController) {
             return Promise.resolve();
         }
+        if (this._options.readOnly) {
+            return PropertyGridView._rejectEditInPlacePromise('cancelEdit');
+        }
         return this._getEditInPlaceController().cancel(force).finally(() => {
             if (this._selectionController) {
                 const controller = this._selectionController;
@@ -1175,6 +1178,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _commitEdit(commitStrategy?: 'hasChanges' | 'all'): TAsyncOperationResult {
         if (!this._editInPlaceController) {
             return Promise.resolve();
+        }
+        if (this._options.readOnly) {
+            return PropertyGridView._rejectEditInPlacePromise('commitEdit');
         }
         return this._getEditInPlaceController().commit(commitStrategy);
     }
@@ -1243,64 +1249,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
-    private static _rejectEditInPlacePromise(fromWhatMethod: string): Promise<void> {
-        const msg = ERROR_MSG.CANT_USE_IN_READ_ONLY(fromWhatMethod);
-        Logger.warn(msg);
-        return Promise.reject(msg);
-    }
-
     private _beforeBeginEditCallback(params: IBeforeBeginEditCallbackParams): Promise<unknown> {
         return new Promise((resolve) => {
             const eventResult = this._notify('beforeBeginEdit', params.toArray());
             resolve(eventResult);
-        }).then((result) => {
-            if (result === EDIT_IN_PLACE_CONSTANTS.CANCEL) {
-                return result;
-            }
-
-            // Если запускается редактирование существующей записи,
-            // то сразу переходим к следующему блоку
-            if (!params.isAdd) {
-                return result;
-            } else {
-                const addedItem = result?.item || params.options?.item;
-                const recordSet: RecordSet = this._listModel.getCollection() as undefined as RecordSet;
-                //const item = recordSet.add({});
-                //return {item};
-                // console.log(params);
-            }
-
-            //region Обработка добавления записи
-            // const sourceController = this.getSourceController();
-            // Добавляемы итем берем либо из результата beforeBeginEdit
-            // либо из параметров запуска редактирования
-
-
-            // Если нет источника и к нам не пришел новый добавляемый итем, то ругаемся
-            // if (!sourceController && !addedItem) {
-            //     throw new Error('You use list without source. So you need to manually create new item when processing an event beforeBeginEdit');
-            // }
-
-            // Если есть источник и сверху не пришел добавляемый итем, то выполним запрос на создание новой записи
-            // if (sourceController && !(addedItem instanceof Model)) {
-            //     return sourceController
-            //         .create(!this._isMounted ? params.options.filter : undefined)
-            //         .then((item) => {
-            //             if (item instanceof Model) {
-            //                 return {item};
-            //             }
-            //
-            //             throw Error('BaseControl::create before add error! Source returned non Model.');
-            //         })
-            //         .catch((error: Error) => {
-            //             return process({error});
-            //         });
-            // }
-            //endregion
-
-            return result;
-        }).then((result) => {
-            return result;
         });
     }
 
@@ -1347,26 +1299,18 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             });
     }
 
-    _saveEditingInSource(item: Model, isAdd: boolean, sourceIndex?: number): Promise<void> {
-        // const updateResult = this._options.source ? this.getSourceController().update(item) : Promise.resolve();
-        const updateResult = Promise.resolve();
-        return updateResult.then(() => {
-            // После выделения слоя логики работы с источником данных в отдельный контроллер,
-            // код ниже должен переехать в него.
-            if (isAdd) {
-                // if (typeof sourceIndex === 'number') {
-                //     this._items.add(item, sourceIndex);
-                // } else {
-                //     this._items.append([item]);
-                // }
-            }
-        });
+    private _saveEditingInSource(item: Model, isAdd: boolean, sourceIndex?: number): Promise<void> {
+        return Promise.resolve();
     }
 
-    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
+    private _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
         this._notify('afterEndEdit', [item.contents, isAdd]);
-        // this._editingItem = null;
-        // item.contents.unsubscribe('onPropertyChange', this._resetValidation);
+    }
+
+    private static _rejectEditInPlacePromise(fromWhatMethod: string): Promise<void> {
+        const msg = ERROR_MSG.CANT_USE_IN_READ_ONLY(fromWhatMethod);
+        Logger.warn(msg);
+        return Promise.reject(msg);
     }
 
     // endregion editInPlace

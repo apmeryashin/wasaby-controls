@@ -29,6 +29,14 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
      */
     protected _$keyProperty: string;
 
+    get propertyValue(): unknown {
+        return this.getPropertyValue();
+    }
+
+    set propertyValue(value: unknown): void {
+        this.setPropertyValue()
+    }
+
     constructor(options?: IGridCollectionOptions) {
         super(options);
         this._$keyProperty = options.keyProperty;
