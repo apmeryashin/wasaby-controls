@@ -15,15 +15,18 @@ class Base extends Control<IControlOptions> {
     }
 
     protected _itemClick(e: Event, item: Record): void {
-        const id = item.getId();
-        if (id === '9') {
-            const itemsData = [
-                {icon: 'icon-Burger', title: 'Список'},
-                {icon: 'icon-ArrangePreview', title: 'Плитка'}
-            ];
-            const data = item.get('icon') === itemsData[0].icon ? itemsData[1] : itemsData[0];
-            item.set('icon', data.icon);
-            item.set('title', data.title);
+        if (item.get('isUpdateIcon')) {
+            const parentId = item.get('parent');
+            const itemsData = data.getItemsWithDirection();
+            itemsData.forEach((itemData) => {
+                if (itemData.id === parentId) {
+                    itemData.icon = item.get('icon');
+                }
+            });
+            this._buttonsSource = new Memory({
+                keyProperty: 'id',
+                data: itemsData
+            });
         }
     }
 

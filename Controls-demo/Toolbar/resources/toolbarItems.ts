@@ -497,9 +497,26 @@ export const data = {
             id: '9',
             viewMode: 'icon',
             icon: 'icon-ArrangePreview',
+            title: 'Вид',
+            '@parent': true,
+            parent: null
+        }, {
+            id: '91',
+            showType: showType.MENU,
+            icon: 'icon-ArrangePreview',
+            isUpdateIcon: true,
             title: 'Плитка',
             '@parent': false,
-            parent: null
+            parent: '9'
         },
+        {
+            id: '92',
+            showType: showType.MENU,
+            icon: 'icon-Burger',
+            isUpdateIcon: true,
+            title: 'Список',
+            '@parent': false,
+            parent: '9'
+        }
     ])
 };
