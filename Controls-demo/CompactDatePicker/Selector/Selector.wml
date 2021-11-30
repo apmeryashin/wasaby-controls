@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-    <Controls.dateRange:RangeSelector
+    <Controls.dateRange:Selector
         datePopupType="compactDatePicker"
         bind:startValue="_startValue"
         _date="{{ _date }}"

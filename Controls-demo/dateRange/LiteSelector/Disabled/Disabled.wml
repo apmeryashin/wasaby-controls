@@ -1,5 +1,6 @@
 <div class="controls-demo_LiteSelector-block">
-    <Controls.dateRange:RangeShortSelector
+    <Controls.dateRange:Selector
+            datePopupType="shortDatePicker"
             readOnly="{{true}}"
             bind:startValue="_startValue"
             bind:endValue="_endValue"

@@ -2,9 +2,10 @@
     <div class="controlsDemo__wrapper controlsDemo__flex controlsDemo__flex-jc-sa"  style="align-items: flex-start">
         <div class="controlsDemo__cell">
             <div class="controls-text-label controlsDemo__maxWidth200">captionFormatter</div>
-            <Controls.dateRange:RangeShortSelector
+            <Controls.dateRange:Selector
                     bind:startValue="_startValue"
                     bind:endValue="_endValue"
+                    datePopupType="shortDatePicker"
                     captionFormatter="{{_captionFormatter}}"
             />
         </div>

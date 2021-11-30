@@ -63,7 +63,7 @@ export = {
        * В данном примере можно выбрать либо 1 день, либо диапазон в 4 дня, либо 2 целые недели, либо 1 месяц.
        * <pre class="brush: html">
        * <!-- WML -->
-       * <Controls.dateRange:RangeSelector ranges="{{ _ranges }}" />
+       * <Controls.dateRange:Selector ranges="{{ _ranges }}" />
        * </pre>
        * <pre class="brush: js">
        * // TypeScript
@@ -107,7 +107,7 @@ export = {
        * @example
        * <pre class="brush: html">
        * <!-- WML -->
-       * <Controls.dateRange:RangeSelector rangeSelectedCallback="{{_rangeSelectedCallback}}" />
+       * <Controls.dateRange:Selector rangeSelectedCallback="{{_rangeSelectedCallback}}" />
        * </pre>
        * <pre class="brush: js">
        * // TypeScript
