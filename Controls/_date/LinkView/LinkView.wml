@@ -16,7 +16,7 @@
         <span
                 attr:data-qa="DateLinkView__template"
                 class="controls-DateLinkView__button-value controls-DateLinkView__value controls-DateLinkView__value_fontWeight-{{ _options.fontWeight }}
-                        controls-fontsize-{{ newOption.fontSize }}
+                        controls-fontsize-{{ _options.fontSize }}
                         {{_fontColorStyle? 'controls-text-' + _fontColorStyle}}
                         {{ styleClass }}">
             {{ _caption }}
