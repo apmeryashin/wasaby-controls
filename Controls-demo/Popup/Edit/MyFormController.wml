@@ -52,8 +52,8 @@
                     <div class="controls-MyFormController__row controls-MyFormController__title">Сумма остатка:</div>
                     <div class="controls-MyFormController__row">
                         <Controls.editableArea:View
-                                editObject="{{content.record}}">
-                            <Controls.editableArea:Base bind:value="content.editObject.balanceCostSumm">
+                                editingObject="{{content.record}}">
+                            <Controls.editableArea:Base bind:value="content.editingObject.balanceCostSumm">
                                 <ws:editorTemplate>
                                     <Controls.input:Number contrastBackground="{{true}}" attr:class="controls-Input_negativeOffset"/>
                                 </ws:editorTemplate>
