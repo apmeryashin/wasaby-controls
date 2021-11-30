@@ -100,10 +100,10 @@ export interface IScrollControllerOptions extends
     itemsSizeControllerConstructor: new (options: IAbstarctItemsSizesControllerOptions) => AbstractItemsSizesController;
     indexesInitializedCallback: IIndexesInitializedCallback;
     indexesChangedCallback: IIndexesChangedCallback;
-    activeElementChangedCallback: IActiveElementChangedChangedCallback;
-    hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
+    activeElementChangedCallback?: IActiveElementChangedChangedCallback;
+    hasItemsOutRangeChangedCallback?: IHasItemsOutRangeChangedCallback;
     placeholdersChangedCallback: IPlaceholdersChangedCallback;
-    itemsEndedCallback: IItemsEndedCallback;
+    itemsEndedCallback?: IItemsEndedCallback;
 }
 
 /**
@@ -143,17 +143,18 @@ export class ScrollController {
             triggersQuerySelector: options.triggersQuerySelector,
             viewportSize: options.viewportSize,
             triggersVisibility: options.triggersVisibility,
-            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
-            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
+            backwardTriggerOffsetCoefficient: options.backwardTriggerOffsetCoefficient,
+            forwardTriggerOffsetCoefficient: options.forwardTriggerOffsetCoefficient,
             observersCallback: this._observersCallback.bind(this)
         });
 
         // корректируем скролл на размер контента до списка
         const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
         // если скролл меньше размера контента до списка, то это значит что сам список еще не проскроллен
-        const scrollPosition = options.scrollPosition < beforeContentSize
+        const givenScrollPosition = options.scrollPosition || 0;
+        const scrollPosition = givenScrollPosition < beforeContentSize
             ? 0
-            : options.scrollPosition - beforeContentSize;
+            : givenScrollPosition - beforeContentSize;
         this._calculator = new Calculator({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
@@ -415,7 +416,9 @@ export class ScrollController {
 
         // itemsEndedCallback должен вызываться ТОЛЬКО ТУТ, загрузка осуществляется ТОЛЬКО по достижению триггера
         if (!result.indexesChanged) {
-            this._itemsEndedCallback(direction);
+            if (this._itemsEndedCallback) {
+                this._itemsEndedCallback(direction);
+            }
         }
     }
 
@@ -426,7 +429,9 @@ export class ScrollController {
      */
     private _processActiveElementIndexChanged(result: IActiveElementIndexChanged): void {
         if (result.activeElementIndexChanged) {
-            this._activeElementChangedCallback(result.activeElementIndex);
+            if (this._activeElementChangedCallback) {
+                this._activeElementChangedCallback(result.activeElementIndex);
+            }
         }
     }
 
@@ -445,10 +450,12 @@ export class ScrollController {
         }
 
         if (result.hasItemsOutRangeChanged) {
-            this._hasItemsOutRangeChangedCallback({
-                backward: result.hasItemsOutRangeBackward,
-                forward: result.hasItemsOutRangeForward
-            });
+            if (this._hasItemsOutRangeChangedCallback) {
+                this._hasItemsOutRangeChangedCallback({
+                    backward: result.hasItemsOutRangeBackward,
+                    forward: result.hasItemsOutRangeForward
+                });
+            }
         }
 
         if (result.indexesChanged) {

@@ -21,12 +21,12 @@ export type TObserversCallback = (event: TIntersectionEvent) => void;
 
 export interface IAbstractObserversControllerBaseOptions {
     listControl: Control;
-    listContainer: HTMLElement;
-    viewportSize: number;
+    listContainer?: HTMLElement;
+    viewportSize?: number;
     triggersQuerySelector: string;
     triggersVisibility: ITriggersVisibility;
-    topTriggerOffsetCoefficient: number;
-    bottomTriggerOffsetCoefficient: number;
+    backwardTriggerOffsetCoefficient: number;
+    forwardTriggerOffsetCoefficient: number;
 }
 
 export interface IAbstractObserversControllerOptions extends IAbstractObserversControllerBaseOptions {
@@ -68,13 +68,13 @@ export abstract class AbstractObserversController {
     constructor(options: IAbstractObserversControllerOptions) {
         this._listControl = options.listControl;
         this._listContainer = options.listContainer;
-        this._viewportSize = options.viewportSize;
+        this._viewportSize = options.viewportSize || 0;
         this._triggersQuerySelector = options.triggersQuerySelector;
         this._triggersVisibility = options.triggersVisibility;
         this._observersCallback = options.observersCallback;
 
-        this._backwardTriggerOffsetCoefficient = options.topTriggerOffsetCoefficient;
-        this._forwardTriggerOffsetCoefficient = options.bottomTriggerOffsetCoefficient;
+        this._backwardTriggerOffsetCoefficient = options.backwardTriggerOffsetCoefficient;
+        this._forwardTriggerOffsetCoefficient = options.forwardTriggerOffsetCoefficient;
 
         if (this._listContainer) {
             this._updateTriggers();

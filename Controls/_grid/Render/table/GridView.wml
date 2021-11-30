@@ -105,6 +105,15 @@
                 </td>
             </tr>
         </tbody>
+
+        <tbody if="{{ _options._newColumnScroll }}">
+            <tr>
+                <ws:for data="i in _listModel.getAllGridColumnsCount()">
+                    <td class="js-controls-Grid__columnScroll__relativeCell"></td>
+                </ws:for>
+            </tr>
+        </tbody>
+
         <!-- Items -->
         <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container">
 
@@ -217,6 +226,9 @@
         <ws:partial template="SCROLLBAR_IN_POSITION" renderPosition="beforeTable"/>
     </ws:if>
 
+    <div if="{{ _options._newColumnScroll }}"
+         class="controls-BaseControl__loadingTrigger_horizontal controls-BaseControl__loadingTrigger_horizontal-left"></div>
+
     <!-- Контент таблицы -->
     <ws:partial template="gridView"
                 attr:name="grid"
@@ -226,4 +238,7 @@
                 on:touchmove="_onColumnScrollDragScrolling('touch')"
                 on:mouseup="_onColumnScrollStopDragScrolling('mouse')"
                 on:touchend="_onColumnScrollStopDragScrolling('touch')"/>
+
+    <div if="{{ _options._newColumnScroll }}"
+         class="controls-BaseControl__loadingTrigger_horizontal controls-BaseControl__loadingTrigger_horizontal-right"></div>
 </div>

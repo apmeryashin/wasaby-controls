@@ -191,6 +191,13 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         return this._$emptyGridRow;
     }
 
+    getAllGridColumnsCount(): number {
+        return [
+            this.hasMultiSelectColumn(),
+            this.hasItemActionsSeparatedCell()
+        ].reduce((acc, shouldAdd) => acc + +shouldAdd, this._$columns.length);
+    }
+
     setEmptyTemplateOptions(options: object): void {
         this.getEmptyGridRow()?.setRowTemplateOptions(options);
     }

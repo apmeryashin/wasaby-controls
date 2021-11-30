@@ -3,7 +3,7 @@ import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
 
 export interface IAbstarctItemsSizesControllerOptions {
-    itemsContainer: HTMLElement;
+    itemsContainer?: HTMLElement;
     itemsQuerySelector: string;
     totalCount: number;
 }

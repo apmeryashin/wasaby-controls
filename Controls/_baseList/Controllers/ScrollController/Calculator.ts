@@ -35,16 +35,16 @@ export interface ICalculatorResult extends IIndexesChangedParams {
 }
 
 export interface ICalculatorBaseOptions {
-    scrollPosition: number;
-    viewportSize: number;
-    contentSize: number;
+    scrollPosition?: number;
+    viewportSize?: number;
+    contentSize?: number;
     totalCount: number;
 
     /**
      * Размеры элементов заданные прикладниками.
      * Берем их из рекордсета по itemHeightProperty.
      */
-    givenItemsSizes: IItemsSizes;
+    givenItemsSizes?: IItemsSizes;
 
     virtualScrollConfig: IVirtualScrollConfig;
 }
@@ -85,10 +85,10 @@ export class Calculator {
         this._itemsSizes = options.itemsSizes;
         this._givenItemsSizes = options.givenItemsSizes;
         this._triggersOffsets = options.triggersOffsets;
-        this._scrollPosition = options.scrollPosition;
+        this._scrollPosition = options.scrollPosition || 0;
         this._totalCount = options.totalCount;
-        this._viewportSize = options.viewportSize;
-        this._contentSize = options.contentSize;
+        this._viewportSize = options.viewportSize || 0;
+        this._contentSize = options.contentSize || 0;
         this._virtualScrollConfig = options.virtualScrollConfig;
         this.resetItems(this._totalCount, false);
     }
