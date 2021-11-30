@@ -245,7 +245,7 @@ export class Calculator {
             placeholdersChanged = this._updatePlaceholders();
         }
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged, true);
     }
 
     // endregion ShiftRangeToDirection
@@ -274,7 +274,7 @@ export class Calculator {
             placeholdersChanged = this._updatePlaceholders();
         }
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged, false);
     }
 
     /**
@@ -310,7 +310,7 @@ export class Calculator {
 
         placeholdersChanged = this._updatePlaceholders();
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged, false);
     }
 
     // endregion ShiftRangeByScrollPosition
@@ -358,6 +358,16 @@ export class Calculator {
 
         const direction = this._calcAddDirection(position, count);
 
+        const isBackwardEdge = this._scrollPosition === 0;
+        const isForwardEdge = this._viewportSize + this._scrollPosition === this._contentSize;
+        const addItemsInsideRange = position > this._range.startIndex && position < this._range.endIndex;
+
+        let shouldRestoreScroll = true;
+        // Не восстанавливаем скролл, если новые записи добавили в центр или список ускролен в край
+        if (addItemsInsideRange || isBackwardEdge || isForwardEdge) {
+            shouldRestoreScroll = false;
+        }
+
         if (direction === 'backward') {
             this._range.startIndex = Math.min(this._totalCount, this._range.startIndex + count);
             this._range.endIndex = Math.min(this._totalCount, this._range.endIndex + count);
@@ -372,8 +382,9 @@ export class Calculator {
         });
 
         const placeholdersChanged = this._updatePlaceholders();
-
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(
+            oldRange, direction, oldPlaceholders, placeholdersChanged, shouldRestoreScroll
+        );
     }
 
     private _calcAddDirection(position: number, count: number): IDirection {
@@ -409,7 +420,9 @@ export class Calculator {
 
         const placeholdersChanged = resultAdd.placeholdersChanged || resultRemove.placeholdersChanged;
 
-        return this._getRangeChangeResult(oldRange, resultAdd.shiftDirection, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(
+            oldRange, resultAdd.shiftDirection, oldPlaceholders, placeholdersChanged, resultAdd.shouldRestoreScroll
+        );
     }
 
     /**
@@ -436,7 +449,7 @@ export class Calculator {
 
         placeholdersChanged = this._updatePlaceholders();
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged, false);
     }
 
     /**
@@ -469,7 +482,7 @@ export class Calculator {
 
         const placeholdersChanged = this._updatePlaceholders();
 
-        return this._getRangeChangeResult(oldRange, 'forward', oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldRange, 'forward', oldPlaceholders, placeholdersChanged, false);
     }
 
     // endregion HandleCollectionChanges
@@ -490,7 +503,8 @@ export class Calculator {
     private _getRangeChangeResult(oldRange: IItemsRange,
                                   shiftDirection: IDirection,
                                   oldPlaceholders: IPlaceholders,
-                                  placeholdersChanged: boolean): ICalculatorResult {
+                                  placeholdersChanged: boolean,
+                                  shouldRestoreScroll: boolean): ICalculatorResult {
         const indexesChanged = oldRange.startIndex !== this._range.startIndex ||
             oldRange.endIndex !== this._range.endIndex;
 
@@ -513,6 +527,7 @@ export class Calculator {
             oldPlaceholders,
             indexesChanged,
             shiftDirection,
+            shouldRestoreScroll,
 
             hasItemsOutRangeBackward,
             hasItemsOutRangeForward,

@@ -34,6 +34,7 @@ export interface IIndexesChangedParams {
     range: IItemsRange;
     oldRange: IItemsRange;
     oldPlaceholders: IPlaceholders;
+    shouldRestoreScroll: boolean;
 }
 
 export interface IActiveElementIndex {
@@ -458,7 +459,8 @@ export class ScrollController {
                 range: result.range,
                 oldRange: result.oldRange,
                 oldPlaceholders: result.oldPlaceholders,
-                shiftDirection: result.shiftDirection
+                shiftDirection: result.shiftDirection,
+                shouldRestoreScroll: result.shouldRestoreScroll
             });
         }
     }

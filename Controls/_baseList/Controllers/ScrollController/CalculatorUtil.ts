@@ -64,22 +64,16 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
         };
     }
 
-    if (segmentSize && totalCount >= pageSize) {
-        if (direction === 'backward') {
-            startIndex = Math.max(0, startIndex - segmentSize);
-            if (startIndex >= totalCount) {
-                startIndex = Math.max(0, totalCount - pageSize);
-            }
-
-            endIndex = Math.max(endIndex - segmentSize, Math.min(startIndex + pageSize, totalCount));
-        } else {
-            endIndex = Math.min(endIndex + segmentSize, totalCount);
-            startIndex = Math.min(startIndex + segmentSize, Math.max(endIndex - pageSize, 0));
+    if (direction === 'backward') {
+        startIndex = Math.max(0, startIndex - segmentSize);
+        if (startIndex >= totalCount) {
+            startIndex = Math.max(0, totalCount - pageSize);
         }
-    }
 
-    if (endIndex < pageSize && endIndex < totalCount) {
-        endIndex = Math.min(pageSize, totalCount);
+        endIndex = Math.max(endIndex - segmentSize, Math.min(startIndex + pageSize, totalCount));
+    } else {
+        endIndex = Math.min(endIndex + segmentSize, totalCount);
+        startIndex = Math.min(startIndex + segmentSize, Math.max(endIndex - pageSize, 0));
     }
 
     return {
