@@ -3,7 +3,7 @@ import { IHashMap } from 'Types/declarations';
 import { ISelectionObject } from 'Controls/interface';
 import { Confirmation } from 'Controls/popup';
 import { Logger } from 'UI/Utils';
-import * as rk from 'i18n!*';
+import * as rk from 'i18n!Controls';
 import { getItemsBySelection } from '../resources/utils/getItemsBySelection';
 
 // @todo https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
