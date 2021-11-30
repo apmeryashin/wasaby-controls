@@ -1,8 +1,9 @@
-<Controls.Container.Async templateName="{{_templateName}}">
+<Controls.Container.Async templateName="{{'Controls/dateRange:Selector'}}">
    <ws:partial template="{{content.resolvedTemplate}}"
                scope="{{_options}}"
                startValue="{{_options.value[0] || null}}"
                endValue="{{_options.value[1] || null}}"
+               datePopupType="{{ _datePopupType }}"
                emptyCaption="{{_emptyCaption}}"
                fontColorStyle="{{_options.fontColorStyle}}"
                resetStartValue="{{ _options.resetStartValue }}"

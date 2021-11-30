@@ -1,8 +1,5 @@
 export {default as Input} from './_dateRange/Input';
-// TODO: Временная поддержка, удалить по https://online.sbis.ru/opendoc.html?guid=84607f88-046c-4331-a402-68061666d88c
-export {default as RangeSelector} from './_dateRange/RangeSelector';
 export {default as Selector} from './_dateRange/RangeSelector';
-export {default as RangeShortSelector} from './_dateRange/RangeShortSelector';
 export {default as RelationController} from './_dateRange/RelationController';
 export {default as RelationWrapper} from './_dateRange/RelationWrapper';
 export {default as RelationButton} from './_dateRange/RelationButton';
@@ -17,13 +14,7 @@ export {default as IRangeSelectable} from './_dateRange/interfaces/IRangeSelecta
 export {default as IDayTemplate} from './_interface/IDayTemplate';
 export {default as IPeriodLiteDialog} from './_dateRange/interfaces/IPeriodLiteDialog';
 export {default as keyboardPeriodController} from './_dateRange/Utils/keyboardPeriodController';
-export {default as DateRangeContextProvider} from './_dateRange/DateRangeContextProvider';
-export {default as ArrowButtonConsumer} from './_dateRange/ArrowButtonConsumer';
-// TODO: Временная поддержка, удалить по https://online.sbis.ru/opendoc.html?guid=84607f88-046c-4331-a402-68061666d88c
 export {default as SelectorConsumer} from './_dateRange/RangeSelectorConsumer';
-export {default as RangeSelectorConsumer} from './_dateRange/RangeSelectorConsumer';
-export {default as DateSelectorConsumer} from './_dateRange/DateSelectorConsumer';
-export {default as RangeShortSelectorConsumer} from './_dateRange/RangeShortSelectorConsumer';
 export {IDateRangeSelectableOptions, IRangeSelectableOptions, TSelectionType} from 'Controls/_dateRange/interfaces/IDateRangeSelectable';
 export {IDateRangeOptions} from 'Controls/_dateRange/interfaces/IDateRange';
 import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRangeSelectable');
@@ -37,8 +28,7 @@ export {
  * Библиотека контролов, которые служат для отображения диапазона дат и выбора дат из выпадающей панели.
  * @library
  * @includes Input Controls/_dateRange/Input
- * @includes RangeSelector Controls/_dateRange/RangeSelector
- * @includes RangeShortSelector Controls/_dateRange/RangeShortSelector
+ * @includes Selector Controls/_dateRange/RangeSelector
  * @includes RelationController Controls/_dateRange/RelationController
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
