@@ -430,6 +430,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         } else {
             this._listModel.addFilter(toggleFilter);
         }
+        if (this._options.trigger === 'hover') {
+            this._notify('expanderClick', [this._expander]);
+        }
         // TODO after deleting additionalProperty option
         // if (value) {
         //     if (this._expandedItems) {
