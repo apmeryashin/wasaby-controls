@@ -20,7 +20,7 @@ import {
 import {groupConstants as constView, IEditingConfig, IList} from '../list';
 import PropertyGridCollection from './PropertyGridCollection';
 import PropertyGridCollectionItem from './PropertyGridCollectionItem';
-import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
+import {IItemAction, Controller as ItemActionsController, IItemActionsItem} from 'Controls/itemActions';
 import {Confirmation, StickyOpener} from 'Controls/popup';
 import 'css!Controls/itemActions';
 import 'css!Controls/propertyGrid';
@@ -45,7 +45,7 @@ import {
     CONSTANTS as EDIT_IN_PLACE_CONSTANTS,
     Controller as EditInPlaceController,
     IBeforeBeginEditCallbackParams, IBeforeEndEditCallbackParams,
-    InputHelper as EditInPlaceInputHelper
+    InputHelper as EditInPlaceInputHelper, JS_SELECTORS, TAsyncOperationResult
 } from 'Controls/editInPlace';
 import {process} from "Controls/error";
 
@@ -460,8 +460,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
-    private _updateItemActions(listModel: TPropertyGridCollection, options: IPropertyGridOptions): void {
+    private _updateItemActions(listModel: TPropertyGridCollection,
+                               options: IPropertyGridOptions,
+                               item: IEditableCollectionItem & IItemActionsItem): void {
         const itemActions: IItemAction[] = options.itemActions;
+        const editingConfig = this._getEditingConfig(options);
 
         if (!itemActions) {
             return;
@@ -469,6 +472,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         this._itemActionsController.update({
             collection: listModel,
             itemActions,
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editingItem: item,
             visibilityCallback: options.itemActionVisibilityCallback,
             style: 'default',
             theme: options.theme
@@ -1113,12 +1118,41 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     // region editInPlace
 
+    protected _itemClick(e: SyntheticEvent, item: Model, originalEvent: SyntheticEvent): void {
+        const canEditByClick = !this._options.readOnly && this._getEditingConfig(this._options).editOnClick && (
+            originalEvent.target.closest('.js-controls-ListView__editingTarget') && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`)
+        );
+        if (canEditByClick) {
+            e.stopPropagation();
+
+            // , { columnIndex: columnIndex }
+            this._beginEdit({ item }).then((result) => {
+                if (!(result && result.canceled)) {
+                    this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
+                }
+                return result;
+            });
+        } else {
+            if (this._editInPlaceController) {
+                this._commitEdit();
+            }
+            this._notify('itemClick', [item, originalEvent]);
+        }
+    }
+
     beginEdit(userOptions: object): Promise<void | {canceled: true}> {
         const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
         return this._beginEdit(userOptions, {
             shouldActivateInput: userOptions?.shouldActivateInput,
             columnIndex: (userOptions?.columnIndex || 0) + hasCheckboxes
         });
+    }
+
+    private _commitEdit(commitStrategy?: 'hasChanges' | 'all'): TAsyncOperationResult {
+        if (!this._editInPlaceController) {
+            return Promise.resolve();
+        }
+        return this._getEditInPlaceController().commit(commitStrategy);
     }
 
     private _getEditingConfig(options?: IPropertyGridOptions): IEditingConfig & {mode: 'row' | 'cell'} {
@@ -1252,6 +1286,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         // уведомлений о запуске редактирования происходить не должно, а дождаться построение
         // редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
         return new Promise((resolve) => {
+            this._updateItemActions(this._listModel, this._options, item);
             // this._continuationEditingDirection = null;
             //
             // if (this._isMounted) {
