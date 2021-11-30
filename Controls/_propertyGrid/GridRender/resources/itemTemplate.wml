@@ -87,7 +87,7 @@
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
         <div class="controls-PropertyGrid__gridLayout_editor
                    controls-PropertyGrid__gridLayout_editor_direction_row
-                   controls-PropertyGrid__gridLayout_editor_{{ !item.caption || _options.captionPosition === 'top' ? 'justify' : 'align' }}_center
+                   {{ !item.caption || _options.captionPosition === 'top' ? 'controls-PropertyGrid__gridLayout_editor_justify_center' }}
                    {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                    {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
