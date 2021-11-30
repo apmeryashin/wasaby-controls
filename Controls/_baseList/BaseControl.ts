@@ -1758,37 +1758,9 @@ const _private = {
         }
     },
 
-    onAfterCollectionChanged(self: typeof BaseControl): void {
-        if (_private.hasSelectionController(self) && self._removedItems.length) {
-            const newSelection = _private.getSelectionController(self).onCollectionRemove(self._removedItems);
-            _private.changeSelection(self, newSelection);
-        }
-
-        self._removedItems = [];
-    },
-
     initListViewModelHandler(self, model) {
-        model.subscribe('onCollectionChange', (...args: any[]) => {
-            self._onCollectionChanged.apply(
-                self,
-                [
-                    args[0], // event
-                    null, // changes type
-                    ...args.slice(1) // the rest of the arguments
-                ]
-            );
-        });
-        model.subscribe('onAfterCollectionChange', (...args: any[]) => {
-            _private.onAfterCollectionChanged.apply(
-                null,
-                [
-                    self,
-                    args[0], // event
-                    null, // changes type
-                    ...args.slice(1) // the rest of the arguments
-                ]
-            );
-        });
+        model.subscribe('onCollectionChange', self._onCollectionChanged);
+        model.subscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
     },
 
     /**
@@ -3339,6 +3311,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._scrollToFirstItemAfterDisplayTopIndicator = this._scrollToFirstItemAfterDisplayTopIndicator.bind(this);
         this._hasHiddenItemsByVirtualScroll = this._hasHiddenItemsByVirtualScroll.bind(this);
         this._intersectionObserverHandler = this._intersectionObserverHandler.bind(this);
+        this._onCollectionChanged = this._onCollectionChanged.bind(this);
+        this._onAfterCollectionChanged = this._onAfterCollectionChanged.bind(this);
     }
 
     /**
@@ -3489,9 +3463,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _afterItemsSet(options): void {
         // для переопределения
     }
-    protected _onCollectionChanged(
+    private _onCollectionChanged(
         event: SyntheticEvent,
-        changesType: string,
         action: string,
         newItems: Array<CollectionItem<Model>>,
         newItemsIndex: number,
@@ -3499,7 +3472,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         removedItemsIndex: number,
         reason: string): void {
         _private.onCollectionChanged(
-            this, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex, reason
+            this, event, null, action, newItems, newItemsIndex, removedItems, removedItemsIndex, reason
         );
         if (action === IObservable.ACTION_RESET) {
             this._afterCollectionReset();
@@ -3523,6 +3496,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _afterCollectionRemove(removedItems: Array<CollectionItem<Model>>, removedItemsIndex: number): void {
         // для переопределения
     }
+
+    private _onAfterCollectionChanged(): void {
+        if (_private.hasSelectionController(this) && this._removedItems.length) {
+            const newSelection = _private.getSelectionController(this).onCollectionRemove(this._removedItems);
+            _private.changeSelection(this, newSelection);
+        }
+
+        this._removedItems = [];
+    }
+
     _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
         let items;
         let collapsedGroups;
@@ -4673,8 +4656,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._destroyEditInPlaceController();
         }
 
-        if (this._listViewModel && !this._options.collection) {
-            this._listViewModel.destroy();
+        if (this._listViewModel) {
+            this._listViewModel.unsubscribe('onCollectionChange', this._onCollectionChanged);
+            this._listViewModel.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChanged);
+            // коллекцию дестроим только, если она была создана в BaseControl(не передана в опциях)
+            if (!this._options.collection) {
+                this._listViewModel.destroy();
+            }
         }
 
         this._loadTriggerVisibility = null;
