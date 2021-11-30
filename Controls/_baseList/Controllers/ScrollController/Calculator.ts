@@ -6,9 +6,9 @@ import {
     getPlaceholdersByRange
 } from './CalculatorUtil';
 
-import type {IVirtualScrollConfig} from 'Controls/_baseList/interface/IVirtualScroll';
-import type {IItemsSizes} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
-import type {ITriggersOffsets} from 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
+import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
+import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/AbstractItemsSizeController';
+import type { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import type {
     IActiveElementIndex,
     IDirection,
@@ -18,7 +18,6 @@ import type {
     IPlaceholders
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {IEdgeItemCalculatingParams} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
-import { isEqual } from 'Types/object';
 
 export interface IActiveElementIndexChanged extends IActiveElementIndex {
     activeElementIndexChanged: boolean;
@@ -72,7 +71,6 @@ const RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT = 4;
  */
 export class Calculator {
     private _itemsSizes: IItemsSizes;
-    private _oldItemsSizes: IItemsSizes;
     private _givenItemsSizes: IItemsSizes;
     private _triggersOffsets: ITriggersOffsets;
     private _virtualScrollConfig: IVirtualScrollConfig;
@@ -127,10 +125,7 @@ export class Calculator {
      * @param itemsSizes
      */
     updateItemsSizes(itemsSizes: IItemsSizes): void {
-        if (!isEqual) {
-            this._oldItemsSizes = this._itemsSizes;
-            this._itemsSizes = itemsSizes;
-        }
+        this._itemsSizes = itemsSizes;
     }
 
     updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
@@ -173,10 +168,10 @@ export class Calculator {
         const direction = params.direction;
         const range = params.range || this._range;
         const placeholders = params.placeholders || this._placeholders;
-        const itemsSizes = params.itemsSizes || this._itemsSizes;
+        const itemsSizes = this._itemsSizes;
         let edgeItemParams: IEdgeItem = null;
 
-        for (let index = range.startIndex; index < range.endIndex; index++) {
+        for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
             const nextItem = itemsSizes[index + 1];
             const itemOffset = item.offset - placeholders.backward;
@@ -515,7 +510,6 @@ export class Calculator {
         return {
             range: this._range,
             oldRange,
-            oldItemsSizes: this._oldItemsSizes,
             oldPlaceholders,
             indexesChanged,
             shiftDirection,

@@ -278,7 +278,6 @@ export class ListVirtualScrollController {
             params: {
                 direction: params.shiftDirection,
                 range: params.oldRange,
-                itemsSizes: params.oldItemsSizes,
                 placeholders: params.oldPlaceholders
             } as IEdgeItemCalculatingParams
         });

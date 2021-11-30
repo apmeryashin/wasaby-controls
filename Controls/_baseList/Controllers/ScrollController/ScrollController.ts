@@ -33,7 +33,6 @@ export interface IIndexesChangedParams {
     shiftDirection: IDirection;
     range: IItemsRange;
     oldRange: IItemsRange;
-    oldItemsSizes: IItemsSizes;
     oldPlaceholders: IPlaceholders;
 }
 
@@ -61,7 +60,6 @@ export interface IEdgeItemCalculatingParams {
     direction: IDirection;
     range?: IItemsRange;
     placeholders?: IPlaceholders;
-    itemsSizes?: IItemsSizes;
 }
 
 export interface IScheduledScrollToElementParams {
@@ -459,7 +457,6 @@ export class ScrollController {
             this._indexesChangedCallback({
                 range: result.range,
                 oldRange: result.oldRange,
-                oldItemsSizes: result.oldItemsSizes,
                 oldPlaceholders: result.oldPlaceholders,
                 shiftDirection: result.shiftDirection
             });
