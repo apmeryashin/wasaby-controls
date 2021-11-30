@@ -3,11 +3,11 @@
         <Controls.buttons:Button
                 on:mousedown="_mouseDownHandler()"
                 attr:data-qa="DateLinkView__template"
-                attr:class="controls-DateLinkView__button-value controls-DateLinkView__value_fontWeight-{{ _fontWeight }}"
+                attr:class="controls-DateLinkView__button-value controls-DateLinkView__value_fontWeight-{{ _options.fontWeight }}"
                 caption="{{ _caption }}"
                 viewMode="link"
                 fontColorStyle="{{ _fontColorStyle }}"
-                fontSize="{{ _fontSize }}"
+                fontSize="{{ _options.fontSize }}"
                 tootltip="{{ _options.tooltip }}"
                 name="openPopupTarget"
         />
@@ -15,8 +15,8 @@
     <ws:else>
         <span
                 attr:data-qa="DateLinkView__template"
-                class="controls-DateLinkView__button-value controls-DateLinkView__value controls-DateLinkView__value_fontWeight-{{ _fontWeight }}
-                        {{_fontSize? 'controls-fontsize-' + _fontSize}}
+                class="controls-DateLinkView__button-value controls-DateLinkView__value controls-DateLinkView__value_fontWeight-{{ _options.fontWeight }}
+                        controls-fontsize-{{ newOption.fontSize }}
                         {{_fontColorStyle? 'controls-text-' + _fontColorStyle}}
                         {{ styleClass }}">
             {{ _caption }}
