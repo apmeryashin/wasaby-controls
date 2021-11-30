@@ -1,6 +1,6 @@
 <Controls.Container.Async templateName="Controls/toggle:Checkbox">
     <ws:partial template="{{content.resolvedTemplate}}"
-                attr:class="controls-Input_negativeOffset"
+                attr:class="controls-Input_negativeOffset controls-PropertyGrid__editor_boolean_control"
                 on:valueChanged="_valueChanged()"
                 value="{{value}}"
                 validationStatus="{{_options.validationStatus}}"/>
