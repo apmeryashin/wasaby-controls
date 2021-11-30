@@ -21,7 +21,8 @@ function createHistorySource(cfg) {
          history list.We request one more record, so that the number of records remains equal to 10 */
       recent: (Constants[cfg.recent] || Constants.MAX_HISTORY) + 1,
       favorite: cfg.favorite,
-      dataLoaded: true
+      dataLoaded: true,
+      multiHistoryId: true
    };
    return new HistorySource({
       originSource: new sourceLib.Memory({

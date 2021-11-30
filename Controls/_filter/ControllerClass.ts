@@ -330,11 +330,7 @@ export default class FilterControllerClass extends mixin<
 
     private _resolveItemsWithHistory(options: Partial<IFilterControllerOptions>,
                                      filter: object): Promise<THistoryData> {
-        return this._resolveHistoryItems(
-            options.historyId,
-            options.historyItems,
-            options.prefetchParams
-        ).then((history) => {
+        return this._resolveHistoryItems(options).then((history) => {
             const filterFromUrl = getFilterFromUrl();
             this._setFilterItems(options.filterButtonSource, options.fastFilterSource, history, filterFromUrl);
             this._applyItemsToFilter(
@@ -349,26 +345,41 @@ export default class FilterControllerClass extends mixin<
     }
 
     // Получает итемы с учетом истории.
-    private _resolveHistoryItems(
+    private _resolveHistoryItems({
+                                     historyId,
+                                     historyItems,
+                                     prefetchParams,
+                                     filterButtonSource
+    }: {
         historyId: string,
         historyItems: IFilterItem[],
-        prefetchParams: IPrefetchHistoryParams
-    ): Promise<THistoryData> {
+        prefetchParams: IPrefetchHistoryParams,
+        filterButtonSource: IFilterItem[]
+    }): Promise<THistoryData> {
         if (historyItems && prefetchParams && historyItems?.length) {
-            return this._loadHistoryItems(historyId, prefetchParams).then((result) => {
+            return this._loadHistoryItems(historyId, filterButtonSource, prefetchParams).then((result) => {
                 return historyItems ? historyItems : result;
             });
         } else {
-            return historyItems ? Promise.resolve(historyItems) : this._loadHistoryItems(historyId, prefetchParams);
+            return historyItems ? Promise.resolve(historyItems) :
+                this._loadHistoryItems(historyId, filterButtonSource, prefetchParams);
         }
     }
 
-    private _loadHistoryItems(historyId: string, prefetchParams?: IPrefetchHistoryParams): Promise<THistoryData> {
+    private _loadHistoryItems(historyId: string,
+                              filterSource: IFilterItem[],
+                              prefetchParams?: IPrefetchHistoryParams): Promise<THistoryData> {
         let result;
 
         if (!historyId) {
             result = Promise.resolve([]);
         } else {
+            const historyIds = [];
+            filterSource.forEach((filterItem) => {
+                if (filterItem.historyId) {
+                    historyIds.push(filterItem.historyId);
+                }
+            });
             const source = getHistorySource({historyId, favorite: !!prefetchParams});
 
             if (!this._crudWrapper) {
@@ -377,15 +388,15 @@ export default class FilterControllerClass extends mixin<
                 });
             }
 
-            result = this._loadHistorySource(source);
+            result = this._loadHistorySource(source, historyIds);
         }
 
         return result;
     }
 
-    private _loadHistorySource(source): Promise<THistoryData> {
+    private _loadHistorySource(source, singleHistoryIds?: string[]): Promise<THistoryData> {
         return new Promise((resolve) => {
-            this._crudWrapper.query({filter: { $_history: true }})
+            this._crudWrapper.query({filter: { $_history: true, singleHistoryIds }})
                 .then((res) => {
                     let historyResult;
                     const recent = source.getRecent();
@@ -512,7 +523,7 @@ export default class FilterControllerClass extends mixin<
 
         if (!getHistorySource({historyId}).historyReady()) {
             // Getting history before updating if it hasn’t already done
-            return this._loadHistoryItems(historyId).then(() => {
+            return this._loadHistoryItems(historyId, filterButtonItems).then(() => {
                 return update();
             });
         } else {
@@ -821,7 +832,7 @@ export default class FilterControllerClass extends mixin<
 
 function getCalculatedFilter(config) {
     const def = new Deferred();
-    this._resolveHistoryItems(config.historyId, config.historyItems, config.prefetchParams).then((items) => {
+    this._resolveHistoryItems(config).then((items) => {
         const filterFromUrl = getFilterFromUrl();
         this._setFilterItems(clone(config.filterButtonSource), clone(config.fastFilterSource), items, filterFromUrl);
         let calculatedFilter;

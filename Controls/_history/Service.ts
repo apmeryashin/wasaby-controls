@@ -1,4 +1,4 @@
-import {SbisService, DataSet, ICrud, IData} from 'Types/source';
+import {SbisService, DataSet, ICrud, Query} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {OptionsToPropertyMixin, SerializableMixin, Model} from 'Types/entity';
 import * as Constants from './Constants';
@@ -74,6 +74,7 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
     protected _$favorite: Array<string | number> = null;
     protected _$recent: number = null;
     protected _$dataLoaded: boolean = null;
+    protected _$multiHistoryId: boolean = false;
 
     constructor(options: IHistoryServiceOptions) {
         super(options);
@@ -110,7 +111,7 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
         });
     }
 
-    private _load(): Promise<any> {
+    private _load(singleHistoryIds?: string[]): Promise<any> {
         let resultDef;
         if (this._$favorite) {
             resultDef = this._callQuery('ClientAndUserHistoryList', {
@@ -122,6 +123,26 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
                     getObjectData: true
                 }
             });
+        } else if (this._$multiHistoryId) {
+            const params = {
+                history_query: {
+                    [this._$historyId]: {
+                        recentCount:  {count: this._$recent || Constants.MAX_HISTORY},
+                        frequentCount: {count: this._$frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0},
+                        pinnedCount: {count: this._$pinned ? Constants.MAX_HISTORY : 0}
+                    }
+                }
+            };
+            if (singleHistoryIds) {
+                singleHistoryIds.forEach((id) => {
+                    params[id] = {
+                        recentCount: 1,
+                        frequentCount: 0,
+                        pinnedCount: 0
+                    };
+                });
+            }
+            resultDef = this._callQuery('BatchIndexesList', params);
         } else {
             if (this._$historyId || this._$historyIds?.length) {
                 resultDef = this._callQuery('UnionMultiHistoryIndexesList', {
@@ -174,7 +195,14 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
         return resultPromise;
     }
 
-    private _addFromData(data: any): any {
+    private _addFromData(data: unknown, singleFilterParams?: unknown): unknown {
+        if (this._$multiHistoryId) {
+            return this._getHistoryDataSource().call('AddFromDataAndSetParams', {
+                history_id: this._$historyId,
+                data,
+                params: singleFilterParams // { "test_param" : {"data": "test_param_data"}}
+            });
+        }
         return this._getHistoryDataSource().call('AddFromData', {
             history_id: this._$historyId,
             data
@@ -255,10 +283,11 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
         return this._deleteItem(data, meta);
     }
 
-    query(): Deferred<DataSet> {
+    query(query?: Query): Deferred<DataSet> {
         const historyId = this.getHistoryIdForStorage();
         const storageDef = LoadPromisesStorage.read(historyId);
         const storageData = DataStorage.read(historyId);
+        const singleHistoryIds = query?.getWhere().singleHistoryIds;
         let resultDef;
 
         const getHistoryDataSet = (): DataSet => {
@@ -292,7 +321,7 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
                 });
                 resultDef = Deferred.success(emptyData);
             } else {
-                resultDef = this._load();
+                resultDef = this._load(singleHistoryIds);
             }
             LoadPromisesStorage.write(historyId, resultDef);
 

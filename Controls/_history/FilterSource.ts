@@ -491,7 +491,7 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          if (!this._loadDef || this._loadDef.isReady()) {
             this._loadDef = new Deferred();
 
-            this.historySource.query().addCallback((data) => {
+            this.historySource.query(query).addCallback((data) => {
                _private.initHistory(this, data);
                prepareHistory();
             }).addErrback((error): Promise<sourceLib.DataSet> => {
