@@ -2,7 +2,7 @@ import {Record} from 'Types/entity';
 
 export interface IViewOptions {
     autoEdit?: boolean;
-    editObject?: Record;
+    editingObject?: Record;
     toolbarVisible?: boolean;
     backgroundStyle?: string;
 }
@@ -44,7 +44,7 @@ export interface IView {
  */
 
 /**
- * @name Controls/_editableArea/interface/IView#editObject
+ * @name Controls/_editableArea/interface/IView#editingObject
  * @cfg {Types/entity:Record} Запись с исходными данными.
  * @demo Controls-demo/EditableArea/View/Index
  * @see editObjectChanged

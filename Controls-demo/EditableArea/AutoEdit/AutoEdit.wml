@@ -3,8 +3,8 @@
       <div class="ControlsDemo-EditableArea__title controls-text-label">autoEdit = false</div>
       <Controls.editableArea:View
          autoEdit="{{false}}"
-         editObject="{{_editObject}}">
-         <Controls.editableArea:Base bind:value="content.editObject.text">
+         editingObject="{{_editObject}}">
+         <Controls.editableArea:Base bind:value="content.editingObject.text">
             <ws:editorTemplate>
                <Controls.input:Text contrastBackground="{{true}}" attr:class="controls-Input_negativeOffset"/>
             </ws:editorTemplate>
@@ -15,8 +15,8 @@
       <div class="controls-text-label">autoEdit = true</div>
       <Controls.editableArea:View
          autoEdit="{{true}}"
-         editObject="{{_editObject}}">
-         <Controls.editableArea:Base bind:value="content.editObject.text">
+         editingObject="{{_editObject}}">
+         <Controls.editableArea:Base bind:value="content.editingObject.text">
             <ws:editorTemplate>
                <Controls.input:Text contrastBackground="{{true}}" attr:class="controls-Input_negativeOffset"/>
             </ws:editorTemplate>
