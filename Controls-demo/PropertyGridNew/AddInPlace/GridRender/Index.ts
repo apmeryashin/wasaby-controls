@@ -11,6 +11,7 @@ export default class Demo extends Control<IControlOptions> {
     protected _editingObject: Model;
     protected _typeDescription: RecordSet;
     protected _itemActions: IItemAction[];
+    private _fakeItemId: number = 0;
 
     protected _beforeMount(): void {
         this._editingObject = new Model<IPropertyGridItem>({
@@ -44,15 +45,19 @@ export default class Demo extends Control<IControlOptions> {
     }
 
     protected _beginAdd(): void {
-        this._children.propertyGrid.beginAdd();
-    }
-
-    protected _beginAddTemplated(): void {
-        this._children.propertyGrid.beginAdd({
-            item: new Model({
-                keyProperty: 'key',
-                rawData: {key: ++this._fakeItemId, title: 'Новая запись...'}
-            })
+        (new Promise((resolve) => {
+            const newItem = new Model({
+                keyProperty: 'name',
+                rawData: {
+                    name: 'dynamicString' + (++this._fakeItemId),
+                    caption: 'Не пусто!',
+                    isDynamic: true,
+                    editorTemplateName: 'Controls/propertyGrid:StringEditor'
+                }
+            });
+            resolve(this._typeDescription.add(newItem));
+        })).then((newItem) => {
+            this._children.propertyGrid.beginEdit({item: newItem});
         });
     }
 

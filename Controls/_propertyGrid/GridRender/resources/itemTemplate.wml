@@ -39,6 +39,13 @@
                collectionItem="{{_options.collectionItem}}"/>
 </ws:if>
 <ws:else>
+    <ws:if data="{{contentTemplate}}">
+        <ws:partial template="{{contentTemplate}}"
+                    item="{{ collectionItem }}"
+                    useDisplayEditInPlace="{{false}}"
+                    highlightOnHover="{{ highlightOnHover }}"
+        />
+    </ws:if>
     <ws:if data="{{!item.editorOptions.jumpingLabel && (item.caption || item.captionTemplate)}}">
         <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden'}}">
             <ws:if data="{{captionPosition === 'top'}}">

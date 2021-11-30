@@ -72,6 +72,11 @@ interface IBeginAddOptions {
     columnIndex?: number;
 }
 
+interface IBeginEditOptions {
+    shouldActivateInput?: boolean;
+    columnIndex?: number;
+}
+
 interface IBeginEditUserOptions extends IBeginAddOptions {
     item?: Model;
 }
@@ -1108,15 +1113,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     // region editInPlace
 
-    beginAdd(userOptions: IBeginEditUserOptions): Promise<void | { canceled: true }> {
-        if (this._options.readOnly) {
-            return PropertyGridView._rejectEditInPlacePromise('beginAdd');
-        }
-        return this._beginAdd(userOptions, {
-            addPosition: userOptions?.addPosition || this._getEditingConfig(this._options).addPosition,
-            targetItem: userOptions?.targetItem,
+    beginEdit(userOptions: object): Promise<void | {canceled: true}> {
+        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
+        return this._beginEdit(userOptions, {
             shouldActivateInput: userOptions?.shouldActivateInput,
-            columnIndex: (userOptions?.columnIndex || 0)
+            columnIndex: (userOptions?.columnIndex || 0) + hasCheckboxes
         });
     }
 
@@ -1151,28 +1152,17 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         };
     }
 
-    private _beginAdd(userOptions: IBeginEditUserOptions, {
-        shouldActivateInput = true,
-        addPosition = 'bottom',
-        targetItem,
-        columnIndex}: IBeginAddOptions = {}): Promise<void | {canceled: true}> {
+    private _beginEdit(userOptions: object,
+                       beginEditOption: IBeginEditOptions = {}): Promise<void | {canceled: true}> {
+        const {shouldActivateInput = true, columnIndex} = beginEditOption;
         return this._getEditInPlaceController()
-            .add(userOptions, {addPosition, targetItem, columnIndex})
-            .then((addResult) => {
-                if (addResult && addResult.canceled) {
-                    return addResult;
-                }
-                if (shouldActivateInput) {
+            .edit(userOptions, { columnIndex })
+            .then((result) => {
+                if (shouldActivateInput && !(result && result.canceled)) {
                     this._editInPlaceInputHelper.shouldActivate();
-                    // нужно вручную вызвать перерисовку, чтобы поставить фокус на инпут, который уже точно отрисовался
                     this._forceUpdate();
                 }
-                if (!this._isMounted) {
-                    return addResult;
-                }
-                if (this._selectionController) {
-                    this._selectionController.setSelection(this._selectionController.getSelection());
-                }
+                return result;
             });
     }
 
@@ -1215,16 +1205,18 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             if (!params.isAdd) {
                 return result;
             } else {
+                const addedItem = result?.item || params.options?.item;
                 const recordSet: RecordSet = this._listModel.getCollection() as undefined as RecordSet;
-                const item = recordSet.add();
-                return {item};
+                //const item = recordSet.add({});
+                //return {item};
+                // console.log(params);
             }
 
             //region Обработка добавления записи
             // const sourceController = this.getSourceController();
             // Добавляемы итем берем либо из результата beforeBeginEdit
             // либо из параметров запуска редактирования
-            // const addedItem = result?.item || params.options?.item;
+
 
             // Если нет источника и к нам не пришел новый добавляемый итем, то ругаемся
             // if (!sourceController && !addedItem) {
