@@ -7,6 +7,8 @@
                 translucent="{{false}}"
                 inlineHeight="l"
                 menuIconStyle="contrast"
+                parentProperty="parent"
+                nodeProperty="@parent"
         />
     </div>
     <div class="controlsDemo__cell" data-qa="controlsDemo_Toolbar__translucent-true">
@@ -17,6 +19,8 @@
                 translucent="{{true}}"
                 inlineHeight="l"
                 menuIconStyle="contrast"
+                parentProperty="parent"
+                nodeProperty="@parent"
         />
     </div>
 </div>
