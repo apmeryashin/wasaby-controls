@@ -1,4 +1,5 @@
 import * as DataContext from 'Core/DataContext';
+import {getDimensions} from 'Controls/sizeUtils';
 import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
 import {IEdgesData} from 'Controls/_stickyEnvironment/interfaces';
 
@@ -18,14 +19,15 @@ interface IPinControllerCfg<T = unknown> {
 }
 
 /**
- * Внутренний контроллер, через который организуется связь между DataPinContainer и DataPinConsumer.
- * DataPinContainer уведомляет о пересечении с верхней границей, контроллер обрабатывает эту информацию
- * и уведомляет DataPinConsumer о новых данных.
+ * Внутренний контроллер, который хранит стек данных, положение которых нужно отслеживать относительно
+ * нижней или верхней границы ScrollContainer.
  */
 export class PinController<T = unknown> extends DataContext {
 
     _moduleName: string;
 
+    // Внутренний стек данных, который собираем на основании события пересечения
+    // их элементов с нижней или верхней границами ScrollContainer
     private _stack: Array<IStackItem<T>> = [];
 
     // Обработчики, которые должны быть вызваны
@@ -82,22 +84,30 @@ export class PinController<T = unknown> extends DataContext {
      */
     private updateStack(entry: IntersectionObserverSyntheticEntry): void {
         const data = entry.data as unknown as T;
-        // getBoundingClientRect для элемента списка, который пересек границы ScrollContainer
-        const targetBounds = entry.nativeEntry.boundingClientRect;
-        const index = this._stack.findIndex((item) => item.data === data);
-
         // Пропускаем запись если она уже есть в стеке.
-        if (index >= 0) {
+        if (this._stack.findIndex((item) => item.data === data) >= 0) {
             return;
         }
 
         let targetIndex;
         const element = entry.nativeEntry.target as HTMLElement;
+        // getBoundingClientRect для элемента списка, который пересек границы ScrollContainer
+        const targetBounds = getDimensions(element);
+        const lastStackElem = this._stack.length && this._stack[this._stack.length - 1].element;
+
+        // Сразу проверим целевой элемент относительно последнего элемента стека
+        // что бы не перебирать его весь. Т.к. обычно данный загружаются либо в конец списка либо в начало
+        if (lastStackElem && getDimensions(lastStackElem).top < targetBounds.top) {
+            this._stack.push({data, element});
+            return;
+        }
 
         // Пробегаемся по стеку и ищем первый элемент верхняя границы которого выше
         // верхней границы текущего элемента, пересечение которого обрабатываем
         for (targetIndex = 0; targetIndex < this._stack.length; targetIndex++) {
-            if (this._stack[targetIndex].element.getBoundingClientRect().top > targetBounds.top) {
+            const stackElementDimensions = getDimensions(this._stack[targetIndex].element);
+
+            if (stackElementDimensions.top > targetBounds.top) {
                 break;
             }
         }
@@ -117,7 +127,7 @@ export class PinController<T = unknown> extends DataContext {
 
         for (let i = 0; i < this._stack.length; i++) {
             const stackItem = this._stack[i];
-            const targetBounds = stackItem.element.getBoundingClientRect();
+            const targetBounds = getDimensions(stackItem.element);
 
             if (targetBounds.top < rootBounds.top) {
                 aboveTop = stackItem.data;
