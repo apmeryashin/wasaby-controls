@@ -4,12 +4,10 @@ import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import {MonthModel as modelViewModel} from 'Controls/calendar';
 import {
-    IDateRangeSelectable,
-    rangeSelection as rangeSelectionUtils,
-    keyboardPeriodController, IRangeSelectableOptions, IDateRangeSelectableOptions, IDateRangeOptions
+    IDateRangeSelectable, IRangeSelectableOptions, IDateRangeSelectableOptions, IDateRangeOptions
 } from 'Controls/dateRange';
+import rangeSelectionUtils from 'Controls/_datePopup/RangeSelection';
 import {Base as dateUtils} from 'Controls/dateUtils';
-import {constants} from 'Env/Env';
 import * as coreMerge from 'Core/core-merge';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 

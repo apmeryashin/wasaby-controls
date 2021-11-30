@@ -2,6 +2,7 @@ import getPeriodType = require('Core/helpers/Date/getPeriodType');
 import getPeriodLengthInMonthByType = require('Core/helpers/Date/getPeriodLengthInMonthByType');
 import periodTypes = require('Core/helpers/Date/periodTypes');
 import {Range, Base as dateUtils} from 'Controls/dateUtils';
+import {IDateConstructorOptions} from 'Controls/interface';
 
 const enum SLIDE_DATE_TYPE {
     days,
@@ -9,13 +10,19 @@ const enum SLIDE_DATE_TYPE {
     years
 }
 
+type TRange = [Date | null, Date | null];
+
+export interface IModel extends IDateConstructorOptions {
+    bindType: string;
+}
+
 class ModuleClass {
-    ranges: Date[][];
+    ranges: TRange[];
     private _steps: number[];
-    private _relationMode: String;
+    private _relationMode: string;
     private _dateConstructor: Function;
 
-    constructor(options) {
+    constructor(options: IModel) {
         this.update(options);
     }
 
@@ -23,14 +30,14 @@ class ModuleClass {
      * Updates model fields.
      * @param options
      */
-    update(options) {
+    update(options: IModel): void {
         this.ranges = this._getRangesFromOptions(options);
         this._updateSteps(this.ranges);
         this._relationMode = options.bindType;
         this._dateConstructor = options.dateConstructor;
     }
 
-    updateRanges(start, end, changedRangeIndex, relationMode) {
+    updateRanges(start: Date, end: Date, changedRangeIndex: number, relationMode: string): void {
         if (this._rangeIsNotEmpty([start, end])) {
             let oldRelationMode;
             let newRanges;
@@ -60,36 +67,37 @@ class ModuleClass {
         }
     }
 
-    get bindType() {
+    // TODO: https://online.sbis.ru/opendoc.html?guid=51df3deb-24db-42ef-9a79-f71fb367fda5
+    get bindType(): string {
         return this._relationMode;
     }
 
-    set bindType(value) {
+    set bindType(value: string) {
         this._relationMode = value;
     }
 
-    get relationMode() {
+    get relationMode(): string {
         return this._relationMode;
     }
 
-    set relationMode(value) {
+    set relationMode(value: string) {
         this._relationMode = value;
     }
-    shiftForward() {
+    shiftForward(): void {
         this._shift(1);
     }
 
-    shiftBackward() {
+    shiftBackward(): void {
         this._shift(-1);
     }
 
-    private _shift(delta) {
+    private _shift(delta: number): void {
         this.ranges = this.ranges.map((range) => {
             return Range.shiftPeriod(range[0], range[1], delta);
         });
     }
 
-    private _autoRelation(ranges, updatedRange, changedRangeIndex) {
+    private _autoRelation(ranges: TRange[], updatedRange: TRange, changedRangeIndex: number): void {
         let periodType;
 
         periodType = getPeriodType(updatedRange[0], updatedRange[1]);
@@ -125,7 +133,8 @@ class ModuleClass {
          }
     }
 
-    private _updateRelation(updatedPeriodType, updatedStartValue, startValue, capacityChanged) {
+    private _updateRelation(updatedPeriodType: string, updatedStartValue: Date,
+                            startValue: Date, capacityChanged: boolean): void {
         let step;
 
         // The linking is turned on only if we switch to year mode and this means that the offset between periods
@@ -150,7 +159,7 @@ class ModuleClass {
         }
     }
 
-    private _updateSteps(dateRanges) {
+    private _updateSteps(dateRanges: TRange[]): void {
         this._steps = [];
         for (const i = 0; i < dateRanges.length - 1; i++) {
             const currentRange = dateRanges[i];
@@ -165,14 +174,14 @@ class ModuleClass {
         return range[0] !== null && range[1] !== null;
     }
 
-    private _resetSteps(step) {
+    private _resetSteps(step: number): void {
         this._steps = [];
         for (let i = 0; i < this.ranges.length - 1; i++) {
             this._steps.push(step);
         }
     }
 
-    private _getMonthCount(start, end) {
+    private _getMonthCount(start: Date, end: Date): number {
         return end.getFullYear() * 12 + end.getMonth() - start.getFullYear() * 12 - start.getMonth();
     }
 
@@ -188,7 +197,7 @@ class ModuleClass {
         return -1;
     }
 
-    private _getRangesFromOptions(options) {
+    private _getRangesFromOptions(options: IModel): TRange[] {
         const ranges = [];
         let i;
         let j;
@@ -213,15 +222,16 @@ class ModuleClass {
         return ranges;
     }
 
-    private _periodTypeIsDay(periodType) {
+    private _periodTypeIsDay(periodType: periodTypes): boolean {
         return (periodType === periodTypes.day || periodType === periodTypes.days);
     }
 
-    private _periodTypeIsYears(periodType) {
+    private _periodTypeIsYears(periodType: periodTypes): boolean {
         return (periodType === periodTypes.year || periodType === periodTypes.years);
     }
 
-    private _getUpdatedRanges(ranges, rangeIndex, newRange, relationMode, steps) {
+    private _getUpdatedRanges(ranges: TRange[], rangeIndex: number, newRange: TRange,
+                              relationMode: string, steps: number[]): TRange[] {
         let selectionType: SLIDE_DATE_TYPE = SLIDE_DATE_TYPE.months;
         const start = newRange[0];
         const end = newRange[1];
@@ -339,7 +349,7 @@ class ModuleClass {
         return respRanges;
     }
 
-    private _slideStartDate(date, delta, selectionType) {
+    private _slideStartDate(date: Date, delta: number, selectionType: SLIDE_DATE_TYPE): Date {
         if (selectionType === SLIDE_DATE_TYPE.days) {
             // При проходе днями, смещаемся на нужное количество дней.
             return new this._dateConstructor(date.getFullYear(), date.getMonth(), date.getDate() + delta);
@@ -351,7 +361,7 @@ class ModuleClass {
         return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta, 1);
     }
 
-    private _slideEndDate(date, delta, selectionType, periodLength) {
+    private _slideEndDate(date: Date, delta: number, selectionType: SLIDE_DATE_TYPE, periodLength: number): Date {
         if (selectionType === SLIDE_DATE_TYPE.days) {
             return new this._dateConstructor(date.getFullYear(), date.getMonth(), date.getDate() + delta);
         } else if (selectionType === SLIDE_DATE_TYPE.years) {

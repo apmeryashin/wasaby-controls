@@ -1,5 +1,5 @@
-import {Control} from 'UI/Base';
-import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapper');
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import * as template from 'wml!Controls/_dateRange/RelationWrapper/RelationWrapper';
 
 /**
  * Обертка для контрола выбора периодов, с помощью которой периоды могут быть связаны.
@@ -33,10 +33,15 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *
  */
 
-class Component extends Control {
-    protected _template: Function = template;
+interface IRelationWrapper extends IControlOptions {
+    number: number;
+    relationMode: string;
+}
 
-    _onRangeChanged(event, startValue: Date, endValue: Date): void {
+class Component extends Control<IRelationWrapper> {
+    protected _template: TemplateFunction = template;
+
+    _onRangeChanged(event: Event, startValue: Date, endValue: Date): void {
         this._notify('rangeChanged', [startValue, endValue]);
         this._notify(
             'relationWrapperRangeChanged',

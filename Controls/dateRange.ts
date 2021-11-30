@@ -11,8 +11,6 @@ export {default as LinkView} from './_dateRange/LinkView';
 export {default as RangeSelectionController} from './_dateRange/Controllers/RangeSelectionController';
 export {default as DateRangeSelectionController} from './_dateRange/Controllers/DateRangeSelectionController';
 export {default as DateRangeModel} from './_dateRange/DateRangeModel';
-export {default as rangeSelection} from './_dateRange/Utils/RangeSelection';
-export {default as dateRangeQuantum} from './_dateRange/Utils/DateRangeQuantum';
 export {default as IRangeSelectable} from './_dateRange/interfaces/IRangeSelectable';
 export {default as IDayTemplate} from './_interface/IDayTemplate';
 export {default as IPeriodLiteDialog} from './_dateRange/interfaces/IPeriodLiteDialog';
