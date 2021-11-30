@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Stack/Template/Stack/Stack';
 import * as rk from 'i18n!Controls';
+import {Logger} from 'UI/Utils';
 import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 import 'css!Controls/popupTemplate';
@@ -60,6 +61,10 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
         this._updateMaximizeButton(options);
         this._prepareTheme();
         this._maximizeButtonClickCallback = this.changeMaximizedState.bind(this);
+        if (options.closeButtonVisibility !== undefined) {
+            Logger.error('Controls/popupTemplate:Stack : Используется устаревшая опция closeButtonVisibility' +
+                                                                                     ' используйте closeButtonVisible');
+        }
     }
 
     protected _beforeUpdate(options: IStackTemplateOptions): void {

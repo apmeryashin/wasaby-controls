@@ -305,7 +305,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 itemActionVisibilityCallback: options.itemActionVisibilityCallback,
                 additionalProperty: options.additionalProperty,
                 footerContentTemplate: options.popupFooterTemplate,
-                closeButtonVisibility: true,
+                closeButtonVisible: true,
                 dropdownClassName: `controls-Toolbar-${options.direction}__dropdown`
             },
             target: options.direction === 'vertical' ? this._children.toolbarItems : this._children.menuTarget
@@ -356,7 +356,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 root,
                 ...this._getMenuTemplateOptions(),
                 showHeader: item.get('showHeader'),
-                closeButtonVisibility: true,
+                closeButtonVisible: true,
                 headConfig: {
                     icon: item.get('icon'),
                     caption: item.get('title'),

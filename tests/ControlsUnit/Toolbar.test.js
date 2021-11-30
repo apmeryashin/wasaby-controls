@@ -315,7 +315,7 @@ define(
                         itemTemplateProperty: 'myTemplate',
                         closeButtonViewMode: 'link',
                         showHeader: true,
-                        closeButtonVisibility: true,
+                        closeButtonVisible: true,
                         headConfig: {
                            icon: 'icon icon-size',
                            caption: 'title',
@@ -338,7 +338,7 @@ define(
 
                 testItem.set('showHeader', false);
                 expectedConfig.templateOptions.showHeader = false;
-                expectedConfig.templateOptions.closeButtonVisibility = true;
+                expectedConfig.templateOptions.closeButtonVisible = true;
                 assert.deepEqual(JSON.stringify((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem)), JSON.stringify(expectedConfig));
             });
             it('get button template options by item', function() {
@@ -456,7 +456,7 @@ define(
                      footerContentTemplate: undefined,
                      itemActions: undefined,
                      itemActionVisibilityCallback: undefined,
-                     closeButtonVisibility: true,
+                     closeButtonVisible: true,
                      dropdownClassName: 'controls-Toolbar-horizontal__dropdown',
                      draggable: undefined
                   };

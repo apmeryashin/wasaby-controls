@@ -5,6 +5,7 @@ import {Controller as ManagerController} from 'Controls/popup';
 import {getRoundClass} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
 import {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 import 'css!Controls/popupTemplate';
+import {Logger} from 'UI/Utils';
 
 export interface IDialogTemplateOptions extends IControlOptions, IPopupTemplateOptions {
 
@@ -41,6 +42,10 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
 
     protected _beforeMount(options: IDialogTemplateOptions): void {
         this._setDragStateByOptions(options);
+        if (options.closeButtonVisibility !== undefined) {
+            Logger.error('Controls/popupTemplate:Dialog : Используется устаревшая опция closeButtonVisibility' +
+                                                                                     ' используйте closeButtonVisible');
+        }
     }
 
     protected _beforeUpdate(options: IDialogTemplateOptions): void {
