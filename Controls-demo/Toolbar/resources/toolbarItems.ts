@@ -493,6 +493,13 @@ export const data = {
             title: 'Задача',
             '@parent': false,
             parent: '8'
-        }
+        }, {
+            id: '9',
+            viewMode: 'icon',
+            icon: 'icon-ArrangePreview',
+            title: 'Плитка',
+            '@parent': false,
+            parent: null
+        },
     ])
 };

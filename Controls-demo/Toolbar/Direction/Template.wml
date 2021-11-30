@@ -8,6 +8,7 @@
                 source="{{_buttonsSource}}"
                 inlineHeight="l"
                 keyProperty="id"
+                on:itemClick="_itemClick()"
         />
     </div>
     <div class="controlsDemo__cell" data-qa="controlsDemo_Toolbar__vertical">
@@ -20,6 +21,7 @@
                 source="{{_buttonsSource}}"
                 inlineHeight="l"
                 keyProperty="id"
+                on:itemClick="_itemClick()"
         />
     </div>
 </div>
