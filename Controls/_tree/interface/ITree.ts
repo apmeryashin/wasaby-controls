@@ -6,6 +6,7 @@ export interface IOptions {
     groupProperty?: string;
     hasChildrenProperty?: string;
     expanderVisibility?: TExpanderVisibility;
+    nodeTypeProperty?: string;
 }
 
 /**
