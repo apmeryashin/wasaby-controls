@@ -22,7 +22,7 @@ function createHistorySource(cfg) {
       recent: (Constants[cfg.recent] || Constants.MAX_HISTORY) + 1,
       favorite: cfg.favorite,
       dataLoaded: true,
-      multiHistoryId: true
+      historyIds: cfg.historyIds
    };
    return new HistorySource({
       originSource: new sourceLib.Memory({

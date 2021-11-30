@@ -24,9 +24,16 @@ import isFilterItemChanged from 'Controls/_filter/Utils/isFilterItemChanged';
 
 import {updateUrlByFilter, getFilterFromUrl} from 'Controls/_filter/Utils/Url';
 
+interface IFilterHistoryParams {
+    [key: string]: {
+        data: IFilterItem
+    };
+}
+
 export interface IFilterHistoryData {
     items: IFilterItem[];
     prefetchParams?: IPrefetchHistoryParams;
+    historyParams: IFilterHistoryParams;
 }
 
 type THistoryData = IFilterHistoryData | IFilterItem[];
@@ -380,7 +387,7 @@ export default class FilterControllerClass extends mixin<
                     historyIds.push(filterItem.historyId);
                 }
             });
-            const source = getHistorySource({historyId, favorite: !!prefetchParams});
+            const source = getHistorySource({historyId, favorite: !!prefetchParams, historyIds});
 
             if (!this._crudWrapper) {
                 this._crudWrapper = new CrudWrapper({
@@ -388,15 +395,15 @@ export default class FilterControllerClass extends mixin<
                 });
             }
 
-            result = this._loadHistorySource(source, historyIds);
+            result = this._loadHistorySource(source);
         }
 
         return result;
     }
 
-    private _loadHistorySource(source, singleHistoryIds?: string[]): Promise<THistoryData> {
+    private _loadHistorySource(source): Promise<THistoryData> {
         return new Promise((resolve) => {
-            this._crudWrapper.query({filter: { $_history: true, singleHistoryIds }})
+            this._crudWrapper.query({filter: { $_history: true }})
                 .then((res) => {
                     let historyResult;
                     const recent = source.getRecent();
@@ -407,6 +414,7 @@ export default class FilterControllerClass extends mixin<
                     } else {
                         historyResult = [];
                     }
+                    historyResult = this._mergeHistoryParams(historyResult, source);
                     resolve(historyResult);
                     return res;
                 })
@@ -416,6 +424,17 @@ export default class FilterControllerClass extends mixin<
                     return error;
                 });
         });
+    }
+
+    private _mergeHistoryParams(filterSource: IFilterItem[], source): IFilterItem[] {
+        const paramsHistoryIds = source.getParams();
+        const history = filterSource.items ? filterSource.items : filterSource;
+        for (const historyId in paramsHistoryIds) {
+            if (paramsHistoryIds.hasOwnProperty(historyId)) {
+                history.push(source.getDataObject(paramsHistoryIds[historyId]));
+            }
+        }
+        return filterSource;
     }
 
     private _deleteCurrentFilterFromHistory(): void {
@@ -556,6 +575,7 @@ export default class FilterControllerClass extends mixin<
         if (this._isFilterItemsChanged(filterButtonItems, fastFilterItems)) {
             result = Prefetch.addPrefetchToHistory(result, prefetchParams);
             result.items = this._prepareHistoryItems(filterButtonItems, fastFilterItems);
+
         }
         return result;
     }
@@ -762,6 +782,10 @@ export default class FilterControllerClass extends mixin<
         } else {
             minimizedItem.name = getPropValue(item, 'name');
             minimizedItem.viewMode = getPropValue(item, 'viewMode');
+        }
+
+        if (getPropValue(item, 'historyId')) {
+            minimizedItem.historyId = getPropValue(item, 'historyId');
         }
         return minimizedItem;
     }
