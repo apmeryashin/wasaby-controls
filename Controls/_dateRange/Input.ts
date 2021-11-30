@@ -76,11 +76,6 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
  * @demo Controls-demo/dateRange/Input/RightFieldTemplate/Index
  */
 
-/**
- * @name Controls/_dateRange/Input#datePopupType
- * @variant shortDatePicker Быстрый выбор периода
- */
-
 export default class DateRangeInput extends Control<IDateRangeInputOptions> implements
         IDateRangeValidators {
     readonly '[Controls/_interface/IDateRangeValidators]': boolean = true;
