@@ -83,8 +83,9 @@ export default class TreeGridCollection<
     }
 
     setNodeTypeProperty(nodeTypeProperty: string): void {
-        super.setNodeTypeProperty(nodeTypeProperty);
+        this._$nodeTypeProperty = nodeTypeProperty;
         this._updateGroupNodeVisibility();
+        this._nextVersion();
     }
 
     setGroupNodeVisibility(groupNodeVisibility: TGroupNodeVisibility): void {
