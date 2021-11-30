@@ -178,6 +178,7 @@ const _private = {
                         return self.scrollToItem(self._fixedItem.key, 'top', false);
                     }
                     //endregion
+                    self._needRestoreScroll = true;
                 });
         }
 
@@ -273,6 +274,7 @@ const _private = {
         self._displayGlobalIndicator();
         return sourceController.load('down', nodeKey).then((list) => {
                 self.stopBatchAdding();
+                self._needRestoreScroll = true;
                 return list;
             })
             .catch((error) => {
