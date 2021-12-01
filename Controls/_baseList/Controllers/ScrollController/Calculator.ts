@@ -19,7 +19,6 @@ import type {
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { IEdgeItemCalculatingParams } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { isEqual } from 'Types/object';
-import { Logger } from 'UI/Utils';
 
 export interface IActiveElementIndexChanged extends IActiveElementIndex {
     activeElementIndexChanged: boolean;
@@ -129,7 +128,6 @@ export class Calculator {
     updateItemsSizes(itemsSizes: IItemsSizes): void {
         if (!isEqual(this._itemsSizes, itemsSizes)) {
             this._itemsSizes = itemsSizes;
-            this._logUpdateItemsSizes();
         }
     }
 
@@ -164,7 +162,6 @@ export class Calculator {
             scrollPosition = itemOffset + edgeItem.borderDistance - viewportSize;
         }
 
-        this._logGetScrollPositionToEdgeItem(edgeItem, scrollPosition);
         return scrollPosition;
     }
 
@@ -222,7 +219,6 @@ export class Calculator {
             }
         }
 
-        this._logGetEdgeVisibleItem(params, edgeItem);
         return edgeItem;
     }
 
@@ -257,7 +253,6 @@ export class Calculator {
             placeholdersChanged = this._updatePlaceholders();
         }
 
-        this._logShiftRangeToDirection(direction, oldRange, oldPlaceholders);
         return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
     }
 
@@ -391,7 +386,6 @@ export class Calculator {
         });
 
         const placeholdersChanged = this._updatePlaceholders();
-        this._logAddItems(position, count, oldRange, oldPlaceholders);
         return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
     }
 
@@ -565,76 +559,4 @@ export class Calculator {
                                                 totalCount: number): boolean {
         return direction === 'backward' ? range.startIndex > 0 : range.endIndex < (totalCount - 1);
     }
-
-    // TODO SCROLL Обсудить, как минимум оставлю пока правлю все тесты
-    // region Debug
-
-    static _debug: boolean = false;
-
-    private _logAddItems(
-        position: number,
-        count: number,
-        oldRange: IItemsRange,
-        oldPlaceholders: IPlaceholders
-    ): void {
-        if (Calculator._debug) {
-            let msg = 'Controls/baseList:ScrollCalculator::addItems.\n';
-            msg += ` Позиция добавления: ${position}. Кол-во добавленных элементов: ${count}\n`;
-            msg += ` Старый диапазон: ${JSON.stringify(oldRange)}\n`;
-            msg += ` Новый диапазон: ${JSON.stringify(this._range)}\n`;
-            msg += ` Старые плейсхолдеры: ${JSON.stringify(oldPlaceholders)}\n`;
-            msg += ` Новые плейсхолдеры: ${JSON.stringify(this._placeholders)}\n`;
-            Logger.info(msg);
-        }
-    }
-
-    private _logGetEdgeVisibleItem(params: IEdgeItemCalculatingParams, edgeItem: IEdgeItem): void {
-        if (Calculator._debug) {
-            let msg = 'Controls/baseList:ScrollCalculator::getEdgeVisibleItem.\n';
-            msg += `Параметры для определения EdgeItem: ${JSON.stringify(params)}.\n`;
-            msg += `Размер вьюпорта: ${this._viewportSize}.\n`;
-            msg += `Позиция скролла: ${this._scrollPosition}.\n`;
-            // msg += `Размеры элементов: ${JSON.stringify(this._itemsSizes)}.\n`;
-            msg += `EdgeItem: ${JSON.stringify(edgeItem)}.\n`;
-            Logger.info(msg);
-        }
-    }
-
-    private _logGetScrollPositionToEdgeItem(edgeItem: IEdgeItem, newScrollPosition: number): void {
-        if (Calculator._debug) {
-            let msg = 'Controls/baseList:ScrollCalculator::getScrollPositionToEdgeItem.\n';
-            msg += `EdgeItem: ${JSON.stringify(edgeItem)}.\n`;
-            msg += `Placeholders: ${JSON.stringify(this._placeholders)}.\n`;
-            msg += `ItemSize: ${JSON.stringify(this._itemsSizes[edgeItem.index])}.\n`;
-            msg += `Размер вьюпорта: ${this._viewportSize}.\n`;
-            msg += `Позиция скролла: ${this._scrollPosition}.\n`;
-            msg += `Новая позиция скролла: ${newScrollPosition}.\n`;
-            Logger.info(msg);
-        }
-    }
-
-    private _logShiftRangeToDirection(
-        direction: IDirection,
-        oldRange: IItemsRange,
-        oldPlaceholders: IPlaceholders
-    ): void {
-        if (Calculator._debug) {
-            let msg = 'Controls/baseList:ScrollCalculator::shiftRangeToDirection.\n';
-            msg += ` Направление: ${direction}\n`;
-            msg += ` Старый диапазон: ${JSON.stringify(oldRange)}\n`;
-            msg += ` Новый диапазон: ${JSON.stringify(this._range)}\n`;
-            msg += ` Старые плейсхолдеры: ${JSON.stringify(oldPlaceholders)}\n`;
-            msg += ` Новые плейсхолдеры: ${JSON.stringify(this._placeholders)}\n`;
-            Logger.info(msg);
-        }
-    }
-    private _logUpdateItemsSizes() {
-        if (Calculator._debug) {
-            let msg = 'Controls/baseList:ScrollCalculator::updateItemsSizes.\n';
-            msg += ` Новые размеры элементов: ${JSON.stringify(this._itemsSizes)}\n`;
-            Logger.info(msg);
-        }
-    }
-
-    // endregion Debug
 }
