@@ -31,6 +31,7 @@
                                 keyProperty="{{_options.keyProperty}}"
                                 index="{{index}}"
                                 item="{{_items.at(index)}}"
+                                _isItemTemplate={{true}}
                                 inlineHeight="{{_options.inlineHeight}}"/>
                 </div>
                 <ws:if data="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}">
