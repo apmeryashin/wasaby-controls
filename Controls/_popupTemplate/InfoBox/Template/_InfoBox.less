@@ -248,13 +248,15 @@
    bottom: calc(var(--arrow_side_length_infobox)/2);
 }
 
+@infoboxTemplate_arrow-indent: calc(var(--arrow_offset_infobox) + ((var(--arrow_base_length_infobox) - var(--arrow_side_length_infobox))/2) + var(--border-thickness));
+
 .controls-InfoBoxTemplate__arrow-top, .controls-InfoBoxTemplate__arrow-bottom {
    &.controls-InfoBoxTemplate__arrow-position-start {
-      left: calc(var(--arrow_offset_infobox) + ((var(--arrow_base_length_infobox) - var(--arrow_side_length_infobox))/2) + var(--border-thickness));
+      left: @infoboxTemplate_arrow-indent;
    }
 
    &.controls-InfoBoxTemplate__arrow-position-end {
-      right: calc(var(--arrow_offset_infobox) + ((var(--arrow_base_length_infobox) - var(--arrow_side_length_infobox))/2) + var(--border-thickness));
+      right: @infoboxTemplate_arrow-indent;
    }
 }
 
@@ -270,10 +272,11 @@
 
 .controls-InfoBoxTemplate__arrow-left, .controls-InfoBoxTemplate__arrow-right {
    &.controls-InfoBoxTemplate__arrow-position-start {
-      top: calc(var(--arrow_offset_infobox) + ((var(--arrow_base_length_infobox) - var(--arrow_side_length_infobox))/2) + var(--border-thickness));
+      top: @infoboxTemplate_arrow-indent;
    }
+
    &.controls-InfoBoxTemplate__arrow-position-end {
-      bottom: calc(var(--arrow_offset_infobox) + ((var(--arrow_base_length_infobox) - var(--arrow_side_length_infobox))/2) + var(--border-thickness));
+      bottom: @infoboxTemplate_arrow-indent;
    }
 }
 
