@@ -1,0 +1,60 @@
+.controls-FilterViewPanel__additional-editors-container {
+   flex-grow: 1;
+   padding-bottom: var(--offset_m);
+   background-color: var(--master_item_background-color_list); //цвет такой же как в мастер-деталь
+}
+
+.controls-FilterViewPanel__additional-caption {
+   color: var(--label_text-color);
+   margin-right: var(--offset_m);
+   margin-left: var(--offset_xl);
+   padding-bottom: var(--offset_xs);
+   font-size: var(--font-size_xs);
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
+}
+
+.controls-FilterViewPanel__additional-editors {
+   display: flex;
+   flex-wrap: wrap;
+   width: 100%;
+   box-sizing: border-box;
+   padding-left: calc(var(--offset_xl) - var(--additional-editor_horizontal-offset_filterViewPanel));
+   padding-right: var(--offset_m);
+}
+
+.controls-FilterViewPanel__additional_left-column,
+.controls-FilterViewPanel__additional_right-column {
+   min-width: 50%;
+   display: flex;
+   flex-direction: column;
+}
+
+.controls-FilterViewPanel__additional-editor {
+   display: inline-block;
+}
+
+.controls-FilterViewPanel-additional__footer {
+   display: flex;
+   justify-content: center;
+   width: 100%;
+}
+
+.controls-FilterViewPanel__additional-default {
+   border-top: var(--border-thickness) solid var(--border-color_switcher);
+}
+
+.controls-FilterViewPanel__additional-editor {
+   cursor: pointer;
+   height: var(--inline_height_s);
+   padding: var(--offset_3xs) var(--additional-editor_horizontal-offset_filterViewPanel);
+   margin-bottom: var(--offset_2xs);
+   margin-right: auto;
+   border-radius: var(--border-radius_m);
+}
+
+.ws-is-hover {
+   .controls-FilterViewPanel__additional-editor:hover {
+      background: var(--unaccented_hover_same_background-color);
+   }
+}

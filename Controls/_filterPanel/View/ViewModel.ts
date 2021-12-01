@@ -7,6 +7,7 @@ import {VersionableMixin} from 'Types/entity';
 import {mixin} from 'Types/util';
 import {FilterUtils} from 'Controls/filter';
 import * as coreClone from 'Core/core-clone';
+import {MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS} from 'Controls/_filterPanel/Constants';
 import {RecordSet} from 'Types/collection';
 import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource';
 
@@ -155,6 +156,31 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             this._collapsedGroups = this._collapsedGroups.filter((item) => group !== item);
             this._nextVersion();
         }
+    }
+
+    getAdditionalColumns(isAdditionalListExpanded: boolean): object {
+        const extendedItems = this.getExtendedFilterItems();
+        const countColumnItems = extendedItems.length / 2;
+        const maxCountVisibleItems = isAdditionalListExpanded ? countColumnItems : MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
+        const columns = {
+            right: [],
+            left: []
+        };
+
+        extendedItems.forEach((item, index) => {
+            if (columns.left.length < maxCountVisibleItems && !(index % 2)) {
+                columns.left.push(item);
+            } else if (columns.right.length < maxCountVisibleItems) {
+                columns.right.push(item);
+            }
+        });
+
+        return columns;
+    }
+
+    needToCutColumnItems(): boolean {
+        const extendedItems = this.getExtendedFilterItems();
+        return extendedItems.length / 2 > MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
     }
 
     getBasicFilterItems(): IFilterItem[] {
