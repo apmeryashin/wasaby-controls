@@ -8,14 +8,14 @@
                attr:test_name="default_range"/>
          </div>
          <div class="PageBlock__componentWrap ControlsDemo-RangeLinkLite_capture">
-            <Controls.date:ContextProvider>
+            <Controls.date:ContextProvider
+                    attr:test_name="show_arrow_range">
                <div class="ControlsDemo-RangeLinkLite__container">
                   <Controls.dateRange:SelectorConsumer
                           datePopupType="shortDatePicker"
                           attr:class="ws-flex-grow-1"
                           bind:startValue="_startValueHalfYear"
                           bind:endValue="_endValueHalfYear"
-                          attr:test_name="show_arrow_range"
                   />
                   <Controls.date:ArrowButtonConsumer direction="left" attr:class="controls-margin_left-m"/>
                   <Controls.date:ArrowButtonConsumer direction="right" attr:class="controls-margin_left-m"/>
