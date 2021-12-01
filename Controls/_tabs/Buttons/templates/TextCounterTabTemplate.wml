@@ -1,5 +1,5 @@
 <div class="ws-flexbox ws-align-self-baseline">
-    <div class="controls-Tabs_margin-left controls-Tabs_itemClickableArea-caption">{{item.caption}}</div>
+    <div class="controls-Tabs_itemClickableArea-caption">{{item.caption}}</div>
     <ws:if data="{{item.icon}}">
         <div class="controls-Tabs_margin-left ws-align-self-center">
             <div class="icon-{{item.icon}} controls-icon_size-{{item.iconSize || 's'}}
