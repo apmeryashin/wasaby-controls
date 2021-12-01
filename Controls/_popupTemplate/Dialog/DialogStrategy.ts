@@ -299,7 +299,7 @@ export class DialogStrategy {
 
         return {
             minWidth: popupOptions.minWidth,
-            minHeight: Math.min(popupOptions.minHeight, maxHeight),
+            minHeight: popupOptions.minHeight,
             maxHeight,
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
         };
