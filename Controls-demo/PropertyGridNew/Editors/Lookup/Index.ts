@@ -1,6 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls-demo/PropertyGridNew/Editors/Lookup/Index';
 import {Memory} from 'Types/source';
+import {names as data} from './resources/LookupData';
 
 export default class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -12,20 +13,7 @@ export default class Index extends Control<IControlOptions> {
             editorOptions: {
                 source: new Memory({
                     keyProperty: 'key',
-                    data: [
-                        {
-                            key: 1,
-                            title: 'First option'
-                        },
-                        {
-                            key: 2,
-                            title: 'Second option'
-                        },
-                        {
-                            key: 3,
-                            title: 'Third option'
-                        }
-                    ]
+                    data
                 }),
                 keyProperty: 'key',
                 displayProperty: 'title',

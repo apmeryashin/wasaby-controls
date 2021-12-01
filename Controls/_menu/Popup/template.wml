@@ -1,6 +1,7 @@
 <ws:template name="menuPopup" >
    <div class="controls_dropdownPopup_theme-{{_options.theme}} controls-Menu__popup"
         on:mouseEnter="_mouseEvent()"
+        on:mouseMove="_mouseEvent()"
         on:mouseLeave="_mouseEvent()">
       <Controls.popupTemplate:Sticky
               attr:class="controls-Popup__isolatedFocusingContext
@@ -32,6 +33,7 @@
               searchDelay="{{_options.searchDelay}}"
               headerBackgroundStyle="transparent"
               markerVisibility="{{_options.markerVisibility}}"
+              verticalDirection="{{_verticalDirection}}"
               on:mouseenter="_mouseEnterHandler()"
               on:headerMouseEnter="_headerMouseEnter()"
               on:headerClick="_headerClick()"
@@ -138,6 +140,7 @@
                        on:beforeSubMenuOpen="_prepareSubMenuConfig()"
                        on:selectedItemsChanged="_setSelectedItems()"
                        on:subMenuMouseenter="_sendResult('subMenuMouseenter')"
+                       on:expanderClick="_expanderClick()"
                />
             </div>
          </ws:bodyContentTemplate>

@@ -33,9 +33,10 @@
 
 <ws:template name="editorTemplate">
     <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
-                caption="{{item.caption}}"
-                attr:class="{{ afterEditorTemplate && options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control'}}"
-                scope="{{_options}}"/>
+                        caption="{{item.caption}}"
+                        attr:class="controls-PropertyGrid__editor_control
+                                    {{ item.caption && _options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control_stretch' }}"
+                        scope="{{_options}}"/>
 </ws:template>
 
 <ws:template name="editingCaptionTemplate">
@@ -130,13 +131,12 @@
     </ws:if>
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
         <div class="controls-PropertyGrid__gridLayout_editor
-                       {{!afterEditorTemplate ? 'controls-PropertyGrid__gridLayout_editor_column'}}
-                       {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
-                       {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
-                       {{(!item.caption || _options.captionPosition === 'top') ? 'controls-PropertyGrid__gridLayout_editor-withoutCaption'}}
-                       {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
-                       {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}
-                       js-controls-ListView__editingTarget"
+                   {{ !item.caption || _options.captionPosition === 'top' ? 'controls-PropertyGrid__gridLayout_editor_justify_center' }}
+                   {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
+                   {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
+                   {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                   {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}
+                   js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor"
              style="{{getEditorStyles(collectionItem, captionPosition, !(item.caption || item.isDynamic))}}">
             <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">

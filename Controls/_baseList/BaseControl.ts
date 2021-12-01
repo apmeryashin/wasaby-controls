@@ -1817,7 +1817,7 @@ const _private = {
                 itemActionsController.deactivateSwipe();
                 // Если ховер заморожен для редактирования по месту, не надо сбрасывать заморозку.
                 if ((!self._editInPlaceController || !self._editInPlaceController.isEditing())) {
-                    _private.addShowActionsClass(self);
+                    _private.addShowActionsClass(self, self._options);
                 }
             }
         }
@@ -2629,7 +2629,7 @@ const _private = {
      */
     initVisibleItemActions(self, options: IList): void {
         if (options.itemActionsVisibility === 'visible') {
-            _private.addShowActionsClass(this);
+            _private.addShowActionsClass(self, options);
             _private.updateItemActions(self, options);
         }
     },
@@ -2889,15 +2889,17 @@ const _private = {
         }
     },
 
-    addShowActionsClass(self): void {
-        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
-        if (!self._destroyed && !TouchDetect.getInstance().isTouch()) {
+    addShowActionsClass(self: BaseControl, options: IList): void {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию.
+        // Если ItemActions видимы всегда, они не должны исчезать свайп устройствах, они присутствуют всегда.
+        if (!self._destroyed && (!TouchDetect.getInstance().isTouch() || options.itemActionsVisibility === 'visible')) {
             self._addShowActionsClass = true;
         }
     },
 
-    removeShowActionsClass(self): void {
-        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
+    removeShowActionsClass(self: BaseControl): void {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию.
+        // Если ItemActions видимы всегда, они не должны исчезать свайп устройствах, они присутствуют всегда.
         if (!self._destroyed && !TouchDetect.getInstance().isTouch() && self._options.itemActionsVisibility !== 'visible') {
             self._addShowActionsClass = false;
         }
@@ -2977,7 +2979,7 @@ const _private = {
             unFreezeHoverCallback: () => {
                 if (!self._itemActionsMenuId) {
                     _private.addHoverEnabledClass(self);
-                    _private.addShowActionsClass(self);
+                    _private.addShowActionsClass(self, self._options);
                 }
             }
         });
@@ -3234,7 +3236,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._useServerSideColumnScroll = typeof shouldPrevent === 'boolean' ? !shouldPrevent : true;
         }
 
-        _private.addShowActionsClass(this);
+        _private.addShowActionsClass(this, newOptions);
 
         return this._doBeforeMount(newOptions);
     }
@@ -6171,7 +6173,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             (!this._editInPlaceController || !this._editInPlaceController.isEditing()) &&
             !this._itemActionsMenuId &&
             (!hoverFreezeController || hoverFreezeController.getCurrentItemKey() === null)) {
-            _private.addShowActionsClass(this);
+            _private.addShowActionsClass(this, this._options);
         }
 
         if (this._dndListController && this._dndListController.isDragging()) {

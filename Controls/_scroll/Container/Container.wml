@@ -1,6 +1,5 @@
 <ws:template name="scrollTpl">
-    <div class="controls-Scroll-Container controls-Scroll controls_scroll_theme-{{ _options.theme }}
-                {{_isMacOS ? 'controls-Scroll-Container_smoothing'}}">
+    <div class="controls-Scroll-Container controls-Scroll controls_scroll_theme-{{ _options.theme }}">
         <ws:partial template="{{_baseTemplate}}"
                     scope="{{_options}}"
                     topShadowVisibility="{{undefined}}"

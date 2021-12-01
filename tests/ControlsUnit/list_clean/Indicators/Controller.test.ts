@@ -398,6 +398,25 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
             controller.destroy(); // уничтожаем все таймеры
         });
+
+        it('double start portioned search but stopCallback called once', async () => {
+            const stopCallback = sinon.spy();
+            const { controller } = initTest(
+                [{id: 1}],
+                { stopDisplayPortionedSearchCallback: stopCallback },
+                {iterative: true }
+            );
+
+            controller.startDisplayPortionedSearch('bottom');
+            fakeTimer.tick(1000);
+            controller.startDisplayPortionedSearch('bottom');
+
+            // ждем приостановки поиска
+            fakeTimer.tick(30001);
+            assert.isTrue(stopCallback.calledOnce);
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
     });
 
     describe('shouldDisplayGlobalIndicator', () => {
