@@ -364,7 +364,7 @@ export default class IndicatorsController {
             if (this._isPortionedSearch()) {
                 this.startDisplayPortionedSearch('top');
             } else {
-                this.displayTopIndicator(scrollToFirstItem, false, isTopIndicatorDisplayed);
+                this.displayTopIndicator(scrollToFirstItem, true, isTopIndicatorDisplayed);
             }
         }
     }
