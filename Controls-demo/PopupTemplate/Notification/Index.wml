@@ -31,7 +31,7 @@
                 <Controls.popupTemplate:NotificationSimple name="myOpenerDanger1"
                                                            text="NotificationSimple- no closeButton"
                                                            style="danger"
-                                                           closeButtonVisibility="{{false}}"
+                                                           closeButtonVisible="{{false}}"
                                                            icon="icon-Subscribe"
 														   attr:class="controlsDemo-Notification__noClose">
                 </Controls.popupTemplate:NotificationSimple>
@@ -45,14 +45,14 @@
                 <Controls.popupTemplate:NotificationSimple name="myOpenerSuccess1"
                                                            text="NotificationSimple- no closeButton, no icon"
                                                            style="success"
-                                                           closeButtonVisibility="{{false}}"
+                                                           closeButtonVisible="{{false}}"
 														   attr:class="controlsDemo-Notification__noCloseIcon">
                 </Controls.popupTemplate:NotificationSimple>
 
                 <Controls.popupTemplate:Notification name="myOpenerDanger2"
                                                      bodyContentTemplate = "Notification - with closeButton"
                                                      style="danger"
-                                                     closeButtonVisibility="{{true}}"
+                                                     closeButtonVisible="{{true}}"
 													 attr:class="controlsDemo-Notification__closeButton">
                 </Controls.popupTemplate:Notification>
 
