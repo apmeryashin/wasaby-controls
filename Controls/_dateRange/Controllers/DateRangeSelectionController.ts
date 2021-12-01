@@ -52,28 +52,30 @@ export default class DateRangeSelectionController extends RangeSelectionControll
         };
 
         this._isSingleQuant = isSingleQuant();
-        this._prepareState(options);
-        super._beforeMount(options);
+        const normalizedOptions = this._prepareState(options);
+        super._beforeMount(normalizedOptions);
     }
 
     protected _beforeUpdate(options: IDateRangeSelectionController): void {
-        this._prepareState(options);
-        super._beforeUpdate(options);
+        const normalizedOptions = this._prepareState(options);
+        super._beforeUpdate(normalizedOptions);
     }
 
-    protected _prepareState(state: IDateRangeSelectionController): void {
-        if (state.hasOwnProperty('startValue')) {
-            state.startValue = DateUtil.normalizeDate(state.startValue);
+    protected _prepareState(state: IDateRangeSelectionController): IDateRangeSelectionController {
+        const newState = {...state};
+        if (newState.hasOwnProperty('startValue')) {
+            newState.startValue = DateUtil.normalizeDate(state.startValue);
         }
-        if (state.hasOwnProperty('endValue')) {
-            state.endValue = DateUtil.normalizeDate(state.endValue);
+        if (newState.hasOwnProperty('endValue')) {
+            newState.endValue = DateUtil.normalizeDate(newState.endValue);
         }
-        if (state.hasOwnProperty('selectionBaseValue')) {
-            state.selectionBaseValue = DateUtil.normalizeDate(state.selectionBaseValue);
+        if (newState.hasOwnProperty('selectionBaseValue')) {
+            newState.selectionBaseValue = DateUtil.normalizeDate(newState.selectionBaseValue);
         }
-        if (state.hasOwnProperty('selectionHoveredValue')) {
-            state.selectionHoveredValue = DateUtil.normalizeDate(state.selectionHoveredValue);
+        if (newState.hasOwnProperty('selectionHoveredValue')) {
+            newState.selectionHoveredValue = DateUtil.normalizeDate(newState.selectionHoveredValue);
         }
+        return newState;
     }
 
     protected _isExternalChanged(valueName: string, options: IDateRangeSelectionController): boolean {
