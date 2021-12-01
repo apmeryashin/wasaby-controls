@@ -8,6 +8,7 @@
                 source="{{_buttonsSource}}"
                 inlineHeight="l"
                 keyProperty="id"
+                attr:data-qa="controls-Toolbar__horizontal"
         />
     </div>
     <div class="controlsDemo__cell">
@@ -20,6 +21,7 @@
                 source="{{_buttonsSource}}"
                 inlineHeight="l"
                 keyProperty="id"
+                attr:data-qa="controls-Toolbar__vertical"
         />
     </div>
 </div>
