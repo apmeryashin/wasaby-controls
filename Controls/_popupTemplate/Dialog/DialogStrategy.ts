@@ -295,11 +295,16 @@ export class DialogStrategy {
                 maxHeight = windowData.height - popupOptions.top;
             }
         }
+        const minHeight = Math.min(popupOptions.minHeight, maxHeight);
         maxHeight = Math.min(maxHeight, windowData.height);
+
+        if (minHeight) {
+            maxHeight = Math.max(minHeight, maxHeight);
+        }
 
         return {
             minWidth: popupOptions.minWidth,
-            minHeight: popupOptions.minHeight,
+            minHeight: Math.min(popupOptions.minHeight, maxHeight),
             maxHeight,
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
         };
