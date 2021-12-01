@@ -367,7 +367,7 @@ export class Calculator {
         const direction = this._calcAddDirection(position, count);
 
         // Корректируем старый диапазон. Т.к. записи добавились  в начало, то все индексы сместятся на count
-        if (direction === 'backward') {
+        if (position === 0) {
             this._range.startIndex = Math.min(this._totalCount, this._range.startIndex + count);
             this._range.endIndex = Math.min(this._totalCount, this._range.endIndex + count);
         }
@@ -397,7 +397,7 @@ export class Calculator {
 
         // Если записи добавили внутрь диапазона, то мы должны ориентироваться по BackwardEdgeItem, чтобы
         // и так видимый элемент остался виден. Поэтому direction='forward', только если записи добавили после диапазона
-        const addBeforeEndIndex = position <= this._range.endIndex;
+        const addBeforeEndIndex = position < this._range.endIndex;
         return addBeforeEndIndex ? 'backward' : 'forward';
     }
 

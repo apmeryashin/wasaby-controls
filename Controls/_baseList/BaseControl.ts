@@ -512,7 +512,8 @@ const _private = {
 
     keyDownHome(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownHome(event).then((key) => self._changeMarkedKey(key));
+            event.stopPropagation();
+            self._listVirtualScrollController.scrollToPage('start').then(self._changeMarkedKey);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -528,7 +529,8 @@ const _private = {
 
     keyDownEnd(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownEnd(event).then((key) => self._changeMarkedKey(key));
+            event.stopPropagation();
+            self._listVirtualScrollController.scrollToPage('end').then(self._changeMarkedKey);
         } else {
             _private.setMarkerAfterScroll(self, event);
             if (self._options.navigation?.viewConfig?.showEndButton) {
@@ -538,14 +540,16 @@ const _private = {
     },
     keyDownPageUp(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownPageUp(event).then((key) => self._changeMarkedKey(key));
+            event.stopPropagation();
+            self._listVirtualScrollController.scrollToPage('backward').then(self._changeMarkedKey);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
     },
     keyDownPageDown(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownPageDown(event).then((key) => self._changeMarkedKey(key));
+            event.stopPropagation();
+            self._listVirtualScrollController.scrollToPage('forward').then(self._changeMarkedKey);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -1085,15 +1089,20 @@ const _private = {
     },
     scrollPage(self, direction) {
         if (!self._scrollPageLocked) {
-            /**
-             * скроллу не нужно блокироваться, если есть ошибка, потому что
-             * тогда при пэйджинге до упора не инициируется цикл обновления
-             * (не происходит подгрузки данных), а флаг снимается только после него
-             * или при ручном скролле - из-за этого пэйджинг перестает работать
-             */
-            self._scrollPageLocked = !self._sourceController?.getLoadError();
-            _private.setMarkerAfterScroll(self);
-            self._notify('doScroll', ['page' + direction], { bubbling: true });
+            if (self._useNewScroll) {
+                const directionCompatibility = direction === 'Up' ? 'backward' : 'forward';
+                self._listVirtualScrollController.scrollToPage(directionCompatibility).then(self._changeMarkedKey);
+            } else {
+                /**
+                 * скроллу не нужно блокироваться, если есть ошибка, потому что
+                 * тогда при пэйджинге до упора не инициируется цикл обновления
+                 * (не происходит подгрузки данных), а флаг снимается только после него
+                 * или при ручном скролле - из-за этого пэйджинг перестает работать
+                 */
+                self._scrollPageLocked = !self._sourceController?.getLoadError();
+                _private.setMarkerAfterScroll(self);
+                self._notify('doScroll', ['page' + direction], { bubbling: true });
+            }
         }
     },
 
@@ -3353,6 +3362,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._scrollToFirstItemAfterDisplayTopIndicator = this._scrollToFirstItemAfterDisplayTopIndicator.bind(this);
         this._hasHiddenItemsByVirtualScroll = this._hasHiddenItemsByVirtualScroll.bind(this);
         this._intersectionObserverHandler = this._intersectionObserverHandler.bind(this);
+        this._changeMarkedKey = this._changeMarkedKey.bind(this);
     }
 
     /**
@@ -4755,7 +4765,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._useNewScroll) {
             const hasNotRenderedChanges = this._hasItemWithImageChanged ||
                 this._indicatorsController.hasNotRenderedChanges();
-            this._listVirtualScrollController.beforeRenderListControl(hasNotRenderedChanges);
+            if (hasNotRenderedChanges) {
+                this._listVirtualScrollController.saveScrollPosition();
+            }
+            this._listVirtualScrollController.beforeRenderListControl();
         } else {
             // save scroll
             let directionToRestoreScroll = this._scrollController &&

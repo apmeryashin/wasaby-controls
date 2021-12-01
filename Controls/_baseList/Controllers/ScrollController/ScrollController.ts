@@ -1,21 +1,16 @@
 import {
-    IItemsSizes,
+    AbstractItemsSizesController,
     IAbstarctItemsSizesControllerOptions,
-    AbstractItemsSizesController
+    IItemsSizes
 } from './ItemsSizeController/AbstractItemsSizeController';
 import {
+    AbstractObserversController,
     IAbstractObserversControllerBaseOptions,
     IAbstractObserversControllerOptions,
-    AbstractObserversController,
-    TIntersectionEvent,
-    ITriggersVisibility
+    ITriggersVisibility,
+    TIntersectionEvent
 } from './ObserverController/AbstractObserversController';
-import {
-    Calculator,
-    IActiveElementIndexChanged,
-    ICalculatorBaseOptions,
-    ICalculatorResult
-} from './Calculator';
+import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalculatorResult} from './Calculator';
 import {CrudEntityKey} from 'Types/source';
 
 export interface IItemsRange {
@@ -334,9 +329,7 @@ export class ScrollController {
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
-        const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
-        return edgeItem.direction === 'forward' ? scrollPosition + beforeContentSize : scrollPosition;
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
     }
 
     /**
