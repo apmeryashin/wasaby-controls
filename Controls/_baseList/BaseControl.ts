@@ -1120,7 +1120,7 @@ const _private = {
             // след. запрос не вернет данные, а скажет ЕстьЕще: false тогда решать будет условие ниже, по высоте
             const visibilityTriggerUp = self._loadTriggerVisibility.up;
             const visibilityTriggerDown = self._loadTriggerVisibility.down;
-            const triggersReady = visibilityTriggerUp !== undefined;
+            const triggersReady = visibilityTriggerUp !== undefined || self._useNewScroll; // TODO SCROLL
             if (
                 triggersReady &&
                 ((hasMoreData.up && !visibilityTriggerUp) || (hasMoreData.down && !visibilityTriggerDown))
