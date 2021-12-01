@@ -28,7 +28,7 @@ export default interface ICaptionFormatter {
  * @example
  * WML:
  * <pre>
- * <Controls.dateRange:RangeSelector captionFormatter="{{_captionFormatter}}" />
+ * <Controls.dateRange:Selector captionFormatter="{{_captionFormatter}}" />
  * </pre>
  * JS:
  * <pre>

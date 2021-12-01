@@ -20,7 +20,7 @@ define([
    describe('Controls/dateRange/Selector', function() {
       describe('_beforeUpdate', function() {
          it('should not generate exceptions if value option is set', function() {
-            const component = calendarTestUtils.createComponent(dateRange.RangeSelector, options);
+            const component = calendarTestUtils.createComponent(dateRange.Selector, options);
             component._beforeUpdate({
                startValue: options.startValue,
                endValue: options.endValue,
@@ -41,7 +41,7 @@ define([
             result: false
          }].forEach(function (test) {
             it('should close popup', function () {
-               const component = calendarTestUtils.createComponent(dateRange.RangeSelector, options);
+               const component = calendarTestUtils.createComponent(dateRange.Selector, options);
                const sandbox = sinon.createSandbox();
 
                sandbox.stub(component._rangeModel, 'setRange');
@@ -71,7 +71,7 @@ define([
             it('should return correct fittingMode in popup options', function() {
                const
                   sandbox = sinon.createSandbox(),
-                  component = calendarTestUtils.createComponent(dateRange.RangeShortSelector, options);
+                  component = calendarTestUtils.createComponent(dateRange.Selector, { ...options, datePopupType: 'shortDatePicker' });
 
                sandbox.stub(component, '_notify');
 
@@ -93,7 +93,7 @@ define([
          it('should set range on model', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(dateRange.RangeSelector, options),
+               component = calendarTestUtils.createComponent(dateRange.Selector, options),
                startValue = new Date(2018, 11, 10),
                endValue = new Date(2018, 11, 13);
 
@@ -118,7 +118,7 @@ define([
 
             const
                 sandbox = sinon.sandbox.create(),
-                component = calendarTestUtils.createComponent(dateRange.RangeSelector, opt),
+                component = calendarTestUtils.createComponent(dateRange.Selector, opt),
                 startValue = new Date(2018, 0, 1),
                 endValue = new Date(2018, 0, 1);
 
@@ -154,7 +154,7 @@ define([
                   replacer: ' ',
                   fontSize: test.fontSize
                };
-               const component = calendarTestUtils.createComponent(dateRange.RangeSelector, opt);
+               const component = calendarTestUtils.createComponent(dateRange.Selector, opt);
                const fontSizeResult = component._getFontSizeClass();
                assert.equal(fontSizeResult, test.result);
             });

@@ -403,6 +403,9 @@ export default class HoverFreeze {
               .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell {
                 background-color: ${hoverBackgroundColor};
               }
+              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .controls-EditingTemplateText_enabled {
+                  background-color: var(--background-color_inputText);
+              }
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .js-controls-ListView__visible-on-hoverFreeze {
                  opacity: 1;
                  visibility: visible;
@@ -414,7 +417,7 @@ export default class HoverFreeze {
               }
               .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell__content .controls-AreaCut__shadow_background-default {
                   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0, ${hoverBackgroundColor} 100%)
-               }
+              }
               `;
     }
 

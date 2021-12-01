@@ -1,11 +1,15 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as coreMerge from 'Core/core-merge';
 import * as coreClone from 'Core/core-clone';
-import RangeSelectrionControllerTmpl = require('wml!Controls/_dateRange/Controllers/RangeSelectionController');
+import * as template from 'wml!Controls/_dateRange/Controllers/RangeSelectionController';
 import IRangeSelectable from './../interfaces/IRangeSelectable';
 import {constants} from 'Env/Env';
 import keyboardPeriodController from '../Utils/keyboardPeriodController';
 import {date as formatDate} from 'Types/formatter';
+import {
+   IDateRangeSelectableOptions,
+   IRangeSelectableOptions
+} from 'Controls/_dateRange/interfaces/IDateRangeSelectable';
+import {IDateRangeOptions} from 'Controls/_dateRange/interfaces/IDateRange';
 
 /**
  * Контроллер, реализующий выделение элементов от одного до другого.
@@ -23,59 +27,52 @@ import {date as formatDate} from 'Types/formatter';
  * @public
  */
 
-export default class RangeSelectionController extends Control<IControlOptions> {
-   _template: TemplateFunction = RangeSelectrionControllerTmpl;
+export interface IRangeSelectionController extends IControlOptions, IDateRangeSelectableOptions,
+    IRangeSelectableOptions, IDateRangeOptions {
+   selectionBaseValue: Date;
+   selectionHoveredValue: Date;
+   hoveredStartValue: Date;
+   hoveredEndValue: Date;
+   selectionProcessing: boolean;
+   rangeSelectedCallback: Function;
+}
 
-   _state: IControlOptions;
-   _selectionType: string;
+export default class RangeSelectionController extends Control<IRangeSelectionController> {
+   protected _template: TemplateFunction = template;
 
-   _selectionProcessing: boolean;
-   _displayedStartValue: Date;
-   _displayedEndValue: Date;
-   _selectionBaseValue: Date;
-   _selectionHoveredValue: Date;
-   _hoveredStartValue: Date;
-   _hoveredEndValue: Date;
+   protected _state: IRangeSelectionController;
+   protected _selectionType: string;
 
-   _startValue: Date;
-   _endValue: Date;
+   private _selectionProcessing: boolean;
+   private _displayedStartValue: Date;
+   private _displayedEndValue: Date;
+   private _selectionBaseValue: Date;
+   private _selectionHoveredValue: Date;
+   private _hoveredStartValue: Date;
+   private _hoveredEndValue: Date;
 
-   _rangeSelectedCallback: Function;
+   private _startValue: Date;
+   private _endValue: Date;
 
-   protected _beforeMount(options): void {
+   protected _beforeMount(options: IRangeSelectionController): void {
       // Приводим копию опций к нормальному виду что бы однотипно работать с ними.
       // Сохраняем старые нормализованные опции в поле _state.
-      options = coreMerge({}, options);
-      this._prepareState(options);
       this._state = options;
       this._selectionType = options.selectionType;
       this._startValue = options.startValue;
       this._endValue = options.endValue;
-      this._rangeSelectedCallback = options.rangeSelectedCallback;
       this._selectionProcessing = options.selectionProcessing;
-      this._displayedStartValue = options.displayedStartValue || this._startValue;
-      this._displayedEndValue = options.displayedEndValue || this._endValue;
+      this._displayedStartValue = this._startValue;
+      this._displayedEndValue = this._endValue;
       this._selectionBaseValue = options.selectionBaseValue;
       this._selectionHoveredValue = options.selectionHoveredValue;
       this._hoveredStartValue = options.hoveredStartValue;
       this._hoveredEndValue = options.hoveredEndValue;
    }
 
-   protected _beforeUpdate(options): void {
+   protected _beforeUpdate(options: IRangeSelectionController): void {
       let isSelectionProcessingExtChanged;
       let changed;
-
-      options = coreMerge({}, options);
-
-      // options = {
-      //    startValue: options.startValue,
-      //    endValue: options.endValue,
-      //    displayedStartValue: options.startValue,
-      //    displayedEndValue: options.displayedEndValue,
-      //    selectionType: options.selectionType
-      // };
-
-      this._prepareState(options);
 
       isSelectionProcessingExtChanged = this._isExternalChanged('selectionProcessing', options, this._state);
 
@@ -124,11 +121,11 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @param event {*}
     * @param item {*} Объект соответствующий элементу.
     */
-   protected _itemClickHandler(event, item): void {
+   protected _itemClickHandler(event: Event, item: Date): void {
       this._itemClick(item);
    }
 
-   private _itemClick(item): void {
+   private _itemClick(item: Date): void {
       if (this._options.readOnly) {
          return;
       }
@@ -146,11 +143,11 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @param item {*} Объект соответствующий элементу.
     * @private
     */
-   protected _itemMouseEnterHandler(event, item): void {
+   protected _itemMouseEnterHandler(event: Event, item: Date): void {
       this._itemMouseEnter(item);
    }
 
-   private _itemMouseEnter(item): void {
+   private _itemMouseEnter(item: Date): void {
       let range;
       if (this._options.readOnly) {
          return;
@@ -182,7 +179,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
       }
    }
 
-   protected _itemMouseLeaveHandler(event, item): void {
+   protected _itemMouseLeaveHandler(): void {
       if (this._options.readOnly) {
          return;
       }
@@ -226,15 +223,6 @@ export default class RangeSelectionController extends Control<IControlOptions> {
    }
 
    /**
-    * Подготавливает объект с оициями перед тем как обновлять состояние контроллера.
-    * @param state
-    * @private
-    */
-   protected _prepareState(state): void {
-       /* For override  */
-   }
-
-   /**
     * Проверяет изменилась ли опция извне.
     * @param valueName название опции
     * @param options новые опции
@@ -243,12 +231,13 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * или это не новое значение которое пришло при двустороннем банде.
     * @private
     */
-   protected _isExternalChanged(valueName, options, oldOptions): boolean {
+   protected _isExternalChanged(valueName: string, options: IRangeSelectionController,
+                                oldOptions: IRangeSelectionController): boolean {
       return options.hasOwnProperty(valueName) &&
           oldOptions[valueName] === this['_' + valueName] && oldOptions[valueName] !== options[valueName];
    }
 
-   protected _processRangeSelection(item): boolean {
+   protected _processRangeSelection(item: Date): void {
       if (this._selectionProcessing) {
          this._stopRangeSelection(item);
       } else {
@@ -256,7 +245,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
       }
    }
 
-   protected _processSingleSelection(item): void {
+   protected _processSingleSelection(item: Date): void {
       const range = this._getDisplayedRangeEdges(item);
       this._selectionBaseValue = null;
       this._selectionHoveredValue = null;
@@ -273,7 +262,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @returns {*[]}
     * @private
     */
-   protected _getDisplayedRangeEdges(item): [] {
+   protected _getDisplayedRangeEdges(item: Date): Date[] {
       if (this._selectionType === RangeSelectionController.SELECTION_TYPES.single) {
          return [item, this._clone(item)];
       }
@@ -286,36 +275,8 @@ export default class RangeSelectionController extends Control<IControlOptions> {
       }
    }
 
-   private _onSelectionProcessingChanged(e, value): void {
-      if (!value) {
-         this._selectionBaseValue = null;
-         this._selectionHoveredValue = null;
-         this._notify('selectionBaseValueChanged', [null]);
-         this._notify('selectionHoveredValueChanged', [null]);
-      }
-   }
-
-   isSelectionProcessing(): boolean {
-      return this._selectionProcessing;
-   }
-   getDisplayedStartValue(): Date {
-      return this._displayedStartValue;
-   }
-   getDisplayedEndValue(): Date {
-      return this._displayedEndValue;
-   }
    getSelectionBaseValue(): Date {
       return this._selectionBaseValue;
-   }
-   getSelectionHoveredValue(): Date {
-      return this._selectionHoveredValue;
-   }
-
-   getStartValue(): Date {
-      return this._startValue;
-   }
-   getEndValue(): Date {
-      return this._endValue;
    }
 
    /**
@@ -323,7 +284,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @param item элемент с которого начали выделение
     * @protected
     */
-   private _startRangeSelection(item): void {
+   private _startRangeSelection(item: Date): void {
       const range = this._getDisplayedRangeEdges(item);
       const start = range[0];
       const end = range[1];
@@ -343,7 +304,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @param item элемент на котором заканчивают выделение
     * @protected
     */
-   private _stopRangeSelection(item): void {
+   private _stopRangeSelection(item: Date): void {
       const range = this._getDisplayedRangeEdges(item);
       this._notify('beforeSelectionEnded', [range[0], range[1]]);
       this._selectionProcessing = false;
@@ -392,12 +353,13 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @returns {*|*[]}
     * @private
     */
-   private _getDisplayedRangeIfChanged(item): [] {
+   private _getDisplayedRangeIfChanged(item: Date): Date[] {
       const range = this._getDisplayedRangeEdges(item);
       if (this._displayedStartValue !== range[0] || this._displayedEndValue !== range[1]) {
          return range;
       }
    }
+
    private _clone(obj: Date): Date {
       if (obj instanceof Date) {
          return new obj.constructor(obj);
@@ -405,21 +367,22 @@ export default class RangeSelectionController extends Control<IControlOptions> {
       return coreClone(obj);
    }
 
-   static SELECTION_TYPES: string = IRangeSelectable.SELECTION_TYPES;
+   static SELECTION_TYPES: {} = IRangeSelectable.SELECTION_TYPES;
 
    static getOptionTypes(): object {
-      return coreMerge({}, IRangeSelectable.getOptionTypes());
+      return IRangeSelectable.getOptionTypes();
    }
 
    static getDefaultOptions(): object {
-      return coreMerge({
+      return {
 
          /**
           * @name Controls/_dateRange/Controllers/RangeSelectionController#content
           * @cfg {String} представление которым управлят контроллер
           */
-         content: undefined
-      }, IRangeSelectable.getDefaultOptions());
+         content: undefined,
+         ...IRangeSelectable.getDefaultOptions()
+      };
    }
 }
 

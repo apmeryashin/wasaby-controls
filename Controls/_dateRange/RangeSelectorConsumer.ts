@@ -1,7 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_dateRange/RangeSelectorConsumer/RangeSelectorConsumer';
 import RangeSelector from 'Controls/_dateRange/RangeSelector';
-import DateRangeSelectorConsumer from 'Controls/_dateRange/_DateRangeSelectorConsumer';
+import {DateSelectorConsumer} from 'Controls/date';
 
 /**
  * Контрол позволяет пользователю выбрать временной период: месяц, квартал, полугодие, год. Выбор происходит с помощью панели большого выбора периода.
@@ -41,7 +41,7 @@ export default class RangeSelectorConsumer extends Control {
     protected _template: TemplateFunction = template;
     protected _children: {
         dateRange: RangeSelector
-        consumer: DateRangeSelectorConsumer
+        consumer: DateSelectorConsumer
     };
 
     openPopup(): void {

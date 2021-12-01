@@ -1,7 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_datePopup/YearsRange';
 import {Date as WSDate} from 'Types/entity';
-import {DateRangeModel, rangeSelection as rangeSelectionUtils, IDateRangeOptions} from 'Controls/dateRange';
+import {DateRangeModel, IDateRangeOptions} from 'Controls/dateRange';
+import rangeSelectionUtils from 'Controls/_datePopup/RangeSelection';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import {constants} from 'Env/Env';
 import 'css!Controls/datePopup';

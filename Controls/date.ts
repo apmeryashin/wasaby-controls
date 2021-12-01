@@ -19,7 +19,6 @@ export {default as ArrowButtonConsumer} from 'Controls/_date/ArrowButtonConsumer
 export {default as ContextProvider} from 'Controls/_date/DateContextProvider';
 export {default as WeekdayFormatter} from 'Controls/_date/WeekdayFormatter';
 
-// TODO: Временная поддержка, удалить по https://online.sbis.ru/opendoc.html?guid=84607f88-046c-4331-a402-68061666d88c
 export {default as _DateSelectorConsumer} from 'Controls/_date/_DateSelectorConsumer';
 export {default as IValue} from 'Controls/_date/interface/IValue';
 import * as MonthCaptionTemplate from 'wml!Controls/_date/Selector/monthCaptionTemplate';

@@ -1,5 +1,5 @@
 import * as coreMerge from 'Core/core-merge';
-import RangeSelectionController from './RangeSelectionController';
+import RangeSelectionController, {IRangeSelectionController} from './RangeSelectionController';
 import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRangeSelectable');
 import CalendarUtils from './../Utils';
 import {Base as DateUtil} from 'Controls/dateUtils';
@@ -20,13 +20,19 @@ import {Base as DateUtil} from 'Controls/dateUtils';
  * @public
  */
 
+interface IDateRangeSelectionController extends IRangeSelectionController {
+    quantum: [];
+}
+
 export default class DateRangeSelectionController extends RangeSelectionController {
     private _quantum: {};
     private _isSingleQuant: boolean;
+    private _rangeSelectedCallback: Function;
 
-    protected _beforeMount(options): void {
+    protected _beforeMount(options: IDateRangeSelectionController): void {
         const quantum = options.quantum || {};
         this._quantum = quantum;
+        this._rangeSelectedCallback = options.rangeSelectedCallback;
 
         const isSingleQuant = () => {
             // Проверяем, есть ли в каком-нибудь из видов кванта больше чем
@@ -46,36 +52,38 @@ export default class DateRangeSelectionController extends RangeSelectionControll
         };
 
         this._isSingleQuant = isSingleQuant();
-
-        super._beforeMount(options);
+        const normalizedOptions = this._prepareState(options);
+        super._beforeMount(normalizedOptions);
     }
 
-    // _beforeUpdate: function(options) {
-    // },
-
-    protected _prepareState(state): void {
-        if (state.hasOwnProperty('startValue')) {
-            state.startValue = DateUtil.normalizeDate(state.startValue);
-        }
-        if (state.hasOwnProperty('endValue')) {
-            state.endValue = DateUtil.normalizeDate(state.endValue);
-        }
-        if (state.hasOwnProperty('selectionBaseValue')) {
-            state.selectionBaseValue = DateUtil.normalizeDate(state.selectionBaseValue);
-        }
-        if (state.hasOwnProperty('selectionHoveredValue')) {
-            state.selectionHoveredValue = DateUtil.normalizeDate(state.selectionHoveredValue);
-        }
-
-        super._prepareState(state);
+    protected _beforeUpdate(options: IDateRangeSelectionController): void {
+        const normalizedOptions = this._prepareState(options);
+        super._beforeUpdate(normalizedOptions);
     }
 
-    protected _isExternalChanged(valueName: string, options): boolean {
+    protected _prepareState(state: IDateRangeSelectionController): IDateRangeSelectionController {
+        const newState = {...state};
+        if (newState.hasOwnProperty('startValue')) {
+            newState.startValue = DateUtil.normalizeDate(state.startValue);
+        }
+        if (newState.hasOwnProperty('endValue')) {
+            newState.endValue = DateUtil.normalizeDate(newState.endValue);
+        }
+        if (newState.hasOwnProperty('selectionBaseValue')) {
+            newState.selectionBaseValue = DateUtil.normalizeDate(newState.selectionBaseValue);
+        }
+        if (newState.hasOwnProperty('selectionHoveredValue')) {
+            newState.selectionHoveredValue = DateUtil.normalizeDate(newState.selectionHoveredValue);
+        }
+        return newState;
+    }
+
+    protected _isExternalChanged(valueName: string, options: IDateRangeSelectionController): boolean {
         return options.hasOwnProperty(valueName) &&
             !DateUtil.isDatesEqual(options[valueName], this['_' + valueName]);
     }
 
-    protected _itemClickHandler(event, item): void {
+    protected _itemClickHandler(event: Event, item: Date): void {
         if (this._state.selectionType === DateRangeSelectionController.SELECTION_TYPES.workdays) {
             this._processSingleSelection(item);
         }
@@ -91,7 +99,7 @@ export default class DateRangeSelectionController extends RangeSelectionControll
         }
     }
 
-    protected _getDisplayedRangeEdges(item): [] {
+    protected _getDisplayedRangeEdges(item: Date): Date[] {
         let range;
         if (this._selectionType === DateRangeSelectionController.SELECTION_TYPES.quantum) {
             range = CalendarUtils.updateRangeByQuantum(this.getSelectionBaseValue() || item, item, this._quantum);

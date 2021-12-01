@@ -76,6 +76,14 @@ const ITEMACTIONS_POSITION_CLASSES = {
 };
 
 /**
+ * @typedef {String} Controls/_display/CollectionItem/TItemBaseLine
+ * Значения для настройки базовой линии плоского списка
+ * @variant default выравнивание содержимого записи по базовой линии 17px
+ * @variant none без выравнивания содержимого записи по базовой линии
+ */
+export type TItemBaseLine = 'default' | 'none';
+
+/**
  * Элемент коллекции
  * @mixes Types/entity:DestroyableMixin
  * @mixes Types/entity:OptionsMixin
@@ -504,16 +512,47 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._counters;
     }
 
-    getMultiSelectOffsetClass(): string {
-        return `controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()} `;
+    getMultiSelectPositionClasses(itemPadding: IItemPadding = {}, baseline: TItemBaseLine = 'none'): string {
+        const topPadding = (itemPadding.top || this.getTopPadding() || 'l').toLowerCase();
+        const position = this.getOwner().getMultiSelectPosition();
+        let checkboxMargin: string;
+        let classes = '';
+
+        if (position === 'default') {
+            // Если контент в записи плоского списка выравнивается по базовой линии 17px (default),
+            // То у чекбокса добавляется отступ записи списка.
+            // Если не выравнивается (по умолчанию), то в зависимости от отступа списка:
+            // для l добавляется отступ s, а для s добавляеься отступ равный разделительной линии.
+            // Это поведение исправится в рамках работ по отступам записей.
+            if (baseline === 'none') {
+                checkboxMargin = topPadding === 's' || topPadding === 'null' ? 'null' : 's';
+            } else {
+                checkboxMargin = topPadding;
+            }
+            classes += ` controls-ListView__checkbox_marginTop_${checkboxMargin}`;
+        }
+        classes += ` controls-ListView__checkbox_position-${position} `;
+        return classes;
     }
 
-    getMultiSelectClasses(): string {
+    getMultiSelectClasses(backgroundColorStyle: string = 'default',
+                          cursor: string = 'pointer',
+                          templateHighlightOnHover: boolean = true,
+                          itemPadding: IItemPadding = {},
+                          baseline: 'none' | 'default' = 'none'): string {
+        let classes = this._getMultiSelectBaseClasses();
+        classes += this.getMultiSelectPositionClasses(itemPadding, baseline);
+        return classes;
+    }
+
+    /**
+     * Базовые классы для чекбокса мультивыбора.
+     * @private
+     */
+    protected _getMultiSelectBaseClasses(): string {
         let classes = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
         classes += 'js-controls-ListView__checkbox js-controls-DragScroll__notDraggable ';
         classes += 'controls-CheckboxMarker_inList controls-ListView__checkbox ';
-        classes += this.getMultiSelectOffsetClass();
-
         if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += 'controls-ListView__checkbox-onhover';
         }
@@ -521,7 +560,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         if (this.isDragged()) {
             classes += ' controls-ListView__itemContent_dragging';
         }
-
         return classes;
     }
 
@@ -1011,7 +1049,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
-    getContentClasses(): string {
+    getContentClasses(baseline: TItemBaseLine = 'none'): string {
         const isAnimatedForSelection = this.isAnimatedForSelection();
         const rowSeparatorSize = this.getRowSeparatorSize();
         let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses()}`;

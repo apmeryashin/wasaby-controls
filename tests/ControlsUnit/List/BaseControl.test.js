@@ -23,8 +23,9 @@ define([
    'Controls/marker',
    'Controls/display',
    'Browser/Transport',
+   'jsdom',
    'Core/polyfill/PromiseAPIDeferred',
-], function(sourceLib, collection, lists, treeGrid, tUtil, cDeferred, cInstance, Env, EnvTouch, clone, entity, SettingsController, popup, listDragNDrop, dragNDrop, listRender, itemActions, dataSource, marker, display, Transport) {
+], function(sourceLib, collection, lists, treeGrid, tUtil, cDeferred, cInstance, Env, EnvTouch, clone, entity, SettingsController, popup, listDragNDrop, dragNDrop, listRender, itemActions, dataSource, marker, display, Transport, jsdom) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
 
@@ -161,9 +162,13 @@ define([
                return {};
             }
          };
+
+         const dom = new jsdom.JSDOM('');
+         global.Element = dom.window.Element;
       });
       afterEach(function() {
          global.window = undefined;
+         global.Element = undefined;
          sandbox.restore();
       });
       it('life cycle', async function() {
@@ -2547,77 +2552,6 @@ define([
          assert.isTrue(notifyCalled);
          assert.isTrue(setDragPositionCalled);
          assert.isNull(ctrl._unprocessedDragEnteredItem);
-      });
-
-      it('native drag prevent only by native "dragstart" event', async function() {
-         let isDefaultPrevented = false;
-
-         const
-            cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  collection: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [null],
-                  excludedKeys: []
-               },
-               viewModelConstructor: 'Controls/display:Collection',
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     hasMore: false
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               },
-               selectedKeys: [null],
-               excludedKeys: [],
-               readOnly: false,
-               itemsDragNDrop: true
-            },
-            ctrl = correctCreateBaseControl(cfg),
-            fakeMouseDown = {
-               nativeEvent: {
-                  button: 0
-               },
-               target: {
-                  closest: () => false
-               },
-               preventDefault: () => isDefaultPrevented = true
-            },
-            fakeDragStart = {
-               preventDefault: () => isDefaultPrevented = true
-            };
-
-         ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-
-         const itemData = {
-            getContents() {
-               return {
-                  getKey() {
-                     return 1;
-                  }
-               };
-            },
-            key: 1
-         };
-
-         // по mouseDown нельзя вызывать preventDefault, иначе сломается фокусировка
-         ctrl._itemMouseDown({target: { closest: () => null }}, itemData, fakeMouseDown);
-         assert.isFalse(isDefaultPrevented);
-
-         // По dragStart нужно вызывать preventDefault
-         ctrl._nativeDragStart(fakeDragStart);
-         assert.isTrue(isDefaultPrevented);
       });
 
       describe('Calling animation handlers', () => {
