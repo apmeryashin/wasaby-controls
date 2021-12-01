@@ -29,14 +29,6 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
      */
     protected _$keyProperty: string;
 
-    get propertyValue(): unknown {
-        return this.getPropertyValue();
-    }
-
-    set propertyValue(value: unknown): void {
-        this.setPropertyValue()
-    }
-
     constructor(options?: IGridCollectionOptions) {
         super(options);
         this._$keyProperty = options.keyProperty;
@@ -153,6 +145,17 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
     getOwner(): PropertyGridCollection<T> {
         return super.getOwner() as PropertyGridCollection<T>;
     }
+
+    // region edit in place
+
+    setEditing(editing: boolean, editingContents?: any, silent?: boolean, columnIndex?: number): void {
+        if (editing && editingContents.getFormat().getFieldIndex('editingValue') === -1) {
+            editingContents.addField({name: 'editingValue', type: 'string', defaultValue: this.getPropertyValue()});
+        }
+        super.setEditing(editing, editingContents, silent, columnIndex);
+    }
+
+    // endregion region edit in place
 }
 
 Object.assign(PropertyGridCollectionItem.prototype, {

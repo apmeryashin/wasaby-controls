@@ -3,18 +3,13 @@
             name="propertyGrid"
             bind:editingObject="_editingObject"
             itemActions="{{_itemActions}}"
+            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
             typeDescription="{{_typeDescription}}">
         <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
         <ws:captionColumnOptions width="50%"/>
         <ws:itemTemplate>
             <ws:partial template="Controls/propertyGrid:ItemTemplate"
-                        class="controls-demo-pg-highlightOnHover-editor-padding"
-                        scope="{{itemTemplate}}"
-                        highlightOnHover="{{true}}">
-                <ws:afterEditorTemplate>
-                    <Controls.buttons:Button buttonStyle="pale" iconSize="s" icon="icon-Question2" viewMode="functionalButton"/>
-                </ws:afterEditorTemplate>
-            </ws:partial>
+                        highlightOnHover="{{true}}"/>
         </ws:itemTemplate>
     </Controls.propertyGrid:PropertyGrid>
     <Controls.list:AddButton caption="Характеристика" on:click="_beginAdd()" class="padding-left"/>

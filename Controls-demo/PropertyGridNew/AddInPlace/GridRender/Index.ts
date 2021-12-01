@@ -16,13 +16,19 @@ export default class Demo extends Control<IControlOptions> {
     protected _beforeMount(): void {
         this._editingObject = new Model<IPropertyGridItem>({
             rawData: {
-                dynamicString: 'http://mysite.com'
+                string: 'Значение',
+                dynamicString: 'Значение'
             }
         });
         this._typeDescription = new RecordSet<IPropertyGridItem>({
             rawData: [
                 {
-                    caption: 'URL',
+                    caption: 'Статическое свойство',
+                    name: 'string',
+                    editorTemplateName: 'Controls/propertyGrid:StringEditor'
+                },
+                {
+                    caption: 'Динамическое свойство',
                     name: 'dynamicString',
                     isDynamic: true,
                     editorTemplateName: 'Controls/propertyGrid:StringEditor'
@@ -43,6 +49,11 @@ export default class Demo extends Control<IControlOptions> {
                 }
             }
         ];
+        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
+    }
+
+    protected _itemActionVisibilityCallback(itemAction: IItemAction, item: Model): boolean {
+        return item.get('isDynamic');
     }
 
     protected _beginAdd(): void {
@@ -51,7 +62,7 @@ export default class Demo extends Control<IControlOptions> {
                 keyProperty: 'name',
                 rawData: {
                     name: 'dynamicString' + (++this._fakeItemId),
-                    caption: 'Не пусто!',
+                    caption: '',
                     isDynamic: true,
                     editorTemplateName: 'Controls/propertyGrid:StringEditor'
                 }

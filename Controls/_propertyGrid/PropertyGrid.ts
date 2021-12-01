@@ -42,6 +42,7 @@ import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Co
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {Logger} from 'UI/Utils';
 import {
+    CONSTANTS,
     CONSTANTS as EDIT_IN_PLACE_CONSTANTS,
     Controller as EditInPlaceController,
     IBeforeBeginEditCallbackParams, IBeforeEndEditCallbackParams,
@@ -391,14 +392,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (this._listModel) {
             this._dragEnter(this._getDragObject());
         }
-        if (!this._itemActionsController) {
-            import('Controls/itemActions').then(({Controller}) => {
-                this._itemActionsController = new Controller();
-                this._updateItemActions(this._listModel, this._options);
-            });
-        } else {
+        this._getItemActionsController().then(() => {
             this._updateItemActions(this._listModel, this._options);
-        }
+        });
     }
 
     protected _itemActionMouseDown(event: SyntheticEvent<MouseEvent>,
@@ -451,6 +447,15 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
+    private _getItemActionsController(): Promise<void | ItemActionsController> {
+        if (!this._itemActionsController) {
+            return import('Controls/itemActions').then(({Controller}) => {
+                this._itemActionsController = new Controller();
+            });
+        }
+        return Promise.resolve(this._itemActionsController);
+    }
+
     private _onItemActionsMenuResult(eventName: string, actionModel: Model): void {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
@@ -466,7 +471,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     private _updateItemActions(listModel: TPropertyGridCollection,
                                options: IPropertyGridOptions,
-                               item: IEditableCollectionItem & IItemActionsItem): void {
+                               editingItem?: IEditableCollectionItem & IItemActionsItem): void {
         const itemActions: IItemAction[] = options.itemActions;
         const editingConfig = this._getEditingConfig(options);
 
@@ -477,7 +482,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             collection: listModel,
             itemActions,
             editingToolbarVisible: editingConfig?.toolbarVisibility,
-            editingItem: item,
+            editingItem,
             visibilityCallback: options.itemActionVisibilityCallback,
             style: 'default',
             theme: options.theme
@@ -1131,13 +1136,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _itemClick(e: SyntheticEvent, item: Model, originalEvent: SyntheticEvent): void {
-        const canEditByClick = !this._options.readOnly && this._getEditingConfig(this._options).editOnClick && (
+        const canEditByClick = !this._options.readOnly && this._getEditingConfig(this._options).editOnClick &&
+            item.get('isDynamic') && (
             originalEvent.target.closest('.js-controls-ListView__editingTarget') && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`)
         );
         if (canEditByClick) {
             e.stopPropagation();
 
-            // , { columnIndex: columnIndex }
             this._beginEdit({ item }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
@@ -1153,10 +1158,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     beginEdit(userOptions: object): Promise<void | {canceled: true}> {
-        const hasCheckboxes = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom';
         return this._beginEdit(userOptions, {
-            shouldActivateInput: userOptions?.shouldActivateInput,
-            columnIndex: (userOptions?.columnIndex || 0) + hasCheckboxes
+            shouldActivateInput: userOptions?.shouldActivateInput
         });
     }
 
@@ -1218,11 +1221,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     private _beginEdit(userOptions: object,
                        beginEditOption: IBeginEditOptions = {}): Promise<void | {canceled: true}> {
-        const {shouldActivateInput = true, columnIndex} = beginEditOption;
         return this._getEditInPlaceController()
-            .edit(userOptions, { columnIndex })
+            .edit(userOptions)
             .then((result) => {
-                if (shouldActivateInput && !(result && result.canceled)) {
+                if (beginEditOption.shouldActivateInput !== false && !(result && result.canceled)) {
                     this._editInPlaceInputHelper.shouldActivate();
                     this._forceUpdate();
                 }
@@ -1251,16 +1253,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     private _beforeBeginEditCallback(params: IBeforeBeginEditCallbackParams): Promise<unknown> {
         return new Promise((resolve) => {
-            const eventResult = this._notify('beforeBeginEdit', params.toArray());
+            const eventResult: IBeginEditUserOptions | CONSTANTS =
+                this._notify('beforeBeginEdit', params.toArray());
             resolve(eventResult);
         });
     }
 
     private _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
-        return new Promise((resolve) => {
+        return this._getItemActionsController().then(() => {
             this._listModel.setHoveredItem(item);
             this._updateItemActions(this._listModel, this._options, item);
-            resolve();
         });
     }
 
@@ -1275,32 +1277,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 if (result === EDIT_IN_PLACE_CONSTANTS.CANCEL) {
                     return result;
                 }
-
                 const eventResult = this._notify('beforeEndEdit', params.toArray());
-
-                // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
-                // Пользовательское сохранение потенциально может начаться только если вернули Promise
-                const shouldUseDefaultSaving =
-                    params.willSave &&
-                    (params.isAdd || params.item.isChanged()) &&
-                    (
-                        !eventResult ||
-                        (eventResult !== EDIT_IN_PLACE_CONSTANTS.CANCEL && !(eventResult instanceof Promise))
-                    );
-
-                return shouldUseDefaultSaving
-                    ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex)
-                    : Promise.resolve(eventResult);
+                return Promise.resolve(eventResult);
             })
             .catch((error: Error) => {
                 return process({error}).then(() => {
                     return EDIT_IN_PLACE_CONSTANTS.CANCEL;
                 });
             });
-    }
-
-    private _saveEditingInSource(item: Model, isAdd: boolean, sourceIndex?: number): Promise<void> {
-        return Promise.resolve();
     }
 
     private _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
