@@ -10,6 +10,7 @@ import dateControlsUtils from '../_date/Utils';
 import {Range as dateRangeUtils} from 'Controls/dateUtils';
 import ICaptionOptions from 'Controls/_date/interface/ICaption';
 import IValueOptions from 'Controls/_date/interface/IValue';
+import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
 import 'css!Controls/dateRange';
 import 'css!Controls/CommonClasses';
 
@@ -119,10 +120,24 @@ class LinkView<T extends ILinkView> extends Control<T> {
             if (opts.captionFormatter) {
                 captionFormatter = opts.captionFormatter;
             } else {
-                captionFormatter = dateControlsUtils.formatDateRangeCaption;
+                captionFormatter = this._formatDateCaption;
             }
             this._caption = captionFormatter(startValue, endValue, options.emptyCaption);
         }
+    }
+
+    private _formatDateCaption(startValue: Date, endValue: Date, emptyCaption: string): string {
+        return getFormattedDateRange(
+            startValue,
+            endValue,
+            {
+                contractToMonth: true,
+                fullNameOfMonth: true,
+                contractToQuarter: true,
+                contractToHalfYear: true,
+                emptyPeriodTitle: emptyCaption || '\xA0'
+            }
+        );
     }
 
     private _updateStyles(newOption): void {
