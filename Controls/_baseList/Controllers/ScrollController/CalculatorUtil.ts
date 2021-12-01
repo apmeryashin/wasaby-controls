@@ -1,5 +1,6 @@
-import type { IItemsSizes } from './ItemsSizeController';
 import type { IDirection, IItemsRange, IPlaceholders } from './ScrollController';
+import type { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
+import type { IItemsSizes } from './ItemsSizeController/AbstractItemsSizeController';
 
 const MIN_RATIO_INDEX_LINE = 0.15;
 const MAX_RATIO_INDEX_LINE = 0.85;
@@ -17,12 +18,22 @@ export interface IGetRangeByItemsSizesParams {
     itemsSizes: IItemsSizes;
 }
 
-export interface IShiftRangeBySegmentParams {
+export interface IShiftRangeBySegmentParams extends IGetSegmentSizeToHideParams {
     pageSize: number;
     totalCount: number;
     segmentSize: number;
     direction: IDirection;
     currentRange: IItemsRange;
+}
+
+interface IGetSegmentSizeToHideParams {
+    direction: IDirection;
+    currentRange: IItemsRange;
+    triggersOffsets: ITriggersOffsets;
+    placeholders: IPlaceholders;
+    itemsSizes: IItemsSizes;
+    viewportSize: number;
+    scrollPosition: number;
 }
 
 export interface IGetByPositionParams {
@@ -64,21 +75,67 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
         };
     }
 
+    // Нельзя скрывать записи на заданный segmentSize, т.к. этого может быть много и мы сразу же увидим триггер.
+    const segmentSizeToHide = getSegmentSizeToHide(params);
     if (direction === 'backward') {
         startIndex = Math.max(0, startIndex - segmentSize);
         if (startIndex >= totalCount) {
             startIndex = Math.max(0, totalCount - pageSize);
         }
 
-        endIndex = Math.max(endIndex - segmentSize, Math.min(startIndex + pageSize, totalCount));
+        endIndex = Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount));
     } else {
+        startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
         endIndex = Math.min(endIndex + segmentSize, totalCount);
-        startIndex = Math.min(startIndex + segmentSize, Math.max(endIndex - pageSize, 0));
     }
 
     return {
         startIndex, endIndex
     };
+}
+
+/**
+ * Рассчитывает сколько элементов нужно скрыть.
+ * Смещение на заданный segmentSize может сразу же вызвать shiftRange по триггеру.
+ */
+function getSegmentSizeToHide(params: IGetSegmentSizeToHideParams): number {
+    if (params.direction === 'backward') {
+        return getSegmentSizeToHideBackward(params);
+    } else {
+        return getSegmentSizeToHideForward(params);
+    }
+}
+
+function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
+    let segmentSize = 0;
+    let endIndex = params.currentRange.endIndex - 1;
+    const itemsSizes = params.itemsSizes;
+    const backwardPlaceholder = params.placeholders.backward;
+    const offsetDistance = params.viewportSize + params.triggersOffsets.backward + params.triggersOffsets.forward;
+
+    while (itemsSizes[endIndex].offset - backwardPlaceholder > offsetDistance) {
+        endIndex--;
+        segmentSize++;
+    }
+
+    return segmentSize;
+}
+
+function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): number {
+    let segmentSize = 0;
+    let start = params.currentRange.startIndex;
+    let itemsSizesSum = 0;
+    const itemsSizes = params.itemsSizes;
+    const offsetDistance = params.scrollPosition - params.viewportSize - params.triggersOffsets.backward
+        - params.triggersOffsets.forward;
+
+    while (itemsSizesSum + itemsSizes[start].size < offsetDistance) {
+        itemsSizesSum += itemsSizes[start].size;
+        segmentSize++;
+        start++;
+    }
+
+    return segmentSize;
 }
 
 /**

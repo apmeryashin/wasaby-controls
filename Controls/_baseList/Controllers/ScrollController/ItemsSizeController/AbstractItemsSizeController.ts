@@ -1,6 +1,6 @@
-import type { IItemsRange } from './ScrollController';
 import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
+import type { IItemsRange } from '../ScrollController';
 
 export interface IAbstarctItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
@@ -70,7 +70,7 @@ export class AbstractItemsSizesController {
     // region on collection change
 
     addItems(position: number, count: number): IItemsSizes {
-        const addedItemsSize = Array(count).fill(AbstractItemsSizesController._getEmptyItemSize());
+        const addedItemsSize = AbstractItemsSizesController._getEmptyItemsSizes(count);
         this._itemsSizes.splice(position, 0, ...addedItemsSize);
 
         return this.getItemsSizes();
@@ -88,7 +88,7 @@ export class AbstractItemsSizesController {
     }
 
     resetItems(count: number): IItemsSizes {
-        this._itemsSizes = Array(count).fill(AbstractItemsSizesController._getEmptyItemSize());
+        this._itemsSizes = AbstractItemsSizesController._getEmptyItemsSizes(count);
         return this.getItemsSizes();
     }
 
@@ -120,6 +120,17 @@ export class AbstractItemsSizesController {
                     this._itemsSizes[position].offset += hiddenItemsOffset;
                     position++;
                 });
+
+                // Т.к. мы обновили размеры в начале массива, то у последующих элементов нужно обновить offset
+                if (itemsRange.endIndex < this._itemsSizes.length) {
+                    const lastUpdatedItem = this._itemsSizes[itemsRange.endIndex - 1];
+                    const firstNotUpdatedItem = this._itemsSizes[itemsRange.endIndex];
+                    const updatedItemsOffset = lastUpdatedItem.offset + lastUpdatedItem.size
+                        - firstNotUpdatedItem.offset;
+                    for (let i = itemsRange.endIndex; i < this._itemsSizes.length; i++) {
+                        this._itemsSizes[i].offset += updatedItemsOffset;
+                    }
+                }
             }
         } else {
             for (let position = itemsRange.startIndex; position <= itemsRange.endIndex; position++) {
@@ -138,4 +149,13 @@ export class AbstractItemsSizesController {
             size: 0
         };
     }
+
+    private static _getEmptyItemsSizes(count: number): IItemsSizes {
+        const itemsSizes = Array(count);
+        for (let position = 0; position < count; position++) {
+            itemsSizes[position] = AbstractItemsSizesController._getEmptyItemSize();
+        }
+        return itemsSizes;
+    }
+
 }
