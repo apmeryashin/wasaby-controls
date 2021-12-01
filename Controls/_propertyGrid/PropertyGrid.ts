@@ -1137,7 +1137,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     protected _itemClick(e: SyntheticEvent, item: Model, originalEvent: SyntheticEvent): void {
         const canEditByClick = !this._options.readOnly && this._getEditingConfig(this._options).editOnClick &&
-            item.get('isDynamic') && (
+            item.get('isEditable') && (
             originalEvent.target.closest('.js-controls-ListView__editingTarget') && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`)
         );
         if (canEditByClick) {
@@ -1234,61 +1234,33 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     private _getEditInPlaceController(): EditInPlaceController {
         if (!this._editInPlaceController) {
-            this._createEditInPlaceController();
+            this._editInPlaceInputHelper = new EditInPlaceInputHelper();
+            this._editInPlaceController = new EditInPlaceController({
+                mode: this._getEditingConfig(this._options).mode,
+                collection: this._listModel,
+                onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
+                onBeforeEndEdit: this._beforeEndEditCallback.bind(this)
+            });
         }
         return this._editInPlaceController;
     }
 
-    private _createEditInPlaceController(options = this._options): void {
-        this._editInPlaceInputHelper = new EditInPlaceInputHelper();
-        this._editInPlaceController = new EditInPlaceController({
-            mode: this._getEditingConfig(options).mode,
-            collection: this._listModel,
-            onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
-            onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
-            onBeforeEndEdit: this._beforeEndEditCallback.bind(this),
-            onAfterEndEdit: this._afterEndEditCallback.bind(this)
-        });
-    }
-
-    private _beforeBeginEditCallback(params: IBeforeBeginEditCallbackParams): Promise<unknown> {
-        return new Promise((resolve) => {
-            const eventResult: IBeginEditUserOptions | CONSTANTS =
-                this._notify('beforeBeginEdit', params.toArray());
-            resolve(eventResult);
-        });
-    }
-
     private _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
+        item.getContents().addField({name: 'editingValue', type: 'string', defaultValue: item.getPropertyValue()});
         return this._getItemActionsController().then(() => {
             this._listModel.setHoveredItem(item);
             this._updateItemActions(this._listModel, this._options, item);
         });
     }
 
+    // выяснить нужно ли это тут.
     private _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<unknown> {
-        if (params.force) {
-            this._notify('beforeEndEdit', params.toArray());
-            return;
+        if (params.item.getFormat().getFieldIndex('editingValue') !== -1) {
+            const editingValue = params.item.get('editingValue');
+            params.item.removeField('editingValue');
+            this._propertyValueChanged(null, params.item, editingValue);
         }
-
-        return Promise.resolve()
-            .then((result: EDIT_IN_PLACE_CONSTANTS | void) => {
-                if (result === EDIT_IN_PLACE_CONSTANTS.CANCEL) {
-                    return result;
-                }
-                const eventResult = this._notify('beforeEndEdit', params.toArray());
-                return Promise.resolve(eventResult);
-            })
-            .catch((error: Error) => {
-                return process({error}).then(() => {
-                    return EDIT_IN_PLACE_CONSTANTS.CANCEL;
-                });
-            });
-    }
-
-    private _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
-        this._notify('afterEndEdit', [item.contents, isAdd]);
+        return Promise.resolve();
     }
 
     private static _rejectEditInPlacePromise(fromWhatMethod: string): Promise<void> {

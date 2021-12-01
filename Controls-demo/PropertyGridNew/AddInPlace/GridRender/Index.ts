@@ -30,7 +30,7 @@ export default class Demo extends Control<IControlOptions> {
                 {
                     caption: 'Динамическое свойство',
                     name: 'dynamicString',
-                    isDynamic: true,
+                    isEditable: true,
                     editorTemplateName: 'Controls/propertyGrid:StringEditor'
                 }
             ],
@@ -53,7 +53,7 @@ export default class Demo extends Control<IControlOptions> {
     }
 
     protected _itemActionVisibilityCallback(itemAction: IItemAction, item: Model): boolean {
-        return item.get('isDynamic');
+        return item.get('isEditable');
     }
 
     protected _beginAdd(): void {
@@ -63,7 +63,7 @@ export default class Demo extends Control<IControlOptions> {
                 rawData: {
                     name: 'dynamicString' + (++this._fakeItemId),
                     caption: '',
-                    isDynamic: true,
+                    isEditable: true,
                     editorTemplateName: 'Controls/propertyGrid:StringEditor'
                 }
             });
