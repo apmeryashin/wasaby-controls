@@ -19,7 +19,7 @@ import {
     getOptionTypes as getValueValidatorsOptionTypes,
     IValueValidatorsOptions
 } from 'Controls/_date/interface/IValueValidators';
-import IValue from 'Controls/_date/interface/IValue';
+import IValueOptions from 'Controls/_date/interface/IValue';
 import {EventUtils} from 'UI/Events';
 import {isValidDate, Container, InputContainer} from 'Controls/validate';
 import template = require('wml!Controls/_date/BaseInput/BaseInput');
@@ -31,8 +31,8 @@ export interface IDateBaseOptions extends
     IBaseInputMaskOptions,
     IValueValidatorsOptions,
     IInputDisplayValueOptions,
-    IValue {
-
+    IValueOptions {
+    autocompleteType: string;
 }
 
 const VALID_PARTIAL_DATE = /^(0{2}| {2})\.(0{2}| {2})\.\d{2,4}$/;
@@ -90,7 +90,7 @@ class BaseInput extends Control<IDateBaseOptions> {
 
     protected _model: Model;
 
-    protected _validators: Function[] = [];
+    protected _validators: TValueValidators = [];
 
     protected _beforeMount(options: IDateBaseOptions): void {
         this._updateDateConstructor(options);
