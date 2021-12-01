@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">icon </div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="secondary"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">icon svg</div>
+        <Controls.buttons:Button viewMode="functionalButton" icon="Controls-icons/arrows:icon-Follow" iconSize="s" iconStyle="contrast"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">svg image</div>
+        <Controls.buttons:Button viewMode="functionalButton" icon="Controls-demo/Buttons/Icon/animateSvg.svg" iconSize="s" iconStyle="contrast"/>
+    </div>
+</div>

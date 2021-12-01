@@ -12,6 +12,9 @@
                 <use xlink:href="{{_icon}}"/>
             </svg>
         </ws:if>
+            <ws:else data="{{_isSVGImage}}">
+                <img src="{{_icon}}" alt="{{_caption}}" class="controls-Button__icon controls-BaseButton__icon {{_iconSize ? 'controls-icon_size-' + _iconSize : ''}}">
+            </ws:else>
         <ws:else>
             <i attr:class="controls-Button__icon controls-BaseButton__icon controls-icon {{_icon}}
                         {{_iconSize ? 'controls-icon_size-' + _iconSize}}

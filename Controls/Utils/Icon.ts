@@ -4,6 +4,7 @@ import {constants} from 'Env/Env';
 interface IIconData {
     icon: string;
     isSvg: boolean;
+    isSvgImage: boolean;
     iconModule?: string;
     iconPackage?: string;
 }
@@ -14,6 +15,8 @@ export function getIcon(url: string): string {
         const iconUrl = `${constants.resourceRoot}${iconData.iconModule}/${iconData.iconPackage}.svg`;
         const fileUrl = getResourceUrl(iconUrl, undefined, true);
         return `${fileUrl}#${iconData.icon}`;
+    } else if (iconData.isSvgImage) {
+        return `${constants.resourceRoot}${iconData.icon}`;
     } else {
         return iconData.icon;
     }
@@ -21,6 +24,10 @@ export function getIcon(url: string): string {
 
 export function isSVGIcon(icon: string = ''): boolean {
     return !!(icon && getIconData(icon).isSvg);
+}
+
+export function isSVGImage(icon: string = ''): boolean {
+    return !!(icon && getIconData(icon).isSvgImage);
 }
 
 export function getClasses(iconSize: string, iconStyle: string, isSvgIcon: boolean, icon: string): string {
@@ -32,19 +39,25 @@ function getIconData(icon: string): IIconData {
     const data: IIconData = {
         icon,
         iconModule: null,
-        isSvg: false
+        isSvg: false,
+        isSvgImage: false
     };
     if (icon) {
-        const [iconModule, iconPath]: string[] = icon.split('/', 2);
-        const isSvgIcon = icon.includes('/') && iconModule && iconPath;
-        if (isSvgIcon) {
-            const [iconPackage, resultIcon] = iconPath.split(':');
-            data.isSvg = true;
-            data.iconPackage = iconPackage;
-            data.iconModule = iconModule;
-            data.icon = resultIcon;
-        } else {
+        if (icon.match(/\.svg$/g)) {
             data.icon = icon;
+            data.isSvgImage = true;
+        } else {
+            const [iconModule, iconPath]: string[] = icon.split('/', 2);
+            const isSvgIcon = icon.includes('/') && iconModule && iconPath;
+            if (isSvgIcon) {
+                const [iconPackage, resultIcon] = iconPath.split(':');
+                data.isSvg = true;
+                data.iconPackage = iconPackage;
+                data.iconModule = iconModule;
+                data.icon = resultIcon;
+            } else {
+                data.icon = icon;
+            }
         }
     }
     return data;

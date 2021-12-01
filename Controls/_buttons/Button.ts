@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {IButton, IButtonOptions} from './interface/IButton';
 import {IClick} from './interface/IClick';
-import {isSVGIcon, getIcon} from '../Utils/Icon';
+import {isSVGIcon, isSVGImage, getIcon} from '../Utils/Icon';
 import {
     ICaption,
     IFontColorStyle,
@@ -67,6 +67,7 @@ export function simpleCssStyleGeneration(options: IButtonOptions): void {
     this._stringCaption = typeof options.caption === 'string' || options.caption instanceof String;
     this._captionPosition = options.captionPosition || 'right';
     this._isSVGIcon = isSVGIcon(options.icon);
+    this._isSVGImage = isSVGImage(options.icon);
     this._icon = getIcon(options.icon);
     if (options.icon) {
         this._iconSize = options.iconSize;
@@ -168,6 +169,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     protected _iconStyle: string;
     protected _hoverIcon: boolean = true;
     protected _isSVGIcon: boolean = false;
+    protected _isSVGImage: boolean = false;
     protected _textAlign: string;
     protected _tooltip: string;
 
