@@ -26,7 +26,13 @@
    position: relative;
    flex-shrink: 0;
    border-width: var(--border-thickness_switcher);
-   border-radius: var(--border-radius_switcher);
+   // В ie есть проблема с calc.
+   // Если передавать border-radius: calc(val / 2), то это воспринимается как невалидное значение.
+   // Поэтому явно указываем все значения
+   border-top-left-radius: var(--border-radius_switcher);
+   border-top-right-radius: var(--border-radius_switcher);
+   border-bottom-left-radius: var(--border-radius_switcher);
+   border-bottom-right-radius: var(--border-radius_switcher);
 }
 
 .controls-Switch__toggle__wrapper_size-l {
