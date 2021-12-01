@@ -68,9 +68,18 @@
                     </ws:defaultCaptionTemplate>
                 </ws:partial>
             </ws:if>
-            <ws:if data="{{collectionItem.isEditing()}}">
-                <Controls.input:Text contrastBackground="{{ true }}" bind:value="item.caption" horizontalPadding="null" />
-            </ws:if>
+            <ws:else data="{{collectionItem.isEditing()}}">
+                <Controls.validate:InputContainer name="InputValidate">
+                    <ws:validators>
+                        <ws:Function value="{{ item.caption }}">Controls/validate:isRequired</ws:Function>
+                    </ws:validators>
+                    <ws:content>
+                        <Controls.input:Text contrastBackground="{{ true }}" horizontalPadding="null"
+                                             attr:class="ws-flex-grow-1"
+                                             bind:value="item.caption" />
+                    </ws:content>
+                </Controls.validate:InputContainer>
+            </ws:else>
             <ws:else>
                 <ws:partial template="defaultCaptionTemplate" item="{{ item }}"/>
             </ws:else>
@@ -102,7 +111,9 @@
                 <ws:partial template="levelPadding"/>
             </ws:if>
             <ws:if data="{{collectionItem.isEditing()}}">
-                <Controls.input:Text contrastBackground="{{true}}" bind:value="item.editingValue" horizontalPadding="null" />
+                <Controls.input:Text contrastBackground="{{true}}" horizontalPadding="null"
+                                     attr:class="ws-flex-grow-1"
+                                     bind:value="item.editingValue" />
             </ws:if>
             <ws:else>
                 <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"

@@ -33,4 +33,6 @@
     on:commitEdit="_commitEditActionHandler()"
     on:cancelEdit="_cancelEditActionHandler()"
     on:checkboxClick="_checkboxClick()"
+    on:validateCreated="_onValidateCreated()"
+    on:validateDestroyed="_onValidateDestroyed()"
 />

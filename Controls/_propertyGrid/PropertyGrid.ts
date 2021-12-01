@@ -42,10 +42,12 @@ import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Co
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {Logger} from 'UI/Utils';
 import {
+    CONSTANTS as EDIT_IN_PLACE_CONSTANTS,
     Controller as EditInPlaceController,
     IBeforeEndEditCallbackParams,
     InputHelper as EditInPlaceInputHelper, JS_SELECTORS, TAsyncOperationResult
 } from 'Controls/editInPlace';
+import {Container as ValidateContainer, ControllerClass as ValidationController} from 'Controls/validate';
 
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
@@ -116,7 +118,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _dndController: DndController;
     private _editInPlaceController: EditInPlaceController;
     private _editInPlaceInputHelper: EditInPlaceInputHelper;
-    private _isMounted: boolean;
+    private _isPendingDeferredSubmit: boolean;
+    private _validateController: ValidationController = null;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
         const {selectedKeys} = options;
@@ -177,10 +180,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             this._notify('controlResize', [], {bubbling: true});
             this._collapsedGroupsChanged = false;
         }
+        if (this._isPendingDeferredSubmit && this._validateController) {
+            this._validateController.resolveSubmit();
+            this._isPendingDeferredSubmit = false;
+        }
     }
 
     protected _afterMount(): void {
-        this._isMounted = true;
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
     }
@@ -201,6 +207,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
+        if (this._validateController) {
+            this._validateController.destroy();
+            this._validateController = null;
+        }
     }
 
     private _getCollection(options: IPropertyGridOptions): TPropertyGridCollection {
@@ -284,7 +294,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
             if (!resultEditingObject.has(name)) {
                 const newEditingObject = factory(editingObject).toObject();
-                newEditingObject[name] = value;
+                newEditingObject[name] = value || '';
                 const format = Model.fromObject(newEditingObject, resultEditingObject.getAdapter()).getFormat();
                 const propertyFormat = format.at(format.getFieldIndex(name));
                 resultEditingObject.addField({
@@ -443,10 +453,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
-    private _getItemActionsController(): Promise<void | ItemActionsController> {
+    private _getItemActionsController(): Promise<ItemActionsController> {
         if (!this._itemActionsController) {
             return import('Controls/itemActions').then(({Controller}) => {
                 this._itemActionsController = new Controller();
+                return this._itemActionsController;
             });
         }
         return Promise.resolve(this._itemActionsController);
@@ -1123,11 +1134,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     // region editInPlace
 
-    _commitEditActionHandler(): TAsyncOperationResult {
+    protected _commitEditActionHandler(): TAsyncOperationResult {
         return this._commitEdit();
     }
 
-    _cancelEditActionHandler(): TAsyncOperationResult {
+    protected _cancelEditActionHandler(): TAsyncOperationResult {
         return this._cancelEdit();
     }
 
@@ -1159,7 +1170,19 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
-    _cancelEdit(force: boolean = false): TAsyncOperationResult {
+    protected _onValidateCreated(e: Event, control: ValidateContainer): void {
+        this._getValidationController().then((controller: ValidationController) => {
+            controller.addValidator(control);
+        });
+    }
+
+    protected _onValidateDestroyed(e: Event, control: ValidateContainer): void {
+        this._getValidationController().then((controller: ValidationController) => {
+            controller.removeValidator(control);
+        });
+    }
+
+    private _cancelEdit(force: boolean = false): TAsyncOperationResult {
         if (!this._editInPlaceController) {
             return Promise.resolve();
         }
@@ -1169,8 +1192,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return this._getEditInPlaceController().then((controller) => {
             controller.cancel(force).finally(() => {
                 if (this._selectionController) {
-                    const controller = this._selectionController;
-                    controller.setSelection(controller.getSelection());
+                    this._selectionController.setSelection(this._selectionController.getSelection());
                 }
             });
         });
@@ -1254,7 +1276,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                     mode: this._getEditingConfig(this._options).mode,
                     collection: this._listModel,
                     onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
-                    onBeforeEndEdit: this._beforeEndEditCallback.bind(this)
+                    onBeforeEndEdit: this._beforeEndEditCallback.bind(this),
+                    onAfterEndEdit: () => Promise.resolve()
                 });
                 return this._editInPlaceController;
             });
@@ -1272,12 +1295,39 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<unknown> {
-        if (params.willSave && params.item.getFormat().getFieldIndex('editingValue') !== -1) {
-            const editingValue = params.item.get('editingValue');
-            params.item.removeField('editingValue');
-            this._propertyValueChanged(null, params.item, editingValue);
+        if (!params.willSave) {
+            return ;
         }
-        return Promise.resolve();
+
+        return this._getValidationController()
+            .then((controller: ValidationController) => {
+                const submitPromise = controller.deferSubmit();
+                this._isPendingDeferredSubmit = true;
+                this._forceUpdate();
+                return submitPromise;
+            })
+            .then((validationResult) => {
+                for (const key in validationResult) {
+                    if (validationResult.hasOwnProperty(key) && validationResult[key]) {
+                        return EDIT_IN_PLACE_CONSTANTS.CANCEL;
+                    }
+                }
+                if (params.item.getFormat().getFieldIndex('editingValue') !== -1) {
+                    const editingValue = params.item.get('editingValue');
+                    params.item.removeField('editingValue');
+                    this._propertyValueChanged(null, params.item, editingValue);
+                }
+            });
+    }
+
+    private _getValidationController(): Promise<ValidationController> {
+        if (!this._validateController) {
+            return import('Controls/validate').then(({ControllerClass}) => {
+                this._validateController = new ControllerClass();
+                return this._validateController;
+            });
+        }
+        return Promise.resolve(this._validateController);
     }
 
     private static _rejectEditInPlacePromise(fromWhatMethod: string): Promise<void> {
