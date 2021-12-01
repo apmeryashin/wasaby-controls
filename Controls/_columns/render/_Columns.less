@@ -2,12 +2,10 @@
    display: grid;
    flex-direction: row;
    justify-content: flex-start;
-   padding: 0 var(--offset_xs);
 }
 
 .controls-ColumnsView_column {
    height: 100%;
-   padding: 0 var(--offset_xs);
    box-sizing: border-box;
 }
 
@@ -15,7 +13,6 @@
    user-select: none;
    box-sizing: border-box;
    display: inline-block;
-   margin: var(--offset_2xs) 0;
    overflow: hidden;
    vertical-align: top;
    width: 100%;
@@ -115,6 +112,520 @@
       &_@{_item} > .controls-ColumnsView__item_marker,
       &_@{_item}::after {
          border-top-right-radius: ~"var(--border_radius_@{_item}_list)";
+      }
+   });
+}
+
+// отступы
+// вертикальные отступы сделаны через margin.
+// На это стоит обратить внимание при будущей реализации вирт. скролла в columns:View
+
+.controls-ColumnsView__item_spacingTop_default {
+   margin-top: calc(var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__item_spacingTop_null {
+   margin-top: 0;
+}
+
+.controls-ColumnsView__item_spacingTop {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-top: calc(~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__item_spacingBottom_default {
+   margin-bottom: calc(var(--offset_s)/ 2);
+}
+
+.controls-ColumnsView__item_spacingBottom_null {
+   margin-bottom: 0;
+}
+
+.controls-ColumnsView__item_spacingBottom {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-bottom: calc(~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__item_spacingRight_default {
+   padding-right: calc(var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__item_spacingRight_null {
+   padding-right: 0;
+}
+
+.controls-ColumnsView__item_spacingRight {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         padding-right: calc(~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__item_spacingLeft_default {
+   padding-left: calc(var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__item_spacingLeft_null {
+   padding-left: 0;
+}
+
+.controls-ColumnsView__item_spacingLeft {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         padding-left: calc(~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+// container padding
+
+// left padding
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_null_itemPadding_null {
+   margin-left: 0;
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_null_itemPadding_default {
+   margin-left: calc(-1 * var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_null_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-left: calc(-1 * ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_default_itemPadding_null {
+   margin-left: var(--offset_m);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_default_itemPadding_default {
+   margin-left: calc(var(--offset_m) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_default_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-left: calc(var(--offset_m) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_xs_itemPadding_null {
+   margin-left: var(--offset_xs);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_xs_itemPadding_default {
+   margin-left: calc(var(--offset_xs) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_xs_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-left: calc(var(--offset_xs) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_s_itemPadding_null {
+   margin-left: var(--offset_s);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_s_itemPadding_default {
+   margin-left: calc(var(--offset_s) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_s_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-left: calc(var(--offset_s) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_m_itemPadding_null {
+   margin-left: var(--offset_m);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_m_itemPadding_default {
+   margin-left: calc(var(--offset_m) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_m_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-left: calc(var(--offset_m) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_l_itemPadding_null {
+   margin-left: var(--offset_l);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_l_itemPadding_default {
+   margin-left: calc(var(--offset_l) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_l_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-left: calc(var(--offset_l) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_xl_itemPadding_null {
+   margin-left: var(--offset_xl);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_xl_itemPadding_default {
+   margin-left: calc(var(--offset_xl) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_xl_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-left: calc(var(--offset_xl) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_2xl_itemPadding_null {
+   margin-left: var(--offset_2xl);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_2xl_itemPadding_default {
+   margin-left: calc(var(--offset_2xl) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_2xl_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-left: calc(var(--offset_2xl) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+// padding right
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_null_itemPadding_null {
+   margin-right: 0;
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_null_itemPadding_default {
+   margin-right: calc(-1 * var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_null_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(-1 * ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_default_itemPadding_null {
+   margin-right: calc(var(--offset_m));
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_default_itemPadding_default {
+   margin-right: calc(var(--offset_m) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_default_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(var(--offset_m) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_xs_itemPadding_null {
+   margin-right: var(--offset_xs);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_xs_itemPadding_default {
+   margin-right: calc(var(--offset_xs) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_xs_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(var(--offset_xs) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_s_itemPadding_null {
+   margin-right: var(--offset_s);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_s_itemPadding_default {
+   margin-right: calc(var(--offset_s) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_s_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(var(--offset_s) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_m_itemPadding_null {
+   margin-right: var(--offset_m);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_m_itemPadding_default {
+   margin-right: calc(var(--offset_m) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_m_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(var(--offset_m) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_l_itemPadding_null {
+   margin-right: var(--offset_l);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_l_itemPadding_default {
+   margin-right: calc(var(--offset_l) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_l_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(var(--offset_l) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_xl_itemPadding_null {
+   margin-right: var(--offset_xl);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_xl_itemPadding_default {
+   margin-right: calc(var(--offset_xl) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_xl_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(var(--offset_xl) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_2xl_itemPadding_null {
+   margin-right: var(--offset_2xl);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_2xl_itemPadding_default {
+   margin-right: calc(var(--offset_2xl) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_2xl_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(var(--offset_2xl) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+// top padding
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_null_itemPadding_null {
+   margin-top: 0;
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_null_itemPadding_default {
+   margin-top: calc(-1 * var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_null_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-top: calc(-1 * ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_default_itemPadding_null {
+   margin-top: var(--offset_xs);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_default_itemPadding_default {
+   margin-top: calc(var(--offset_xs) - var(--offset_m) / 2);
+}
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_default_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-top: calc(var(--offset_xs) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+//bottom padding
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_null_itemPadding_null {
+   margin-bottom: 0;
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_null_itemPadding_default {
+   margin-bottom: calc(-1 * var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_null_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-bottom: calc(-1 * ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_default_itemPadding_null {
+   margin-bottom: var(--offset_xs);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_default_itemPadding_default {
+   margin-bottom: calc(var(--offset_xs) - var(--offset_m) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_null_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-bottom: calc(var(--offset_xs) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_default {
+   margin-left: calc(-1 * var(--offset_m) / 2 + var(--offset_m));
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft_null {
+   margin-left: 0;
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingLeft {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-left: calc(~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_default {
+   margin-right: calc(-1 * var(--offset_m) / 2 + var(--offset_m));
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight_null {
+   margin-right: 0;
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingRight {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_null {
+   margin-top: 0;
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_default {
+   margin-top: calc(-1 * var(--offset_m) / 2 + var(--offset_xs));
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(~"var(--offset_@{_item})" / 2 + var(--offset_xs));
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_null {
+   margin-bottom: 0;
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_default {
+   margin-bottom: calc(-1 * var(--offset_m) / 2 + var(--offset_xs));
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-right: calc(~"var(--offset_@{_item})" / 2 + var(--offset_xs));
       }
    });
 }
