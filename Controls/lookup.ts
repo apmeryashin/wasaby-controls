@@ -39,6 +39,7 @@ export {default as showSelector} from 'Controls/_lookup/showSelector';
 export {ILookupOptions} from 'Controls/_lookup/Lookup';
 export {ISelectorButtonOptions as ISelectorOptions} from 'Controls/_lookup/Button';
 export {ToSourceModel} from 'Controls/_lookup/resources/ToSourceModel';
+export {default as BaseLookupInput, ILookupInputOptions} from 'Controls/_lookup/BaseLookupInput';
 
 import ItemTemplate = require('wml!Controls/_lookup/SelectedCollection/ItemTemplate');
 export {
