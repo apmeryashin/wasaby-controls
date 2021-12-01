@@ -46,13 +46,10 @@ export interface IDataPinContainer extends IControlOptions {
  * @demo Controls-demo/StickyEnvironment/DataPinProvider/Grid/Index
  * @demo Controls-demo/StickyEnvironment/DataPinProvider/Events/Index
  *
- * @implements Controls/stickyEnvironment:IDataPinContainer
- *
  * @public
  * @author Уфимцев Д.Ю.
  */
 export class DataPinContainer extends Control<IDataPinContainer> {
-    protected _options: IDataPinContainer;
     protected _template: TemplateFunction = template;
 
     // значения пересечения при которых дергается _intersectHandler
