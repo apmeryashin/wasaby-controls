@@ -31,47 +31,6 @@
     />
 </ws:template>
 
-<ws:template name="editorTemplate">
-    <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
-                        caption="{{item.caption}}"
-                        attr:class="controls-PropertyGrid__editor_control
-                                    {{ item.caption && _options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control_stretch' }}"
-                        scope="{{_options}}"/>
-</ws:template>
-
-<ws:template name="editingCaptionTemplate">
-    <Controls.Container.Async templateName="Controls/list:EditingTemplate">
-        <ws:partial template="{{content.resolvedTemplate}}"
-                    value="{{ item.caption }}"
-                    item="{{ collectionItem }}"
-                    scope="{{ item.captionOptions }}">
-            <ws:viewTemplate>
-                <ws:partial template="defaultCaptionTemplate" item="{{item}}"/>
-            </ws:viewTemplate>
-            <ws:editorTemplate>
-                <Controls.input:Text contrastBackground="{{ true }}" bind:value="item.caption" />
-            </ws:editorTemplate>
-        </ws:partial>
-    </Controls.Container.Async>
-</ws:template>
-
-<ws:template name="editingEditorTemplate">
-    <Controls.Container.Async templateName="Controls/list:EditingTemplate">
-        <ws:partial template="{{content.resolvedTemplate}}"
-                    value="{{ collectionItem.getPropertyValue() }}"
-                    item="{{ collectionItem }}"
-                    scope="{{ collectionItem.getEditorOptions() }}">
-            <ws:viewTemplate>
-                <ws:partial template="editorTemplate" item="{{ item }}"/>
-            </ws:viewTemplate>
-            <ws:editorTemplate>
-                <Controls.input:Text contrastBackground="{{true}}"
-                                     bind:value="item.editingValue"/>
-            </ws:editorTemplate>
-        </ws:partial>
-    </Controls.Container.Async>
-</ws:template>
-
 <ws:if data="{{_options.colspan || _options.colspanTemplate}}">
    <ws:partial template="{{_options.colspanTemplate}}"
                attr:class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}"
@@ -109,9 +68,9 @@
                     </ws:defaultCaptionTemplate>
                 </ws:partial>
             </ws:if>
-            <ws:else data="{{item.isEditable}}">
-                <ws:partial template="editingCaptionTemplate" item="{{ item }}"/>
-            </ws:else>
+            <ws:if data="{{collectionItem.isEditing()}}">
+                <Controls.input:Text contrastBackground="{{ true }}" bind:value="item.caption" horizontalPadding="null" />
+            </ws:if>
             <ws:else>
                 <ws:partial template="defaultCaptionTemplate" item="{{ item }}"/>
             </ws:else>
@@ -142,11 +101,15 @@
             <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">
                 <ws:partial template="levelPadding"/>
             </ws:if>
-            <ws:if data="{{item.isEditable}}">
-                <ws:partial template="editingEditorTemplate" item="{{ item }}"/>
+            <ws:if data="{{collectionItem.isEditing()}}">
+                <Controls.input:Text contrastBackground="{{true}}" bind:value="item.editingValue" horizontalPadding="null" />
             </ws:if>
             <ws:else>
-                <ws:partial template="editorTemplate" item="{{ item }}"/>
+                <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
+                            caption="{{item.caption}}"
+                            attr:class="controls-PropertyGrid__editor_control
+                                    {{ item.caption && _options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control_stretch' }}"
+                            scope="{{_options}}"/>
             </ws:else>
             <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">

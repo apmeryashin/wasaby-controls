@@ -42,13 +42,10 @@ import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Co
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {Logger} from 'UI/Utils';
 import {
-    CONSTANTS,
-    CONSTANTS as EDIT_IN_PLACE_CONSTANTS,
     Controller as EditInPlaceController,
-    IBeforeBeginEditCallbackParams, IBeforeEndEditCallbackParams,
+    IBeforeEndEditCallbackParams,
     InputHelper as EditInPlaceInputHelper, JS_SELECTORS, TAsyncOperationResult
 } from 'Controls/editInPlace';
-import {process} from "Controls/error";
 
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
@@ -66,20 +63,9 @@ interface IPropertyGridValidatorArguments {
     item: PropertyGridCollectionItem<Model>;
 }
 
-interface IBeginAddOptions {
-    shouldActivateInput?: boolean;
-    addPosition?: 'top' | 'bottom';
-    targetItem?: Model;
-    columnIndex?: number;
-}
-
 interface IBeginEditOptions {
     shouldActivateInput?: boolean;
     columnIndex?: number;
-}
-
-interface IBeginEditUserOptions extends IBeginAddOptions {
-    item?: Model;
 }
 
 /**
@@ -197,6 +183,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         this._isMounted = true;
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
+    }
+
+    protected _afterRender(oldOptions?: IPropertyGridOptions, oldContext?: any): void {
+        if (
+            this._editInPlaceController &&
+            this._editInPlaceController.isEditing() &&
+            !this._editInPlaceController.isEndEditProcessing()
+        ) {
+            this._activateEditingInput();
+        }
     }
 
     protected _beforeUnmount(): void {
@@ -1170,11 +1166,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (this._options.readOnly) {
             return PropertyGridView._rejectEditInPlacePromise('cancelEdit');
         }
-        return this._getEditInPlaceController().cancel(force).finally(() => {
-            if (this._selectionController) {
-                const controller = this._selectionController;
-                controller.setSelection(controller.getSelection());
-            }
+        return this._getEditInPlaceController().then((controller) => {
+            controller.cancel(force).finally(() => {
+                if (this._selectionController) {
+                    const controller = this._selectionController;
+                    controller.setSelection(controller.getSelection());
+                }
+            });
         });
     }
 
@@ -1185,7 +1183,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (this._options.readOnly) {
             return PropertyGridView._rejectEditInPlacePromise('commitEdit');
         }
-        return this._getEditInPlaceController().commit(commitStrategy);
+        return this._getEditInPlaceController()
+            .then((controller) => controller.commit(commitStrategy));
     }
 
     private _getEditingConfig(options?: IPropertyGridOptions): IEditingConfig & {mode: 'row' | 'cell'} {
@@ -1219,10 +1218,25 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         };
     }
 
+    /**
+     * Метод для активации поля ввода при редактировании по месту
+     * @private
+     */
+    private _activateEditingInput(): void {
+        const activateRowCallback = () => {};
+        this._editInPlaceInputHelper.activateInput(activateRowCallback);
+    }
+
+    /**
+     * Метод, фактически начинающий редактирование
+     * @param userOptions
+     * @param beginEditOption
+     * @private
+     */
     private _beginEdit(userOptions: object,
                        beginEditOption: IBeginEditOptions = {}): Promise<void | {canceled: true}> {
         return this._getEditInPlaceController()
-            .edit(userOptions)
+            .then((controller) => controller.edit(userOptions))
             .then((result) => {
                 if (beginEditOption.shouldActivateInput !== false && !(result && result.canceled)) {
                     this._editInPlaceInputHelper.shouldActivate();
@@ -1232,30 +1246,33 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             });
     }
 
-    private _getEditInPlaceController(): EditInPlaceController {
+    private _getEditInPlaceController(): Promise<EditInPlaceController> {
         if (!this._editInPlaceController) {
-            this._editInPlaceInputHelper = new EditInPlaceInputHelper();
-            this._editInPlaceController = new EditInPlaceController({
-                mode: this._getEditingConfig(this._options).mode,
-                collection: this._listModel,
-                onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
-                onBeforeEndEdit: this._beforeEndEditCallback.bind(this)
+            return import('Controls/editInPlace').then(({InputHelper, Controller}) => {
+                this._editInPlaceInputHelper = new InputHelper();
+                this._editInPlaceController = new Controller({
+                    mode: this._getEditingConfig(this._options).mode,
+                    collection: this._listModel,
+                    onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
+                    onBeforeEndEdit: this._beforeEndEditCallback.bind(this)
+                });
+                return this._editInPlaceController;
             });
         }
-        return this._editInPlaceController;
+        return Promise.resolve(this._editInPlaceController);
     }
 
     private _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
         item.getContents().addField({name: 'editingValue', type: 'string', defaultValue: item.getPropertyValue()});
-        return this._getItemActionsController().then(() => {
-            this._listModel.setHoveredItem(item);
-            this._updateItemActions(this._listModel, this._options, item);
-        });
+        return this._getItemActionsController()
+            .then(() => {
+                this._listModel.setHoveredItem(item);
+                this._updateItemActions(this._listModel, this._options, item);
+            });
     }
 
-    // выяснить нужно ли это тут.
     private _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<unknown> {
-        if (params.item.getFormat().getFieldIndex('editingValue') !== -1) {
+        if (params.willSave && params.item.getFormat().getFieldIndex('editingValue') !== -1) {
             const editingValue = params.item.get('editingValue');
             params.item.removeField('editingValue');
             this._propertyValueChanged(null, params.item, editingValue);
