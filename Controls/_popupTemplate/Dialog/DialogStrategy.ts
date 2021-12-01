@@ -60,6 +60,11 @@ export class DialogStrategy {
         if (position.width > maxWidth) {
             position.width = maxWidth;
         }
+
+        // Не даем верху диалога уезжать за видимую область
+        if (position.top < 0) {
+            position.top = 0;
+        }
         return position;
     }
 
