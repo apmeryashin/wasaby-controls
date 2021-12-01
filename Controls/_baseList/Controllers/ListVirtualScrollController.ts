@@ -267,13 +267,17 @@ export class ListVirtualScrollController {
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
         this._scheduleUpdateItemsSizes(params.range);
+        // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
+        // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
+        // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
+        const shouldRestoreScroll = this._collection.getStartIndex() !== params.range.startIndex;
         this._collection.setIndexes(params.range.startIndex, params.range.endIndex);
 
-        // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
-        // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
-        // и мы будем знать актуальную scrollPosition.
-        // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
-        if (params.shouldRestoreScroll) {
+        if (shouldRestoreScroll) {
+            // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
+            // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
+            // и мы будем знать актуальную scrollPosition.
+            // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
             this._scheduleScroll({
                 type: 'calculateRestoreScrollParams',
                 params: {

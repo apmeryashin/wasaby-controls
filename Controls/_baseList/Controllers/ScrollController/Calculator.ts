@@ -239,7 +239,6 @@ export class Calculator {
         const oldRange = this._range;
         const oldPlaceholders = this._placeholders;
         let placeholdersChanged = false;
-        let shouldRestoreScroll = false;
 
         if (Calculator._hasItemsOutRangeToDirection(direction, this._range, this._totalCount)) {
             this._range = shiftRangeBySegment({
@@ -255,14 +254,11 @@ export class Calculator {
                 placeholders: this._placeholders
             });
 
-            shouldRestoreScroll = true;
             placeholdersChanged = this._updatePlaceholders();
         }
 
         this._logShiftRangeToDirection(direction, oldRange, oldPlaceholders);
-        return this._getRangeChangeResult(
-            oldRange, direction, oldPlaceholders, placeholdersChanged, shouldRestoreScroll
-        );
+        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
     }
 
     // endregion ShiftRangeToDirection
@@ -394,16 +390,9 @@ export class Calculator {
             placeholders: this._placeholders
         });
 
-        // Мы всегда восстанавливаем скролл, если делаем shiftRangeToDirection, т.к. в этом случае всегда изменится
-        // startIndex и endIndex. Соответственно и при добавлении элементов восстнавливать скролл должны
-        // в аналогичной ситуации.
-        const shouldRestoreScroll = this._range.startIndex !== oldRange.startIndex &&
-            this._range.endIndex !== oldRange.endIndex;
         const placeholdersChanged = this._updatePlaceholders();
         this._logAddItems(position, count, oldRange, oldPlaceholders);
-        return this._getRangeChangeResult(
-            oldRange, direction, oldPlaceholders, placeholdersChanged, shouldRestoreScroll
-        );
+        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
     }
 
     private _calcAddDirection(position: number, count: number): IDirection {
@@ -435,9 +424,7 @@ export class Calculator {
 
         const placeholdersChanged = resultAdd.placeholdersChanged || resultRemove.placeholdersChanged;
 
-        return this._getRangeChangeResult(
-            oldRange, resultAdd.shiftDirection, oldPlaceholders, placeholdersChanged, resultAdd.shouldRestoreScroll
-        );
+        return this._getRangeChangeResult(oldRange, resultAdd.shiftDirection, oldPlaceholders, placeholdersChanged);
     }
 
     /**
@@ -523,8 +510,7 @@ export class Calculator {
     private _getRangeChangeResult(oldRange: IItemsRange,
                                   shiftDirection: IDirection,
                                   oldPlaceholders: IPlaceholders,
-                                  placeholdersChanged: boolean,
-                                  shouldRestoreScroll: boolean): ICalculatorResult {
+                                  placeholdersChanged: boolean): ICalculatorResult {
         const indexesChanged = oldRange.startIndex !== this._range.startIndex ||
             oldRange.endIndex !== this._range.endIndex;
 
@@ -547,7 +533,6 @@ export class Calculator {
             oldPlaceholders,
             indexesChanged,
             shiftDirection,
-            shouldRestoreScroll,
 
             hasItemsOutRangeBackward,
             hasItemsOutRangeForward,
