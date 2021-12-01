@@ -21,6 +21,7 @@ export {default as WeekdayFormatter} from 'Controls/_date/WeekdayFormatter';
 
 export {default as _DateSelectorConsumer} from 'Controls/_date/_DateSelectorConsumer';
 export {default as IValue} from 'Controls/_date/interface/IValue';
+export {default as IDateBaseOptions} from 'Controls/_date/BaseInput';
 import * as MonthCaptionTemplate from 'wml!Controls/_date/Selector/monthCaptionTemplate';
 export {default as IMonthCaptionTemplate, IMonthCaptionTemplateOptions} from 'Controls/_date/interface/IMonthCaptionTemplate';
 export {IDatePopupTypeOptions} from 'Controls/_date/interface/IDatePopupType';

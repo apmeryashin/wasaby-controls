@@ -1,5 +1,5 @@
 export default interface IValueOptions {
-    value: Date | null;
+    value: Date | null | string;
 }
 
 /**
