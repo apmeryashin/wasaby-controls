@@ -18,8 +18,12 @@ export type IItemsSizesControllerConstructor = new (options: IItemsSizesControll
 export type IObserversControllerConstructor = new (options: IObserversControllerOptions) => ObserversController;
 
 export class ListVirtualScrollController extends AbstractListVirtualScrollController {
-    protected _observersControllerConstructor: IObserversControllerConstructor = ObserversController;
-    protected _itemsSizeControllerConstructor: IItemsSizesControllerConstructor = ItemsSizeController;
+    protected _getObserversControllerConstructor(): IObserversControllerConstructor {
+        return ObserversController;
+    }
+    protected _getItemsSizeControllerConstructor(): IItemsSizesControllerConstructor {
+        return ItemsSizeController;
+    }
 
     protected _applyIndexes(startIndex: number, endIndex: number): void {
         this._collection.setIndexes(startIndex, endIndex);

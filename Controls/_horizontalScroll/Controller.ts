@@ -17,14 +17,18 @@ export type IObserversControllerConstructor = new (options: IObserversController
 
 export class Controller extends AbstractListVirtualScrollController<IControllerOptions> {
     protected _collection: GridCollection;
-    protected _itemsSizeControllerConstructor: IItemsSizesControllerConstructor = ItemsSizeController;
-    protected _observersControllerConstructor: IObserversControllerConstructor = ObserversController;
-
     private _columns: TColumns;
 
     constructor(options: IControllerOptions) {
         super(options);
         this._columns = options.columns;
+    }
+
+    protected _getObserversControllerConstructor(): IObserversControllerConstructor {
+        return ObserversController;
+    }
+    protected _getItemsSizeControllerConstructor(): IItemsSizesControllerConstructor {
+        return ItemsSizeController;
     }
 
     protected _applyIndexes(startIndex: number, endIndex: number): void {

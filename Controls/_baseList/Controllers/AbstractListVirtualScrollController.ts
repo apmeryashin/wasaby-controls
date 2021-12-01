@@ -111,8 +111,6 @@ export abstract class AbstractListVirtualScrollController<
      * @private
      */
     private _scrollToElementCompletedCallback: () => void;
-    protected abstract _itemsSizeControllerConstructor: IAbstractItemsSizesControllerConstructor;
-    protected abstract _observersControllerConstructor: IAbstractObserversControllerConstructor;
 
     constructor(options: TOptions) {
         this._onCollectionChange = this._onCollectionChange.bind(this);
@@ -129,6 +127,9 @@ export abstract class AbstractListVirtualScrollController<
         this._setCollectionIterator(options.virtualScrollConfig.mode);
         this._createScrollController(options);
     }
+
+    protected abstract _getItemsSizeControllerConstructor(): IAbstractItemsSizesControllerConstructor;
+    protected abstract _getObserversControllerConstructor(): IAbstractObserversControllerConstructor;
 
     setCollection(collection: Collection): void {
         this._initCollection(collection);
@@ -239,8 +240,8 @@ export abstract class AbstractListVirtualScrollController<
             listContainer: options.listContainer,
 
             itemsQuerySelector: options.itemsQuerySelector,
-            itemsSizeControllerConstructor: this._itemsSizeControllerConstructor,
-            observerControllerConstructor: this._observersControllerConstructor,
+            itemsSizeControllerConstructor: this._getItemsSizeControllerConstructor(),
+            observerControllerConstructor: this._getObserversControllerConstructor(),
             triggersQuerySelector: options.triggersQuerySelector,
 
             triggersVisibility: options.triggersVisibility,
@@ -276,13 +277,17 @@ export abstract class AbstractListVirtualScrollController<
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
         this._scheduleUpdateItemsSizes(params.range);
+        // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
+        // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
+        // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
+        const shouldRestoreScroll = this._collection.getStartIndex() !== params.range.startIndex;
         this._applyIndexes(params.range.startIndex, params.range.endIndex);
 
-        // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
-        // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
-        // и мы будем знать актуальную scrollPosition.
-        // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
-        if (params.shouldRestoreScroll) {
+        if (shouldRestoreScroll) {
+            // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
+            // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
+            // и мы будем знать актуальную scrollPosition.
+            // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
             this._scheduleScroll({
                 type: 'calculateRestoreScrollParams',
                 params: {
