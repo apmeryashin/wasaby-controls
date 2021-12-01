@@ -1,4 +1,6 @@
-<div attr:class="controls_columns_theme-{{_options.theme}} controls-ListViewV controls-ColumnsView">
+<div attr:class="controls_columns_theme-{{_options.theme}}
+                 {{_getItemsPaddingContainerClasses()}}
+                 controls-ListViewV controls-ColumnsView">
    <ws:if data="{{ _options.listModel }}">
       <!--Top loading indicator-->
       <ws:partial if="{{ _listModel.getTopIndicator() }}"
@@ -14,7 +16,7 @@
       <div attr:class="controls-ColumnsView__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container"
            style="{{_getItemsContainerStyle()}}" name="itemsContainer">
          <ws:for data="i in _options.listModel.getColumnsCount()">
-            <div class="controls-ColumnsView_column" style="{{_getColumnStyle(i)}}">
+            <div class="controls-ColumnsView_column {{_getColumnPaddingClasses()}}" style="{{_getColumnStyle(i)}}">
                <div class="controls-ColumnsView_column-placeholder" style="{{_getPlaceholderStyle()}}"></div>
                <ws:partial
                        template="wml!Controls/_columns/render/resources/For"

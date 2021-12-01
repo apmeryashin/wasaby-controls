@@ -122,3 +122,53 @@
  * @remark
  * Дополнительно необходимо задать значение для опции {@link columnProperty}, а также для каждого элемента данных в соответствующем поле указать номер колонки.
  */
+
+/**
+ * @typedef {String} Controls/columns:View/ItemPaddingEnum
+ * @description Допустимые значения для свойств {@link Controls/tile:ITile.ItemPadding ItemPadding}.
+ * @variant null Нулевой отступ.
+ * @variant xs Очень маленький отступ.
+ * @variant s Маленький отступ.
+ * @variant m Средний отступ.
+ * @variant l Большой отступ.
+ * @variant xl Очень большой оступ.
+ */
+
+/**
+ * @typedef {String} ItemPadding
+ * @property {Controls/columns:View/ItemPaddingEnum.typedef} [top=m] Отступ сверху от записи. Если свойство принимает значение null, то отступ отсутствует.
+ * @property {Controls/columns:View/ItemPaddingEnum.typedef} [bottom=m] Отступ снизу от записи. Если свойство принимает значение null, то отступ отсутствует.
+ * @property {Controls/columns:View/ItemPaddingEnum.typedef} [left=m] Отступ слева от записи. Если свойство принимает значение null, то отступ отсутствует.
+ * @property {Controls/columns:View/ItemPaddingEnum.typedef} [right=m] Отступ справа от записи. Если свойство принимает значение null, то отступ отсутствует.
+ */
+
+/**
+ * @name Controls/columns:View#itemPadding
+ * @cfg {Controls/columns:View/ItemPadding.typedef} конфигурация отступов между записями.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.columns:View source="{{_viewSource}}">
+ *    <ws:itemPadding
+ *       top="l"
+ *       bottom="l"
+ *       left="l"
+ *       right="l"/>
+ * </Controls.tile:View>
+ * </pre>
+ */
+/**
+ * @name Controls/columns:View#itemsContainerPadding
+ * @cfg {Controls/columns:View/ItemPadding.typedef} конфигурация отступов между крайними записями и контейнером.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.columns:View source="{{_viewSource}}">
+ *    <ws:itemsContainerPadding
+ *       top="l"
+ *       bottom="l"
+ *       left="l"
+ *       right="l"/>
+ * </Controls.tile:View>
+ * </pre>
+ */
