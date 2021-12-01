@@ -282,7 +282,7 @@ export class Calculator {
             placeholdersChanged = this._updatePlaceholders();
         }
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged, false);
+        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
     }
 
     /**
@@ -318,7 +318,7 @@ export class Calculator {
 
         placeholdersChanged = this._updatePlaceholders();
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged, false);
+        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
     }
 
     // endregion ShiftRangeByScrollPosition
@@ -450,7 +450,7 @@ export class Calculator {
 
         placeholdersChanged = this._updatePlaceholders();
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged, false);
+        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
     }
 
     /**
@@ -483,7 +483,7 @@ export class Calculator {
 
         const placeholdersChanged = this._updatePlaceholders();
 
-        return this._getRangeChangeResult(oldRange, 'forward', oldPlaceholders, placeholdersChanged, false);
+        return this._getRangeChangeResult(oldRange, 'forward', oldPlaceholders, placeholdersChanged);
     }
 
     // endregion HandleCollectionChanges
