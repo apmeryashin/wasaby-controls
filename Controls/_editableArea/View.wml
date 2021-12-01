@@ -18,7 +18,6 @@
       <div class="controls-EditableArea__wrapper">
          <ws:partial
             template="{{_options.content}}"
-            editObject="{{_editObject}}"
             editingObject="{{_editObject}}"
             on:mousedown="_onClickHandler()"
             on:keyDown="_onKeyDown()"

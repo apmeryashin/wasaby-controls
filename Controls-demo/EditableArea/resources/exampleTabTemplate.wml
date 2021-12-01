@@ -1,5 +1,5 @@
 <Controls.editableArea:View
-        editObject="{{item}}"
+        editingObject="{{item}}"
         readOnly="{{!selected}}"
         backgroundStyle="withoutBorder"
 >
@@ -7,7 +7,7 @@
         <div class="ControlsDemo-EditableArea__header">{{item[displayProperty]}}</div>
         <div class="controls-Tabs__content_text">
             <Controls.editableArea:Base
-                    bind:value="content.editObject.date"
+                    bind:value="content.editingObject.date"
                     attr:class="ControlsDemo-EditableArea__date ControlsDemo-EditableArea__tabEditor"
             >
                 <ws:editorTemplate>
@@ -18,7 +18,7 @@
         </div>
         <span class="controls-Tabs__content_additionaltext">№</span>
         <Controls.editableArea:Base
-                bind:value="content.editObject.number"
+                bind:value="content.editingObject.number"
                 attr:class="controls-Tabs__content_additionaltext ControlsDemo-EditableArea__number ControlsDemo-EditableArea__tabEditor"
         >
             <ws:editorTemplate>
