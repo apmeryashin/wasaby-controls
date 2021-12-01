@@ -3053,7 +3053,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _updateInProgress = false;
 
     _hasItemWithImageChanged = false;
-
+    _needRestoreScroll = false;
     _isMounted = false;
 
     _shadowVisibility = null;
@@ -4408,7 +4408,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // save scroll
         let directionToRestoreScroll = this._scrollController &&
             this._scrollController.getParamsToRestoreScrollPosition();
-        if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+        if (!directionToRestoreScroll &&
+            (
+                this._hasItemWithImageChanged ||
+                this._indicatorsController.hasNotRenderedChanges() ||
+                this._needRestoreScroll
+            )) {
             directionToRestoreScroll = 'up';
         }
         if (directionToRestoreScroll &&
@@ -4489,7 +4494,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             // restore scroll
             let directionToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
-            if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+            if (!directionToRestoreScroll &&
+                (
+                    this._hasItemWithImageChanged ||
+                    this._indicatorsController.hasNotRenderedChanges() ||
+                    this._needRestoreScroll
+                )) {
                 directionToRestoreScroll = 'up';
             }
             if (directionToRestoreScroll) {
@@ -4497,6 +4507,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._getItemsContainer(), this._getItemsContainerUniqueClass());
                 this._scrollController.beforeRestoreScrollPosition();
                 this._hasItemWithImageChanged = false;
+                this._needRestoreScroll = false;
                 this._notify('doScroll', [newScrollTop, true], { bubbling: true });
             }
 
