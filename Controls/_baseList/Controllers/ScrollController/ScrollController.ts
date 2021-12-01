@@ -49,10 +49,17 @@ export interface IEdgeItem {
     borderDistance: number;
 }
 
+/**
+ * Интерфейс, описывающий параметры для подсчтеа крайнего видимого элемента
+ * @remark
+ * range, placeholders, itemsSizes - не обязательные параметры. Если их не задать, то будут использоваться
+ * текущие значения. Задвать нужно только для восстановления скролла, т.к. восстанавливать скролл нужно
+ * исходя из старого состояния.
+ */
 export interface IEdgeItemCalculatingParams {
     direction: IDirection;
-    range: IItemsRange;
-    placeholders: IPlaceholders;
+    range?: IItemsRange;
+    placeholders?: IPlaceholders;
 }
 
 export interface IScheduledScrollToElementParams {
@@ -320,15 +327,10 @@ export class ScrollController {
 
     /**
      * Возвращает крайний видимый элемент
-     * @param direction Направление
-     * @param range Диапазон отображаемых записей
-     * @param placeholders Плейсхолдер(размер скрытых записей до и после текущего диапазона)
-     * @remark
-     * range, placeholders - не обязательные параметры. Если они не заданы, то используются текущие значение.
-     * Текущие значения нужно для pageDown/pageUp.
+     * @param params
      */
-    getEdgeVisibleItem(direction: IDirection, range?: IItemsRange, placeholders?: IPlaceholders): IEdgeItem {
-        return this._calculator.getEdgeVisibleItem(direction, range, placeholders);
+    getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
+        return this._calculator.getEdgeVisibleItem(params);
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {

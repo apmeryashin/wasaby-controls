@@ -1358,13 +1358,13 @@ const _private = {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
 
-        if (self._scrollController.isRealScroll()) {
+        if (self._scrollController?.isRealScroll()) {
             self._scrolled = true;
         }
         // на мобильных устройствах с overflow scrolling, scrollTop может быть отрицательным
         self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self._options.navigation)) {
+        if (_private.needScrollPaging(self._options.navigation) && self._scrollController) {
             if (!self._scrollController.getParamsToRestoreScrollPosition()) {
                 _private.updateScrollPagingButtons(self, {...self._getScrollParams(), initial: !self._scrolled});
             }
@@ -2214,7 +2214,7 @@ const _private = {
         }
 
         if (self._useNewScroll) {
-            return;
+            return Promise.resolve();
         }
 
         if (self._finishScrollToEdgeOnDrawItems) {
@@ -2616,6 +2616,10 @@ const _private = {
     // endregion
 
     createScrollController(self: BaseControl, options: any): void {
+        if (self._useNewScroll) {
+            return;
+        }
+
         self._scrollController = new ScrollController({
             disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig,
@@ -3637,7 +3641,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         );
         // viewSize обновляется раньше чем viewportSize, поэтому проверяем что viewportSize уже есть
         this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
-        if (scrollTop !== undefined) {
+        if (scrollTop !== undefined && this._scrollController) {
             this._scrollTop = scrollTop;
             const result = this._scrollController.scrollPositionChange({scrollTop}, false);
             _private.handleScrollControllerResult(this, result);
@@ -3796,7 +3800,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._listVirtualScrollController = new ListVirtualScrollController({
             collection: this._listViewModel,
             listControl: this,
-            virtualScrollConfig: options.virtualScrollConfig,
+            virtualScrollConfig: options.virtualScrollConfig || {},
 
             itemsContainer: null,
             listContainer: null,
@@ -3881,7 +3885,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             itemsEndedCallback: (direction): void => {
                 const compatibleDirection = direction === 'forward' ? 'down' : 'up';
-                _private.loadToDirectionIfNeed(this, compatibleDirection);
+                if (this._shouldLoadOnScroll(compatibleDirection)) {
+                    this._loadMore(compatibleDirection);
+                }
             }
         });
     }
@@ -3893,12 +3899,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
             this._listVirtualScrollController.setListContainer(this._container);
 
-            if (
-                !this._listViewModel.getCount() ||
-                !this._hasMoreData('down') && this._hasMoreData('up')
-            ) {
-                this._listVirtualScrollController.setTriggersVisibility({ backward: true, forward: true });
-            }
+            const backwardTriggerVisibility = !this._listViewModel.getCount() ||
+                !this._hasMoreData('up') ||
+                !this._options.attachLoadTopTriggerToNull ||
+                this._hasHiddenItemsByVirtualScroll('up');
+
+            this._listVirtualScrollController.setTriggersVisibility({
+                backward: backwardTriggerVisibility,
+                forward: true
+            });
         }
 
         if (constants.isBrowserPlatform) {
@@ -4953,7 +4962,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // Проверяем видимость триггеров после перерисовки.
     // Если видимость не изменилась, то события не будет, а обработать нужно.
     checkTriggersVisibility(): void {
-        if (this._destroyed || this._sourceController?.getLoadError()) {
+        if (this._destroyed || this._sourceController?.getLoadError() || this._useNewScroll) {
             return;
         }
         const triggerDown = this._loadTriggerVisibility.down;
@@ -4988,7 +4997,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._handleLoadToDirection = _private.isInfinityNavigation(this._options.navigation) &&
                                       !!this._sourceController &&
                                       this._sourceController.hasMoreData(direction);
-        this._scrollController.shiftToDirection(direction).then((result) => {
+        this._scrollController?.shiftToDirection(direction).then((result) => {
             if (this._destroyed) {
                 return;
             }
@@ -5132,7 +5141,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         this._applySelectedPage = () => {
             this._currentPage = page;
-            if (this._scrollController.getParamsToRestoreScrollPosition()) {
+            if (this._scrollController?.getParamsToRestoreScrollPosition()) {
                 return;
             }
             scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
@@ -7134,6 +7143,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _hasHiddenItemsByVirtualScroll(direction: 'up'|'down'): boolean {
+        // TODO SCROLL
         return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
     }
 
