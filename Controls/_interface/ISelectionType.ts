@@ -1,9 +1,10 @@
 export type TSelectionType = 'all' | 'leaf' | 'node';
+export {Model} from 'Types/entity';
 
 export type TKeySelection = number|string|null;
 export type TKeysSelection = TKeySelection[];
 
-export type TSelectionRecord = Record<{
+export type TSelectionRecord = Model<{
     marked: TKeysSelection,
     excluded: TKeysSelection,
     type: TSelectionType,
