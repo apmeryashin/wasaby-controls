@@ -3247,7 +3247,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _popupOptions = null;
     private _scrollController: ScrollController;
     private _listVirtualScrollController: ListVirtualScrollController;
-    private _useNewScroll: boolean = false;
+    private _useNewScroll: boolean = true;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -4212,6 +4212,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             this._noDataBeforeReload = !(items && items.getCount());
             _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
+            if (this._listVirtualScrollController) {
+                this._listVirtualScrollController.setCollection(this._listViewModel);
+            }
 
             // observersController нужно обновить до скроллКонтроллера,
             // т.к. scrollController получает опции из _observersController
@@ -4284,6 +4287,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         this._listViewModel.destroy();
                     }
                     _private.initializeModel(this, newOptions, items);
+                    if (this._listVirtualScrollController) {
+                        this._listVirtualScrollController.setCollection(this._listViewModel);
+                    }
                     this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
                     this._updateScrollController(newOptions);
                     this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);

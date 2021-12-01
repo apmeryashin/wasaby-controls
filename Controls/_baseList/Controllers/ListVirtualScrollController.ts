@@ -432,13 +432,18 @@ export class ListVirtualScrollController {
             return;
         }
 
-        if (this._collection) {
+        // Не нужно отписываться от коллекции, если она уже задестроена
+        if (this._collection && !this._collection.destroyed) {
             this._collection.unsubscribe('onCollectionChange', this._onCollectionChange);
         }
 
         this._collection = collection;
 
         this._collection.subscribe('onCollectionChange', this._onCollectionChange);
+
+        if (this._scrollController && this._collection) {
+            this._scrollController.resetItems(this._collection.getCount(), this._keepScrollPosition);
+        }
     }
 
     private _onCollectionChange(
