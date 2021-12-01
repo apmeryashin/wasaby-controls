@@ -526,10 +526,11 @@ const _private = {
         if (event.nativeEvent.ctrlKey || self.isEditing() || !self.getViewModel() || !self.getViewModel().getCount()) {
             return;
         }
+
         if (_private.hasMarkerController(self)) {
             const markerController = _private.getMarkerController(self);
             const markedKey = markerController.getMarkedKey();
-            if (markedKey !== null) {
+            if (markedKey !== null && markedKey !== undefined) {
                 const markedItem = self.getItems().getRecordById(markedKey);
                 self._notifyItemClick([event, markedItem, event]);
                 if (event && !event.isStopped()) {
