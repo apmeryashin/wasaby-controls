@@ -21,6 +21,8 @@ interface IDialogPosition {
     height: number;
 }
 
+const POSITION_COORDINATES = ['top', 'left', 'right', 'bottom'];
+
 export class DialogStrategy {
     /**
      * Returns popup position
@@ -61,10 +63,12 @@ export class DialogStrategy {
             position.width = maxWidth;
         }
 
-        // Не даем верху диалога уезжать за видимую область
-        if (position.top < 0) {
-            position.top = 0;
-        }
+        // Не даем краю диалога позиционироваться за видимой областью
+        POSITION_COORDINATES.forEach((coordName) => {
+            if (position[coordName] !== undefined && position[coordName] < 0) {
+                position[coordName] = 0;
+            }
+        });
         return position;
     }
 
