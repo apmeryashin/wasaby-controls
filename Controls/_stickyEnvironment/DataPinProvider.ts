@@ -1,4 +1,5 @@
 import {PinController} from './PinController';
+import {IEdgesData} from 'Controls/_stickyEnvironment/interfaces';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_stickyEnvironment/DataPinProvider';
 
@@ -13,13 +14,12 @@ export interface IPinConsumerContext<T = unknown> {
 /**
  * Контрол, организующий связь между {@link Controls/stickyEnvironment:DataPinContainer DataPinContainer} и {@link Controls/stickyEnvironment:DataPinConsumer DataPinConsumer}.
  *
- * Задача данного контрола - отследить когда <i>DataPinContainer</i> уходит за верхнюю границу {@link Controls/scroll:Container}
- * (либо {@link Controls/scroll:IntersectionObserverController}) и прокинуть его данные в {@link Controls/stickyEnvironment:DataPinConsumer DataPinConsumer}.
- * При этом если несколько <i>DataPinContainer</i> будут находиться за верхней границей {@link Controls/scroll:Container},
- * то в <i>DataPinConsumer</i> будут переданы данные ближайшего <i>DataPinContainer</i>.
+ * Задача данного контрола - отслеживать и уведомлять пользователей об обновление граничных данных относительно верхней и нижней границы {@link Controls/scroll:Container} (либо {@link Controls/scroll:IntersectionObserverController})
+ * Уведомление пользователей происходит путём генерации события ${@link Controls/stickyEnvironment:DataPinProvider#edgesDataChanged edgesDataChanged}
  *
- * @demo Controls-demo/StickyEnvironment/DataPinProvider/Base
- * @demo Controls-demo/StickyEnvironment/DataPinProvider/Grid
+ * @demo Controls-demo/StickyEnvironment/DataPinProvider/Base/Index
+ * @demo Controls-demo/StickyEnvironment/DataPinProvider/Grid/Index
+ * @demo Controls-demo/StickyEnvironment/DataPinProvider/Events/Index
  *
  * @public
  * @author Уфимцев Д.Ю.
@@ -30,7 +30,15 @@ export class DataPinProvider<T = unknown> extends Control<IControlOptions> {
     private _pinController: PinController<T>;
 
     protected _beforeMount(): void {
-        this._pinController = new PinController<T>();
+        // Создаем контроллер, который будет обрабатывать появление/скрытие
+        // целевых элементов в области видимости
+        this._pinController = new PinController<T>({
+            onEdgesDataChanged: this._onEdgesDataChanged.bind(this)
+        });
+    }
+
+    private _onEdgesDataChanged(intersectInfo: IEdgesData<T>): void {
+        this._notify('edgesDataChanged', [intersectInfo]);
     }
 
     _getChildContext(): IPinConsumerContext {
@@ -39,3 +47,8 @@ export class DataPinProvider<T = unknown> extends Control<IControlOptions> {
         };
     }
 }
+
+/**
+ * @event edgesDataChanged Происходи при обновлении граничных данных относительно верхней и нижней границы родительского {@link Controls/scroll:Container} (либо {@link Controls/scroll:IntersectionObserverController})
+ * @name Controls/stickyEnvironment:DataPinProvider#edgesDataChanged
+ */
