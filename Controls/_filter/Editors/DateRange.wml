@@ -1,13 +1,45 @@
-<Controls.Container.Async templateName="{{'Controls/dateRange:Selector'}}">
-   <ws:partial template="{{content.resolvedTemplate}}"
-               scope="{{_options}}"
-               startValue="{{_options.value[0] || null}}"
-               endValue="{{_options.value[1] || null}}"
-               datePopupType="{{ _datePopupType }}"
-               emptyCaption="{{_emptyCaption}}"
-               fontColorStyle="{{_options.fontColorStyle}}"
-               resetStartValue="{{ _options.resetStartValue }}"
-               resetEndValue="{{ _options.resetEndValue }}"
-               attr:class="controls_filter_theme-{{_options.theme}} controls-FilterEditor-DateRange"
-               on:rangeChanged="_rangeChanged()" />
-</Controls.Container.Async>
+<ws:template name="baseSelector">
+   <Controls.Container.Async templateName="{{templateName}}">
+      <ws:partial template="{{content.resolvedTemplate}}"
+                  scope="{{_options}}"
+                  startValue="{{_options.value[0] || null}}"
+                  endValue="{{_options.value[1] || null}}"
+                  datePopupType="{{ _datePopupType }}"
+                  emptyCaption="{{_emptyCaption}}"
+                  fontColorStyle="{{_options.fontColorStyle}}"
+                  resetStartValue="{{ _options.resetStartValue }}"
+                  resetEndValue="{{ _options.resetEndValue }}"
+                  attr:class="controls_filter_theme-{{_options.theme}} controls-FilterEditor-DateRange"
+                  on:rangeChanged="_rangeChanged()" />
+   </Controls.Container.Async>
+</ws:template>
+<ws:if data="{{ _options.prevArrowVisible || _options.nextArrowVisible }}">
+   <Controls.Container.Async templateName="Controls/date:ContextProvider">
+      <ws:partial template="{{ content.resolvedTemplate }}" scope="{{ _options }}">
+         <ws:content>
+            <div class="ws-flexbox">
+               <ws:partial template="baseSelector" templateName="Controls/dateRange:SelectorConsumer"/>
+               <ws:if data="{{ _options.prevArrowVisible }}">
+                  <Controls.Container.Async templateName="Controls/date:ArrowButtonConsumer">
+                     <ws:partial template="{{ content.resolvedTemplate }}"
+                                 direction="left"
+                                 attr:class="controls-margin_left-m"
+                     />
+                  </Controls.Container.Async>
+               </ws:if>
+               <ws:if data="{{ _options.nextArrowVisible }}">
+                  <Controls.Container.Async templateName="Controls/date:ArrowButtonConsumer">
+                     <ws:partial template="{{ content.resolvedTemplate }}"
+                                 direction="right"
+                                 attr:class="controls-margin_left-m"
+                     />
+                  </Controls.Container.Async>
+               </ws:if>
+            </div>
+         </ws:content>
+      </ws:partial>
+   </Controls.Container.Async>
+</ws:if>
+<ws:else>
+   <ws:partial template="baseSelector" templateName="Controls/dateRange:Selector"/>
+</ws:else>

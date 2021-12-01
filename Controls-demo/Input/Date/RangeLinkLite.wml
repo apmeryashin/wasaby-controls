@@ -8,14 +8,19 @@
                attr:test_name="default_range"/>
          </div>
          <div class="PageBlock__componentWrap ControlsDemo-RangeLinkLite_capture">
-            <Controls.dateRange:Selector
-               prevArrowVisibility="{{true}}"
-               nextArrowVisibility="{{true}}"
-               datePopupType="shortDatePicker"
-               bind:startValue="_startValueHalfYear"
-               bind:endValue="_endValueHalfYear"
-               attr:test_name="show_arrow_range"
-            />
+            <Controls.date:ContextProvider>
+               <div class="ControlsDemo-RangeLinkLite__container">
+                  <Controls.dateRange:SelectorConsumer
+                          datePopupType="shortDatePicker"
+                          attr:class="ws-flex-grow-1"
+                          bind:startValue="_startValueHalfYear"
+                          bind:endValue="_endValueHalfYear"
+                          attr:test_name="show_arrow_range"
+                  />
+                  <Controls.date:ArrowButtonConsumer direction="left" attr:class="controls-margin_left-m"/>
+                  <Controls.date:ArrowButtonConsumer direction="right" attr:class="controls-margin_left-m"/>
+               </div>
+            </Controls.date:ContextProvider>
          </div>
          <div class="PageBlock__componentWrap">
             <Controls.dateRange:Selector
@@ -65,8 +70,6 @@
             bind:startValue="_startValueYear"
             bind:endValue="_endValueYear"
             datePopupType="shortDatePicker"
-            prevArrowVisibility="{{true}}"
-            nextArrowVisibility="{{true}}"
             readOnly="{{true}}"
             attr:test_name="readonly"
          />
