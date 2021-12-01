@@ -1279,6 +1279,9 @@ const _private = {
                 self._notify('controlResize', [], { bubbling: true });
             }
             self._viewSize = container.clientHeight;
+            if (self._listVirtualScrollController) {
+                self._listVirtualScrollController.contentResized(self._viewSize);
+            }
             self._observersController?.setViewHeight(
                 self._viewSize,
                 self._children.listView?.getTopLoadingTrigger(),
@@ -3247,6 +3250,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _popupOptions = null;
     private _scrollController: ScrollController;
     private _listVirtualScrollController: ListVirtualScrollController;
+    private _scheduledNotifyActiveElement: CrudEntityKey = null;
     private _useNewScroll: boolean = true;
 
     // target элемента, на котором было вызвано контекстное меню
@@ -3711,10 +3715,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const contentSize = _private.getViewSize(this, true);
             this._viewSize = contentSize;
 
-            if (this._listVirtualScrollController) {
-                this._listVirtualScrollController.contentResized(contentSize);
-            }
-
             /**
              * Заново определяем должен ли отображаться пэйджинг или нет.
              * Скрывать нельзя, так как при подгрузке данных пэйджинг будет моргать.
@@ -3809,8 +3809,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             triggersVisibility: { backward: !this._hasMoreData('up'), forward: true },
             topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
             bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
-
-            totalCount: this._listViewModel.getCount(),
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
                 return this._notify(

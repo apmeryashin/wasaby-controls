@@ -23,17 +23,16 @@ import {
     IIndexesChangedParams,
     IItemsEndedCallback,
     IItemsRange,
-    IDirection,
     IPageDirection,
     IPlaceholders,
     IScheduledScrollParams,
     IScheduledScrollToElementParams,
     ScrollController
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
-import type { IItemsSizes, IItemSize } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/AbstractItemsSizeController';
-import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
-import {ObserversController} from 'Controls/_baseList/Controllers/ScrollController/ObserverController/ObserversController';
-import {ItemsSizeController} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
+import type { IItemsSizes} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/AbstractItemsSizeController';
+import type { ITriggersVisibility } from './ScrollController/ObserverController/AbstractObserversController';
+import { ObserversController } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/ObserversController';
+import { ItemsSizeController } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
 import { Logger } from 'UI/Utils';
 
 export interface IShadowVisibility {
