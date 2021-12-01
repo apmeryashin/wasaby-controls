@@ -17,6 +17,7 @@ export interface IDialogItem extends IPopupItem {
     fixPosition: boolean;
     targetCoords: object;
     contextIsTouch: boolean;
+    previousHeight: number;
 }
 
 const IPAD_MIN_WIDTH = 1024;
@@ -165,7 +166,7 @@ class DialogController extends BaseController {
         const scrollTop = scroll?.scrollTop;
         container.style.maxHeight = '';
         container.style.height = '';
-        item.sizes = this._getPopupSizes(item, container);
+        this._updateSizes(item, container);
 
         // Если есть таргет и не было смещения через dnd, то позиционируемся через стики стратегию
         if (item.popupOptions.target) {
@@ -217,10 +218,17 @@ class DialogController extends BaseController {
         return detection.isMobileIOS && detection.IOSVersion === 12;
     }
 
+    private _updateSizes(item: IDialogItem, container: HTMLElement): void {
+        item.sizes = this._getPopupSizes(item, container);
+        const minHeight = item.popupOptions.minHeight;
+        if (!minHeight || minHeight < item.sizes.height) {
+            item.popupOptions.minHeight = item.sizes.height;
+        }
+    }
+
     private _prepareConfigWithSizes(item: IDialogItem, container: HTMLElement): void {
-        const sizes: IPopupSizes = this._getPopupSizes(item, container);
-        item.sizes = sizes;
-        this._prepareConfig(item, sizes);
+        this._updateSizes(item, container);
+        this._prepareConfig(item, item.sizes);
     }
 
     private _prepareConfig(item: IDialogItem, sizes: IPopupSizes): void {
