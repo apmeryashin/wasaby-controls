@@ -67,10 +67,6 @@ export default class TileView extends ListView {
     protected _shouldPerformAnimation: boolean;
     protected _targetItemRect: ClientRect;
 
-    protected _beforeMount(options: ITileOptions): void {
-        super._beforeMount(options);
-    }
-
     protected _afterMount(options: ITileOptions): void {
         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
         this._notify('register', ['scroll', this, this._onScroll, {listenAll: true}], {bubbling: true});

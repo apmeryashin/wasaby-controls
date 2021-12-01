@@ -99,3 +99,4 @@ export {IRoundBorder} from 'Controls/_interface/IRoundBorder';
 export {TPaddingSize} from 'Controls/_interface/TPaddingSize';
 export {IItemPaddingOptions, default as IItemPadding} from 'Controls/_interface/IItemPadding';
 export {default as IResetValue, IResetValueOptions} from 'Controls/_interface/IResetValue';
+export {default as IItemsContainerPadding, IItemsContainerPaddingOption} from 'Controls/_interface/IItemsContainerPadding';
