@@ -47,10 +47,6 @@ export default class TileCollection<
     protected _createComposer(): itemsStrategy.Composer<S, CollectionItem<Model>> {
         const composer = super._createComposer();
 
-        composer.append(AddingTileStrategy, {
-            display: this
-        });
-
         composer.append(InvisibleStrategy, {
             display: this
         });
@@ -59,12 +55,14 @@ export default class TileCollection<
     }
 
     showAddingItem(): void {
-        this.appendStrategy(this._addingTileStrategy as StrategyConstructor<any>);
+        this._prependStrategy(this._addingTileStrategy as StrategyConstructor<any>,
+            { display: this },
+            InvisibleStrategy);
         this._reIndex();
     }
 
     hideAddingItem(): void {
-        this.removeStrategy(this._addingTileStrategy);
+        this.removeStrategy(this._addingTileStrategy as StrategyConstructor<any>);
         this._reIndex();
     }
 }

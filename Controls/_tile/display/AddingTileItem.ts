@@ -1,24 +1,17 @@
 import TileCollectionItem, {ITileCollectionItemOptions} from './TileCollectionItem';
 import { mixin } from 'Types/util';
-
-// export interface IAddingTileItemOptions extends ITileCollectionItemOptions {
-// }
+import AddingItem from 'Controls/_tile/display/mixins/AddingItem';
 
 /**
- * Невидимый элемент в плиточной коллекции
- * @author Панихин К.А.
+ * Элемент добавления записей в плиточной коллекции
+ * @author Колесов В.А.
  */
 export default class AddingTileItem
-    extends mixin<TileCollectionItem>(TileCollectionItem) {
+    extends mixin<TileCollectionItem, AddingItem>(TileCollectionItem, AddingItem) {
+
     constructor(options: ITileCollectionItemOptions) {
         super(options);
-        TileCollectionItem.call(this, options);
-    }
-
-    // переопределяем key, т.к. по дефолту он берется из contents, но в пачке невидимых элементов одинаковый contents,
-    // поэтому падает ошибка с дубликатами ключе в верстке
-    get key(): string {
-        return this._instancePrefix + this.getInstanceId();
+        AddingItem.call(this, options);
     }
 }
 

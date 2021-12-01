@@ -24,6 +24,7 @@ import {getImageUrl, getImageSize, getImageClasses, getImageRestrictions, getIte
 import TileCollection, { ITileCollectionOptions } from 'Controls/_tile/display/TileCollection';
 import TileCollectionItem, { ITileCollectionItemOptions } from 'Controls/_tile/display/TileCollectionItem';
 import InvisibleTileItem from 'Controls/_tile/display/InvisibleTileItem';
+import AddingItem from 'Controls/_tile/display/mixins/AddingItem';
 import AddingTileItem from 'Controls/_tile/display/AddingTileItem';
 import Tile from 'Controls/_tile/display/mixins/Tile';
 import TileItem from 'Controls/_tile/display/mixins/TileItem';
@@ -54,6 +55,8 @@ export {
     InvisibleTileItem,
     InvisibleStrategy,
     AddingTileStrategy,
+    AddingTileItem,
+    AddingItem,
     COUNT_INVISIBLE_ITEMS,
     TileItemActions,
     ITileItemActionsOptions,

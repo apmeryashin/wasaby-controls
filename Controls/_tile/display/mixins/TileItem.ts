@@ -27,7 +27,7 @@ const DEFAULT_WIDTH_PROPORTION = 1;
 const DEFAULT_ITEM_IMAGE_FIT = 'none';
 const DEFAULT_RICH_ITEM_IMAGE_FIT = 'cover';
 
-export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small';
+export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small'|'adding';
 export type TTitlePosition = 'underImage'|'onImage';
 export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
 
@@ -1003,6 +1003,9 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'preview':
                 classes += ' controls-TileView__previewTemplate_image';
+                break;
+            case 'adding':
+                classes += ' controls-TileView__addingTile_image';
                 break;
         }
 

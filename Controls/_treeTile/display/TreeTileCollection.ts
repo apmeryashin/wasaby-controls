@@ -1,9 +1,10 @@
 import {Model} from 'Types/entity';
 import { mixin } from 'Types/util';
-import {ITileCollectionOptions, TileMixin, AddingTileStrategy} from 'Controls/tile';
+import {ITileCollectionOptions, TileMixin} from 'Controls/tile';
 import TreeTileCollectionItem, {ITreeTileCollectionItemOptions} from './TreeTileCollectionItem';
 import {ItemsFactory, itemsStrategy, ITreeOptions, Tree, TreeItem} from 'Controls/display';
 import InvisibleStrategy from './strategy/Invisible';
+import AddingTreeTileStrategy from './strategy/AddingTile';
 import {StrategyConstructor} from 'Controls/_display/Collection';
 
 /**
@@ -44,7 +45,7 @@ export default class TreeTileCollection<
 
     readonly SupportExpand: boolean = false;
 
-    protected _addingTileStrategy: StrategyConstructor<AddingTileStrategy> = AddingTileStrategy;
+    protected _addingTileStrategy: StrategyConstructor<AddingTreeTileStrategy> = AddingTreeTileStrategy;
 
     constructor(options: ITreeTileCollectionOptions<S, T>) {
         super(options);
@@ -120,11 +121,6 @@ export default class TreeTileCollection<
 
     protected _createComposer(): itemsStrategy.Composer<S, TreeItem<Model>> {
         const composer = super._createComposer();
-
-        composer.append(AddingTileStrategy, {
-            display: this
-        });
-
         composer.append(InvisibleStrategy, {
             display: this
         });
@@ -133,12 +129,14 @@ export default class TreeTileCollection<
     }
 
     showAddingItem(): void {
-        this.appendStrategy(this._addingTileStrategy as StrategyConstructor<any>);
+        this._prependStrategy(this._addingTileStrategy as StrategyConstructor<any>,
+            { display: this },
+            InvisibleStrategy);
         this._reIndex();
     }
 
     hideAddingItem(): void {
-        this.removeStrategy(this._addingTileStrategy);
+        this.removeStrategy(this._addingTileStrategy as StrategyConstructor<any>);
         this._reIndex();
     }
 }

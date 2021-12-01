@@ -4,8 +4,6 @@
         displayProperty="title"
         imageProperty="image"
         keyProperty="id"
-        showAddingTile="{{true}}"
         source="{{_viewSource}}">
-
 </Controls.treeTile:View>
 </div>

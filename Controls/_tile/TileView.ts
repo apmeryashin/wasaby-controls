@@ -40,7 +40,7 @@ export interface ITileAspectOptions {
     actionMenuViewMode: TActionMenuViewMode;
     actionMode: TActionMode;
     itemsContainerPadding: IItemPadding;
-    showAddingTile?: boolean;
+    addingTileVisible?: boolean;
 }
 
 export interface ITileOptions extends IListViewOptions, ITileAspectOptions {
@@ -71,7 +71,7 @@ export default class TileView extends ListView {
     protected _beforeMount(options: ITileOptions): void {
         super._beforeMount(options);
         if (this._listModel) {
-            if (options.showAddingTile) {
+            if (options.addingTileVisible) {
                 this._listModel.showAddingItem();
             }
         }
@@ -92,6 +92,20 @@ export default class TileView extends ListView {
             }
         }
         super._onItemContextMenu(event, item);
+    }
+
+    protected _onItemClick(event: Event, item: TileCollectionItem): void {
+        if (item['[Controls/_tile/display/mixins/AddingItem]']) {
+            const eventResult = this._notify('addingTileClick', [], {bubbling: true});
+            if (eventResult instanceof Promise) {
+                this._listModel.hideAddingItem();
+                eventResult.finally(() => {
+                    this._listModel.showAddingItem();
+                });
+            }
+        } else {
+            super._onItemContextMenu(event, item);
+        }
     }
 
     private _onResize(event: SyntheticEvent<AnimationEvent>): void {

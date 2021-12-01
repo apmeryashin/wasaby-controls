@@ -1,30 +1,30 @@
 import {IItemsStrategy} from 'Controls/display';
 import {Model} from 'Types/entity';
-import TileCollection from '../TileCollection';
-import TileCollectionItem from '../TileCollectionItem';
-import AddingTileItem from '../AddingTileItem';
+import TreeTileCollection from '../TreeTileCollection';
+import TreeTileCollectionItem from '../TreeTileCollectionItem';
+import AddingTreeTileItem from '../AddingTreeTileItem';
 
 /**
- * Интерфейс опций, с которыми создается стратегия AddingTileStrategy
+ * Интерфейс опций, с которыми создается стратегия AddingTreeTileStrategy
  */
-interface IOptions<S extends Model = Model, T extends TileCollectionItem<S> = TileCollectionItem<S>> {
+interface IOptions<S extends Model = Model, T extends TreeTileCollectionItem<S> = TreeTileCollectionItem<S>> {
     source: IItemsStrategy<S, T>;
-    display: TileCollection<S, T>;
+    display: TreeTileCollection<S, T>;
 }
 
 /**
- * Интерфейс опций метода AddingTileStrategy::sortItems
+ * Интерфейс опций метода AddingTreeTileStrategy::sortItems
  */
-interface ISortOptions<S extends Model = Model, T extends TileCollectionItem<S> = TileCollectionItem<S>> {
-    display: TileCollection<S, T>;
+interface ISortOptions<S extends Model = Model, T extends TreeTileCollectionItem<S> = TreeTileCollectionItem<S>> {
+    display: TreeTileCollection<S, T>;
 }
 
 /**
  * Стратегия, которая создает плитку добавления в коллекции
  */
-export default class AddingTileStrategy<
+export default class AddingTreeTileStrategy<
     S extends Model = Model,
-    T extends TileCollectionItem<S> = TileCollectionItem<S>
+    T extends TreeTileCollectionItem<S> = TreeTileCollectionItem<S>
     > implements IItemsStrategy<S, T> {
     readonly '[Controls/_display/IItemsStrategy]': boolean;
 
@@ -32,7 +32,7 @@ export default class AddingTileStrategy<
     protected _items: T[];
     protected _options: IOptions<S, T>;
     protected _source: IItemsStrategy<S, T>;
-    protected _addingTile: AddingTileItem;
+    protected _addingTreeTile: AddingTreeTileItem;
     protected _itemsOrder: number[];
 
     constructor(options: IOptions<S, T>) {
@@ -93,13 +93,13 @@ export default class AddingTileStrategy<
      * @protected
      */
     protected _getItems(): T[] {
-        if (!this._addingTile) {
-            this._addingTile = this.options.display.createItem({
-                itemModule: 'Controls/tile:AddingTileItem',
+        if (!this._addingTreeTile) {
+            this._addingTreeTile = this.options.display.createItem({
+                itemModule: 'Controls/treeTile:AddingTreeTileItem',
                 contents: new Model({})
-            }) as AddingTileItem;
+            }) as AddingTreeTileItem;
         }
-        return ([this._addingTile] as any[] as T[]).concat(this.source.items);
+        return ([this._addingTreeTile] as any[] as T[]).concat(this.source.items);
     }
 
     /**
@@ -119,7 +119,7 @@ export default class AddingTileStrategy<
      * @protected
      */
     protected _createItemsOrder(): number[] {
-        return AddingTileStrategy.sortItems<S, T>(this.source.items, {
+        return AddingTreeTileStrategy.sortItems<S, T>(this.source.items, {
             display: this.options.display
         });
     }
@@ -129,7 +129,7 @@ export default class AddingTileStrategy<
      * @param items Элементы проекции.
      * @param options Опции
      */
-    static sortItems<S extends Model = Model, T extends TileCollectionItem<S> = TileCollectionItem<S>>(
+    static sortItems<S extends Model = Model, T extends TreeTileCollectionItem<S> = TreeTileCollectionItem<S>>(
         items: T[],
         options: ISortOptions<S, T>
     ): number[] {
@@ -140,9 +140,9 @@ export default class AddingTileStrategy<
     }
 }
 
-Object.assign(AddingTileStrategy.prototype, {
+Object.assign(AddingTreeTileStrategy.prototype, {
     '[Controls/_display/IItemsStrategy]': true,
-    '[Controls/_tile/strategy/AddingTile]': true,
-    _moduleName: 'Controls/tile:AddingTileStrategy',
+    '[Controls/_treeTile/strategy/AddingTreeTile]': true,
+    _moduleName: 'Controls/treeTile:AddingTreeTileStrategy',
     _itemsOrder: null
 });

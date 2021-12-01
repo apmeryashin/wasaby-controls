@@ -1,0 +1,28 @@
+<div class="controlsDemo__wrapper controlDemo_Tile_default">
+    <Controls.toggle:RadioGroup
+            bind:selectedKey="_itemTemplate"
+            source="{{_itemTemplateSource}}"
+            keyProperty="id"
+            displayProperty="id"
+            direction="horizontal"/>
+<Controls.treeTile:View
+        tileMode="static"
+        displayProperty="title"
+        imageProperty="image"
+        keyProperty="id"
+        itemsReadyCallback="{{_itemsReadyCallback}}"
+        on:addingTileClick="_addItem()"
+        addingTileVisible="{{true}}"
+        roundBorder="{{ {tr: 'm', br: 'm', tl: 'm', bl: 'm'} }}"
+        tileHeight="200"
+        tileWidth="300"
+        source="{{_viewSource}}">
+    <ws:itemTemplate>
+        <ws:partial
+                template="{{_itemTemplate}}"
+                imageSize="m"
+                border="{{false}}"
+                scope="{{itemTemplate}}"/>
+    </ws:itemTemplate>
+</Controls.treeTile:View>
+</div>
