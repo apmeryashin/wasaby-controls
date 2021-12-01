@@ -6,6 +6,7 @@
             itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
             typeDescription="{{_typeDescription}}">
         <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
+        <ws:itemPadding top="s" right="m" bottom="s" left="m"/>
         <ws:captionColumnOptions width="50%"/>
         <ws:itemTemplate>
             <ws:partial template="Controls/propertyGrid:ItemTemplate"
