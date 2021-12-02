@@ -19,6 +19,7 @@ import {
     getOptionTypes as getValueValidatorsOptionTypes,
     IValueValidatorsOptions
 } from 'Controls/_date/interface/IValueValidators';
+import IValueOptions from 'Controls/_date/interface/IValue';
 import {EventUtils} from 'UI/Events';
 import {isValidDate, Container, InputContainer} from 'Controls/validate';
 import template = require('wml!Controls/_date/BaseInput/BaseInput');
@@ -29,8 +30,9 @@ export interface IDateBaseOptions extends
     IBaseInputOptions,
     IBaseInputMaskOptions,
     IValueValidatorsOptions,
-    IInputDisplayValueOptions {
-
+    IInputDisplayValueOptions,
+    IValueOptions {
+    autocompleteType: string;
 }
 
 const VALID_PARTIAL_DATE = /^(0{2}| {2})\.(0{2}| {2})\.\d{2,4}$/;
@@ -87,7 +89,7 @@ class BaseInput extends Control<IDateBaseOptions> {
 
     protected _model: Model;
 
-    protected _validators: Function[] = [];
+    protected _validators: TValueValidators = [];
 
     protected _beforeMount(options: IDateBaseOptions): void {
         this._updateDateConstructor(options);
@@ -96,10 +98,7 @@ class BaseInput extends Control<IDateBaseOptions> {
             ...options,
             dateConstructor: this._dateConstructor
         });
-        EventUtils.proxyModelEvents(this, this._model, ['valueChanged']);
-        this._model.subscribe('valueChanged', () => {
-            this._updateValidators();
-        });
+        this._registerModelEvents();
         this._updateValidators(options.valueValidators, options.inputMode, options.mask);
     }
 
@@ -125,6 +124,13 @@ class BaseInput extends Control<IDateBaseOptions> {
                 options.displayValue !== this._options.displayValue) {
             this._updateValidators(options.valueValidators, options.inputMode, options.mask);
         }
+    }
+
+    protected _registerModelEvents(): void {
+        EventUtils.proxyModelEvents(this, this._model, ['valueChanged']);
+        this._model.subscribe('valueChanged', () => {
+            this._updateValidators();
+        });
     }
 
     protected _inputCompletedHandler(e: SyntheticEvent<KeyboardEvent>, value: Date | WSDate, textValue: string): void {
@@ -199,7 +205,7 @@ class BaseInput extends Control<IDateBaseOptions> {
         return dateConstructorMap[getMaskType(mask)];
     }
 
-    private _updateValidators(validators?: TValueValidators, inputMode?: string, mask?: string): void {
+    protected _updateValidators(validators?: TValueValidators, inputMode?: string, mask?: string): void {
         const iMode = inputMode || this._options.inputMode;
         const v: TValueValidators = validators || this._options.valueValidators;
         this._validators = [];
