@@ -31,11 +31,11 @@ define('Controls/_icon/Icon', ['UI/Executor', 'Controls/Utils/Icon', 'css!Contro
          }, [], attr ? {
             context: attr.context,
             key: key + '0_0_0_'
-         } : {}, defCollection, viewController)], attr, defCollection, viewController)]) : ([markupGenerator.createTag('div', {
+         } : {}, defCollection, viewController)], attr, defCollection, viewController, true)]) : ([markupGenerator.createTag('div', {
             'attributes': { 'class': classes },
             'events': {},
             'key': key + '1_0_'
-         }, [], attr, defCollection, viewController)]))], key, defCollection);
+         }, [], attr, defCollection, viewController, true)]))], key, defCollection);
          if (defCollection && defCollection.def) {
             out = markupGenerator.chain(out, defCollection, this);
          }

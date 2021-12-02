@@ -100,7 +100,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
          }, [markupGenerator.createText('' + (thelpers.wrapUndef(markupGenerator.escape(currency))) + '', key + '0_2_0_0_')], attr ? {
             context: attr.context,
             key: key + '0_2_0_'
-         } : {}, defCollection, viewController)]) : markupGenerator.createText(''))], attr, defCollection, viewController)], key, defCollection);
+         } : {}, defCollection, viewController)]) : markupGenerator.createText(''))], attr, defCollection, viewController, true)], key, defCollection);
          if (defCollection && defCollection.def) {
             out = markupGenerator.chain(out, defCollection, this);
          }
