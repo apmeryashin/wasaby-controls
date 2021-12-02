@@ -8,10 +8,8 @@ import {DetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/ID
 import {IExplorerOptions} from 'Controls/_newBrowser/interfaces/IExplorerOptions';
 import {MasterVisibilityEnum} from 'Controls/_newBrowser/interfaces/IMasterOptions';
 import {IBrowserViewConfig, NodesPosition} from 'Controls/_newBrowser/interfaces/IBrowserViewConfig';
-import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {EventUtils} from 'UI/Events';
-import {CrudEntityKey} from 'Types/source';
 import {View as ExplorerView} from 'Controls/explorer';
 import {getListConfiguration} from 'Controls/_newBrowser/utils';
 import * as ViewTemplate from 'wml!Controls/_newBrowser/View/View';
@@ -342,6 +340,16 @@ export default class View extends Control<IOptions, IReceivedState> {
      */
     protected _onDetailExplorerChangedViewMode(): void {
         this._afterViewModeChanged();
+    }
+
+    protected _getViewModeForItemTemplate(): string {
+        const isSelectedViewModeUnloaded = !this._tileLoaded && this.viewMode === DetailViewMode.tile ||
+            !this._listLoaded && this.viewMode === DetailViewMode.list;
+        if (isSelectedViewModeUnloaded) {
+            return this._appliedViewMode;
+        } else {
+            return this.viewMode;
+        }
     }
 
     protected _getListOptions(
