@@ -1,11 +1,11 @@
 <Controls.editableArea:View
-        editObject="{{item}}"
+        editingObject="{{item}}"
         readOnly="{{!selected}}"
         backgroundStyle="withoutBorder"
 >
     <div class="ControlsDemo-EditableArea__eapWrapper">
         <Controls.editableArea:Base
-                bind:value="content.editObject.name"
+                bind:value="content.editingObject.name"
                 fontSize="3xl"
                 fontWeight="bold"
         >

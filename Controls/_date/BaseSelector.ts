@@ -10,14 +10,11 @@ import IValueOptions from 'Controls/_date/interface/IValue';
 
 export interface IBaseSelectorOptions extends IControlOptions, IFontSizeOptions, IDatePopupTypeOptions,
     IDateConstructorOptions, IValueOptions {
-    prevArrowVisibility: boolean;
-    nextArrowVisibility: boolean;
 }
 
 export default class BaseSelector<T extends IBaseSelectorOptions> extends Control<T> {
     protected _dependenciesTimer: DependencyTimer = null;
     protected _loadCalendarPopupPromise: Promise<unknown> = null;
-    protected _isMinWidth: boolean = null;
     protected _state: string;
 
     private _stickyOpener: StickyOpener;
@@ -26,22 +23,10 @@ export default class BaseSelector<T extends IBaseSelectorOptions> extends Contro
     };
 
     protected _beforeMount(options: IBaseSelectorOptions): void {
-        this._updateIsMinWidth(options.prevArrowVisibility);
         this._stateChangedCallback = this._stateChangedCallback.bind(this);
         this.shiftPeriod = this.shiftPeriod.bind(this);
 
         this._stickyOpener = new StickyOpener({closeOnOutsideClick: true, actionOnScroll: 'close'});
-    }
-
-    protected _beforeUpdate(options: IBaseSelectorOptions): void {
-        this._updateIsMinWidth(options.prevArrowVisibility);
-    }
-
-    private _updateIsMinWidth(prevArrowVisibility: boolean): void {
-        // при добавлении управляющих стрелок устанавливаем минимальную ширину блока,
-        // чтобы стрелки всегда были зафиксированы и не смещались.
-        // https://online.sbis.ru/opendoc.html?guid=ae195d05-0e33-4532-a77a-7bd8c9783ef1
-        this._isMinWidth = prevArrowVisibility;
     }
 
     protected _onResult(value: Date): void {

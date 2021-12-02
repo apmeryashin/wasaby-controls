@@ -17,24 +17,7 @@ const EMPTY_CAPTIONS = {
 export default {
     getDefaultOptions() {
         return {
-            clickable: true,
-
-            /**
-             * @name Controls/_dateRange/interfaces/ILinkView#nextArrowVisibility
-             * @cfg {Boolean} Отображает стрелку перехода к следующему периоду.
-             * @demo Controls-demo/dateRange/LiteSelector/ArrowVisibility/Index
-             * @default false
-             */
-
-            /*
-             * @name Controls/_dateRange/interfaces/ILinkView#nextArrowVisibility
-             * @cfg {Boolean} Display the control arrow to switch to the next period
-             * @default false
-             */
-            nextArrowVisibility: false,
-
-            prevArrowVisibility: false
-
+            clickable: true
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
              * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
@@ -51,8 +34,6 @@ export default {
 
     getOptionTypes() {
         return {
-            nextArrowVisibility: descriptor(Boolean),
-            prevArrowVisibility: descriptor(Boolean),
             emptyCaption: descriptor(String)
         };
     }

@@ -9,12 +9,17 @@
                bind:value="_value"/>
          </div>
          <div class="controlsDemo-Link__componentWrap">
-            <Controls.date:Selector
-               prevArrowVisibility="{{true}}"
-               nextArrowVisibility="{{true}}"
-               bind:value="_value"
-			   attr:test_name="show_arrow_range"
-            />
+            <Controls.date:ContextProvider>
+               <div class="controlsDemo-Link__componentWrap__selector-container">
+                  <Controls.date:SelectorConsumer
+                          attr:class="ws-flex-grow-1"
+                          bind:value="_value"
+                          attr:test_name="show_arrow_range"
+                  />
+                  <Controls.date:ArrowButtonConsumer direction="left" attr:class="controls-margin_left-m"/>
+                  <Controls.date:ArrowButtonConsumer direction="right" attr:class="controls-margin_left-m"/>
+               </div>
+            </Controls.date:ContextProvider>
          </div>
          <div class="controlsDemo-Link__componentWrap">
             <Controls.date:Selector

@@ -196,6 +196,11 @@ export abstract class AbstractObserversController {
     }
 
     private _updateTriggers(): void {
+        // нужно править юниты
+        if (!this._listContainer) {
+            return;
+        }
+
         this._triggers = Array.from(
             this._listContainer.querySelectorAll(this._triggersQuerySelector)
         );

@@ -28,17 +28,6 @@ class LinkView<T extends ILinkView> extends Control<T> {
         this._updateResetButtonVisible(options);
         this._updateCaption(options);
         this._updateFontColorStyle(options);
-
-        if (options.clearButtonVisibility) {
-            Logger.error('LinkView: Используется устаревшая опция clearButtonVisibility, используйте' +
-                'resetStartValue и resetEndValue');
-        }
-        if (options.prevArrowVisibility) {
-            Logger.warn('LinkView: Используется устаревшая опция prevArrowVisibility, используйте контрол ArrowButton');
-        }
-        if (options.nextArrowVisibility) {
-            Logger.warn('LinkView: Используется устаревшая опция nextArrowVisibility, используйте контрол ArrowButton');
-        }
     }
 
     protected _beforeUpdate(options: ILinkView): void {

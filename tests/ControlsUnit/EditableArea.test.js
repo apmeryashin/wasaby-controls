@@ -22,13 +22,13 @@ define([
          instance = new editableArea.View();
          cfg = {
             autoEdit: true,
-            editObject: entity.Model.fromObject({
+            editingObject: entity.Model.fromObject({
                text: 'qwerty'
             })
          };
          cfg2 = {
             autoEdit: false,
-            editObject: entity.Model.fromObject({
+            editingObject: entity.Model.fromObject({
                text: 'test'
             })
          };
@@ -166,9 +166,9 @@ define([
             instance._beforeMount(cfg);
             instance.beginEdit(event);
             assert.isTrue(instance._isEditing);
-            assert.isFalse(instance._options.editObject === instance._editObject);
+            assert.isFalse(instance._options.editingObject === instance._editObject);
             instance._beforeUpdate(cfg);
-            assert.isFalse(instance._options.editObject === instance._editObject);
+            assert.isFalse(instance._options.editingObject === instance._editObject);
          });
 
          it('without cancelling', function() {
@@ -177,7 +177,7 @@ define([
             instance._notify = mockNotify();
             instance.beginEdit(event);
             assert.equal(eventQueue[0].event, 'beforeBeginEdit');
-            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
+            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editingObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isTrue(instance._isEditing);
             assert.isTrue(instance._isStartEditing);
@@ -189,7 +189,7 @@ define([
             instance._notify = mockNotify();
             instance.beginEdit();
             assert.equal(eventQueue[0].event, 'beforeBeginEdit');
-            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
+            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editingObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isTrue(instance._isEditing);
             assert.isTrue(instance._isStartEditing);
@@ -201,7 +201,7 @@ define([
             instance._notify = mockNotify(Constants.editing.CANCEL);
             instance.beginEdit(event);
             assert.equal(eventQueue[0].event, 'beforeBeginEdit');
-            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
+            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editingObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isFalse(instance._isEditing);
             assert.isNotOk(instance._isStartEditing);
@@ -222,7 +222,7 @@ define([
             assert.equal(eventQueue[1].eventArgs[0], instance._editObject);
             assert.equal(instance._editObject.get('text'), 'qwerty');
             assert.isFalse(instance._editObject.isChanged());
-            assert.isFalse(instance._options.editObject.isChanged());
+            assert.isFalse(instance._options.editingObject.isChanged());
             assert.isFalse(instance._isEditing);
          });
 
@@ -245,7 +245,7 @@ define([
             assert.equal(eventQueue[0].eventArgs[0], instance._editObject);
             assert.equal(instance._editObject.get('text'), 'changed');
             assert.isTrue(instance._editObject.isChanged());
-            assert.isTrue(instance._options.editObject.isChanged());
+            assert.isTrue(instance._options.editingObject.isChanged());
          });
 
          it('callback cancel', function() {
@@ -263,7 +263,7 @@ define([
             assert.equal(eventQueue[0].eventArgs[0], instance._editObject);
             assert.equal(instance._editObject.get('text'), 'changed');
             assert.isTrue(instance._editObject.isChanged());
-            assert.isTrue(instance._options.editObject.isChanged());
+            assert.isTrue(instance._options.editingObject.isChanged());
          });
 
          it ('clone in begitedit', async function() {
@@ -284,7 +284,7 @@ define([
             // завершаем редактирование с сохранением
             await instance.commitEdit();
             // проверили, что опция поменялась
-            assert.equal(cfg.editObject.get('text'), 'asdf');
+            assert.equal(cfg.editingObject.get('text'), 'asdf');
 
             // вновь начинаем редактирование, делаем клон записи с подтверждением изменений.
             instance.beginEdit();
@@ -295,7 +295,7 @@ define([
             // завершаем редактирование с отменой. Не сохраняем.
             await instance.cancelEdit();
             // проверили, что опция не поменялась
-            assert.equal(cfg.editObject.get('text'), 'asdf');
+            assert.equal(cfg.editingObject.get('text'), 'asdf');
 
          });
          it ('change options after edit-mode', async function() {
@@ -316,12 +316,12 @@ define([
             // завершаем редактирование с сохранением
             await instance.commitEdit();
             // проверили, что опция поменялась
-            assert.equal(cfg.editObject.get('text'), 'asdf');
+            assert.equal(cfg.editingObject.get('text'), 'asdf');
 
             // меняем опцию и проверяем, что поменялся _editObject
             const newCfg = {
                editWhenFirstRendered: true,
-               editObject: entity.Model.fromObject({
+               editingObject: entity.Model.fromObject({
                   text: 'changed'
                })
             };
@@ -343,7 +343,7 @@ define([
             assert.equal(eventQueue[1].eventArgs[0], instance._editObject);
             assert.isFalse(instance._isEditing);
             assert.isFalse(instance._editObject.isChanged());
-            assert.isFalse(instance._options.editObject.isChanged());
+            assert.isFalse(instance._options.editingObject.isChanged());
          });
       });
 
@@ -366,9 +366,9 @@ define([
             assert.equal(eventQueue[0].eventArgs[0], instance._editObject);
             assert.equal(eventQueue[1].event, 'afterEndEdit');
             assert.equal(eventQueue[1].eventArgs[0], instance._editObject);
-            assert.equal(cfg.editObject.get('text'), 'asdf');
-            assert.equal(instance._editObject, instance._options.editObject);
-            assert.isTrue(instance._options.editObject.isChanged());
+            assert.equal(cfg.editingObject.get('text'), 'asdf');
+            assert.equal(instance._editObject, instance._options.editingObject);
+            assert.isTrue(instance._options.editingObject.isChanged());
             assert.isFalse(instance._isEditing);
          });
 
@@ -390,7 +390,7 @@ define([
             assert.equal(eventQueue[0].eventArgs[0], instance._editObject);
             assert.equal(instance._editObject.get('text'), 'asdf');
             assert.isTrue(instance._editObject.isChanged());
-            assert.isTrue(instance._options.editObject.isChanged());
+            assert.isTrue(instance._options.editingObject.isChanged());
             assert.isTrue(instance._isEditing);
          });
 
@@ -413,7 +413,7 @@ define([
             assert.isTrue(instance._isEditing);
             assert.equal(instance._editObject.get('text'), 'asdf');
             assert.isTrue(instance._editObject.isChanged());
-            assert.isTrue(instance._options.editObject.isChanged());
+            assert.isTrue(instance._options.editingObject.isChanged());
          });
 
          it('deferred', async function() {
@@ -434,9 +434,9 @@ define([
             assert.equal(eventQueue[0].eventArgs[0], instance._editObject);
             assert.equal(eventQueue[1].event, 'afterEndEdit');
             assert.equal(eventQueue[1].eventArgs[0], instance._editObject);
-            assert.equal(cfg.editObject.get('text'), 'asdf');
-            assert.equal(instance._editObject, instance._options.editObject);
-            assert.isTrue(instance._options.editObject.isChanged());
+            assert.equal(cfg.editingObject.get('text'), 'asdf');
+            assert.equal(instance._editObject, instance._options.editingObject);
+            assert.isTrue(instance._options.editingObject.isChanged());
             assert.isFalse(instance._isEditing);
          });
       });
