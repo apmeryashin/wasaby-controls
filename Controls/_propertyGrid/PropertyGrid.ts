@@ -11,13 +11,14 @@ import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
-import {IMoveActionOptions, Move as MoveAction, Move as MoveCommand} from 'Controls/listCommands';
+import {Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
 import {
+    EDIT_IN_PLACE_CANCEL,
     PROPERTY_GROUP_FIELD,
     PROPERTY_TOGGLE_BUTTON_ICON_FIELD
 } from './Constants';
-import {groupConstants as constView, IEditingConfig, IList} from '../list';
+import {groupConstants as constView} from '../list';
 import PropertyGridCollection from './PropertyGridCollection';
 import PropertyGridCollectionItem from './PropertyGridCollectionItem';
 import {IItemAction, Controller as ItemActionsController, IItemActionsItem} from 'Controls/itemActions';
@@ -42,10 +43,9 @@ import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Co
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {Logger} from 'UI/Utils';
 import {
-    CONSTANTS as EDIT_IN_PLACE_CONSTANTS,
     Controller as EditInPlaceController,
     IBeforeEndEditCallbackParams,
-    InputHelper as EditInPlaceInputHelper, JS_SELECTORS, TAsyncOperationResult
+    InputHelper as EditInPlaceInputHelper, TAsyncOperationResult
 } from 'Controls/editInPlace';
 import {Container as ValidateContainer, ControllerClass as ValidationController} from 'Controls/validate';
 
@@ -54,20 +54,15 @@ const DRAG_SHIFT_LIMIT = 4;
 const IE_MOUSEMOVE_FIX_DELAY = 50;
 const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
-const ERROR_MSG = {
-    CANT_USE_IN_READ_ONLY: (methodName: string): string => `List is in readOnly mode. Cant use ${methodName}() in readOnly!`
-};
+interface IEditingUserOptions {
+    item?: Model;
+}
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
 
 interface IPropertyGridValidatorArguments {
     item: PropertyGridCollectionItem<Model>;
-}
-
-interface IBeginEditOptions {
-    shouldActivateInput?: boolean;
-    columnIndex?: number;
 }
 
 /**
@@ -180,6 +175,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             this._notify('controlResize', [], {bubbling: true});
             this._collapsedGroupsChanged = false;
         }
+
+        // Запустить валидацию, которая была заказана методом commit у редактирования по месту, после
+        // применения всех обновлений реактивных состояний.
         if (this._isPendingDeferredSubmit && this._validateController) {
             this._validateController.resolveSubmit();
             this._isPendingDeferredSubmit = false;
@@ -192,12 +190,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _afterRender(oldOptions?: IPropertyGridOptions, oldContext?: any): void {
+        // Активация поля ввода должна происходить после рендера.
         if (
             this._editInPlaceController &&
             this._editInPlaceController.isEditing() &&
             !this._editInPlaceController.isEndEditProcessing()
         ) {
-            this._activateEditingInput();
+            this._editInPlaceInputHelper.activateInput(() => true);
         }
     }
 
@@ -294,7 +293,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
             if (!resultEditingObject.has(name)) {
                 const newEditingObject = factory(editingObject).toObject();
-                newEditingObject[name] = value || '';
+                newEditingObject[name] = value;
                 const format = Model.fromObject(newEditingObject, resultEditingObject.getAdapter()).getFormat();
                 const propertyFormat = format.at(format.getFieldIndex(name));
                 resultEditingObject.addField({
@@ -373,7 +372,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._processItemMouseEnterWithDragNDrop(displayItem);
             }
         } else {
-            if (!this._editInPlaceController || !this._editInPlaceController.isEditing()) {
+            if (!this._editInPlaceController?.isEditing()) {
                 this._listModel.setHoveredItem(displayItem);
             }
         }
@@ -386,7 +385,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _itemMouseLeave() {
-        if (!this._editInPlaceController || !this._editInPlaceController.isEditing()) {
+        if (!this._editInPlaceController?.isEditing()) {
             this._listModel.setHoveredItem(null);
         }
         if (this._dndController) {
@@ -480,15 +479,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                                options: IPropertyGridOptions,
                                editingItem?: IEditableCollectionItem & IItemActionsItem): void {
         const itemActions: IItemAction[] = options.itemActions;
-        const editingConfig = this._getEditingConfig(options);
-
-        if (!itemActions) {
+        if (!itemActions && !editingItem) {
             return;
         }
         this._itemActionsController.update({
             collection: listModel,
             itemActions,
-            editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editingToolbarVisible: !!editingItem,
             editingItem,
             visibilityCallback: options.itemActionVisibilityCallback,
             style: 'default',
@@ -1143,10 +1140,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _itemClick(e: SyntheticEvent, item: Model, originalEvent: SyntheticEvent): void {
-        const canEditByClick = !this._options.readOnly && this._getEditingConfig(this._options).editOnClick &&
-            item.get('isEditable') && (
-            originalEvent.target.closest('.js-controls-ListView__editingTarget') && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`)
-        );
+        const canEditByClick = !this._options.readOnly && item.get('isEditable');
         if (canEditByClick) {
             e.stopPropagation();
 
@@ -1164,10 +1158,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
-    beginEdit(userOptions: object): Promise<void | {canceled: true}> {
-        return this._beginEdit(userOptions, {
-            shouldActivateInput: userOptions?.shouldActivateInput
-        });
+    beginEdit(userOptions: IEditingUserOptions): Promise<void | {canceled: true}> {
+        return this._beginEdit(userOptions);
     }
 
     protected _onValidateCreated(e: Event, control: ValidateContainer): void {
@@ -1209,58 +1201,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             .then((controller) => controller.commit(commitStrategy));
     }
 
-    private _getEditingConfig(options?: IPropertyGridOptions): IEditingConfig & {mode: 'row' | 'cell'} {
-        const editingConfig = options.editingConfig || {};
-        const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
-
-        // Режим последовательного редактирования (действие по Enter).
-        const getSequentialEditingMode = () => {
-            // sequentialEditingMode[row | cell | none] - новая опция, sequentialEditing[boolean?] - старая опция
-            if (typeof editingConfig.sequentialEditingMode === 'string') {
-                return editingConfig.sequentialEditingMode;
-            } else {
-                return editingConfig.sequentialEditing !== false ? 'row' : 'none';
-            }
-        };
-        let autoAddByApplyButton: boolean = false;
-        if (editingConfig.autoAddByApplyButton !== false) {
-            autoAddByApplyButton = !!(editingConfig.autoAddByApplyButton || editingConfig.autoAdd);
-        }
-        return {
-            mode: editingConfig.mode || 'row',
-            editOnClick: !!editingConfig.editOnClick,
-            sequentialEditingMode: getSequentialEditingMode(),
-            addPosition,
-            item: editingConfig.item,
-            autoAdd: !!editingConfig.autoAdd,
-            autoAddOnInit: !!editingConfig.autoAddOnInit,
-            backgroundStyle: editingConfig.backgroundStyle || 'default',
-            autoAddByApplyButton,
-            toolbarVisibility: !!editingConfig.toolbarVisibility
-        };
-    }
-
-    /**
-     * Метод для активации поля ввода при редактировании по месту
-     * @private
-     */
-    private _activateEditingInput(): void {
-        const activateRowCallback = () => {};
-        this._editInPlaceInputHelper.activateInput(activateRowCallback);
-    }
-
     /**
      * Метод, фактически начинающий редактирование
      * @param userOptions
-     * @param beginEditOption
      * @private
      */
-    private _beginEdit(userOptions: object,
-                       beginEditOption: IBeginEditOptions = {}): Promise<void | {canceled: true}> {
+    private _beginEdit(userOptions: IEditingUserOptions): Promise<void | {canceled: true}> {
         return this._getEditInPlaceController()
             .then((controller) => controller.edit(userOptions))
             .then((result) => {
-                if (beginEditOption.shouldActivateInput !== false && !(result && result.canceled)) {
+                if (!result?.canceled) {
                     this._editInPlaceInputHelper.shouldActivate();
                     this._forceUpdate();
                 }
@@ -1273,11 +1223,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             return import('Controls/editInPlace').then(({InputHelper, Controller}) => {
                 this._editInPlaceInputHelper = new InputHelper();
                 this._editInPlaceController = new Controller({
-                    mode: this._getEditingConfig(this._options).mode,
+                    mode: 'row',
                     collection: this._listModel,
                     onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
-                    onBeforeEndEdit: this._beforeEndEditCallback.bind(this),
-                    onAfterEndEdit: () => Promise.resolve()
+                    onBeforeEndEdit: this._beforeEndEditCallback.bind(this)
                 });
                 return this._editInPlaceController;
             });
@@ -1309,10 +1258,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             .then((validationResult) => {
                 for (const key in validationResult) {
                     if (validationResult.hasOwnProperty(key) && validationResult[key]) {
-                        return EDIT_IN_PLACE_CONSTANTS.CANCEL;
+                        return EDIT_IN_PLACE_CANCEL;
                     }
                 }
                 if (params.item.getFormat().getFieldIndex('editingValue') !== -1) {
+                    // if (editingValue !== this._options.editingObject[params.item.get('name')]) {
+                    // this._propertyValueChanged(null, params.item, editingValue);
+                    // }
+                    // определить, что значение поменялось и только тогда стрелять событием
                     const editingValue = params.item.get('editingValue');
                     params.item.removeField('editingValue');
                     this._propertyValueChanged(null, params.item, editingValue);
@@ -1330,8 +1283,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return Promise.resolve(this._validateController);
     }
 
-    private static _rejectEditInPlacePromise(fromWhatMethod: string): Promise<void> {
-        const msg = ERROR_MSG.CANT_USE_IN_READ_ONLY(fromWhatMethod);
+    private static _rejectEditInPlacePromise(methodName: string): Promise<void> {
+        const msg = `PropertyGrid is in readOnly mode. Can't use ${methodName}()!`;
         Logger.warn(msg);
         return Promise.reject(msg);
     }

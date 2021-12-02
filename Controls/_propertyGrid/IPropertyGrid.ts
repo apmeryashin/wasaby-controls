@@ -4,6 +4,7 @@ import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import {IPromiseSelectableOptions, ISelectionTypeOptions, IItemPaddingOptions, TKey} from 'Controls/interface';
+import {IEditingPropertyGrid} from 'Controls/_propertyGrid/interface/IEditingPropertyGrid';
 
 type TPadding = 'null'|'m';
 
@@ -71,7 +72,8 @@ export interface IPropertyGridOptions extends
     IControlOptions,
     IPromiseSelectableOptions,
     ISelectionTypeOptions,
-    IItemPaddingOptions {
+    IItemPaddingOptions,
+    IEditingPropertyGrid {
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#editingObject
      * @cfg {Object | Types/entity:Model} Объект, свойства которого являются значениями для редакторов.

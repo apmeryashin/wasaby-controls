@@ -18,3 +18,4 @@ export const DEFAULT_VALIDATORS_BY_TYPE = {
     date: 'Controls/validate:InputContainer',
     time: 'Controls/validate:InputContainer'
 };
+export const EDIT_IN_PLACE_CANCEL = 'Cancel';

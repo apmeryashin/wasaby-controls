@@ -36,24 +36,6 @@ export default class Demo extends Control<IControlOptions> {
             ],
             keyProperty: 'name'
         });
-        this._itemActions = [
-            {
-                id: 1,
-                icon: 'icon-Erase',
-                iconStyle: 'danger',
-                showType: TItemActionShowType.MENU,
-                title: 'Удалить',
-                handler: (item: Model) => {
-                    const key = item.getKey();
-                    this._typeDescription.remove(this._typeDescription.getRecordById(key));
-                }
-            }
-        ];
-        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
-    }
-
-    protected _itemActionVisibilityCallback(itemAction: IItemAction, item: Model): boolean {
-        return item.get('isEditable');
     }
 
     protected _beginAdd(): void {

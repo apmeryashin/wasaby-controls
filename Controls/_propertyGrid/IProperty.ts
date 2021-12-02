@@ -303,7 +303,7 @@ export default interface IProperty {
 
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#isEditable
-     * @cfg {Boolean} Для свойства возможно редактирование caption и значения в редакторе.
+     * @cfg {Boolean} Определяет, возможно ли редактирование текста метки редактора.
      * @demo Controls-demo/PropertyGridNew/Validators/Index
      * @see caption
      * @see editorOption

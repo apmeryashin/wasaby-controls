@@ -8,7 +8,6 @@ import PropertyGridCollection from './PropertyGridCollection';
 import {CollectionItem, isFullGridSupport} from 'Controls/display';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {TAsyncOperationResult} from "Controls/_editInPlace/Controller";
 
 interface IColumnOptions {
     width: string;

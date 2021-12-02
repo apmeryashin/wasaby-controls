@@ -69,7 +69,7 @@
                 </ws:partial>
             </ws:if>
             <ws:else data="{{collectionItem.isEditing()}}">
-                <Controls.validate:InputContainer name="InputValidate">
+                <Controls.validate:InputContainer>
                     <ws:validators>
                         <ws:Function value="{{ item.caption }}">Controls/validate:isRequired</ws:Function>
                     </ws:validators>
