@@ -6,7 +6,6 @@
                 bind:endValue="_endValueQuarter"
                 chooseHalfyears="{{false}}"
                 chooseMonths="{{false}}"
-                viewMode="selector"
                 attr:test_name="quarters_range"
         />
     </div>
@@ -18,7 +17,9 @@
                 bind:endValue="_endValueQuarter"
                 chooseHalfyears="{{false}}"
                 chooseMonths="{{false}}"
-                viewMode="label"
+                fontWeight="normal"
+                fontSize="m"
+                fontColorStyle="label"
                 attr:test_name="quarters_range"
         />
     </div>
@@ -30,7 +31,8 @@
                 bind:endValue="_endValueQuarter"
                 chooseHalfyears="{{false}}"
                 chooseMonths="{{false}}"
-                viewMode="link"
+                fontWeight="normal"
+                fontSize="m"
                 attr:test_name="quarters_range"
         />
     </div>

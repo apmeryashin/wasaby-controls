@@ -17,8 +17,6 @@ const EMPTY_CAPTIONS = {
 export default {
     getDefaultOptions() {
         return {
-            viewMode: 'selector',
-
             clickable: true
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
