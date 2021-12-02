@@ -60,6 +60,13 @@ export interface IGetSizesByRangeParams {
     totalCount: number;
 }
 
+export interface IGetFirstVisibleItemIndexParams {
+    itemsSizes: IItemsSizes;
+    scrollPosition: number;
+    placeholders: IPlaceholders;
+    currentRange: IItemsRange;
+}
+
 /**
  * Расчет видимых индексов от переданного индекса
  * @param {IShiftRangeBySegmentParams} params
@@ -346,4 +353,20 @@ function getItemsSizesSum(params: IGetSizesByRangeParams): number {
     }
 
     return result;
+}
+
+/**
+ * Возвращает индекс первой полностью видимой записи
+ * @param params
+ */
+export function getFirstVisibleItemIndex(params: IGetFirstVisibleItemIndexParams): number {
+    const itemsSizes = params.itemsSizes;
+    const backwardPlaceholder = params.placeholders.backward;
+    let itemIndex = params.currentRange.startIndex;
+
+    while (itemsSizes[itemIndex].offset - backwardPlaceholder < params.scrollPosition) {
+        itemIndex++;
+    }
+
+    return itemIndex;
 }

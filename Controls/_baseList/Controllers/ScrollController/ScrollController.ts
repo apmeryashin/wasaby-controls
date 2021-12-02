@@ -7,7 +7,6 @@ import {
     AbstractObserversController,
     IAbstractObserversControllerBaseOptions,
     IAbstractObserversControllerOptions,
-    ITriggersVisibility,
     TIntersectionEvent
 } from './ObserverController/AbstractObserversController';
 import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalculatorResult} from './Calculator';
@@ -85,8 +84,6 @@ export interface IHasItemsOutRange {
 }
 
 export type IDirection = 'backward' | 'forward';
-
-export type IPageDirection = 'backward' | 'forward' | 'start' | 'end';
 
 export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
 
@@ -190,6 +187,10 @@ export class ScrollController {
 
     getElement(key: CrudEntityKey): HTMLElement {
         return this._itemsSizesController.getElement(key);
+    }
+
+    getFirstVisibleItemIndex(): number {
+        return this._calculator.getFirstVisibleItemIndex();
     }
 
     // region Triggers

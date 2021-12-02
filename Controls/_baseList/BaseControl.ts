@@ -513,7 +513,7 @@ const _private = {
     keyDownHome(self, event) {
         if (self._useNewScroll) {
             event.stopPropagation();
-            self._listVirtualScrollController.scrollToPage('start').then(self._setMarkerAfterScrollPaging);
+            self._listVirtualScrollController.scrollToEdge('backward').then(self._setMarkedKeyAfterPaging);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -532,7 +532,7 @@ const _private = {
         if (self._options.navigation?.viewConfig?.showEndButton) {
             _private.scrollToEdge(self, 'down');
         } else if (self._useNewScroll) {
-            self._listVirtualScrollController.scrollToPage('end').then(self._setMarkerAfterScrollPaging);
+            self._listVirtualScrollController.scrollToEdge('forward').then(self._setMarkedKeyAfterPaging);
         }
     },
     keyDownPageUp(self, event) {
@@ -541,7 +541,7 @@ const _private = {
             event.stopPropagation();
             event.preventDefault();
             self._listVirtualScrollController.scrollToPage('backward')
-                .then(self._setMarkerAfterScrollPaging);
+                .then(self._setMarkedKeyAfterPaging);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -552,7 +552,7 @@ const _private = {
             event.stopPropagation();
             event.preventDefault();
             self._listVirtualScrollController.scrollToPage('forward')
-                .then(self._setMarkerAfterScrollPaging);
+                .then(self._setMarkedKeyAfterPaging);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -1053,8 +1053,8 @@ const _private = {
                 if (!self._sourceController?.getLoadError()) {
                     if (direction === 'up') {
                         if (self._useNewScroll) {
-                            self._listVirtualScrollController.scrollToPage('start').then((key) => {
-                                self._setMarkerAfterScrollPaging(key);
+                            self._listVirtualScrollController.scrollToEdge('backward').then((key) => {
+                                self._setMarkedKeyAfterPaging(key);
                                 if (_private.isPagingNavigation(self._options.navigation)) {
                                     self._currentPage = 1;
                                 }
@@ -1074,8 +1074,8 @@ const _private = {
                         }
                     } else {
                         if (self._useNewScroll) {
-                            self._listVirtualScrollController.scrollToPage('end').then((key) => {
-                                self._setMarkerAfterScrollPaging(key);
+                            self._listVirtualScrollController.scrollToEdge('forward').then((key) => {
+                                self._setMarkedKeyAfterPaging(key);
                                 if (_private.isPagingNavigation(self._options.navigation)) {
                                     self._currentPage = self._knownPagesCount;
                                 }
@@ -1097,8 +1097,8 @@ const _private = {
             }).catch((error) => error);
         } else if (direction === 'up') {
             if (self._useNewScroll) {
-                self._listVirtualScrollController.scrollToPage('start').then((key) => {
-                    self._setMarkerAfterScrollPaging(key);
+                self._listVirtualScrollController.scrollToEdge('backward').then((key) => {
+                    self._setMarkedKeyAfterPaging(key);
                     if (self._scrollPagingCtr) {
                         self._currentPage = 1;
                         self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
@@ -1131,7 +1131,7 @@ const _private = {
             if (self._useNewScroll) {
                 const directionCompatibility = direction === 'Up' ? 'backward' : 'forward';
                 self._listVirtualScrollController.scrollToPage(directionCompatibility)
-                    .then(self._setMarkerAfterScrollPaging);
+                    .then(self._setMarkedKeyAfterPaging);
             } else {
                 /**
                  * скроллу не нужно блокироваться, если есть ошибка, потому что
@@ -2265,32 +2265,38 @@ const _private = {
             self._scrollPagingCtr.shiftToEdge('down', hasMoreData);
         }
 
-        if (self._finishScrollToEdgeOnDrawItems) {
-
-            // Если для подскролла в конец делали reload, то индексы виртуального скролла
-            // поставили такие, что последниц элемент уже отображается, scrollToItem не нужен.
-            self._notify(
-                'doScroll',
-                [self._scrollController?.calculateVirtualScrollHeight() || 'down'],
-                { bubbling: true }
-            );
-            _private.updateScrollPagingButtons(self, self._getScrollParams());
-            return Promise.resolve();
-        } else {
-
-            // Последняя страница уже загружена но конец списка не обязательно отображается,
-            // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
-            return _private.scrollToItem(self, lastItemKey, 'bottom', true).then(() => {
-
-                // После того как последний item гарантированно отобразился,
-                // нужно попросить ScrollWatcher прокрутить вниз, чтобы
-                // прокрутить отступ пейджинга и скрыть тень
-                self._notify(
-                    'doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], {bubbling: true}
-                );
-
+        if (self._useNewScroll) {
+            return self._listVirtualScrollController.scrollToEdge('forward').then((key) => {
+                self._setMarkedKeyAfterPaging(key);
                 _private.updateScrollPagingButtons(self, self._getScrollParams());
             });
+        } else {
+            if (self._finishScrollToEdgeOnDrawItems) {
+                // Если для подскролла в конец делали reload, то индексы виртуального скролла
+                // поставили такие, что последниц элемент уже отображается, scrollToItem не нужен.
+                self._notify(
+                    'doScroll',
+                    [self._scrollController?.calculateVirtualScrollHeight() || 'down'],
+                    { bubbling: true }
+                );
+                _private.updateScrollPagingButtons(self, self._getScrollParams());
+                return Promise.resolve();
+            } else {
+
+                // Последняя страница уже загружена но конец списка не обязательно отображается,
+                // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
+                return _private.scrollToItem(self, lastItemKey, 'bottom', true).then(() => {
+
+                    // После того как последний item гарантированно отобразился,
+                    // нужно попросить ScrollWatcher прокрутить вниз, чтобы
+                    // прокрутить отступ пейджинга и скрыть тень
+                    self._notify(
+                        'doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], {bubbling: true}
+                    );
+
+                    _private.updateScrollPagingButtons(self, self._getScrollParams());
+                });
+            }
         }
     },
 
@@ -3398,7 +3404,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._scrollToFirstItemAfterDisplayTopIndicator = this._scrollToFirstItemAfterDisplayTopIndicator.bind(this);
         this._hasHiddenItemsByVirtualScroll = this._hasHiddenItemsByVirtualScroll.bind(this);
         this._intersectionObserverHandler = this._intersectionObserverHandler.bind(this);
-        this._setMarkerAfterScrollPaging = this._setMarkerAfterScrollPaging.bind(this);
+        this._setMarkedKeyAfterPaging = this._setMarkedKeyAfterPaging.bind(this);
     }
 
     /**
@@ -3949,7 +3955,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
-    private _setMarkerAfterScrollPaging(key: CrudEntityKey): void {
+    private _setMarkedKeyAfterPaging(key: CrudEntityKey): void {
         if (_private.getMarkerController(this).shouldMoveMarkerOnScrollPaging()) {
             this._changeMarkedKey(key);
         }

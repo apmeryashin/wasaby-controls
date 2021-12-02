@@ -113,6 +113,13 @@ export abstract class AbstractListVirtualScrollController<
      */
     private _scrollToElementCompletedCallback: () => void;
 
+    /**
+     * Колбэк, который вызывается, когда завершился подскролл.
+     * Используется, чтобы вернуть правильный ключ в методе scrollToPage
+     * @private
+     */
+    protected _doScrollCompletedCallback: () => void;
+
     constructor(options: TOptions) {
         this._onCollectionChange = this._onCollectionChange.bind(this);
         this._initCollection(options.collection);
@@ -361,6 +368,7 @@ export abstract class AbstractListVirtualScrollController<
                 case 'doScroll':
                     const doScrollParams = this._scheduledScrollParams.params as IDoScrollParams;
                     this._doScrollUtil(doScrollParams.scrollParam);
+                    this._doScrollCompletedCallback();
                     this._scheduledScrollParams = null;
                     break;
                 default:

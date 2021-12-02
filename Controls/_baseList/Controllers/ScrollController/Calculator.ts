@@ -1,9 +1,11 @@
 import {
     getActiveElementIndexByScrollPosition,
-    getRangeByIndex, getRangeByItemsSizes,
+    getRangeByIndex,
+    getRangeByItemsSizes,
     getRangeByScrollPosition,
     shiftRangeBySegment,
-    getPlaceholdersByRange
+    getPlaceholdersByRange,
+    getFirstVisibleItemIndex
 } from './CalculatorUtil';
 
 import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
@@ -137,6 +139,18 @@ export class Calculator {
 
     updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
         this._givenItemsSizes = itemsSizes;
+    }
+
+    /**
+     * Возвращает индекс первой полностью видимой записи
+     */
+    getFirstVisibleItemIndex(): number {
+        return getFirstVisibleItemIndex({
+            itemsSizes: this._itemsSizes,
+            currentRange: this._range,
+            scrollPosition: this._scrollPosition,
+            placeholders: this._placeholders
+        });
     }
 
     // endregion Getters/Setters
