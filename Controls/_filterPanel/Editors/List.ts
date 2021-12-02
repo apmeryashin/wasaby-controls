@@ -528,7 +528,7 @@ class ListEditor extends Control<IListEditorOptions> {
             this._filter[keyProperty] = selectedKeys;
         }
         if (historyId) {
-            this._filter._historyIds = [historyId];
+            this._filter._historyId = [historyId];
         }
     }
 
