@@ -43,6 +43,11 @@ export class ListVirtualScrollController extends AbstractListVirtualScrollContro
         let itemIndex;
         if (pageDirection === 'forward' || pageDirection === 'backward') {
             const edgeItem = this._scrollController.getEdgeVisibleItem({direction: pageDirection});
+            // TODO SCROLL юниты
+            if (!edgeItem) {
+                return Promise.resolve(null);
+            }
+
             itemIndex = edgeItem.index;
         } else {
             itemIndex = pageDirection === 'start' ? 0 : this._collection.getCount() - 1;
