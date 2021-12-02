@@ -21,7 +21,7 @@
               footerContentTemplate="{{footerContent}}"
               headerContentTemplate="{{headerContentTemplate || _headerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
-              closeButtonVisibility="{{_closeButtonVisibility}}"
+              closeButtonVisible="{{_closeButtonVisibility}}"
               closeButtonViewMode="{{_options.closeButtonViewMode}}"
               stickyPosition="{{_options.stickyPosition}}"
               draggable="{{_options.draggable}}"

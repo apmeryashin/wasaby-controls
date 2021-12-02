@@ -13,7 +13,7 @@
     <div class="controlsDemo__wrapper">
         <div class="controls-text-label">Без кнопки закрытия</div>
         <Controls.popupTemplate:Sticky headingCaption="Заголовок"
-                                       closeButtonVisibility="{{false}}">
+                                       closeButtonVisible="{{false}}">
             <ws:bodyContentTemplate>
                <div class="controlsDemo-PopupTemplate__list-item"> Элемент меню 1 </div>
                <div class="controlsDemo-PopupTemplate__list-item"> Элемент меню 2 </div>

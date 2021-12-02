@@ -4,6 +4,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Controller as ManagerController} from 'Controls/popup';
 import {getRoundClass} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
 import {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
+import {Logger} from 'UI/Utils';
 import 'css!Controls/popupTemplate';
 
 export interface IDialogTemplateOptions extends IControlOptions, IPopupTemplateOptions {
@@ -41,6 +42,10 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
 
     protected _beforeMount(options: IDialogTemplateOptions): void {
         this._setDragStateByOptions(options);
+        if (options.closeButtonVisibility !== undefined) {
+            Logger.warn('Controls/popupTemplate:Dialog : Используется устаревшая опция closeButtonVisibility,' +
+                                                                                     ' используйте closeButtonVisible');
+        }
     }
 
     protected _beforeUpdate(options: IDialogTemplateOptions): void {
@@ -103,7 +108,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
             headerBorderVisible: false,
             backgroundStyle: 'default',
             headingFontSize: '3xl',
-            closeButtonVisibility: true,
+            closeButtonVisible: true,
             closeButtonViewMode: 'linkButton',
             closeButtonTransparent: true
         };

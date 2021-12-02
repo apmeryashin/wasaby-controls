@@ -6,7 +6,7 @@
 </ws:template>
 
 <Controls.popupTemplate:Sticky closeButtonTopSpacing="none"
-                               closeButtonVisibility="{{ !!_options.stickyPosition }}"
+                               closeButtonVisible="{{ !!_options.stickyPosition }}"
                                stickyPosition="{{ _options.stickyPosition }}"
                                closeButtonViewMode="external"
                                attr:class="controls-PeriodLiteDialog__shadow">

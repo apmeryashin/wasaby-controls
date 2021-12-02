@@ -3,6 +3,7 @@ import * as template from 'wml!Controls/_popupTemplate/InfoBox/Template/InfoBox'
 import {TVertical, THorizontal} from 'Controls/_popupTemplate/Sticky/StickyController';
 import {IStickyPopupPosition, IInfoBoxOptions} from 'Controls/popup';
 import {ValidationStatus, IValidationStatusOptions} from 'Controls/interface';
+import {Logger} from 'UI/Utils';
 import 'css!Controls/popupTemplate';
 
 type TArrowPosition = 'start' | 'end' | 'center';
@@ -36,6 +37,10 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     protected _beforeMount(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
         this._borderStyle = InfoboxTemplate._setBorderStyle(newOptions.style as TStyle, newOptions.validationStatus);
+        if (newOptions.closeButtonVisibility !== undefined) {
+            Logger.warn('Controls/popupTemplate:Infobox : Используется устаревшая опция closeButtonVisibility' +
+                                                                                     ' используйте closeButtonVisible');
+        }
     }
 
     protected _beforeUpdate(newOptions: IInfoboxTemplateOptions): void {
@@ -65,7 +70,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     }
 
     static defaultProps: Partial<IInfoboxTemplateOptions> = {
-        closeButtonVisibility: true,
+        closeButtonVisible: true,
         validationStatus: 'valid',
         style: 'secondary'
     };

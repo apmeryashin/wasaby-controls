@@ -48,7 +48,7 @@ class NotificationSimple extends Control<INotificationSimpleOptions> {
     static getDefaultOptions(): INotificationSimpleOptions {
         return {
             style: 'secondary',
-            closeButtonVisibility: true
+            closeButtonVisible: true
         };
     }
 }
