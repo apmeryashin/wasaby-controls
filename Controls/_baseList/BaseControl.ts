@@ -1416,8 +1416,8 @@ const _private = {
         // на мобильных устройствах с overflow scrolling, scrollTop может быть отрицательным
         self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self._options.navigation) && self._scrollController) {
-            if (!self._scrollController.getParamsToRestoreScrollPosition()) {
+        if (_private.needScrollPaging(self._options.navigation)) {
+            if (!self._scrollController?.getParamsToRestoreScrollPosition()) {
                 _private.updateScrollPagingButtons(self, {...self._getScrollParams(), initial: !self._scrolled});
             }
         }
@@ -2636,7 +2636,8 @@ const _private = {
     },
 
     setMarkerAfterScroll(self: typeof BaseControl, event: SyntheticEvent): void {
-        if (_private.getMarkerController(self, this._options).shouldMoveMarkerOnScrollPaging() !== false) {
+        if (_private.getMarkerController(self, this._options).shouldMoveMarkerOnScrollPaging() !== false &&
+            !self._useNewScroll) {
             self._setMarkerAfterScroll = true;
         }
     },
@@ -3651,6 +3652,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // TODO SCROLL избавиться от scrollTop в BaseControl
             this._scrollTop = params.scrollTop > 0 ? params.scrollTop : 0;
             this._listVirtualScrollController.scrollPositionChange(params.scrollTop);
+            _private.handleListScrollSync(this, params.scrollTop);
         } else {
             _private.handleListScrollSync(this, params.scrollTop);
             const result = this._scrollController?.scrollPositionChange({
