@@ -16,7 +16,7 @@ import {
 } from 'Controls/display';
 import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 import {
-    IActiveElementChangedChangedCallback,
+    IActiveElementChangedChangedCallback, IDoScrollParams,
     IEdgeItem,
     IEdgeItemCalculatingParams,
     IHasItemsOutRange,
@@ -26,6 +26,7 @@ import {
     IPlaceholders,
     IScheduledScrollParams,
     IScheduledScrollToElementParams,
+    IScrollParam,
     ScrollController
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {
@@ -50,7 +51,7 @@ export interface IShadowVisibility {
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
 type IScrollToElementUtil = (container: HTMLElement, position: string, force: boolean) => Promise<void>|void;
-type IDoScrollUtil = (scrollTop: number) => void;
+type IDoScrollUtil = (scrollParam: IScrollParam) => void;
 type IUpdateShadowsUtil = (hasItems: IHasItemsOutRange) => void;
 type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
 type IUpdateVirtualNavigationUtil = (hasItems: IHasItemsOutRange) => void;
@@ -192,7 +193,7 @@ export abstract class AbstractListVirtualScrollController<
 
         const itemIndex = this._collection.getIndexByKey(key);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
-        if (rangeChanged) {
+        if (rangeChanged || this._scheduledScrollParams) {
             this._scheduleScroll({
                 type: 'scrollToElement',
                 params: { key, position, force }
@@ -323,7 +324,7 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
-    private _scheduleScroll(scrollParams: IScheduledScrollParams): void {
+    protected _scheduleScroll(scrollParams: IScheduledScrollParams): void {
         this._scheduledScrollParams = scrollParams;
     }
 
@@ -355,6 +356,11 @@ export abstract class AbstractListVirtualScrollController<
                         scrollToElementParams.position,
                         scrollToElementParams.force
                     );
+                    this._scheduledScrollParams = null;
+                    break;
+                case 'doScroll':
+                    const doScrollParams = this._scheduledScrollParams.params as IDoScrollParams;
+                    this._doScrollUtil(doScrollParams.scrollParam);
                     this._scheduledScrollParams = null;
                     break;
                 default:

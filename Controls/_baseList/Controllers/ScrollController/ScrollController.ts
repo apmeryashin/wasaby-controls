@@ -35,7 +35,7 @@ export interface IActiveElementIndex {
     activeElementIndex: number;
 }
 
-export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement';
+export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement' | 'doScroll';
 
 export interface IEdgeItem {
     index: number;
@@ -63,9 +63,15 @@ export interface IScheduledScrollToElementParams {
     force: boolean;
 }
 
+export type IScrollParam = number | 'top' | 'bottom' | 'pageUp' | 'pageDown';
+
+export interface IDoScrollParams {
+    scrollParam: IScrollParam;
+}
+
 export interface IScheduledScrollParams {
     type: IScheduledScrollType;
-    params: IEdgeItem | IScheduledScrollToElementParams | IEdgeItemCalculatingParams;
+    params: IEdgeItem | IScheduledScrollToElementParams | IEdgeItemCalculatingParams | IDoScrollParams;
 }
 
 export interface IPlaceholders {

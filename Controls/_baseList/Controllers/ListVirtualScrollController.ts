@@ -55,6 +55,19 @@ export class ListVirtualScrollController extends AbstractListVirtualScrollContro
 
         const item = this._collection.getItemBySourceIndex(itemIndex);
         const itemKey = item.getContents().getKey();
-        return this.scrollToItem(itemKey).then(() => itemKey);
+        const scrollPosition = pageDirection === 'forward' || pageDirection === 'end' ? 'top' : 'bottom';
+        return this.scrollToItem(itemKey, scrollPosition, true).then(() => {
+            if (pageDirection === 'start' || pageDirection === 'end') {
+                // делаем подскролл, чтобы список отскролился к самому краю
+                // Делаем через scheduleScroll, чтобы если что успел отрисоваться отступ под пэйджинг
+                this._scheduleScroll({
+                    type: 'doScroll',
+                    params: {
+                        scrollParam: pageDirection === 'start' ? 'top' : 'bottom'
+                    }
+                });
+            }
+            return itemKey;
+        });
     }
 }

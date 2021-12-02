@@ -513,7 +513,7 @@ const _private = {
     keyDownHome(self, event) {
         if (self._useNewScroll) {
             event.stopPropagation();
-            self._listVirtualScrollController.scrollToPage('start').then(self._changeMarkedKey);
+            self._listVirtualScrollController.scrollToPage('start').then(self._setMarkerAfterScrollPaging);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -528,28 +528,31 @@ const _private = {
     },
 
     keyDownEnd(self, event) {
-        if (self._useNewScroll) {
-            event.stopPropagation();
-            self._listVirtualScrollController.scrollToPage('end').then(self._changeMarkedKey);
-        } else {
-            _private.setMarkerAfterScroll(self, event);
-            if (self._options.navigation?.viewConfig?.showEndButton) {
-                _private.scrollToEdge(self, 'down');
-            }
+        _private.setMarkerAfterScroll(self, event);
+        if (self._options.navigation?.viewConfig?.showEndButton) {
+            _private.scrollToEdge(self, 'down');
+        } else if (self._useNewScroll) {
+            self._listVirtualScrollController.scrollToPage('end').then(self._setMarkerAfterScrollPaging);
         }
     },
     keyDownPageUp(self, event) {
         if (self._useNewScroll) {
+            // отлючаем нативное поведение и всплытие событие, чтобы нам повторно не пришло событие от Application
             event.stopPropagation();
-            self._listVirtualScrollController.scrollToPage('backward').then(self._changeMarkedKey);
+            event.preventDefault();
+            self._listVirtualScrollController.scrollToPage('backward')
+                .then(self._setMarkerAfterScrollPaging);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
     },
     keyDownPageDown(self, event) {
         if (self._useNewScroll) {
+            // отлючаем нативное поведение и всплытие событие, чтобы нам повторно не пришло событие от Application
             event.stopPropagation();
-            self._listVirtualScrollController.scrollToPage('forward').then(self._changeMarkedKey);
+            event.preventDefault();
+            self._listVirtualScrollController.scrollToPage('forward')
+                .then(self._setMarkerAfterScrollPaging);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -1049,38 +1052,69 @@ const _private = {
                  */
                 if (!self._sourceController?.getLoadError()) {
                     if (direction === 'up') {
-                        if (_private.isPagingNavigation(self._options.navigation)) {
-                            self._currentPage = 1;
-                        }
-                        self._finishScrollToEdgeOnDrawItems = () => {
-                            self._currentPage = 1;
-                            self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
-                            self._notify('doScroll', ['top'], { bubbling: true });
-                            scrollToEdgePromiseResolver();
-                        };
-                    } else {
-                        if (_private.isPagingNavigation(self._options.navigation)) {
-                            self._currentPage = self._knownPagesCount;
-                        }
-                        self._finishScrollToEdgeOnDrawItems = () => {
-                            _private.jumpToEnd(self).then(() => {
+                        if (self._useNewScroll) {
+                            self._listVirtualScrollController.scrollToPage('start').then((key) => {
+                                self._setMarkerAfterScrollPaging(key);
+                                if (_private.isPagingNavigation(self._options.navigation)) {
+                                    self._currentPage = 1;
+                                }
+                                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
                                 scrollToEdgePromiseResolver();
                             });
-                        };
+                        } else {
+                            if (_private.isPagingNavigation(self._options.navigation)) {
+                                self._currentPage = 1;
+                            }
+                            self._finishScrollToEdgeOnDrawItems = () => {
+                                self._currentPage = 1;
+                                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
+                                self._notify('doScroll', ['top'], { bubbling: true });
+                                scrollToEdgePromiseResolver();
+                            };
+                        }
+                    } else {
+                        if (self._useNewScroll) {
+                            self._listVirtualScrollController.scrollToPage('end').then((key) => {
+                                self._setMarkerAfterScrollPaging(key);
+                                if (_private.isPagingNavigation(self._options.navigation)) {
+                                    self._currentPage = self._knownPagesCount;
+                                }
+                            });
+                        } else {
+                            if (_private.isPagingNavigation(self._options.navigation)) {
+                                self._currentPage = self._knownPagesCount;
+                            }
+                            self._finishScrollToEdgeOnDrawItems = () => {
+                                _private.jumpToEnd(self).then(() => {
+                                    scrollToEdgePromiseResolver();
+                                });
+                            };
+                        }
                     }
                 } else {
                     scrollToEdgePromiseResolver();
                 }
             }).catch((error) => error);
         } else if (direction === 'up') {
-            self._scrollToFirstItem().then(() => {
-                self._notify('doScroll', ['top'], { bubbling: true });
-                if (self._scrollPagingCtr) {
-                    self._currentPage = 1;
-                    self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
-                }
-                scrollToEdgePromiseResolver();
-            });
+            if (self._useNewScroll) {
+                self._listVirtualScrollController.scrollToPage('start').then((key) => {
+                    self._setMarkerAfterScrollPaging(key);
+                    if (self._scrollPagingCtr) {
+                        self._currentPage = 1;
+                        self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
+                    }
+                    scrollToEdgePromiseResolver();
+                });
+            } else {
+                self._scrollToFirstItem().then(() => {
+                    self._notify('doScroll', ['top'], { bubbling: true });
+                    if (self._scrollPagingCtr) {
+                        self._currentPage = 1;
+                        self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
+                    }
+                    scrollToEdgePromiseResolver();
+                });
+            }
         } else {
             _private.jumpToEnd(self).then(() => {
                 if (self._scrollPagingCtr) {
@@ -1096,7 +1130,8 @@ const _private = {
         if (!self._scrollPageLocked) {
             if (self._useNewScroll) {
                 const directionCompatibility = direction === 'Up' ? 'backward' : 'forward';
-                self._listVirtualScrollController.scrollToPage(directionCompatibility).then(self._changeMarkedKey);
+                self._listVirtualScrollController.scrollToPage(directionCompatibility)
+                    .then(self._setMarkerAfterScrollPaging);
             } else {
                 /**
                  * скроллу не нужно блокироваться, если есть ошибка, потому что
@@ -2228,10 +2263,6 @@ const _private = {
         if (self._scrollPagingCtr) {
             self._currentPage = self._pagingCfg.pagesCount;
             self._scrollPagingCtr.shiftToEdge('down', hasMoreData);
-        }
-
-        if (self._useNewScroll) {
-            return Promise.resolve();
         }
 
         if (self._finishScrollToEdgeOnDrawItems) {
@@ -3366,7 +3397,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._scrollToFirstItemAfterDisplayTopIndicator = this._scrollToFirstItemAfterDisplayTopIndicator.bind(this);
         this._hasHiddenItemsByVirtualScroll = this._hasHiddenItemsByVirtualScroll.bind(this);
         this._intersectionObserverHandler = this._intersectionObserverHandler.bind(this);
-        this._changeMarkedKey = this._changeMarkedKey.bind(this);
+        this._setMarkerAfterScrollPaging = this._setMarkerAfterScrollPaging.bind(this);
     }
 
     /**
@@ -3894,12 +3925,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
                 if (bottomEnabled) {
                     this._notify('enableVirtualNavigation', ['bottom'], { bubbling: true });
-                    // todo зачем?
-                    // self._bottomVisible = false;
+                    // чтобы скрыть отступ под пэйджинг
+                    this._bottomVisible = false;
                 } else {
                     this._notify('disableVirtualNavigation', ['bottom'], { bubbling: true });
-                    // todo зачем?
-                    // self._bottomVisible = true;
+                    // чтобы нарисовать отступ под пэйджинг
+                    this._bottomVisible = true;
                 }
             },
 
@@ -3914,6 +3945,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 }
             }
         });
+    }
+
+    private _setMarkerAfterScrollPaging(key: CrudEntityKey): void {
+        if (_private.getMarkerController(this).shouldMoveMarkerOnScrollPaging()) {
+            this._changeMarkedKey(key);
+        }
     }
 
     protected _afterMount(): void {
