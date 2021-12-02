@@ -1,8 +1,11 @@
 <div class="controls-FilterViewPanel__additional-editors-container">
     <ws:if data="{{_viewModel.hasBasicItems()}}">
-        <div class="controls-FilterViewPanel__additional-caption">
-            {{rk('Еще можно отобрать')}}
-        </div>
+        <Controls.heading:Title caption="{{rk('Еще можно отобрать')}}"
+                                fontColorStyle="unaccented"
+                                fontSize="xs"
+                                fontWeight="normal"
+                                readOnly="{{true}}"
+                                attr:class="controls-FilterViewPanel__additional-caption"/>
     </ws:if>
     <div class="controls-FilterViewPanel__additional-editors">
         <div class="controls-FilterViewPanel__additional_left-column">

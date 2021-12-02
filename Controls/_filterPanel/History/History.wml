@@ -1,7 +1,12 @@
 <div>
    <ws:if data="{{_options.historyId && (_historyItems.getCount() || _options.emptyHistoryTemplate)}}">
       <div class="controls-FilterViewPanel__history-editors-container">
-         <div class="controls-FilterViewPanel__history-caption">{{rk('Ранее отбирались')}}</div>
+         <Controls.heading:Title caption="{{rk('Ранее отбирались')}}"
+                                 fontColorStyle="unaccented"
+                                 fontSize="xs"
+                                 fontWeight="normal"
+                                 readOnly="{{true}}"
+                                 attr:class="controls-FilterViewPanel__history-caption"/>
          <div class="controls-FilterViewPanel__history-editors">
             <ws:for data="index, filter in _historyItems">
                <ws:if data="{{index < _maxHistoryCount}}">

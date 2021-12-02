@@ -17,10 +17,10 @@ export default class extends Control {
                 name: 'booleanEditor',
                 editorTemplateName: 'Controls/filterPanel:TextEditor',
                 resetValue: false,
-                viewMode: 'basic',
+                viewMode: 'extended',
                 value: false,
                 editorOptions: {
-                    value: true,
+                    filterValue: true,
                     extendedCaption: 'Без рабочих групп'
                 }
             }, {
@@ -31,7 +31,7 @@ export default class extends Control {
                 caption: '',
                 value: ['1'],
                 textValue: '',
-                viewMode: 'basic',
+                viewMode: 'extended',
                 editorOptions: {
                     source: new Memory({
                         keyProperty: 'id',
@@ -55,7 +55,7 @@ export default class extends Control {
                 caption: '',
                 value: ['1'],
                 textValue: '',
-                viewMode: 'basic',
+                viewMode: 'extended',
                 editorOptions: {
                     source: new Memory({
                         keyProperty: 'id',
