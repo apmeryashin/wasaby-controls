@@ -1177,9 +1177,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _onValidateDestroyed(e: Event, control: ValidateContainer): void {
-        this._getValidationController().then((controller: ValidationController) => {
-            controller.removeValidator(control);
-        });
+        if (this._validateController) {
+            this._validateController.removeValidator(control);
+        }
     }
 
     private _cancelEdit(force: boolean = false): TAsyncOperationResult {
