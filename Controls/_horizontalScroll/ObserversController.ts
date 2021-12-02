@@ -1,11 +1,13 @@
 import {
     AbstractObserversController,
+    IAbstractObserversControllerOptions,
     TIntersectionEvent,
     IDirectionNew as IDirection
 } from 'Controls/baseList';
-
 import {EdgeIntersectionObserver} from 'Controls/scroll';
 import {Control} from 'UI/Base';
+
+export {IAbstractObserversControllerOptions as IObserversControllerOptions};
 
 export class ObserversController extends AbstractObserversController {
     protected _createTriggersObserver(component: Control,
