@@ -342,6 +342,13 @@ export interface IPropertyGridOptions extends
  */
 
 /**
+ * @event Controls/_propertyGrid/IPropertyGrid#typeDescriptionChanged Происходит при изменении конфигурации свойств в PropertyGrid.
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Controls/_propertyGrid/IProperty[]} typeDescription конфигурация свойств в PropertyGrid.
+ * @see typeDescription
+ */
+
+/**
  * Интерфейс контрола {@link Controls/propertyGrid:PropertyGrid}.
  * @interface Controls/_propertyGrid/IPropertyGrid
  * @public

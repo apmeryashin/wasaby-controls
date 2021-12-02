@@ -1261,14 +1261,18 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                         return EDIT_IN_PLACE_CANCEL;
                     }
                 }
-                if (params.item.getFormat().getFieldIndex('editingValue') !== -1) {
-                    // if (editingValue !== this._options.editingObject[params.item.get('name')]) {
-                    // this._propertyValueChanged(null, params.item, editingValue);
-                    // }
-                    // определить, что значение поменялось и только тогда стрелять событием
+
+                const eventResult = this._notify('typeDescriptionChanged', [this._listModel.getCollection()]);
+
+                if (eventResult !== EDIT_IN_PLACE_CANCEL &&
+                    params.item.getFormat().getFieldIndex('editingValue') !== -1) {
+                    const editingObject = this._listModel.getEditingObject();
                     const editingValue = params.item.get('editingValue');
+                    const name = params.item.get(this._listModel.getKeyProperty());
                     params.item.removeField('editingValue');
-                    this._propertyValueChanged(null, params.item, editingValue);
+                    if (editingValue !== editingObject[name]) {
+                        this._propertyValueChanged(null, params.item, editingValue);
+                    }
                 }
             });
     }
