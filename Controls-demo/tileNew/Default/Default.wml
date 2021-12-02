@@ -5,6 +5,5 @@
         imageProperty="image"
         keyProperty="id"
         source="{{_viewSource}}">
-
 </Controls.treeTile:View>
 </div>
