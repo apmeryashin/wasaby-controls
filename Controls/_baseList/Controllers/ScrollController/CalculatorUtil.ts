@@ -33,7 +33,7 @@ interface IGetSegmentSizeToHideParams {
     placeholders: IPlaceholders;
     itemsSizes: IItemsSizes;
     viewportSize: number;
-    scrollPosition: number;
+    contentSize: number;
 }
 
 export interface IGetByPositionParams {
@@ -85,8 +85,9 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
 
         endIndex = Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount));
     } else {
-        startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
+        // сперва считаем именно endIndex, т.к. startIndex зависит от нового значения endIndex
         endIndex = Math.min(endIndex + segmentSize, totalCount);
+        startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
     }
 
     return {
@@ -99,7 +100,8 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
  * Смещение на заданный segmentSize может сразу же вызвать shiftRange по триггеру.
  */
 function getSegmentSizeToHide(params: IGetSegmentSizeToHideParams): number {
-    if (params.direction === 'backward') {
+    const shiftDirection = params.direction;
+    if (shiftDirection === 'forward') {
         return getSegmentSizeToHideBackward(params);
     } else {
         return getSegmentSizeToHideForward(params);
@@ -126,7 +128,7 @@ function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): numbe
     let start = params.currentRange.startIndex;
     let itemsSizesSum = 0;
     const itemsSizes = params.itemsSizes;
-    const offsetDistance = params.scrollPosition - params.viewportSize - params.triggersOffsets.backward
+    const offsetDistance = params.contentSize - params.viewportSize - params.triggersOffsets.backward
         - params.triggersOffsets.forward;
     // Если список не проскроллен, то offsetDistance может получиться меньше 0.
     if (offsetDistance < 0) {

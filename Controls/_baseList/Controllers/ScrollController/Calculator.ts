@@ -248,7 +248,7 @@ export class Calculator {
                 segmentSize: this._getSegmentSize(),
                 totalCount: this._totalCount,
                 viewportSize: this._viewportSize,
-                scrollPosition: this._scrollPosition,
+                contentSize: this._contentSize,
                 triggersOffsets: this._triggersOffsets,
                 itemsSizes: this._itemsSizes,
                 placeholders: this._placeholders
@@ -383,7 +383,7 @@ export class Calculator {
             segmentSize: this._getSegmentSize(),
             totalCount: this._totalCount,
             viewportSize: this._viewportSize,
-            scrollPosition: this._scrollPosition,
+            contentSize: this._contentSize,
             triggersOffsets: this._triggersOffsets,
             itemsSizes: this._itemsSizes,
             placeholders: this._placeholders
@@ -446,7 +446,7 @@ export class Calculator {
             segmentSize: count,
             totalCount: this._totalCount,
             viewportSize: this._viewportSize,
-            scrollPosition: this._scrollPosition,
+            contentSize: this._contentSize,
             triggersOffsets: this._triggersOffsets,
             itemsSizes: this._itemsSizes,
             placeholders: this._placeholders
