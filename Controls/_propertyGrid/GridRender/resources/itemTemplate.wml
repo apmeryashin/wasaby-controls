@@ -39,7 +39,7 @@
                collectionItem="{{_options.collectionItem}}"/>
 </ws:if>
 <ws:else>
-    <ws:if data="{{!item.editorOptions.jumpingLabel && (item.isEditable || item.caption || item.captionTemplate)}}">
+    <ws:if data="{{!item.editorOptions.jumpingLabel && (collectionItem.isEditing() || item.caption || item.captionTemplate)}}">
         <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden'}}">
             <ws:if data="{{captionPosition === 'top'}}">
                 <div style="{{getCheckboxStyles(collectionItem, captionPosition, true)}}"
@@ -106,7 +106,7 @@
                    {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}
                    js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor"
-             style="{{getEditorStyles(collectionItem, captionPosition, !(item.caption || item.isEditable))}}">
+             style="{{getEditorStyles(collectionItem, captionPosition, !(item.caption || collectionItem.isEditing()))}}">
             <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">
                 <ws:partial template="levelPadding"/>
             </ws:if>
