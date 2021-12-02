@@ -1,8 +1,0 @@
-<div class="controls-demo_LiteSelector-block">
-    <Controls.dateRange:Selector
-            prevArrowVisibility="{{true}}"
-            nextArrowVisibility="{{true}}"
-            datePopupType="shortDatePicker"
-            bind:startValue="_startValue"
-            bind:endValue="_endValue"/>
-</div>

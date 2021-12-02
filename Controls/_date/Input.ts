@@ -41,9 +41,8 @@ interface IDateInput extends ICalendarButtonVisibleOptions, IControlOptions, IDa
  * @implements Controls/date:ICalendarButtonVisible
  * @implements Controls/date:IValue
  * @mixes Controls/input:IBase
- * @mixes Controls/input:IValueValidators
+ * @mixes Controls/date:IValueValidators
  * @implements Controls/interface:IOpenPopup
- * @mixes Controls/input:IInputDisplayValueValidators
  * @implements Controls/date:IDatePopupType
  *
  * @public

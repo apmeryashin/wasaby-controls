@@ -27,16 +27,4 @@
                         controls-icon icon-Close"
               on:click="_resetButtonClickHandler()"></span>
     </ws:if>
-    <ws:if data="{{ _options.prevArrowVisibility && !_options.readOnly}}">
-        <Controls.buttons:ArrowButton attr:class="controls-DateLinkView__arrow controls-DateLinkView__prev
-        controls-RangeShortSelectorLink__arrow-prev"
-                                      direction="left"
-                                      on:click="shiftBack()"/>
-    </ws:if>
-    <ws:if data="{{ _options.nextArrowVisibility && !_options.readOnly}}">
-        <Controls.buttons:ArrowButton attr:class="controls-DateLinkView__arrow controls-DateLinkView__next
-        controls-RangeShortSelectorLink__arrow-next"
-                                      direction="right"
-                                      on:click="shiftForward()"/>
-    </ws:if>
 </div>

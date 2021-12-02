@@ -1,12 +1,17 @@
 <div class="controls-demo_LiteSelector-block">
-    <Controls.dateRange:Selector
-            datePopupType="shortDatePicker"
-            attr:data-qa="controls-demo_LiteSelector-block__month"
-            displayedRanges="{{_displayedRanges}}"
-            prevArrowVisibility="{{true}}"
-            nextArrowVisibility="{{true}}"
-            bind:startValue="_startValue1"
-            bind:endValue="_endValue1"/>
+    <Controls.date:ContextProvider>
+        <div class="controls-demo_LiteSelector-block__selector-container">
+            <Controls.dateRange:SelectorConsumer
+                    datePopupType="shortDatePicker"
+                    attr:class="ws-flex-grow-1"
+                    attr:data-qa="controls-demo_LiteSelector-block__month"
+                    displayedRanges="{{_displayedRanges}}"
+                    bind:startValue="_startValue1"
+                    bind:endValue="_endValue1"/>
+            <Controls.date:ArrowButtonConsumer direction="left" attr:class="controls-margin_left-m"/>
+            <Controls.date:ArrowButtonConsumer direction="right" attr:class="controls-margin_left-m"/>
+        </div>
+    </Controls.date:ContextProvider>
     <div>
         <Controls.dateRange:Selector
                 datePopupType="shortDatePicker"

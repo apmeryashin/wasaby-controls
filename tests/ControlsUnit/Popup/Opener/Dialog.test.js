@@ -690,7 +690,7 @@ define(
                DialogController._getRestrictiveContainerSize = () => windowData;
                let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
                assert.equal(position.right, 860);
-               assert.equal(position.bottom, 430);
+               assert.equal(position.bottom, 419);
                item.position = {
                   ...position,
                   ...dialogSizes
@@ -701,7 +701,7 @@ define(
                });
                position = DialogStrategy.getPosition(windowData, dialogSizes, item);
                assert.equal(position.right, 840);
-               assert.equal(position.bottom, 410);
+               assert.equal(position.bottom, 399);
                DialogController._getRestrictiveContainerSize = getRestrictiveContainer;
                item.position = {};
                item.fixPosition = false;
@@ -716,7 +716,7 @@ define(
                DialogController._getRestrictiveContainerSize = () => windowData;
                let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
                assert.equal(position.right, 860);
-               assert.equal(position.bottom, 430);
+               assert.equal(position.bottom, 419);
                item.position = {
                   ...position,
                   ...dialogSizes

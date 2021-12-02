@@ -1,6 +1,6 @@
 import {
     AbstractItemsSizesController,
-    IAbstarctItemsSizesControllerOptions,
+    IAbstractItemsSizesControllerOptions,
     IItemsSizes
 } from './ItemsSizeController/AbstractItemsSizeController';
 import {
@@ -95,11 +95,11 @@ export type IHasItemsOutRangeChangedCallback = (hasItems: IHasItemsOutRange) => 
 export type IPlaceholdersChangedCallback = (placeholders: IPlaceholders) => void;
 
 export interface IScrollControllerOptions extends
-    IAbstarctItemsSizesControllerOptions,
+    IAbstractItemsSizesControllerOptions,
     IAbstractObserversControllerBaseOptions,
     ICalculatorBaseOptions {
     observerControllerConstructor: new (options: IAbstractObserversControllerOptions) => AbstractObserversController;
-    itemsSizeControllerConstructor: new (options: IAbstarctItemsSizesControllerOptions) => AbstractItemsSizesController;
+    itemsSizeControllerConstructor: new (options: IAbstractItemsSizesControllerOptions) => AbstractItemsSizesController;
     indexesInitializedCallback: IIndexesInitializedCallback;
     indexesChangedCallback: IIndexesChangedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;

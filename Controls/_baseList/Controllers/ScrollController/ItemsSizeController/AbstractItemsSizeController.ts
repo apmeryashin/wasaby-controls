@@ -2,7 +2,7 @@ import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
 import type { IItemsRange } from '../ScrollController';
 
-export interface IAbstarctItemsSizesControllerOptions {
+export interface IAbstractItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
     itemsQuerySelector: string;
     totalCount: number;
@@ -23,7 +23,7 @@ export class AbstractItemsSizesController {
     private _itemsContainer: HTMLElement;
     private _itemsSizes: IItemsSizes = [];
 
-    constructor(options: IAbstarctItemsSizesControllerOptions) {
+    constructor(options: IAbstractItemsSizesControllerOptions) {
         this._itemsContainer = options.itemsContainer;
         this._itemsQuerySelector = options.itemsQuerySelector;
         this.resetItems(options.totalCount);

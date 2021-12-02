@@ -18,5 +18,8 @@ export default class RangeSelectedCallback extends Control<IControlOptions> {
             new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 4)];
     }
 
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+    static _styles: string[] = [
+        'Controls-demo/Controls-demo',
+        'Controls-demo/dateRange/RangeSelector/rangeSelectedCallback/RangeSelectedCallback'
+    ];
 }
