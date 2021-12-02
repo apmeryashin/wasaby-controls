@@ -6,6 +6,7 @@ import {ICollectionItemOptions} from 'Controls/display';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from 'Controls/_tile/utils/imageUtil';
 import * as ImageTemplate from 'wml!Controls/_tile/render/Image';
 import * as DefaultContent from 'wml!Controls/_tile/render/itemsContent/Default';
+import * as AddContent from 'wml!Controls/_tile/render/itemsContent/Add';
 import * as MediumContent from 'wml!Controls/_tile/render/itemsContent/Medium';
 import * as PreviewContent from 'wml!Controls/_tile/render/itemsContent/Preview';
 import * as RichContent from 'wml!Controls/_tile/render/itemsContent/Rich';
@@ -1539,6 +1540,10 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TemplateFunction} contentTemplate Прикладной темплейт контента
      */
     getContentTemplate(itemType: TTileItem = 'default', contentTemplate?: TemplateFunction): TemplateFunction {
+        if (this['[Controls/_tile/display/mixins/AddItem]']) {
+            return AddContent;
+        }
+
         if (contentTemplate) {
             return contentTemplate;
         }
