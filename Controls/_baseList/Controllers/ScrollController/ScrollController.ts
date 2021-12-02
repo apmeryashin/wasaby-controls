@@ -145,8 +145,8 @@ export class ScrollController {
             triggersQuerySelector: options.triggersQuerySelector,
             viewportSize: options.viewportSize,
             triggersVisibility: options.triggersVisibility,
-            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
-            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
+            triggersOffsetCoefficients: options.triggersOffsetCoefficients,
+            resetTriggersOffsets: options.resetTriggersOffsets,
             observersCallback: this._observersCallback.bind(this)
         });
 
@@ -168,6 +168,10 @@ export class ScrollController {
         });
 
         this._indexesInitializedCallback(this._calculator.getRange());
+        this._hasItemsOutRangeChangedCallback({
+            backward: this._calculator.hasItemsOutRange('backward'),
+            forward: this._calculator.hasItemsOutRange('forward')
+        });
     }
 
     viewportResized(viewportSize: number): void {
@@ -186,6 +190,16 @@ export class ScrollController {
 
     setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
         this._observersController.setTriggersVisibility(triggersVisibility);
+    }
+
+    setResetBackwardTriggerOffset(reset: boolean): void {
+        const triggerOffsets = this._observersController.setResetBackwardTriggerOffset(reset);
+        this._calculator.setTriggerOffsets(triggerOffsets);
+    }
+
+    setResetForwardTriggerOffset(reset: boolean): void {
+        const triggerOffsets = this._observersController.setResetForwardTriggerOffset(reset);
+        this._calculator.setTriggerOffsets(triggerOffsets);
     }
 
     // endregion Triggers
@@ -329,7 +343,9 @@ export class ScrollController {
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
+        const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
+        const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
+        return edgeItem.direction === 'forward' ? scrollPosition + beforeContentSize : scrollPosition;
     }
 
     /**

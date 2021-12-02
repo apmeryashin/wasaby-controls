@@ -3262,7 +3262,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _popupOptions = null;
     private _scrollController: ScrollController;
     private _listVirtualScrollController: ListVirtualScrollController;
-    private _scheduledNotifyActiveElement: CrudEntityKey = null;
     private _useNewScroll: boolean = true;
 
     // target элемента, на котором было вызвано контекстное меню
@@ -3819,9 +3818,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
             itemsQuerySelector: options.itemsSelector,
 
-            triggersVisibility: { backward: !this._hasMoreData('up'), forward: true },
-            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
-            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
+            triggersVisibility: {
+                backward: !this._hasMoreData('up') ||
+                    !this._listViewModel.getCount() ||
+                    !this._options.attachLoadTopTriggerToNull,
+                forward: true
+            },
+            triggersOffsetCoefficients: {
+                backward: options.topTriggerOffsetCoefficient,
+                forward: options.bottomTriggerOffsetCoefficient
+            },
+            resetTriggersOffsets: {
+                backward: this._sourceController && this._sourceController.hasMoreData('up'),
+                forward: this._sourceController && this._sourceController.hasMoreData('down')
+            },
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
                 return this._notify(
@@ -3907,16 +3917,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._useNewScroll) {
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
             this._listVirtualScrollController.setListContainer(this._container);
-
-            const backwardTriggerVisibility = !this._listViewModel.getCount() ||
-                !this._hasMoreData('up') ||
-                !this._options.attachLoadTopTriggerToNull ||
-                this._hasHiddenItemsByVirtualScroll('up');
-
-            this._listVirtualScrollController.setTriggersVisibility({
-                backward: backwardTriggerVisibility,
-                forward: true
-            });
         }
 
         if (constants.isBrowserPlatform) {

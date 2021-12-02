@@ -105,6 +105,10 @@ export class Calculator {
         return this._totalCount;
     }
 
+    hasItemsOutRange(direction: IDirection): boolean {
+        return Calculator._hasItemsOutRangeToDirection(direction, this._range, this._totalCount);
+    }
+
     setTriggerOffsets(triggerOffset: ITriggersOffsets): void {
         this._triggersOffsets = triggerOffset;
     }

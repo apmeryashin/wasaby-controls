@@ -36,6 +36,8 @@ import {
 import {
     AbstractObserversController,
     IAbstractObserversControllerOptions,
+    IResetTriggersOffsets,
+    ITriggersOffsetCoefficients,
     ITriggersVisibility
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
@@ -74,8 +76,8 @@ export interface IAbstractListVirtualScrollControllerOptions {
     updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
 
     triggersVisibility: ITriggersVisibility;
-    topTriggerOffsetCoefficient: number;
-    bottomTriggerOffsetCoefficient: number;
+    triggersOffsetCoefficients: ITriggersOffsetCoefficients;
+    resetTriggersOffsets: IResetTriggersOffsets;
 
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
@@ -210,9 +212,21 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.viewportResized(viewportSize);
     }
 
+    // region Triggers
+
     setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
         this._scrollController.setTriggersVisibility(triggersVisibility);
     }
+
+    setResetBackwardTriggerOffset(reset: boolean): void {
+        this._scrollController.setResetBackwardTriggerOffset(reset);
+    }
+
+    setResetForwardTriggerOffset(reset: boolean): void {
+        this._scrollController.setResetForwardTriggerOffset(reset);
+    }
+
+    // endregion Triggers
 
     private _createScrollController(options: TOptions): void {
         const totalCount = this._collection.getCount();
@@ -229,8 +243,8 @@ export abstract class AbstractListVirtualScrollController<
             triggersQuerySelector: options.triggersQuerySelector,
 
             triggersVisibility: options.triggersVisibility,
-            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
-            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
+            triggersOffsetCoefficients: options.triggersOffsetCoefficients,
+            resetTriggersOffsets: options.resetTriggersOffsets,
 
             scrollPosition: 0,
             viewportSize: options.virtualScrollConfig.viewportHeight || 0,
@@ -295,6 +309,17 @@ export abstract class AbstractListVirtualScrollController<
         if (hasItemsOutRange) {
             this._updateShadowsUtil(hasItemsOutRange);
             this._updateVirtualNavigationUtil(hasItemsOutRange);
+
+            // TODO SCROLL нужно будет удалить
+            // Код нужен только для того, чтобы у триггера проставить оффсет после инициализации.
+            // НО при иницализцаии оффсет у триггера не нужен в этом кейсе.
+            // Удалить, после внедрения. Нужно будет поправить тест. Внедряемся без каких-либо изменений тестов.
+            if (hasItemsOutRange.backward) {
+                this.setResetBackwardTriggerOffset(false);
+            }
+            if (hasItemsOutRange.forward) {
+                this.setResetForwardTriggerOffset(false);
+            }
         }
     }
 
