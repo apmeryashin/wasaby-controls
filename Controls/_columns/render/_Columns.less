@@ -491,7 +491,7 @@
 }
 
 .controls-ColumnsView__itemsPaddingContainer_spacingTop_null_itemPadding_default {
-   margin-top: calc(-1 * var(--offset_m) / 2);
+   margin-top: calc(-1 * var(--offset_s) / 2);
 }
 
 .controls-ColumnsView__itemsPaddingContainer_spacingTop_null_itemPadding {
@@ -509,7 +509,7 @@
 }
 
 .controls-ColumnsView__itemsPaddingContainer_spacingTop_default_itemPadding_default {
-   margin-top: calc(var(--offset_xs) - var(--offset_m) / 2);
+   margin-top: calc(var(--offset_xs) - var(--offset_s) / 2);
 }
 .controls-ColumnsView__itemsPaddingContainer_spacingTop_default_itemPadding {
    @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
@@ -521,13 +521,121 @@
    });
 }
 
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_xs_itemPadding_null {
+   margin-top: var(--offset_xs);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_xs_itemPadding_default {
+   margin-top: calc(var(--offset_xs) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_xs_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-top: calc(var(--offset_xs) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_s_itemPadding_null {
+   margin-top: var(--offset_s);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_s_itemPadding_default {
+   margin-top: calc(var(--offset_s) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_s_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-top: calc(var(--offset_s) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_m_itemPadding_null {
+   margin-top: var(--offset_m);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_m_itemPadding_default {
+   margin-top: calc(var(--offset_m) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_m_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-top: calc(var(--offset_m) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_l_itemPadding_null {
+   margin-top: var(--offset_l);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_l_itemPadding_default {
+   margin-top: calc(var(--offset_l) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_l_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-top: calc(var(--offset_l) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_xl_itemPadding_null {
+   margin-top: var(--offset_xl);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_xl_itemPadding_default {
+   margin-top: calc(var(--offset_xl) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_xl_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-top: calc(var(--offset_xl) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_2xl_itemPadding_null {
+   margin-top: var(--offset_2xl);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_2xl_itemPadding_default {
+   margin-top: calc(var(--offset_2xl) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingTop_2xl_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-top: calc(var(--offset_2xl) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
 //bottom padding
 .controls-ColumnsView__itemsPaddingContainer_spacingBottom_null_itemPadding_null {
    margin-bottom: 0;
 }
 
 .controls-ColumnsView__itemsPaddingContainer_spacingBottom_null_itemPadding_default {
-   margin-bottom: calc(-1 * var(--offset_m) / 2);
+   margin-bottom: calc(-1 * var(--offset_s) / 2);
 }
 
 .controls-ColumnsView__itemsPaddingContainer_spacingBottom_null_itemPadding {
@@ -545,7 +653,7 @@
 }
 
 .controls-ColumnsView__itemsPaddingContainer_spacingBottom_default_itemPadding_default {
-   margin-bottom: calc(var(--offset_xs) - var(--offset_m) / 2);
+   margin-bottom: calc(var(--offset_xs) - var(--offset_s) / 2);
 }
 
 .controls-ColumnsView__itemsPaddingContainer_spacingBottom_null_itemPadding {
@@ -557,6 +665,115 @@
       }
    });
 }
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_xs_itemPadding_null {
+   margin-bottom: var(--offset_xs);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_xs_itemPadding_default {
+   margin-bottom: calc(var(--offset_xs) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_xs_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-bottom: calc(var(--offset_xs) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_s_itemPadding_null {
+   margin-bottom: var(--offset_s);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_s_itemPadding_default {
+   margin-bottom: calc(var(--offset_s) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_s_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-bottom: calc(var(--offset_s) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_m_itemPadding_null {
+   margin-bottom: var(--offset_m);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_m_itemPadding_default {
+   margin-bottom: calc(var(--offset_m) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_m_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-bottom: calc(var(--offset_m) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_l_itemPadding_null {
+   margin-bottom: var(--offset_l);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_l_itemPadding_default {
+   margin-bottom: calc(var(--offset_l) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_l_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-bottom: calc(var(--offset_l) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_xl_itemPadding_null {
+   margin-bottom: var(--offset_xl);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_xl_itemPadding_default {
+   margin-bottom: calc(var(--offset_xl) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_xl_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-bottom: calc(var(--offset_xl) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_2xl_itemPadding_null {
+   margin-bottom: var(--offset_2xl);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_2xl_itemPadding_default {
+   margin-bottom: calc(var(--offset_2xl) - var(--offset_s) / 2);
+}
+
+.controls-ColumnsView__itemsPaddingContainer_spacingBottom_2xl_itemPadding {
+   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+
+   .for(@variants, {
+      &_@{_item} {
+         margin-bottom: calc(var(--offset_2xl) - ~"var(--offset_@{_item})" / 2);
+      }
+   });
+}
+
 
 .controls-ColumnsView__itemsPaddingContainer_spacingLeft_default {
    margin-left: calc(-1 * var(--offset_m) / 2 + var(--offset_m));
