@@ -59,8 +59,8 @@
 
             <div if="{{ _options._newColumnScroll }}"
                  class="controls-Grid__columnScroll__relativeCells">
-                <ws:for data="i in _listModel.getAllGridColumnsCount()">
-                    <div class="js-controls-Grid__columnScroll__relativeCell"></div>
+                <ws:for data="col in _listModel.getAllGridColumns()">
+                    <div class="{{ col.className }}"></div>
                 </ws:for>
             </div>
 

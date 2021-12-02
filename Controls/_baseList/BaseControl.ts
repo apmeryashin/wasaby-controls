@@ -3810,8 +3810,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             itemsQuerySelector: options.itemsSelector,
 
             triggersVisibility: { backward: !this._hasMoreData('up'), forward: true },
-            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
-            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
+            backwardTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
+            forwardTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
 
             totalCount: this._listViewModel.getCount(),
 
@@ -7630,6 +7630,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _onToggleHorizontalScroll(e, visibility: boolean): void {
         this._isColumnScrollVisible = visibility;
     }
+
+    // TODO: Должно переехать в GridControl, когда он появится.
+    _onColumnScroll(e, position: number): void {/**/}
 
     // TODO: Должно переехать в GridControl, когда он появится.
     isColumnScrollVisible(): boolean {

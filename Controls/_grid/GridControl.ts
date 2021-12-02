@@ -42,6 +42,10 @@ export class GridControl extends mixin<BaseControl, GridControlMixin>(BaseContro
         GridControlMixin.prototype._$viewportResizeHandler.apply(this, [viewportHeight, viewportRect, scrollTop]);
     }
 
+    _onColumnScroll(e, position: number): void {
+        GridControlMixin.prototype._$onColumnScroll.apply(this, arguments);
+    }
+
     static getDefaultOptions(): Partial<IGridControlOptions> {
         return {
             ...BaseControl.getDefaultOptions(),

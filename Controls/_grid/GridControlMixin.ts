@@ -1,5 +1,5 @@
 import {BaseControl, IBaseControlOptions} from 'Controls/baseList';
-import {TColumns} from './display/interface/IColumn';
+import type {TColumns, THeader} from 'Controls/grid';
 import {Controller as ListVirtualColumnScrollController} from 'Controls/horizontalScroll';
 
 const HORIZONTAL_LOADING_TRIGGER_SELECTOR = '.controls-BaseControl__loadingTrigger_horizontal';
@@ -9,6 +9,8 @@ export interface IGridControlMixinOptions extends IBaseControlOptions {
     _newColumnScroll?: boolean;
 
     columns: TColumns;
+    header?: THeader;
+    stickyColumnsCount?: number;
     columnScrollStartPosition?: 'end';
 
     // FIX: тип должен импортироваться
@@ -26,7 +28,7 @@ export class GridControlMixin<
     private _listVirtualColumnScrollController: ListVirtualColumnScrollController;
 
     _$prepareItemsOnMount(options: IGridControlMixinOptions): void {
-        if (!!options._newColumnScroll) {
+        if (!!options._newColumnScroll && options.virtualColumnScrollConfig) {
             this._createColumnScrollController(options);
         }
     }
@@ -75,6 +77,8 @@ export class GridControlMixin<
             collection: this._listViewModel,
             virtualScrollConfig: options.virtualColumnScrollConfig,
             columns: options.columns,
+            header: options.header,
+            stickyColumnsCount: options.stickyColumnsCount,
             columnScrollStartPosition: options.columnScrollStartPosition,
             triggersQuerySelector: HORIZONTAL_LOADING_TRIGGER_SELECTOR,
             backwardTriggerOffsetCoefficient: options.leftTriggerOffsetCoefficient,
@@ -84,8 +88,8 @@ export class GridControlMixin<
                 backward: true,
                 forward: true
             },
-            doScrollUtil: (scrollTop) => {
-                this._notify('doHorizontalScroll', [scrollTop, true], { bubbling: true });
+            doScrollUtil: (position) => {
+                // this._notify('doHorizontalScroll', [scrollTop, true], { bubbling: true });
             },
             updatePlaceholdersUtil: (placeholders) => {
                 const convertedPlaceholders = {
@@ -95,6 +99,12 @@ export class GridControlMixin<
                 this._notify('updatePlaceholdersSize', [convertedPlaceholders], {bubbling: true});
             }
         });
+    }
+
+    _$onColumnScroll(e, position: number): void {
+        if (this._listVirtualColumnScrollController) {
+            this._listVirtualColumnScrollController.scrollPositionChange(position);
+        }
     }
 
     static getDefaultOptions(): Partial<IGridControlMixinOptions> {

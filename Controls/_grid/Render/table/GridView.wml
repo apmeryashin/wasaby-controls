@@ -108,8 +108,8 @@
 
         <tbody if="{{ _options._newColumnScroll }}">
             <tr>
-                <ws:for data="i in _listModel.getAllGridColumnsCount()">
-                    <td class="js-controls-Grid__columnScroll__relativeCell"></td>
+                <ws:for data="col in _listModel.getAllGridColumns()">
+                    <td class="{{ col.className }}"></td>
                 </ws:for>
             </tr>
         </tbody>
