@@ -4785,8 +4785,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._indicatorsController.hasNotRenderedChanges();
             if (hasNotRenderedChanges) {
                 this._listVirtualScrollController.saveScrollPosition();
+            } else {
+                this._listVirtualScrollController.beforeRenderListControl();
             }
-            this._listVirtualScrollController.beforeRenderListControl();
         } else {
             // save scroll
             let directionToRestoreScroll = this._scrollController &&

@@ -339,6 +339,22 @@ export class ScrollController {
         this._calculator.updateItemsSizes(itemsSizes);
 
         const result = this._calculator.resetItems(totalCount, keepPosition);
+
+        const hasItemsOutRange = {
+            backward: this._calculator.hasItemsOutRange('backward'),
+            forward: this._calculator.hasItemsOutRange('forward')
+        };
+        // TODO SCROLL нужно будет удалить
+        // Код нужен только для того, чтобы у триггера проставить оффсет после инициализации.
+        // НО при иницализцаии оффсет у триггера не нужен в этом кейсе.(чтобы избежать лишних подгрузок)
+        // Удалить, после внедрения. Нужно будет поправить тест. Внедряемся без каких-либо изменений тестов.
+        if (hasItemsOutRange.backward) {
+            this.setResetBackwardTriggerOffset(false);
+        }
+        if (hasItemsOutRange.forward) {
+            this.setResetForwardTriggerOffset(false);
+        }
+
         this._processCalculatorResult(result);
     }
 
@@ -357,7 +373,7 @@ export class ScrollController {
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
         const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
         const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
-        return edgeItem.direction === 'forward' ? scrollPosition + beforeContentSize : scrollPosition;
+        return edgeItem.direction === 'backward' ? scrollPosition + beforeContentSize : scrollPosition;
     }
 
     /**

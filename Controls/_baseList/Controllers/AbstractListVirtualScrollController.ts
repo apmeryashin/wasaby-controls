@@ -143,7 +143,7 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.setListContainer(listContainer);
     }
 
-    beforeRenderListControl(hasNotRenderedChanges: boolean): void {
+    beforeRenderListControl(): void {
         this._handleScheduledScroll();
     }
 
@@ -313,17 +313,6 @@ export abstract class AbstractListVirtualScrollController<
         if (hasItemsOutRange) {
             this._updateShadowsUtil(hasItemsOutRange);
             this._updateVirtualNavigationUtil(hasItemsOutRange);
-
-            // TODO SCROLL нужно будет удалить
-            // Код нужен только для того, чтобы у триггера проставить оффсет после инициализации.
-            // НО при иницализцаии оффсет у триггера не нужен в этом кейсе.
-            // Удалить, после внедрения. Нужно будет поправить тест. Внедряемся без каких-либо изменений тестов.
-            if (hasItemsOutRange.backward) {
-                this.setResetBackwardTriggerOffset(false);
-            }
-            if (hasItemsOutRange.forward) {
-                this.setResetForwardTriggerOffset(false);
-            }
         }
     }
 
