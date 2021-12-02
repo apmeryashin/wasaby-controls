@@ -29,7 +29,8 @@
                bind:endValue="_endValueBind"
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
-               viewMode="link"
+               fontWeight="normal"
+               fontSize="m"
                fontColorStyle="link"
 			   attr:test_name="months_range"
             />
@@ -40,7 +41,8 @@
                bind:endValue="_endValueQuarter"
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
-               viewMode="link"
+               fontWeight="normal"
+               fontSize="m"
                fontColorStyle="unaccented"
 			   attr:test_name="quarters_range"
             />
@@ -48,7 +50,9 @@
          </div>
          <div class="controlsDemo-RageLink__componentWrap">
             <Controls.dateRange:Selector
-               viewMode="label"
+               fontWeight="normal"
+               fontSize="m"
+               fontColorStyle="label"
                emptyCaption="не задан"
 			   attr:test_name="range_not_value"
             />

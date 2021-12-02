@@ -136,6 +136,11 @@ export default class Model extends mixin<VersionableMixin, ObservableMixin>(Vers
       }
    }
 
+   // Нужен метод, где будем менять текстовое значение без изменения значения даты
+   setTextValue(value: string): void {
+      this._textValue = value;
+   }
+
    get displayValue(): string {
       return this._textValue.replace(RegExp(this._replacer, 'g'), ' ');
    }
