@@ -19,7 +19,7 @@ const MAX_YEAR_VALUE =  new Date().getFullYear() + additionalYears;
  * @public
  * @author Красильников А.С.
  * @remark
- * Валидатор вшит в контролы {@link Controls/date:BaseInput}, {@link Controls/date:Input}, {@link Controls/dateRange:BaseInput}
+ * Валидатор вшит в контролы {@link Controls/date:BaseInput}, {@link Controls/date:Input}, {@link Controls/dateRange:Input}
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  *
  * Аргументы функции:
