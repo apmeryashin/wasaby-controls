@@ -5,7 +5,7 @@
                 autoEdit="{{true}}"
                 toolbarVisible="{{false}}"
                 backgroundStyle="editableArea"
-                editingObject="{{_editObject}}">
+                editingObject="{{_editingObject}}">
             <ws:if data="{{content.isEditing}}">
                 <div class="controlsDemo-EditableArea__mainWrapper">
                     <div class="controlsDemo__cell ws-flexbox">
