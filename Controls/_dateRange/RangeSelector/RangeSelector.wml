@@ -11,5 +11,5 @@
         on:linkClick="openPopup()"
         on:mouseenter="_mouseEnterHandler()"
         on:mouseleave="_mouseLeaveHandler()"
-        attr:class="controls-DateRangeSelector controls-DateRangeSelector__view {{_isMinWidth ? 'controls-DateRangeSelector__view_minWidth'}}"
+        attr:class="controls-DateRangeSelector controls-DateRangeSelector__view"
 />

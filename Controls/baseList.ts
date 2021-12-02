@@ -88,6 +88,11 @@ export {MoveController, IMoveControllerOptions}  from 'Controls/_baseList/Contro
 
 //region new scroll
 export {
+    AbstractListVirtualScrollController,
+    IAbstractListVirtualScrollControllerOptions
+} from './_baseList/Controllers/AbstractListVirtualScrollController';
+
+export {
     ScrollController as NewScrollController,
     IDirection as IDirectionNew,
     IPlaceholders,
@@ -101,7 +106,7 @@ export {
 export {
     IItemSize,
     AbstractItemsSizesController,
-    IAbstarctItemsSizesControllerOptions
+    IAbstractItemsSizesControllerOptions
 } from './_baseList/Controllers/ScrollController/ItemsSizeController/AbstractItemsSizeController';
 export {
     AbstractObserversController,

@@ -30,7 +30,12 @@ function prepareArray(array: string[]|number[]): string[] {
    });
 }
 
-function getSelectionRecord(selection: ISelectionObject, rsAdapter: adapter.IAdapter, selectionType?: TSelectionType = 'all', recursive?: boolean = true): TSelectionRecord {
+function getSelectionRecord(
+    selection: ISelectionObject,
+    rsAdapter: adapter.IAdapter,
+    selectionType: TSelectionType = 'all',
+    recursive: boolean = true
+): TSelectionRecord {
    const result = new Record({
       adapter: rsAdapter,
       format: SELECTION_FORMAT

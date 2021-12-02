@@ -1,9 +1,11 @@
 import {
     AbstractItemsSizesController,
+    IAbstractItemsSizesControllerOptions,
     IItemSize
 } from 'Controls/baseList';
-
 import {getDimensions} from 'Controls/sizeUtils';
+
+export {IAbstractItemsSizesControllerOptions as IItemsSizesControllerOptions};
 
 export class ItemsSizeController extends AbstractItemsSizesController {
     protected _getBeforeContentSize(itemsContainer: HTMLElement, scrollContent: Element): number {

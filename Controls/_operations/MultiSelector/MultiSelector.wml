@@ -5,6 +5,7 @@
             isAllSelected="{{_options.isAllSelected}}"
     />
     <Controls._operations.__MultiSelector selectedKeys="{{ _options.selectedKeys }}"
+                                          selectionCountMode="{{_options.selectionCountMode}}"
                                           excludedKeys="{{ _options.excludedKeys }}"
                                           selectedKeysCount="{{ _options.selectedKeysCount }}"
                                           selectedCountConfig="{{ _options.selectedCountConfig }}"

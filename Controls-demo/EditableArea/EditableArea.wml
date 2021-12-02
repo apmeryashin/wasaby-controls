@@ -5,11 +5,11 @@
            <span class="ControlsDemo-EditableArea__label">Шаблон:</span>
            <Controls.editableArea:View
                    name="edit"
-                   editObject="{{_record}}"
+                   editingObject="{{_record}}"
                    backgroundStyle="editableArea"
                    toolbarVisible="{{true}}">
                <Controls.editableArea:Base
-                       bind:value="content.editObject.text1"
+                       bind:value="content.editingObject.text1"
                        attr:class="ControlsDemo-EditableArea__firstExample__editor_wrapper"
                        fontColorStyle="secondary"
                >
@@ -26,13 +26,13 @@
     <div class="ControlsDemo-EditableArea__FirstExample__long ws-flexbox ws-align-items-center">
             <Controls.editableArea:View
                     name="edit"
-                    editObject="{{_record1}}"
+                    editingObject="{{_record1}}"
                     backgroundStyle="editableArea"
                     attr:class="ws-flexbox ws-flex-grow-1"
                     toolbarVisibible="{{true}}">
                 <div class="ControlsDemo-EditableArea__longExample__editor_wrapper">
                     <Controls.editableArea:Base
-                            bind:value="content.editObject.text1"
+                            bind:value="content.editingObject.text1"
                             attr:class="ControlsDemo-EditableArea__longExample__editor"
                             fontColorStyle="secondary"
                     >

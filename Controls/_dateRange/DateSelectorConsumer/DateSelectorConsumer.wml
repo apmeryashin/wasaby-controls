@@ -1,3 +1,0 @@
-<Controls._dateRange._DateRangeSelectorConsumer name="consumer">
-    <Controls.date:Selector scope="{{ _options }}" name="dateRange"/>
-</Controls._dateRange._DateRangeSelectorConsumer>

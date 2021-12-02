@@ -2,7 +2,7 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
-import {ICollectionItemOptions} from 'Controls/display';
+import {ICollectionItemOptions, IItemPadding, TItemBaseLine} from 'Controls/display';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from 'Controls/_tile/utils/imageUtil';
 import * as ImageTemplate from 'wml!Controls/_tile/render/Image';
 import * as DefaultContent from 'wml!Controls/_tile/render/itemsContent/Default';

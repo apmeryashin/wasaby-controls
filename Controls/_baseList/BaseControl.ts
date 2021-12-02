@@ -555,10 +555,11 @@ const _private = {
         if (event.nativeEvent.ctrlKey || self.isEditing() || !self.getViewModel() || !self.getViewModel().getCount()) {
             return;
         }
+
         if (_private.hasMarkerController(self)) {
             const markerController = _private.getMarkerController(self);
             const markedKey = markerController.getMarkedKey();
-            if (markedKey !== null) {
+            if (markedKey !== null && markedKey !== undefined) {
                 const markedItem = self.getItems().getRecordById(markedKey);
                 self._notifyItemClick([event, markedItem, event]);
                 if (event && !event.isStopped()) {
@@ -1358,13 +1359,13 @@ const _private = {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
 
-        if (self._scrollController.isRealScroll()) {
+        if (self._scrollController?.isRealScroll()) {
             self._scrolled = true;
         }
         // на мобильных устройствах с overflow scrolling, scrollTop может быть отрицательным
         self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self._options.navigation)) {
+        if (_private.needScrollPaging(self._options.navigation) && self._scrollController) {
             if (!self._scrollController.getParamsToRestoreScrollPosition()) {
                 _private.updateScrollPagingButtons(self, {...self._getScrollParams(), initial: !self._scrolled});
             }
@@ -1898,7 +1899,7 @@ const _private = {
                 itemActionsController.deactivateSwipe();
                 // Если ховер заморожен для редактирования по месту, не надо сбрасывать заморозку.
                 if ((!self._editInPlaceController || !self._editInPlaceController.isEditing())) {
-                    _private.addShowActionsClass(self);
+                    _private.addShowActionsClass(self, self._options);
                 }
             }
         }
@@ -2214,7 +2215,7 @@ const _private = {
         }
 
         if (self._useNewScroll) {
-            return;
+            return Promise.resolve();
         }
 
         if (self._finishScrollToEdgeOnDrawItems) {
@@ -2616,6 +2617,10 @@ const _private = {
     // endregion
 
     createScrollController(self: BaseControl, options: any): void {
+        if (self._useNewScroll) {
+            return;
+        }
+
         self._scrollController = new ScrollController({
             disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig,
@@ -2750,7 +2755,7 @@ const _private = {
      */
     initVisibleItemActions(self, options: IList): void {
         if (options.itemActionsVisibility === 'visible') {
-            _private.addShowActionsClass(this);
+            _private.addShowActionsClass(self, options);
             _private.updateItemActions(self, options);
         }
     },
@@ -2774,9 +2779,12 @@ const _private = {
     // возвращаем промис для юнитов
     startDragNDrop(self: BaseControl, domEvent: SyntheticEvent, draggableItem: CollectionItem): Promise<void> {
         if (
-            !self._options.readOnly && self._options.itemsDragNDrop
-            && DndController.canStartDragNDrop(
-                self._options.canStartDragNDrop, domEvent, TouchDetect.getInstance().isTouch()
+            DndController.canStartDragNDrop(
+                self._options.readOnly,
+                self._options.itemsDragNDrop,
+                self._options.canStartDragNDrop,
+                domEvent,
+                self._dndListController && self._dndListController.isDragging()
             )
         ) {
             const draggableKey = draggableItem.getContents().getKey();
@@ -3020,15 +3028,17 @@ const _private = {
         }
     },
 
-    addShowActionsClass(self): void {
-        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
-        if (!self._destroyed && !TouchDetect.getInstance().isTouch()) {
+    addShowActionsClass(self: BaseControl, options: IList): void {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию.
+        // Если ItemActions видимы всегда, они не должны исчезать свайп устройствах, они присутствуют всегда.
+        if (!self._destroyed && (!TouchDetect.getInstance().isTouch() || options.itemActionsVisibility === 'visible')) {
             self._addShowActionsClass = true;
         }
     },
 
-    removeShowActionsClass(self): void {
-        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
+    removeShowActionsClass(self: BaseControl): void {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию.
+        // Если ItemActions видимы всегда, они не должны исчезать свайп устройствах, они присутствуют всегда.
         if (!self._destroyed && !TouchDetect.getInstance().isTouch() && self._options.itemActionsVisibility !== 'visible') {
             self._addShowActionsClass = false;
         }
@@ -3112,7 +3122,7 @@ const _private = {
             unFreezeHoverCallback: () => {
                 if (!self._itemActionsMenuId) {
                     _private.addHoverEnabledClass(self);
-                    _private.addShowActionsClass(self);
+                    _private.addShowActionsClass(self, self._options);
                 }
             }
         });
@@ -3185,7 +3195,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _updateInProgress = false;
 
     _hasItemWithImageChanged = false;
-
+    _needRestoreScroll = false;
     _isMounted = false;
 
     _shadowVisibility = null;
@@ -3334,6 +3344,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         options = options || {};
         this._validateController = new ControllerClass();
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
+        this._nativeDragStart = this._nativeDragStart.bind(this);
         this._resetValidation = this._resetValidation.bind(this);
         this._onWindowResize = this._onWindowResize.bind(this);
         this._scrollToFirstItemAfterDisplayTopIndicator = this._scrollToFirstItemAfterDisplayTopIndicator.bind(this);
@@ -3371,7 +3382,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._useServerSideColumnScroll = typeof shouldPrevent === 'boolean' ? !shouldPrevent : true;
         }
 
-        _private.addShowActionsClass(this);
+        _private.addShowActionsClass(this, newOptions);
 
         return this._doBeforeMount(newOptions);
     }
@@ -3631,7 +3642,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         );
         // viewSize обновляется раньше чем viewportSize, поэтому проверяем что viewportSize уже есть
         this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
-        if (scrollTop !== undefined) {
+        if (scrollTop !== undefined && this._scrollController) {
             this._scrollTop = scrollTop;
             const result = this._scrollController.scrollPositionChange({scrollTop}, false);
             _private.handleScrollControllerResult(this, result);
@@ -3790,7 +3801,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._listVirtualScrollController = new ListVirtualScrollController({
             collection: this._listViewModel,
             listControl: this,
-            virtualScrollConfig: options.virtualScrollConfig,
+            virtualScrollConfig: options.virtualScrollConfig || {},
 
             itemsContainer: null,
             listContainer: null,
@@ -3875,7 +3886,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             itemsEndedCallback: (direction): void => {
                 const compatibleDirection = direction === 'forward' ? 'down' : 'up';
-                _private.loadToDirectionIfNeed(this, compatibleDirection);
+                if (this._shouldLoadOnScroll(compatibleDirection)) {
+                    this._loadMore(compatibleDirection);
+                }
             }
         });
     }
@@ -3887,12 +3900,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
             this._listVirtualScrollController.setListContainer(this._container);
 
-            if (
-                !this._listViewModel.getCount() ||
-                !this._hasMoreData('down') && this._hasMoreData('up')
-            ) {
-                this._listVirtualScrollController.setTriggersVisibility({ backward: true, forward: true });
-            }
+            const backwardTriggerVisibility = !this._listViewModel.getCount() ||
+                !this._hasMoreData('up') ||
+                !this._options.attachLoadTopTriggerToNull ||
+                this._hasHiddenItemsByVirtualScroll('up');
+
+            this._listVirtualScrollController.setTriggersVisibility({
+                backward: backwardTriggerVisibility,
+                forward: true
+            });
         }
 
         if (constants.isBrowserPlatform) {
@@ -4742,7 +4758,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             let directionToRestoreScroll = this._scrollController &&
                 this._scrollController.getParamsToRestoreScrollPosition();
             if (!directionToRestoreScroll &&
-                (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+                (
+                    this._hasItemWithImageChanged ||
+                    this._indicatorsController.hasNotRenderedChanges() ||
+                    this._needRestoreScroll
+                )) {
                 directionToRestoreScroll = 'up';
             }
             if (directionToRestoreScroll &&
@@ -4827,7 +4847,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // restore scroll
             let directionToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (!directionToRestoreScroll &&
-                (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+                (
+                    this._hasItemWithImageChanged ||
+                    this._indicatorsController.hasNotRenderedChanges() ||
+                    this._needRestoreScroll
+                )) {
                 directionToRestoreScroll = 'up';
             }
             if (directionToRestoreScroll) {
@@ -4835,6 +4859,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._getItemsContainer(), this._getItemsContainerUniqueClass());
                 this._scrollController.beforeRestoreScrollPosition();
                 this._hasItemWithImageChanged = false;
+                this._needRestoreScroll = false;
                 this._notify('doScroll', [newScrollTop, true], { bubbling: true });
             }
 
@@ -4947,7 +4972,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // Проверяем видимость триггеров после перерисовки.
     // Если видимость не изменилась, то события не будет, а обработать нужно.
     checkTriggersVisibility(): void {
-        if (this._destroyed || this._sourceController?.getLoadError()) {
+        if (this._destroyed || this._sourceController?.getLoadError() || this._useNewScroll) {
             return;
         }
         const triggerDown = this._loadTriggerVisibility.down;
@@ -4982,7 +5007,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._handleLoadToDirection = _private.isInfinityNavigation(this._options.navigation) &&
                                       !!this._sourceController &&
                                       this._sourceController.hasMoreData(direction);
-        this._scrollController.shiftToDirection(direction).then((result) => {
+        this._scrollController?.shiftToDirection(direction).then((result) => {
             if (this._destroyed) {
                 return;
             }
@@ -5126,7 +5151,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         this._applySelectedPage = () => {
             this._currentPage = page;
-            if (this._scrollController.getParamsToRestoreScrollPosition()) {
+            if (this._scrollController?.getParamsToRestoreScrollPosition()) {
                 return;
             }
             scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
@@ -6390,12 +6415,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     // endregion Cut
 
-    _nativeDragStart(event) {
+    private _nativeDragStart(event: SyntheticEvent): void {
         // preventDefault нужно делать именно на нативный dragStart:
         // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
         //    preventDefault в startDragNDrop сработает слишком поздно, браузер уже включит нативное перетаскивание
         // 2. На mouseDown ставится фокус, если на нём сделать preventDefault - фокус не будет устанавливаться
-        event.preventDefault();
+        if (DndController.canStartDragNDrop(
+            this._options.readOnly,
+            this._options.itemsDragNDrop,
+            this._options.canStartDragNDrop,
+            event,
+            this._dndListController && this._dndListController.isDragging()
+        )) {
+            event.preventDefault();
+        }
     }
 
     handleKeyDown(event): void {
@@ -6551,7 +6584,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             (!this._editInPlaceController || !this._editInPlaceController.isEditing()) &&
             !this._itemActionsMenuId &&
             (!hoverFreezeController || hoverFreezeController.getCurrentItemKey() === null)) {
-            _private.addShowActionsClass(this);
+            _private.addShowActionsClass(this, this._options);
         }
 
         if (this._dndListController && this._dndListController.isDragging()) {
@@ -7120,6 +7153,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _hasHiddenItemsByVirtualScroll(direction: 'up'|'down'): boolean {
+        // TODO SCROLL
         return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
     }
 

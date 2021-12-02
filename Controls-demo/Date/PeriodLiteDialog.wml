@@ -8,7 +8,7 @@
                       endValue="{{_endValue}}"
                       year="{{_year}}"
                       stickyPosition="{{_stickyPosition}}"
-                      attr:class="ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__full"
+                      attr:class="controlsDemo-ShortDatePicker ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__full"
               />
           </div>
           <div class="PageBlock__component">
@@ -19,7 +19,7 @@
                       checkedStart="{{_checkedStart}}"
                       year="{{_year}}"
                       stickyPosition="{{_stickyPosition}}"
-                      attr:class="ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__fullYes"
+                      attr:class="controlsDemo-ShortDatePicker ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__fullYes"
               >
                   <ws:monthTemplate>
                       <ws:partial periods="{{_periods}}" template="Controls/shortDatePicker:MonthTemplate"/>
@@ -34,7 +34,7 @@
                       chooseHalfyears="{{false}}"
                       chooseQuarters="{{false}}"
                       stickyPosition="{{_stickyPosition}}"
-                      attr:class="ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__months"
+                      attr:class="controlsDemo-ShortDatePicker ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__months"
               />
           </div>
           <div class="PageBlock__component">
@@ -47,7 +47,7 @@
                       periods="{{_periods}}"
                       checkedStart="{{_checkedStart}}"
                       stickyPosition="{{_stickyPosition}}"
-                      attr:class="ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__monthsYes"
+                      attr:class="controlsDemo-ShortDatePicker ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__monthsYes"
               >
                   <ws:monthTemplate>
                       <ws:partial periods="{{_periods}}" template="Controls/shortDatePicker:MonthTemplate"/>
@@ -65,7 +65,7 @@
                       checkedStart="2015-02-31"
                       checkedEnd="2015-08-31"
                       stickyPosition="{{_stickyPosition}}"
-                      attr:class="ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__quarters"
+                      attr:class="controlsDemo-ShortDatePicker ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__quarters"
               />
           </div>
           <div class="PageBlock__component">
@@ -76,7 +76,7 @@
                       chooseHalfyears="{{false}}"
                       chooseMonths="{{false}}"
                       stickyPosition="{{_stickyPosition}}"
-                      attr:class="ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__quartersYes"
+                      attr:class="controlsDemo-ShortDatePicker ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__quartersYes"
               />
           </div>
           <div class="PageBlock__component">
@@ -88,7 +88,7 @@
                       chooseMonths="{{false}}"
                       chooseQuarters="{{false}}"
                       stickyPosition="{{_stickyPosition}}"
-                      attr:class="ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__years"
+                      attr:class="controlsDemo-ShortDatePicker ControlsDemo-PeriodLiteDialog ControlsDemo-PeriodLiteDialog__years"
               />
           </div>
       </div>

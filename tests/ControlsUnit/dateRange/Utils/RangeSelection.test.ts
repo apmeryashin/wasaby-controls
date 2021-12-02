@@ -1,4 +1,4 @@
-import utils from 'Controls/_dateRange/Utils/RangeSelection';
+import utils from 'Controls/_datePopup/RangeSelection';
 
 describe('Controls/_dateRange/Utils/RangeSelection', () => {
     describe('prepareSelectionClass', () => {

@@ -4,13 +4,14 @@ import * as monthHeaderTmpl from 'wml!Controls/_datePopup/DateRangeMonthHeaderTe
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import { SyntheticEvent } from 'Vdom/Vdom';
-import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumUtils, IDateRangeOptions} from 'Controls/dateRange';
+import {DateRangeModel, Utils as DateControlsUtils, IDateRangeOptions} from 'Controls/dateRange';
 import {EventUtils} from 'UI/Events';
 import {MonthModel} from 'Controls/calendar';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import {detection} from 'Env/Env';
 import {IRangeSelectableOptions, IDateRangeSelectableOptions} from 'Controls/dateRange';
 import {IDateConstructorOptions} from 'Controls/interface';
+import isEmpty = require('Core/helpers/Object/isEmpty');
 import 'css!Controls/datePopup';
 
 interface IDatePopupDateRangeOptions extends IControlOptions, IDateConstructorOptions,
@@ -209,8 +210,11 @@ export default class DateRange extends Control<IDatePopupDateRangeOptions> {
 
     private _updateView(options: IDatePopupDateRangeOptions): void {
         this._rangeModel.update(options);
+        const monthSelectionEnabled = (quantum) => {
+            return !quantum || isEmpty(quantum) || ('months' in quantum && quantum.months.indexOf(1) !== -1);
+        };
         this._monthSelectionEnabled = !options.readOnly && (options.selectionType === 'range' ||
-            (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.ranges) &&
+            (options.selectionType === 'quantum' && monthSelectionEnabled(options.ranges) &&
                 options.ranges.months[0] === 1));
         if (this._position !== options.position) {
             this._position = options.position;

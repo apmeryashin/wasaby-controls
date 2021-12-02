@@ -26,7 +26,8 @@
     <div class="controlsDemo__cell">
         <Controls.date:ContextProvider attr:class="controlsDemo__flex controlsDemo-DateRangeContextProvider_right">
             <div>
-                <Controls.dateRange:RangeShortSelectorConsumer
+                <Controls.dateRange:SelectorConsumer
+                        datePopupType="shortDatePicker"
                         bind:startValue="_startValue3"
                         bind:endValue="_endValue3"
                 />

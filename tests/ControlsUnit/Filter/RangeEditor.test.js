@@ -8,12 +8,12 @@ define(['Controls/filter', 'Controls/dateRange'],
             rangeEditor._beforeMount({
                editorMode: 'Lite'
             });
-            assert.equal(rangeEditor._templateName, 'Controls/dateRange:RangeShortSelector');
+            assert.equal(rangeEditor._datePopupType, 'shortDatePicker');
 
             rangeEditor._beforeMount({
                editorMode: 'Selector'
             });
-            assert.equal(rangeEditor._templateName, 'Controls/dateRange:RangeSelector');
+            assert.equal(rangeEditor._datePopupType, 'datePicker');
          });
 
          describe('_beforeMount _emptyCaption', () => {

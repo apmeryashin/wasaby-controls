@@ -1,12 +1,14 @@
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
+import jsdom = require('jsdom');
 import { assert } from 'chai';
 import { spy } from 'sinon';
 import { DndController, FlatStrategy } from 'Controls/listDragNDrop';
 import { RecordSet } from 'Types/collection';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { Collection } from 'Controls/display';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 describe('Controls/_listDragNDrop/Controller', () => {
    let model;
@@ -24,8 +26,16 @@ describe('Controls/_listDragNDrop/Controller', () => {
       keyProperty: 'id'
    };
 
+   const dom = new jsdom.JSDOM('');
+
    beforeEach(() => {
       model = new Collection(cfg);
+
+      global.Element = dom.window.Element;
+   });
+
+   afterEach(() => {
+      global.Element = undefined;
    });
 
    describe('startDrag', () => {
@@ -165,24 +175,21 @@ describe('Controls/_listDragNDrop/Controller', () => {
 
    it('canStartDragNDrop', () => {
       const canStartDragNDrop = () => true;
-      const event = {
-          nativeEvent: {
-              button: undefined
-          },
-          target: {
-              closest(cssClass) {
-                  return false;
-              }
-          }
+      const event: SyntheticEvent = {
+         nativeEvent: {
+            button: undefined
+         } as MouseEvent,
+         target: dom.window.document.createElement('div')
       };
 
-      assert.isTrue(DndController.canStartDragNDrop(canStartDragNDrop, event, false));
-      assert.isTrue(DndController.canStartDragNDrop(false, event, false));
-      assert.isFalse(DndController.canStartDragNDrop(canStartDragNDrop, event, true));
-      assert.isFalse(DndController.canStartDragNDrop(true, event, false));
+      assert.isTrue(DndController.canStartDragNDrop(false, true, canStartDragNDrop, event));
+      assert.isFalse(DndController.canStartDragNDrop(true, true, canStartDragNDrop, event));
+      assert.isFalse(DndController.canStartDragNDrop(true, false, canStartDragNDrop, event));
+      assert.isTrue(DndController.canStartDragNDrop(false, true, false, event));
+      assert.isFalse(DndController.canStartDragNDrop(false, true, true, event));
 
       event.nativeEvent.button = {};
-      assert.isFalse(DndController.canStartDragNDrop(canStartDragNDrop, event, false));
+      assert.isFalse(DndController.canStartDragNDrop(false, true, canStartDragNDrop, event));
    });
 
    describe('getSelectionForDragNDrop', () => {

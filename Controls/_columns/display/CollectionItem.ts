@@ -37,12 +37,24 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
         return this.getOwner().getIndex(this);
     }
 
+    /**
+     * Возвращает классы с отступами элемента
+     */
+    getItemPaddingClasses(): string {
+        let classes = '';
+        classes += ` controls-ColumnsView__item_spacingTop_${this.getTopPadding()}`;
+        classes += ` controls-ColumnsView__item_spacingBottom_${this.getBottomPadding()}`;
+
+        return classes;
+    }
+
     getWrapperClasses(templateHighlightOnHover: boolean = true,
                       cursor: string | boolean = 'pointer',
                       shadowVisibility: 'visible'|'hidden'): string {
         let result: string = super.getWrapperClasses.apply(this, arguments);
         result += ' controls-ColumnsView__itemV';
 
+        result += ` ${this.getItemPaddingClasses()}`;
         result += ` ${this.getRoundBorderClasses()}`;
 
         if (cursor === true || cursor === 'pointer') {
@@ -69,7 +81,7 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
         return result;
     }
 
-    getMultiSelectOffsetClass(): string {
+    getMultiSelectPositionClasses(): string {
         return `controls-ColumnsView__checkbox_position-${this.getOwner().getMultiSelectPosition()} `;
     }
 

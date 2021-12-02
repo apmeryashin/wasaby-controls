@@ -6,6 +6,7 @@ import defaultItemTemplate = require('wml!Controls/_columns/render/resources/Ite
 import {ListView, IList} from 'Controls/baseList';
 import Collection from 'Controls/_columns/display/Collection';
 import {DEFAULT_COLUMNS_COUNT} from '../Constants';
+import { IItemPadding } from 'Controls/display';
 
 export interface IColumnsRenderOptions extends IList {
     columnMinWidth: number;
@@ -15,6 +16,8 @@ export interface IColumnsRenderOptions extends IList {
     spacing: number;
     listModel: Collection;
     availableWidth?: number;
+    itemsContainerPadding?: IItemPadding;
+    itemPadding?: IItemPadding;
 }
 
 export default class Columns extends ListView {
@@ -67,6 +70,43 @@ export default class Columns extends ListView {
         } else {
             return '100%';
         }
+    }
+
+    private _getPadding(paddingOption: string): IItemPadding {
+        return {
+            left: this._options[paddingOption]?.left || 'default',
+            right: this._options[paddingOption]?.right || 'default',
+            top: this._options[paddingOption]?.top || 'default',
+            bottom: this._options[paddingOption]?.bottom || 'default'
+        };
+    }
+
+    protected _getItemsPaddingContainerClasses(): string {
+        let classes = ' controls-ColumnsView__itemPaddingContainer';
+
+        const prefix = ' controls-ColumnsView__itemsPaddingContainer_spacing';
+        const itemPadding = this._getPadding('itemPadding');
+        if (this._options.itemsContainerPadding) {
+            const itemsContainerPadding = this._getPadding('itemsContainerPadding');
+            classes += `${prefix}Left_${itemsContainerPadding.left}_itemPadding_${itemPadding.left}`;
+            classes += `${prefix}Right_${itemsContainerPadding.right}_itemPadding_${itemPadding.right}`;
+            classes += `${prefix}Top_${itemsContainerPadding.top}_itemPadding_${itemPadding.top}`;
+            classes += `${prefix}Bottom_${itemsContainerPadding.bottom}_itemPadding_${itemPadding.bottom}`;
+        } else {
+            classes += `${prefix}Left_${itemPadding.left}`;
+            classes += `${prefix}Right_${itemPadding.right}`;
+            classes += `${prefix}Top_${itemPadding.top}`;
+            classes += `${prefix}Bottom_${itemPadding.bottom}`;
+        }
+        return classes;
+    }
+
+    protected _getColumnPaddingClasses(): string {
+        let classes = '';
+        const itemPadding = this._getPadding('itemPadding');
+        classes += ` controls-ColumnsView__item_spacingLeft_${itemPadding.left}`;
+        classes += ` controls-ColumnsView__item_spacingRight_${itemPadding.right}`;
+        return classes;
     }
 
     protected _getItemsContainerStyle(): string {
