@@ -115,15 +115,15 @@ Object.defineProperty(View, 'defaultProps', {
  */
 
 /**
- * @name Controls/_tile/View#addTileVisible Позволяет выводить специальную плитку добавления записей на последнем месте.
+ * @name Controls/_tile/View#addButtonVisible Позволяет выводить кнопку добавления записей в виде плитки на последнем месте.
  * @cfg {Boolean}
- * @demo Controls-demo/tileNew/addTile/Index
- * @see Controls/_tile/View#addTileClick
+ * @demo Controls-demo/tileNew/addButton/Index
+ * @see Controls/_tile/View#addButtonClick
  */
 
 /**
  * @event Событие клика по плитке добавления записей. Из обработчика следует возвращать Promise, который завершится после окончания добавления записи.
- * @name Controls/_tile/View#addTileClick
+ * @name Controls/_tile/View#addButtonClick
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @see Controls/_tile/View#addTileVisible
+ * @see Controls/_tile/View#addButtonVisible
  */
