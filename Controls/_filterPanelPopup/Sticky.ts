@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_filterPanelPopup/sticky/Sticky';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as rk from 'i18n!Controls';
 import {IFilterItem} from 'Controls/filter';
-import {IViewPanelOptions, View} from 'Controls/filterPanel';
+import {View} from 'Controls/filterPanel';
 import {isEqual} from 'Types/object';
 import 'css!Controls/filterPanelPopup';
 import 'css!Controls/filterPanel';
