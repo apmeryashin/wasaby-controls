@@ -188,8 +188,12 @@ export class ScrollController {
 
     // region Triggers
 
-    setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
-        this._observersController.setTriggersVisibility(triggersVisibility);
+    setBackwardTriggerVisible(visible: boolean): void {
+        this._observersController.setBackwardTriggerVisible(visible);
+    }
+
+    setForwardTriggerVisible(visible: boolean): void {
+        this._observersController.setForwardTriggerVisible(visible);
     }
 
     setResetBackwardTriggerOffset(reset: boolean): void {
@@ -283,6 +287,14 @@ export class ScrollController {
         this._calculator.updateItemsSizes(itemsSizes);
 
         const result = this._calculator.addItems(position, count);
+
+        // При добавлении записей в список нужно добавить оффсет триггеру,
+        // чтобы далее загрузка не требовала подскролла до ромашки
+        const triggersOffsets = result.shiftDirection === 'backward'
+            ? this._observersController.setResetBackwardTriggerOffset(false)
+            : this._observersController.setResetForwardTriggerOffset(false);
+        this._calculator.setTriggerOffsets(triggersOffsets);
+
         this._processCalculatorResult(result);
     }
 

@@ -143,18 +143,21 @@ export abstract class AbstractObserversController {
 
     // region TriggerVisibility
 
-    setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
-        if (this._triggersVisibility.backward !== triggersVisibility.backward) {
-            this._setTriggerVisibility('backward', triggersVisibility.backward);
+    setBackwardTriggerVisible(visible: boolean): void {
+        if (this._triggersVisibility.backward !== visible) {
+            this._setTriggerVisible('backward', visible);
+            this._triggersVisibility.backward = visible;
         }
-        if (this._triggersVisibility.forward !== triggersVisibility.forward) {
-            this._setTriggerVisibility('backward', triggersVisibility.forward);
-        }
-
-        this._triggersVisibility = triggersVisibility;
     }
 
-    private _setTriggerVisibility(direction: IDirection, visible: boolean): void {
+    setForwardTriggerVisible(visible: boolean): void {
+        if (this._triggersVisibility.forward !== visible) {
+            this._setTriggerVisible('forward', visible);
+            this._triggersVisibility.forward = visible;
+        }
+    }
+
+    private _setTriggerVisible(direction: IDirection, visible: boolean): void {
         const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
 
         if (trigger.style.display !== 'none' && trigger.style.display !== '') {

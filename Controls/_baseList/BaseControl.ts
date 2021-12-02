@@ -780,7 +780,11 @@ const _private = {
                     if (viewportFilled) {
                         self._indicatorsController.displayTopIndicator(true);
                     } else {
-                        self._observersController?.displayTrigger(self._children.listView?.getTopLoadingTrigger());
+                        if (self._useNewScroll) {
+                            self._listVirtualScrollController.setBackwardTriggerVisible(true);
+                        } else {
+                            self._observersController?.displayTrigger(self._children.listView?.getTopLoadingTrigger());
+                        }
                     }
                 }
                 // если больше нет данных заканчиваем порцоннный поиск
@@ -3532,11 +3536,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._afterCollectionRemove(removedItems, removedItemsIndex);
         }
         if (this._useNewScroll) {
-            // TODO по идее это нужно делать после релоада.
+            // TODO SCROLL по идее это нужно делать после релоада.
             if (action === IObservable.ACTION_RESET) {
                 // если есть данные и вниз и вверх, то скрываем триггер вверх, т.к. в первую очередь грузим вниз
                 if (this._hasMoreData('down') && this._hasMoreData('up')) {
-                    this._listVirtualScrollController.setTriggersVisibility({ backward: false, forward: true });
+                    this._listVirtualScrollController.setBackwardTriggerVisible(false);
+                    this._listVirtualScrollController.setForwardTriggerVisible(true);
                 }
             }
         }
@@ -3821,7 +3826,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             triggersVisibility: {
                 backward: !this._hasMoreData('up') ||
                     !this._listViewModel.getCount() ||
-                    !this._options.attachLoadTopTriggerToNull,
+                    !options.attachLoadTopTriggerToNull,
                 forward: true
             },
             triggersOffsetCoefficients: {
@@ -4028,7 +4033,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             ) {
                 // скроллить не нужно, т.к. не куда, ведь элементы не занимают весь вьюПорт
                 this._indicatorsController.displayTopIndicator(false);
-                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                if (this._useNewScroll) {
+                    this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                } else {
+                    this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                }
             }
         }
 
@@ -4242,7 +4251,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (this._indicatorsController.shouldDisplayTopIndicator()) {
                 this._indicatorsController.displayTopIndicator(true);
             } else {
-                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                if (this._useNewScroll) {
+                    this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                } else {
+                    this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                }
             }
 
             this._modelRecreated = true;
@@ -4319,7 +4332,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (this._indicatorsController.shouldDisplayTopIndicator()) {
                         this._indicatorsController.displayTopIndicator(true);
                     } else {
-                        this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                        if (this._useNewScroll) {
+                            this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                        } else {
+                            this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                        }
                     }
                 }
 
@@ -7178,11 +7195,19 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
                 // если уже список проскроллен, то не нужно скроллить к первому элементу
-                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                if (this._useNewScroll) {
+                    this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                } else {
+                    this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                }
             } else {
                 const scrollResult = this._scrollToFirstItem();
                 scrollResult.then(() => {
-                    this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                    if (this._useNewScroll) {
+                        this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                    } else {
+                        this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                    }
                 });
             }
         };

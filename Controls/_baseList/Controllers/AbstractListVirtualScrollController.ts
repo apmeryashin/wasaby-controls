@@ -214,8 +214,12 @@ export abstract class AbstractListVirtualScrollController<
 
     // region Triggers
 
-    setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
-        this._scrollController.setTriggersVisibility(triggersVisibility);
+    setBackwardTriggerVisible(visible: boolean): void {
+        this._scrollController.setBackwardTriggerVisible(visible);
+    }
+
+    setForwardTriggerVisible(visible: boolean): void {
+        this._scrollController.setForwardTriggerVisible(visible);
     }
 
     setResetBackwardTriggerOffset(reset: boolean): void {
