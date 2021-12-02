@@ -28,8 +28,8 @@ import 'css!Controls/Application/oldCss';
 import 'css!Controls/application';
 import 'css!Controls/dragnDrop';
 import 'css!Controls/CommonClasses';
-import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import 'css!/cdn/Tailwind/1.0.1/tailwind';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 /**
  * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
