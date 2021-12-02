@@ -60,8 +60,7 @@ const VALID_PARTIAL_DATE = /^(0{2}| {2})\.(0{2}| {2})\.\d{2,4}$/;
  * @mixes Controls/input:IBorderVisibility
  * @implements Controls/interface:IInputPlaceholder
  * @implements Controls/date:IValue
- * @mixes Controls/input:IValueValidators
- * @mixes Controls/input:IInputDisplayValueValidators
+ * @mixes Controls/date:IValueValidators
  *
  *
  * @public
