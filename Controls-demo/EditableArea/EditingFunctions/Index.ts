@@ -1,5 +1,5 @@
 import {Record} from 'Types/entity';
-import {main as editObject} from '../Data';
+import {main as editingObject} from '../Data';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
@@ -7,7 +7,7 @@ import * as template from 'wml!Controls-demo/EditableArea/EditingFunctions/Editi
 
 class EditingFunctions extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _editObject: Record = editObject;
+    protected _editingObject: Record = editingObject;
 
     protected _beginEdit(): void {
         this._children.editingView.beginEdit();

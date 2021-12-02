@@ -3,11 +3,11 @@
                           onResult="{{_onResult}}"
                           autoHide="{{true}}">
       <ws:template>
-         <Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" closeButtonVisibility="{{false}}">
+         <Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" closeButtonVisible="{{false}}">
             <Controls-demo.Popup.BaseTemplate/>
          </Controls.popupTemplate:InfoBox>
       </ws:template>
-      <ws:templateOptions closeButtonVisibility="{{true}}"/>
+      <ws:templateOptions closeButtonVisible="{{true}}"/>
       <ws:direction vertical="{{_config[_selectedKeysSimple-1].direction.vertical}}" horizontal="{{_config[_selectedKeysSimple-1].direction.horizontal}}"/>
       <ws:targetPoint vertical="{{_config[_selectedKeysSimple-1].targetPoint.vertical}}" horizontal="{{_config[_selectedKeysSimple-1].targetPoint.horizontal}}"/>
    </Controls.popup:Sticky>

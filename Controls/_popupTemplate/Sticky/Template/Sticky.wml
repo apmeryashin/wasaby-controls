@@ -23,7 +23,7 @@
                         on:click="_proxyEvent('headerClick')"/>
         </ws:if>
         <ws:else>
-            <ws:if data="{{_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility}}">
+            <ws:if data="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}">
                 <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
                 {{_options.roundBorder !== false && _closeBtnPosition === 'default' ? 'controls-StickyTemplate_roundBorder__close_button_position-' :
                 'controls-StickyTemplate__close_button_position-'}}{{_closeBtnPosition}}
