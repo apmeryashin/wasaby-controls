@@ -1005,7 +1005,7 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ' controls-TileView__previewTemplate_image';
                 break;
             case 'adding':
-                classes += ' controls-TileView__addingTile_image';
+                classes += ' controls-TileView__addTile_image';
                 break;
         }
 

@@ -5,7 +5,7 @@
     <ws:if data="{{ item.shouldDisplayAutoResizer(item.getItemType(itemType, nodeContentTemplate), staticHeight) }}">
         <div style="{{ item.getAutoResizerStyles(item.getItemType(itemType, nodeContentTemplate), width || itemWidth, imageProportion, imagePosition, imageViewMode) }}"></div>
     </ws:if>
-    <div attr:class="{{item.getAddingItemClasses(itemType)}}
+    <div attr:class="{{item.getAddItemClasses(itemType)}}
     {{ item.getWrapperClasses(item.getItemType(itemType, nodeContentTemplate), shadowVisibility, false, highlightOnHover, backgroundColorStyle, height, border, titleStyle) }}">
         <div attr:class="{{ item.getImageWrapperClasses('adding', hasTitle, titleStyle, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem, contentPadding) }}"
              attr:style="{{ item.getImageWrapperStyles(itemType, imageViewMode, imagePosition) }}">

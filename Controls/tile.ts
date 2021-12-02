@@ -24,12 +24,12 @@ import {getImageUrl, getImageSize, getImageClasses, getImageRestrictions, getIte
 import TileCollection, { ITileCollectionOptions } from 'Controls/_tile/display/TileCollection';
 import TileCollectionItem, { ITileCollectionItemOptions } from 'Controls/_tile/display/TileCollectionItem';
 import InvisibleTileItem from 'Controls/_tile/display/InvisibleTileItem';
-import AddingItem from 'Controls/_tile/display/mixins/AddingItem';
-import AddingTileItem from 'Controls/_tile/display/AddingTileItem';
+import AddItem from 'Controls/_tile/display/mixins/AddItem';
+import AddTileItem from 'Controls/_tile/display/AddTileItem';
 import Tile from 'Controls/_tile/display/mixins/Tile';
 import TileItem from 'Controls/_tile/display/mixins/TileItem';
 import InvisibleStrategy, { COUNT_INVISIBLE_ITEMS } from 'Controls/_tile/display/strategies/Invisible';
-import AddingTileStrategy from 'Controls/_tile/display/strategies/AddingTile';
+import AddTileStrategy from 'Controls/_tile/display/strategies/AddTile';
 import TileView from 'Controls/_tile/TileView';
 import ItemsView from 'Controls/_tile/ItemsView';
 import InvisibleItem from 'Controls/_tile/display/mixins/InvisibleItem';
@@ -54,9 +54,9 @@ export {
     InvisibleItem,
     InvisibleTileItem,
     InvisibleStrategy,
-    AddingTileStrategy,
-    AddingTileItem,
-    AddingItem,
+    AddTileStrategy,
+    AddTileItem,
+    AddItem,
     COUNT_INVISIBLE_ITEMS,
     TileItemActions,
     ITileItemActionsOptions,
@@ -82,4 +82,4 @@ export {
 register('Controls/tile:TileCollection', TileCollection, {instantiate: false});
 register('Controls/tile:TileCollectionItem', TileCollectionItem, {instantiate: false});
 register('Controls/tile:InvisibleTileItem', InvisibleTileItem, {instantiate: false});
-register('Controls/tile:AddingTileItem', AddingTileItem, {instantiate: false});
+register('Controls/tile:AddTileItem', AddTileItem, {instantiate: false});

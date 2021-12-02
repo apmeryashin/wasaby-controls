@@ -1,5 +1,5 @@
 import { Control, TemplateFunction } from 'UI/Base';
-import * as Template from 'wml!Controls-demo/tileNew/AddingTile/Template';
+import * as Template from 'wml!Controls-demo/tileNew/AddTile/Template';
 import { Gadgets } from '../DataHelpers/DataCatalog';
 import { HierarchicalMemory, Memory } from 'Types/source';
 import { RecordSet } from 'Types/collection';

@@ -2,7 +2,7 @@
    <ws:partial template="wml!Controls/_tile/render/items/Invisible" scope="{{_options}}"/>
 </ws:if>
 <ws:else>
-   <ws:if data="{{ (item || itemData)['[Controls/_tile/display/mixins/AddingItem]'] }}">
+   <ws:if data="{{ (item || itemData)['[Controls/_tile/display/mixins/AddItem]'] }}">
       <ws:partial template="wml!Controls/_tile/render/items/Adding" scope="{{_options}}"/>
    </ws:if>
    <ws:else>

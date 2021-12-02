@@ -2,10 +2,10 @@ import {IItemsStrategy} from 'Controls/display';
 import {Model} from 'Types/entity';
 import TreeTileCollection from '../TreeTileCollection';
 import TreeTileCollectionItem from '../TreeTileCollectionItem';
-import AddingTreeTileItem from '../AddingTreeTileItem';
+import AddTreeTileItem from '../AddTreeTileItem';
 
 /**
- * Интерфейс опций, с которыми создается стратегия AddingTreeTileStrategy
+ * Интерфейс опций, с которыми создается стратегия AddTreeTileStrategy
  */
 interface IOptions<S extends Model = Model, T extends TreeTileCollectionItem<S> = TreeTileCollectionItem<S>> {
     source: IItemsStrategy<S, T>;
@@ -13,7 +13,7 @@ interface IOptions<S extends Model = Model, T extends TreeTileCollectionItem<S> 
 }
 
 /**
- * Интерфейс опций метода AddingTreeTileStrategy::sortItems
+ * Интерфейс опций метода AddTreeTileStrategy::sortItems
  */
 interface ISortOptions<S extends Model = Model, T extends TreeTileCollectionItem<S> = TreeTileCollectionItem<S>> {
     display: TreeTileCollection<S, T>;
@@ -22,7 +22,7 @@ interface ISortOptions<S extends Model = Model, T extends TreeTileCollectionItem
 /**
  * Стратегия, которая создает плитку добавления в коллекции
  */
-export default class AddingTreeTileStrategy<
+export default class AddTreeTileStrategy<
     S extends Model = Model,
     T extends TreeTileCollectionItem<S> = TreeTileCollectionItem<S>
     > implements IItemsStrategy<S, T> {
@@ -32,7 +32,7 @@ export default class AddingTreeTileStrategy<
     protected _items: T[];
     protected _options: IOptions<S, T>;
     protected _source: IItemsStrategy<S, T>;
-    protected _addingTreeTile: AddingTreeTileItem;
+    protected _addingTreeTile: AddTreeTileItem;
     protected _itemsOrder: number[];
 
     constructor(options: IOptions<S, T>) {
@@ -95,9 +95,9 @@ export default class AddingTreeTileStrategy<
     protected _getItems(): T[] {
         if (!this._addingTreeTile) {
             this._addingTreeTile = this.options.display.createItem({
-                itemModule: 'Controls/treeTile:AddingTreeTileItem',
+                itemModule: 'Controls/treeTile:AddTreeTileItem',
                 contents: new Model({})
-            }) as AddingTreeTileItem;
+            }) as AddTreeTileItem;
         }
         return ([this._addingTreeTile] as any[] as T[]).concat(this.source.items);
     }
@@ -119,7 +119,7 @@ export default class AddingTreeTileStrategy<
      * @protected
      */
     protected _createItemsOrder(): number[] {
-        return AddingTreeTileStrategy.sortItems<S, T>(this.source.items, {
+        return AddTreeTileStrategy.sortItems<S, T>(this.source.items, {
             display: this.options.display
         });
     }
@@ -140,9 +140,9 @@ export default class AddingTreeTileStrategy<
     }
 }
 
-Object.assign(AddingTreeTileStrategy.prototype, {
+Object.assign(AddTreeTileStrategy.prototype, {
     '[Controls/_display/IItemsStrategy]': true,
-    '[Controls/_treeTile/strategy/AddingTreeTile]': true,
-    _moduleName: 'Controls/treeTile:AddingTreeTileStrategy',
+    '[Controls/_treeTile/strategy/AddTreeTile]': true,
+    _moduleName: 'Controls/treeTile:AddTreeTileStrategy',
     _itemsOrder: null
 });

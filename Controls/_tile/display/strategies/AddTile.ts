@@ -2,10 +2,10 @@ import {IItemsStrategy} from 'Controls/display';
 import {Model} from 'Types/entity';
 import TileCollection from '../TileCollection';
 import TileCollectionItem from '../TileCollectionItem';
-import AddingTileItem from '../AddingTileItem';
+import AddTileItem from '../AddTileItem';
 
 /**
- * Интерфейс опций, с которыми создается стратегия AddingTileStrategy
+ * Интерфейс опций, с которыми создается стратегия AddTileStrategy
  */
 interface IOptions<S extends Model = Model, T extends TileCollectionItem<S> = TileCollectionItem<S>> {
     source: IItemsStrategy<S, T>;
@@ -13,7 +13,7 @@ interface IOptions<S extends Model = Model, T extends TileCollectionItem<S> = Ti
 }
 
 /**
- * Интерфейс опций метода AddingTileStrategy::sortItems
+ * Интерфейс опций метода AddTileStrategy::sortItems
  */
 interface ISortOptions<S extends Model = Model, T extends TileCollectionItem<S> = TileCollectionItem<S>> {
     display: TileCollection<S, T>;
@@ -22,7 +22,7 @@ interface ISortOptions<S extends Model = Model, T extends TileCollectionItem<S> 
 /**
  * Стратегия, которая создает плитку добавления в коллекции
  */
-export default class AddingTileStrategy<
+export default class AddTileStrategy<
     S extends Model = Model,
     T extends TileCollectionItem<S> = TileCollectionItem<S>
     > implements IItemsStrategy<S, T> {
@@ -32,7 +32,7 @@ export default class AddingTileStrategy<
     protected _items: T[];
     protected _options: IOptions<S, T>;
     protected _source: IItemsStrategy<S, T>;
-    protected _addingTile: AddingTileItem;
+    protected _addTile: AddTileItem;
     protected _itemsOrder: number[];
 
     constructor(options: IOptions<S, T>) {
@@ -93,13 +93,13 @@ export default class AddingTileStrategy<
      * @protected
      */
     protected _getItems(): T[] {
-        if (!this._addingTile) {
-            this._addingTile = this.options.display.createItem({
-                itemModule: 'Controls/tile:AddingTileItem',
+        if (!this._addTile) {
+            this._addTile = this.options.display.createItem({
+                itemModule: 'Controls/tile:AddTileItem',
                 contents: new Model({})
-            }) as AddingTileItem;
+            }) as AddTileItem;
         }
-        return ([this._addingTile] as any[] as T[]).concat(this.source.items);
+        return ([this._addTile] as any[] as T[]).concat(this.source.items);
     }
 
     /**
@@ -119,7 +119,7 @@ export default class AddingTileStrategy<
      * @protected
      */
     protected _createItemsOrder(): number[] {
-        return AddingTileStrategy.sortItems<S, T>(this.source.items, {
+        return AddTileStrategy.sortItems<S, T>(this.source.items, {
             display: this.options.display
         });
     }
@@ -140,9 +140,9 @@ export default class AddingTileStrategy<
     }
 }
 
-Object.assign(AddingTileStrategy.prototype, {
+Object.assign(AddTileStrategy.prototype, {
     '[Controls/_display/IItemsStrategy]': true,
-    '[Controls/_tile/strategy/AddingTile]': true,
-    _moduleName: 'Controls/tile:AddingTileStrategy',
+    '[Controls/_tile/strategy/AddTile]': true,
+    _moduleName: 'Controls/tile:AddTileStrategy',
     _itemsOrder: null
 });
