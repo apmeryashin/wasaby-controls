@@ -10,7 +10,6 @@ import {
     ItemsSizeController,
     IItemsSizesControllerOptions
 } from './ScrollController/ItemsSizeController/ItemsSizeController';
-import {SyntheticEvent} from 'UI/Vdom';
 import {CrudEntityKey} from 'Types/source';
 import {IPageDirection} from './ScrollController/ScrollController';
 

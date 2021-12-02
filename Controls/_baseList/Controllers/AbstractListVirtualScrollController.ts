@@ -23,8 +23,6 @@ import {
     IIndexesChangedParams,
     IItemsEndedCallback,
     IItemsRange,
-    IDirection,
-    IPageDirection,
     IPlaceholders,
     IScheduledScrollParams,
     IScheduledScrollToElementParams,
@@ -144,24 +142,27 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     beforeRenderListControl(hasNotRenderedChanges: boolean): void {
-        if (hasNotRenderedChanges && !this._scheduledScrollParams) {
-            // Планируем восстановление скролла, если
-            // не было запланировано восстановления скролла и у нас есть неотрендеренные изменения,
-            // которые могут повлиять на скролл
-            const edgeItem = this._scrollController.getEdgeVisibleItem({ direction: 'forward' });
-            this._scheduleScroll({
-                type: 'restoreScroll',
-                params: edgeItem
-            });
-        } else {
-            this._handleScheduledScroll();
-        }
+        this._handleScheduledScroll();
     }
 
     afterRenderListControl(): void {
         this._updateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll();
+    }
+
+    saveScrollPosition(): void {
+        // Если и так запланировано восстановление скролла, то не нужно пытаться еще раз сохранять позицию.
+        // Данный кейс возможен если мы, например: скроллим вверх, смещаем диапазон, показываем ромашку(т.к. следующее
+        // достижение триггера долнжо подгрузить данные). В этом случае восстановление скролла будет запланировано
+        // в indexesChangedCallback.
+        if (!this._scheduledScrollParams) {
+            const edgeItem = this._scrollController.getEdgeVisibleItem({ direction: 'forward' });
+            this._scheduleScroll({
+                type: 'restoreScroll',
+                params: edgeItem
+            });
+        }
     }
 
     virtualScrollPositionChange(position: number): void {
@@ -188,23 +189,6 @@ export abstract class AbstractListVirtualScrollController<
         const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
 
         const itemIndex = this._collection.getIndexByKey(key);
-        const rangeChanged = this._scrollController.scrollToItem(itemIndex);
-        if (rangeChanged) {
-            this._scheduleScroll({
-                type: 'scrollToElement',
-                params: { key, position, force }
-            });
-        } else {
-            this._scrollToElement(key, position, force);
-        }
-
-        return promise;
-    }
-
-    scrollToItem(index: number, position?: string, force?: boolean): Promise<void> {
-        const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
-
-        const itemIndex = index;
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
         if (rangeChanged) {
             this._scheduleScroll({
@@ -280,23 +264,22 @@ export abstract class AbstractListVirtualScrollController<
         // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
         // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
         // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
-        const shouldRestoreScroll = this._collection.getStartIndex() !== params.range.startIndex;
+        // PS. ОБРАТИТЬ ВНИМАНИЕ! Восстанавливать скролл нужно ВСЕГДА, т.к. если записи добавляются в самое начало,
+        // то startIndex не изменится, а изменится только endIndex, но по факту это изменение startIndex.
         this._applyIndexes(params.range.startIndex, params.range.endIndex);
 
-        if (shouldRestoreScroll) {
-            // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
-            // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
-            // и мы будем знать актуальную scrollPosition.
-            // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
-            this._scheduleScroll({
-                type: 'calculateRestoreScrollParams',
-                params: {
-                    direction: params.shiftDirection,
-                    range: params.oldRange,
-                    placeholders: params.oldPlaceholders
-                } as IEdgeItemCalculatingParams
-            });
-        }
+        // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
+        // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
+        // и мы будем знать актуальную scrollPosition.
+        // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
+        this._scheduleScroll({
+            type: 'calculateRestoreScrollParams',
+            params: {
+                direction: params.shiftDirection,
+                range: params.oldRange,
+                placeholders: params.oldPlaceholders
+            } as IEdgeItemCalculatingParams
+        });
     }
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
@@ -425,13 +408,18 @@ export abstract class AbstractListVirtualScrollController<
             return;
         }
 
-        if (this._collection) {
+        // Не нужно отписываться от коллекции, если она уже задестроена
+        if (this._collection && !this._collection.destroyed) {
             this._collection.unsubscribe('onCollectionChange', this._onCollectionChange);
         }
 
         this._collection = collection;
 
         this._collection.subscribe('onCollectionChange', this._onCollectionChange);
+
+        if (this._scrollController && this._collection) {
+            this._scrollController.resetItems(this._collection.getCount(), this._keepScrollPosition);
+        }
     }
 
     protected _onCollectionChange(
