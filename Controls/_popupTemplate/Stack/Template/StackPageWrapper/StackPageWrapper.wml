@@ -1,5 +1,5 @@
-<div class="controls-PageTemplate controls_popupTemplate_theme-{{_options.theme}}"
-     attr:style="width: 100vw; min-width: {{ _minWidth }}px; max-width: {{ _workspaceWidth }}px;"
+<div class="controls-PageTemplate controls_popupTemplate_theme-{{_options.theme}} {{_sizesClass ? _sizesClass}}"
+     attr:style="{{!_sizesClass ? 'width: 100vw'}}; min-width: {{ _minWidth }}px; max-width: {{ _workspaceWidth }}px;"
      on:register="_registerHandler()"
      on:unregister="_unregisterHandler()">
     <ws:if data="{{_canResize}}">
