@@ -23,6 +23,8 @@ import {default as ListController} from 'Controls/_newBrowser/TemplateController
 import {default as TableController} from 'Controls/_newBrowser/TemplateControllers/Table';
 import {object} from 'Types/util';
 import 'css!Controls/newBrowser';
+import {TKey} from 'Controls/interface';
+import {IReloadItemOptions} from 'Controls/list';
 
 //endregion
 
@@ -535,9 +537,8 @@ export default class View extends Control<IOptions, IReceivedState> {
         }
     }
 
-    reloadItem(): unknown {
-        const detailExplorer = this._children.detailList;
-        return detailExplorer.reloadItem.apply(detailExplorer, arguments);
+    reloadItem(key: TKey, options: IReloadItemOptions = {}): Promise<Model | RecordSet> {
+        return this._children.detailList.reloadItem(key, options);
     }
 
     moveItemsWithDialog(): unknown {
