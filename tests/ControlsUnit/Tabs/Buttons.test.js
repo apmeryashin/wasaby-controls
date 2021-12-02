@@ -359,10 +359,9 @@ define([
                selectedKey: '15',
                keyProperty: 'karambola'
             },
-            expected = 'controls-Tabs_style_secondary__item_state_selected ' +
-                'controls-Tabs__item_view_selected ' +
-               'controls-Tabs__item_state_selected ',
-            expected2 = 'controls-Tabs__item_state_default',
+            expected = 'controls-Tabs__item_view_selected ' +
+                'controls-text-secondary',
+            expected2 = 'controls-Tabs__item_state_default controls-text-secondary',
             expected3 = 'controls-Tabs__item_view_main';
          const tabs = new tabsMod.Buttons();
          tabs.saveOptions(options);
@@ -416,7 +415,7 @@ define([
 
                assert.equal(
                   tabs._prepareItemMarkerClass(item),
-                  'controls-Tabs__itemClickableArea_marker controls-Tabs__itemClickableArea_markerThickness controls-Tabs_style_undefined__item-marker_state_selected'
+                  'controls-Tabs__itemClickableArea_marker controls-Tabs__itemClickableArea_markerThickness controls-Tabs_style_primary__item-marker_state_selected'
                );
 
                tabs.destroy();

@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {RecordSet} from 'Types/collection';
 import {data} from '../tabsItems';
-import template = require('wml!Controls-demo/Tabs/Buttons/Style/Style');
+import template = require('wml!Controls-demo/Tabs/Buttons/FontColorStyle/Style');
 
 export default class TabButtonsDemo extends Control {
     protected _template: TemplateFunction = template;
@@ -9,6 +9,7 @@ export default class TabButtonsDemo extends Control {
     protected SelectedKey1: string = '1';
     protected SelectedKey2: string =  '1';
     protected SelectedKey3: string =  '1';
+    protected SelectedKey4: string =  '1';
     protected _items1: RecordSet | null = null;
 
     protected _beforeMount(): void {

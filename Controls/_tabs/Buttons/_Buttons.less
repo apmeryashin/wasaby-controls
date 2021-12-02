@@ -196,8 +196,6 @@
 
 .controls-Tabs__item_state_default {
    .user-select();
-
-   color: var(--unselected_item_text-color_tabs);
 }
 
 .controls-Tabs__item_view_main {
@@ -268,22 +266,32 @@
    color: var(--secondary_item_text-color_tabs);
 }
 
-.controls-Tabs_style_primary__item-marker_state_selected {
+.controls-Tabs_style_default__item-marker_state_selected {
    &::after {
-      background: var(--primary_marker_color_tabs);
+      background: var(--text-color);
+   }
+}
+
+.controls-Tabs_style_forTranslucent__item-marker_state_selected {
+   &::after {
+      background: #fff;
    }
 }
 
 .controls-Tabs_style_unaccented__item-marker_state_selected {
    &::after {
-      background: var(--unaccented_marker_color_tabs);
+      background-color: var(--item_selected_color);
    }
 }
 
-.controls-Tabs_style_secondary__item-marker_state_selected {
-   &::after {
-      background: var(--secondary_marker_color_tabs);
-   }
+// Маркеры красятся под цвет текста
+.controls-Tabs_style_ {
+   @variants: primary, secondary, link, label, danger, warning, success, info, readonly;
+   .for(@variants, { &@{_item}__item-marker_state_selected {
+      &::after {
+         background-color: ~"var(--@{_item}_text-color)";
+      }
+   } });
 }
 
 .controls-Tabs__marker {
@@ -300,16 +308,16 @@
    height: var(--marker_thickness_tabs);
 }
 
-.controls-Tabs__marker_style-primary {
-   background: var(--primary_marker_color_tabs);
-}
-
 .controls-Tabs__marker_style-unaccented {
-   background: var(--text-color);
+   background-color: var(--item_selected_color);
 }
 
-.controls-Tabs__marker_style-secondary {
-   background: var(--secondary_marker_color_tabs);
+// Маркеры красятся под цвет текста
+.controls-Tabs__marker_style- {
+   @variants: primary, secondary, link, label, danger, warning, success, info, readonly;
+   .for(@variants, { &@{_item} {
+      background-color: ~"var(--@{_item}_text-color)";
+   } });
 }
 
 .controls-Tabs__main-marker {
@@ -416,10 +424,6 @@
    .controls-AdaptiveButtons__more:hover {
       color: var(--link_hover_text-color);
       text-decoration: underline;
-   }
-
-   .controls-Tabs__item_state_default:hover {
-      color: var(--unselected_item_text-color_tabs);
    }
 }
 
