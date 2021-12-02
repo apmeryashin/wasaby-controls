@@ -28,7 +28,8 @@ import {
     IPlaceholders,
     IScheduledScrollParams,
     IScheduledScrollToElementParams,
-    ScrollController
+    ScrollController,
+    IScrollControllerOptions
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {
     AbstractItemsSizesController,
@@ -71,13 +72,13 @@ export interface IAbstractListVirtualScrollControllerOptions {
     triggersQuerySelector: string;
     itemsQuerySelector: string;
 
-    updateShadowsUtil: IUpdateShadowsUtil;
+    updateShadowsUtil?: IUpdateShadowsUtil;
     updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
-    updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
+    updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
 
     triggersVisibility: ITriggersVisibility;
-    topTriggerOffsetCoefficient: number;
-    bottomTriggerOffsetCoefficient: number;
+    backwardTriggerOffsetCoefficient: number;
+    forwardTriggerOffsetCoefficient: number;
 
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
@@ -97,9 +98,9 @@ export abstract class AbstractListVirtualScrollController<
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     private readonly _doScrollUtil: IDoScrollUtil;
-    private readonly _updateShadowsUtil: IUpdateShadowsUtil;
+    private readonly _updateShadowsUtil?: IUpdateShadowsUtil;
     private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
-    private readonly _updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
+    private readonly _updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
 
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
@@ -231,8 +232,13 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     private _createScrollController(options: TOptions): void {
-        const totalCount = this._collection.getCount();
-        this._scrollController = new ScrollController({
+        const scrollControllerOptions = this._getScrollControllerOptions(options);
+        this._scrollController = new ScrollController(scrollControllerOptions);
+        this._scrollController.resetItems(scrollControllerOptions.totalCount, false);
+    }
+
+    protected _getScrollControllerOptions(options: TOptions): IScrollControllerOptions {
+        return {
             listControl: options.listControl,
             virtualScrollConfig: options.virtualScrollConfig,
 
@@ -245,13 +251,13 @@ export abstract class AbstractListVirtualScrollController<
             triggersQuerySelector: options.triggersQuerySelector,
 
             triggersVisibility: options.triggersVisibility,
-            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
-            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
+            backwardTriggerOffsetCoefficient: options.backwardTriggerOffsetCoefficient,
+            forwardTriggerOffsetCoefficient: options.forwardTriggerOffsetCoefficient,
 
             scrollPosition: 0,
             viewportSize: options.virtualScrollConfig.viewportHeight || 0,
             contentSize: 0,
-            totalCount,
+            totalCount: this._collection.getCount(),
             givenItemsSizes: this._getGivenItemsSizes(),
 
             indexesInitializedCallback: (range: IItemsRange): void => {
@@ -270,9 +276,7 @@ export abstract class AbstractListVirtualScrollController<
             },
             activeElementChangedCallback: options.activeElementChangedCallback,
             itemsEndedCallback: options.itemsEndedCallback
-        });
-
-        this._scrollController.resetItems(totalCount, false);
+        };
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
@@ -310,8 +314,12 @@ export abstract class AbstractListVirtualScrollController<
     private _handleScheduledUpdateHasItemsOutRange(): void {
         const hasItemsOutRange = this._scheduledUpdateHasItemsOutRange;
         if (hasItemsOutRange) {
-            this._updateShadowsUtil(hasItemsOutRange);
-            this._updateVirtualNavigationUtil(hasItemsOutRange);
+            if (this._updateShadowsUtil) {
+                this._updateShadowsUtil(hasItemsOutRange);
+            }
+            if (this._updateVirtualNavigationUtil) {
+                this._updateVirtualNavigationUtil(hasItemsOutRange);
+            }
         }
     }
 

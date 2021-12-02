@@ -44,7 +44,7 @@ export class GridControlMixin<
         }
     }
 
-    _$beforeRender() {
+    _$beforeRender(): void {
         if (this._listVirtualColumnScrollController) {
             const hasNotRenderedChanges = this._hasItemWithImageChanged ||
                 this._indicatorsController.hasNotRenderedChanges();
@@ -52,13 +52,13 @@ export class GridControlMixin<
         }
     }
 
-    _$afterRender() {
+    _$afterRender(): void {
         if (this._listVirtualColumnScrollController) {
             this._listVirtualColumnScrollController.afterRenderListControl();
         }
     }
 
-    _$observeScrollHandler(eventName, params) {
+    _$observeScrollHandler(eventName, params): void {
         if (!this._listVirtualColumnScrollController) {
             return;
         }
@@ -77,8 +77,13 @@ export class GridControlMixin<
             columns: options.columns,
             columnScrollStartPosition: options.columnScrollStartPosition,
             triggersQuerySelector: HORIZONTAL_LOADING_TRIGGER_SELECTOR,
-            leftTriggerOffsetCoefficient: options.leftTriggerOffsetCoefficient,
-            rightTriggerOffsetCoefficient: options.rightTriggerOffsetCoefficient,
+            backwardTriggerOffsetCoefficient: options.leftTriggerOffsetCoefficient,
+            forwardTriggerOffsetCoefficient: options.rightTriggerOffsetCoefficient,
+            itemsQuerySelector: '.js-controls-Grid__columnScroll__relativeCell',
+            triggersVisibility: {
+                backward: true,
+                forward: true
+            },
             doScrollUtil: (scrollTop) => {
                 this._notify('doHorizontalScroll', [scrollTop, true], { bubbling: true });
             },

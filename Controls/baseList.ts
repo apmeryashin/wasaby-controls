@@ -94,6 +94,7 @@ export {
 
 export {
     ScrollController as NewScrollController,
+    IScrollControllerOptions,
     IDirection as IDirectionNew,
     IPlaceholders,
     IEdgeItem,

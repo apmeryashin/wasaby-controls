@@ -2,7 +2,7 @@ import type { IItemsRange } from './ScrollController';
 import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
 
-export interface IAbstarctItemsSizesControllerOptions {
+export interface IAbstractItemsSizesControllerOptions {
     itemsContainer?: HTMLElement;
     itemsQuerySelector: string;
     totalCount: number;

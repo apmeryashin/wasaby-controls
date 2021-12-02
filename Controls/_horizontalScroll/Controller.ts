@@ -1,34 +1,44 @@
 import {
     AbstractListVirtualScrollController,
-    IAbstractListVirtualScrollControllerOptions
+    IAbstractListVirtualScrollControllerOptions,
+    IScrollControllerOptions
 } from 'Controls/baseList';
-
 import {ObserversController, IObserversControllerOptions} from './ObserversController';
 import {ItemsSizeController, IItemsSizesControllerOptions} from './ItemsSizeController';
-import type {GridCollection, TColumns} from 'Controls/grid';
+import type {TColumns, GridCollection} from 'Controls/grid';
+import type {Collection} from 'Controls/display';
 
 export interface IControllerOptions extends IAbstractListVirtualScrollControllerOptions {
-    columnScrollStartPosition?: 'end';
+    collection: Collection & GridCollection;
     columns: TColumns;
+    columnScrollStartPosition?: 'end';
 }
 
 export type IItemsSizesControllerConstructor = new (options: IItemsSizesControllerOptions) => ItemsSizeController;
 export type IObserversControllerConstructor = new (options: IObserversControllerOptions) => ObserversController;
 
 export class Controller extends AbstractListVirtualScrollController<IControllerOptions> {
-    protected _collection: GridCollection;
+    protected _collection: Collection & GridCollection;
     private _columns: TColumns;
 
     constructor(options: IControllerOptions) {
-        super(options);
         this._columns = options.columns;
+        super(options);
     }
 
-    protected _getObserversControllerConstructor(): IObserversControllerConstructor {
+    protected protected _getObserversControllerConstructor(): IObserversControllerConstructor {
         return ObserversController;
     }
+
     protected _getItemsSizeControllerConstructor(): IItemsSizesControllerConstructor {
         return ItemsSizeController;
+    }
+
+    protected _getScrollControllerOptions(options: IControllerOptions): IScrollControllerOptions {
+        return {
+            ...super._getScrollControllerOptions(options),
+            totalCount: options.columns.length
+        };
     }
 
     protected _applyIndexes(startIndex: number, endIndex: number): void {
