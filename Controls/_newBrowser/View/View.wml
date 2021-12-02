@@ -40,9 +40,9 @@
                     tileCfg="{{_tileCfg}}"
                     listCfg="{{_listCfg}}"
                     loading="{{_detailLoading}}"
-                    imageViewMode="{{_getImageViewMode(viewMode)}}"
-                    nodeImageViewMode="{{_getNodeImageViewMode(viewMode)}}"
-                    imagePosition="{{_getImagePosition(viewMode)}}"
+                    imageViewMode="{{_getImageViewMode(!_listLoaded || !_tileLoaded ? _appliedViewMode : viewMode)}}"
+                    nodeImageViewMode="{{_getNodeImageViewMode(!_listLoaded || !_tileLoaded ? _appliedViewMode : viewMode)}}"
+                    imagePosition="{{_getImagePosition(!_listLoaded || !_tileLoaded ? _appliedViewMode : viewMode)}}"
                     attr:class="controls-newBrowser__detail-list"
                     on:itemClick="_onExplorerItemClick(false)"
                     on:viewModeChanged="_onDetailExplorerChangedViewMode()"
@@ -55,9 +55,9 @@
             <Controls.list:Container id="detail">
                 <Controls.list:HotKeysContainer>
                     <Controls.listTemplates:ImageDisplayContainer scope="{{_detailExplorerOptions}}"
-                                                                  imageViewMode="{{_getImageViewMode(viewMode)}}"
-                                                                  nodeImageViewMode="{{_getNodeImageViewMode(viewMode)}}"
-                                                                  imagePosition="{{_getImagePosition(viewMode)}}"
+                                                                  imageViewMode="{{_getImageViewMode(!_listLoaded || !_tileLoaded ? _appliedViewMode : viewMode)}}"
+                                                                  nodeImageViewMode="{{_getNodeImageViewMode(!_listLoaded || !_tileLoaded ? _appliedViewMode : viewMode)}}"
+                                                                  imagePosition="{{_getImagePosition(!_listLoaded || !_tileLoaded ? _appliedViewMode : viewMode)}}"
                                                                   columns="{{_columns}}">
                         <ws:content>
                             <Controls.explorer:View
