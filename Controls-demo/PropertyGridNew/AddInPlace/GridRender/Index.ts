@@ -1,7 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
+import {IItemAction} from 'Controls/itemActions';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import {default as IPropertyGridItem} from 'Controls/_propertyGrid/IProperty';
 
 import * as template from 'wml!Controls-demo/PropertyGridNew/AddInPlace/GridRender/GridRender';
@@ -38,21 +39,25 @@ export default class Demo extends Control<IControlOptions> {
         });
     }
 
+    protected _typeDescriptionChanged(e: SyntheticEvent, typeDescription: RecordSet<IPropertyGridItem>): void {
+        console.log(typeDescription);
+    }
+
+    protected _editingObjectChanged(e: SyntheticEvent, editingObject: RecordSet<IPropertyGridItem>): void {
+        console.log(editingObject);
+    }
+
     protected _beginAdd(): void {
-        (new Promise((resolve) => {
-            const newItem = new Model({
-                keyProperty: 'name',
-                rawData: {
-                    name: 'dynamicString' + (++this._fakeItemId),
-                    caption: '',
-                    isEditable: true,
-                    editorTemplateName: 'Controls/propertyGrid:StringEditor'
-                }
-            });
-            resolve(this._typeDescription.add(newItem));
-        })).then((newItem) => {
-            this._children.propertyGrid.beginEdit({item: newItem});
+        const newItem = new Model({
+            keyProperty: 'name',
+            rawData: {
+                name: 'dynamicString' + (++this._fakeItemId),
+                caption: '',
+                isEditable: true,
+                editorTemplateName: 'Controls/propertyGrid:StringEditor'
+            }
         });
+        this._children.propertyGrid.beginAdd({item: newItem});
     }
 
     static _styles: string[] = ['Controls-demo/PropertyGridNew/PropertyGrid'];

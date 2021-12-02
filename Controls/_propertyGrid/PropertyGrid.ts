@@ -43,7 +43,7 @@ import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Co
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {Logger} from 'UI/Utils';
 import {
-    Controller as EditInPlaceController,
+    Controller as EditInPlaceController, IBeforeBeginEditCallbackParams,
     IBeforeEndEditCallbackParams,
     InputHelper as EditInPlaceInputHelper, TAsyncOperationResult
 } from 'Controls/editInPlace';
@@ -1158,6 +1158,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
+    beginAdd(userOptions: IEditingUserOptions): Promise<void | {canceled: true}> {
+        if (this._options.readOnly) {
+            return PropertyGridView._rejectEditInPlacePromise('beginAdd');
+        }
+        return this._beginAdd(userOptions);
+    }
+
     beginEdit(userOptions: IEditingUserOptions): Promise<void | {canceled: true}> {
         return this._beginEdit(userOptions);
     }
@@ -1206,7 +1213,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
      * @param userOptions
      * @private
      */
-    private _beginEdit(userOptions: IEditingUserOptions): Promise<void | {canceled: true}> {
+    private _beginEdit(userOptions: IEditingUserOptions): TAsyncOperationResult {
         return this._getEditInPlaceController()
             .then((controller) => controller.edit(userOptions))
             .then((result) => {
@@ -1218,6 +1225,27 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             });
     }
 
+    /**
+     * Метод, фактически начинающий добавление по месту
+     * @param userOptions
+     * @private
+     */
+    private _beginAdd(userOptions: IEditingUserOptions): TAsyncOperationResult {
+        return this._getEditInPlaceController()
+            .then((controller) => controller.add(userOptions, {
+                addPosition: 'bottom',
+                columnIndex: 0,
+                targetItem: undefined
+            }))
+            .then((addResult) => {
+                if (addResult && addResult.canceled) {
+                    return addResult;
+                }
+                this._editInPlaceInputHelper.shouldActivate();
+                this._forceUpdate();
+            });
+    }
+
     private _getEditInPlaceController(): Promise<EditInPlaceController> {
         if (!this._editInPlaceController) {
             return import('Controls/editInPlace').then(({InputHelper, Controller}) => {
@@ -1225,6 +1253,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._editInPlaceController = new Controller({
                     mode: 'row',
                     collection: this._listModel,
+                    onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
                     onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
                     onBeforeEndEdit: this._beforeEndEditCallback.bind(this)
                 });
@@ -1232,6 +1261,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             });
         }
         return Promise.resolve(this._editInPlaceController);
+    }
+
+    private _beforeBeginEditCallback(params: IBeforeBeginEditCallbackParams): Promise<void> {
+        // Если к нам не пришел новый добавляемый итем, то ругаемся
+        if (!params.options?.item) {
+            throw new Error('You use list without source. So you need to manually create new item when processing an event beforeBeginEdit');
+        }
+        return;
     }
 
     private _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
@@ -1261,19 +1298,27 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                         return EDIT_IN_PLACE_CANCEL;
                     }
                 }
+                const editingObject = this._listModel.getEditingObject();
+                const name = params.item.get(this._listModel.getKeyProperty());
 
-                const eventResult = this._notify('typeDescriptionChanged', [this._listModel.getCollection()]);
-
-                if (eventResult !== EDIT_IN_PLACE_CANCEL &&
-                    params.item.getFormat().getFieldIndex('editingValue') !== -1) {
-                    const editingObject = this._listModel.getEditingObject();
-                    const editingValue = params.item.get('editingValue');
-                    const name = params.item.get(this._listModel.getKeyProperty());
+                const editingValue = params.item.get('editingValue');
+                if (params.item.getFormat().getFieldIndex('editingValue') !== -1) {
                     params.item.removeField('editingValue');
-                    if (editingValue !== editingObject[name]) {
-                        this._propertyValueChanged(null, params.item, editingValue);
+                }
+
+                if (params.willSave && params.isAdd) {
+                    const collection = this._listModel.getCollection() as undefined as RecordSet;
+                    if (typeof params.sourceIndex === 'number') {
+                        collection.add(params.item, params.sourceIndex);
+                    } else {
+                        collection.append([params.item]);
                     }
                 }
+                if (params.willSave && editingValue !== editingObject[name]) {
+                    this._propertyValueChanged(null, params.item, editingValue);
+                }
+
+                this._notify('typeDescriptionChanged', [this._listModel.getCollection()]);
             });
     }
 

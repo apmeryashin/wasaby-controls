@@ -2,7 +2,9 @@
     <Controls.propertyGrid:PropertyGrid
             name="propertyGrid"
             bind:editingObject="_editingObject"
-            typeDescription="{{_typeDescription}}">
+            bind:typeDescription="_typeDescription"
+            on:typeDescriptionChanged="_typeDescriptionChanged()"
+            on:editingObjectChanged="_editingObjectChanged()">
         <ws:itemPadding top="s" right="m" bottom="s" left="m"/>
         <ws:captionColumnOptions width="50%"/>
         <ws:itemTemplate>
