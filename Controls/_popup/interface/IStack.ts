@@ -109,9 +109,9 @@ export interface IStackOpener extends IOpener {
  * @property {Boolean} [closeOnOutsideClick=false] Определяет возможность закрытия стекового окна по клику вне.
  * @property {function|String} template Шаблон стекового окна.
  * @property {function|String} templateOptions Опции для контрола, переданного в {@link template}.
- * @property {Number} minWidth Минимально допустимая ширина стекового окна. Значение указывается в px.
- * @property {Number} maxWidth Максимально допустимая ширина стекового окна. Значение указывается в px.
- * @property {Number} width Текущая ширина стекового окна. Значение указывается в px.
+ * @property {Number|Controls/_popup/interface/IStackOpener/BaseSizes.typedef} minWidth Минимально допустимая ширина стекового окна. Значение указывается в px. Так же поддерживается стандартная линейка размеров.
+ * @property {Number|Controls/_popup/interface/IStackOpener/BaseSizes.typedef} maxWidth Максимально допустимая ширина стекового окна. Значение указывается в px. Так же поддерживается стандартная линейка размеров.
+ * @property {Number|Controls/_popup/interface/IStackOpener/BaseSizes.typedef} width Текущая ширина стекового окна. Значение указывается в px. Так же поддерживается стандартная линейка размеров.
  * @property {Node} opener Логический инициатор открытия стекового окна (см. {@link /doc/platform/developmentapl/interface-development/ui-library/focus/activate-control/#control-opener Определение понятия "опенер контрола"}).
  * @property {Controls/_popup/interface/IBaseOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события стекового окна.
  */
@@ -130,6 +130,18 @@ export interface IStackOpener extends IOpener {
  * @property {Number} width Width of popup.
  * @property {Node} opener Read more {@link /doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener there}.
  * @property {Controls/_popup/interface/IBaseOpener/EventHandlers.typedef} eventHandlers Callback functions on popup events.
+ */
+
+/**
+ * @typedef {BaseSizes} Controls/_popup/interface/IStackOpener/BaseSizes
+ * @description Стандартная линейка размеров для ширин стековых панелей. Значения устанавливаются согласно заданной теме.
+ * @property {String} a
+ * @property {String} b
+ * @property {String} c
+ * @property {String} d
+ * @property {String} e
+ * @property {String} f
+ * @property {String} g
  */
 
 /**
