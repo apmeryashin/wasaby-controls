@@ -28,7 +28,7 @@ function getConstants(themeName: string, className: string, hashMap: object): ob
     return themeConstantsGetter(className, hashMap);
 }
 
-export default function initConstants(className: string, hashMap: object): Promise<unknown> {
+export default function initConstants(className: string, hashMap: object): Promise<void|object> {
     let constantsInit;
     if (!constantsInit) {
         constantsInit = new Promise<object>((resolve, reject) => {

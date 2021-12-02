@@ -24,7 +24,6 @@ const ACCORDEON_MIN_WIDTH = 50;
 const MIN_DISTANCE = 100;
 
 let themeConstants = {};
-const BASE_WIDTH_SIZES = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
 
 export interface IStackItem extends IPopupItem {
     containerWidth: number;
@@ -37,6 +36,7 @@ export class StackController extends BaseController {
     TYPE: string = 'Stack';
     _stack: List<IStackItem> = new List();
 
+    BASE_WIDTH_SIZES: string[] =  ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
     private _sideBarVisible: boolean = true;
     private _positionBeforeUpdate: IPopupPosition;
 
@@ -122,12 +122,8 @@ export class StackController extends BaseController {
     getDefaultConfig(item: IStackItem): void|Promise<void> {
         const promiseArray = [];
         this._preparePropStorageId(item);
-        if (
-            (typeof item.popupOptions.width === 'string' && BASE_WIDTH_SIZES.includes(item.popupOptions.width)) ||
-            (typeof item.popupOptions.minWidth === 'string' && BASE_WIDTH_SIZES.includes(item.popupOptions.minWidth)) ||
-            (typeof item.popupOptions.maxWidth === 'string' && BASE_WIDTH_SIZES.includes(item.popupOptions.maxWidth))
-            ) {
-            promiseArray.push(this._initializationConstants());
+        if (this._checkItemWidthValue(item)) {
+            promiseArray.push(this.initializationConstants());
         }
         if (item.popupOptions.propStorageId) {
             promiseArray.push(this._getPopupWidth(item));
@@ -154,8 +150,8 @@ export class StackController extends BaseController {
         return true;
     }
 
-    private _initializationConstants(): Promise<void|object> {
-        const initConstansConfig = {
+    initializationConstants(): Promise<void|object> {
+        const initConstantsConfig = {
             a: 'margin-right',
             b: 'margin-left',
             c: 'margin-bottom',
@@ -166,10 +162,17 @@ export class StackController extends BaseController {
         };
         const constansClassName =
             `controls-StackTemplate__themeConstants controls_popupTemplate_theme-${Controller.getTheme()}`;
-        return initConstants(constansClassName, initConstansConfig).then(
+        return initConstants(constansClassName, initConstantsConfig).then(
             (result) => {
                 themeConstants = result;
+                return result;
             });
+    }
+
+    private _checkItemWidthValue(item: IStackItem): boolean {
+        return (this.BASE_WIDTH_SIZES.includes(item.popupOptions.width)) ||
+            (this.BASE_WIDTH_SIZES.includes(item.popupOptions.minWidth)) ||
+            (this.BASE_WIDTH_SIZES.includes(item.popupOptions.maxWidth));
     }
 
     private _updateMaximizedState(item: IStackItem, state?: boolean): void {
@@ -387,7 +390,7 @@ export class StackController extends BaseController {
         for (let i = 0; i < optionsSet.length; i++) {
             if (optionsSet[i][property]) {
                 if (typeof optionsSet[i][property] === 'string') {
-                    if (Object.keys(themeConstants).indexOf(optionsSet[i][property]) !== -1) {
+                    if (Object.keys(themeConstants).includes(optionsSet[i][property])) {
                         return themeConstants[optionsSet[i][property]];
                     } else if (!optionsSet[i][property].includes('%')) {
                         // get size, if it's not percentage value

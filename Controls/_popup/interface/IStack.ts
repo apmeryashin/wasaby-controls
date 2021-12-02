@@ -134,14 +134,14 @@ export interface IStackOpener extends IOpener {
 
 /**
  * @typedef {BaseSizes} Controls/_popup/interface/IStackOpener/BaseSizes
- * @description Базовая линейка размеров для ширин стековых панелей для дефолтной темы.
- * @property {String} a Соответствует значению 450.
- * @property {String} b Соответствует значению 550.
- * @property {String} c Соответствует значению 650.
- * @property {String} d Соответствует значению 700.
- * @property {String} e Соответствует значению 750.
- * @property {String} f Соответствует значению 900.
- * @property {String} g Соответствует значению 1200.
+ * @description Стандартная линейка размеров для ширин стековых панелей. Значения устанавливаются согласно заданной теме.
+ * @property {String} a
+ * @property {String} b
+ * @property {String} c
+ * @property {String} d
+ * @property {String} e
+ * @property {String} f
+ * @property {String} g
  */
 
 /**
