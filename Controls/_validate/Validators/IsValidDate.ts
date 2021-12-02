@@ -19,7 +19,7 @@ const MAX_YEAR_VALUE =  new Date().getFullYear() + additionalYears;
  * @public
  * @author Красильников А.С.
  * @remark
- * Валидатор используется по умолчанию в платформенных полях ввода даты и времени, задавать его в ручную не нужно.
+ * Валидатор используется по умолчанию в платформенных полях ввода даты и времени, задавать его вручную не нужно.
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  *
  * Аргументы функции:
