@@ -7,7 +7,6 @@ export interface IPopupTemplateBaseOptions {
     headingCaption?: string;
     headingFontSize?: string;
     headingFontColorStyle?: string;
-    closeButtonVisibility?: boolean;
     closeButtonVisible?: boolean;
 }
 
@@ -56,7 +55,7 @@ export default interface IPopupTemplateBase {
  */
 
 /**
- * @name Controls/_popupTemplate/interface/IPopupTemplateBase#closeButtonVisibility
+ * @name Controls/_popupTemplate/interface/IPopupTemplateBase#closeButtonVisible
  * @cfg {Boolean} Определяет, будет ли отображаться кнопка закрытия
  * @default true
  */
