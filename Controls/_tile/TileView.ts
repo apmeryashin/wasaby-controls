@@ -104,7 +104,7 @@ export default class TileView extends ListView {
                 });
             }
         } else {
-            super._onItemContextMenu(event, item);
+            super._onItemClick(event, item);
         }
     }
 
