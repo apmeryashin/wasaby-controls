@@ -114,9 +114,9 @@ import {
 } from 'Controls/_grid/display/Collection';
 
 export {
-    GridControlMixin,
-    IGridControlMixinOptions
-} from 'Controls/_grid/GridControlMixin';
+    GridControl,
+    IGridControlOptions
+} from 'Controls/_grid/GridControl';
 
 export {
     default as GridMixin,

@@ -3351,7 +3351,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.initializeNavigation(this, newOptions);
 
-        if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
+        if (
+            !this._options.newColumnScroll &&
+            newOptions.columnScroll &&
+            newOptions.columnScrollStartPosition === 'end'
+        ) {
             const shouldPrevent = newOptions.preventServerSideColumnScroll;
             this._useServerSideColumnScroll = typeof shouldPrevent === 'boolean' ? !shouldPrevent : true;
         }
@@ -3517,7 +3522,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._removedItems = [];
     }
 
-    _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
+    protected _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
         let items;
         let collapsedGroups;
 
@@ -3898,7 +3903,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             window.addEventListener('resize', this._onWindowResize);
         }
 
-        if (this._useServerSideColumnScroll) {
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
+        if (!this._options.newColumnScroll && this._useServerSideColumnScroll) {
             this._useServerSideColumnScroll = false;
         }
 
@@ -4101,9 +4107,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _keyDownLeft(event): void {
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
         // Сначала обрабатываем скролл колонок, если не было проскролено, то двигаем маркер
-        // TODO: Должно уехать в GridControl
-        if (event.nativeEvent.shiftKey) {
+        if (!this._options.newColumnScroll && event.nativeEvent.shiftKey) {
             if (this._options.columnScroll && this._children.listView.keyDownLeft()) {
                 return;
             }
@@ -4112,9 +4118,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _keyDownRight(event): void {
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
         // Сначала обрабатываем скролл колонок, если не было проскролено, то двигаем маркер
-        // TODO: Должно уехать в GridControl
-        if (event.nativeEvent.shiftKey) {
+        if (!this._options.newColumnScroll && event.nativeEvent.shiftKey) {
             if (this._options.columnScroll && this._children.listView.keyDownRight()) {
                 return;
             }
@@ -6268,7 +6274,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let hasDragScrolling = false;
         const contents = _private.getPlainItemContents(itemData);
         this._mouseDownItemKey = contents.getKey();
-        if (this._options.columnScroll) {
+        if (!this._options.newColumnScroll && this._options.columnScroll) {
             // Не должно быть завязки на горизонтальный скролл.
             // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
             hasDragScrolling = this._isColumnScrollVisible && (
@@ -7615,31 +7621,17 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._needBottomPadding = _private.needBottomPadding(this, options);
     }
 
-    // TODO: Должно переехать в GridControl, когда он появится.
     _onToggleHorizontalScroll(e, visibility: boolean): void {
-        this._isColumnScrollVisible = visibility;
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
+        if (!this._options.newColumnScroll) {
+            this._isColumnScrollVisible = visibility;
+        }
     }
 
-    // TODO: Должно переехать в GridControl, когда он появится.
     isColumnScrollVisible(): boolean {
-        return this._isColumnScrollVisible;
-    }
-
-    scrollToLeft(): void {
-        if (this._children.listView.scrollToLeft) {
-            this._children.listView.scrollToLeft();
-        }
-    }
-
-    scrollToRight(): void {
-        if (this._children.listView.scrollToRight) {
-            this._children.listView.scrollToRight();
-        }
-    }
-
-    scrollToColumn(columnIndex: number): void {
-        if (this._children.listView.scrollToColumn) {
-            this._children.listView.scrollToColumn(columnIndex);
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
+        if (!this._options.newColumnScroll) {
+            return this._isColumnScrollVisible;
         }
     }
 

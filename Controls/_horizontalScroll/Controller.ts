@@ -19,17 +19,21 @@ export interface IControllerOptions extends IAbstractListVirtualScrollController
 export type IItemsSizesControllerConstructor = new (options: IItemsSizesControllerOptions) => ItemsSizeController;
 export type IObserversControllerConstructor = new (options: IObserversControllerOptions) => ObserversController;
 
+export const HORIZONTAL_LOADING_TRIGGER_SELECTOR = '.controls-BaseControl__loadingTrigger_horizontal';
+
 export class Controller extends AbstractListVirtualScrollController<IControllerOptions> {
     protected _collection: Collection & GridCollection;
     private _columns: TColumns;
     private _header?: THeader;
-    private _stickyColumnsCount: number;
 
     constructor(options: IControllerOptions) {
         this._columns = options.columns;
         this._header = options.header;
-        this._stickyColumnsCount = options.stickyColumnsCount;
-        super(options);
+        super({
+            ...options,
+            itemsQuerySelector: '.js-controls-Grid__columnScroll__relativeCell',
+            triggersQuerySelector: HORIZONTAL_LOADING_TRIGGER_SELECTOR
+        });
     }
 
     protected _getObserversControllerConstructor(): IObserversControllerConstructor {
@@ -55,7 +59,15 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
         }
     }
 
-    private _onCollectionChange(): void {
+    keyDownLeft(): Promise<void> {
+        return this._scrollToPage('backward');
+    }
+
+    keyDownRight(): Promise<void> {
+        return this._scrollToPage('forward');
+    }
+
+    protected _onCollectionChange(): void {
         /*Еще не реализована реакция на обновление*/
     }
 }

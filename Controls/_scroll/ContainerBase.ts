@@ -4,12 +4,15 @@ import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RegisterClass, RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {RESIZE_OBSERVER_BOX, ResizeObserverUtil} from 'Controls/sizeUtils';
+import {ResizeObserverUtil, RESIZE_OBSERVER_BOX} from 'Controls/sizeUtils';
 import {getScrollContainerPageCoords, isCursorAtBorder, SCROLL_DIRECTION, SCROLL_POSITION} from './Utils/Scroll';
 import {scrollToElement} from './Utils/scrollToElement';
-import ScrollState, {IScrollState} from './Utils/ScrollState';
+import {scrollTo} from './Utils/Scroll';
+import ScrollState from './Utils/ScrollState';
 import ScrollModel from './Utils/ScrollModel';
+import {IScrollState} from './Utils/ScrollState';
 import {SCROLL_MODE} from './Container/Type';
+import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import {EventUtils} from 'UI/Events';
 import {isHidden} from './StickyBlock/Utils';
 import {getHeadersHeight} from './StickyBlock/Utils/getHeadersHeight';
@@ -17,7 +20,6 @@ import {location} from 'Application/Env';
 import {Entity} from 'Controls/dragnDrop';
 import {Logger} from 'UICommon/Utils';
 import 'css!Controls/scroll';
-import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 
 interface IInitialScrollPosition {
     vertical: SCROLL_POSITION.START | SCROLL_POSITION.END;
