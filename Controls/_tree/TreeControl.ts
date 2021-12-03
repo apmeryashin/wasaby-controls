@@ -14,7 +14,7 @@ import {Model} from 'Types/entity';
 import {Direction, IBaseSourceConfig, IFilterOptions, IHierarchyOptions, TKey} from 'Controls/interface';
 import {
     BaseControl,
-    convertReloadItemArgs,
+    checkReloadItemArgs,
     IBaseControlOptions, IDirection,
     IReloadItemOptions,
     ISiblingStrategy
@@ -836,12 +836,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return super.reload(keepNavigation, sourceConfig);
     }
 
-    reloadItem(key: TKey, options: IReloadItemOptions | object, direction?: boolean | string): Promise<Model> {
-        const newArgs = convertReloadItemArgs(...arguments);
+    reloadItem(key: TKey, options: IReloadItemOptions = {}): Promise<Model | RecordSet> {
+        checkReloadItemArgs(...arguments);
 
-        return newArgs.options.hierarchyReload
+        return options.hierarchyReload
             ? _private.reloadItem(key, this.getViewModel() as Tree, this._options.filter, this.getSourceController())
-            : super.reloadItem.apply(this, [newArgs.key, newArgs.options]);
+            : super.reloadItem.apply(this, [key, options]);
     }
 
     /**
