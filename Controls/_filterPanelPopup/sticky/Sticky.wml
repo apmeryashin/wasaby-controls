@@ -14,35 +14,32 @@
                                            controls_filterPanel_theme-{{_options.theme}}">
     <ws:headerContentTemplate>
         <div class="controls-FilterPanelPopup__header controls-FilterPanelPopup-normal">
-            <div class="controls-FilterPanelPopup__buttons-container">
-                <ws:if data="{{_resetButtonVisible}}">
-                    <Controls.buttons:Button viewMode="linkButton"
-                                             caption="{{rk('Сбросить')}}"
-                                             fontColorStyle="label"
-                                             inlineHeight="4xl"
-                                             fontSize="xs"
-                                             attr:class="controls-FilterPanelPopup__reset-button"
-                                             on:click="_resetFilter()"/>
-                </ws:if>
-                <ws:if data="{{_options.applyButtonCaption}}">
-                    <div class="controls-FilterPanelPopup__applyButton">
-                        <Controls.buttons:Button caption="{{_options.applyButtonCaption}}"
-                                                 buttonStyle="primary"
-                                                 on:click="_applyFilter()"/>
-                    </div>
-                </ws:if>
-                <ws:else>
-                    <Controls.buttons:Button viewMode="functionalButton"
-                                             icon="icon-Yes"
-                                             iconSize="s"
-                                             iconStyle="contrast"
-                                             buttonStyle="success"
-                                             caption="{{null}}"
-                                             inlineHeight="m"
-                                             attr:class="controls-FilterPanelPopup__applyButton"
+            <ws:if data="{{_resetButtonVisible}}">
+                <Controls.buttons:Button viewMode="linkButton"
+                                         caption="{{rk('Сбросить')}}"
+                                         fontColorStyle="label"
+                                         fontSize="xs"
+                                         attr:class="controls-FilterPanelPopup__reset-button"
+                                         on:click="_resetFilter()"/>
+            </ws:if>
+            <ws:if data="{{_options.applyButtonCaption}}">
+                <div class="controls-FilterPanelPopup__applyButton">
+                    <Controls.buttons:Button caption="{{_options.applyButtonCaption}}"
+                                             buttonStyle="primary"
                                              on:click="_applyFilter()"/>
-                </ws:else>
-            </div>
+                </div>
+            </ws:if>
+            <ws:else>
+                <Controls.buttons:Button viewMode="functionalButton"
+                                         icon="icon-Yes"
+                                         iconSize="s"
+                                         iconStyle="contrast"
+                                         buttonStyle="success"
+                                         caption="{{null}}"
+                                         inlineHeight="m"
+                                         attr:class="controls-FilterPanelPopup__applyButton"
+                                         on:click="_applyFilter()"/>
+            </ws:else>
         </div>
     </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
