@@ -4,6 +4,7 @@ import {Container} from 'Controls/dragnDrop';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import IResizingLine from 'Controls/_dragnDrop/interface/IResizingLine';
+import {detection} from 'Env/Env';
 import 'css!Controls/dragnDrop';
 
 /*TODO Kingo*/
@@ -41,8 +42,13 @@ class ResizingLine extends Control<IControlOptions, IResizingLine> {
     protected _children: IChildren;
     protected _options: IResizingLine;
     protected _template: TemplateFunction = template;
+    protected _isMobilePlatform: boolean;
     protected _styleArea: string = '';
     protected _dragging: boolean = false;
+
+    protected _beforeMount(): void {
+        this._isMobilePlatform = detection.isMobilePlatform;
+    }
 
     protected _beginDragHandler(event: Event): void {
         // to disable selection while dragging
