@@ -1,7 +1,7 @@
 import {IMaxLengthOptions} from 'Controls/_input/interface/IMaxLength';
 
 export interface ITextOptions extends IMaxLengthOptions {
-    constraint?: string;
+    constraint?: string | RegExp;
     convertPunycode: boolean;
     trim: boolean;
     transliterate?: boolean;
@@ -21,7 +21,7 @@ export interface IText {
 
 /**
  * @name Controls/_input/interface/IText#constraint
- * @cfg {String} Фильтр вводимого значения в формате регулярного выражение {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Guide/Regular_Expressions#special-character-set [xyz]}.
+ * @cfg {String | RegExp} Фильтр вводимого значения в формате регулярного выражение {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Guide/Regular_Expressions#special-character-set [xyz]}.
  * @remark
  * Каждый, введенный символ пользователем, фильтруется отдельно. Символ не прошедший фильтрацию в поле не добавляется.
  * Например, пользователь вставляет "1ab2cd" в поле с ограничением "[0-9]". Будет вставлено "12".

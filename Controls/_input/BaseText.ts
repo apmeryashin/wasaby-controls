@@ -78,8 +78,8 @@ export class BaseText extends Base<IBaseTextInputOptions> {
         });
     }
 
-    private static _validateConstraint(constraint: string): boolean {
-        if (constraint && !/^\[[\s\S]+?\]\*?$/.test(constraint)) {
+    private static _validateConstraint(constraint: string | RegExp): boolean {
+        if ((typeof constraint === 'string') && (constraint && !/^\[[\s\S]+?\]\*?$/.test(constraint))) {
             Logger.error('Controls/_input/Text', 'В опцию "constraint" передано не корректное значение. Подробнее тут: https://wi.sbis.ru/docs/js/Controls/_input/Text/options/constraint/');
             return false;
         }
@@ -101,7 +101,7 @@ export class BaseText extends Base<IBaseTextInputOptions> {
 
         optionTypes.maxLength = descriptor(Number, null);
         optionTypes.trim = descriptor(Boolean);
-        optionTypes.constraint = descriptor(String);
+        optionTypes.constraint = descriptor(String, RegExp);
 
         return optionTypes;
     }
