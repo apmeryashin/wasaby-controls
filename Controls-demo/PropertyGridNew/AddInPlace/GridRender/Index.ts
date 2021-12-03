@@ -40,11 +40,11 @@ export default class Demo extends Control<IControlOptions> {
     }
 
     protected _typeDescriptionChanged(e: SyntheticEvent, typeDescription: RecordSet<IPropertyGridItem>): void {
-        console.log(typeDescription);
+        // console.log(typeDescription);
     }
 
     protected _editingObjectChanged(e: SyntheticEvent, editingObject: RecordSet<IPropertyGridItem>): void {
-        console.log(editingObject);
+        // console.log(editingObject);
     }
 
     protected _beginAdd(): void {

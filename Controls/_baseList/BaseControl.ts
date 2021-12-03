@@ -512,7 +512,8 @@ const _private = {
 
     keyDownHome(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownHome(event).then((key) => self._changeMarkedKey(key));
+            event.stopPropagation();
+            self._listVirtualScrollController.scrollToEdge('backward').then(self._setMarkedKeyAfterPaging);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -527,25 +528,31 @@ const _private = {
     },
 
     keyDownEnd(self, event) {
-        if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownEnd(event).then((key) => self._changeMarkedKey(key));
-        } else {
-            _private.setMarkerAfterScroll(self, event);
-            if (self._options.navigation?.viewConfig?.showEndButton) {
-                _private.scrollToEdge(self, 'down');
-            }
+        _private.setMarkerAfterScroll(self, event);
+        if (self._options.navigation?.viewConfig?.showEndButton) {
+            _private.scrollToEdge(self, 'down');
+        } else if (self._useNewScroll) {
+            self._listVirtualScrollController.scrollToEdge('forward').then(self._setMarkedKeyAfterPaging);
         }
     },
     keyDownPageUp(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownPageUp(event).then((key) => self._changeMarkedKey(key));
+            // отлючаем нативное поведение и всплытие событие, чтобы нам повторно не пришло событие от Application
+            event.stopPropagation();
+            event.preventDefault();
+            self._listVirtualScrollController.scrollToPage('backward')
+                .then(self._setMarkedKeyAfterPaging);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
     },
     keyDownPageDown(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownPageDown(event).then((key) => self._changeMarkedKey(key));
+            // отлючаем нативное поведение и всплытие событие, чтобы нам повторно не пришло событие от Application
+            event.stopPropagation();
+            event.preventDefault();
+            self._listVirtualScrollController.scrollToPage('forward')
+                .then(self._setMarkedKeyAfterPaging);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -776,7 +783,11 @@ const _private = {
                     if (viewportFilled) {
                         self._indicatorsController.displayTopIndicator(true);
                     } else {
-                        self._observersController?.displayTrigger(self._children.listView?.getTopLoadingTrigger());
+                        if (self._useNewScroll) {
+                            self._listVirtualScrollController.setBackwardTriggerVisible(true);
+                        } else {
+                            self._observersController?.displayTrigger(self._children.listView?.getTopLoadingTrigger());
+                        }
                     }
                 }
                 // если больше нет данных заканчиваем порцоннный поиск
@@ -1041,38 +1052,69 @@ const _private = {
                  */
                 if (!self._sourceController?.getLoadError()) {
                     if (direction === 'up') {
-                        if (_private.isPagingNavigation(self._options.navigation)) {
-                            self._currentPage = 1;
-                        }
-                        self._finishScrollToEdgeOnDrawItems = () => {
-                            self._currentPage = 1;
-                            self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
-                            self._notify('doScroll', ['top'], { bubbling: true });
-                            scrollToEdgePromiseResolver();
-                        };
-                    } else {
-                        if (_private.isPagingNavigation(self._options.navigation)) {
-                            self._currentPage = self._knownPagesCount;
-                        }
-                        self._finishScrollToEdgeOnDrawItems = () => {
-                            _private.jumpToEnd(self).then(() => {
+                        if (self._useNewScroll) {
+                            self._listVirtualScrollController.scrollToEdge('backward').then((key) => {
+                                self._setMarkedKeyAfterPaging(key);
+                                if (_private.isPagingNavigation(self._options.navigation)) {
+                                    self._currentPage = 1;
+                                }
+                                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
                                 scrollToEdgePromiseResolver();
                             });
-                        };
+                        } else {
+                            if (_private.isPagingNavigation(self._options.navigation)) {
+                                self._currentPage = 1;
+                            }
+                            self._finishScrollToEdgeOnDrawItems = () => {
+                                self._currentPage = 1;
+                                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
+                                self._notify('doScroll', ['top'], { bubbling: true });
+                                scrollToEdgePromiseResolver();
+                            };
+                        }
+                    } else {
+                        if (self._useNewScroll) {
+                            self._listVirtualScrollController.scrollToEdge('forward').then((key) => {
+                                self._setMarkedKeyAfterPaging(key);
+                                if (_private.isPagingNavigation(self._options.navigation)) {
+                                    self._currentPage = self._knownPagesCount;
+                                }
+                            });
+                        } else {
+                            if (_private.isPagingNavigation(self._options.navigation)) {
+                                self._currentPage = self._knownPagesCount;
+                            }
+                            self._finishScrollToEdgeOnDrawItems = () => {
+                                _private.jumpToEnd(self).then(() => {
+                                    scrollToEdgePromiseResolver();
+                                });
+                            };
+                        }
                     }
                 } else {
                     scrollToEdgePromiseResolver();
                 }
             }).catch((error) => error);
         } else if (direction === 'up') {
-            self._scrollToFirstItem().then(() => {
-                self._notify('doScroll', ['top'], { bubbling: true });
-                if (self._scrollPagingCtr) {
-                    self._currentPage = 1;
-                    self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
-                }
-                scrollToEdgePromiseResolver();
-            });
+            if (self._useNewScroll) {
+                self._listVirtualScrollController.scrollToEdge('backward').then((key) => {
+                    self._setMarkedKeyAfterPaging(key);
+                    if (self._scrollPagingCtr) {
+                        self._currentPage = 1;
+                        self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
+                    }
+                    scrollToEdgePromiseResolver();
+                });
+            } else {
+                self._scrollToFirstItem().then(() => {
+                    self._notify('doScroll', ['top'], { bubbling: true });
+                    if (self._scrollPagingCtr) {
+                        self._currentPage = 1;
+                        self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
+                    }
+                    scrollToEdgePromiseResolver();
+                });
+            }
         } else {
             _private.jumpToEnd(self).then(() => {
                 if (self._scrollPagingCtr) {
@@ -1086,15 +1128,21 @@ const _private = {
     },
     scrollPage(self, direction) {
         if (!self._scrollPageLocked) {
-            /**
-             * скроллу не нужно блокироваться, если есть ошибка, потому что
-             * тогда при пэйджинге до упора не инициируется цикл обновления
-             * (не происходит подгрузки данных), а флаг снимается только после него
-             * или при ручном скролле - из-за этого пэйджинг перестает работать
-             */
-            self._scrollPageLocked = !self._sourceController?.getLoadError();
-            _private.setMarkerAfterScroll(self);
-            self._notify('doScroll', ['page' + direction], { bubbling: true });
+            if (self._useNewScroll) {
+                const directionCompatibility = direction === 'Up' ? 'backward' : 'forward';
+                self._listVirtualScrollController.scrollToPage(directionCompatibility)
+                    .then(self._setMarkedKeyAfterPaging);
+            } else {
+                /**
+                 * скроллу не нужно блокироваться, если есть ошибка, потому что
+                 * тогда при пэйджинге до упора не инициируется цикл обновления
+                 * (не происходит подгрузки данных), а флаг снимается только после него
+                 * или при ручном скролле - из-за этого пэйджинг перестает работать
+                 */
+                self._scrollPageLocked = !self._sourceController?.getLoadError();
+                _private.setMarkerAfterScroll(self);
+                self._notify('doScroll', ['page' + direction], { bubbling: true });
+            }
         }
     },
 
@@ -1121,7 +1169,7 @@ const _private = {
             // след. запрос не вернет данные, а скажет ЕстьЕще: false тогда решать будет условие ниже, по высоте
             const visibilityTriggerUp = self._loadTriggerVisibility.up;
             const visibilityTriggerDown = self._loadTriggerVisibility.down;
-            const triggersReady = visibilityTriggerUp !== undefined;
+            const triggersReady = visibilityTriggerUp !== undefined || self._useNewScroll; // TODO SCROLL
             if (
                 triggersReady &&
                 ((hasMoreData.up && !visibilityTriggerUp) || (hasMoreData.down && !visibilityTriggerDown))
@@ -1280,6 +1328,9 @@ const _private = {
                 self._notify('controlResize', [], { bubbling: true });
             }
             self._viewSize = container.clientHeight;
+            if (self._useNewScroll) {
+                self._listVirtualScrollController.contentResized(self._viewSize);
+            }
             self._observersController?.setViewHeight(
                 self._viewSize,
                 self._children.listView?.getTopLoadingTrigger(),
@@ -1365,8 +1416,8 @@ const _private = {
         // на мобильных устройствах с overflow scrolling, scrollTop может быть отрицательным
         self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self._options.navigation) && self._scrollController) {
-            if (!self._scrollController.getParamsToRestoreScrollPosition()) {
+        if (_private.needScrollPaging(self._options.navigation)) {
+            if (!self._scrollController?.getParamsToRestoreScrollPosition()) {
                 _private.updateScrollPagingButtons(self, {...self._getScrollParams(), initial: !self._scrolled});
             }
         }
@@ -2187,35 +2238,37 @@ const _private = {
         }
 
         if (self._useNewScroll) {
-            return Promise.resolve();
-        }
-
-        if (self._finishScrollToEdgeOnDrawItems) {
-
-            // Если для подскролла в конец делали reload, то индексы виртуального скролла
-            // поставили такие, что последниц элемент уже отображается, scrollToItem не нужен.
-            self._notify(
-                'doScroll',
-                [self._scrollController?.calculateVirtualScrollHeight() || 'down'],
-                { bubbling: true }
-            );
-            _private.updateScrollPagingButtons(self, self._getScrollParams());
-            return Promise.resolve();
-        } else {
-
-            // Последняя страница уже загружена но конец списка не обязательно отображается,
-            // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
-            return _private.scrollToItem(self, lastItemKey, 'bottom', true).then(() => {
-
-                // После того как последний item гарантированно отобразился,
-                // нужно попросить ScrollWatcher прокрутить вниз, чтобы
-                // прокрутить отступ пейджинга и скрыть тень
-                self._notify(
-                    'doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], {bubbling: true}
-                );
-
+            return self._listVirtualScrollController.scrollToEdge('forward').then((key) => {
+                self._setMarkedKeyAfterPaging(key);
                 _private.updateScrollPagingButtons(self, self._getScrollParams());
             });
+        } else {
+            if (self._finishScrollToEdgeOnDrawItems) {
+                // Если для подскролла в конец делали reload, то индексы виртуального скролла
+                // поставили такие, что последниц элемент уже отображается, scrollToItem не нужен.
+                self._notify(
+                    'doScroll',
+                    [self._scrollController?.calculateVirtualScrollHeight() || 'down'],
+                    { bubbling: true }
+                );
+                _private.updateScrollPagingButtons(self, self._getScrollParams());
+                return Promise.resolve();
+            } else {
+
+                // Последняя страница уже загружена но конец списка не обязательно отображается,
+                // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
+                return _private.scrollToItem(self, lastItemKey, 'bottom', true).then(() => {
+
+                    // После того как последний item гарантированно отобразился,
+                    // нужно попросить ScrollWatcher прокрутить вниз, чтобы
+                    // прокрутить отступ пейджинга и скрыть тень
+                    self._notify(
+                        'doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], {bubbling: true}
+                    );
+
+                    _private.updateScrollPagingButtons(self, self._getScrollParams());
+                });
+            }
         }
     },
 
@@ -2561,7 +2614,8 @@ const _private = {
     },
 
     setMarkerAfterScroll(self: typeof BaseControl, event: SyntheticEvent): void {
-        if (_private.getMarkerController(self, this._options).shouldMoveMarkerOnScrollPaging() !== false) {
+        if (_private.getMarkerController(self, this._options).shouldMoveMarkerOnScrollPaging() !== false &&
+            !self._useNewScroll) {
             self._setMarkerAfterScroll = true;
         }
     },
@@ -3324,6 +3378,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._intersectionObserverHandler = this._intersectionObserverHandler.bind(this);
         this._onCollectionChanged = this._onCollectionChanged.bind(this);
         this._onAfterCollectionChanged = this._onAfterCollectionChanged.bind(this);
+        this._setMarkedKeyAfterPaging = this._setMarkedKeyAfterPaging.bind(this);
     }
 
     /**
@@ -3492,11 +3547,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._afterCollectionRemove(removedItems, removedItemsIndex);
         }
         if (this._useNewScroll) {
-            // TODO по идее это нужно делать после релоада.
+            // TODO SCROLL по идее это нужно делать после релоада.
             if (action === IObservable.ACTION_RESET) {
                 // если есть данные и вниз и вверх, то скрываем триггер вверх, т.к. в первую очередь грузим вниз
                 if (this._hasMoreData('down') && this._hasMoreData('up')) {
-                    this._listVirtualScrollController.setTriggersVisibility({ backward: false, forward: true });
+                    this._listVirtualScrollController.setBackwardTriggerVisible(false);
+                    this._listVirtualScrollController.setForwardTriggerVisible(true);
                 }
             }
         }
@@ -3585,6 +3641,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // TODO SCROLL избавиться от scrollTop в BaseControl
             this._scrollTop = params.scrollTop > 0 ? params.scrollTop : 0;
             this._listVirtualScrollController.scrollPositionChange(params.scrollTop);
+            _private.handleListScrollSync(this, params.scrollTop);
         } else {
             _private.handleListScrollSync(this, params.scrollTop);
             const result = this._scrollController?.scrollPositionChange({
@@ -3611,7 +3668,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
 
-        if (this._listVirtualScrollController) {
+        if (this._useNewScroll) {
             this._listVirtualScrollController.viewportResized(viewportHeight);
             // TODO SCROLL во viewportResizeHandler не должно быть scrollTop
             if (scrollTop !== undefined) {
@@ -3696,10 +3753,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const container = this._children.viewContainer || this._container[0] || this._container;
             const contentSize = _private.getViewSize(this, true);
             this._viewSize = contentSize;
-
-            if (this._listVirtualScrollController) {
-                this._listVirtualScrollController.contentResized(contentSize);
-            }
 
             /**
              * Заново определяем должен ли отображаться пэйджинг или нет.
@@ -3792,11 +3845,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
             itemsQuerySelector: options.itemsSelector,
 
-            triggersVisibility: { backward: !this._hasMoreData('up'), forward: true },
-            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
-            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
-
-            totalCount: this._listViewModel.getCount(),
+            triggersVisibility: {
+                backward: !this._hasMoreData('up') ||
+                    !this._listViewModel.getCount() ||
+                    !options.attachLoadTopTriggerToNull,
+                forward: true
+            },
+            triggersOffsetCoefficients: {
+                backward: options.topTriggerOffsetCoefficient,
+                forward: options.bottomTriggerOffsetCoefficient
+            },
+            triggersPositions: {
+                backward: this._sourceController.hasMoreData('up') ? 'null' : 'offset',
+                forward: this._sourceController.hasMoreData('down') ? 'null' : 'offset'
+            },
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
                 return this._notify(
@@ -3854,12 +3916,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
                 if (bottomEnabled) {
                     this._notify('enableVirtualNavigation', ['bottom'], { bubbling: true });
-                    // todo зачем?
-                    // self._bottomVisible = false;
+                    // чтобы скрыть отступ под пэйджинг
+                    this._bottomVisible = false;
                 } else {
                     this._notify('disableVirtualNavigation', ['bottom'], { bubbling: true });
-                    // todo зачем?
-                    // self._bottomVisible = true;
+                    // чтобы нарисовать отступ под пэйджинг
+                    this._bottomVisible = true;
                 }
             },
 
@@ -3876,22 +3938,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
+    private _setMarkedKeyAfterPaging(key: CrudEntityKey): void {
+        if (_private.getMarkerController(this).shouldMoveMarkerOnScrollPaging()) {
+            this._changeMarkedKey(key);
+        }
+    }
+
     protected _afterMount(): void {
         this._isMounted = true;
 
         if (this._useNewScroll) {
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
             this._listVirtualScrollController.setListContainer(this._container);
-
-            const backwardTriggerVisibility = !this._listViewModel.getCount() ||
-                !this._hasMoreData('up') ||
-                !this._options.attachLoadTopTriggerToNull ||
-                this._hasHiddenItemsByVirtualScroll('up');
-
-            this._listVirtualScrollController.setTriggersVisibility({
-                backward: backwardTriggerVisibility,
-                forward: true
-            });
         }
 
         if (constants.isBrowserPlatform) {
@@ -4003,7 +4061,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             ) {
                 // скроллить не нужно, т.к. не куда, ведь элементы не занимают весь вьюПорт
                 this._indicatorsController.displayTopIndicator(false);
-                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                if (this._useNewScroll) {
+                    this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                } else {
+                    this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                }
             }
         }
 
@@ -4198,6 +4260,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             this._noDataBeforeReload = !(items && items.getCount());
             _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
+            if (this._useNewScroll) {
+                this._listVirtualScrollController.setCollection(this._listViewModel);
+            }
 
             // observersController нужно обновить до скроллКонтроллера,
             // т.к. scrollController получает опции из _observersController
@@ -4214,7 +4279,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (this._indicatorsController.shouldDisplayTopIndicator()) {
                 this._indicatorsController.displayTopIndicator(true);
             } else {
-                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                if (this._useNewScroll) {
+                    this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                } else {
+                    this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                }
             }
 
             this._modelRecreated = true;
@@ -4270,6 +4339,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         this._listViewModel.destroy();
                     }
                     _private.initializeModel(this, newOptions, items);
+                    if (this._useNewScroll) {
+                        this._listVirtualScrollController.setCollection(this._listViewModel);
+                    }
                     this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
                     this._updateScrollController(newOptions);
                     this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
@@ -4288,7 +4360,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (this._indicatorsController.shouldDisplayTopIndicator()) {
                         this._indicatorsController.displayTopIndicator(true);
                     } else {
-                        this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                        if (this._useNewScroll) {
+                            this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                        } else {
+                            this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                        }
                     }
                 }
 
@@ -4733,9 +4809,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._useNewScroll) {
+            this._listVirtualScrollController.beforeRenderListControl();
             const hasNotRenderedChanges = this._hasItemWithImageChanged ||
                 this._indicatorsController.hasNotRenderedChanges();
-            this._listVirtualScrollController.beforeRenderListControl(hasNotRenderedChanges);
+            if (hasNotRenderedChanges) {
+                this._listVirtualScrollController.saveScrollPosition();
+            }
         } else {
             // save scroll
             let directionToRestoreScroll = this._scrollController &&
@@ -7145,11 +7224,19 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
                 // если уже список проскроллен, то не нужно скроллить к первому элементу
-                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                if (this._useNewScroll) {
+                    this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                } else {
+                    this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                }
             } else {
                 const scrollResult = this._scrollToFirstItem();
                 scrollResult.then(() => {
-                    this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                    if (this._useNewScroll) {
+                        this._listVirtualScrollController.setBackwardTriggerVisible(true);
+                    } else {
+                        this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                    }
                 });
             }
         };
