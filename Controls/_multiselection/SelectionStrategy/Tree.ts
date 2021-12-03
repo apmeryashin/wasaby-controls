@@ -483,6 +483,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _unselectNode(selection: ISelection, node: TreeItem<Model>): void {
       this._unselectLeaf(selection, node);
+      // если сняли выбор с узла, то нужно убрать его из ENTRY_PATH
+      const nodeKey = this._getKey(node);
+      if (!selection.selected.includes(nodeKey) && selection.excluded.includes(nodeKey)) {
+         this._clearEntryPath([nodeKey]);
+      }
       // снять выбор с детей мы можем в любом случае, независимо от selectDescendants и selectAncestors,
       // т.к. по клику по закрашенному чекбоксу это нужно делать
       this._removeChildes(selection, node);
@@ -500,9 +505,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       const parent = item.getParent();
       const parentId = this._getKey(parent);
       const itemId = this._getKey(item);
+      const itemInSelected = selection.selected.includes(itemId);
 
-      ArraySimpleValuesUtil.removeSubArray(selection.selected, [itemId]);
-      if (this._isAllSelected(selection, parentId)) {
+      if (itemInSelected) {
+         ArraySimpleValuesUtil.removeSubArray(selection.selected, [itemId]);
+      }
+
+      // если родитель выбран, то ребенка нужно положить в excluded, чтобы он не был выбран
+      if (!itemInSelected || this._isAllSelected(selection, parentId)) {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, [itemId]);
       }
 

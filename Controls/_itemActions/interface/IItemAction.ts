@@ -273,7 +273,7 @@ export interface IItemAction {
 }
 
 /**
- * @typedef {Function} TItemActionVisibilityCallback
+ * @typedef {Function} Controls/_itemActions/interface/IItemActions/TItemActionVisibilityCallback
  * @description
  * Функция обратного вызова для определения видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
  * Чтобы опция записи отображалась, из функции следует вернуть true.

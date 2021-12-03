@@ -39,7 +39,7 @@
                collectionItem="{{_options.collectionItem}}"/>
 </ws:if>
 <ws:else>
-    <ws:if data="{{!item.editorOptions.jumpingLabel && (item.caption || item.captionTemplate)}}">
+    <ws:if data="{{!item.editorOptions.jumpingLabel && (collectionItem.isEditing() || item.caption || item.captionTemplate)}}">
         <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden'}}">
             <ws:if data="{{captionPosition === 'top'}}">
                 <div style="{{getCheckboxStyles(collectionItem, captionPosition, true)}}"
@@ -56,7 +56,8 @@
                     {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                     {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                     {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
-                    {{collectionItem.getItemPaddingClasses(1)}}"
+                    {{collectionItem.getItemPaddingClasses(1)}}
+                    js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor-caption"
              style="{{getCaptionStyles(collectionItem, captionPosition, !collectionItem.getEditorTemplateName())}}">
             <ws:partial template="levelPadding"/>
@@ -67,8 +68,20 @@
                     </ws:defaultCaptionTemplate>
                 </ws:partial>
             </ws:if>
+            <ws:else data="{{collectionItem.isEditing()}}">
+                <Controls.validate:InputContainer>
+                    <ws:validators>
+                        <ws:Function value="{{ item.caption }}">Controls/validate:isRequired</ws:Function>
+                    </ws:validators>
+                    <ws:content>
+                        <Controls.input:Text contrastBackground="{{ true }}" horizontalPadding="null"
+                                             attr:class="ws-flex-grow-1"
+                                             bind:value="item.caption" />
+                    </ws:content>
+                </Controls.validate:InputContainer>
+            </ws:else>
             <ws:else>
-                <ws:partial template="defaultCaptionTemplate" item="{{item}}"/>
+                <ws:partial template="defaultCaptionTemplate" item="{{ item }}"/>
             </ws:else>
             <ws:if data="{{!collectionItem.getEditorTemplateName() && collectionItem.shouldDisplayActions()}}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
@@ -85,24 +98,30 @@
         </div>
     </ws:if>
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
-        <!--TODO убрать условие afterEditorTemplate в классе после https://online.sbis.ru/opendoc.html?guid=5fdfb03c-5a9a-4a1c-9387-1b61ca40f9b0 -->
-       <div class="controls-PropertyGrid__gridLayout_editor
-                   {{!afterEditorTemplate ? 'controls-PropertyGrid__gridLayout_editor_column'}}
+        <div class="controls-PropertyGrid__gridLayout_editor
+                   {{ !item.caption || _options.captionPosition === 'top' ? 'controls-PropertyGrid__gridLayout_editor_justify_center' }}
                    {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                    {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
-                   {{(!item.caption || _options.captionPosition === 'top') ? 'controls-PropertyGrid__gridLayout_editor-withoutCaption'}}
                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
-                   {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}"
+                   {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}
+                   js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor"
-             style="{{getEditorStyles(collectionItem, captionPosition, !item.caption)}}">
-           <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">
-               <ws:partial template="levelPadding"/>
-           </ws:if>
-           <!--TODO убрать условие в классе после https://online.sbis.ru/opendoc.html?guid=5fdfb03c-5a9a-4a1c-9387-1b61ca40f9b0 -->
-          <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
-                      caption="{{item.caption}}"
-                      attr:class="{{ afterEditorTemplate && options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control'}}"
-                      scope="{{_options}}"/>
+             style="{{getEditorStyles(collectionItem, captionPosition, !(item.caption || collectionItem.isEditing()))}}">
+            <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">
+                <ws:partial template="levelPadding"/>
+            </ws:if>
+            <ws:if data="{{collectionItem.isEditing()}}">
+                <Controls.input:Text contrastBackground="{{true}}" horizontalPadding="null"
+                                     attr:class="ws-flex-grow-1"
+                                     bind:value="item.editingValue" />
+            </ws:if>
+            <ws:else>
+                <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
+                            caption="{{item.caption}}"
+                            attr:class="controls-PropertyGrid__editor_control
+                                    {{ item.caption && _options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control_stretch' }}"
+                            scope="{{_options}}"/>
+            </ws:else>
             <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
                     <ws:partial
@@ -110,9 +129,9 @@
                             template="{{ itemActionsTemplate }}" />
                 </ws:if>
             </ws:if>
-           <ws:if data="{{afterEditorTemplate && options.captionPosition !== 'top'}}">
-               <ws:partial template="{{afterEditorTemplate}}"/>
-           </ws:if>
+            <ws:if data="{{afterEditorTemplate && options.captionPosition !== 'top'}}">
+                <ws:partial template="{{afterEditorTemplate}}"/>
+            </ws:if>
         </div>
     </ws:if>
 </ws:else>

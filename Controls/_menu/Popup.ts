@@ -97,7 +97,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
         if (newOptions.stickyPosition && newOptions.stickyPosition.direction &&
             this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
-            this._verticalDirection = newOptions.footerContentTemplate ? 'bottom' :
+            this._verticalDirection = newOptions.footerContentTemplate || newOptions.searchParam ? 'bottom' :
                 newOptions.stickyPosition.direction.vertical;
             this._horizontalDirection = newOptions.stickyPosition.direction.horizontal;
         }
@@ -135,12 +135,24 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         if (this._calmTimer) {
             switch (event.type) {
                 case 'mouseenter':
+                    this._ignoreMouseLeave = false;
                     this._calmTimer.stop();
                     break;
                 case 'mouseleave':
-                    this._calmTimer.start();
+                    if (!this._ignoreMouseLeave) {
+                        this._calmTimer.start();
+                    }
+                    break;
+                case 'mousemove':
+                    this._ignoreMouseLeave = false;
                     break;
             }
+        }
+    }
+
+    protected _expanderClick(event: SyntheticEvent<MouseEvent>, state: boolean): void {
+        if (!state) {
+            this._ignoreMouseLeave = true;
         }
     }
 

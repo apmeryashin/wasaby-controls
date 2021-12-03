@@ -8,7 +8,7 @@ import cInstance = require('Core/core-instance');
  * @author Красильников А.С.
  * @remark
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
- * 
+ *
  * Аргументы функции:
  *
  * * value — проверяемое значение.
@@ -41,7 +41,6 @@ export = function (args) {
    var isEmpty = false;
 
    switch (typeof args.value) {
-      case 'boolean':
       case 'string':
          isEmpty = !Boolean(args.value);
          break;

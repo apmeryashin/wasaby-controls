@@ -526,10 +526,11 @@ const _private = {
         if (event.nativeEvent.ctrlKey || self.isEditing() || !self.getViewModel() || !self.getViewModel().getCount()) {
             return;
         }
+
         if (_private.hasMarkerController(self)) {
             const markerController = _private.getMarkerController(self);
             const markedKey = markerController.getMarkedKey();
-            if (markedKey !== null) {
+            if (markedKey !== null && markedKey !== undefined) {
                 const markedItem = self.getItems().getRecordById(markedKey);
                 self._notifyItemClick([event, markedItem, event]);
                 if (event && !event.isStopped()) {
@@ -1678,37 +1679,9 @@ const _private = {
         }
     },
 
-    onAfterCollectionChanged(self: typeof BaseControl): void {
-        if (_private.hasSelectionController(self) && self._removedItems.length) {
-            const newSelection = _private.getSelectionController(self).onCollectionRemove(self._removedItems);
-            _private.changeSelection(self, newSelection);
-        }
-
-        self._removedItems = [];
-    },
-
     initListViewModelHandler(self, model) {
-        model.subscribe('onCollectionChange', (...args: any[]) => {
-            self._onCollectionChanged.apply(
-                self,
-                [
-                    args[0], // event
-                    null, // changes type
-                    ...args.slice(1) // the rest of the arguments
-                ]
-            );
-        });
-        model.subscribe('onAfterCollectionChange', (...args: any[]) => {
-            _private.onAfterCollectionChanged.apply(
-                null,
-                [
-                    self,
-                    args[0], // event
-                    null, // changes type
-                    ...args.slice(1) // the rest of the arguments
-                ]
-            );
-        });
+        model.subscribe('onCollectionChange', self._onCollectionChanged);
+        model.subscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
     },
 
     /**
@@ -1817,7 +1790,7 @@ const _private = {
                 itemActionsController.deactivateSwipe();
                 // Если ховер заморожен для редактирования по месту, не надо сбрасывать заморозку.
                 if ((!self._editInPlaceController || !self._editInPlaceController.isEditing())) {
-                    _private.addShowActionsClass(self);
+                    _private.addShowActionsClass(self, self._options);
                 }
             }
         }
@@ -2629,7 +2602,7 @@ const _private = {
      */
     initVisibleItemActions(self, options: IList): void {
         if (options.itemActionsVisibility === 'visible') {
-            _private.addShowActionsClass(this);
+            _private.addShowActionsClass(self, options);
             _private.updateItemActions(self, options);
         }
     },
@@ -2889,15 +2862,17 @@ const _private = {
         }
     },
 
-    addShowActionsClass(self): void {
-        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
-        if (!self._destroyed && !TouchDetect.getInstance().isTouch()) {
+    addShowActionsClass(self: BaseControl, options: IList): void {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию.
+        // Если ItemActions видимы всегда, они не должны исчезать свайп устройствах, они присутствуют всегда.
+        if (!self._destroyed && (!TouchDetect.getInstance().isTouch() || options.itemActionsVisibility === 'visible')) {
             self._addShowActionsClass = true;
         }
     },
 
-    removeShowActionsClass(self): void {
-        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
+    removeShowActionsClass(self: BaseControl): void {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию.
+        // Если ItemActions видимы всегда, они не должны исчезать свайп устройствах, они присутствуют всегда.
         if (!self._destroyed && !TouchDetect.getInstance().isTouch() && self._options.itemActionsVisibility !== 'visible') {
             self._addShowActionsClass = false;
         }
@@ -2977,7 +2952,7 @@ const _private = {
             unFreezeHoverCallback: () => {
                 if (!self._itemActionsMenuId) {
                     _private.addHoverEnabledClass(self);
-                    _private.addShowActionsClass(self);
+                    _private.addShowActionsClass(self, self._options);
                 }
             }
         });
@@ -3050,7 +3025,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _updateInProgress = false;
 
     _hasItemWithImageChanged = false;
-
+    _needRestoreScroll = false;
     _isMounted = false;
 
     _shadowVisibility = null;
@@ -3202,6 +3177,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._scrollToFirstItemAfterDisplayTopIndicator = this._scrollToFirstItemAfterDisplayTopIndicator.bind(this);
         this._hasHiddenItemsByVirtualScroll = this._hasHiddenItemsByVirtualScroll.bind(this);
         this._intersectionObserverHandler = this._intersectionObserverHandler.bind(this);
+        this._onCollectionChanged = this._onCollectionChanged.bind(this);
+        this._onAfterCollectionChanged = this._onAfterCollectionChanged.bind(this);
     }
 
     /**
@@ -3234,7 +3211,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._useServerSideColumnScroll = typeof shouldPrevent === 'boolean' ? !shouldPrevent : true;
         }
 
-        _private.addShowActionsClass(this);
+        _private.addShowActionsClass(this, newOptions);
 
         return this._doBeforeMount(newOptions);
     }
@@ -3346,16 +3323,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _afterItemsSet(options): void {
         // для переопределения
     }
-    protected _onCollectionChanged(
+    private _onCollectionChanged(
         event: SyntheticEvent,
-        changesType: string,
         action: string,
         newItems: Array<CollectionItem<Model>>,
         newItemsIndex: number,
         removedItems: Array<CollectionItem<Model>>,
         removedItemsIndex: number,
         reason: string): void {
-        _private.onCollectionChanged(this, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex, reason);
+        _private.onCollectionChanged(this, event, null, action, newItems, newItemsIndex, removedItems, removedItemsIndex, reason);
         if (action === IObservable.ACTION_RESET) {
             this._afterCollectionReset();
         }
@@ -3369,6 +3345,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _afterCollectionRemove(removedItems: Array<CollectionItem<Model>>, removedItemsIndex: number): void {
         // для переопределения
     }
+
+    private _onAfterCollectionChanged(): void {
+        if (_private.hasSelectionController(this) && this._removedItems.length) {
+            const newSelection = _private.getSelectionController(this).onCollectionRemove(this._removedItems);
+            _private.changeSelection(this, newSelection);
+        }
+
+        this._removedItems = [];
+    }
+
     _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
         let items;
         let collapsedGroups;
@@ -4342,8 +4328,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._destroyEditInPlaceController();
         }
 
-        if (this._listViewModel && !this._options.collection) {
-            this._listViewModel.destroy();
+        if (this._listViewModel) {
+            this._listViewModel.unsubscribe('onCollectionChange', this._onCollectionChanged);
+            this._listViewModel.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChanged);
+            // коллекцию дестроим только, если она была создана в BaseControl(не передана в опциях)
+            if (!this._options.collection) {
+                this._listViewModel.destroy();
+            }
         }
 
         this._loadTriggerVisibility = null;
@@ -4405,7 +4396,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // save scroll
         let directionToRestoreScroll = this._scrollController &&
             this._scrollController.getParamsToRestoreScrollPosition();
-        if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+        if (!directionToRestoreScroll &&
+            (
+                this._hasItemWithImageChanged ||
+                this._indicatorsController.hasNotRenderedChanges() ||
+                this._needRestoreScroll
+            )) {
             directionToRestoreScroll = 'up';
         }
         if (directionToRestoreScroll &&
@@ -4486,7 +4482,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             // restore scroll
             let directionToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
-            if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+            if (!directionToRestoreScroll &&
+                (
+                    this._hasItemWithImageChanged ||
+                    this._indicatorsController.hasNotRenderedChanges() ||
+                    this._needRestoreScroll
+                )) {
                 directionToRestoreScroll = 'up';
             }
             if (directionToRestoreScroll) {
@@ -4494,6 +4495,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._getItemsContainer(), this._getItemsContainerUniqueClass());
                 this._scrollController.beforeRestoreScrollPosition();
                 this._hasItemWithImageChanged = false;
+                this._needRestoreScroll = false;
                 this._notify('doScroll', [newScrollTop, true], { bubbling: true });
             }
 
@@ -5932,7 +5934,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     detection.isMac && domEvent.nativeEvent.metaKey || !detection.isMac && domEvent.nativeEvent.ctrlKey
                 )) {
                 const url = itemData.item.get(this._options.urlProperty);
-                if (url) {
+                const isLinkClick = domEvent.target.tagName === 'A' && !!domEvent.target.getAttribute('href');
+                if (url && !isLinkClick) {
                     window.open(url);
                     this._onLastMouseUpWasOpenUrl = domEvent.nativeEvent.button === 0;
                 }
@@ -6171,7 +6174,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             (!this._editInPlaceController || !this._editInPlaceController.isEditing()) &&
             !this._itemActionsMenuId &&
             (!hoverFreezeController || hoverFreezeController.getCurrentItemKey() === null)) {
-            _private.addShowActionsClass(this);
+            _private.addShowActionsClass(this, this._options);
         }
 
         if (this._dndListController && this._dndListController.isDragging()) {

@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/BreadCrumbs/BackgroundStyle/Template');
+import controlTemplate = require('wml!Controls-demo/BreadCrumbs/backgroundStyle/Template');
 import 'css!Controls-demo/Controls-demo';
 import {RecordSet} from 'Types/collection';
 

@@ -5,7 +5,8 @@ import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
 import {Model} from 'Types/entity';
 
 /**
- * @typedef {Function} Функция обратного вызова, вызываемая до перемещения в источнике
+ * @typedef {Function} TBeforeMoveCallback
+ * @description Функция обратного вызова, вызываемая до перемещения в источнике
  * @param {Controls/interfaces:ISelectionObject} selection
  * @param {Types/entity:Model|Types/source:CrudEntityKey} target
  */

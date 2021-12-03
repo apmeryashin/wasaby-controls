@@ -8,7 +8,7 @@
             <ws:validators>
                <ws:Function
                   item="{{collectionItem}}">
-                  Controls/propertyGrid:PropertyGrid.prototype.validate
+                  Controls/propertyGrid:PropertyGrid.prototype.startValidation
                </ws:Function>
             </ws:validators>
             <ws:content>

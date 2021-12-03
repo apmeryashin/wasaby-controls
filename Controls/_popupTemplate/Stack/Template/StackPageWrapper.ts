@@ -70,12 +70,12 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
                         this._setSavedSizes(resultData);
                     }
                     this._updateProperties(options);
-                    this._maximized = this._getMaximizeState();
+                    this._maximized = this._getMaximizeState(options);
                     resolve(resultData);
                 });
             });
         } else {
-            this._maximized = this._getMaximizeState();
+            this._maximized = this._getMaximizeState(options);
         }
     }
 
@@ -111,6 +111,7 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         this._notify('offsetChanged', [offset]);
 
         this._updateOffset();
+        this._maximized = this._getMaximizeState(this._options);
         this._offsetChanged = true;
     }
 
@@ -118,14 +119,16 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         const item = this._generateControllerItem();
         StackController.elementMaximized(item, false);
         this._setWorkSpaceWidth(item.popupOptions.width);
+
         this._updateOffset();
+        this._maximized = this._getMaximizeState(this._options);
     }
 
-    private _getMaximizeState(): boolean {
+    private _getMaximizeState(options: IPageTemplate): boolean {
         return StackController.getMaximizedState(
             this._templateWorkSpaceWidth,
-            this._minSavedWidth || this._options.minWidth,
-            this._maxSavedWidth || this._options.maxWidth
+            this._minSavedWidth || options.minWidth,
+            this._maxSavedWidth || options.maxWidth
         );
     }
 

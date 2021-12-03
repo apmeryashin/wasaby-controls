@@ -45,3 +45,16 @@
    display: flex;
    align-items: center;
 }
+
+
+// По стандарту панели фильтров, если редактор-список не является основным (primary) фильтром,
+// то между элементами такого списка не должно быть дополнительных отступов
+.controls-EditorList_secondaryFilter .controls-Grid_master {
+   grid-row-gap: 0;
+}
+
+// Так же, как и для плитки, у чекбокса должна быть заливка, т.к. фон у панели фильтров не белый
+// https://online.sbis.ru/opendoc.html?guid=01022f3f-d160-4c99-9ef9-d0838cb6db05
+.controls-ListEditor__multiSelect .controls-CheckboxMarker__icon-border_enabled {
+   fill: var(--background-color);
+}

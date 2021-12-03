@@ -523,7 +523,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
         };
 
         const notifyAfterEndEdit = () => {
-            return this._options?.onAfterEndEdit(editingCollectionItem, isAdd, willSave);
+            return this._options?.onAfterEndEdit?.(editingCollectionItem, isAdd, willSave);
         };
 
         if (force) {

@@ -7,7 +7,7 @@ import {process} from 'Controls/error';
 import {IndicatorOpener} from 'Controls/LoadingIndicator';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
-import {descriptor, Model} from 'Types/entity';
+import {CancelablePromise, descriptor, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {PrefetchProxy, ICrudPlus, Memory} from 'Types/source';
 import * as mStubs from 'Core/moduleStubs';
@@ -470,6 +470,10 @@ export default class _Controller implements IDropdownController {
    }
 
    private _getSourceController(options, source?: ICrudPlus): Promise<SourceController> {
+      if (this._sourcePromise) {
+         this._sourcePromise.cancel();
+         this._sourcePromise = null;
+      }
       let sourcePromise;
 
       if (this._hasHistory(options) && this._isLocalSource(options.source) && !options.historyNew) {
@@ -477,12 +481,14 @@ export default class _Controller implements IDropdownController {
       } else {
          sourcePromise = Promise.resolve(source || options.source);
       }
-      return sourcePromise.then((source) => {
+      this._sourcePromise = new CancelablePromise(sourcePromise);
+      return this._sourcePromise.promise.then((source) => {
          this._source = source;
          if (isHistorySource(this._source)) {
             this._source.setDataLoadCallback(options.dataLoadCallback);
          }
          this._filter = this._prepareFilterForQuery(options);
+         this._sourcePromise = null;
          return this._createSourceController(options, this._filter);
       });
    }
@@ -502,6 +508,10 @@ export default class _Controller implements IDropdownController {
                   return Promise.reject(error);
                }
             });
+         }, (error) => {
+            if (!error.isCanceled) {
+               return Promise.reject(error);
+            }
          });
       }
    }
@@ -751,7 +761,7 @@ export default class _Controller implements IDropdownController {
          width: this._options.width !== undefined ?
              (this.target[0] || this.target).offsetWidth :
              undefined,
-         hasMoreButton: this._sourceController.hasMoreData('down'),
+         hasMoreButton: this._sourceController?.hasMoreData('down'),
          draggable: this._options.menuDraggable
       };
       const config = {

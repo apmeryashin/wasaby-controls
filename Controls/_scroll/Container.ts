@@ -101,7 +101,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _isOptimizeShadowEnabled: boolean;
     protected _optimizeShadowClass: string;
-    protected _isMacOS: boolean = false;
     private _isControllerInitialized: boolean;
     private _wasMouseEnter: boolean = false;
     private _gridAutoShadows: boolean = true;
@@ -131,7 +130,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._containerLoaded = new Promise<void>((res) => {
             this._containerLoadedResolve = res;
         });
-        this._isMacOS = detection.isMac;
         super._beforeMount(...arguments);
     }
 
@@ -178,7 +176,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._containerLoadedResolve();
         this._containerLoaded = true;
 
-        if (this._isMacOS) {
+        if (detection.isMac) {
             // ResizeObserver на Mac не реагирует на изменение padding, если не задана высота через height из-за этого
             // не происходит обновления пейджинга.
             this._paging?.update(this._scrollModel);
