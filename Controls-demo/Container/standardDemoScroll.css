@@ -9,7 +9,7 @@
 }
 
 .ControlsDemo-navigation {
-  color: #FFFFFF;
+  color: var(--contrast_text-color);
   background: #2c3e50;
 }
 
