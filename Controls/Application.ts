@@ -28,6 +28,7 @@ import 'css!Controls/Application/oldCss';
 import 'css!Controls/application';
 import 'css!Controls/dragnDrop';
 import 'css!Controls/CommonClasses';
+import 'css!/cdn/Tailwind/1.0.0/tailwind';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 /**
