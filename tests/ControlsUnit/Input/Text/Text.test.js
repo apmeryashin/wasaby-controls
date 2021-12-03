@@ -205,6 +205,14 @@ define(
 
                assert.equal(calls.length, 0);
             });
+            it('use RegExp', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  constraint: /([^ ]+)$/g
+               });
+
+               assert.equal(calls.length, 0);
+            });
          });
       });
    }

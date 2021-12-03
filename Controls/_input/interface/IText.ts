@@ -1,7 +1,7 @@
 import {IMaxLengthOptions} from 'Controls/_input/interface/IMaxLength';
 
 export interface ITextOptions extends IMaxLengthOptions {
-    constraint?: string;
+    constraint?: string | RegExp;
     convertPunycode: boolean;
     trim: boolean;
     transliterate?: boolean;
