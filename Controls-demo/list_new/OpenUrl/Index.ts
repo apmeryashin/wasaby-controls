@@ -20,7 +20,7 @@ const DATA = [
     },
     {
         key: 4,
-        title: 'Открываются новые вкладки',
+        title: 'Открываются новые вкладки. А если нажать на ссылку www.google.com, то откроется она.',
         url: 'Controls-demo%2Flist_new%2FOpenUrl%2FPages%2FFourth'
     }
 ];
