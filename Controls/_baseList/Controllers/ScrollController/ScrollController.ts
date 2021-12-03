@@ -7,10 +7,12 @@ import {
     AbstractObserversController,
     IAbstractObserversControllerBaseOptions,
     IAbstractObserversControllerOptions,
+    ITriggerPosition,
     TIntersectionEvent
 } from './ObserverController/AbstractObserversController';
 import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalculatorResult} from './Calculator';
 import {CrudEntityKey} from 'Types/source';
+import type { IEdgeItemCalculatingParams } from '../AbstractListVirtualScrollController';
 
 export interface IItemsRange {
     startIndex: number;
@@ -34,43 +36,11 @@ export interface IActiveElementIndex {
     activeElementIndex: number;
 }
 
-export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement' | 'doScroll';
-
 export interface IEdgeItem {
     index: number;
     direction: IDirection;
     border: IDirection;
     borderDistance: number;
-}
-
-/**
- * Интерфейс, описывающий параметры для подсчтеа крайнего видимого элемента
- * @remark
- * range, placeholders, itemsSizes - не обязательные параметры. Если их не задать, то будут использоваться
- * текущие значения. Задвать нужно только для восстановления скролла, т.к. восстанавливать скролл нужно
- * исходя из старого состояния.
- */
-export interface IEdgeItemCalculatingParams {
-    direction: IDirection;
-    range?: IItemsRange;
-    placeholders?: IPlaceholders;
-}
-
-export interface IScheduledScrollToElementParams {
-    key: CrudEntityKey;
-    position: string;
-    force: boolean;
-}
-
-export type IScrollParam = number | 'top' | 'bottom' | 'pageUp' | 'pageDown';
-
-export interface IDoScrollParams {
-    scrollParam: IScrollParam;
-}
-
-export interface IScheduledScrollParams {
-    type: IScheduledScrollType;
-    params: IEdgeItem | IScheduledScrollToElementParams | IEdgeItemCalculatingParams | IDoScrollParams;
 }
 
 export interface IPlaceholders {
@@ -149,7 +119,7 @@ export class ScrollController {
             viewportSize: options.viewportSize,
             triggersVisibility: options.triggersVisibility,
             triggersOffsetCoefficients: options.triggersOffsetCoefficients,
-            resetTriggersOffsets: options.resetTriggersOffsets,
+            triggersPositions: options.triggersPositions,
             observersCallback: this._observersCallback.bind(this)
         });
 
@@ -203,13 +173,13 @@ export class ScrollController {
         this._observersController.setForwardTriggerVisible(visible);
     }
 
-    setResetBackwardTriggerOffset(reset: boolean): void {
-        const triggerOffsets = this._observersController.setResetBackwardTriggerOffset(reset);
+    setBackwardTriggerPosition(position: ITriggerPosition): void {
+        const triggerOffsets = this._observersController.setBackwardTriggerPosition(position);
         this._calculator.setTriggerOffsets(triggerOffsets);
     }
 
-    setResetForwardTriggerOffset(reset: boolean): void {
-        const triggerOffsets = this._observersController.setResetForwardTriggerOffset(reset);
+    setForwardTriggerPosition(position: ITriggerPosition): void {
+        const triggerOffsets = this._observersController.setForwardTriggerPosition(position);
         this._calculator.setTriggerOffsets(triggerOffsets);
     }
 
@@ -298,8 +268,8 @@ export class ScrollController {
         // При добавлении записей в список нужно добавить оффсет триггеру,
         // чтобы далее загрузка не требовала подскролла до ромашки
         const triggersOffsets = result.shiftDirection === 'backward'
-            ? this._observersController.setResetBackwardTriggerOffset(false)
-            : this._observersController.setResetForwardTriggerOffset(false);
+            ? this._observersController.setBackwardTriggerPosition('offset')
+            : this._observersController.setForwardTriggerPosition('offset');
         this._calculator.setTriggerOffsets(triggersOffsets);
 
         this._processCalculatorResult(result);
@@ -356,10 +326,10 @@ export class ScrollController {
         // НО при иницализцаии оффсет у триггера не нужен в этом кейсе.(чтобы избежать лишних подгрузок)
         // Удалить, после внедрения. Нужно будет поправить тест. Внедряемся без каких-либо изменений тестов.
         if (hasItemsOutRange.backward) {
-            this.setResetBackwardTriggerOffset(false);
+            this.setBackwardTriggerPosition('offset');
         }
         if (hasItemsOutRange.forward) {
-            this.setResetForwardTriggerOffset(false);
+            this.setForwardTriggerPosition('offset');
         }
 
         this._processCalculatorResult(result);
@@ -451,9 +421,9 @@ export class ScrollController {
         // Чтобы дальше триггер срабатывал заранее за счет оффсета.
         let triggerOffsets;
         if (direction === 'forward') {
-            triggerOffsets = this._observersController.setResetForwardTriggerOffset(false);
+            triggerOffsets = this._observersController.setForwardTriggerPosition('offset');
         } else {
-            triggerOffsets = this._observersController.setResetBackwardTriggerOffset(false);
+            triggerOffsets = this._observersController.setBackwardTriggerPosition('offset');
         }
         this._calculator.setTriggerOffsets(triggerOffsets);
         // TODO триггер может сразу стать виден, но это вызовет точно 2 перерисовки.
