@@ -344,6 +344,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
             // if press backspace, the input field is empty and there are selected entries -  remove last item
             this._removeItem(items.at(items.getCount() - 1));
+            this._activateLookup(false);
         }
     }
 
