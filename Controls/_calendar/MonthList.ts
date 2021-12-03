@@ -47,6 +47,8 @@ const enum VIEW_MODE {
 const SCALE_ROUNDING_ERROR_FIX = 1.5;
 
 const ENRICH_ITEMS_DELAY = 200;
+
+const ITEM_DATA_LOAD_RATIO = 0.1;
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
  *
@@ -98,7 +100,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _virtualPageSize: number;
     protected _errorViewConfig: ErrorViewConfig;
-    protected _threshold: number[] = [0, 0.01, 0.1, 0.99, 1];
+    protected _threshold: number[] = [0, 0.01, ITEM_DATA_LOAD_RATIO, 0.99, 1];
     private _errorController: ErrorController = new ErrorController({});
 
     protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
@@ -412,6 +414,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
         if (
             entry.nativeEntry.isIntersecting &&
+            entry.nativeEntry.intersectionRatio >= ITEM_DATA_LOAD_RATIO &&
             !isDisplayed && entry.data.type === ITEM_TYPES.body
         ) {
             this._displayedDates.push(time);
