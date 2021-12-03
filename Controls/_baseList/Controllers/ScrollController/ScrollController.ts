@@ -242,6 +242,7 @@ export class ScrollController {
     contentResized(contentSize: number): void {
         this._updateItemsSizes();
         this._calculator.setContentSize(contentSize);
+        this._observersController.setContentSize(contentSize);
     }
 
     private _updateItemsSizes(itemsRange?: IItemsRange): void {
@@ -383,6 +384,7 @@ export class ScrollController {
     scrollPositionChange(position: number): void {
         const result = this._calculator.scrollPositionChange(position);
         this._processActiveElementIndexChanged(result);
+        this._observersController.setScrollPosition(position);
     }
 
     // endregion Scroll

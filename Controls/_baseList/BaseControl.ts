@@ -3867,6 +3867,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 backward: this._sourceController && this._sourceController.hasMoreData('up') ? 'null' : 'offset',
                 forward: this._sourceController && this._sourceController.hasMoreData('down') ? 'null' : 'offset'
             },
+            totalCount: this._listViewModel.getCount(),
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
                 return this._notify(

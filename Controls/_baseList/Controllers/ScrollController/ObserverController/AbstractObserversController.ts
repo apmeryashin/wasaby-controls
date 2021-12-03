@@ -57,6 +57,9 @@ export abstract class AbstractObserversController {
     private _triggersQuerySelector: string;
     private _viewportSize: number;
 
+    private _scrollPosition: number;
+    private _contentSize: number;
+
     private _triggersOffsetCoefficients: ITriggersOffsetCoefficients;
 
     /**
@@ -121,6 +124,24 @@ export abstract class AbstractObserversController {
         return this.getTriggersOffsets();
     }
 
+    setScrollPosition(position: number): void {
+        if (this._scrollPosition !== position) {
+            this._scrollPosition = position;
+        }
+    }
+
+    setContentSize(size: number): void {
+        if (this._contentSize !== size) {
+            this._contentSize = size;
+            // После отрисовки записей, мы обновляем их размер в состоянии.
+            // Возможна ситуация, что записей недостаточно, чтобы заполнить вьюпорт.
+            // Поэтому нужно инициализировать подгрузку(или смещение диапазона, если криво настроен виртуальный скролл).
+            // НО observerCallback не сработает, т.к. он был до этого виден и остался виден.
+            // Сами проверяем, что триггер виден и вызываем колбэк.
+            this._checkTriggersVisibility();
+        }
+    }
+
     setBackwardTriggerPosition(position: ITriggerPosition): ITriggersOffsets {
         if (this._triggersPositions.backward !== position) {
             this._triggersPositions.backward = position;
@@ -181,7 +202,7 @@ export abstract class AbstractObserversController {
     // region OnCollectionChange
 
     resetItems(totalCount: number): ITriggersOffsets {
-        // Прижимаем к триггер к краю, чтобы после перезагрузки не было лишних подгрузок
+        // Прижимаем триггер к краю, чтобы после перезагрузки не было лишних подгрузок
         this.setBackwardTriggerPosition('null');
         this.setForwardTriggerPosition('null');
         return this.getTriggersOffsets();
@@ -190,10 +211,10 @@ export abstract class AbstractObserversController {
     // endregion OnCollectionChange
 
     private _recalculateOffsets(): void {
-        const newTopTriggerOffset = this._triggersPositions.backward
+        const newTopTriggerOffset = this._triggersPositions.backward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.backward;
-        const newBottomTriggerOffset = this._triggersPositions.forward
+        const newBottomTriggerOffset = this._triggersPositions.forward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.forward;
 
@@ -222,6 +243,32 @@ export abstract class AbstractObserversController {
         this._triggers[1].style.display = this._triggersVisibility.forward ? '' : 'none';
 
         this._observer = this._createTriggersObserver(this._listControl, this._observersCallback, ...this._triggers);
+    }
+
+    private _checkTriggersVisibility(): void {
+        // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
+        if (this._isTriggerVisible('forward')) {
+            this._observersCallback('bottomIn');
+        }
+        if (this._isTriggerVisible('backward')) {
+            this._observersCallback('topIn');
+        }
+    }
+
+    private _isTriggerVisible(direction: IDirection): boolean {
+        const scrollPosition = this._scrollPosition;
+        const contentSize = this._contentSize;
+        const viewportSize = this._viewportSize;
+
+        if (direction === 'backward') {
+            const backwardViewportPosition = scrollPosition;
+            const backwardTriggerPosition = this._triggersOffsets.backward;
+            return backwardTriggerPosition >= backwardViewportPosition;
+        } else {
+            const forwardViewportPosition = scrollPosition + viewportSize;
+            const forwardTriggerPosition = contentSize - this._triggersOffsets.forward;
+            return forwardTriggerPosition <= forwardViewportPosition;
+        }
     }
 
     protected abstract _createTriggersObserver(component: Control,
