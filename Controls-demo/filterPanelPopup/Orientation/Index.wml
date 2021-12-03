@@ -1,0 +1,12 @@
+<div class="controlsDemo__wrapper">
+    <Controls.browser:Browser filterButtonSource="{{_filterButtonData}}">
+        <Controls.filter:ViewContainer>
+            <Controls.filter:View source="{{_filterSource}}"
+                                  alignment="left"
+                                  historyId="DEMO_HISTORY_ID"
+                                  orientation="horizontal"
+                                  detailPanelTemplateName="Controls/filterPanelPopup:Sticky"
+                                  detailPanelTemplateOptions="{{_detailPanelTemplateOptions}}"/>
+        </Controls.filter:ViewContainer>
+    </Controls.browser:Browser>
+</div>

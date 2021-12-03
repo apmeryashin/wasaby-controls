@@ -1,0 +1,9 @@
+<div class="controlsDemo__wrapper">
+    <Controls.browser:Browser filterButtonSource="{{_filterButtonData}}">
+        <Controls.filter:ViewContainer>
+            <Controls.filter:View source="{{_filterSource}}"
+                                  historyId="DEMO_HISTORY_ID"
+                                  detailPanelTemplateName="Controls/filterPanelPopup:Sticky"/>
+        </Controls.filter:ViewContainer>
+    </Controls.browser:Browser>
+</div>

@@ -1,18 +1,34 @@
 <div>
    <ws:if data="{{_options.historyId && (_historyItems.getCount() || _options.emptyHistoryTemplate)}}">
       <div class="controls-FilterViewPanel__history-editors-container">
-         <div class="controls-FilterViewPanel__history-caption">{{rk('Ранее отбирались')}}</div>
+         <Controls.heading:Title caption="{{rk('Ранее отбирались')}}"
+                                 fontColorStyle="unaccented"
+                                 fontSize="xs"
+                                 fontWeight="normal"
+                                 readOnly="{{true}}"
+                                 attr:class="controls-FilterViewPanel__history-caption"/>
          <div class="controls-FilterViewPanel__history-editors">
-            <ws:for data="filter in _historyItems">
-               <div class="controls-FilterViewPanel__history-editor">
-                  <div class="controls-FilterViewPanel__history-editor_caption"
-                       on:click="_handleHistoryItemClick(filter)">
-                     {{_getItemText(filter)}}
+            <ws:for data="index, filter in _historyItems">
+               <ws:if data="{{index < _maxHistoryCount}}">
+                  <div class="controls-FilterViewPanel__history-editor-container">
+                     <div class="controls-FilterViewPanel__history-editor">
+                        <div class="controls-FilterViewPanel__history-editor_caption {{filter.get('pinned') ? 'controls-FilterViewPanel__history-editor_caption-pinned'}}"
+                             on:click="_handleHistoryItemClick(filter)">
+                           {{_getItemText(filter)}}
+                        </div>
+                     </div>
+                     <span class="{{filter.get('pinned') ? 'icon-PinOff controls-FilterViewPanel__pinned-icon' : 'icon-PinNull'}} secondary controls-FilterViewPanel__pin-icon"
+                           on:click="_onPinClick(filter)"> </span>
                   </div>
-                  <span class="{{filter.get('pinned') ? 'icon-PinOff controls-FilterViewPanel__pinned-icon' : 'icon-PinNull'}} secondary controls-FilterViewPanel__pin-icon"
-                        on:click="_onPinClick(filter)"> </span>
-               </div>
+               </ws:if>
             </ws:for>
+            <ws:if data="{{_expandButtonVisible}}">
+               <div class="controls-FilterPanelPopup-history__footer">
+                  <Controls.toggle:BigSeparator iconSize="l"
+                                                value="{{_historyListExpanded}}"
+                                                on:click="_handleExpanderClick()"/>
+               </div>
+            </ws:if>
          </div>
       </div>
    </ws:if>
