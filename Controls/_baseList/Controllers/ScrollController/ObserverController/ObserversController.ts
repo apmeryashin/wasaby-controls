@@ -20,10 +20,7 @@ export class ObserversController extends AbstractObserversController {
     }
 
     protected _applyTriggerOffset(element: HTMLElement, direction: IDirection, offset: number): void {
-        if (direction === 'backward') {
-            element.style.top = `${offset}px`;
-        } else {
-            element.style.bottom = `${offset}px`;
-        }
+        const correctedOffset = direction === 'backward' ? offset : -offset;
+        element.style.transform = `translateY(${correctedOffset}px)`;
     }
 }

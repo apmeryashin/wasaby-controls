@@ -91,7 +91,6 @@ export abstract class AbstractObserversController {
 
         if (this._listContainer) {
             this._updateTriggers();
-            this._recalculateOffsets();
         }
     }
 
@@ -101,7 +100,6 @@ export abstract class AbstractObserversController {
             this._observer.destroy();
         }
         this._updateTriggers();
-        this._recalculateOffsets();
     }
 
     setTriggersQuerySelector(newTriggersQuerySelector: string): void {
@@ -110,7 +108,6 @@ export abstract class AbstractObserversController {
             this._observer.destroy();
         }
         this._updateTriggers();
-        this._recalculateOffsets();
     }
 
     setViewportSize(size: number): ITriggersOffsets {
@@ -133,12 +130,6 @@ export abstract class AbstractObserversController {
     setContentSize(size: number): void {
         if (this._contentSize !== size) {
             this._contentSize = size;
-            // После отрисовки записей, мы обновляем их размер в состоянии.
-            // Возможна ситуация, что записей недостаточно, чтобы заполнить вьюпорт.
-            // Поэтому нужно инициализировать подгрузку(или смещение диапазона, если криво настроен виртуальный скролл).
-            // НО observerCallback не сработает, т.к. он был до этого виден и остался виден.
-            // Сами проверяем, что триггер виден и вызываем колбэк.
-            this._checkTriggersVisibility();
         }
     }
 
@@ -162,6 +153,20 @@ export abstract class AbstractObserversController {
 
     getTriggersOffsets(): ITriggersOffsets {
         return this._triggersOffsets;
+    }
+
+    checkTriggerVisibility(direction: IDirection): void {
+        // После отрисовки записей, мы обновляем их размер в состоянии.
+        // Возможна ситуация, что записей недостаточно, чтобы заполнить вьюпорт.
+        // Поэтому нужно инициализировать подгрузку(или смещение диапазона, если криво настроен виртуальный скролл).
+        // НО observerCallback не сработает, т.к. он был до этого виден и остался виден.
+        // Сами проверяем, что триггер виден и вызываем колбэк.
+
+        // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
+
+        if (this._isTriggerVisible(direction)) {
+            this._observersCallback(direction === 'forward' ? 'bottomIn' : 'topIn');
+        }
     }
 
     // region TriggerVisibility
@@ -211,21 +216,28 @@ export abstract class AbstractObserversController {
     // endregion OnCollectionChange
 
     private _recalculateOffsets(): void {
-        const newTopTriggerOffset = this._triggersPositions.backward === 'null'
+        const newBackwardTriggerOffset = this._triggersPositions.backward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.backward;
-        const newBottomTriggerOffset = this._triggersPositions.forward === 'null'
+        const newForwardTriggerOffset = this._triggersPositions.forward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.forward;
 
+        const backwardTriggerOffsetChanged = this._triggersOffsets.backward !== newBackwardTriggerOffset;
+        const forwardTriggerOffsetChanged = this._triggersOffsets.forward !== newForwardTriggerOffset;
+
         this._triggersOffsets = {
-            backward: newTopTriggerOffset,
-            forward: newBottomTriggerOffset
+            backward: newBackwardTriggerOffset,
+            forward: newForwardTriggerOffset
         };
 
         if (this._triggers && this._triggers.length) {
-            this._applyTriggerOffset(this._triggers[0], 'backward', this._triggersOffsets.backward);
-            this._applyTriggerOffset(this._triggers[1], 'forward', this._triggersOffsets.forward);
+            if (backwardTriggerOffsetChanged) {
+                this._applyTriggerOffset(this._triggers[0], 'backward', this._triggersOffsets.backward);
+            }
+            if (forwardTriggerOffsetChanged) {
+                this._applyTriggerOffset(this._triggers[1], 'forward', this._triggersOffsets.forward);
+            }
         }
     }
 
@@ -241,18 +253,10 @@ export abstract class AbstractObserversController {
 
         this._triggers[0].style.display = this._triggersVisibility.backward ? '' : 'none';
         this._triggers[1].style.display = this._triggersVisibility.forward ? '' : 'none';
+        this._applyTriggerOffset(this._triggers[0], 'backward', this._triggersOffsets.backward);
+        this._applyTriggerOffset(this._triggers[1], 'forward', this._triggersOffsets.forward);
 
         this._observer = this._createTriggersObserver(this._listControl, this._observersCallback, ...this._triggers);
-    }
-
-    private _checkTriggersVisibility(): void {
-        // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
-        if (this._isTriggerVisible('forward')) {
-            this._observersCallback('bottomIn');
-        }
-        if (this._isTriggerVisible('backward')) {
-            this._observersCallback('topIn');
-        }
     }
 
     private _isTriggerVisible(direction: IDirection): boolean {

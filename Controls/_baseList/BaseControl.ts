@@ -3957,7 +3957,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._isMounted = true;
 
         if (this._useNewScroll) {
-            this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
             this._listVirtualScrollController.setListContainer(this._container);
         }
 
@@ -7024,6 +7023,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
+        }
         this._viewReady = true;
         if (this._needScrollCalculation) {
             this._viewSize = _private.getViewSize(this, true);

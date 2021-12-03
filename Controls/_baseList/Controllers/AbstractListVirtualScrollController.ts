@@ -129,6 +129,7 @@ export abstract class AbstractListVirtualScrollController<
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
+    private _directionScheduledCheckTriggerVisibility: IDirection;
 
     /**
      * Колбэк, который вызывается когда завершился скролл к элементу. Скролл к элементу вызывается асинхронно.
@@ -183,6 +184,7 @@ export abstract class AbstractListVirtualScrollController<
         this._updateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll();
+        this._handleScheduledCheckTriggerVisibility();
     }
 
     saveScrollPosition(): void {
@@ -311,6 +313,11 @@ export abstract class AbstractListVirtualScrollController<
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
         this._scheduleUpdateItemsSizes(params.range);
+        // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
+        // Поэтому на после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
+        // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
+        // TODO SCROLL this._scheduleCheckTriggerVisibility(params.shiftDirection);
+
         // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
         // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
         // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
@@ -352,6 +359,16 @@ export abstract class AbstractListVirtualScrollController<
         if (this._itemsRangeScheduledSizeUpdate) {
             this._scrollController.updateItemsSizes(this._itemsRangeScheduledSizeUpdate);
             this._itemsRangeScheduledSizeUpdate = null;
+        }
+    }
+
+    private _scheduleCheckTriggerVisibility(direction: IDirection) {
+        this._directionScheduledCheckTriggerVisibility = direction;
+    }
+
+    private _handleScheduledCheckTriggerVisibility(): void {
+        if (this._directionScheduledCheckTriggerVisibility) {
+            this._scrollController.checkTriggerVisibility(this._directionScheduledCheckTriggerVisibility);
         }
     }
 

@@ -183,6 +183,10 @@ export class ScrollController {
         this._calculator.setTriggerOffsets(triggerOffsets);
     }
 
+    checkTriggerVisibility(direction: IDirection): void {
+        this._observersController.checkTriggerVisibility(direction);
+    }
+
     // endregion Triggers
 
     // region Update DOM elements
