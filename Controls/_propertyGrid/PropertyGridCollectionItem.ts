@@ -79,7 +79,8 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         if (gridColumnIndex !== 1) {
             classes += ` controls-PropertyGrid__editor_spacingRight_${owner.getRightPadding()}`;
         }
-        if (gridColumnIndex !== 2 || !itemContents.get('caption') || editorOptions?.jumpingLabel) {
+        if (gridColumnIndex !== 2 ||
+            !(itemContents.get('caption') || itemContents.get('isEditable')) || editorOptions?.jumpingLabel) {
             classes += ` controls-PropertyGrid__editor_spacingLeft_${owner.getLeftPadding()}`;
         }
         return classes;

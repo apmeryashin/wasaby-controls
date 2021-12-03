@@ -68,7 +68,8 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     }
 
     protected _getEditorStyles(item: PropertyGridItem<Model>, captionPosition: string, colspan?: boolean): string {
-        const needColspan = captionPosition === 'top' || !item.getContents().get('caption');
+        const needColspan = captionPosition === 'top' || !(item.getContents().get('caption') ||
+                                                           item.getContents().get('isEditable'));
         const rowIndex = this._getRowIndex(item, captionPosition, 2);
         const columnIndex = (this._isMultiSelect() ? 2 : 1) + (needColspan ? 0 : 1);
         let colspanIndex;
@@ -164,6 +165,14 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
         if (!item['[Controls/_display/GroupItem]']) {
             this._notify('itemContextMenu', [item, e]);
         }
+    }
+
+    _commitEditActionHandler(e: SyntheticEvent<MouseEvent>, item: PropertyGridItem<Model>): void {
+        this._notify('commitEdit', [item, e]);
+    }
+
+    _cancelEditActionHandler(e: SyntheticEvent<MouseEvent>, item: PropertyGridItem<Model>): void {
+        this._notify('cancelEdit', [item, e]);
     }
 
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: PropertyGridItem<Model>): void {
