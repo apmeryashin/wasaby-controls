@@ -17,5 +17,5 @@ export interface IDatePopupTypeOptions {
  * @variant datePicker Большой выбор периода
  * @variant compactDatePicker Компактный выбор периода
  * @default datePicker
- * @demo Controls-demo/dateRange/RangeSelector/DatePopupType/Index
+ * @demo Controls-demo/Date/DatePopupType/Index
  */
