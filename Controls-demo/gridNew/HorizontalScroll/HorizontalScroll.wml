@@ -6,7 +6,7 @@
                 columns="{{_columns}}"
                 backgroundStyle="default"
                 newColumnScroll="{{ true }}"
-                stickyColumnsCount="{{2}}">
+                stickyColumnsCount="{{1}}">
             <ws:virtualColumnScrollConfig pageSize="{{ 20 }}"/>
         </Controls.grid:View>
     </Controls.scroll:Container>

@@ -1322,6 +1322,17 @@ const _private = {
     },
 
     getViewSize(self, update = false): number {
+        // TODO: Распутать эту страннейшую логику обновления размеров, ресайза по сути, в методе
+        //  [GET]ViewSize. Это явно должно быть отдельно, но пока это единственная точка ресайза контента.
+        if (self._container && !self._viewWidth) {
+            const container = self._children?.viewContainer || self._container[0] || self._container;
+            if (
+                self._viewSize !== container.clientHeight ||
+                self._viewWidth !== container.clientWidth
+            ) {
+                self._onContentResized(container.clientWidth, container.clientHeight);
+            }
+        }
         if (self._container && (!self._viewSize || update)) {
             const container = self._children?.viewContainer || self._container[0] || self._container;
             if (self._viewSize !== container.clientHeight) {
@@ -3874,7 +3885,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 ) as Promise<void>;
             },
 
-            doScroltotalCountlUtil: (scrollTop) => {
+            doScrollUtil: (scrollTop) => {
                 this._notify('doScroll', [scrollTop, true], { bubbling: true });
             },
 
@@ -7014,6 +7025,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _getItemsContainer(): HTMLElement {/* For override  */}
     getItemsContainer() {
         return this._getItemsContainer();
+    }
+
+    _onContentResized(width: number, height: number): void {
+        // TODO: После переписывания метода getViewSize, тут будет обновление размеров.
     }
 
     _viewUnmount(): void {

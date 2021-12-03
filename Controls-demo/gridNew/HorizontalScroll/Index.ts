@@ -22,7 +22,7 @@ export default class extends Control {
     }
 
     private _multiplyColumns<T extends Array<{}>>(columns: T, count: number, displayProperty, template): T {
-        const res = [...(columns.map((c) => ({...c})))] as T;
+        const res = [...(columns.slice(1, columns.length).map((c) => ({...c})))] as T;
         for (let i = 0; i < count - 1; i++) {
             res.push(
                 ...(columns.map((c, idx) => ({

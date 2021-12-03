@@ -190,10 +190,10 @@ export abstract class AbstractObserversController {
     // endregion OnCollectionChange
 
     private _recalculateOffsets(): void {
-        const newTopTriggerOffset = this._triggersPositions.backward
+        const newTopTriggerOffset = this._triggersPositions.backward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.backward;
-        const newBottomTriggerOffset = this._triggersPositions.forward
+        const newBottomTriggerOffset = this._triggersPositions.forward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.forward;
 

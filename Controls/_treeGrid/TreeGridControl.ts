@@ -111,8 +111,14 @@ export class TreeGridControl extends TreeControl<ITreeGridControlOptions> {
             listControl: this,
             collection: this._listViewModel,
             virtualScrollConfig: options.virtualColumnScrollConfig,
-            backwardTriggerOffsetCoefficient: options.leftTriggerOffsetCoefficient,
-            forwardTriggerOffsetCoefficient: options.rightTriggerOffsetCoefficient,
+            triggersOffsetCoefficients: {
+                backward: options.leftTriggerOffsetCoefficient,
+                forward: options.rightTriggerOffsetCoefficient
+            },
+            triggersPositions: {
+                backward: 'offset',
+                forward: 'offset'
+            },
             triggersVisibility: {
                 backward: true,
                 forward: true
@@ -128,6 +134,10 @@ export class TreeGridControl extends TreeControl<ITreeGridControlOptions> {
                 this._notify('updatePlaceholdersSize', [convertedPlaceholders], {bubbling: true});
             }
         });
+    }
+
+    _onContentResized(width: number, height: number): void {
+        this._listVirtualColumnScrollController?.contentResized(width);
     }
 
     static getDefaultOptions(): Partial<ITreeGridControlOptions> {
