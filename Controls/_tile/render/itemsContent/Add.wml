@@ -1,0 +1,7 @@
+<div attr:class="{{ item.getAddItemClasses(itemType) }} {{ item.getImageWrapperClasses('adding', hasTitle, titleStyle, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem, contentPadding) }}"
+     attr:style="{{ item.getImageWrapperStyles(itemType, imageViewMode, imagePosition) }}">
+    <ws:if data="{{ item.shouldDisplayAutoResizer(item.getItemType(itemType, nodeContentTemplate), staticHeight) }}">
+        <div style="{{ item.getAutoResizerStyles(item.getItemType(itemType, nodeContentTemplate), width || itemWidth, imageProportion, imagePosition, imageViewMode) }}"></div>
+    </ws:if>
+    <Controls.icon:Icon iconSize="s" iconStyle="default" icon="icon-RoundPlus"/>
+</div>

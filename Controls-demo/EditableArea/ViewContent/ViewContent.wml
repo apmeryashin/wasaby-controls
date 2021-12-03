@@ -2,7 +2,7 @@
    <div class="ControlsDemo-EditableArea__title controls-text-label">Используется Controls.editableArea:Base</div>
    <div class="controlsDemo__cell demo-editableArea__base">
       <Controls.editableArea:View
-              editingObject="{{_editObject}}">
+              editingObject="{{_editingObject}}">
          <Controls.editableArea:Base bind:value="content.editingObject.text">
             <ws:editorTemplate>
                <Controls.input:Text contrastBackground="{{true}}" attr:class="controls-Input_negativeOffset"/>
@@ -13,7 +13,7 @@
    <div class="controls-text-label">Используется Controls.editableArea:DateTime</div>
    <div class="controlsDemo__cell demo-editableArea__dateTime">
       <Controls.editableArea:View
-              editingObject="{{_editObjectRange}}">
+              editingObject="{{_editingObjectRange}}">
          <Controls.editableArea:DateTime bind:value="content.editingObject.date">
             <ws:editorTemplate>
                <Controls.date:BaseInput contrastBackground="{{true}}" attr:class="controls-Input_negativeOffset"/>
@@ -24,7 +24,7 @@
    <div class="controls-text-label">Используется прикладной шаблон</div>
    <div class="controlsDemo__cell demo-editableArea__customTemplate">
       <Controls.editableArea:View
-              editingObject="{{_editObject}}">
+              editingObject="{{_editingObject}}">
          <ws:partial template="wml!Controls-demo/EditableArea/ViewContent/CustomTemplate"/>
       </Controls.editableArea:View>
    </div>

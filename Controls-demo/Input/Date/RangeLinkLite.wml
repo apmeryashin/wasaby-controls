@@ -29,7 +29,9 @@
                datePopupType="shortDatePicker"
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
-               fontColorStyle="link" viewMode="link"
+               fontColorStyle="link"
+               fontWeight="normal"
+               fontSize="m"
                attr:test_name="months_range"/>
          </div>
          <div class="PageBlock__componentWrap">
@@ -39,7 +41,8 @@
                datePopupType="shortDatePicker"
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
-               viewMode="link"
+               fontWeight="normal"
+               fontSize="m"
                fontColorStyle="unaccented"
                attr:test_name="quarters_range"
             />
@@ -47,7 +50,9 @@
          </div>
          <div class="PageBlock__componentWrap">
             <Controls.dateRange:Selector
-               viewMode="label"
+               fontWeight="normal"
+               fontSize="m"
+               fontColorStyle="label"
                datePopupType="shortDatePicker"
                emptyCaption="не задан"
                attr:test_name="range_not_value"

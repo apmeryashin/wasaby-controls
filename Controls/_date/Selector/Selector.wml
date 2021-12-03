@@ -2,8 +2,6 @@
         name="linkView"
         scope="{{_options}}"
         value="{{ _options.value }}"
-        fontColorStyle="{{_options.fontColorStyle}}"
-        fontWeight="{{ _options.fontWeight }}"
         on:linkClick="openPopup()"
         on:valueChanged="_rangeChangedHandler()"
         on:mouseenter="_mouseEnterHandler()"

@@ -1,12 +1,12 @@
 import {Record} from 'Types/entity';
 import {Memory} from 'Types/source';
-import {main as editObject} from '../Data';
+import {main as editingObject} from '../Data';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/EditableArea/Buttons/Buttons';
 
 class BackgroundStyle extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _editObject: Record = editObject;
+    protected _editingObject: Record = editingObject;
     protected  _periodType: Memory = null;
     protected  _periodQuarter: Memory = null;
     protected _periodTypeKey: string = '0';

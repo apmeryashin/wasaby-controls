@@ -3004,7 +3004,7 @@ export default class Collection<
         }
     }
 
-    private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
+    protected _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
         const strategyOptions = { ...options, display: this };
         let index = 0;
 

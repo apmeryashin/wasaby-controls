@@ -52,7 +52,7 @@ export interface IOptions<T extends Model = Model> {
     isFirstItem?: boolean;
     hasMoreDataUp?: boolean;
     isFirstStickedItem?: boolean;
-    stickyCallback: Function;
+    stickyCallback?: Function;
     roundBorder?: object;
     isTopSeparatorEnabled?: boolean;
     isBottomSeparatorEnabled?: boolean;

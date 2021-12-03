@@ -113,3 +113,17 @@ Object.defineProperty(View, 'defaultProps', {
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/tile/paddings/#item-padding руководство разработчика}
  */
+
+/**
+ * @name Controls/_tile/View#addButtonVisible Позволяет выводить кнопку добавления записей в виде плитки на последнем месте.
+ * @cfg {Boolean}
+ * @demo Controls-demo/tileNew/addButton/Index
+ * @see Controls/_tile/View#addButtonClick
+ */
+
+/**
+ * @event Событие клика по плитке добавления записей. Из обработчика следует возвращать Promise, который завершится после окончания добавления записи.
+ * @name Controls/_tile/View#addButtonClick
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @see Controls/_tile/View#addButtonVisible
+ */
