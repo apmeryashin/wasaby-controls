@@ -77,16 +77,11 @@ export default class View extends List {
         return 'Controls/tile:TileCollection';
     }
 
-    // Переопределяет метод List'a
-    // У плитки своя реализация отступов со своей линейкой значений
-    protected _getItemsContainerPadding(): null {
-        return null;
-    }
-
     static getDefaultOptions(): object {
         return {
             actionAlignment: 'vertical',
-            actionCaptionPosition: 'none'
+            actionCaptionPosition: 'none',
+            itemsContainerPadding: null
         };
     }
 }

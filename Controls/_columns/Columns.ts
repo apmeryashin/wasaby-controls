@@ -19,16 +19,11 @@ export default class Columns extends View { /** @lends Controls/_list/List.proto
         return 'Controls/columns:ColumnsCollection';
     }
 
-    // Переопределяет метод List'a
-    // У колоночного списка своя реализация отступов со своей линейкой значений
-    protected _getItemsContainerPadding(): null {
-        return null;
-    }
-
     static getDefaultOptions(): object {
         return {
             disableVirtualScroll: true,
-            ...super.getDefaultOptions()
+            ...super.getDefaultOptions(),
+            itemsContainerPadding: null
         };
     }
 }
