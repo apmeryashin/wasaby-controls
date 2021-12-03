@@ -5934,7 +5934,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     detection.isMac && domEvent.nativeEvent.metaKey || !detection.isMac && domEvent.nativeEvent.ctrlKey
                 )) {
                 const url = itemData.item.get(this._options.urlProperty);
-                if (url) {
+                const isLinkClick = domEvent.target.tagName === 'A' && !!domEvent.target.getAttribute('href');
+                if (url && !isLinkClick) {
                     window.open(url);
                     this._onLastMouseUpWasOpenUrl = domEvent.nativeEvent.button === 0;
                 }
