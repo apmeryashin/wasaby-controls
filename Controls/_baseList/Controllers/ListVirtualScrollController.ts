@@ -81,6 +81,10 @@ export class ListVirtualScrollController extends AbstractListVirtualScrollContro
     }
 
     private _getFirstVisibleItemKey(): CrudEntityKey {
+        if (!this._collection || !this._collection.getCount()) {
+            return null;
+        }
+
         const firstVisibleItemIndex = this._scrollController.getFirstVisibleItemIndex();
         const item = this._collection.at(firstVisibleItemIndex);
         return item.getContents().getKey();
