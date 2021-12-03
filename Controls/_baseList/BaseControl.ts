@@ -3864,8 +3864,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 forward: options.bottomTriggerOffsetCoefficient
             },
             triggersPositions: {
-                backward: this._sourceController.hasMoreData('up') ? 'null' : 'offset',
-                forward: this._sourceController.hasMoreData('down') ? 'null' : 'offset'
+                backward: this._sourceController && this._sourceController.hasMoreData('up') ? 'null' : 'offset',
+                forward: this._sourceController && this._sourceController.hasMoreData('down') ? 'null' : 'offset'
             },
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
