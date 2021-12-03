@@ -1328,7 +1328,7 @@ const _private = {
                 self._notify('controlResize', [], { bubbling: true });
             }
             self._viewSize = container.clientHeight;
-            if (self._listVirtualScrollController) {
+            if (self._useNewScroll) {
                 self._listVirtualScrollController.contentResized(self._viewSize);
             }
             self._observersController?.setViewHeight(
@@ -3668,7 +3668,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
 
-        if (this._listVirtualScrollController) {
+        if (this._useNewScroll) {
             this._listVirtualScrollController.viewportResized(viewportHeight);
             // TODO SCROLL во viewportResizeHandler не должно быть scrollTop
             if (scrollTop !== undefined) {
@@ -3855,9 +3855,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 backward: options.topTriggerOffsetCoefficient,
                 forward: options.bottomTriggerOffsetCoefficient
             },
-            resetTriggersOffsets: {
-                backward: this._sourceController && this._sourceController.hasMoreData('up'),
-                forward: this._sourceController && this._sourceController.hasMoreData('down')
+            triggersPositions: {
+                backward: this._sourceController.hasMoreData('up') ? 'null' : 'offset',
+                forward: this._sourceController.hasMoreData('down') ? 'null' : 'offset'
             },
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
@@ -4260,7 +4260,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             this._noDataBeforeReload = !(items && items.getCount());
             _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
-            if (this._listVirtualScrollController) {
+            if (this._useNewScroll) {
                 this._listVirtualScrollController.setCollection(this._listViewModel);
             }
 
@@ -4339,7 +4339,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         this._listViewModel.destroy();
                     }
                     _private.initializeModel(this, newOptions, items);
-                    if (this._listVirtualScrollController) {
+                    if (this._useNewScroll) {
                         this._listVirtualScrollController.setCollection(this._listViewModel);
                     }
                     this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
@@ -4814,12 +4814,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._useNewScroll) {
+            this._listVirtualScrollController.beforeRenderListControl();
             const hasNotRenderedChanges = this._hasItemWithImageChanged ||
                 this._indicatorsController.hasNotRenderedChanges();
             if (hasNotRenderedChanges) {
                 this._listVirtualScrollController.saveScrollPosition();
-            } else {
-                this._listVirtualScrollController.beforeRenderListControl();
             }
         } else {
             // save scroll

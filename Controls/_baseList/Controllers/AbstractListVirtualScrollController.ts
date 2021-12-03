@@ -16,17 +16,14 @@ import {
 } from 'Controls/display';
 import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 import {
-    IActiveElementChangedChangedCallback, IDoScrollParams,
+    IActiveElementChangedChangedCallback,
+    IDirection,
     IEdgeItem,
-    IEdgeItemCalculatingParams,
     IHasItemsOutRange,
     IIndexesChangedParams,
     IItemsEndedCallback,
     IItemsRange,
     IPlaceholders,
-    IScheduledScrollParams,
-    IScheduledScrollToElementParams,
-    IScrollParam,
     ScrollController
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {
@@ -37,18 +34,45 @@ import {
 import {
     AbstractObserversController,
     IAbstractObserversControllerOptions,
-    IResetTriggersOffsets,
+    ITriggersPositions,
     ITriggersOffsetCoefficients,
-    ITriggersVisibility
+    ITriggersVisibility, ITriggerPosition
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
 
-export interface IShadowVisibility {
-    backward: boolean;
-    forward: boolean;
+const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
+
+export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement' | 'doScroll';
+
+export interface IScheduledScrollToElementParams {
+    key: CrudEntityKey;
+    position: string;
+    force: boolean;
 }
 
-const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
+/**
+ * Интерфейс, описывающий параметры для подсчтеа крайнего видимого элемента
+ * @remark
+ * range, placeholders, itemsSizes - не обязательные параметры. Если их не задать, то будут использоваться
+ * текущие значения. Задвать нужно только для восстановления скролла, т.к. восстанавливать скролл нужно
+ * исходя из старого состояния.
+ */
+export interface IEdgeItemCalculatingParams {
+    direction: IDirection;
+    range?: IItemsRange;
+    placeholders?: IPlaceholders;
+}
+
+export type IScrollParam = number | 'top' | 'bottom' | 'pageUp' | 'pageDown';
+
+export interface IDoScrollParams {
+    scrollParam: IScrollParam;
+}
+
+export interface IScheduledScrollParams {
+    type: IScheduledScrollType;
+    params: IEdgeItem | IScheduledScrollToElementParams | IEdgeItemCalculatingParams | IDoScrollParams;
+}
 
 type IScrollToElementUtil = (container: HTMLElement, position: string, force: boolean) => Promise<void>|void;
 type IDoScrollUtil = (scrollParam: IScrollParam) => void;
@@ -78,7 +102,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
 
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
-    resetTriggersOffsets: IResetTriggersOffsets;
+    triggersPositions: ITriggersPositions;
 
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
@@ -230,12 +254,12 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.setForwardTriggerVisible(visible);
     }
 
-    setResetBackwardTriggerOffset(reset: boolean): void {
-        this._scrollController.setResetBackwardTriggerOffset(reset);
+    setBackwardTriggerPosition(position: ITriggerPosition): void {
+        this._scrollController.setBackwardTriggerPosition(position);
     }
 
-    setResetForwardTriggerOffset(reset: boolean): void {
-        this._scrollController.setResetForwardTriggerOffset(reset);
+    setForwardTriggerPosition(position: ITriggerPosition): void {
+        this._scrollController.setForwardTriggerPosition(position);
     }
 
     // endregion Triggers
@@ -256,7 +280,7 @@ export abstract class AbstractListVirtualScrollController<
 
             triggersVisibility: options.triggersVisibility,
             triggersOffsetCoefficients: options.triggersOffsetCoefficients,
-            resetTriggersOffsets: options.resetTriggersOffsets,
+            triggersPositions: options.triggersPositions,
 
             scrollPosition: 0,
             viewportSize: options.virtualScrollConfig.viewportHeight || 0,

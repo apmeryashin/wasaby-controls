@@ -19,7 +19,7 @@ import type {
     IItemsRange,
     IPlaceholders
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
-import { IEdgeItemCalculatingParams } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import type { IEdgeItemCalculatingParams } from 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 import { isEqual } from 'Types/object';
 
 export interface IActiveElementIndexChanged extends IActiveElementIndex {
