@@ -92,7 +92,6 @@ interface IColumnScrollViewMixin {
     scrollToColumn(columnIndex: number): void;
     scrollToLeft(): void;
     scrollToRight(): void;
-    setScrollPosition(position: number): void;
     _resetColumnScroll(position: IViewOptions['columnScrollStartPosition']): void;
     _isDragScrollEnabledByOptions(options: IViewOptions): boolean;
     _getColumnScrollThumbStyles(options: IViewOptions): string;

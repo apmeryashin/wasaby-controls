@@ -946,7 +946,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 scrollHeight: this._scrollModel.scrollHeight
             });
 
-            this._sendScrollMoveAsync('vertical');
+            this._sendScrollMoveAsync(SCROLL_DIRECTION.VERTICAL);
         }
 
         if (this._scrollModel.scrollLeft !== this._oldScrollState.scrollLeft) {
@@ -957,7 +957,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 scrollWidth: this._scrollModel.scrollWidth
             });
 
-            this._sendScrollMoveAsync('horizontal');
+            this._sendScrollMoveAsync(SCROLL_DIRECTION.HORIZONTAL);
         }
 
         if (this._scrollModel.canVerticalScroll !== this._oldScrollState.canVerticalScroll) {

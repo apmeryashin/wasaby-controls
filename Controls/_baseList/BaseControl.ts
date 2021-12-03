@@ -7621,9 +7621,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     // TODO: Должно переехать в GridControl, когда он появится.
-    _onColumnScroll(e, position: number): void {/**/}
-
-    // TODO: Должно переехать в GridControl, когда он появится.
     isColumnScrollVisible(): boolean {
         return this._isColumnScrollVisible;
     }

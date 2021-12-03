@@ -476,12 +476,6 @@ export default class ColumnScrollController {
         // сбрасываем расстягивание на всю ширину контейнера индикатора, чтобы корректно его позиционировать
         newTransformHTML += `.${transformSelector} .controls-Grid__loadingIndicator-content { width: ${this._containerSize}px; transform: translateX(${position}px); }`;
 
-        newTransformHTML +=
-            `.${transformSelector} .controls-BaseControl__loadingTrigger_horizontal-left{transform: translateX(-${position}px);}`;
-        const maxScrollTransform = this._contentSize - this._containerSize - position;
-        newTransformHTML +=
-            `.${transformSelector} .controls-BaseControl__loadingTrigger_horizontal-right{transform: translateX(${maxScrollTransform}px);}`;
-
         // Не скроллируем операции над записью и не анимируем пока не перешли на нативный скролл.
         // Отсутствие анимации в реальном кейсе почти невозможно заметить.
         if (!isFullGridSupport) {

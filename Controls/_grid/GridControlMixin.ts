@@ -6,7 +6,7 @@ const HORIZONTAL_LOADING_TRIGGER_SELECTOR = '.controls-BaseControl__loadingTrigg
 const DEFAULT_TRIGGER_OFFSET = 0.3;
 
 export interface IGridControlMixinOptions extends IBaseControlOptions {
-    _newColumnScroll?: boolean;
+    newColumnScroll?: boolean;
 
     columns: TColumns;
     header?: THeader;
@@ -28,7 +28,7 @@ export class GridControlMixin<
     private _listVirtualColumnScrollController: ListVirtualColumnScrollController;
 
     _$prepareItemsOnMount(options: IGridControlMixinOptions): void {
-        if (!!options._newColumnScroll && options.virtualColumnScrollConfig) {
+        if (!!options.newColumnScroll && options.virtualColumnScrollConfig) {
             this._createColumnScrollController(options);
         }
     }
@@ -80,16 +80,16 @@ export class GridControlMixin<
             header: options.header,
             stickyColumnsCount: options.stickyColumnsCount,
             columnScrollStartPosition: options.columnScrollStartPosition,
-            triggersQuerySelector: HORIZONTAL_LOADING_TRIGGER_SELECTOR,
             backwardTriggerOffsetCoefficient: options.leftTriggerOffsetCoefficient,
             forwardTriggerOffsetCoefficient: options.rightTriggerOffsetCoefficient,
+            triggersQuerySelector: HORIZONTAL_LOADING_TRIGGER_SELECTOR,
             itemsQuerySelector: '.js-controls-Grid__columnScroll__relativeCell',
             triggersVisibility: {
                 backward: true,
                 forward: true
             },
             doScrollUtil: (position) => {
-                // this._notify('doHorizontalScroll', [scrollTop, true], { bubbling: true });
+                this._notify('doHorizontalScroll', [position, true], { bubbling: true });
             },
             updatePlaceholdersUtil: (placeholders) => {
                 const convertedPlaceholders = {
@@ -99,12 +99,6 @@ export class GridControlMixin<
                 this._notify('updatePlaceholdersSize', [convertedPlaceholders], {bubbling: true});
             }
         });
-    }
-
-    _$onColumnScroll(e, position: number): void {
-        if (this._listVirtualColumnScrollController) {
-            this._listVirtualColumnScrollController.scrollPositionChange(position);
-        }
     }
 
     static getDefaultOptions(): Partial<IGridControlMixinOptions> {

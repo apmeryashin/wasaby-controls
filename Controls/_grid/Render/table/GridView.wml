@@ -106,7 +106,7 @@
             </tr>
         </tbody>
 
-        <tbody if="{{ _options._newColumnScroll }}">
+        <tbody if="{{ _options.newColumnScroll }}">
             <tr>
                 <ws:for data="col in _listModel.getAllGridColumns()">
                     <td class="{{ col.className }}"></td>
@@ -226,7 +226,7 @@
         <ws:partial template="SCROLLBAR_IN_POSITION" renderPosition="beforeTable"/>
     </ws:if>
 
-    <div if="{{ _options._newColumnScroll }}"
+    <div if="{{ _options.newColumnScroll }}"
          class="controls-BaseControl__loadingTrigger_horizontal controls-BaseControl__loadingTrigger_horizontal-left"></div>
 
     <!-- Контент таблицы -->
@@ -239,6 +239,6 @@
                 on:mouseup="_onColumnScrollStopDragScrolling('mouse')"
                 on:touchend="_onColumnScrollStopDragScrolling('touch')"/>
 
-    <div if="{{ _options._newColumnScroll }}"
+    <div if="{{ _options.newColumnScroll }}"
          class="controls-BaseControl__loadingTrigger_horizontal controls-BaseControl__loadingTrigger_horizontal-right"></div>
 </div>

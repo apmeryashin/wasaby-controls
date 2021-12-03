@@ -98,7 +98,6 @@ export const isSizeAffectsOptionsChanged = (newOptions: Partial<IAbstractViewOpt
     }
 
     return Boolean(
-        newOptions._newColumnScroll ||
         changedOptions.hasOwnProperty('columns') ||
         changedOptions.hasOwnProperty('header') ||
         changedOptions.hasOwnProperty('breadCrumbsMode') ||
@@ -589,10 +588,6 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
                 }
             });
         });
-    },
-
-    setScrollPosition(position: number): void {
-        setScrollPosition(this, position, true, false);
     },
 
     _resetColumnScroll(position?: IAbstractViewOptions['columnScrollStartPosition']): void {

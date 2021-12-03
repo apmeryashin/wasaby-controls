@@ -17,7 +17,7 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'key',
-            data: this._getData('key', 1000)
+            data: this._getData('key', 30)
         });
     }
 

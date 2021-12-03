@@ -57,7 +57,7 @@
         <!-- Items -->
         <div name="itemsContainer" class="controls-GridViewV__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container">
 
-            <div if="{{ _options._newColumnScroll }}"
+            <div if="{{ _options.newColumnScroll }}"
                  class="controls-Grid__columnScroll__relativeCells">
                 <ws:for data="col in _listModel.getAllGridColumns()">
                     <div class="{{ col.className }}"></div>
@@ -160,7 +160,7 @@
         <Controls.event:Listener event="controlResize" on:controlResize="_onColumnScrollViewResized()"/>
     </ws:if>
 
-    <div if="{{ _options._newColumnScroll }}"
+    <div if="{{ _options.newColumnScroll }}"
          class="controls-BaseControl__loadingTrigger_horizontal controls-BaseControl__loadingTrigger_horizontal-left"></div>
 
     <!-- Контент таблицы -->
@@ -174,7 +174,7 @@
                 on:mouseup="_onColumnScrollStopDragScrolling('mouse')"
                 on:touchend="_onColumnScrollStopDragScrolling('touch')"/>
 
-    <div if="{{ _options._newColumnScroll }}"
+    <div if="{{ _options.newColumnScroll }}"
          class="controls-BaseControl__loadingTrigger_horizontal controls-BaseControl__loadingTrigger_horizontal-right"></div>
 
     <ws:if data="{{ _$columnScrollUseFakeRender }}">

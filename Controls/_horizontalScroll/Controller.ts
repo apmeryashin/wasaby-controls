@@ -48,18 +48,10 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
     }
 
     protected _applyIndexes(startIndex: number, endIndex: number): void {
-        const scrollableStart = startIndex < this._stickyColumnsCount ? this._stickyColumnsCount : startIndex;
-        const scrollableEnd = scrollableStart + (endIndex - startIndex - this._stickyColumnsCount);
-
-        const slice = (cols) => [
-            ...cols.slice(0, this._stickyColumnsCount),
-            ...cols.slice(scrollableStart, scrollableEnd)
-        ];
-
-        this._collection.setColumns(slice(this._columns));
+        this._collection.setColumns(this._columns.slice(startIndex, endIndex));
 
         if (this._header) {
-            this._collection.setHeader(slice(this._header));
+            this._collection.setHeader(this._header.slice(startIndex, endIndex));
         }
     }
 
