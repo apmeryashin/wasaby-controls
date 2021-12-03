@@ -17,6 +17,18 @@ export interface ITriggersVisibility {
     forward: boolean;
 }
 
+export type ITriggerPosition = 'null' | 'offset';
+
+export interface ITriggersPositions {
+    backward: ITriggerPosition;
+    forward: ITriggerPosition;
+}
+
+export interface ITriggersOffsetCoefficients {
+    backward: number;
+    forward: number;
+}
+
 export type TObserversCallback = (event: TIntersectionEvent) => void;
 
 export interface IAbstractObserversControllerBaseOptions {
@@ -25,8 +37,8 @@ export interface IAbstractObserversControllerBaseOptions {
     viewportSize?: number;
     triggersQuerySelector: string;
     triggersVisibility: ITriggersVisibility;
-    backwardTriggerOffsetCoefficient: number;
-    forwardTriggerOffsetCoefficient: number;
+    triggersOffsetCoefficients: ITriggersOffsetCoefficients;
+    triggersPositions: ITriggersPositions;
 }
 
 export interface IAbstractObserversControllerOptions extends IAbstractObserversControllerBaseOptions {
@@ -45,8 +57,14 @@ export abstract class AbstractObserversController {
     private _triggersQuerySelector: string;
     private _viewportSize: number;
 
-    private _backwardTriggerOffsetCoefficient: number;
-    private _forwardTriggerOffsetCoefficient: number;
+    private _triggersOffsetCoefficients: ITriggersOffsetCoefficients;
+
+    /**
+     * Сбрасываем оффсет триггеров в 0 пр помощи этих переменных.
+     * Это нужно для того, чтобы изначально не произошло лишних подгрузок и чтобы триггер работал, если список пустой.
+     * @private
+     */
+    private _triggersPositions: ITriggersPositions;
 
     private _triggersVisibility: ITriggersVisibility;
     private _triggersOffsets: ITriggersOffsets = {
@@ -54,16 +72,8 @@ export abstract class AbstractObserversController {
         forward: 0
     };
 
-    /**
-     * Сбрасываем оффсет триггеров в 0 пр помощи этих переменных.
-     * Это нужно для того, чтобы изначально не произошло лишних подгрузок и чтобы триггер работал, если список пустой.
-     * @private
-     */
-    private _resetBackwardTriggerOffset: boolean = true;
-    private _resetForwardTriggerOffset: boolean = true;
-
     private _observer: EdgeIntersectionObserver;
-    private _observersCallback: TObserversCallback;
+    private readonly _observersCallback: TObserversCallback;
 
     constructor(options: IAbstractObserversControllerOptions) {
         this._listControl = options.listControl;
@@ -73,8 +83,8 @@ export abstract class AbstractObserversController {
         this._triggersVisibility = options.triggersVisibility;
         this._observersCallback = options.observersCallback;
 
-        this._backwardTriggerOffsetCoefficient = options.backwardTriggerOffsetCoefficient;
-        this._forwardTriggerOffsetCoefficient = options.forwardTriggerOffsetCoefficient;
+        this._triggersOffsetCoefficients = options.triggersOffsetCoefficients;
+        this._triggersPositions = options.triggersPositions;
 
         if (this._listContainer) {
             this._updateTriggers();
@@ -111,18 +121,18 @@ export abstract class AbstractObserversController {
         return this.getTriggersOffsets();
     }
 
-    setResetBackwardTriggerOffset(reset: boolean): ITriggersOffsets {
-        if (this._resetBackwardTriggerOffset !== reset) {
-            this._resetBackwardTriggerOffset = reset;
+    setBackwardTriggerPosition(position: ITriggerPosition): ITriggersOffsets {
+        if (this._triggersPositions.backward !== position) {
+            this._triggersPositions.backward = position;
             this._recalculateOffsets();
         }
 
         return this.getTriggersOffsets();
     }
 
-    setResetForwardTriggerOffset(reset: boolean): ITriggersOffsets {
-        if (this._resetForwardTriggerOffset !== reset) {
-            this._resetForwardTriggerOffset = reset;
+    setForwardTriggerPosition(position: ITriggerPosition): ITriggersOffsets {
+        if (this._triggersPositions.forward !== position) {
+            this._triggersPositions.forward = position;
             this._recalculateOffsets();
         }
 
@@ -135,18 +145,21 @@ export abstract class AbstractObserversController {
 
     // region TriggerVisibility
 
-    setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
-        if (this._triggersVisibility.backward !== triggersVisibility.backward) {
-            this._setTriggerVisibility('backward', triggersVisibility.backward);
+    setBackwardTriggerVisible(visible: boolean): void {
+        if (this._triggersVisibility.backward !== visible) {
+            this._setTriggerVisible('backward', visible);
+            this._triggersVisibility.backward = visible;
         }
-        if (this._triggersVisibility.forward !== triggersVisibility.forward) {
-            this._setTriggerVisibility('backward', triggersVisibility.forward);
-        }
-
-        this._triggersVisibility = triggersVisibility;
     }
 
-    private _setTriggerVisibility(direction: IDirection, visible: boolean): void {
+    setForwardTriggerVisible(visible: boolean): void {
+        if (this._triggersVisibility.forward !== visible) {
+            this._setTriggerVisible('forward', visible);
+            this._triggersVisibility.forward = visible;
+        }
+    }
+
+    private _setTriggerVisible(direction: IDirection, visible: boolean): void {
         const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
 
         if (trigger.style.display !== 'none' && trigger.style.display !== '') {
@@ -168,21 +181,21 @@ export abstract class AbstractObserversController {
     // region OnCollectionChange
 
     resetItems(totalCount: number): ITriggersOffsets {
-        // Сбрасываем оффсет у триггеров, чтобы после перезагрузки первая подгрузка была при скролле к самому краю
-        this.setResetBackwardTriggerOffset(true);
-        this.setResetForwardTriggerOffset(true);
+        // Прижимаем к триггер к краю, чтобы после перезагрузки не было лишних подгрузок
+        this.setBackwardTriggerPosition('null');
+        this.setForwardTriggerPosition('null');
         return this.getTriggersOffsets();
     }
 
     // endregion OnCollectionChange
 
     private _recalculateOffsets(): void {
-        const newTopTriggerOffset = this._resetBackwardTriggerOffset
+        const newTopTriggerOffset = this._triggersPositions.backward
             ? 0
-            : this._viewportSize * this._backwardTriggerOffsetCoefficient;
-        const newBottomTriggerOffset = this._resetForwardTriggerOffset
+            : this._viewportSize * this._triggersOffsetCoefficients.backward;
+        const newBottomTriggerOffset = this._triggersPositions.forward
             ? 0
-            : this._viewportSize * this._forwardTriggerOffsetCoefficient;
+            : this._viewportSize * this._triggersOffsetCoefficients.forward;
 
         this._triggersOffsets = {
             backward: newTopTriggerOffset,

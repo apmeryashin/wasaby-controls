@@ -120,14 +120,8 @@ implements IMovableList, IRemovableList {
         }
     }
 
-    reloadItem(
-        key: TKey,
-        options: object | IReloadItemOptions,
-        replaceItem?: boolean,
-        reloadType: string = 'read'
-    ): Promise<Model> {
-        const listControl = this._children.listControl;
-        return listControl.reloadItem.apply(listControl, arguments);
+    reloadItem(key: TKey, options: IReloadItemOptions = {}): Promise<Model | RecordSet> {
+        return this._children.listControl.reloadItem(key, options);
     }
 
     getItems(): RecordSet {

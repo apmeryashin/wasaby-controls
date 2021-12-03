@@ -17,7 +17,7 @@ export default abstract class InvisibleItem {
      * Возвращает классы стилей для невидимого элемента
      */
     getInvisibleClasses(): string {
-        let classes = 'controls-TileView__item controls-TileView__item_invisible ';
+        let classes = 'controls-ListView__itemV controls-TileView__item controls-TileView__item_invisible ';
         classes += this.getItemPaddingClasses();
         return classes;
     }
