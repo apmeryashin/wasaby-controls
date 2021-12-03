@@ -27,7 +27,12 @@
     on:itemMouseEnter="_itemMouseEnter()"
     on:itemMouseMove="_itemMouseMove()"
     on:itemMouseLeave="_itemMouseLeave()"
+    on:itemClick="_itemClick()"
     on:mouseenter="_mouseEnterHandler()"
     on:itemActionMouseDown="_itemActionMouseDown()"
+    on:commitEdit="_commitEditActionHandler()"
+    on:cancelEdit="_cancelEditActionHandler()"
     on:checkboxClick="_checkboxClick()"
+    on:validateCreated="_onValidateCreated()"
+    on:validateDestroyed="_onValidateDestroyed()"
 />

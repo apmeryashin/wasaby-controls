@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_propertyGrid/PropertyGrid';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
-import {GroupItem, CollectionItem, TreeItem} from 'Controls/display';
+import {GroupItem, CollectionItem, TreeItem, IEditableCollectionItem} from 'Controls/display';
 import {IObservable, RecordSet} from 'Types/collection';
 import {Model, Record as entityRecord} from 'Types/entity';
 import {factory} from 'Types/chain';
@@ -11,16 +11,17 @@ import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
-import {IMoveActionOptions, Move as MoveAction, Move as MoveCommand} from 'Controls/listCommands';
+import {Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
 import {
+    EDIT_IN_PLACE_CANCEL,
     PROPERTY_GROUP_FIELD,
     PROPERTY_TOGGLE_BUTTON_ICON_FIELD
 } from './Constants';
-import {groupConstants as constView, IList} from '../list';
+import {groupConstants as constView} from '../list';
 import PropertyGridCollection from './PropertyGridCollection';
 import PropertyGridCollectionItem from './PropertyGridCollectionItem';
-import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
+import {IItemAction, Controller as ItemActionsController, IItemActionsItem} from 'Controls/itemActions';
 import {Confirmation, StickyOpener} from 'Controls/popup';
 import 'css!Controls/itemActions';
 import 'css!Controls/propertyGrid';
@@ -40,11 +41,22 @@ import {TouchDetect} from 'Env/Touch';
 import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
 import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Controls/listDragNDrop';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import {Logger} from 'UI/Utils';
+import {
+    Controller as EditInPlaceController, IBeforeBeginEditCallbackParams,
+    IBeforeEndEditCallbackParams,
+    InputHelper as EditInPlaceInputHelper, TAsyncOperationResult
+} from 'Controls/editInPlace';
+import {Container as ValidateContainer, ControllerClass as ValidationController} from 'Controls/validate';
 
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
 const IE_MOUSEMOVE_FIX_DELAY = 50;
 const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
+
+interface IEditingUserOptions {
+    item?: Model;
+}
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
@@ -99,6 +111,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _collapsedGroupsChanged: boolean = false;
     private _editingObject: TEditingObject = null;
     private _dndController: DndController;
+    private _editInPlaceController: EditInPlaceController;
+    private _editInPlaceInputHelper: EditInPlaceInputHelper;
+    private _isPendingDeferredSubmit: boolean;
+    private _validateController: ValidationController = null;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
         const {selectedKeys} = options;
@@ -159,11 +175,29 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             this._notify('controlResize', [], {bubbling: true});
             this._collapsedGroupsChanged = false;
         }
+
+        // Запустить валидацию, которая была заказана методом commit у редактирования по месту, после
+        // применения всех обновлений реактивных состояний.
+        if (this._isPendingDeferredSubmit && this._validateController) {
+            this._validateController.resolveSubmit();
+            this._isPendingDeferredSubmit = false;
+        }
     }
 
     protected _afterMount(): void {
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
+    }
+
+    protected _afterRender(oldOptions?: IPropertyGridOptions, oldContext?: any): void {
+        // Активация поля ввода должна происходить после рендера.
+        if (
+            this._editInPlaceController &&
+            this._editInPlaceController.isEditing() &&
+            !this._editInPlaceController.isEndEditProcessing()
+        ) {
+            this._editInPlaceInputHelper.activateInput(() => true);
+        }
     }
 
     protected _beforeUnmount(): void {
@@ -172,6 +206,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
+        if (this._validateController) {
+            this._validateController.destroy();
+            this._validateController = null;
+        }
     }
 
     private _getCollection(options: IPropertyGridOptions): TPropertyGridCollection {
@@ -334,7 +372,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._processItemMouseEnterWithDragNDrop(displayItem);
             }
         } else {
-            this._listModel.setHoveredItem(displayItem);
+            if (!this._editInPlaceController?.isEditing()) {
+                this._listModel.setHoveredItem(displayItem);
+            }
         }
     }
 
@@ -345,7 +385,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _itemMouseLeave() {
-        this._listModel.setHoveredItem(null);
+        if (!this._editInPlaceController?.isEditing()) {
+            this._listModel.setHoveredItem(null);
+        }
         if (this._dndController) {
             this._unprocessedDragEnteredItem = null;
         }
@@ -355,14 +397,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (this._listModel) {
             this._dragEnter(this._getDragObject());
         }
-        if (!this._itemActionsController) {
-            import('Controls/itemActions').then(({Controller}) => {
-                this._itemActionsController = new Controller();
-                this._updateItemActions(this._listModel, this._options);
-            });
-        } else {
+        this._getItemActionsController().then(() => {
             this._updateItemActions(this._listModel, this._options);
-        }
+        });
     }
 
     protected _itemActionMouseDown(event: SyntheticEvent<MouseEvent>,
@@ -415,6 +452,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
+    private _getItemActionsController(): Promise<ItemActionsController> {
+        if (!this._itemActionsController) {
+            return import('Controls/itemActions').then(({Controller}) => {
+                this._itemActionsController = new Controller();
+                return this._itemActionsController;
+            });
+        }
+        return Promise.resolve(this._itemActionsController);
+    }
+
     private _onItemActionsMenuResult(eventName: string, actionModel: Model): void {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
@@ -428,15 +475,18 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
-    private _updateItemActions(listModel: TPropertyGridCollection, options: IPropertyGridOptions): void {
+    private _updateItemActions(listModel: TPropertyGridCollection,
+                               options: IPropertyGridOptions,
+                               editingItem?: IEditableCollectionItem & IItemActionsItem): void {
         const itemActions: IItemAction[] = options.itemActions;
-
-        if (!itemActions) {
+        if (!itemActions && !editingItem) {
             return;
         }
         this._itemActionsController.update({
             collection: listModel,
             itemActions,
+            editingToolbarVisible: !!editingItem,
+            editingItem,
             visibilityCallback: options.itemActionVisibilityCallback,
             style: 'default',
             theme: options.theme
@@ -1078,6 +1128,217 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             this._getMoveViewCommand(movedItems, LOCAL_MOVE_POSITION.On, resultTarget).execute();
         });
     }
+
+    // region editInPlace
+
+    protected _commitEditActionHandler(): TAsyncOperationResult {
+        return this._commitEdit();
+    }
+
+    protected _cancelEditActionHandler(): TAsyncOperationResult {
+        return this._cancelEdit();
+    }
+
+    protected _itemClick(e: SyntheticEvent, item: Model, originalEvent: SyntheticEvent): void {
+        const canEditByClick = !this._options.readOnly && item.get('isEditable');
+        if (canEditByClick) {
+            e.stopPropagation();
+
+            this._beginEdit({ item }).then((result) => {
+                if (!(result && result.canceled)) {
+                    this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
+                }
+                return result;
+            });
+        } else {
+            if (this._editInPlaceController) {
+                this._commitEdit();
+            }
+            this._notify('itemClick', [item, originalEvent]);
+        }
+    }
+
+    beginAdd(userOptions: IEditingUserOptions): Promise<void | {canceled: true}> {
+        if (this._options.readOnly) {
+            return PropertyGridView._rejectEditInPlacePromise('beginAdd');
+        }
+        return this._beginAdd(userOptions);
+    }
+
+    beginEdit(userOptions: IEditingUserOptions): Promise<void | {canceled: true}> {
+        return this._beginEdit(userOptions);
+    }
+
+    protected _onValidateCreated(e: Event, control: ValidateContainer): void {
+        this._getValidationController().then((controller: ValidationController) => {
+            controller.addValidator(control);
+        });
+    }
+
+    protected _onValidateDestroyed(e: Event, control: ValidateContainer): void {
+        if (this._validateController) {
+            this._validateController.removeValidator(control);
+        }
+    }
+
+    private _cancelEdit(force: boolean = false): TAsyncOperationResult {
+        if (!this._editInPlaceController) {
+            return Promise.resolve();
+        }
+        if (this._options.readOnly) {
+            return PropertyGridView._rejectEditInPlacePromise('cancelEdit');
+        }
+        return this._getEditInPlaceController().then((controller) => {
+            controller.cancel(force).finally(() => {
+                if (this._selectionController) {
+                    this._selectionController.setSelection(this._selectionController.getSelection());
+                }
+            });
+        });
+    }
+
+    private _commitEdit(commitStrategy?: 'hasChanges' | 'all'): TAsyncOperationResult {
+        if (!this._editInPlaceController) {
+            return Promise.resolve();
+        }
+        if (this._options.readOnly) {
+            return PropertyGridView._rejectEditInPlacePromise('commitEdit');
+        }
+        return this._getEditInPlaceController()
+            .then((controller) => controller.commit(commitStrategy));
+    }
+
+    /**
+     * Метод, фактически начинающий редактирование
+     * @param userOptions
+     * @private
+     */
+    private _beginEdit(userOptions: IEditingUserOptions): TAsyncOperationResult {
+        return this._getEditInPlaceController()
+            .then((controller) => controller.edit(userOptions))
+            .then((result) => {
+                if (!result?.canceled) {
+                    this._editInPlaceInputHelper.shouldActivate();
+                    this._forceUpdate();
+                }
+                return result;
+            });
+    }
+
+    /**
+     * Метод, фактически начинающий добавление по месту
+     * @param userOptions
+     * @private
+     */
+    private _beginAdd(userOptions: IEditingUserOptions): TAsyncOperationResult {
+        return this._getEditInPlaceController()
+            .then((controller) => controller.add(userOptions, {
+                addPosition: 'bottom',
+                columnIndex: 0,
+                targetItem: undefined
+            }))
+            .then((addResult) => {
+                if (addResult && addResult.canceled) {
+                    return addResult;
+                }
+                this._editInPlaceInputHelper.shouldActivate();
+                this._forceUpdate();
+            });
+    }
+
+    private _getEditInPlaceController(): Promise<EditInPlaceController> {
+        if (!this._editInPlaceController) {
+            return import('Controls/editInPlace').then(({InputHelper, Controller}) => {
+                this._editInPlaceInputHelper = new InputHelper();
+                this._editInPlaceController = new Controller({
+                    mode: 'row',
+                    collection: this._listModel,
+                    onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
+                    onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
+                    onBeforeEndEdit: this._beforeEndEditCallback.bind(this)
+                });
+                return this._editInPlaceController;
+            });
+        }
+        return Promise.resolve(this._editInPlaceController);
+    }
+
+    private _beforeBeginEditCallback(params: IBeforeBeginEditCallbackParams): Promise<void> {
+        // Если к нам не пришел новый добавляемый итем, то ругаемся
+        if (!params.options?.item) {
+            throw new Error('You use list without source. So you need to manually create new item when processing an event beforeBeginEdit');
+        }
+        return;
+    }
+
+    private _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
+        item.getContents().addField({name: 'editingValue', type: 'string', defaultValue: item.getPropertyValue()});
+        return this._getItemActionsController()
+            .then(() => {
+                this._listModel.setHoveredItem(item);
+                this._updateItemActions(this._listModel, this._options, item);
+            });
+    }
+
+    private _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<unknown> {
+        if (!params.willSave) {
+            return ;
+        }
+
+        return this._getValidationController()
+            .then((controller: ValidationController) => {
+                const submitPromise = controller.deferSubmit();
+                this._isPendingDeferredSubmit = true;
+                this._forceUpdate();
+                return submitPromise;
+            })
+            .then((validationResult) => {
+                for (const key in validationResult) {
+                    if (validationResult.hasOwnProperty(key) && validationResult[key]) {
+                        return EDIT_IN_PLACE_CANCEL;
+                    }
+                }
+                const editingObject = this._listModel.getEditingObject();
+                const name = params.item.get(this._listModel.getKeyProperty());
+
+                const editingValue = params.item.get('editingValue');
+                if (params.item.getFormat().getFieldIndex('editingValue') !== -1) {
+                    params.item.removeField('editingValue');
+                }
+
+                if (params.willSave && params.isAdd) {
+                    const collection = this._listModel.getCollection() as undefined as RecordSet;
+                    if (typeof params.sourceIndex === 'number') {
+                        collection.add(params.item, params.sourceIndex);
+                    } else {
+                        collection.append([params.item]);
+                    }
+                }
+                if (params.willSave && editingValue !== editingObject[name]) {
+                    this._propertyValueChanged(null, params.item, editingValue);
+                }
+
+                this._notify('typeDescriptionChanged', [this._listModel.getCollection()]);
+            });
+    }
+
+    private _getValidationController(): Promise<ValidationController> {
+        if (!this._validateController) {
+            return import('Controls/validate').then(({ControllerClass}) => {
+                this._validateController = new ControllerClass();
+                return this._validateController;
+            });
+        }
+        return Promise.resolve(this._validateController);
+    }
+
+    private static _rejectEditInPlacePromise(methodName: string): Promise<void> {
+        const msg = `PropertyGrid is in readOnly mode. Can't use ${methodName}()!`;
+        Logger.warn(msg);
+        return Promise.reject(msg);
+    }
+
+    // endregion editInPlace
 
     static defaultProps: Partial<IPropertyGridOptions> = {
         keyProperty: 'name',

@@ -238,6 +238,11 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
     }
 
     private _validateAddingItem(editingItem, targetItem): void | never {
+        // Костыль необходим из-за особенности реализации модели PropertyGrid. Это дерево, но без parentProperty
+        // https://online.sbis.ru/opendoc.html?guid=87de3080-fe7e-48f7-ad35-e4a133d5b8fc
+        if (editingItem['[Controls/_propertyGrid/PropertyGridCollectionItem]']) {
+            return;
+        }
         // У каждого элемента дерева есть родитель. Если его нет, значит конфигурация добавляемого элемента
         // ошибочна. Добавление записи не сможет начаться, если родительская запись отсутствует в дереве.
         // Родительский элемент может быть корнем, как null, так и реальной записью.

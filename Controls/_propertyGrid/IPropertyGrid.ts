@@ -4,6 +4,7 @@ import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import {IPromiseSelectableOptions, ISelectionTypeOptions, IItemPaddingOptions, TKey} from 'Controls/interface';
+import {IEditingPropertyGrid} from 'Controls/_propertyGrid/interface/IEditingPropertyGrid';
 
 type TPadding = 'null'|'m';
 
@@ -71,7 +72,8 @@ export interface IPropertyGridOptions extends
     IControlOptions,
     IPromiseSelectableOptions,
     ISelectionTypeOptions,
-    IItemPaddingOptions {
+    IItemPaddingOptions,
+    IEditingPropertyGrid {
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#editingObject
      * @cfg {Object | Types/entity:Model} Объект, свойства которого являются значениями для редакторов.
@@ -337,6 +339,13 @@ export interface IPropertyGridOptions extends
  * @name Controls/_propertyGrid/IPropertyGrid#editingObjectChanged
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object | Types/entity:Model} editingObject Объект, с обновленными значениями для редакторов.
+ */
+
+/**
+ * @event Controls/_propertyGrid/IPropertyGrid#typeDescriptionChanged Происходит при изменении конфигурации свойств в PropertyGrid.
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Controls/_propertyGrid/IProperty[]} typeDescription конфигурация свойств в PropertyGrid.
+ * @see typeDescription
  */
 
 /**
