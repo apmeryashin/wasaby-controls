@@ -1130,8 +1130,16 @@ const _private = {
         if (!self._scrollPageLocked) {
             if (self._useNewScroll) {
                 const directionCompatibility = direction === 'Up' ? 'backward' : 'forward';
-                self._listVirtualScrollController.scrollToPage(directionCompatibility)
-                    .then(self._setMarkedKeyAfterPaging);
+                self._listVirtualScrollController.scrollToPage(directionCompatibility).then((key) => {
+                    self._setMarkedKeyAfterPaging(key);
+                    /**
+                     * скроллу не нужно блокироваться, если есть ошибка, потому что
+                     * тогда при пэйджинге до упора не инициируется цикл обновления
+                     * (не происходит подгрузки данных), а флаг снимается только после него
+                     * или при ручном скролле - из-за этого пэйджинг перестает работать
+                     */
+                    self._scrollPageLocked = !self._sourceController?.getLoadError();
+                });
             } else {
                 /**
                  * скроллу не нужно блокироваться, если есть ошибка, потому что

@@ -121,7 +121,7 @@ export abstract class AbstractListVirtualScrollController<
     private _keepScrollPosition: boolean = false;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
-    private readonly _doScrollUtil: IDoScrollUtil;
+    protected readonly _doScrollUtil: IDoScrollUtil;
     private readonly _updateShadowsUtil: IUpdateShadowsUtil;
     private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     private readonly _updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
