@@ -1,13 +1,10 @@
 import {StickyController, IStickyItem} from 'Controls/_popupTemplate/Sticky/StickyController';
-import themeConstantsGetter from 'Controls/_popupTemplate/InfoBox/getThemeConstants';
 import * as Deferred from 'Core/Deferred';
 import * as cMerge from 'Core/core-merge';
 import StickyStrategy from 'Controls/_popupTemplate/Sticky/StickyStrategy';
-import {IPopupItem, IPopupSizes, IPopupPosition, Controller} from 'Controls/popup';
+import {IPopupSizes, IPopupPosition, Controller} from 'Controls/popup';
 import {getStickyConfig} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
-
-import {constants} from 'Env/Env';
-import {Controller as ManagerController} from 'Controls/popup';
+import initConstants from 'Controls/_popupTemplate/Util/getThemeConstants';
 
 interface IInfoBoxThemeConstants {
     ARROW_WIDTH?: number;
@@ -25,33 +22,8 @@ interface IInfoBoxSide {
     c: string;
 }
 
-function getConstants(themeName: string): IInfoBoxThemeConstants {
-    return themeConstantsGetter(`controls-InfoBox__themeConstants controls_popupTemplate_theme-${themeName}`, {
-        ARROW_WIDTH: 'marginLeft',
-        ARROW_H_OFFSET: 'marginRight',
-        ARROW_V_OFFSET: 'marginBottom',
-        TARGET_OFFSET: 'marginTop',
-        MAX_WIDTH: 'maxWidth'
-    });
-}
-
 // todo: https://online.sbis.ru/opendoc.html?guid=b385bef8-31dd-4601-9716-f3593dfc9d41
 let themeConstants: IInfoBoxThemeConstants = {};
-let constantsInit;
-
-// Нужно инициализировать константы после построения, т.к. во время реквайра тема не инициализирована
-function initConstants(): Promise<unknown> {
-    if (!constantsInit) {
-        constantsInit = new Promise<void>((resolve, reject) => {
-            if (!constants.isBrowserPlatform) { return resolve(); }
-            import('Controls/popupTemplate')
-                .then(({ InfoBox }) => InfoBox.loadCSS())
-                .then(() => { themeConstants = getConstants(ManagerController.getTheme()); })
-                .then(resolve, reject);
-        });
-    }
-    return constantsInit;
-}
 
 const SIDES: IInfoBoxSide = {
     t: 'top',
@@ -148,7 +120,19 @@ class InfoBoxController extends StickyController {
             right: undefined,
             bottom: undefined
         };
-        return initConstants().then(() => {
+        const initConstantsConfig = {
+            ARROW_WIDTH: 'marginLeft',
+            ARROW_H_OFFSET: 'marginRight',
+            ARROW_V_OFFSET: 'marginBottom',
+            TARGET_OFFSET: 'marginTop',
+            MAX_WIDTH: 'maxWidth'
+        };
+        return initConstants(
+            `controls-InfoBox__themeConstants controls_popupTemplate_theme-${Controller.getTheme()}`,
+            initConstantsConfig
+        )
+            .then((result) => {
+            themeConstants = result;
             if (item.popupOptions.target) {
                 // Calculate the width of the infobox before its positioning.
                 // It is impossible to count both the size and the position at the same time,

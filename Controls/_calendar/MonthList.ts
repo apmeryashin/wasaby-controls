@@ -30,7 +30,6 @@ interface IModuleComponentOptions extends
     IDisplayedRangesOptions,
     IDayTemplateOptions,
     IDateConstructorOptions {
-    itemDataLoadRatio: number;
 }
 
 const ITEM_BODY_SELECTOR  = {
@@ -48,6 +47,8 @@ const enum VIEW_MODE {
 const SCALE_ROUNDING_ERROR_FIX = 1.5;
 
 const ENRICH_ITEMS_DELAY = 200;
+
+const ITEM_DATA_LOAD_RATIO = 0.1;
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
  *
@@ -99,7 +100,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _virtualPageSize: number;
     protected _errorViewConfig: ErrorViewConfig;
-    protected _threshold: number[];
+    protected _threshold: number[] = [0, 0.01, ITEM_DATA_LOAD_RATIO, 0.99, 1];
     private _errorController: ErrorController = new ErrorController({});
 
     protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
@@ -124,7 +125,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._positionToScroll = position;
         this._displayedPosition = position;
         this._lastNotifiedPositionChangedDate = normalizedPosition;
-        this._threshold = [0, 0.01, options.itemDataLoadRatio, 0.99, 1];
 
         const topShadowVisibility = options.topShadowVisibility ||
             this._calculateInitialShadowVisibility(options.displayedRanges, 'top');
@@ -414,7 +414,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
         if (
             entry.nativeEntry.isIntersecting &&
-            entry.nativeEntry.intersectionRatio >= this._options.itemDataLoadRatio &&
+            entry.nativeEntry.intersectionRatio >= ITEM_DATA_LOAD_RATIO &&
             !isDisplayed && entry.data.type === ITEM_TYPES.body
         ) {
             this._displayedDates.push(time);
@@ -597,7 +597,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             order: 'asc',
             dateConstructor: WSDate,
             displayedRanges: null,
-            itemDataLoadRatio: 0.1,
             // Опция при значении false позволяет загружать элементы списка 'вверх'
             attachLoadTopTriggerToNull: true,
             markerVisibility: 'hidden'

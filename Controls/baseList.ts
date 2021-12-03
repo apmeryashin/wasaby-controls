@@ -95,7 +95,8 @@ export {
 export {
     ScrollController as NewScrollController,
     IDirection as IDirectionNew,
-    IPlaceholders
+    IPlaceholders,
+    IItemsEndedCallback
 } from './_baseList/Controllers/ScrollController/ScrollController';
 export {
     IItemSize,
