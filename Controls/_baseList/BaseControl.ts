@@ -1435,6 +1435,7 @@ const _private = {
         if (self._scrollController?.isRealScroll()) {
             self._scrolled = true;
         }
+        // TODO SCROLL избавиться от scrollTop в BaseControl
         // на мобильных устройствах с overflow scrolling, scrollTop может быть отрицательным
         self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
@@ -3660,10 +3661,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     scrollMoveSyncHandler(params: IScrollParams): void {
         if (this._useNewScroll) {
-            // TODO SCROLL избавиться от scrollTop в BaseControl
-            this._scrollTop = params.scrollTop > 0 ? params.scrollTop : 0;
-            this._listVirtualScrollController.scrollPositionChange(params.scrollTop);
             _private.handleListScrollSync(this, params.scrollTop);
+            this._listVirtualScrollController.scrollPositionChange(params.scrollTop);
         } else {
             _private.handleListScrollSync(this, params.scrollTop);
             const result = this._scrollController?.scrollPositionChange({
@@ -3691,6 +3690,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._viewportSize = viewportHeight;
 
         if (this._useNewScroll) {
+            this._scrollTop = scrollTop;
             this._listVirtualScrollController.viewportResized(viewportHeight);
             // TODO SCROLL во viewportResizeHandler не должно быть scrollTop
             if (scrollTop !== undefined) {

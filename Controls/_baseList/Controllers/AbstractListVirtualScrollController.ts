@@ -194,7 +194,7 @@ export abstract class AbstractListVirtualScrollController<
         // достижение триггера долнжо подгрузить данные). В этом случае восстановление скролла будет запланировано
         // в indexesChangedCallback.
         if (!this._scheduledScrollParams) {
-            const edgeItem = this._scrollController.getEdgeVisibleItem({ direction: 'forward' });
+            const edgeItem = this._scrollController.getEdgeVisibleItem({ direction: 'backward' });
             this._scheduleScroll({
                 type: 'restoreScroll',
                 params: edgeItem
