@@ -27,7 +27,11 @@ export interface IItemsRange {
  * на _beforeRender для восстановления скролла
  */
 export interface IIndexesChangedParams {
-    shiftDirection: IDirection;
+    /**
+     * Направление, в котором был смещен диапазон.
+     * @remark Возможно значение null. Это значит, что не возможно определить направление. Например, reset.
+     */
+    shiftDirection: IDirection|null;
     range: IItemsRange;
     oldRange: IItemsRange;
     oldPlaceholders: IPlaceholders;

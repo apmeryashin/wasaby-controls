@@ -501,7 +501,7 @@ export class Calculator {
 
         const placeholdersChanged = this._updatePlaceholders();
 
-        return this._getRangeChangeResult(oldRange, 'forward', oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldRange, null, oldPlaceholders, placeholdersChanged);
     }
 
     // endregion HandleCollectionChanges
@@ -520,7 +520,7 @@ export class Calculator {
     }
 
     private _getRangeChangeResult(oldRange: IItemsRange,
-                                  shiftDirection: IDirection,
+                                  shiftDirection: IDirection|null,
                                   oldPlaceholders: IPlaceholders,
                                   placeholdersChanged: boolean): ICalculatorResult {
         const indexesChanged = oldRange.startIndex !== this._range.startIndex ||

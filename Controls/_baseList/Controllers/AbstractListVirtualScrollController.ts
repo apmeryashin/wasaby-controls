@@ -335,14 +335,16 @@ export abstract class AbstractListVirtualScrollController<
         // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
         // и мы будем знать актуальную scrollPosition.
         // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
-        this._scheduleScroll({
-            type: 'calculateRestoreScrollParams',
-            params: {
-                direction: params.shiftDirection,
-                range: params.oldRange,
-                placeholders: params.oldPlaceholders
-            } as IEdgeItemCalculatingParams
-        });
+        if (params.shiftDirection !== null) {
+            this._scheduleScroll({
+                type: 'calculateRestoreScrollParams',
+                params: {
+                    direction: params.shiftDirection,
+                    range: params.oldRange,
+                    placeholders: params.oldPlaceholders
+                } as IEdgeItemCalculatingParams
+            });
+        }
     }
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
