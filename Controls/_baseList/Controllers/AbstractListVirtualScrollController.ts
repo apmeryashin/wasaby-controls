@@ -36,7 +36,7 @@ import {
     IAbstractObserversControllerOptions,
     ITriggersPositions,
     ITriggersOffsetCoefficients,
-    ITriggersVisibility, ITriggerPosition
+    ITriggersVisibility, ITriggerPosition, IAdditionalTriggersOffsets
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
 
@@ -103,6 +103,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
     triggersPositions: ITriggersPositions;
+    additionalTriggersOffsets: IAdditionalTriggersOffsets;
 
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
@@ -264,6 +265,10 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.setForwardTriggerPosition(position);
     }
 
+    setAdditionalTriggersOffsets(additionalTriggersOffsets: IAdditionalTriggersOffsets): void {
+        this._scrollController.setAdditionalTriggersOffsets(additionalTriggersOffsets);
+    }
+
     // endregion Triggers
 
     private _createScrollController(options: TOptions): void {
@@ -283,6 +288,7 @@ export abstract class AbstractListVirtualScrollController<
             triggersVisibility: options.triggersVisibility,
             triggersOffsetCoefficients: options.triggersOffsetCoefficients,
             triggersPositions: options.triggersPositions,
+            additionalTriggersOffsets: options.additionalTriggersOffsets,
 
             scrollPosition: 0,
             viewportSize: options.virtualScrollConfig.viewportHeight || 0,

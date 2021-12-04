@@ -801,6 +801,13 @@ const _private = {
                     self._indicatorsController.hideIndicator(DIRECTION_COMPATIBILITY[direction]);
                 }
 
+                if (self._useNewScroll) {
+                    self._listVirtualScrollController.setAdditionalTriggersOffsets({
+                        backward: self._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                        forward: self._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
+                    });
+                }
+
                 return addedItems;
             }).addErrback((error: CancelableError) => {
                 if (self._destroyed) {
@@ -817,6 +824,13 @@ const _private = {
                 if (hideIndicatorOnCancelQuery) {
                     // при пересчете скроем все ненужые индикаторы
                     self._indicatorsController.recountIndicators(direction);
+
+                    if (self._useNewScroll) {
+                        self._listVirtualScrollController.setAdditionalTriggersOffsets({
+                            backward: self._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                            forward: self._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
+                        });
+                    }
                 }
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
                 if (!error.canceled && !error.isCanceled) {
@@ -3867,6 +3881,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 backward: this._sourceController && this._sourceController.hasMoreData('up') ? 'null' : 'offset',
                 forward: this._sourceController && this._sourceController.hasMoreData('down') ? 'null' : 'offset'
             },
+            additionalTriggersOffsets: {
+                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
+            },
             totalCount: this._listViewModel.getCount(),
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
@@ -4075,6 +4093,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
                 }
             }
+        }
+
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.setAdditionalTriggersOffsets({
+                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
+            });
         }
 
         _private.tryLoadToDirectionAgain(this);
@@ -4624,6 +4649,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shouldRestoreScrollPosition = true;
         }
 
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.setAdditionalTriggersOffsets({
+                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
+            });
+        }
+
         this._spaceBlocked = false;
 
         this._updateBaseControlModel(newOptions);
@@ -5091,6 +5123,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._indicatorsController.displayBottomIndicator();
                 } else if (direction === 'up' && this._indicatorsController.shouldDisplayTopIndicator()) {
                     this._indicatorsController.displayTopIndicator(false);
+                }
+
+                if (this._useNewScroll) {
+                    this._listVirtualScrollController.setAdditionalTriggersOffsets({
+                        backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                        forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
+                    });
                 }
 
                 this._handleLoadToDirection = false;
@@ -6729,6 +6768,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (this._indicatorsController.shouldDisplayBottomIndicator()) {
                 this._indicatorsController.displayBottomIndicator();
             }
+
+            if (this._useNewScroll) {
+                this._listVirtualScrollController.setAdditionalTriggersOffsets({
+                    backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                    forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
+                });
+            }
         }
 
         if (!this._pagingVisible) {
@@ -7183,6 +7229,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             if (this._indicatorsController.shouldDisplayTopIndicator()) {
                 this._indicatorsController.displayTopIndicator(true);
+
+                if (this._useNewScroll) {
+                    this._listVirtualScrollController.setAdditionalTriggersOffsets({
+                        backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                        forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
+                    });
+                }
             }
 
             if (this._isScrollShown) {

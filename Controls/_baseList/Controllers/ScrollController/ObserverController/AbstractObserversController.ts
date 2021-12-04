@@ -2,6 +2,7 @@ import type { EdgeIntersectionObserver } from 'Controls/scroll';
 import { Control } from 'UI/Base';
 import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { Logger } from 'UI/Utils';
+import {isEqual} from 'Types/object';
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
 
@@ -29,6 +30,11 @@ export interface ITriggersOffsetCoefficients {
     forward: number;
 }
 
+export interface IAdditionalTriggersOffsets {
+    backward: number;
+    forward: number;
+}
+
 export type TObserversCallback = (event: TIntersectionEvent) => void;
 
 export interface IAbstractObserversControllerBaseOptions {
@@ -39,6 +45,7 @@ export interface IAbstractObserversControllerBaseOptions {
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
     triggersPositions: ITriggersPositions;
+    additionalTriggersOffsets: IAdditionalTriggersOffsets;
 }
 
 export interface IAbstractObserversControllerOptions extends IAbstractObserversControllerBaseOptions {
@@ -75,6 +82,18 @@ export abstract class AbstractObserversController {
         forward: 0
     };
 
+    /**
+     * Размеры дополнительного отступа для триггеров.
+     * Используется, чтобы позиционировать триггер от ромашки, а не от края списка.
+     * Можно избавиться, если позиционировать триггер с помощью transform=`translateY({offset}px), но
+     * нужн решить проблему с пробелом перед списком, если триггер релативный https://jsfiddle.net/hg7qc8s1/49/
+     * @private
+     */
+    private _additionalTriggersOffsets: IAdditionalTriggersOffsets = {
+        backward: 0,
+        forward: 0
+    };
+
     private _observer: EdgeIntersectionObserver;
     private readonly _observersCallback: TObserversCallback;
 
@@ -88,6 +107,7 @@ export abstract class AbstractObserversController {
 
         this._triggersOffsetCoefficients = options.triggersOffsetCoefficients;
         this._triggersPositions = options.triggersPositions;
+        this._additionalTriggersOffsets = options.additionalTriggersOffsets;
 
         if (this._listContainer) {
             this._updateTriggers();
@@ -145,6 +165,15 @@ export abstract class AbstractObserversController {
     setForwardTriggerPosition(position: ITriggerPosition): ITriggersOffsets {
         if (this._triggersPositions.forward !== position) {
             this._triggersPositions.forward = position;
+            this._recalculateOffsets();
+        }
+
+        return this.getTriggersOffsets();
+    }
+
+    setAdditionalTriggersOffsets(additionalTriggersOffsets: IAdditionalTriggersOffsets): ITriggersOffsets {
+        if (!isEqual(this._additionalTriggersOffsets, additionalTriggersOffsets)) {
+            this._additionalTriggersOffsets = additionalTriggersOffsets;
             this._recalculateOffsets();
         }
 
@@ -216,12 +245,15 @@ export abstract class AbstractObserversController {
     // endregion OnCollectionChange
 
     private _recalculateOffsets(): void {
-        const newBackwardTriggerOffset = this._triggersPositions.backward === 'null'
+        let newBackwardTriggerOffset = this._triggersPositions.backward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.backward;
-        const newForwardTriggerOffset = this._triggersPositions.forward === 'null'
+        let newForwardTriggerOffset = this._triggersPositions.forward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.forward;
+
+        newBackwardTriggerOffset += this._additionalTriggersOffsets.backward;
+        newForwardTriggerOffset += this._additionalTriggersOffsets.forward;
 
         const backwardTriggerOffsetChanged = this._triggersOffsets.backward !== newBackwardTriggerOffset;
         const forwardTriggerOffsetChanged = this._triggersOffsets.forward !== newForwardTriggerOffset;

@@ -7,6 +7,7 @@ import {
     AbstractObserversController,
     IAbstractObserversControllerBaseOptions,
     IAbstractObserversControllerOptions,
+    IAdditionalTriggersOffsets,
     ITriggerPosition,
     TIntersectionEvent
 } from './ObserverController/AbstractObserversController';
@@ -120,6 +121,7 @@ export class ScrollController {
             triggersVisibility: options.triggersVisibility,
             triggersOffsetCoefficients: options.triggersOffsetCoefficients,
             triggersPositions: options.triggersPositions,
+            additionalTriggersOffsets: options.additionalTriggersOffsets,
             observersCallback: this._observersCallback.bind(this)
         });
 
@@ -181,6 +183,11 @@ export class ScrollController {
     setForwardTriggerPosition(position: ITriggerPosition): void {
         const triggerOffsets = this._observersController.setForwardTriggerPosition(position);
         this._calculator.setTriggerOffsets(triggerOffsets);
+    }
+
+    setAdditionalTriggersOffsets(additionalTriggersOffsets: IAdditionalTriggersOffsets): void {
+        const triggersOffsets = this._observersController.setAdditionalTriggersOffsets(additionalTriggersOffsets);
+        this._calculator.setTriggerOffsets(triggersOffsets);
     }
 
     checkTriggerVisibility(direction: IDirection): void {
