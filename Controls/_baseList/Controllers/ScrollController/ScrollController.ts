@@ -103,6 +103,9 @@ export class ScrollController {
     private readonly _itemsEndedCallback: IItemsEndedCallback;
     private readonly _indexesInitializedCallback: IIndexesInitializedCallback;
 
+    private _viewportSize: number;
+    private _contentSize: number;
+
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
         this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
@@ -110,6 +113,9 @@ export class ScrollController {
         this._activeElementChangedCallback = options.activeElementChangedCallback;
         this._itemsEndedCallback = options.itemsEndedCallback;
         this._indexesInitializedCallback = options.indexesInitializedCallback;
+
+        this._viewportSize = options.viewportSize;
+        this._contentSize = options.contentSize;
 
         this._itemsSizesController = new options.itemsSizeControllerConstructor({
             itemsContainer: options.itemsContainer,
@@ -154,11 +160,25 @@ export class ScrollController {
     }
 
     viewportResized(viewportSize: number): void {
-        const triggerOffsets = this._observersController.setViewportSize(viewportSize);
-        this._calculator.setTriggerOffsets(triggerOffsets);
-        this._calculator.setViewportSize(viewportSize);
+        if (this._viewportSize !== viewportSize) {
+            this._viewportSize = viewportSize;
 
-        this._updateItemsSizes();
+            const triggerOffsets = this._observersController.setViewportSize(viewportSize);
+            this._calculator.setTriggerOffsets(triggerOffsets);
+            this._calculator.setViewportSize(viewportSize);
+
+            this._updateItemsSizes();
+        }
+    }
+
+    contentResized(contentSize: number): void {
+        if (this._contentSize !== contentSize) {
+            this._contentSize = contentSize;
+
+            this._updateItemsSizes();
+            this._calculator.setContentSize(contentSize);
+            this._observersController.setContentSize(contentSize);
+        }
     }
 
     getElement(key: CrudEntityKey): HTMLElement {
@@ -252,12 +272,6 @@ export class ScrollController {
 
     updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
         this._calculator.updateGivenItemsSizes(itemsSizes);
-    }
-
-    contentResized(contentSize: number): void {
-        this._updateItemsSizes();
-        this._calculator.setContentSize(contentSize);
-        this._observersController.setContentSize(contentSize);
     }
 
     private _updateItemsSizes(itemsRange?: IItemsRange): void {
@@ -367,7 +381,7 @@ export class ScrollController {
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
         const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
         const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
-        return edgeItem.direction === 'backward' ? scrollPosition + beforeContentSize : scrollPosition;
+        return edgeItem.direction === 'forward' ? scrollPosition - beforeContentSize : scrollPosition;
     }
 
     /**

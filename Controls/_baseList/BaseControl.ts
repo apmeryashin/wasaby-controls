@@ -974,7 +974,8 @@ const _private = {
         const sourceController = self._sourceController;
         const hasMoreData = self._hasMoreData(direction);
         const allowLoadByLoadedItems =
-            _private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig) ?
+            _private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig)
+            && !self._options.disableVirtualScroll ?
                 !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
                 true;
         const allowLoadBySource =
@@ -1067,13 +1068,16 @@ const _private = {
                 if (!self._sourceController?.getLoadError()) {
                     if (direction === 'up') {
                         if (self._useNewScroll) {
-                            self._listVirtualScrollController.scrollToEdge('backward').then((key) => {
-                                self._setMarkedKeyAfterPaging(key);
-                                if (_private.isPagingNavigation(self._options.navigation)) {
-                                    self._currentPage = 1;
-                                }
-                                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
-                                scrollToEdgePromiseResolver();
+                            // нужно дождаться когда отрисуются новые элементы
+                            _private.doAfterRender(self, () => {
+                                self._listVirtualScrollController.scrollToEdge('backward').then((key) => {
+                                    self._setMarkedKeyAfterPaging(key);
+                                    if (_private.isPagingNavigation(self._options.navigation)) {
+                                        self._currentPage = 1;
+                                    }
+                                    self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
+                                    scrollToEdgePromiseResolver();
+                                });
                             });
                         } else {
                             if (_private.isPagingNavigation(self._options.navigation)) {
@@ -1088,11 +1092,15 @@ const _private = {
                         }
                     } else {
                         if (self._useNewScroll) {
-                            self._listVirtualScrollController.scrollToEdge('forward').then((key) => {
-                                self._setMarkedKeyAfterPaging(key);
-                                if (_private.isPagingNavigation(self._options.navigation)) {
-                                    self._currentPage = self._knownPagesCount;
-                                }
+                            // нужно дождаться когда отрисуются новые элементы
+                            _private.doAfterRender(self, () => {
+                                self._listVirtualScrollController.scrollToEdge('forward').then((key) => {
+                                    self._setMarkedKeyAfterPaging(key);
+                                    if (_private.isPagingNavigation(self._options.navigation)) {
+                                        self._currentPage = self._knownPagesCount;
+                                    }
+                                    scrollToEdgePromiseResolver();
+                                });
                             });
                         } else {
                             if (_private.isPagingNavigation(self._options.navigation)) {
@@ -3976,6 +3984,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (this._useNewScroll) {
             this._listVirtualScrollController.setListContainer(this._container);
+            this._listVirtualScrollController.afterMountListControl();
         }
 
         if (constants.isBrowserPlatform) {

@@ -177,6 +177,11 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.setListContainer(listContainer);
     }
 
+    afterMountListControl(): void {
+        this._handleScheduledUpdateHasItemsOutRange();
+        this._handleScheduledCheckTriggerVisibility();
+    }
+
     beforeRenderListControl(): void {
         this._handleScheduledScroll();
     }
