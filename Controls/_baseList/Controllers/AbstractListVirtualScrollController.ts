@@ -127,6 +127,19 @@ export abstract class AbstractListVirtualScrollController<
     private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     private readonly _updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
 
+    /**
+     * Флаг, который означает что текущий цикл синхронизации был вызван изменением индексов коллекции
+     * @private
+     */
+    private _collectionIndexesWasChanged: boolean = false;
+
+    /**
+     * Флаг, который означает что в текущий момент мы отрисовываем изменения коллекции.
+     * Нужно для того, чтобы вызвать запланированное обновление размер элементов именно после отрисовки этих элементов.
+     * @private
+     */
+    private _renderCollectionChanges: boolean = false;
+
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
@@ -178,8 +191,17 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterMountListControl(): void {
+        this._renderCollectionChanges = true;
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledCheckTriggerVisibility();
+        this._renderCollectionChanges = false;
+    }
+
+    beforeUpdateListControl(): void {
+        // Этот цикл синхронизации мог быть вызван не изменением коллекции
+        if (this._collectionIndexesWasChanged) {
+            this._renderCollectionChanges = true;
+        }
     }
 
     beforeRenderListControl(): void {
@@ -187,10 +209,17 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterRenderListControl(): void {
-        this._updateItemsSizes();
+        this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll();
         this._handleScheduledCheckTriggerVisibility();
+
+        if (this._collectionIndexesWasChanged) {
+            this._collectionIndexesWasChanged = false;
+        }
+        if (this._renderCollectionChanges) {
+            this._renderCollectionChanges = false;
+        }
     }
 
     saveScrollPosition(): void {
@@ -246,10 +275,17 @@ export abstract class AbstractListVirtualScrollController<
 
     contentResized(contentSize: number): void {
         this._scrollController.contentResized(contentSize);
+        const changed = this._scrollController.contentResized(contentSize);
+        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+            this._scrollController.updateItemsSizes();
+        }
     }
 
     viewportResized(viewportSize: number): void {
-        this._scrollController.viewportResized(viewportSize);
+        const changed = this._scrollController.viewportResized(viewportSize);
+        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+            this._scrollController.updateItemsSizes();
+        }
     }
 
     // region Triggers
@@ -323,6 +359,7 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
+        this._collectionIndexesWasChanged = true;
         this._scheduleUpdateItemsSizes(params.range);
         // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
         // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
@@ -368,8 +405,10 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
-    private _updateItemsSizes(): void {
-        if (this._itemsRangeScheduledSizeUpdate) {
+    private _handleScheduledUpdateItemsSizes(): void {
+        // Обновляем размеры, только тогда, когда отрендирились изменения коллекции.
+        // Т.к. мы планировали обновить размеры после изменения индексов.
+        if (this._itemsRangeScheduledSizeUpdate && this._renderCollectionChanges) {
             this._scrollController.updateItemsSizes(this._itemsRangeScheduledSizeUpdate);
             this._itemsRangeScheduledSizeUpdate = null;
         }

@@ -159,26 +159,27 @@ export class ScrollController {
         });
     }
 
-    viewportResized(viewportSize: number): void {
-        if (this._viewportSize !== viewportSize) {
+    viewportResized(viewportSize: number): boolean {
+        const changed = this._viewportSize !== viewportSize;
+        if (changed) {
             this._viewportSize = viewportSize;
 
             const triggerOffsets = this._observersController.setViewportSize(viewportSize);
             this._calculator.setTriggerOffsets(triggerOffsets);
             this._calculator.setViewportSize(viewportSize);
-
-            this._updateItemsSizes();
         }
+        return changed;
     }
 
-    contentResized(contentSize: number): void {
-        if (this._contentSize !== contentSize) {
+    contentResized(contentSize: number): boolean {
+        const changed = this._contentSize !== contentSize;
+        if (changed) {
             this._contentSize = contentSize;
 
-            this._updateItemsSizes();
             this._calculator.setContentSize(contentSize);
             this._observersController.setContentSize(contentSize);
         }
+        return changed;
     }
 
     getElement(key: CrudEntityKey): HTMLElement {
@@ -266,18 +267,13 @@ export class ScrollController {
 
     // region Update items sizes
 
-    updateItemsSizes(itemsRange: IItemsRange): void {
-        this._updateItemsSizes(itemsRange);
+    updateItemsSizes(itemsRange: IItemsRange = this._calculator.getRange()): void {
+        const newItemsSizes = this._itemsSizesController.updateItemsSizes(itemsRange);
+        this._calculator.updateItemsSizes(newItemsSizes);
     }
 
     updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
         this._calculator.updateGivenItemsSizes(itemsSizes);
-    }
-
-    private _updateItemsSizes(itemsRange?: IItemsRange): void {
-        const range = itemsRange || this._calculator.getRange();
-        const newItemsSizes = this._itemsSizesController.updateItemsSizes(range);
-        this._calculator.updateItemsSizes(newItemsSizes);
     }
 
     // endregion Update items sizes

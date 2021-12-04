@@ -4111,6 +4111,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             });
         }
 
+        // TODO SCROLL по идее это не нужно с новым скроллом, т.к. мы в новом контроллере проверим видимость триггера
+        //  и спровоцируем подгрузку по нему
         _private.tryLoadToDirectionAgain(this);
     }
 
@@ -4663,6 +4665,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
                 forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
             });
+            this._listVirtualScrollController.beforeUpdateListControl();
         }
 
         this._spaceBlocked = false;
