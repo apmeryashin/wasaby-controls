@@ -130,7 +130,7 @@ export abstract class AbstractListVirtualScrollController<
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
-    private _directionScheduledCheckTriggerVisibility: IDirection;
+    private _scheduledCheckTriggersVisibility: boolean;
 
     /**
      * Колбэк, который вызывается когда завершился скролл к элементу. Скролл к элементу вызывается асинхронно.
@@ -320,9 +320,9 @@ export abstract class AbstractListVirtualScrollController<
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
         this._scheduleUpdateItemsSizes(params.range);
         // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
-        // Поэтому на после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
+        // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
         // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
-        // TODO SCROLL this._scheduleCheckTriggerVisibility(params.shiftDirection);
+        this._scheduleCheckTriggersVisibility();
 
         // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
         // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
@@ -368,13 +368,14 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
-    private _scheduleCheckTriggerVisibility(direction: IDirection) {
-        this._directionScheduledCheckTriggerVisibility = direction;
+    private _scheduleCheckTriggersVisibility() {
+        this._scheduledCheckTriggersVisibility = true;
     }
 
     private _handleScheduledCheckTriggerVisibility(): void {
-        if (this._directionScheduledCheckTriggerVisibility) {
-            this._scrollController.checkTriggerVisibility(this._directionScheduledCheckTriggerVisibility);
+        if (this._scheduledCheckTriggersVisibility) {
+            this._scheduledCheckTriggersVisibility = false;
+            this._scrollController.checkTriggersVisibility();
         }
     }
 

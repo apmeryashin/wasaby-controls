@@ -4877,10 +4877,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _afterRender(): void {
-        if (this._useNewScroll) {
-            this._listVirtualScrollController.afterRenderListControl();
-            this._hasItemWithImageChanged = false;
-        }
 
         let positionRestored = false;
 
@@ -4888,6 +4884,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._container) {
             this._viewSize = _private.getViewSize(this, true);
         }
+
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.afterRenderListControl();
+            this._hasItemWithImageChanged = false;
+        }
+
         if (this._recalcPagingVisible) {
             if (!this._pagingVisible) {
                 _private.initPaging(this);

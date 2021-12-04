@@ -184,17 +184,13 @@ export abstract class AbstractObserversController {
         return this._triggersOffsets;
     }
 
-    checkTriggerVisibility(direction: IDirection): void {
-        // После отрисовки записей, мы обновляем их размер в состоянии.
-        // Возможна ситуация, что записей недостаточно, чтобы заполнить вьюпорт.
-        // Поэтому нужно инициализировать подгрузку(или смещение диапазона, если криво настроен виртуальный скролл).
-        // НО observerCallback не сработает, т.к. он был до этого виден и остался виден.
-        // Сами проверяем, что триггер виден и вызываем колбэк.
-
+    checkTriggersVisibility(): void {
         // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
-
-        if (this._isTriggerVisible(direction)) {
-            this._observersCallback(direction === 'forward' ? 'bottomIn' : 'topIn');
+        if (this._isTriggerVisible('forward')) {
+            this._observersCallback('bottomIn');
+        }
+        if (this._isTriggerVisible('backward')) {
+            this._observersCallback('topIn');
         }
     }
 

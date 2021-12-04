@@ -190,8 +190,8 @@ export class ScrollController {
         this._calculator.setTriggerOffsets(triggersOffsets);
     }
 
-    checkTriggerVisibility(direction: IDirection): void {
-        this._observersController.checkTriggerVisibility(direction);
+    checkTriggersVisibility(): void {
+        this._observersController.checkTriggersVisibility();
     }
 
     // endregion Triggers
@@ -308,10 +308,11 @@ export class ScrollController {
      * @param count Кол-во удаленных элементов.
      */
     removeItems(position: number, count: number): void {
+        const result = this._calculator.removeItems(position, count);
+
         const itemsSizes = this._itemsSizesController.removeItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        const result = this._calculator.removeItems(position, count);
         this._processCalculatorResult(result);
     }
 
