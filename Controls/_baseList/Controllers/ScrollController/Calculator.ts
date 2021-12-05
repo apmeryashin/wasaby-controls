@@ -303,15 +303,6 @@ export class Calculator {
         return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
     }
 
-    /**
-     * Возвращает, что элемент по переданному index находится внутри виртуального диапазона
-     * @param index Индекс элемента
-     * @return {boolean}
-     */
-    private _isItemInRange(index: number): boolean {
-        return index >= this._range.startIndex && index < this._range.endIndex;
-    }
-
     // endregion ShiftRangeByIndex
 
     // region ShiftRangeByScrollPosition
@@ -378,30 +369,38 @@ export class Calculator {
      * @param count Кол-во добавленных записей
      */
     addItems(position: number, count: number): ICalculatorResult {
-        const oldRange = this._range;
+        const oldRange = {...this._range};
         const oldPlaceholders = this._placeholders;
         this._totalCount += count;
 
         const direction = this._calcAddDirection(position, count);
+        const isItemInRange = this._isItemInRange(position);
+        // 0 - уникальное значение, т.к. до нуля индекса не может быть
+        const addItemsBeforeRange = position < this._range.startIndex || position === 0;
 
         // Корректируем старый диапазон. Т.к. записи добавились  в начало, то все индексы сместятся на count
-        if (position === 0) {
+        if (addItemsBeforeRange) {
             this._range.startIndex = Math.min(this._totalCount, this._range.startIndex + count);
             this._range.endIndex = Math.min(this._totalCount, this._range.endIndex + count);
         }
 
-        this._range = shiftRangeBySegment({
-            currentRange: this._range,
-            direction,
-            pageSize: this._virtualScrollConfig.pageSize,
-            segmentSize: this._getSegmentSize(),
-            totalCount: this._totalCount,
-            viewportSize: this._viewportSize,
-            contentSize: this._contentSize,
-            triggersOffsets: this._triggersOffsets,
-            itemsSizes: this._itemsSizes,
-            placeholders: this._placeholders
-        });
+        // Смещаем диапазон, только если новые записи добавили внутрь текущего диапазона.
+        // Если записи добавили до диапазона, то достаточно смещения диапазона выше
+        // Если записи добавили после диапазона, то это никак не влияет на текущий диапазон
+        if (isItemInRange) {
+            this._range = shiftRangeBySegment({
+                currentRange: this._range,
+                direction,
+                pageSize: this._virtualScrollConfig.pageSize,
+                segmentSize: count,
+                totalCount: this._totalCount,
+                viewportSize: this._viewportSize,
+                contentSize: this._contentSize,
+                triggersOffsets: this._triggersOffsets,
+                itemsSizes: this._itemsSizes,
+                placeholders: this._placeholders
+            });
+        }
 
         const placeholdersChanged = this._updatePlaceholders();
         return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
@@ -446,25 +445,37 @@ export class Calculator {
      * @param count Кол-во удаленных элементов.
      */
     removeItems(position: number, count: number): ICalculatorResult {
-        const oldRange = this._range;
+        const oldRange = {...this._range};
         const oldPlaceholders = this._placeholders;
         const direction = position <= this._range.startIndex ? 'backward' : 'forward';
+        const isItemInRange = this._isItemInRange(position);
+        // 0 - уникальное значение, т.к. до нуля индекса не может быть
+        const removeItemsBeforeRange = position < this._range.startIndex || position === 0;
+
         let placeholdersChanged;
 
         this._totalCount -= count;
 
-        this._range = shiftRangeBySegment({
-            currentRange: this._range,
-            direction,
-            pageSize: this._virtualScrollConfig.pageSize,
-            segmentSize: count,
-            totalCount: this._totalCount,
-            viewportSize: this._viewportSize,
-            contentSize: this._contentSize,
-            triggersOffsets: this._triggersOffsets,
-            itemsSizes: this._itemsSizes,
-            placeholders: this._placeholders
-        });
+        // Корректируем старый диапазон. Т.к. записи удалились с начала, то все индексы сместятся на count
+        if (removeItemsBeforeRange) {
+            this._range.startIndex = Math.max(0, this._range.startIndex - count);
+            this._range.endIndex = Math.max(0, this._range.endIndex - count);
+        }
+
+        if (isItemInRange) {
+            this._range = shiftRangeBySegment({
+                currentRange: this._range,
+                direction,
+                pageSize: this._virtualScrollConfig.pageSize,
+                segmentSize: count,
+                totalCount: this._totalCount,
+                viewportSize: this._viewportSize,
+                contentSize: this._contentSize,
+                triggersOffsets: this._triggersOffsets,
+                itemsSizes: this._itemsSizes,
+                placeholders: this._placeholders
+            });
+        }
 
         placeholdersChanged = this._updatePlaceholders();
 
@@ -563,6 +574,15 @@ export class Calculator {
             segmentSize = Math.ceil(virtualScrollConfig.pageSize / RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT);
         }
         return segmentSize;
+    }
+
+    /**
+     * Возвращает, что элемент по переданному index находится внутри виртуального диапазона
+     * @param index Индекс элемента
+     * @return {boolean}
+     */
+    private _isItemInRange(index: number): boolean {
+        return index >= this._range.startIndex && index <= this._range.endIndex;
     }
 
     /**
