@@ -1,0 +1,28 @@
+<div class="{{item.getItemClasses({
+    'highlightOnHover': highlightOnHover,
+    'cursor': cursor,
+    'clickable': clickable
+})}}"
+     attr:key="{{item.key}}"
+     attr:data-qa="{{ item.listElementName }}">
+    <div class="{{ item.getContentClasses(backgroundColorStyle, cursor, highlightOnHover) }}">
+        <!-- Отступы для выравнивания с экспандером -->
+        <ws:if data="{{item.shouldDisplayExpanderBlock()}}">
+            <ws:if data="{{!withoutLevelPadding && item.getLevel() > 1}}">
+                <ws:for data="i in item.getLevel() - 1">
+                    <div class="{{item.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
+                </ws:for>
+            </ws:if>
+            <ws:if data="{{item.shouldDisplayExpanderPadding(expanderIcon)}}">
+                <div class="{{item.getExpanderPaddingClasses(expanderSize)}}"></div>
+            </ws:if>
+        </ws:if>
+
+        <ws:partial template="Controls/list:NavigationButtonTemplate"
+                    buttonView="{{navigationButtonView}}"
+                    buttonConfig="{{navigationButtonConfig}}"
+                    linkFontColorStyle="{{ item.getMoreFontColorStyle() }}"
+                    linkFontSize="xs"
+                    linkClass="controls-Tree__nodeHeaderLoadMore"/>
+    </div>
+</div>

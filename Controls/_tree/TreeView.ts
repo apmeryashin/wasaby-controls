@@ -22,7 +22,15 @@ export default class TreeView extends ListView {
         if (dispItem['[Controls/tree:TreeNodeFooterItem]']) {
             e.stopImmediatePropagation();
             if (e.target.closest('.js-controls-BaseControl__NavigationButton')) {
-                this._notify('loadMore', [dispItem.getNode()]);
+                this._notify('loadMore', [dispItem.getNode(), 'down']);
+            }
+            return;
+        }
+
+        if (dispItem['[Controls/tree:TreeNodeHeaderItem]']) {
+            e.stopImmediatePropagation();
+            if (e.target.closest('.js-controls-BaseControl__NavigationButton')) {
+                this._notify('loadMore', [dispItem.getNode(), 'up']);
             }
             return;
         }
@@ -31,7 +39,7 @@ export default class TreeView extends ListView {
     }
 
     protected _onItemMouseUp(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
-        if (dispItem['[Controls/tree:TreeNodeFooterItem]']) {
+        if (dispItem['[Controls/tree:TreeNodeFooterItem]'] || dispItem['[Controls/tree:TreeNodeHeaderItem]']) {
             e.stopImmediatePropagation();
             return;
         }
@@ -40,7 +48,7 @@ export default class TreeView extends ListView {
     }
 
     protected _onItemMouseDown(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
-        if (dispItem['[Controls/tree:TreeNodeFooterItem]']) {
+        if (dispItem['[Controls/tree:TreeNodeFooterItem]'] || dispItem['[Controls/tree:TreeNodeHeaderItem]']) {
             e.stopImmediatePropagation();
             return;
         }

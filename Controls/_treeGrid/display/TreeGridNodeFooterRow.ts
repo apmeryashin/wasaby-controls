@@ -71,7 +71,7 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         // Нужно рисовать футер если:
         //  * есть данные для загрузки и нужно показывать нашу кнопку "Ещё"
         //  * нет данных для загрузки и есть пользовательский контент
-        return this.hasMoreStorage() ? this.needMoreButton() : !!content;
+        return this.hasMoreStorage('forward') ? this.needMoreButton() : !!content;
     }
 
     isSticked(): boolean {
@@ -104,7 +104,7 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         const hideForLastNode = collection.getMoreButtonVisibility() === MoreButtonVisibility.exceptLastNode;
 
         const needHide =
-            !this.hasMoreStorage() ||
+            !this.hasMoreStorage('forward') ||
             (hideForLastNode && dataRowIsLastCollectionItem && !collection.getFooter());
 
         return !needHide;

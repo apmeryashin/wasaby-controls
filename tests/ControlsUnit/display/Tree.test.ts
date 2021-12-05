@@ -2541,7 +2541,11 @@ describe('Controls/_display/Tree', () => {
             assert.isFalse(hasNodeFooter);
 
             // футеры сразу пересчитываются, т.к. передали флаг
-            tree.setHasMoreStorage({1: true}, true);
+            tree.setHasMoreStorage({
+                1: {
+                    forward: true,
+                    backward: false
+                }}, true);
 
             items = tree.getItems();
             // проверяем что создался узел
@@ -2611,7 +2615,12 @@ describe('Controls/_display/Tree', () => {
 
             // hasMoreStorage пересчитывается только после подгрузки в узел, поэтому нодФутеры
             // пересчитаются только, когда добавятся новые элементы
-            tree.setHasMoreStorage({1: true});
+            tree.setHasMoreStorage({
+                1: {
+                    forward: true,
+                    backward: false
+                }
+            });
             rs.add(new Model({
                 rawData: {id: 12, node: null, pid: 1}
             }));

@@ -268,7 +268,12 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             parentProperty: 'parent',
             nodeProperty: 'node',
             expandedItems: [null],
-            hasMoreStorage: {2: true}
+            hasMoreStorage: {
+               2: {
+                  backward: false,
+                  forward: true
+               }
+            }
          });
          const strategy = new TreeSelectionStrategy({
             selectDescendants: true,

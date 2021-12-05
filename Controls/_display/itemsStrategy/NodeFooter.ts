@@ -31,7 +31,7 @@ export function shouldDisplayNodeFooterTemplate(
 ): boolean {
     // если темплейт не задан, то мы точно его не будем отображать. А если есть данные еще,
     // то в первую очередь отображается кнопка Еще
-    if (!hasNodeFooterViewConfig || item.hasMoreStorage()) {
+    if (!hasNodeFooterViewConfig || item.hasMoreStorage('forward')) {
         return false;
     }
 
@@ -217,7 +217,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
                     itemModule: options.nodeFooterModule,
                     contents: nodeFooterContent,
                     parent: item,
-                    hasMore: item.hasMoreStorage(),
+                    hasMore: item.getHasMoreStorage(),
                     moreFontColorStyle: options.display.getMoreFontColorStyle()
                 });
                 options.nodeFooters.splice(index, 0, nodeFooter);
@@ -298,7 +298,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             // nodeFooterVisibilityCallback вызываем только когда будем отображать прикладной темплейт,
             // если отображаем Еще, то всегда показываем nodeFooter
             if (
-                item.hasMoreStorage() ||
+                item.hasMoreStorage('forward') ||
                 shouldDisplayNodeFooterTemplate(item, hasNodeFooterViewConfig, nodeFooterVisibilityCallback)
             ) {
                 nodesWithFooter.push(item);

@@ -423,6 +423,7 @@ Object.assign(TreeGridCollection.prototype, {
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
     _itemModule: 'Controls/treeGrid:TreeGridDataRow',
     _nodeFooterModule: 'Controls/treeGrid:TreeGridNodeFooterRow',
+    _nodeHeaderModule: 'Controls/treeGrid:TreeGridNodeHeaderRow',
     _$groupNodeVisibility: 'visible',
     _$nodeTypeProperty: null
 });

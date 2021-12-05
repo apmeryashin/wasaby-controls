@@ -722,7 +722,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       let result = true;
 
-      const hasMore = node['[Controls/_display/TreeItem]'] && node.hasMoreStorage();
+      const hasMore = node['[Controls/_display/TreeItem]'] &&
+          (node.hasMoreStorage('forward') || node.hasMoreStorage('backward'));
       if (childes.getCount() && !hasMore) {
          for (let i = 0; i < childes.getCount(); i++) {
             const child = childes.at(i);
