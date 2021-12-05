@@ -1264,8 +1264,6 @@ const _private = {
         _private.doAfterUpdate(self, () => {
             self._isScrollShown = true;
 
-            self._viewSize = _private.getViewSize(self, true);
-
             self._updateHeights();
 
             if (_private.needScrollPaging(self._options.navigation)) {
