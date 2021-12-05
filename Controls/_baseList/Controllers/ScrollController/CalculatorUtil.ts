@@ -32,7 +32,6 @@ interface IGetSegmentSizeToHideParams {
     triggersOffsets: ITriggersOffsets;
     placeholders: IPlaceholders;
     itemsSizes: IItemsSizes;
-    segmentSize: number;
     viewportSize: number;
     contentSize: number;
 }
@@ -89,7 +88,7 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
     }
 
     // Нельзя скрывать записи на заданный segmentSize, т.к. этого может быть много и мы сразу же увидим триггер.
-    const segmentSizeToHide = getSegmentSizeToHide({...params, segmentSize: correctedSegmentSize});
+    const segmentSizeToHide = getSegmentSizeToHide(params);
     if (direction === 'backward') {
         startIndex = Math.max(0, startIndex - correctedSegmentSize);
         if (startIndex >= totalCount) {
@@ -117,19 +116,12 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
  * Смещение на заданный segmentSize может сразу же вызвать shiftRange по триггеру.
  */
 function getSegmentSizeToHide(params: IGetSegmentSizeToHideParams): number {
-    if (params.currentRange.endIndex - params.currentRange.startIndex <= 0) {
-        return 0;
-    }
-
     const shiftDirection = params.direction;
-    let segmentSize;
     if (shiftDirection === 'forward') {
-        segmentSize = getSegmentSizeToHideBackward(params);
+        return getSegmentSizeToHideBackward(params);
     } else {
-        segmentSize = getSegmentSizeToHideForward(params);
+        return getSegmentSizeToHideForward(params);
     }
-    // Нельзя скрывать записей больше, чем будем смещать диапазон
-    return Math.min(segmentSize, params.segmentSize);
 }
 
 function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
