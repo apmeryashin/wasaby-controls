@@ -79,6 +79,7 @@ type IDoScrollUtil = (scrollParam: IScrollParam) => void;
 type IUpdateShadowsUtil = (hasItems: IHasItemsOutRange) => void;
 type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
 type IUpdateVirtualNavigationUtil = (hasItems: IHasItemsOutRange) => void;
+type IHasItemsOutRangeChangedCallback = (hasItems: IHasItemsOutRange) => void;
 export type IAbstractItemsSizesControllerConstructor =
     new (options: IAbstractItemsSizesControllerOptions) => AbstractItemsSizesController;
 export type IAbstractObserversControllerConstructor =
@@ -99,6 +100,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
     updateShadowsUtil: IUpdateShadowsUtil;
     updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
+    hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
@@ -126,6 +128,7 @@ export abstract class AbstractListVirtualScrollController<
     private readonly _updateShadowsUtil: IUpdateShadowsUtil;
     private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     private readonly _updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
+    private readonly _hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
     /**
      * Флаг, который означает что текущий цикл синхронизации был вызван изменением индексов коллекции
@@ -170,6 +173,7 @@ export abstract class AbstractListVirtualScrollController<
         this._updateShadowsUtil = options.updateShadowsUtil;
         this._updatePlaceholdersUtil = options.updatePlaceholdersUtil;
         this._updateVirtualNavigationUtil = options.updateVirtualNavigationUtil;
+        this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
 
         this._setCollectionIterator(options.virtualScrollConfig.mode);
         this._createScrollController(options);
@@ -350,6 +354,7 @@ export abstract class AbstractListVirtualScrollController<
             },
             hasItemsOutRangeChangedCallback: (hasItemsOutRange: IHasItemsOutRange): void => {
                 this._scheduleUpdateHasItemsOutRange(hasItemsOutRange);
+                this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
             },
             activeElementChangedCallback: options.activeElementChangedCallback,
             itemsEndedCallback: options.itemsEndedCallback

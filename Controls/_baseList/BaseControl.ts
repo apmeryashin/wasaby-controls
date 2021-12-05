@@ -1264,7 +1264,7 @@ const _private = {
         _private.doAfterUpdate(self, () => {
             self._isScrollShown = true;
 
-            self._viewSize = _private.getViewSize(this, true);
+            self._viewSize = _private.getViewSize(self, true);
 
             self._updateHeights();
 
@@ -3642,8 +3642,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         _private.createScrollController(self, newOptions);
-        self._createIndicatorsController(newOptions);
         self._createListVirtualScrollController(newOptions);
+        self._createIndicatorsController(newOptions);
     }
 
     _initKeyProperty(options: TOptions): void {
@@ -3913,6 +3913,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     bottom: placeholders.forward
                 };
                 this._notify('updatePlaceholdersSize', [convertedPlaceholders], {bubbling: true});
+            },
+
+            hasItemsOutRangeChangedCallback: (hasItemsOutRange) => {
+                // для ромашек
+                this._hasItemsOutRange = hasItemsOutRange;
             },
 
             updateShadowsUtil: (hasItemsOutRange) => {
@@ -7294,8 +7299,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _hasHiddenItemsByVirtualScroll(direction: 'up'|'down'): boolean {
-        // TODO SCROLL
-        return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
+        if (this._useNewScroll) {
+            const compatibleDirection = direction === 'up' ? 'backward' : 'forward';
+            return this._hasItemsOutRange && this._hasItemsOutRange[compatibleDirection];
+        } else {
+            return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
+        }
     }
 
     private _scrollToFirstItemAfterDisplayTopIndicator(onDrawItems: boolean = false): void {
