@@ -3882,6 +3882,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             updateShadowsUtil: (hasItemsOutRange) => {
                 const collection = this._listViewModel;
+                const collection2 = this._listViewModel;
                 const navigation = this._options.navigation;
                 const itemsCount = collection?.getCount();
                 const shadowVisibleByNavigation = _private.needShowShadowByNavigation(navigation, itemsCount);
