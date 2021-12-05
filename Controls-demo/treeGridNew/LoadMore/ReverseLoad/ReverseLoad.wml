@@ -6,6 +6,7 @@
             markerVisibility="hidden"
             parentProperty="parent"
             navigation="{{_navigation}}"
+            nodeMoreCaption="Показать еще ответы..."
             nodeProperty="type">
         <ws:itemTemplate>
             <ws:partial template="Controls/treeGrid:ItemTemplate" scope="{{itemTemplate}}"/>

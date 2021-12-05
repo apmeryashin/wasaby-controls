@@ -17,6 +17,7 @@ export default class TreeGridNodeHeaderRow extends TreeGridDataRow<null> {
     readonly ItemActionsItem: boolean = false;
 
     protected _$moreFontColorStyle: string;
+    protected _$moreCaption: string;
 
     readonly listInstanceName: string =  'controls-TreeGrid__node-header';
 
@@ -62,6 +63,10 @@ export default class TreeGridNodeHeaderRow extends TreeGridDataRow<null> {
         return false;
     }
 
+    getMoreCaption(): string {
+        return this._$moreCaption;
+    }
+
     getMoreFontColorStyle(): string {
         return this._$moreFontColorStyle;
     }
@@ -101,5 +106,6 @@ Object.assign(TreeGridNodeHeaderRow.prototype, {
     _cellModule: 'Controls/treeGrid:TreeGridNodeFooterCell',
     _instancePrefix: 'tree-grid-node-header-row-',
     _$supportLadder: false,
-    _$moreFontColorStyle: null
+    _$moreFontColorStyle: null,
+    _$moreCaption: null
 });

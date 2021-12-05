@@ -15,6 +15,7 @@ export default class TreeNodeHeaderItem extends TreeItem<null> {
     readonly EdgeRowSeparatorItem: boolean = false;
     readonly ItemActionsItem: boolean = false;
 
+    protected _$moreCaption: string;
     protected _$moreFontColorStyle: string;
 
     readonly listInstanceName: string =  'controls-Tree__node-header';
@@ -35,6 +36,10 @@ export default class TreeNodeHeaderItem extends TreeItem<null> {
 
     needMoreButton(): boolean {
         return this.hasMoreStorage('backward');
+    }
+
+    getMoreCaption(): string {
+        return this._$moreCaption;
     }
 
     getItemClasses(): string {
@@ -80,5 +85,6 @@ Object.assign(TreeNodeHeaderItem.prototype, {
     '[Controls/tree:TreeNodeHeaderItem]': true,
     _moduleName: 'Controls/tree:TreeNodeHeaderItem',
     _instancePrefix: 'tree-node-header-item-',
-    _$moreFontColorStyle: null
+    _$moreFontColorStyle: null,
+    _$moreCaption: null
 });

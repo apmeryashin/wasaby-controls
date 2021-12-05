@@ -383,7 +383,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          for (let index = 0; index < selectedNodes.length; index++) {
             const nodeKey = selectedNodes[index];
             let countItemsSelectedInNode;
-            if (this._model.getHasMoreStorage()[nodeKey]) {
+            const nodeHasMoreData = this._model.getHasMoreStorage()[nodeKey];
+            if (nodeHasMoreData && (nodeHasMoreData.forward || nodeHasMoreData.backward)) {
                 countItemsSelectedInNode = null;
             } else {
                const node = this._getItem(nodeKey);

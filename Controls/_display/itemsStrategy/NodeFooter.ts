@@ -218,7 +218,8 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
                     contents: nodeFooterContent,
                     parent: item,
                     hasMore: item.getHasMoreStorage(),
-                    moreFontColorStyle: options.display.getMoreFontColorStyle()
+                    moreFontColorStyle: options.display.getMoreFontColorStyle(),
+                    moreCaption: options.display.getNodeMoreCaption()
                 });
                 options.nodeFooters.splice(index, 0, nodeFooter);
                 item.setNodeFooter(nodeFooter);

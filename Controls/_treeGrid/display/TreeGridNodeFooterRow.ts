@@ -17,6 +17,7 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
     readonly ItemActionsItem: boolean = false;
 
     protected _$moreFontColorStyle: string;
+    protected _$moreCaption: string;
 
     readonly listInstanceName: string =  'controls-TreeGrid__node-footer';
 
@@ -76,6 +77,10 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
     isSticked(): boolean {
         return false;
+    }
+
+    getMoreCaption(): string {
+        return this._$moreCaption;
     }
 
     getMoreFontColorStyle(): string {
@@ -138,5 +143,6 @@ Object.assign(TreeGridNodeFooterRow.prototype, {
     _cellModule: 'Controls/treeGrid:TreeGridNodeFooterCell',
     _instancePrefix: 'tree-grid-node-footer-row-',
     _$supportLadder: false,
-    _$moreFontColorStyle: null
+    _$moreFontColorStyle: null,
+    _$moreCaption: null
 });

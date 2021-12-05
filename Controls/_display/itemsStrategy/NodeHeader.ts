@@ -186,7 +186,8 @@ export default class NodeHeader<S extends Model = Model, T extends TreeItem<S> =
                     contents: nodeHeaderContent,
                     parent: item,
                     hasMore: item.getHasMoreStorage(),
-                    moreFontColorStyle: options.display.getMoreFontColorStyle()
+                    moreFontColorStyle: options.display.getMoreFontColorStyle(),
+                    moreCaption: options.display.getNodeMoreCaption()
                 });
                 options.nodeHeaders.splice(index, 0, nodeHeader);
                 item.setNodeHeader(nodeHeader);

@@ -274,6 +274,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      */
     protected _$expanderIconStyle: TExpanderIconStyle;
 
+    protected _$nodeMoreCaption: string;
     protected _$nodeFooterTemplateMoreButton: TemplateFunction;
 
     /**
@@ -549,6 +550,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     // endregion Drag-n-drop
 
     // region NodeFooter
+
+    getNodeMoreCaption(): string {
+        return this._$nodeMoreCaption;
+    }
 
     getNodeFooterTemplateMoreButton(): TemplateFunction {
         return this._$nodeFooterTemplateMoreButton;
@@ -1499,6 +1504,7 @@ Object.assign(Tree.prototype, {
     _$rootEnumerable: false,
     _$nodeFooterTemplate: null,
     _$nodeFooterVisibilityCallback: null,
+    _$nodeMoreCaption: null,
     _$nodeFooterTemplateMoreButton: null,
     _$moreFontColorStyle: null,
     _$hasMoreStorage: {},

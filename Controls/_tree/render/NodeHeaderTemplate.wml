@@ -21,6 +21,7 @@
         <ws:partial template="Controls/list:NavigationButtonTemplate"
                     buttonView="{{navigationButtonView}}"
                     buttonConfig="{{navigationButtonConfig}}"
+                    loadMoreCaption="{{ item.getMoreCaption() }}"
                     linkFontColorStyle="{{ item.getMoreFontColorStyle() }}"
                     linkFontSize="xs"
                     linkClass="controls-Tree__nodeHeaderLoadMore"/>
