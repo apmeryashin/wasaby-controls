@@ -80,7 +80,7 @@ export {CssClassList, createClassListCollection} from './_baseList/resources/uti
 
 //region controllers
 export * from './_baseList/Controllers/Grouping';
-export {default as ScrollController} from './_baseList/ScrollController';
+export {default as ScrollController, IScrollParams} from './_baseList/ScrollController';
 export {RemoveController} from 'Controls/_baseList/Controllers/RemoveController';
 export {default as VirtualScroll} from './_baseList/ScrollContainer/VirtualScroll';
 export {MoveController, IMoveControllerOptions}  from 'Controls/_baseList/Controllers/MoveController';
@@ -94,9 +94,15 @@ export {
 
 export {
     ScrollController as NewScrollController,
+    IScrollControllerOptions,
     IDirection as IDirectionNew,
     IPlaceholders,
-    IItemsEndedCallback
+    IEdgeItem,
+    IEdgeItemCalculatingParams,
+    IHasItemsOutRange,
+    IItemsRange,
+    IScheduledScrollParams,
+    IScheduledScrollToElementParams
 } from './_baseList/Controllers/ScrollController/ScrollController';
 export {
     IItemSize,

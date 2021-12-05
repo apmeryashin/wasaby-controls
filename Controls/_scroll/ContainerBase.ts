@@ -113,7 +113,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _isUnmounted: boolean = false;
 
-    private _scrollMoveTimer: number;
+    private _scrollMoveTimer: Record<SCROLL_DIRECTION, number> = {
+        [SCROLL_DIRECTION.VERTICAL]: null,
+        [SCROLL_DIRECTION.HORIZONTAL]: null
+    };
 
     private _isFirstUpdateState: boolean = true;
     private _scrollToElementCalled: boolean = false;
@@ -841,6 +844,18 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         e.stopPropagation();
     }
 
+    protected _doHorizontalScrollHandler(e: SyntheticEvent<null>, scrollParam: number, isVirtual: boolean): void {
+        // overflow scrolling на ipad мешает восстановлению скролла. Поэтому перед восстановлением его выключаем.
+        if (detection.isMobileIOS) {
+            this._setOverflowScrolling('hidden');
+        }
+        this._scrollTo(scrollParam, SCROLL_DIRECTION.HORIZONTAL, false);
+        if (detection.isMobileIOS) {
+            this._setOverflowScrolling('');
+        }
+        e.stopPropagation();
+    }
+
     protected _doScroll(scrollParam, isVirtual) {
         if (scrollParam === 'top') {
             this._setScrollTop(0);
@@ -899,11 +914,28 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             });
         }
 
+        if ((this._scrollModel.clientWidth !== this._oldScrollState.clientWidth) ||
+            (this._scrollModel.scrollWidth !== this._oldScrollState.scrollWidth)) {
+            this._sendByListScrollRegistrar('horizontalScrollResize', {
+                scrollWidth: this._scrollModel.scrollWidth,
+                clientWidth: this._scrollModel.clientWidth
+            });
+        }
+
         if (this._scrollModel.clientHeight !== this._oldScrollState.clientHeight) {
             this._sendByListScrollRegistrar('viewportResize', {
                 scrollHeight: this._scrollModel.scrollHeight,
                 scrollTop: this._scrollModel.scrollTop,
                 clientHeight: this._scrollModel.clientHeight,
+                rect: this._scrollModel.viewPortRect
+            });
+        }
+
+        if (this._scrollModel.clientWidth !== this._oldScrollState.clientWidth) {
+            this._sendByListScrollRegistrar('horizontalViewportResize', {
+                scrollWidth: this._scrollModel.scrollWidth,
+                scrollLeft: this._scrollModel.scrollLeft,
+                clientWidth: this._scrollModel.clientWidth,
                 rect: this._scrollModel.viewPortRect
             });
         }
@@ -916,7 +948,18 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 scrollHeight: this._scrollModel.scrollHeight
             });
 
-            this._sendScrollMoveAsync();
+            this._sendScrollMoveAsync(SCROLL_DIRECTION.VERTICAL);
+        }
+
+        if (this._scrollModel.scrollLeft !== this._oldScrollState.scrollLeft) {
+            this._sendByListScrollRegistrar('horizontalScrollMoveSync', {
+                scrollLeft: this._scrollModel.scrollLeft,
+                position: this._scrollModel.horizontalPosition,
+                clientWidth: this._scrollModel.clientWidth,
+                scrollWidth: this._scrollModel.scrollWidth
+            });
+
+            this._sendScrollMoveAsync(SCROLL_DIRECTION.HORIZONTAL);
         }
 
         if (this._scrollModel.canVerticalScroll !== this._oldScrollState.canVerticalScroll) {
@@ -928,24 +971,43 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                     viewPortRect: this._scrollModel.viewPortRect
                 });
         }
+
+        if (this._scrollModel.canHorizontalScroll !== this._oldScrollState.canHorizontalScroll) {
+            this._sendByListScrollRegistrar(
+                this._scrollModel.canVerticalScroll ? 'canHorizontalScroll' : 'cantHorizontalScroll',
+                {
+                    clientWidth: this._scrollModel.clientWidth,
+                    scrollWidth: this._scrollModel.scrollWidth,
+                    viewPortRect: this._scrollModel.viewPortRect
+                });
+        }
     }
 
-    _sendScrollMoveAsync(): void {
-        if (this._scrollMoveTimer) {
-                clearTimeout(this._scrollMoveTimer);
-            }
+    _sendScrollMoveAsync(direction: SCROLL_DIRECTION): void {
+        if (this._scrollMoveTimer[direction]) {
+            clearTimeout(this._scrollMoveTimer[direction]);
+        }
 
-        this._scrollMoveTimer = setTimeout(() => {
+        this._scrollMoveTimer[direction] = setTimeout(() => {
                 // Т.к код выполняется асинхронно, может получиться, что контрол к моменту вызова функции уже
                 // уничтожился
                 if (!this._isUnmounted) {
-                    this._sendByListScrollRegistrar('scrollMove', {
-                        scrollTop: this._scrollModel.scrollTop,
-                        position: this._scrollModel.verticalPosition,
-                        clientHeight: this._scrollModel.clientHeight,
-                        scrollHeight: this._scrollModel.scrollHeight
-                    });
-                    this._scrollMoveTimer = null;
+                    if (direction === SCROLL_DIRECTION.VERTICAL) {
+                        this._sendByListScrollRegistrar('scrollMove', {
+                            scrollTop: this._scrollModel.scrollTop,
+                            position: this._scrollModel.verticalPosition,
+                            clientHeight: this._scrollModel.clientHeight,
+                            scrollHeight: this._scrollModel.scrollHeight
+                        });
+                    } else {
+                        this._sendByListScrollRegistrar('horizontalScrollMove', {
+                            scrollLeft: this._scrollModel.scrollLeft,
+                            position: this._scrollModel.horizontalPosition,
+                            clientWidth: this._scrollModel.clientWidth,
+                            scrollWidth: this._scrollModel.scrollWidth
+                        });
+                    }
+                    this._scrollMoveTimer[direction] = null;
                 }
             }, 0);
     }
@@ -965,6 +1027,16 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             viewPortRect: this._scrollModel.viewPortRect
         });
 
+        // TODO: Свести в одно событие canScroll с параметрами
+        this._sendByListScrollRegistrarToComponent(
+            component,
+            this._scrollModel.canHorizontalScroll ? 'canHorizontalScroll' : 'cantHorizontalScroll',
+            {
+                clientWidth: this._scrollModel.clientWidth,
+                scrollWidth: this._scrollModel.scrollWidth,
+                viewPortRect: this._scrollModel.viewPortRect
+            });
+
         this._sendByListScrollRegistrarToComponent(
             component,
             'viewportResize',
@@ -972,6 +1044,18 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 scrollHeight: this._scrollModel.scrollHeight,
                 scrollTop: this._scrollModel.scrollTop,
                 clientHeight: this._scrollModel.clientHeight,
+                rect: this._scrollModel.viewPortRect
+            }
+        );
+
+        // TODO: Свести в одно событие viewportResize с параметрами
+        this._sendByListScrollRegistrarToComponent(
+            component,
+            'horizontalViewportResize',
+            {
+                scrollWidth: this._scrollModel.scrollWidth,
+                scrollLeft: this._scrollModel.scrollLeft,
+                clientWidth: this._scrollModel.clientWidth,
                 rect: this._scrollModel.viewPortRect
             }
         );

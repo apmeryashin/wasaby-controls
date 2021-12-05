@@ -24,7 +24,8 @@ import {
     IItemsEndedCallback,
     IItemsRange,
     IPlaceholders,
-    ScrollController
+    ScrollController,
+    IScrollControllerOptions
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {
     AbstractItemsSizesController,
@@ -36,7 +37,8 @@ import {
     IAbstractObserversControllerOptions,
     ITriggersPositions,
     ITriggersOffsetCoefficients,
-    ITriggersVisibility, ITriggerPosition
+    ITriggersVisibility,
+    ITriggerPosition
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
 
@@ -96,9 +98,9 @@ export interface IAbstractListVirtualScrollControllerOptions {
     triggersQuerySelector: string;
     itemsQuerySelector: string;
 
-    updateShadowsUtil: IUpdateShadowsUtil;
+    updateShadowsUtil?: IUpdateShadowsUtil;
     updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
-    updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
+    updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
 
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
@@ -122,9 +124,9 @@ export abstract class AbstractListVirtualScrollController<
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     private readonly _doScrollUtil: IDoScrollUtil;
-    private readonly _updateShadowsUtil: IUpdateShadowsUtil;
+    private readonly _updateShadowsUtil?: IUpdateShadowsUtil;
     private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
-    private readonly _updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
+    private readonly _updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
 
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
@@ -265,8 +267,13 @@ export abstract class AbstractListVirtualScrollController<
     // endregion Triggers
 
     private _createScrollController(options: TOptions): void {
-        const totalCount = this._collection.getCount();
-        this._scrollController = new ScrollController({
+        const scrollControllerOptions = this._getScrollControllerOptions(options);
+        this._scrollController = new ScrollController(scrollControllerOptions);
+        this._scrollController.resetItems(scrollControllerOptions.totalCount, false);
+    }
+
+    protected _getScrollControllerOptions(options: TOptions): IScrollControllerOptions {
+        return {
             listControl: options.listControl,
             virtualScrollConfig: options.virtualScrollConfig,
 
@@ -285,7 +292,7 @@ export abstract class AbstractListVirtualScrollController<
             scrollPosition: 0,
             viewportSize: options.virtualScrollConfig.viewportHeight || 0,
             contentSize: 0,
-            totalCount,
+            totalCount: this._collection.getCount(),
             givenItemsSizes: this._getGivenItemsSizes(),
 
             indexesInitializedCallback: (range: IItemsRange): void => {
@@ -304,9 +311,7 @@ export abstract class AbstractListVirtualScrollController<
             },
             activeElementChangedCallback: options.activeElementChangedCallback,
             itemsEndedCallback: options.itemsEndedCallback
-        });
-
-        this._scrollController.resetItems(totalCount, false);
+        };
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
@@ -343,8 +348,12 @@ export abstract class AbstractListVirtualScrollController<
     private _handleScheduledUpdateHasItemsOutRange(): void {
         const hasItemsOutRange = this._scheduledUpdateHasItemsOutRange;
         if (hasItemsOutRange) {
-            this._updateShadowsUtil(hasItemsOutRange);
-            this._updateVirtualNavigationUtil(hasItemsOutRange);
+            if (this._updateShadowsUtil) {
+                this._updateShadowsUtil(hasItemsOutRange);
+            }
+            if (this._updateVirtualNavigationUtil) {
+                this._updateVirtualNavigationUtil(hasItemsOutRange);
+            }
         }
     }
 
@@ -515,6 +524,27 @@ export abstract class AbstractListVirtualScrollController<
                 break;
             }
         }
+    }
+
+    /**
+     * Скроллит к переданной странице.
+     * Скроллит так, чтобы было видно последний элемент с предыдущей страницы, чтобы не потерять "контекст".
+     * Смещает диапазон, возвращает промис с индексами крайних видимых полностью элементов.
+     * @param pageDirection Условная страница, к которой нужно скроллить. (Следующая, предыдущая, начальная, конечная)
+     * @private
+     */
+    protected _scrollToPage(pageDirection: IPageDirection): Promise<CrudEntityKey> {
+        let itemIndex;
+        if (pageDirection === 'forward' || pageDirection === 'backward') {
+            const edgeItem = this._scrollController.getEdgeVisibleItem({direction: pageDirection});
+            itemIndex = edgeItem.index;
+        } else {
+            itemIndex = pageDirection === 'start' ? 0 : this._collection.getCount() - 1;
+        }
+
+        const item = this._collection.getItemBySourceIndex(itemIndex);
+        const itemKey = item.getContents().getKey();
+        return this.scrollToItem(itemKey).then(() => itemKey);
     }
 
     protected abstract _applyIndexes(startIndex: number, endIndex: number): void;
