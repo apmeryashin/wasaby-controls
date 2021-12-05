@@ -9,6 +9,7 @@ import Utils = require('Types/util');
 import {HistoryUtils} from 'Controls/filter';
 import {factory, List, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
+import {MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS, MAX_EXPANDED_COUNT_OF_VISIBLE_ITEMS} from 'Controls/_filterPanel/Constants';
 import 'css!Controls/filterPanel';
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -21,6 +22,9 @@ interface IHistoryOptions {
 export default class History extends Control<IHistoryOptions> {
     protected _template: TemplateFunction = template;
     protected _historyItems: RecordSet | List<IFilterItem[]>;
+    protected _expandButtonVisible: boolean;
+    protected _historyListExpanded: boolean;
+    protected _maxHistoryCount: number = MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
 
     protected _beforeMount(
         options: IHistoryOptions,
@@ -29,15 +33,22 @@ export default class History extends Control<IHistoryOptions> {
     ): Promise<RecordSet | List<IFilterItem[]>> {
         if (receivedState) {
             this._historyItems = receivedState;
+            this._expandButtonVisible = this._historyItems.getCount() > MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
         } else {
             return this._loadHistoryItems(options.historyId, options.source);
         }
     }
 
-    protected _beforeUpdate(options: IHistoryOptions): void | Promise<RecordSet | List<IFilterItem[]>> {
+    protected _beforeUpdate(options: IHistoryOptions): void {
         if (options.historyId !== this._options.historyId) {
-            return this._loadHistoryItems(options.historyId, options.source);
+            this._loadHistoryItems(options.historyId, options.source);
+            this._expandButtonVisible = this._historyItems.getCount() > MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
         }
+    }
+
+    protected _handleExpanderClick(): void {
+        this._historyListExpanded = !this._historyListExpanded;
+        this._maxHistoryCount = this._historyListExpanded ? MAX_EXPANDED_COUNT_OF_VISIBLE_ITEMS : MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
     }
 
     protected _onPinClick(event: Event, item: Model): void {

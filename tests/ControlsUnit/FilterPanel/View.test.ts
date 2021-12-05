@@ -35,21 +35,5 @@ describe('Controls/filterPanel:View', () => {
             assert.equal(viewControl._options.viewMode, 'default');
             assert.isTrue(filterChanged);
         });
-
-        it('viewMode is filterPanelStack', () => {
-            config.viewMode = 'filterPanelStack';
-            const viewControl = new View({});
-            viewControl._beforeMount(config);
-            viewControl.saveOptions(config);
-            let filterChanged = false;
-            viewControl._notify = (eventName) => {
-                if (eventName === 'filterChanged') {
-                    filterChanged = true;
-                }
-            };
-
-            viewControl._resetFilterItem(displayItem);
-            assert.isFalse(filterChanged);
-        });
     });
 });
