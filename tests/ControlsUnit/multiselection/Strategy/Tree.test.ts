@@ -1325,7 +1325,10 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       it('selected node with more data', () => {
          const selection = {selected: [6], excluded: []};
          model.setHasMoreStorage({
-            6: true
+            6: {
+               backward: false,
+               forward: true
+            }
          });
          const treeStrategyWithNodesMoreData = new TreeSelectionStrategy({
              selectAncestors: true,
