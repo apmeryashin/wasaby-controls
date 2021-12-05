@@ -195,6 +195,10 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
         return styles;
     }
 
+    getStickyHeaderMode(): string {
+        return 'stackable';
+    }
+
     getZIndex(): number {
         let zIndex;
         if (this._$owner.hasColumnScroll()) {

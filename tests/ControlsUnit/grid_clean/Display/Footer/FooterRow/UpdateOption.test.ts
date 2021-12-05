@@ -9,6 +9,7 @@ const mockedOwner = {
     hasItemActionsSeparatedCell: () => false,
     isFullGridSupport: () => true,
     hasColumnScroll: () => false,
+    hasNewColumnScroll: () => false,
     isStickyFooter: () => false
 } as any;
 
@@ -110,6 +111,7 @@ describe('Controls/grid_clean/Display/Footer/FooterRow/UpdateOption', () => {
             hasItemActionsSeparatedCell: () => false,
             isFullGridSupport: () => true,
             hasColumnScroll: () => false,
+            hasNewColumnScroll: () => false,
             isStickyFooter: () => false
         } as any;
 

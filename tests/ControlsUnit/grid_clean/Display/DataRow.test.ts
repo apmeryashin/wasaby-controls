@@ -20,6 +20,7 @@ const mockedCollection = {
     notifyItemChange: () => {/* FIXME: sinon mock */},
     getItemEditorTemplate: () => {/* FIXME: sinon mock */},
     hasColumnScroll: () => false,
+    hasNewColumnScroll: () => false,
     isFullGridSupport: () => true,
     getItemEditorTemplateOptions: () => {/* FIXME: sinon mock */}
 } as GridCollection<Model>;

@@ -20,6 +20,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetCol
         isStickyHeader: () => true,
         isStickyGroup: () => true,
         hasColumnScroll: () => false,
+        hasNewColumnScroll: () => false,
         getGridColumnsConfig: () => columns,
         hasMultiSelectColumn: () => multiSelectVisibility,
         isFullGridSupport: () => true,

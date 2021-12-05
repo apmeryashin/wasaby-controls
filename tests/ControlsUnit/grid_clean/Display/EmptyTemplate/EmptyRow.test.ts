@@ -16,7 +16,8 @@ describe('Controls/grid_clean/Display/EmptyTemplate/EmptyRow', () => {
                 getStickyColumnsCount: () => {/* FIXME: sinon mock */},
                 isFullGridSupport: () => true,
                 hasItemActionsSeparatedCell: () => false,
-                hasColumnScroll: () => false
+                hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false
             } as GridCollection<unknown>,
             rowTemplate: () => 'EMPTY_TEMPLATE'
         });

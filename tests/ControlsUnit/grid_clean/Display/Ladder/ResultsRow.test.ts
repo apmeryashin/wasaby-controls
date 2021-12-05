@@ -8,6 +8,7 @@ const getMockedOwner = (extendedProps = {}): GridCollection<unknown> => {
         hasMultiSelectColumn: () => false,
         hasItemActionsSeparatedCell: () => false,
         hasColumnScroll: () => false,
+        hasNewColumnScroll: () => false,
         ...extendedProps
     } as GridCollection<unknown>;
 };

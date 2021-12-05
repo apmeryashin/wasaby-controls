@@ -367,7 +367,8 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                     getBounds: () => ({
                         column: {start: 1, end: 4},
                         row: {start: 1, end: 2}
-                    })
+                    }),
+                    isSticked: () => true
                 };
 
                 const headerRow = new GridHeaderRow({

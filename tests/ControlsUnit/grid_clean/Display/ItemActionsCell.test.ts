@@ -21,6 +21,7 @@ describe('Controls/grid_clean/Display/ItemActionsCell', () => {
             isFullGridSupport: () => false,
             DisplayItemActions: true,
             hasColumnScroll: () => false,
+            hasNewColumnScroll: () => false,
             getHoverBackgroundStyle: () => '',
             getEditingBackgroundStyle: () => '',
             getTopPadding: () => '',

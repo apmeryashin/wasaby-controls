@@ -92,7 +92,9 @@ export default class Row<TContents extends Model = Model>
     setMarked(marked: boolean, silent?: boolean): void {
         const changed = marked !== this.isMarked();
         super.setMarked(marked, silent);
-        if (changed) {
+        if (this._isSupportSticky()) {
+            this._reinitializeColumns(true);
+        } else if (changed) {
             this._redrawColumns('first');
         }
     }

@@ -26,6 +26,7 @@ describe('Controls/grid/Display/Cell/backgroundColorStyle', () => {
 
         // This setting changes behavior
         hasColumnScroll: () => hasColumnScroll,
+        hasNewColumnScroll: () => false,
         isMarked: () => false
     } as undefined as GridRow<Model>;
 

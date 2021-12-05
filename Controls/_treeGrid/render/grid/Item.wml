@@ -104,7 +104,7 @@
 </ws:template>
 
 
-<ws:if data="{{ isSticked !== false && (item || itemData).isSticked(stickyCallback, item) }}">
+<ws:if data="{{ isSticked !== false && ((item || itemData).isSticked(stickyCallback, item) || (item || itemData).hasStickyColumns()) }}">
    <Controls.scroll:Group>
       <div attr:data-qa="{{ (item || itemData).listElementName }}"
            attr:class="{{ (item || itemData).getItemClasses({
@@ -114,18 +114,27 @@
            'showItemActionsOnHover': showItemActionsOnHover
        }) }}">
          <ws:for data="column in (item || itemData).getColumns()">
-            <Controls.scroll:StickyBlock position="{{ (item || itemData).getStickyHeaderPosition(stickyCallback) }}"
-                                          mode="{{ (item || itemData).getStickyHeaderMode(stickyCallback) }}"
-                                          shadowVisibility="{{column.shadowVisibility}}"
-                                          backgroundStyle="{{ column.getStickyBackgroundStyle() }}"
-                                          _isIosZIndexOptimized="{{ (item || itemData).isIosZIndexOptimized() }}"
-                                          fixedZIndex="{{ column.getZIndex()}}"
-                                          attr:key="sticky_{{ column.getInstanceId() }}"
-                                          attr:class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
-                                          attr:style="{{ column.getWrapperStyles(containerSize) }} {{ column.isHidden() ? 'ws-hidden' }}"
-                                          attr:data-qa="{{ column.listElementName }}">
-               <ws:partial template="COLUMN" gridColumn="{{ column }}" if="{{ !column.isHidden() }}"/>
-            </Controls.scroll:StickyBlock>
+            <ws:if data="{{ column.isSticked() }}">
+                <Controls.scroll:StickyBlock position="{{ (item || itemData).getStickyHeaderPosition(stickyCallback) }}"
+                                              mode="{{ (item || itemData).getStickyHeaderMode(stickyCallback) }}"
+                                              shadowVisibility="{{column.shadowVisibility}}"
+                                              backgroundStyle="{{ column.getStickyBackgroundStyle() }}"
+                                              _isIosZIndexOptimized="{{ (item || itemData).isIosZIndexOptimized() }}"
+                                              fixedZIndex="{{ column.getZIndex()}}"
+                                              attr:key="sticky_{{ column.getInstanceId() }}"
+                                              attr:class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
+                                              attr:style="{{ column.getWrapperStyles(containerSize) }} {{ column.isHidden() ? 'ws-hidden' }}"
+                                              attr:data-qa="{{ column.listElementName }}">
+                    <ws:partial template="COLUMN" gridColumn="{{ column }}" if="{{ !column.isHidden() }}"/>
+                </Controls.scroll:StickyBlock>
+            </ws:if>
+            <ws:else>
+                <div class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }} {{ column.isHidden() ? 'ws-hidden' }}"
+                    style="{{ column.getWrapperStyles(containerSize) }}"
+                    attr:data-qa="{{ column.listElementName }}">
+                    <ws:partial template="COLUMN" gridColumn="{{ column }}" if="{{ !column.isHidden() }}"/>
+               </div>
+            </ws:else>
          </ws:for>
       </div>
    </Controls.scroll:Group>

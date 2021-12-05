@@ -42,10 +42,6 @@ export default class HeaderRow extends Row<null> {
         return this._$headerModel.isSticked();
     }
 
-    getStickyHeaderMode() {
-        return 'stackable';
-    }
-
     isMultiline(): boolean {
         return this._$headerModel.isMultiline();
     }
@@ -90,7 +86,8 @@ export default class HeaderRow extends Row<null> {
                 isLadderCell: true,
                 owner: this,
                 backgroundStyle: 'transparent',
-                shadowVisibility: 'hidden'
+                shadowVisibility: 'hidden',
+                isSticked: this.isSticked()
             }));
         }
 
@@ -101,7 +98,8 @@ export default class HeaderRow extends Row<null> {
                     isLadderCell: true,
                     owner: this,
                     shadowVisibility: 'hidden',
-                    backgroundStyle: 'transparent'
+                    backgroundStyle: 'transparent',
+                    isSticked: this.isSticked()
                 })
             ] as Cell[]).concat(this._$columnItems);
         }
@@ -127,7 +125,8 @@ export default class HeaderRow extends Row<null> {
                     backgroundStyle: this._$backgroundStyle,
                     cellPadding: this._getCellPaddingForHeaderColumn(column, index),
                     columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index),
-                    shadowVisibility: this.getShadowVisibility()
+                    shadowVisibility: this.getShadowVisibility(),
+                    isSticked: this.isSticked()
                 });
             });
 
@@ -138,6 +137,7 @@ export default class HeaderRow extends Row<null> {
                 this._$columnItems.push(new ItemActionsCell({
                     owner: this,
                     rowspan: this.getBounds().row.end - this.getBounds().row.start,
+                    isSticked: this.isSticked(),
                     column: {}
                 }));
             }
@@ -157,7 +157,8 @@ export default class HeaderRow extends Row<null> {
                 },
                 backgroundStyle: this._$backgroundStyle,
                 isFixed: true,
-                shadowVisibility: this.getShadowVisibility()
+                shadowVisibility: this.getShadowVisibility(),
+                isSticked: this.isSticked()
             }));
         }
     }

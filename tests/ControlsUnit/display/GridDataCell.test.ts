@@ -76,6 +76,7 @@ describe('Controls/display/GridDataCell', () => {
                 getGridColumnsConfig: () => columns,
                 hasItemActionsSeparatedCell: () => hasItemActionsSeparatedCell,
                 hasColumnScroll: () => hasColumnScroll,
+                hasNewColumnScroll: () => false,
                 getHoverBackgroundStyle: () => 'default',
                 getTopPadding: () => 'null',
                 getBottomPadding: () => 'null',

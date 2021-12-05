@@ -10,6 +10,7 @@ const mockedOwner = {
     hasItemActionsSeparatedCell: () => true,
     isFullGridSupport: () => true,
     hasColumnScroll: () => false,
+    hasNewColumnScroll: () => false,
     isStickyFooter: () => false
 } as any;
 

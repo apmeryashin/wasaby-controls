@@ -10,7 +10,8 @@ const mockedCollection = {
     notifyItemChange: () => {/* FIXME: sinon mock */},
     getItemEditorTemplate: () => {/* FIXME: sinon mock */},
     isFullGridSupport: () => true,
-    hasColumnScroll: () => false
+    hasColumnScroll: () => false,
+    hasNewColumnScroll: () => false
 } as GridCollection<Model>;
 
 describe('Controls/grid_clean/Display/Ladder/Row/Colspan', () => {

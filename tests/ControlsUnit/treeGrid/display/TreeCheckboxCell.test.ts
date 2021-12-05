@@ -26,6 +26,7 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterCell', () => {
             isFullGridSupport: () => false,
             isActive: () => false,
             hasColumnScroll: () => false,
+            hasNewColumnScroll: () => false,
             isEditing: () => false,
             isMarked: () => false
         };

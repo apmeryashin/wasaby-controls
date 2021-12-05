@@ -6,6 +6,7 @@ describe('Controls/treeGrid_clean/Display/NodeFooterRow', () => {
         getRoot: () => null,
         hasMultiSelectColumn: () => false,
         hasColumnScroll: () => false,
+        hasNewColumnScroll: () => false,
         isFullGridSupport: () => true,
         hasItemActionsSeparatedCell: () => false
     });

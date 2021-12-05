@@ -21,6 +21,7 @@ describe('Controls/_grid/display/DataCell', () => {
         getColumnsCount: () => columnsCount,
         getColumnIndex: () => columnIndex,
         hasColumnScroll: () => false,
+        hasNewColumnScroll: () => false,
         getHoverBackgroundStyle: () => '',
         getTopPadding: () => 'null',
         getBottomPadding: () => 'null',

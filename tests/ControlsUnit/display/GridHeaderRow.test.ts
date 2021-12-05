@@ -26,7 +26,8 @@ describe('Controls/_display:GridHeaderRow', () => {
             gridColumnsConfig: [{}],
             headerModel: {
                 getBounds: () => ({ row: {start: 1, end: 3} }),
-                isMultiline: (): boolean => true
+                isMultiline: (): boolean => true,
+                isSticked: () => true
             }
         });
         assert.equal(headerRow.getColumns().length, 2);

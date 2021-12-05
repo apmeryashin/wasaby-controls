@@ -105,7 +105,8 @@ export default class FooterRow extends mixin<Row<null>, Footer>(Row, Footer) {
     protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IFooterCellOptions> {
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
-            shouldAddFooterPadding: this._$shouldAddFooterPadding
+            shouldAddFooterPadding: this._$shouldAddFooterPadding,
+            isSticked: this.isSticked()
         };
     }
 

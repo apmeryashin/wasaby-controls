@@ -14,6 +14,7 @@ describe('Controls/grid_clean/Display/Group/ColumnScroll/GroupCell', () => {
         isFullGridSupport: () => true,
         hasMultiSelectColumn: () => false,
         hasColumnScroll: () => hasColumnsScroll,
+        hasNewColumnScroll: () => false,
         hasItemActionsSeparatedCell: () => true,
         isStickyHeader: () => false,
         isStickyGroup: () => false,

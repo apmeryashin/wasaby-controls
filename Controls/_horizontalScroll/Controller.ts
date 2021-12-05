@@ -52,7 +52,13 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
     }
 
     protected _applyIndexes(startIndex: number, endIndex: number): void {
-        this._collection.setColumns(this._columns.slice(startIndex, endIndex));
+        const a = [0, 1];
+        const b = [startIndex, endIndex - 1];
+
+        this._collection.setColumns([
+            ...this._columns.slice(a[0], a[1]),
+            ...this._columns.slice(b[0], b[1])
+        ]);
 
         if (this._header) {
             this._collection.setHeader(this._header.slice(startIndex, endIndex));

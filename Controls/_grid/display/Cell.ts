@@ -176,6 +176,19 @@ export default class Cell<
         return this._$owner.getEditingConfig();
     }
 
+    isSticked(): boolean {
+        return this._$isSticked || (this.getOwner().hasNewColumnScroll() && this._$isFixed);
+    }
+
+    getStickyHeaderMode(stickyCallback: Function): string {
+        const isSticked = this.isSticked();
+        if (isSticked && this.getOwner().hasNewColumnScroll()) {
+            return 'stackable';
+        } else {
+            return isSticked || stickyCallback ? 'replaceable' : 'notsticky';
+        }
+    }
+
     // region Аспект "Colspan. Объединение ячеек по горизонтали"
 
     /**
@@ -331,7 +344,7 @@ export default class Cell<
             // Сюда же попадаем, если backgroundColorStyle = default
             wrapperClasses += ` controls-Grid__row-cell_background_${backgroundColorStyle}`;
         } else if (hasColumnScroll ||
-                   this._$isSticked ||
+                   this.isSticked() ||
                    (this.getOwner().isMarked() && this.getStyle() === 'master')) {
             wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
         }

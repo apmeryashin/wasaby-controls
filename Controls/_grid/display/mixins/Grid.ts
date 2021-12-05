@@ -114,6 +114,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     protected _$resultsColspanCallback: TResultsColspanCallback;
     protected _$resultsTemplate: TemplateFunction;
     protected _$columnScroll: boolean;
+    protected _$newColumnScroll: boolean;
     protected _$columnScrollViewMode: TColumnScrollViewMode;
     protected _$stickyColumnsCount: number;
     protected _$emptyGridRow: EmptyRow<S>;
@@ -613,6 +614,10 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         return this._$columnScroll;
     }
 
+    hasNewColumnScroll(): boolean {
+        return this._$newColumnScroll;
+    }
+
     getColumnScrollViewMode() {
         return this._$columnScrollViewMode;
     }
@@ -751,6 +756,7 @@ Object.assign(Grid.prototype, {
     _$resultsTemplate: null,
     _$colspanGroup: true,
     _$columnScroll: false,
+    _$newColumnScroll: false,
     _$columnScrollViewMode: 'scrollbar',
     _$stickyColumnsCount: 1,
     _$sorting: null,

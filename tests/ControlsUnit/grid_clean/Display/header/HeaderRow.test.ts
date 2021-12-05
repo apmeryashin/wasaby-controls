@@ -10,7 +10,8 @@ describe('Controls/grid_clean/Display/header/HeaderRow', () => {
         getStickyColumnsCount: () => 1,
         getGridColumnsConfig: () => columns,
         hasMultiSelectColumn: () => true,
-        hasItemActionsSeparatedCell: () => false
+        hasItemActionsSeparatedCell: () => false,
+        isSticked: () => true
     } as undefined as GridCollection<Model>;
 
     const headerModel = {
@@ -24,7 +25,8 @@ describe('Controls/grid_clean/Display/header/HeaderRow', () => {
                 start: 1,
                 end: 2
             }
-        })
+        }),
+        isSticked: () => true
     } as undefined as GridHeader<Model>;
 
     describe('_initializeColumns', () => {
@@ -43,7 +45,8 @@ describe('Controls/grid_clean/Display/header/HeaderRow', () => {
                             startRow: 1
                         },
                         isFixed: true,
-                        shadowVisibility: 'lastVisible'
+                        shadowVisibility: 'lastVisible',
+                        isSticked: true
                     };
                     const standardOptions = {
                         column: columns[0],
@@ -52,7 +55,8 @@ describe('Controls/grid_clean/Display/header/HeaderRow', () => {
                         cellPadding: undefined,
                         backgroundStyle: 'custom',
                         columnSeparatorSize: null,
-                        shadowVisibility: 'lastVisible'
+                        shadowVisibility: 'lastVisible',
+                        isSticked: true
                     };
 
                     // assertion here

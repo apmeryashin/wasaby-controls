@@ -7,6 +7,7 @@ describe('Controls/grid_clean/Display/FooterRow', () => {
         const mockedCollection = {
             getGridColumnsConfig: () => gridColumnsConfig,
             hasColumnScroll: () => false,
+            hasNewColumnScroll: () => false,
             isFullGridSupport: () => true,
             hasMultiSelectColumn: () => false,
             hasItemActionsSeparatedCell: () => false,

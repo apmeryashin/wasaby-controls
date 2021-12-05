@@ -52,7 +52,8 @@ describe('Controls/grid_clean/Display/SearchValue/DataRow/UpdateOption', () => {
                 hasItemActionsSeparatedCell: () => false,
                 getItemEditorTemplate: () => {/* FIXME: sinon mock */},
                 isFullGridSupport: () => true,
-                hasColumnScroll: () => false
+                hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false
             } as any,
             columnsConfig: columns,
             gridColumnsConfig: columns
@@ -85,7 +86,8 @@ describe('Controls/grid_clean/Display/SearchValue/DataRow/UpdateOption', () => {
                 hasItemActionsSeparatedCell: () => false,
                 getItemEditorTemplate: () => {/* FIXME: sinon mock */},
                 isFullGridSupport: () => true,
-                hasColumnScroll: () => false
+                hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false
             } as any,
             columnsConfig: columns,
             gridColumnsConfig: columns
