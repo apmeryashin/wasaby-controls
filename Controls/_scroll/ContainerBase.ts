@@ -4,15 +4,13 @@ import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RegisterClass, RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {ResizeObserverUtil, RESIZE_OBSERVER_BOX} from 'Controls/sizeUtils';
+import {RESIZE_OBSERVER_BOX, ResizeObserverUtil} from 'Controls/sizeUtils';
 import {getScrollContainerPageCoords, isCursorAtBorder, SCROLL_DIRECTION, SCROLL_POSITION} from './Utils/Scroll';
 import {scrollToElement} from './Utils/scrollToElement';
-import {scrollTo} from './Utils/Scroll';
-import ScrollState from './Utils/ScrollState';
+import {ListCompatible} from './Utils/ListCompatible';
+import ScrollState, {IScrollState} from './Utils/ScrollState';
 import ScrollModel from './Utils/ScrollModel';
-import {IScrollState} from './Utils/ScrollState';
 import {SCROLL_MODE} from './Container/Type';
-import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import {EventUtils} from 'UI/Events';
 import {isHidden} from './StickyBlock/Utils';
 import {getHeadersHeight} from './StickyBlock/Utils/getHeadersHeight';
@@ -20,6 +18,7 @@ import {location} from 'Application/Env';
 import {Entity} from 'Controls/dragnDrop';
 import {Logger} from 'UICommon/Utils';
 import 'css!Controls/scroll';
+import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 
 interface IInitialScrollPosition {
     vertical: SCROLL_POSITION.START | SCROLL_POSITION.END;
@@ -95,6 +94,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _savedScrollTop: number = 0;
     private _savedScrollPosition: number = 0;
+    private _listCompatible: ListCompatible;
 
     private _virtualNavigationRegistrar: RegisterClass;
     private _virtualNavigationState: {top: boolean, bottom: boolean} = { top: false, bottom: false };
@@ -113,14 +113,22 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _isUnmounted: boolean = false;
 
-    private _scrollMoveTimer: number;
-
     private _isFirstUpdateState: boolean = true;
     private _scrollToElementCalled: boolean = false;
 
     // Состояние для логирования сохраняем отдельно, т.к. состояние положения скрола в некоторых сценариях
     // обновляется синхронно, и невозможно узнать старое состояние в обработчике.
     private _lastLogState: {top: number, left: number} = { top: 0, left: 0 };
+
+    constructor(...args: [IContainerBaseOptions]) {
+        super(...args);
+
+        this._listCompatible = new ListCompatible({
+            notifyUtil: (...notifyArgs: [string]) => {
+                this._notify(...notifyArgs);
+            }
+        });
+    }
 
     _beforeMount(options: IContainerBaseOptions, context?, receivedState?) {
         this._virtualNavigationRegistrar = new RegisterClass({register: 'virtualNavigation'});
@@ -364,7 +372,16 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             case 'listScroll':
                 // совместимость со списками
                 this._registrars.listScroll.register(event, registerType, component, callback);
-                this._onRegisterNewListScrollComponent(component);
+                // Списку нужны события canScroll и cantScroll в момент инициализации до того,
+                // как у нас отработают обработчики и инициализируются состояние.
+                if (!this._scrollModel) {
+                    this._createScrollModel();
+                }
+                this._listCompatible.onRegisterNewListScrollComponent(
+                    this._registrars.listScroll,
+                    this._scrollModel,
+                    component
+                );
                 break;
             case 'virtualScrollMove':
                 this._registrars.virtualScrollMove.register(event, registerType, component, callback);
@@ -648,7 +665,11 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                     ], this._getScrollNotifyConfig());
             }
 
-            this._generateCompatibleEvents();
+            this._listCompatible.generateCompatibleEvents(
+                this._registrars.listScroll,
+                this._scrollModel,
+                this._oldScrollState
+            );
         } else if (this._isFirstUpdateState) {
             // При первом обновлении scrollState кидаем scrollStateChanged, чтобы можно было знать, с какими размерами
             // построился скролл контейнер.
@@ -830,11 +851,26 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     protected _doScrollHandler(e: SyntheticEvent<null>, scrollParam: number|string, isVirtual: boolean): void {
+        this._doScrollBaseHandler(e, SCROLL_DIRECTION.HORIZONTAL, scrollParam, isVirtual);
+    }
+
+    protected _doHorizontalScrollHandler(e: SyntheticEvent<null>, scrollParam: number): void {
+        this._doScrollBaseHandler(e, SCROLL_DIRECTION.HORIZONTAL, scrollParam);
+    }
+
+    private _doScrollBaseHandler(e: SyntheticEvent<null>,
+                                 direction: SCROLL_DIRECTION,
+                                 scrollParam: number|string,
+                                 isVirtual?: boolean): void {
         // overflow scrolling на ipad мешает восстановлению скролла. Поэтому перед восстановлением его выключаем.
         if (detection.isMobileIOS) {
             this._setOverflowScrolling('hidden');
         }
-        this._doScroll(scrollParam, isVirtual);
+        if (direction === SCROLL_DIRECTION.VERTICAL) {
+            this._doScroll(scrollParam, isVirtual);
+        } else {
+            this._scrollTo(scrollParam as number, SCROLL_DIRECTION.HORIZONTAL, false);
+        }
         if (detection.isMobileIOS) {
             this._setOverflowScrolling('');
         }
@@ -889,102 +925,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     // Слой совместимости с таблицами
-
-    private _generateCompatibleEvents(): void {
-        if ((this._scrollModel.clientHeight !== this._oldScrollState.clientHeight) ||
-            (this._scrollModel.scrollHeight !== this._oldScrollState.scrollHeight)) {
-            this._sendByListScrollRegistrar('scrollResize', {
-                scrollHeight: this._scrollModel.scrollHeight,
-                clientHeight: this._scrollModel.clientHeight
-            });
-        }
-
-        if (this._scrollModel.clientHeight !== this._oldScrollState.clientHeight) {
-            this._sendByListScrollRegistrar('viewportResize', {
-                scrollHeight: this._scrollModel.scrollHeight,
-                scrollTop: this._scrollModel.scrollTop,
-                clientHeight: this._scrollModel.clientHeight,
-                rect: this._scrollModel.viewPortRect
-            });
-        }
-
-        if (this._scrollModel.scrollTop !== this._oldScrollState.scrollTop) {
-            this._sendByListScrollRegistrar('scrollMoveSync', {
-                scrollTop: this._scrollModel.scrollTop,
-                position: this._scrollModel.verticalPosition,
-                clientHeight: this._scrollModel.clientHeight,
-                scrollHeight: this._scrollModel.scrollHeight
-            });
-
-            this._sendScrollMoveAsync();
-        }
-
-        if (this._scrollModel.canVerticalScroll !== this._oldScrollState.canVerticalScroll) {
-            this._sendByListScrollRegistrar(
-                this._scrollModel.canVerticalScroll ? 'canScroll' : 'cantScroll',
-                {
-                    clientHeight: this._scrollModel.clientHeight,
-                    scrollHeight: this._scrollModel.scrollHeight,
-                    viewPortRect: this._scrollModel.viewPortRect
-                });
-        }
-    }
-
-    _sendScrollMoveAsync(): void {
-        if (this._scrollMoveTimer) {
-                clearTimeout(this._scrollMoveTimer);
-            }
-
-        this._scrollMoveTimer = setTimeout(() => {
-                // Т.к код выполняется асинхронно, может получиться, что контрол к моменту вызова функции уже
-                // уничтожился
-                if (!this._isUnmounted) {
-                    this._sendByListScrollRegistrar('scrollMove', {
-                        scrollTop: this._scrollModel.scrollTop,
-                        position: this._scrollModel.verticalPosition,
-                        clientHeight: this._scrollModel.clientHeight,
-                        scrollHeight: this._scrollModel.scrollHeight
-                    });
-                    this._scrollMoveTimer = null;
-                }
-            }, 0);
-    }
-
-    _onRegisterNewListScrollComponent(component: Control): void {
-        // Списку нужны события canScroll и cantScroll в момент инициализации до того,
-        // как у нас отработают обработчики и инициализируются состояние.
-        if (!this._scrollModel) {
-            this._createScrollModel();
-        }
-        this._sendByListScrollRegistrarToComponent(
-            component,
-        this._scrollModel.canVerticalScroll ? 'canScroll' : 'cantScroll',
-        {
-            clientHeight: this._scrollModel.clientHeight,
-            scrollHeight: this._scrollModel.scrollHeight,
-            viewPortRect: this._scrollModel.viewPortRect
-        });
-
-        this._sendByListScrollRegistrarToComponent(
-            component,
-            'viewportResize',
-            {
-                scrollHeight: this._scrollModel.scrollHeight,
-                scrollTop: this._scrollModel.scrollTop,
-                clientHeight: this._scrollModel.clientHeight,
-                rect: this._scrollModel.viewPortRect
-            }
-        );
-    }
-
-    _sendByListScrollRegistrar(eventType: string, params: object): void {
-        this._registrars.listScroll.start(eventType, params);
-        this._notify(eventType, [params]);
-    }
-
-    _sendByListScrollRegistrarToComponent(component: Control, eventType: string, params: object): void {
-        this._registrars.listScroll.startOnceTarget(component, eventType, params);
-    }
 
     _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, position, force}): Promise<void> {
         // Есть кейсы, когда scrollToElement вызывается до componentDidMount. По этому флагу не будем сбрасывать
@@ -1135,7 +1075,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 }]);
                 // TODO: Удалить после перехода списков на новые события
                 //  https://online.sbis.ru/opendoc.html?guid=ca70827b-ee39-4d20-bf8c-32b10d286682
-                this._sendByListScrollRegistrar(
+                this._listCompatible.sendByListScrollRegistrar(
+                    this._registrars.listScroll,
                     'virtualScrollMove',
                     {
                         scrollTop,

@@ -1,41 +1,73 @@
 import {
     AbstractListVirtualScrollController,
-    IAbstractListVirtualScrollControllerOptions
+    IAbstractListVirtualScrollControllerOptions,
+    IScrollControllerOptions
 } from 'Controls/baseList';
-
 import {ObserversController, IObserversControllerOptions} from './ObserversController';
 import {ItemsSizeController, IItemsSizesControllerOptions} from './ItemsSizeController';
-import type {GridCollection, TColumns} from 'Controls/grid';
+import type {TColumns, GridCollection, THeader} from 'Controls/grid';
+import type {Collection} from 'Controls/display';
 
 export interface IControllerOptions extends IAbstractListVirtualScrollControllerOptions {
-    columnScrollStartPosition?: 'end';
+    collection: Collection & GridCollection;
     columns: TColumns;
+    header?: THeader;
+    stickyColumnsCount?: number;
+    columnScrollStartPosition?: 'end';
 }
 
 export type IItemsSizesControllerConstructor = new (options: IItemsSizesControllerOptions) => ItemsSizeController;
 export type IObserversControllerConstructor = new (options: IObserversControllerOptions) => ObserversController;
 
+export const HORIZONTAL_LOADING_TRIGGER_SELECTOR = '.controls-BaseControl__loadingTrigger_horizontal';
+
 export class Controller extends AbstractListVirtualScrollController<IControllerOptions> {
-    protected _collection: GridCollection;
+    protected _collection: Collection & GridCollection;
     private _columns: TColumns;
+    private _header?: THeader;
 
     constructor(options: IControllerOptions) {
-        super(options);
         this._columns = options.columns;
+        this._header = options.header;
+        super({
+            ...options,
+            itemsQuerySelector: '.js-controls-Grid__columnScroll__relativeCell',
+            triggersQuerySelector: HORIZONTAL_LOADING_TRIGGER_SELECTOR
+        });
     }
 
     protected _getObserversControllerConstructor(): IObserversControllerConstructor {
         return ObserversController;
     }
+
     protected _getItemsSizeControllerConstructor(): IItemsSizesControllerConstructor {
         return ItemsSizeController;
     }
 
-    protected _applyIndexes(startIndex: number, endIndex: number): void {
-        this._collection.setColumns(this._columns.slice(startIndex, endIndex));
+    protected _getScrollControllerOptions(options: IControllerOptions): IScrollControllerOptions {
+        return {
+            ...super._getScrollControllerOptions(options),
+            totalCount: options.columns.length
+        };
     }
 
-    private _onCollectionChange(): void {
+    protected _applyIndexes(startIndex: number, endIndex: number): void {
+        this._collection.setColumns(this._columns.slice(startIndex, endIndex));
+
+        if (this._header) {
+            this._collection.setHeader(this._header.slice(startIndex, endIndex));
+        }
+    }
+
+    keyDownLeft(): Promise<void> {
+        return this._scrollToPage('backward');
+    }
+
+    keyDownRight(): Promise<void> {
+        return this._scrollToPage('forward');
+    }
+
+    protected _onCollectionChange(): void {
         /*Еще не реализована реакция на обновление*/
     }
 }
