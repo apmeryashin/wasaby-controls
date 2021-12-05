@@ -421,10 +421,10 @@ const _private = {
             // При полной перезагрузке данных нужно сбросить состояние скролла
             // и вернуться к началу списка, иначе браузер будет пытаться восстановить
             // scrollTop, догружая новые записи после сброса.
+            self._resetScrollAfterReload = !self._keepScrollAfterReload;
             if (self._useNewScroll) {
                 self._listVirtualScrollController.disableKeepScrollPosition();
             } else {
-                self._resetScrollAfterReload = !self._keepScrollAfterReload;
                 self._keepScrollAfterReload = false;
             }
         }
