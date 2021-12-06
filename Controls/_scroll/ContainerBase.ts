@@ -4,13 +4,16 @@ import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RegisterClass, RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {RESIZE_OBSERVER_BOX, ResizeObserverUtil} from 'Controls/sizeUtils';
+import {ResizeObserverUtil, RESIZE_OBSERVER_BOX} from 'Controls/sizeUtils';
 import {getScrollContainerPageCoords, isCursorAtBorder, SCROLL_DIRECTION, SCROLL_POSITION} from './Utils/Scroll';
 import {scrollToElement} from './Utils/scrollToElement';
+import {scrollTo} from './Utils/Scroll';
 import {ListCompatible} from './Utils/ListCompatible';
-import ScrollState, {IScrollState} from './Utils/ScrollState';
+import ScrollState from './Utils/ScrollState';
 import ScrollModel from './Utils/ScrollModel';
+import {IScrollState} from './Utils/ScrollState';
 import {SCROLL_MODE} from './Container/Type';
+import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import {EventUtils} from 'UI/Events';
 import {isHidden} from './StickyBlock/Utils';
 import {getHeadersHeight} from './StickyBlock/Utils/getHeadersHeight';
@@ -18,7 +21,6 @@ import {location} from 'Application/Env';
 import {Entity} from 'Controls/dragnDrop';
 import {Logger} from 'UICommon/Utils';
 import 'css!Controls/scroll';
-import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 
 interface IInitialScrollPosition {
     vertical: SCROLL_POSITION.START | SCROLL_POSITION.END;
@@ -233,6 +235,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     _beforeUnmount(): void {
+        this._listCompatible.destroy();
         // Установим дата аттрибут, чтобы в будущем была возможность определить, был ли в этой ноде скролл контейнер.
         // Подробности в комментарии в _componentDidMount.
         this._container.dataset?.scrollContainerNode = 'true';
@@ -851,7 +854,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     protected _doScrollHandler(e: SyntheticEvent<null>, scrollParam: number|string, isVirtual: boolean): void {
-        this._doScrollBaseHandler(e, SCROLL_DIRECTION.HORIZONTAL, scrollParam, isVirtual);
+        this._doScrollBaseHandler(e, SCROLL_DIRECTION.VERTICAL, scrollParam, isVirtual);
     }
 
     protected _doHorizontalScrollHandler(e: SyntheticEvent<null>, scrollParam: number): void {
