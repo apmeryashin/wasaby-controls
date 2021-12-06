@@ -18,7 +18,6 @@
       <module id="37e402f1-2fb0-4b73-81c5-113cf94dbf1c" name="WasabyLoader"/>
       <module id="e4bbd0f2-f7ce-404e-88b2-5130d105b770" name="ParametersWebAPI"/>
       <module id="825f3706-0d79-4982-aa00-b07e4c471288" name="Controls-icons"/>
-      <module id="f9771b31-df2d-48ac-8d01-2586a920bcc7" name="ParametersServiceAPI"/>
     </depends>
 
   <load_after/>
