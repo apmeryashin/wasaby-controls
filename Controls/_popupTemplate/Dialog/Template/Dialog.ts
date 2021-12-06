@@ -43,7 +43,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     protected _beforeMount(options: IDialogTemplateOptions): void {
         this._setDragStateByOptions(options);
         if (options.closeButtonVisibility !== undefined) {
-            Logger.warn('Controls/popupTemplate:Dialog : Используется устаревшая опция closeButtonVisibility,' +
+            Logger.error('Controls/popupTemplate:Dialog : Используется устаревшая опция closeButtonVisibility,' +
                                                                                      ' используйте closeButtonVisible');
         }
     }

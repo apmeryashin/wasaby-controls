@@ -16,6 +16,7 @@ import * as GroupColumnTemplate from 'wml!Controls/_treeGrid/render/GroupCellCon
 import * as GridItemTemplate from 'wml!Controls/_treeGrid/render/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_treeGrid/render/table/Item';
 import * as NodeFooterTemplate from 'wml!Controls/_treeGrid/render/NodeFooterTemplate';
+import * as NodeHeaderTemplate from 'wml!Controls/_treeGrid/render/NodeHeaderTemplate';
 
 // FIXME: при обычном условном присвоении шаблона tmpl = isAny ? tmpl1 : tmpl2, переменной один раз
 //  присвоится значение и не будет меняться. В таком случае возникает ошибка при открытии одной
@@ -38,6 +39,7 @@ export {
     TreeGridViewTable,
     ItemTemplate,
     NodeFooterTemplate,
+    NodeHeaderTemplate,
     GroupColumnTemplate,
     TableItemTemplate
 };
@@ -46,6 +48,7 @@ import {register} from 'Types/di';
 import TreeGridCollection from 'Controls/_treeGrid/display/TreeGridCollection';
 import TreeGridDataRow from 'Controls/_treeGrid/display/TreeGridDataRow';
 import TreeGridDataCell from 'Controls/_treeGrid/display/TreeGridDataCell';
+import TreeGridNodeHeaderRow from 'Controls/_treeGrid/display/TreeGridNodeHeaderRow';
 import TreeGridNodeFooterRow from 'Controls/_treeGrid/display/TreeGridNodeFooterRow';
 import TreeGridNodeFooterCell from 'Controls/_treeGrid/display/TreeGridNodeFooterCell';
 import TreeGridFooterRow from 'Controls/_treeGrid/display/TreeGridFooterRow';
@@ -71,6 +74,7 @@ export {
     TreeGridDataRow,
     TreeGridDataCell,
     TreeGridNodeFooterRow,
+    TreeGridNodeHeaderRow,
     TreeGridNodeFooterCell,
     TreeGridGroupDataRow,
     TreeGridGroupDataCell,
@@ -82,6 +86,7 @@ register('Controls/treeGrid:TreeGridCollection', TreeGridCollection, {instantiat
 register('Controls/treeGrid:TreeGridDataRow', TreeGridDataRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridDataCell', TreeGridDataCell, {instantiate: false});
 register('Controls/treeGrid:TreeGridNodeFooterRow', TreeGridNodeFooterRow, {instantiate: false});
+register('Controls/treeGrid:TreeGridNodeHeaderRow', TreeGridNodeHeaderRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridNodeFooterCell', TreeGridNodeFooterCell, {instantiate: false});
 register('Controls/treeGrid:TreeGridFooterRow', TreeGridFooterRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridFooterCell', TreeGridFooterCell, {instantiate: false});

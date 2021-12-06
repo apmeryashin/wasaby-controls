@@ -35,6 +35,7 @@ import {
     getReloadItemsHierarchy,
     getRootsForHierarchyReload
 } from 'Controls/_tree/utils';
+import {IHasMoreStorage} from 'Controls/_display/Tree';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -257,22 +258,25 @@ const _private = {
     prepareHasMoreStorage(
         sourceController: NewSourceController,
         expandedItems: TKey[],
-        currentHasMore: Record<string, boolean>
-    ): Record<string, boolean> {
+        currentHasMore: IHasMoreStorage
+    ): IHasMoreStorage {
         const hasMore = {...currentHasMore};
 
         expandedItems.forEach((nodeKey) => {
-            hasMore[nodeKey] = sourceController ? sourceController.hasMoreData('down', nodeKey) : false;
+            hasMore[nodeKey] = {
+                backward: sourceController ? sourceController.hasMoreData('up', nodeKey) : false,
+                forward: sourceController ? sourceController.hasMoreData('down', nodeKey) : false
+            };
         });
 
         return hasMore;
     },
 
-    loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey): Promise<RecordSet> {
+    loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey, direction: IDirection = 'down'): Promise<RecordSet> {
         const sourceController = self.getSourceController();
 
         self._displayGlobalIndicator();
-        return sourceController.load('down', nodeKey).then((list) => {
+        return sourceController.load(direction, nodeKey).then((list) => {
                 self.stopBatchAdding();
                 self._needRestoreScroll = true;
                 return list;
@@ -551,7 +555,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
         // Можно грузить если это раскрытый узел в котором есть не загруженные данные и не задан футер списка и нет
         // данных для загрузки в дочернем узле
-        return item.isNode() !== null && item.isExpanded() && item.hasMoreStorage() &&
+        return item.isNode() !== null && item.isExpanded() && item.hasMoreStorage('forward') &&
             !this._options.footerTemplate && !hasMoreParentData;
     }
 
@@ -823,10 +827,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return _private.toggleExpanded(this, item);
     }
 
-    protected _onloadMore(e, dispItem?): void {
+    protected _onloadMore(e, dispItem?, direction?: IDirection): void {
         if (dispItem) {
             const nodeKey = dispItem.getContents().getKey();
-            _private.loadNodeChildren(this, nodeKey);
+            _private.loadNodeChildren(this, nodeKey, direction);
         } else {
             super._onloadMore(e);
         }

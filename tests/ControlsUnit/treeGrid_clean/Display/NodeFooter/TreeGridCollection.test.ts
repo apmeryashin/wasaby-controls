@@ -30,7 +30,12 @@ describe('Controls/treeGrid_clean/Display/NodeFooter/Collection', () => {
         assert.isFalse(hasNodeFooter);
 
         // футеры сразу пересчитываются, т.к. передали флаг
-        tree.setHasMoreStorage({1: true}, true);
+        tree.setHasMoreStorage({
+            1: {
+                forward: true,
+                backward: false
+            }
+        }, true);
 
         items = tree.getItems();
         // проверяем что создался узел

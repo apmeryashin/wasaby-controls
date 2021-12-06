@@ -17,6 +17,7 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
     readonly ItemActionsItem: boolean = false;
 
     protected _$moreFontColorStyle: string;
+    protected _$moreCaption: string;
 
     readonly listInstanceName: string =  'controls-TreeGrid__node-footer';
 
@@ -71,11 +72,15 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         // Нужно рисовать футер если:
         //  * есть данные для загрузки и нужно показывать нашу кнопку "Ещё"
         //  * нет данных для загрузки и есть пользовательский контент
-        return this.hasMoreStorage() ? this.needMoreButton() : !!content;
+        return this.hasMoreStorage('forward') ? this.needMoreButton() : !!content;
     }
 
     isSticked(): boolean {
         return false;
+    }
+
+    getMoreCaption(): string {
+        return this._$moreCaption;
     }
 
     getMoreFontColorStyle(): string {
@@ -104,7 +109,7 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         const hideForLastNode = collection.getMoreButtonVisibility() === MoreButtonVisibility.exceptLastNode;
 
         const needHide =
-            !this.hasMoreStorage() ||
+            !this.hasMoreStorage('forward') ||
             (hideForLastNode && dataRowIsLastCollectionItem && !collection.getFooter());
 
         return !needHide;
@@ -138,5 +143,6 @@ Object.assign(TreeGridNodeFooterRow.prototype, {
     _cellModule: 'Controls/treeGrid:TreeGridNodeFooterCell',
     _instancePrefix: 'tree-grid-node-footer-row-',
     _$supportLadder: false,
-    _$moreFontColorStyle: null
+    _$moreFontColorStyle: null,
+    _$moreCaption: null
 });

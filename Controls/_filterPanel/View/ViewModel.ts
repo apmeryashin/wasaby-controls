@@ -1,7 +1,6 @@
 import {IFilterItem} from 'Controls/filter';
 import {TemplateFunction} from 'UI/Base';
 import IExtendedPropertyValue from '../_interface/IExtendedPropertyValue';
-import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
 import {VersionableMixin} from 'Types/entity';
 import {mixin} from 'Types/util';
@@ -264,7 +263,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     }
 
     resetFilter(): void {
-        this._source = object.clone(this._source);
+        this._source = coreClone(this._source);
         FilterUtils.resetFilter(this._source);
         this._resetSourceViewMode();
         this._collapsedGroups = [];
@@ -274,7 +273,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     }
 
     resetFilterItem(name: string): void {
-        this._source = object.clone(this._source);
+        this._source = coreClone(this._source);
         const item = this._source.find((filterItem) => filterItem.name === name);
         item.value = item.resetValue;
         item.textValue = '';
