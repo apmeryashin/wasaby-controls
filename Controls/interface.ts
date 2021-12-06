@@ -46,7 +46,7 @@ export {
     TKeySelection,
     TKeysSelection
 } from './_interface/ISelectionType';
-export { ISelectionCountModeOptions } from './_interface/ISelectionCountMode';
+export { ISelectionCountModeOptions, TSelectionCountMode } from './_interface/ISelectionCountMode';
 export {ITileRoundBorder} from './_interface/ITileRoundBorder';
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';

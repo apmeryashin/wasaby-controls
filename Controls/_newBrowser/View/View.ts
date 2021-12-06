@@ -8,10 +8,8 @@ import {DetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/ID
 import {IExplorerOptions} from 'Controls/_newBrowser/interfaces/IExplorerOptions';
 import {MasterVisibilityEnum} from 'Controls/_newBrowser/interfaces/IMasterOptions';
 import {IBrowserViewConfig, NodesPosition} from 'Controls/_newBrowser/interfaces/IBrowserViewConfig';
-import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {EventUtils} from 'UI/Events';
-import {CrudEntityKey} from 'Types/source';
 import {View as ExplorerView} from 'Controls/explorer';
 import {getListConfiguration} from 'Controls/_newBrowser/utils';
 import * as ViewTemplate from 'wml!Controls/_newBrowser/View/View';
@@ -23,6 +21,8 @@ import {default as ListController} from 'Controls/_newBrowser/TemplateController
 import {default as TableController} from 'Controls/_newBrowser/TemplateControllers/Table';
 import {object} from 'Types/util';
 import 'css!Controls/newBrowser';
+import {TKey} from 'Controls/interface';
+import {IReloadItemOptions} from 'Controls/list';
 
 //endregion
 
@@ -344,6 +344,16 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._afterViewModeChanged();
     }
 
+    protected _getViewModeForItemTemplate(): string {
+        const isSelectedViewModeUnloaded = !this._tileLoaded && this.viewMode === DetailViewMode.tile ||
+            !this._listLoaded && this.viewMode === DetailViewMode.list;
+        if (isSelectedViewModeUnloaded) {
+            return this._appliedViewMode;
+        } else {
+            return this.viewMode;
+        }
+    }
+
     protected _getListOptions(
         listConfig: Partial<IExplorerOptions> = {},
         listOptions: Partial<IExplorerOptions> = {}
@@ -535,9 +545,8 @@ export default class View extends Control<IOptions, IReceivedState> {
         }
     }
 
-    reloadItem(): unknown {
-        const detailExplorer = this._children.detailList;
-        return detailExplorer.reloadItem.apply(detailExplorer, arguments);
+    reloadItem(key: TKey, options: IReloadItemOptions = {}): Promise<Model | RecordSet> {
+        return this._children.detailList.reloadItem(key, options);
     }
 
     moveItemsWithDialog(): unknown {

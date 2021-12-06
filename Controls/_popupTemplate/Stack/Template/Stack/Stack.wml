@@ -37,7 +37,7 @@
                              on:click="changeMaximizedState()"
                              attr:title="{{_maximizeButtonTitle}}"></div>
                     </ws:if>
-                    <ws:if data="{{_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility}}">
+                    <ws:if data="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}">
                         <Controls._popupTemplate.CloseButton
                                 attr:class="controls-StackTemplate__close_button"
                                 attr:data-qa="controls-stack-Button__close"
@@ -77,7 +77,7 @@
         <ws:if data="{{_hasRightPanel}}">
             <ws:partial template="Controls/_popupTemplate/Stack/Template/RightPanel"
                         scope="{{_options}}"
-                        closeButtonVisibility="{{_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility}}"
+                        closeButtonVisble="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}"
                         rightBorderVisible="{{_options.rightBorderVisible}}"
                         toolbarContentTemplate="{{_options.toolbarContentTemplate}}"
                         maximizeButtonVisibility="{{_maximizeButtonVisibility}}"

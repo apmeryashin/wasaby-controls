@@ -15,6 +15,7 @@ import {error as loadDataError} from 'Controls/dataSource';
  * @mixes Controls/toolbars:IToolbarSource
  * @implements Controls/interface/IItemTemplate
  * @implements Controls/interface:IHierarchy
+ * @implements Controls/_interface/ISelectionCountModeOptions
  *
  * @public
  * @author Герасимов А.М.

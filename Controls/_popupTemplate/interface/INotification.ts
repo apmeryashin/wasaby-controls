@@ -20,7 +20,7 @@ import {IControlOptions} from 'UI/Base';
  */
 
 /**
- * @name Controls/_popupTemplate/interface/INotification#closeButtonVisibility
+ * @name Controls/_popupTemplate/interface/INotification#closeButtonVisible
  * @cfg {Boolean} Устанавливает видимость кнопки, закрывающей окно.
  * @default true
  */
@@ -28,7 +28,7 @@ import {IControlOptions} from 'UI/Base';
 type TStyle = 'warning' | 'secondary' | 'success' | 'danger';
 
 export interface INotificationBase {
-    closeButtonVisibility?: Boolean;
+    closeButtonVisible?: Boolean;
     style?: TStyle;
 }
 

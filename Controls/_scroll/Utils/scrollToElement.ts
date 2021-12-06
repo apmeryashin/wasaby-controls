@@ -126,7 +126,12 @@ function getFirstReplaceableHeader(scrollableElement: HTMLElement): object {
    }
 }
 
-function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; bottom: number; topWithOffset: number } {
+function getStickyHeaderHeight(targetElement: HTMLElement, scrollableElement: HTMLElement):
+    { top: number; bottom: number; topWithOffset: number } {
+   if (targetElement.classList.contains('controls-StickyHeader__isolatedGroup')) {
+      return { top: 0, bottom: 0, topWithOffset: 0 };
+   }
+
    const scrollControlNode: HTMLElement = scrollableElement.closest(SCROLL_CONTAINERS_SELECTOR);
    if (scrollControlNode) {
       const scrollContainer = getScrollContainerByElement(scrollControlNode);
@@ -156,10 +161,8 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
 /**
  * Позволяет проскроллить содержимое, находящееся внутри родительского скролл-контейнера, к выбранному элементу, сделав его видимым.
  * @param {HTMLElement} element DOM-элемент, к которому нужно проскроллить содержимое.
- * @param {String} position Определяет, должен ли быть виден нижний край контейнера. Допустимые значения: top, bottom, center.
- * @param {boolean} force
- * * true — позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
- * * false — элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
+ * @param {String} [position='top'] Целевое положение элемента, к которому происходит скроллирование. Допустимые значения: top, bottom, center.
+ * @param {boolean} [force=false] Определяет форсированность скролла. Если true, то подскролл произойдет в любом случае. Если false, то подскролл произойдет только в случае, если элемент частично или полностью скрыт за пределами области прокрутки.
  *
  * @example
  * <pre class="brush: js">
@@ -217,7 +220,7 @@ export function scrollToElement(element: HTMLElement, position?: TScrollPosition
       const stickyElement = isStickyElement(element);
       const elemOffset = stickyElement ? getStickyElementOffset(stickyElement, parent) : getOffset(element);
 
-      const stickyHeaderHeight = getStickyHeaderHeight(parent);
+      const stickyHeaderHeight = getStickyHeaderHeight(element, parent);
       // Если внутри элемента, к которому хотят подскроллиться, лежит StickyHeader или элемент является StickyHeader'ом,
       // то мы не должны учитывать высоту предыдущего заголовка, т.к. заголовок встанет вместо него
       // Рассматримается кейс: https://online.sbis.ru/opendoc.html?guid=cf7d3b3a-de34-43f2-ad80-d545d462602b, где все

@@ -1,7 +1,7 @@
 <Controls.popupSliding:Template
    slidingPanelOptions="{{ _options.slidingPanelOptions }}"
    shadowVisible="{{true}}"
-   closeButtonVisibility="{{false}}"
+   closeButtonVisible="{{false}}"
    controlButtonVisibility="{{false}}"
 >
    <ws:bodyContentTemplate>

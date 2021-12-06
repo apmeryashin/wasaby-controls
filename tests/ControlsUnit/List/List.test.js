@@ -4,14 +4,17 @@ define(['Controls/list'], function(lists) {
          var list = new lists.View({});
          list._children = {
             listControl: {
-               reloadItem: function(key, readMeta, direction) {
+               reloadItem: function(key, options) {
                   assert.equal(key, 'test');
-                  assert.deepEqual(readMeta, {test: 'test'});
-                  assert.equal(direction, 'depth');
+                  assert.deepEqual(options.readMeta, {test: 'test'});
+                  assert.equal(options.hierarchyReload, true);
                }
             }
          };
-         list.reloadItem('test', {test: 'test'}, 'depth');
+         list.reloadItem('test', {
+            readMeta: { test: 'test' },
+            hierarchyReload: true
+         });
       });
    });
 });

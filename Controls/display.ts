@@ -33,7 +33,7 @@ export {
     Collection, ICollectionOptions, IEditingConfig, ISessionItems,
     IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory, IViewIterator
 };
-export {default as CollectionItem, IOptions as ICollectionItemOptions} from './_display/CollectionItem';
+export {default as CollectionItem, IOptions as ICollectionItemOptions, TItemBaseLine} from './_display/CollectionItem';
 import {default as GroupItem} from './_display/GroupItem';
 export {GroupItem};
 import * as itemsStrategy from './_display/itemsStrategy';

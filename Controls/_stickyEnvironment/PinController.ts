@@ -1,87 +1,162 @@
-// tslint:disable-next-line:ban-ts-ignore
-// @ts-ignore
 import * as DataContext from 'Core/DataContext';
-import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObserver/SyntheticEntry';
+import {getDimensions} from 'Controls/sizeUtils';
+import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
+import {IEdgesData} from 'Controls/_stickyEnvironment/interfaces';
 
 type CallbackType<T> = (pinnedData: T) => void;
 
+interface IStackItem<T = unknown> {
+    data: T;
+    element: HTMLElement;
+}
+
+interface IPinControllerCfg<T = unknown> {
+    /**
+     * Обработчик, который вызывается при обновлении пограничных данных относительно
+     * верхней и/или нижней границ корневого элемента.
+     */
+    onEdgesDataChanged?: (data: IEdgesData<T>) => void;
+}
+
 /**
- * Внутренний контроллер, через который организуется связь между DataPinContainer и DataPinConsumer.
- * DataPinContainer уведомляет о пересечении с верхней границей, контроллер обрабатывает эту информацию
- * и уведомляет DataPinConsumer о новых данных.
+ * Внутренний контроллер, который хранит стек данных, положение которых нужно отслеживать относительно
+ * нижней или верхней границы ScrollContainer.
  */
 export class PinController<T = unknown> extends DataContext {
 
     _moduleName: string;
 
-    protected _stack: T[] = [];
+    // Внутренний стек данных, который собираем на основании события пересечения
+    // их элементов с нижней или верхней границами ScrollContainer
+    private _stack: Array<IStackItem<T>> = [];
 
+    // Обработчики, которые должны быть вызваны
+    // при смене верхних граничных данных
     private _callbacks: Array<CallbackType<T>> = [];
+
+    constructor(private _cfg: IPinControllerCfg<T>) {
+        super();
+    }
 
     subscribe(callback: CallbackType<T>): void {
         this._callbacks.push(callback);
     }
 
-    processIntersect(entries: IntersectionObserverSyntheticEntry): void {
-        const pinnedData = this.updateStack([entries]);
+    /**
+     * Выкидывает переданные данные из стека если они там есть.
+     */
+    dropStackItem(data: T): void {
+        const index = this._stack.findIndex((item) => item.data === data);
 
-        this._callbacks.forEach((callback) => {
-            callback(pinnedData);
-        });
+        if (index >= 0) {
+            this._stack.splice(index, 1);
+        }
     }
 
-    private updateStack(entries: IntersectionObserverSyntheticEntry[]): T | null {
-        // Оставляем только те записи где есть данные
-        const groupsEntries = entries.filter((e) => !!e.data);
-
-        if (!groupsEntries.length) {
-            return this.getPinnedData();
+    /**
+     * Обработчик появления/скрытия целевых элементов в области видимости корневого элемента.
+     * 1. Обновляет внутренний стек данных в соответствии с тем порядком в котором они идут в разметке.
+     * 2. Обновляет информация о пограничных данных для верхней и нижней границ
+     */
+    processIntersect(entry: IntersectionObserverSyntheticEntry): void {
+        // Если данных нет, то и обрабатывать нечего. Это какой-то левый элемент.
+        if (!entry.data) {
+            return;
         }
 
-        // Пробегаемся по всем записям и заполняем _stack.
-        // Записи приходят в том порядке в котором они расположены в DOM.
-        // Нас интересуют только те записи, которые находятся выше верхней границы либо пересекаются с ней.
-        groupsEntries.forEach((e) => {
-            //region intersect var
-            // getBoundingClientRect для ScrollContainer
-            const rootBounds = e.nativeEntry.rootBounds;
-            // getBoundingClientRect для элемента списка, который пересек границы ScrollContainer
-            const targetBounds = e.nativeEntry.boundingClientRect;
+        // 1. Обновим стек данных
+        this.updateStack(entry);
+        // 2. Пересчитаем пограничные данные для верхней и нижней границ
+        const edgesData = this.getEdgesData(entry.nativeEntry.rootBounds);
 
-            // true если дочерний контейнер пересекается с верхней границей
-            const intersectTop = targetBounds.top < rootBounds.top && targetBounds.bottom > rootBounds.top;
-            // true если дочерний контейнер находится полностью за верхней границей
-            const above = targetBounds.bottom <= rootBounds.top;
-            //endregion
-
-            const data = e.data as unknown as T;
-            const index = this._stack.indexOf(data);
-            const hasInStack = index >= 0;
-
-            // Если контейнер пересек или ушел за верхнюю границу, то добавляем его в стек закрепленных.
-            // В противном случае выкидываем его из стека тем самым делая последний элемент стека актуальным.
-            if (intersectTop || above) {
-                // Пропускаем запись если она уже есть в стеке.
-                // В зависимости от конфигурации threshold событие
-                // пересечения может стрелять несколько раз
-                if (hasInStack) {
-                    return;
-                }
-
-                this._stack.push(data);
-            } else if (hasInStack) {
-                // Если запись нашлась в середине, то нужно также из стека выкинуть все что стоит после неё.
-                // Т.к. при включенном виртуальном скроле и быстром скролировании элементы могут просто не
-                // успеть отрисоваться и события о пересечении для них не будет.
-                this._stack.splice(index, this._stack.length - index);
-            }
+        this._callbacks.forEach((callback) => {
+            callback(edgesData.top.above);
         });
 
-        return this.getPinnedData();
+        if (this._cfg.onEdgesDataChanged) {
+            this._cfg.onEdgesDataChanged(edgesData);
+        }
     }
 
-    private getPinnedData(): T {
-        return this._stack.length ? this._stack[this._stack.length - 1] : null;
+    /**
+     * Обновляет стек элементов с которыми отслеживается пересечение.
+     * На основании верхнего смещения элемента вставляет его в соответсвующее место стека.
+     */
+    private updateStack(entry: IntersectionObserverSyntheticEntry): void {
+        const data = entry.data as unknown as T;
+        // Пропускаем запись если она уже есть в стеке.
+        if (this._stack.findIndex((item) => item.data === data) >= 0) {
+            return;
+        }
+
+        let targetIndex;
+        const element = entry.nativeEntry.target as HTMLElement;
+        // getBoundingClientRect для элемента списка, который пересек границы ScrollContainer
+        const targetBounds = getDimensions(element);
+        const lastStackElem = this._stack.length && this._stack[this._stack.length - 1].element;
+
+        // Сразу проверим целевой элемент относительно последнего элемента стека
+        // что бы не перебирать его весь. Т.к. обычно данный загружаются либо в конец списка либо в начало
+        if (lastStackElem && getDimensions(lastStackElem).top < targetBounds.top) {
+            this._stack.push({data, element});
+            return;
+        }
+
+        // Пробегаемся по стеку и ищем первый элемент верхняя границы которого выше
+        // верхней границы текущего элемента, пересечение которого обрабатываем
+        for (targetIndex = 0; targetIndex < this._stack.length; targetIndex++) {
+            const stackElementDimensions = getDimensions(this._stack[targetIndex].element);
+
+            if (stackElementDimensions.top > targetBounds.top) {
+                break;
+            }
+        }
+
+        this._stack.splice(targetIndex, 0, {data, element});
+    }
+
+    /**
+     * На основании текущих данных стека вычисляет какие из них находятся ближе всего
+     * к верхней и нижней границе корневого элемента.
+     */
+    private getEdgesData(rootBounds: DOMRectReadOnly): IEdgesData<T> {
+        let aboveTop: T;
+        let bellowTop: T;
+        let aboveBottom: T;
+        let belowBottom: T;
+
+        for (let i = 0; i < this._stack.length; i++) {
+            const stackItem = this._stack[i];
+            const targetBounds = getDimensions(stackItem.element);
+
+            if (targetBounds.top < rootBounds.top) {
+                aboveTop = stackItem.data;
+            }
+
+            if (!bellowTop && targetBounds.top >= rootBounds.top) {
+                bellowTop = stackItem.data;
+            }
+
+            if (targetBounds.top < rootBounds.bottom) {
+                aboveBottom = stackItem.data;
+            }
+
+            if (!belowBottom && targetBounds.top >= rootBounds.bottom) {
+                belowBottom = stackItem.data;
+                break;
+            }
+        }
+
+        return {
+            top: {
+                above: aboveTop,
+                below: bellowTop
+            },
+            bottom: {
+                above: aboveBottom,
+                below: belowBottom
+            }
+        };
     }
 }
 

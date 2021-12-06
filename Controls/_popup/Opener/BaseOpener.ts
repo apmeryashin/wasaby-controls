@@ -3,6 +3,7 @@ import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import { IOpener, IBaseOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
 import {loadModule, getModuleByName} from 'Controls/_popup/utils/moduleHelper';
+import loadPopupPageConfig from 'Controls/_popup/utils/loadPopupPageConfig';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
@@ -94,19 +95,26 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         return BaseOpener.isOpened(this._popupId);
     }
 
-    private _openPopup(cfg: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
+    private _openPopup(config: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
-            const syncResult: ILoadDependencies = this._getModulesSync(cfg, controller);
-            // Если зависимости загружены, действуем синхронно, без промисов
-            if (syncResult) {
-                this._loadDepsCallback(cfg, syncResult, resolve);
+            const openPopup = (cfg) => {
+                const syncResult: ILoadDependencies = this._getModulesSync(cfg, controller);
+                // Если зависимости загружены, действуем синхронно, без промисов
+                if (syncResult) {
+                    this._loadDepsCallback(cfg, syncResult, resolve);
+                } else {
+                    this._requireModules(cfg, controller).then((result: ILoadDependencies) => {
+                        this._loadDepsCallback(cfg, result, resolve);
+                    }).catch(() => {
+                        this._toggleIndicator(false);
+                        resolve();
+                    });
+                }
+            };
+            if (config.pageId) {
+                loadPopupPageConfig(config).then(openPopup);
             } else {
-                this._requireModules(cfg, controller).then((result: ILoadDependencies) => {
-                    this._loadDepsCallback(cfg, result, resolve);
-                }).catch(() => {
-                    this._toggleIndicator(false);
-                    resolve();
-                });
+                openPopup(config);
             }
         }));
     }

@@ -882,6 +882,28 @@
    border: none;
 }
 
+.controls-TileView__item_addTile {
+   background: var(--unaccented_same_background-color);
+
+   &:hover {
+      background: var(--unaccented_hover_same_background-color);
+   }
+   &:active {
+      background: var(--unaccented_active_same_background-color);
+   }
+}
+
+.controls-TileView__item_addTile_rich {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.controls-TileView__addTile_image {
+   height: 100%;
+   width: 100%;
+}
+
 //TODO: Выписана задача. чтобы унести стили из плитки https://online.sbis.ru/opendoc.html?guid=f1421bfc-67dd-4aa5-bf13-28df0a9ab79b
 .controls-TileView__itemActions_bottomRight {
    bottom: 0;

@@ -9,6 +9,7 @@ import 'css!Controls/treeGrid';
 import TreeGridCollection from './display/TreeGridCollection';
 import TreeGridDataRow from './display/TreeGridDataRow';
 import TreeGridNodeFooterRow from './display/TreeGridNodeFooterRow';
+import TreeGridNodeHeaderRow from './display/TreeGridNodeHeaderRow';
 import { ITreeControlOptions } from 'Controls/tree';
 import {TGroupNodeVisibility} from './interface/ITreeGrid';
 
@@ -43,7 +44,15 @@ export default class TreeGridView extends GridView {
         if (item instanceof TreeGridNodeFooterRow) {
             e.stopImmediatePropagation();
             if (e.target.closest('.js-controls-BaseControl__NavigationButton')) {
-                this._notify('loadMore', [item.getNode()]);
+                this._notify('loadMore', [item.getNode(), 'down']);
+            }
+            return;
+        }
+
+        if (item instanceof TreeGridNodeHeaderRow) {
+            e.stopImmediatePropagation();
+            if (e.target.closest('.js-controls-BaseControl__NavigationButton')) {
+                this._notify('loadMore', [item.getNode(), 'up']);
             }
             return;
         }
@@ -52,7 +61,7 @@ export default class TreeGridView extends GridView {
     }
 
     protected _onItemMouseUp(e: SyntheticEvent, item: TreeGridDataRow|TreeGridNodeFooterRow): void {
-        if (item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+        if (item['[Controls/treeGrid:TreeGridNodeFooterRow]'] || item['[Controls/treeGrid:TreeGridNodeHeaderRow]']) {
             e.stopImmediatePropagation();
             return;
         }
@@ -61,7 +70,7 @@ export default class TreeGridView extends GridView {
     }
 
     protected _onItemMouseDown(e: SyntheticEvent, item: TreeGridDataRow|TreeGridNodeFooterRow): void {
-        if (item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+        if (item['[Controls/treeGrid:TreeGridNodeFooterRow]'] || item['[Controls/treeGrid:TreeGridNodeHeaderRow]']) {
             e.stopImmediatePropagation();
             return;
         }

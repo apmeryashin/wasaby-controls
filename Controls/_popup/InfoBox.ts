@@ -95,8 +95,8 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
             // InfoBox close by outside click only if trigger is set to 'demand' or 'click'.
             closeOnOutsideClick,
             floatCloseButton: this._options.floatCloseButton,
-            closeButtonVisibility: this._options.closeButtonVisible !== undefined ? this._options.closeButtonVisible :
-                                                                                   this._options.closeButtonVisibility ,
+            closeButtonVisible: this._options.closeButtonVisibility !== undefined ?
+                                                this._options.closeButtonVisibility : this._options.closeButtonVisible ,
             eventHandlers: {
                 onResult: this._resultHandler,
                 onClose: this._closeHandler
@@ -229,7 +229,7 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
             alignment: 'start',
             style: 'secondary',
             trigger: 'hover',
-            closeButtonVisibility: true
+            closeButtonVisible: true
         };
     }
 }

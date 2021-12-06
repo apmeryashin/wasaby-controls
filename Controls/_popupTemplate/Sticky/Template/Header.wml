@@ -2,14 +2,22 @@
             {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder_top'}}
             {{_options.headerBackgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
                                                              'controls-background-' + _options.headerBackgroundStyle}}
-            controls-StickyTemplate__top-area-{{(_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility) ? 'withClose' : 'withoutClose'}}">
+            controls-StickyTemplate__top-area-{{(_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible) ? 'withClose' : 'withoutClose'}}">
    <div class="controls-StickyTemplate__top-area-content">
+      <ws:if data="{{_options.headingIcon}}">
+         <div class="controls-StickyTemplate__top-area-icon">
+            <Controls.icon:Icon icon="{{_options.headingIcon}}"
+                                iconSize="{{_options.headingIconSize}}"
+                                iconStyle="{{_options.headingIconStyle}}"/>
+         </div>
+      </ws:if>
       <ws:if data="{{_options.headingCaption}}">
          <div class="controls-StickyTemplate__caption">
             <Controls.heading:Title caption="{{_options.headingCaption}}"
                                     fontColorStyle="{{_options.headingFontColorStyle}}"
                                     fontSize="{{_options.headingFontSize}}"
                                     readOnly="{{true}}"
+                                    fontWeight="{{_options.headingFontWeight}}"
                                     tooltip="{{_options.headingCaption}}"/>
          </div>
       </ws:if>
@@ -19,7 +27,7 @@
                      borderStyle="{{null}}"
                      theme="{{_options.theme}}"/>
       </ws:if>
-      <ws:if data="{{_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility}}">
+      <ws:if data="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}">
          <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
             controls-StickyTemplate__close_button_position-{{_options.closeBtnPosition}}
             {{_options.verticalDirection === 'top' ?

@@ -3,6 +3,7 @@
             {{_options.newDesign ? 'controls-operationsPanelV_newDesign' : ''}}">
     <Controls.operations:MultiSelector selectedKeys="{{ _options.selectedKeys }}"
                                        excludedKeys="{{ _options.excludedKeys }}"
+                                       selectionCountMode="{{_options.selectionCountMode}}"
                                        size="{{_options.multiSelectSize}}"
                                        fontColorStyle="{{_options.fontColorStyle}}"
                                        fontSize="{{_options.multiSelectFontSize}}"

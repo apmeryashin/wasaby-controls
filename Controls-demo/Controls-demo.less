@@ -36,11 +36,11 @@
   background-color: transparent;
   height: 24px;
   border-radius: 12px;
-  border: 1px solid #587AB0;
+  border: 1px solid var(--secondary_color);
   cursor: pointer;
   padding: 0 11px;
   &:hover {
-    background-color: #F0F5FB;
+    background-color: var(--hover_background-color);
   }
   &:active {
     background-color: #E1ECF6;
@@ -401,7 +401,7 @@
 }
 .controlsDemo__GridInEditingRow__editingRow__content {
   margin: 10px;
-  box-shadow: 1px 0 4px 0 #ccc;
+  box-shadow: 1px 0 4px 0 var(--readonly_color);
 }
 /*==========[ Controls-demo/grid ]================*/
 
@@ -422,7 +422,7 @@
 }
 
 .controlsDemo_ColumnsView_itemTemplate-border {
-  border: 1px solid #587AB0;
+  border: 1px solid var(--secondary_color);
 }
 
 .controlsDemo_ColumnsView_itemTemplate-title {
@@ -535,7 +535,7 @@
 }
 
 .controlsDemo-tile_AltAction {
-  background: #fff;
+  background: var(--background-color);
   opacity: .6;
   width: 24px;
   height: 24px;

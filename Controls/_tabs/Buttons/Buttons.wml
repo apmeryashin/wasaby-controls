@@ -24,13 +24,15 @@
                             {{_prepareItemMarkerClass(item)}}
                             {{_prepareItemTypeClass(item)}}">
                     <ws:partial
-                                class="{{_prepareItemSelectedClass(item)}}"
+                                attr:class="{{_prepareItemSelectedClass(item)}}"
+                                attr:data-qa="{{item[_options.keyProperty] === _options.selectedKey ? 'TabsItemSelected'}}"
                                 template="{{ _getTemplate(_options.itemTemplate, item, _options.itemTemplateProperty) || _defaultItemTemplate}}"
                                 selected="{{item[_options.keyProperty] === _options.selectedKey}}"
                                 displayProperty="{{_options.displayProperty}}"
                                 keyProperty="{{_options.keyProperty}}"
                                 index="{{index}}"
                                 item="{{_items.at(index)}}"
+                                horizontalPadding="none"
                                 inlineHeight="{{_options.inlineHeight}}"/>
                 </div>
                 <ws:if data="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}">

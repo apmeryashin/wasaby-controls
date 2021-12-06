@@ -8,7 +8,7 @@ import Collection, {
 } from './Collection';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem from './CollectionItem';
-import TreeItem from './TreeItem';
+import TreeItem, {IHasMore} from './TreeItem';
 import TreeChildren from './TreeChildren';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
 import DirectItemsStrategy from './itemsStrategy/Direct';
@@ -21,6 +21,7 @@ import {Object as EventObject} from 'Env/Event';
 import {TemplateFunction} from 'UI/Base';
 import {CrudEntityKey} from 'Types/source';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
+import NodeHeader from 'Controls/_display/itemsStrategy/NodeHeader';
 import {Model, relation} from 'Types/entity';
 import {IDragPosition} from './interface/IDragPosition';
 import TreeDrag from './itemsStrategy/TreeDrag';
@@ -32,6 +33,10 @@ import AddStrategy from 'Controls/_display/itemsStrategy/Add';
 import {TExpanderIconSize, TExpanderIconStyle} from './interface/ITree';
 
 export type TNodeFooterVisibilityCallback<S extends Model = Model> = (contents: S) => boolean;
+
+export interface IHasMoreStorage {
+    [key: string]: IHasMore;
+}
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -66,7 +71,7 @@ export interface IOptions<S, T> extends ICollectionOptions<S, T> {
     loadedProperty?: string;
     root?: T | any;
     rootEnumerable?: boolean;
-    hasMoreStorage?: Record<string, boolean>;
+    hasMoreStorage?: IHasMoreStorage;
     expandedItems?: CrudEntityKey[];
     collapsedItems?: CrudEntityKey[];
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
@@ -190,6 +195,7 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  */
 export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>> extends Collection<S, T> {
     readonly SupportNodeFooters: boolean;
+    readonly SupportNodeHeaders: boolean;
 
     /**
      * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится
@@ -268,6 +274,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      */
     protected _$expanderIconStyle: TExpanderIconStyle;
 
+    protected _$nodeMoreCaption: string;
     protected _$nodeFooterTemplateMoreButton: TemplateFunction;
 
     /**
@@ -299,7 +306,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      * Объект, в котором хранится навигация для узлов
      * @protected
      */
-    protected _$hasMoreStorage: Record<string, boolean>;
+    protected _$hasMoreStorage: IHasMoreStorage;
 
     /**
      * Темплейт подвала узла
@@ -350,6 +357,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      */
     private _nodeFooterModule: string;
 
+    /**
+     * Название модуля элементы, который будет создаваться в стратегии NodeHeader.
+     * Задается с помощью Object.assign
+     * @private
+     */
+    private _nodeHeaderModule: string;
+
     getCurrent: () => T;
 
     // endregion Expanded/Collapsed
@@ -386,6 +400,12 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             this.appendStrategy(this.getNodeFooterStrategyCtor(), {
                 nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback,
                 nodeFooterModule: this._nodeFooterModule
+            });
+        }
+
+        if (this.SupportNodeHeaders) {
+            this.appendStrategy(this.getNodeHeaderStrategyCtor(), {
+                nodeHeaderModule: this._nodeHeaderModule
             });
         }
     }
@@ -531,6 +551,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     // region NodeFooter
 
+    getNodeMoreCaption(): string {
+        return this._$nodeMoreCaption;
+    }
+
     getNodeFooterTemplateMoreButton(): TemplateFunction {
         return this._$nodeFooterTemplateMoreButton;
     }
@@ -561,7 +585,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         }
     }
 
-    setHasMoreStorage(storage: Record<string, boolean>, reBuildNodeFooters: boolean = false): void {
+    setHasMoreStorage(storage: IHasMoreStorage, reBuildNodeFooters: boolean = false): void {
         if (!isEqual(this._$hasMoreStorage, storage)) {
             this._$hasMoreStorage = storage;
             this._updateItemsHasMore(storage);
@@ -572,7 +596,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         }
     }
 
-    getHasMoreStorage(): Record<string, boolean> {
+    getHasMoreStorage(): IHasMoreStorage {
         return this._$hasMoreStorage;
     }
 
@@ -590,7 +614,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         }
     }
 
-    private _updateItemsHasMore(storage: Record<string, boolean>): void {
+    private _updateItemsHasMore(storage: IHasMoreStorage): void {
         Object.keys(storage).forEach((key) => {
             const item = this.getItemBySourceKey(key);
             if (item && item['[Controls/_display/TreeItem]']) {
@@ -914,7 +938,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                     // TODO: не должен общий модуль знать про конкретную реализацию TreeGridNodeFooterRow
                     //  getContents() у TreeGridNodeFooterRow должен придерживаться контракта и возвращать
                     //  Model а не строку
-                    if (!item['[Controls/_display/TreeItem]'] || item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+                    if (!item['[Controls/_display/TreeItem]']
+                        || item['[Controls/treeGrid:TreeGridNodeFooterRow]']
+                        || item['[Controls/treeGrid:TreeGridNodeHeaderRow]']) {
                         return;
                     }
 
@@ -1006,7 +1032,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             }
 
             if (this.getHasMoreStorage() && this.getHasMoreStorage()[key]) {
-                options.hasMore = true;
+                options.hasMore = this.getHasMoreStorage()[key];
             }
 
             return parent.call(this, options);
@@ -1062,19 +1088,29 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         return NodeFooter;
     }
 
+    protected getNodeHeaderStrategyCtor(): NodeHeader {
+        return NodeHeader;
+    }
+
     protected getNodeFooterStrategy(): NodeFooter {
         return this.getStrategyInstance(NodeFooter);
+    }
+
+    protected getNodeHeaderStrategy(): NodeHeader {
+        return this.getStrategyInstance(NodeHeader);
     }
 
     protected _reBuildNodeFooters(reset: boolean = false): void {
         if (reset) {
             const session = this._startUpdateSession();
             this.getNodeFooterStrategy()?.reset();
+            this.getNodeHeaderStrategy()?.reset();
             this._reSort();
             this._reFilter();
             this._finishUpdateSession(session, true);
         } else {
             this.getNodeFooterStrategy()?.invalidate();
+            this.getNodeHeaderStrategy()?.invalidate();
         }
     }
 
@@ -1169,6 +1205,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 while (enumerator.moveNext()) {
                     item = enumerator.getCurrent();
                     if (
+                        item['[Controls/treeGrid:TreeGridNodeHeaderRow]'] ||
                         item['[Controls/treeGrid:TreeGridNodeFooterRow]'] ||
                         !(item instanceof TreeItem) && !(item['[Controls/_display/BreadcrumbsItem]'])
                     ) {
@@ -1447,9 +1484,11 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 Object.assign(Tree.prototype, {
     '[Controls/_display/Tree]': true,
     SupportNodeFooters: true,
+    SupportNodeHeaders: true,
     _moduleName: 'Controls/display:Tree',
     _itemModule: 'Controls/display:TreeItem',
     _nodeFooterModule: 'Controls/display:NodeFooter',
+    _nodeHeaderModule: 'Controls/display:NodeHeader',
     _$parentProperty: '',
     _$nodeProperty: '',
     _$childrenProperty: '',
@@ -1465,6 +1504,7 @@ Object.assign(Tree.prototype, {
     _$rootEnumerable: false,
     _$nodeFooterTemplate: null,
     _$nodeFooterVisibilityCallback: null,
+    _$nodeMoreCaption: null,
     _$nodeFooterTemplateMoreButton: null,
     _$moreFontColorStyle: null,
     _$hasMoreStorage: {},

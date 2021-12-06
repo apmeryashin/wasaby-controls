@@ -121,17 +121,17 @@ export interface IInfoBoxOptions extends IControlOptions {
     */
     templateOptions?: any;
     /**
-     * @name Controls/_popup/interface/IInfoBox#closeButtonVisibility
+     * @name Controls/_popup/interface/IInfoBox#closeButtonVisible
      * @cfg {Boolean} Определяет, будет ли отображаться кнопка закрытия.
      * @default true
      */
 
     /*
-    * @name Controls/_popup/interface/IInfoBox#closeButtonVisibility
+    * @name Controls/_popup/interface/IInfoBox#closeButtonVisible
     * @cfg {Boolean} Whether the close button is displayed.
     * @default true
     */
-    closeButtonVisibility?: boolean;
+    closeButtonVisible?: boolean;
 
     /**
      * @name Controls/_popup/interface/IInfoBox#horizontalPadding
@@ -140,7 +140,7 @@ export interface IInfoBoxOptions extends IControlOptions {
      */
 
     /*
-    * @name Controls/_popup/interface/IInfoBox#closeButtonVisibility
+    * @name Controls/_popup/interface/IInfoBox#closeButtonVisible
     * @cfg {Boolean} Whether the close button is displayed.
     * @default true
     */
@@ -178,7 +178,7 @@ export interface IInfoBox {
  * @property {String} targetSide Сторона таргета, относительно которой будет позиционнироваться всплывающая подсказка.
  * @property {String} alignment Выравнивание всплывающей подсказки относительно вызывающего её элемента.
  * @property {Boolean} floatCloseButton  Определяет, будет ли контент обтекать кнопку закрытия.
- * @property {Boolean} closeButtonVisibility Определяет, будет ли отображаться кнопка закрытия.
+ * @property {Boolean} closeButtonVisible Определяет, будет ли отображаться кнопка закрытия.
  * @property {String} style Внешний вид всплывающей подсказки.
  */
 
@@ -192,7 +192,7 @@ export interface IInfoBox {
  * @property {String} targetSide
  * @property {String} alignment
  * @property {Boolean} floatCloseButton Whether the content should wrap around the cross closure.
- * @property {Boolean} closeButtonVisibility Whether the close button is displayed.
+ * @property {Boolean} closeButtonVisible Whether the close button is displayed.
  * @property {String} style InfoBox display style.
  */
 

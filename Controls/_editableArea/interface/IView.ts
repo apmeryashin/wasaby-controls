@@ -2,7 +2,7 @@ import {Record} from 'Types/entity';
 
 export interface IViewOptions {
     autoEdit?: boolean;
-    editObject?: Record;
+    editingObject?: Record;
     toolbarVisible?: boolean;
     backgroundStyle?: string;
 }
@@ -44,10 +44,10 @@ export interface IView {
  */
 
 /**
- * @name Controls/_editableArea/interface/IView#editObject
+ * @name Controls/_editableArea/interface/IView#editingObject
  * @cfg {Types/entity:Record} Запись с исходными данными.
  * @demo Controls-demo/EditableArea/View/Index
- * @see editObjectChanged
+ * @see editingObjectChanged
  */
 
 /**
@@ -113,7 +113,7 @@ export interface IView {
  *
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
+ * <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" editingObject="{{_editingObject}}" />
  * </pre>
  *
  * <pre class="brush: js">
@@ -129,14 +129,14 @@ export interface IView {
  * </pre>
  * @see beforeEndEdit
  * @see afterEndEdit
- * @see editObject
+ * @see editingObject
  */
 
 /**
  * @event Происходит до окончания редактирования.
  * @name Controls/_editableArea/interface/IView#beforeEndEdit
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Record} editObject Редактируемая запись.
+ * @param {Types/entity:Record} editingObject Редактируемая запись.
  * @param {Boolean} commit Если значение параметра true, редактирование закончится сохранением.
  * @returns {BeforeEndEditResult}
  * @remark
@@ -146,7 +146,7 @@ export interface IView {
  *
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.editableArea:View on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
+ * <Controls.editableArea:View on:beforeEndEdit="beforeEndEditHandler()" editingObject="{{_editingObject}}" />
  * </pre>
  *
  * <pre class="brush: js">
@@ -163,20 +163,20 @@ export interface IView {
  * </pre>
  * @see beforeBeginEdit
  * @see afterEndEdit
- * @see editObject
+ * @see editingObject
  */
 
 /**
  * @event Происходит после окончания редактирования.
  * @name Controls/_editableArea/interface/IView#afterEndEdit
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Record} editObject Редактируемая запись.
+ * @param {Types/entity:Record} editingObject Редактируемая запись.
  * @example
  * В следующем примере показано, как скрыть и показать изображение в зависимости от состояния редактирования.
  *
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
+ * <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" on:afterEndEdit="afterEndEditHandler()" editingObject="{{_editingObject}}" />
  * <ws:if data="{{_imgVisible}}">
  *    <img src="/media/examples/frog.png" alt="Frog"/>
  * </ws:if>
@@ -193,5 +193,5 @@ export interface IView {
  * </pre>
  * @see beforeBeginEdit
  * @see beforeEndEdit
- * @see editObject
+ * @see editingObject
  */

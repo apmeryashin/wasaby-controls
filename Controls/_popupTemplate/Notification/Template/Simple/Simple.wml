@@ -1,5 +1,5 @@
 <ws:partial template="Controls/_popupTemplate/Notification/Template/Base"
-            closeButtonVisibility="{{_options.closeButtonVisible !== undefined ? _options.closeButtonVisible : _options.closeButtonVisibility}}"
+            closeButtonVisible="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}"
             style="{{_options.style}}">
     <ws:bodyContentTemplate>
         <div class="controls-Notification__simpleTemplate">

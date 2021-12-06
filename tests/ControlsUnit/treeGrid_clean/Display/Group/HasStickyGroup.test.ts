@@ -136,7 +136,7 @@ describe('Controls/treeGrid_clean/Display/StickyGroup/HasStickyGroup', () => {
             columns
         });
 
-        assert.strictEqual(treeGridCollection.getVersion(), 4);
+        assert.strictEqual(treeGridCollection.getVersion(), 5);
 
         const sandbox = sinon.createSandbox();
         treeGridCollection.getViewIterator().each((item: TreeGridDataRow<any>) => {
@@ -147,7 +147,7 @@ describe('Controls/treeGrid_clean/Display/StickyGroup/HasStickyGroup', () => {
 
         treeGridCollection.setNodeTypeProperty('nodeType');
 
-        assert.strictEqual(treeGridCollection.getVersion(), 5);
+        assert.strictEqual(treeGridCollection.getVersion(), 6);
         treeGridCollection.getViewIterator().each((item: TreeGridDataRow<any>) => {
             if (item.LadderSupport) {
                 assert(item.setHasStickyGroup.calledOnce, 'setHasStickyGroup must be called on items');

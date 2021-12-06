@@ -12,6 +12,7 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
     readonly ItemActionsItem: boolean = false;
 
     protected _$moreFontColorStyle: string;
+    protected _$moreCaption: string;
 
     readonly listInstanceName: string =  'controls-Tree__node-footer';
 
@@ -53,11 +54,15 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
     }
 
     shouldDisplayVisibleFooter(content: TemplateFunction): boolean {
-        return this.hasMoreStorage() || !!content;
+        return this.hasMoreStorage('forward') || !!content;
     }
 
     getMoreFontColorStyle(): string {
         return this._$moreFontColorStyle;
+    }
+
+    getMoreCaption(): string {
+        return this._$moreCaption;
     }
 
     setMoreFontColorStyle(moreFontColorStyle: string): void {
@@ -80,5 +85,6 @@ Object.assign(TreeNodeFooterItem.prototype, {
     '[Controls/tree:TreeNodeFooterItem]': true,
     _moduleName: 'Controls/tree:TreeNodeFooterItem',
     _instancePrefix: 'tree-node-footer-item-',
-    _$moreFontColorStyle: null
+    _$moreFontColorStyle: null,
+    _$moreCaption: null
 });

@@ -11,6 +11,7 @@
  *       * mainCounterStyle {String} — Стиль отображения счетчика.
  *       * caption {String} — Подпись вкладки.
  *       * additionalCaption {String} - Дополнительная подпись вкладки.
+ *       * horizontalPadding {String} - Определяет Наличие отступа
  * @class Controls/_tabs/interface/TextCounterTabTemplate
  * @author Красильников А.С.
  * @example
@@ -79,4 +80,13 @@ export interface ITextCounterTabTemplate {
      * @cfg {String} Дополнительная подпись вкладки.
      */
     additionalCaption?: string;
+    /**
+     * @name Controls/_tabs/interface/ITextCounterTabTemplate#horizontalPadding
+     * @cfg {String} Определяет наличие отступа.
+     * @variant left
+     * @variant right
+     * @variant none
+     * @default left
+     */
+    horizontalPadding?: string;
 }

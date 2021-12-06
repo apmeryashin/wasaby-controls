@@ -1,95 +1,42 @@
-import {Control} from 'UI/Base';
-
 import {
-    NewScrollController as ScrollController,
-    IPlaceholders
+    AbstractListVirtualScrollController,
+    IAbstractListVirtualScrollControllerOptions
 } from 'Controls/baseList';
 
-import {ObserversController} from './ObserversController';
-import {ItemsSizeController} from './ItemsSizeController';
-import type {GridCollection} from 'Controls/grid';
+import {ObserversController, IObserversControllerOptions} from './ObserversController';
+import {ItemsSizeController, IItemsSizesControllerOptions} from './ItemsSizeController';
+import type {GridCollection, TColumns} from 'Controls/grid';
 
-export interface IControllerOptions {
-    listControl: Control;
-    collection: GridCollection;
-    virtualScrollConfig?: {
-        pageSize?: number;
-    };
+export interface IControllerOptions extends IAbstractListVirtualScrollControllerOptions {
     columnScrollStartPosition?: 'end';
-    triggersQuerySelector: string;
-    columns: object[];
-    leftTriggerOffsetCoefficient: number;
-    rightTriggerOffsetCoefficient: number;
-    updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
+    columns: TColumns;
 }
 
-type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
+export type IItemsSizesControllerConstructor = new (options: IItemsSizesControllerOptions) => ItemsSizeController;
+export type IObserversControllerConstructor = new (options: IObserversControllerOptions) => ObserversController;
 
-export class Controller {
-    private _scrollController: ScrollController;
-    private _collection: GridCollection;
-    private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
+export class Controller extends AbstractListVirtualScrollController<IControllerOptions> {
+    protected _collection: GridCollection;
+    private _columns: TColumns;
 
     constructor(options: IControllerOptions) {
-        this._collection = options.collection;
-        this._updatePlaceholdersUtil = options.updatePlaceholdersUtil;
-        this._createScrollController(options);
+        super(options);
+        this._columns = options.columns;
     }
 
-    private _createScrollController(options: IControllerOptions): void {
-        this._scrollController = new ScrollController({
-            virtualScrollConfig: options.virtualScrollConfig,
-            listControl: options.listControl,
-            totalCount: options.columns.length,
-            itemsSizeControllerConstructor: ItemsSizeController,
-            observerControllerConstructor: ObserversController,
-
-            indexesChangedCallback: ({startIndex, endIndex}) => {
-                this._collection.setColumns(options.columns.slice(startIndex, endIndex));
-            },
-            hasItemsOutRangeChangedCallback: () => {/**/
-            },
-            indexesInitializedCallback: ({startIndex, endIndex}) => {
-                this._collection.setColumns(options.columns.slice(startIndex, endIndex));
-            },
-            placeholdersChangedCallback: (placeholders: IPlaceholders) => {
-                this._updatePlaceholdersUtil(placeholders);
-            },
-            itemsEndedCallback: () => {/*Needless*/
-            },
-            activeElementChangedCallback: () => {/*Needless*/
-            },
-
-            itemsContainer: undefined,
-            listContainer: undefined,
-
-            itemsQuerySelector: '.js-Controls-Grid__columnScroll__relativeCell',
-
-            topTriggerOffsetCoefficient: options.leftTriggerOffsetCoefficient,
-            bottomTriggerOffsetCoefficient: options.rightTriggerOffsetCoefficient,
-            triggersQuerySelector: options.triggersQuerySelector,
-            triggersVisibility: {
-                backward: true,
-                forward: true
-            },
-
-            contentSize: 0,
-            givenItemsSizes: undefined,
-            scrollPosition: 0,
-            viewportSize: 0
-        });
+    protected _getObserversControllerConstructor(): IObserversControllerConstructor {
+        return ObserversController;
+    }
+    protected _getItemsSizeControllerConstructor(): IItemsSizesControllerConstructor {
+        return ItemsSizeController;
     }
 
-    setItemsContainer(itemsContainer: HTMLElement): void {
-        this._scrollController.setItemsContainer(itemsContainer);
+    protected _applyIndexes(startIndex: number, endIndex: number): void {
+        this._collection.setColumns(this._columns.slice(startIndex, endIndex));
     }
 
-    setListContainer(listContainer: HTMLElement): void {
-        this._scrollController.setListContainer(listContainer);
-    }
-
-    viewportResized(viewportSize: number): void {
-        this._scrollController.viewportResized(viewportSize);
+    private _onCollectionChange(): void {
+        /*Еще не реализована реакция на обновление*/
     }
 }
 

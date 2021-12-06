@@ -1,5 +1,6 @@
-import type { IItemsSizes } from './ItemsSizeController';
 import type { IDirection, IItemsRange, IPlaceholders } from './ScrollController';
+import type { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
+import type { IItemsSizes } from './ItemsSizeController/AbstractItemsSizeController';
 
 const MIN_RATIO_INDEX_LINE = 0.15;
 const MAX_RATIO_INDEX_LINE = 0.85;
@@ -17,12 +18,22 @@ export interface IGetRangeByItemsSizesParams {
     itemsSizes: IItemsSizes;
 }
 
-export interface IShiftRangeBySegmentParams {
+export interface IShiftRangeBySegmentParams extends IGetSegmentSizeToHideParams {
     pageSize: number;
     totalCount: number;
     segmentSize: number;
     direction: IDirection;
     currentRange: IItemsRange;
+}
+
+interface IGetSegmentSizeToHideParams {
+    direction: IDirection;
+    currentRange: IItemsRange;
+    triggersOffsets: ITriggersOffsets;
+    placeholders: IPlaceholders;
+    itemsSizes: IItemsSizes;
+    viewportSize: number;
+    contentSize: number;
 }
 
 export interface IGetByPositionParams {
@@ -49,6 +60,13 @@ export interface IGetSizesByRangeParams {
     totalCount: number;
 }
 
+export interface IGetFirstVisibleItemIndexParams {
+    itemsSizes: IItemsSizes;
+    scrollPosition: number;
+    placeholders: IPlaceholders;
+    currentRange: IItemsRange;
+}
+
 /**
  * Расчет видимых индексов от переданного индекса
  * @param {IShiftRangeBySegmentParams} params
@@ -57,27 +75,80 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
     const { direction, segmentSize, totalCount, pageSize, currentRange } = params;
     let { startIndex, endIndex } = currentRange;
 
-    if (segmentSize && totalCount >= pageSize) {
-        if (direction === 'backward') {
-            startIndex = Math.max(0, startIndex - segmentSize);
-            if (startIndex >= totalCount) {
-                startIndex = Math.max(0, totalCount - pageSize);
-            }
-
-            endIndex = Math.max(endIndex - segmentSize, Math.min(startIndex + pageSize, totalCount));
-        } else {
-            endIndex = Math.min(endIndex + segmentSize, totalCount);
-            startIndex = Math.min(startIndex + segmentSize, Math.max(endIndex - pageSize, 0));
-        }
+    if (!pageSize) {
+        return {
+            startIndex: 0,
+            endIndex: totalCount
+        };
     }
 
-    if (endIndex < pageSize && endIndex < totalCount) {
-        endIndex = Math.min(pageSize, totalCount);
+    // Нельзя скрывать записи на заданный segmentSize, т.к. этого может быть много и мы сразу же увидим триггер.
+    const segmentSizeToHide = getSegmentSizeToHide(params);
+    if (direction === 'backward') {
+        startIndex = Math.max(0, startIndex - segmentSize);
+        if (startIndex >= totalCount) {
+            startIndex = Math.max(0, totalCount - pageSize);
+        }
+
+        endIndex = Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount));
+    } else {
+        // сперва считаем именно endIndex, т.к. startIndex зависит от нового значения endIndex
+        endIndex = Math.min(endIndex + segmentSize, totalCount);
+        startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
     }
 
     return {
         startIndex, endIndex
     };
+}
+
+/**
+ * Рассчитывает сколько элементов нужно скрыть.
+ * Смещение на заданный segmentSize может сразу же вызвать shiftRange по триггеру.
+ */
+function getSegmentSizeToHide(params: IGetSegmentSizeToHideParams): number {
+    const shiftDirection = params.direction;
+    if (shiftDirection === 'forward') {
+        return getSegmentSizeToHideBackward(params);
+    } else {
+        return getSegmentSizeToHideForward(params);
+    }
+}
+
+function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
+    let segmentSize = 0;
+    let endIndex = params.currentRange.endIndex - 1;
+    const itemsSizes = params.itemsSizes;
+    const backwardPlaceholder = params.placeholders.backward;
+    const offsetDistance = params.viewportSize + params.triggersOffsets.backward + params.triggersOffsets.forward;
+
+    while (itemsSizes[endIndex].offset - backwardPlaceholder > offsetDistance) {
+        endIndex--;
+        segmentSize++;
+    }
+
+    return segmentSize;
+}
+
+function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): number {
+    let segmentSize = 0;
+    let start = params.currentRange.startIndex;
+    let itemsSizesSum = 0;
+    const itemsSizes = params.itemsSizes;
+    const offsetDistance = params.contentSize - params.viewportSize - params.triggersOffsets.backward
+        - params.triggersOffsets.forward;
+    // Если список не проскроллен, то offsetDistance может получиться меньше 0.
+    if (offsetDistance < 0) {
+        return 0;
+    }
+
+    while (itemsSizesSum + itemsSizes[start].size < offsetDistance) {
+        itemsSizesSum += itemsSizes[start].size;
+        segmentSize++;
+        start++;
+    }
+
+    return segmentSize;
 }
 
 /**
@@ -278,8 +349,24 @@ function getItemsSizesSum(params: IGetSizesByRangeParams): number {
     let result = 0;
 
     for (let idx = fixedStartIndex; idx < fixedEndIndex; idx++) {
-        result += itemsSizes[idx].size || 0;
+        result += itemsSizes[idx]?.size || 0;
     }
 
     return result;
+}
+
+/**
+ * Возвращает индекс первой полностью видимой записи
+ * @param params
+ */
+export function getFirstVisibleItemIndex(params: IGetFirstVisibleItemIndexParams): number {
+    const itemsSizes = params.itemsSizes;
+    const backwardPlaceholder = params.placeholders.backward;
+    let itemIndex = params.currentRange.startIndex;
+
+    while (itemsSizes[itemIndex].offset - backwardPlaceholder < params.scrollPosition) {
+        itemIndex++;
+    }
+
+    return itemIndex;
 }

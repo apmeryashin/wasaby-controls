@@ -11,10 +11,17 @@ import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
-import {Direction, IBaseSourceConfig, IFilterOptions, IHierarchyOptions, TKey} from 'Controls/interface';
+import {
+    Direction,
+    IBaseSourceConfig,
+    IFilterOptions,
+    IHierarchyOptions,
+    ISelectionObject,
+    TKey
+} from 'Controls/interface';
 import {
     BaseControl,
-    convertReloadItemArgs,
+    checkReloadItemArgs,
     IBaseControlOptions, IDirection,
     IReloadItemOptions,
     ISiblingStrategy
@@ -35,6 +42,7 @@ import {
     getReloadItemsHierarchy,
     getRootsForHierarchyReload
 } from 'Controls/_tree/utils';
+import {IHasMoreStorage} from 'Controls/_display/Tree';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -178,6 +186,7 @@ const _private = {
                         return self.scrollToItem(self._fixedItem.key, 'top', false);
                     }
                     //endregion
+                    self._needRestoreScroll = true;
                 });
         }
 
@@ -256,23 +265,27 @@ const _private = {
     prepareHasMoreStorage(
         sourceController: NewSourceController,
         expandedItems: TKey[],
-        currentHasMore: Record<string, boolean>
-    ): Record<string, boolean> {
+        currentHasMore: IHasMoreStorage
+    ): IHasMoreStorage {
         const hasMore = {...currentHasMore};
 
         expandedItems.forEach((nodeKey) => {
-            hasMore[nodeKey] = sourceController ? sourceController.hasMoreData('down', nodeKey) : false;
+            hasMore[nodeKey] = {
+                backward: sourceController ? sourceController.hasMoreData('up', nodeKey) : false,
+                forward: sourceController ? sourceController.hasMoreData('down', nodeKey) : false
+            };
         });
 
         return hasMore;
     },
 
-    loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey): Promise<RecordSet> {
+    loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey, direction: IDirection = 'down'): Promise<RecordSet> {
         const sourceController = self.getSourceController();
 
         self._displayGlobalIndicator();
-        return sourceController.load('down', nodeKey).then((list) => {
+        return sourceController.load(direction, nodeKey).then((list) => {
                 self.stopBatchAdding();
+                self._needRestoreScroll = true;
                 return list;
             })
             .catch((error) => {
@@ -549,7 +562,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
         // Можно грузить если это раскрытый узел в котором есть не загруженные данные и не задан футер списка и нет
         // данных для загрузки в дочернем узле
-        return item.isNode() !== null && item.isExpanded() && item.hasMoreStorage() &&
+        return item.isNode() !== null && item.isExpanded() && item.hasMoreStorage('forward') &&
             !this._options.footerTemplate && !hasMoreParentData;
     }
 
@@ -821,10 +834,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return _private.toggleExpanded(this, item);
     }
 
-    protected _onloadMore(e, dispItem?): void {
+    protected _onloadMore(e, dispItem?, direction?: IDirection): void {
         if (dispItem) {
             const nodeKey = dispItem.getContents().getKey();
-            _private.loadNodeChildren(this, nodeKey);
+            _private.loadNodeChildren(this, nodeKey, direction);
         } else {
             super._onloadMore(e);
         }
@@ -834,12 +847,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return super.reload(keepNavigation, sourceConfig);
     }
 
-    reloadItem(key: TKey, options: IReloadItemOptions | object, direction?: boolean | string): Promise<Model> {
-        const newArgs = convertReloadItemArgs(...arguments);
+    reloadItem(key: TKey, options: IReloadItemOptions = {}): Promise<Model | RecordSet> {
+        checkReloadItemArgs(...arguments);
 
-        return newArgs.options.hierarchyReload
+        return options.hierarchyReload
             ? _private.reloadItem(key, this.getViewModel() as Tree, this._options.filter, this.getSourceController())
-            : super.reloadItem.apply(this, [newArgs.key, newArgs.options]);
+            : super.reloadItem.apply(this, [key, options]);
     }
 
     /**
@@ -941,8 +954,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         _private.toggleExpanded(this, dispItem);
     }
 
-    protected _getSourceControllerOptionsForGetDraggedItems(): ISourceControllerOptions {
-        const options = super._getSourceControllerOptionsForGetDraggedItems();
+    protected _getSourceControllerOptionsForGetDraggedItems(selection: ISelectionObject): ISourceControllerOptions {
+        const options = super._getSourceControllerOptionsForGetDraggedItems(selection);
 
         options.deepReload = true;
         options.expandedItems = this._expandController.getExpandedItems();

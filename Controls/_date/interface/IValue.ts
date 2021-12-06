@@ -1,5 +1,5 @@
 export default interface IValueOptions {
-    value: Date | null;
+    value: Date | null | string;
 }
 
 /**
@@ -22,4 +22,12 @@ export default interface IValueOptions {
  * <pre>
  *  _value: Date = new Date(2021, 0);
  * </pre>
+ */
+
+/**
+ * @event Происходит при изменении значения поля ввода.
+ * @name Controls/_date/interface/IValue#valueChanged
+ * @param {Event} eventObject Дескриптор события.
+ * @param {Date} value Новое значение поля ввода.
+ * @param {String} displayValue Текстовое значение поля ввода.
  */

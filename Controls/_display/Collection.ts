@@ -1750,6 +1750,11 @@ export default class Collection<
     }
 
     setGroupProperty(groupProperty: string): boolean {
+        // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
+        // https://online.sbis.ru/opendoc.html?guid=37b14566-12c3-44ed-ac0b-0cd7e0ae5c9d
+        if (this._disableSupportsGrouping) {
+            return;
+        }
         if (this._$groupProperty !== groupProperty) {
             this._$groupProperty = groupProperty;
             const groupCallback = this._createGroupFunctor();
@@ -1808,6 +1813,11 @@ export default class Collection<
      * @see getGroup
      */
     setGroup(group?: GroupFunction<S, T>): void {
+        // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
+        // https://online.sbis.ru/opendoc.html?guid=37b14566-12c3-44ed-ac0b-0cd7e0ae5c9d
+        if (this._disableSupportsGrouping) {
+            return;
+        }
         if (this._$group === group) {
             return;
         }
@@ -2994,7 +3004,7 @@ export default class Collection<
         }
     }
 
-    private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
+    protected _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
         const strategyOptions = { ...options, display: this };
         let index = 0;
 

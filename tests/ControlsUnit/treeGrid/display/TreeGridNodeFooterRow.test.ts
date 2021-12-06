@@ -101,7 +101,9 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterRow', () => {
       assert.isFalse(nodeFooterRow.shouldDisplayVisibleFooter(undefined));
       assert.isTrue(nodeFooterRow.shouldDisplayVisibleFooter({}));
 
-      treeGridCollection.setHasMoreStorage({ 3: true });
+      treeGridCollection.setHasMoreStorage({
+         3: { forward: true, backward: false }
+      });
       assert.isTrue(nodeFooterRow.shouldDisplayVisibleFooter(undefined));
    });
 });

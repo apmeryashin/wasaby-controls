@@ -2,10 +2,11 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
-import {ICollectionItemOptions} from 'Controls/display';
+import {ICollectionItemOptions, IItemPadding, TItemBaseLine} from 'Controls/display';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from 'Controls/_tile/utils/imageUtil';
 import * as ImageTemplate from 'wml!Controls/_tile/render/Image';
 import * as DefaultContent from 'wml!Controls/_tile/render/itemsContent/Default';
+import * as AddContent from 'wml!Controls/_tile/render/itemsContent/Add';
 import * as MediumContent from 'wml!Controls/_tile/render/itemsContent/Medium';
 import * as PreviewContent from 'wml!Controls/_tile/render/itemsContent/Preview';
 import * as RichContent from 'wml!Controls/_tile/render/itemsContent/Rich';
@@ -27,7 +28,7 @@ const DEFAULT_WIDTH_PROPORTION = 1;
 const DEFAULT_ITEM_IMAGE_FIT = 'none';
 const DEFAULT_RICH_ITEM_IMAGE_FIT = 'cover';
 
-export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small';
+export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small'|'adding';
 export type TTitlePosition = 'underImage'|'onImage';
 export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
 
@@ -1004,6 +1005,9 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'preview':
                 classes += ' controls-TileView__previewTemplate_image';
                 break;
+            case 'adding':
+                classes += ' controls-TileView__addTile_image';
+                break;
         }
 
         return classes;
@@ -1536,6 +1540,10 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TemplateFunction} contentTemplate Прикладной темплейт контента
      */
     getContentTemplate(itemType: TTileItem = 'default', contentTemplate?: TemplateFunction): TemplateFunction {
+        if (this['[Controls/_tile/display/mixins/AddItem]']) {
+            return AddContent;
+        }
+
         if (contentTemplate) {
             return contentTemplate;
         }

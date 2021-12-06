@@ -9,6 +9,7 @@ import {IDragObject} from 'Controls/dragnDrop';
 import 'css!Controls/popupTemplate';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {getRoundClass} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
+import {Logger} from 'UI/Utils';
 
 const enum POSITION {
     RIGHT = 'right',
@@ -40,7 +41,7 @@ interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions,
  * @author Красильников А.С.
  * @implements Controls/popupTemplate:IPopupTemplateBase
  * @demo Controls-demo/PopupTemplate/Sticky/FooterContentTemplate/Index
- * @demo Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/Index
+ * @demo Controls-demo/PopupTemplate/Sticky/CloseButtonVisible/Index
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/Index
  */
 
@@ -53,7 +54,10 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
     protected _dragging: boolean = false;
 
     protected _beforeMount(options: IPopupTemplateOptions): void {
-        /* For override */
+        if (options.closeButtonVisibility !== undefined) {
+            Logger.error('Controls/popupTemplate:Sticky : Используется устаревшая опция closeButtonVisibility,' +
+                                                                                     ' используйте closeButtonVisible');
+        }
     }
 
     protected _beforeUpdate(options: IPopupTemplateOptions): void {
@@ -153,7 +157,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         return {
             headingFontSize: 'l',
             headingFontColorStyle: 'secondary',
-            closeButtonVisibility: true,
+            closeButtonVisible: true,
             shadowVisible: false,
             backgroundStyle: 'default',
             headerBackgroundStyle: 'default',

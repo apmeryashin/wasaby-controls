@@ -5,6 +5,7 @@
  * @author Уфимцев Д.Ю.
  */
 
+export * from './_stickyEnvironment/interfaces';
 export * from './_stickyEnvironment/DataPinConsumer';
 export * from './_stickyEnvironment/DataPinContainer';
 export {DataPinProvider} from './_stickyEnvironment/DataPinProvider';

@@ -19,6 +19,8 @@ interface IReceivedState {
     minSavedWidth?: number;
 }
 
+let themeConstants = {};
+
 /**
  * Контрол-обертка для базовой раскладки {@link /doc/platform/developmentapl/interface-development/controls/openers/stack/ стекового окна} в отдельной вкладке.
  *
@@ -40,6 +42,7 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     protected _canResize: boolean;
     protected _minWidth: number;
     protected _maximized: boolean = false;
+    protected _sizesClass: string = '';
     private _resizeRegister: RegisterClass;
     private _offsetChanged: boolean;
     private _minSavedWidth: number;
@@ -48,13 +51,16 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
 
     protected _beforeMount(options?: IPageTemplate, context?: object,
                            receivedState?: IReceivedState): void | Promise<IReceivedState> {
+        this._calcSizesClass(options);
         this._rightPanelWidth = getRightPanelWidth();
         const width = this._validateWidth(options, receivedState?.width || options.workspaceWidth);
-        this._setWorkSpaceWidth(width);
-        this._setSavedSizes(receivedState);
-        this._updateOffset(options);
-        this._updateProperties(options);
         this._resizeRegister = new RegisterClass({register: 'controlResize'});
+        this._setSavedSizes(receivedState);
+        if (!this._sizesClass) {
+            this._setWorkSpaceWidth(width);
+            this._updateOffset(options.minWidth, options.maxWidth);
+            this._updateProperties(options.propStorageId, options.minWidth, options.maxWidth, options.workspaceWidth);
+        }
         if (!receivedState && options.propStorageId) {
             return new Promise((resolve) => {
                 getPopupWidth(options.propStorageId).then((data?: number | IStackSavedConfig) => {
@@ -66,16 +72,49 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
                                 width: data
                             };
                         }
-                        this._setWorkSpaceWidth(resultData.width);
-                        this._setSavedSizes(resultData);
+                        if (!this._sizesClass) {
+                            this._setWorkSpaceWidth(resultData.width);
+                            this._setSavedSizes(resultData);
+                        }
                     }
-                    this._updateProperties(options);
+                    if (!this._sizesClass) {
+                        this._updateProperties(
+                            options.propStorageId,
+                            options.minWidth,
+                            options.maxWidth,
+                            options.workspaceWidth
+                        );
+                        this._maximized = this._getMaximizeState(options);
+
+                    }
                     this._maximized = this._getMaximizeState(options);
                     resolve(resultData);
                 });
             });
         } else {
             this._maximized = this._getMaximizeState(options);
+        }
+    }
+
+    protected _componentDidMount(options: IPageTemplate): void {
+        if (this._sizesClass) {
+            this._sizesClass = '';
+            StackController.initializationConstants()
+                .then((result) => {
+                    themeConstants = result as object;
+                    const width = this._isLiteralWidth(options.workspaceWidth) ?
+                                                  this._getNumberWidth(options.workspaceWidth) : options.workspaceWidth;
+                    const minWidth = this._isLiteralWidth(options.minWidth) ?
+                                                  this._getNumberWidth(options.minWidth) : options.minWidth;
+                    const maxWidth = this._isLiteralWidth(options.maxWidth) ?
+                                                  this._getNumberWidth(options.maxWidth) : options.maxWidth;
+                    if (!this._workspaceWidth) {
+                        this._setWorkSpaceWidth(maxWidth);
+                    }
+                    this._updateOffset(minWidth, maxWidth);
+                    this._updateProperties(options.propStorageId, minWidth, maxWidth, width);
+                    }
+                );
         }
     }
 
@@ -86,6 +125,26 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
            this._notify('workspaceResize', [this._workspaceWidth], { bubbling: true });
            this._resizeRegister.start(new SyntheticEvent({}));
        }
+    }
+
+    protected _isLiteralWidth(value: string|number): boolean {
+        return StackController.BASE_WIDTH_SIZES.includes(value);
+    }
+
+    protected _getNumberWidth(value: string): number {
+        return themeConstants[value];
+    }
+
+    protected _calcSizesClass(options: IPageTemplate): void {
+        if (this._isLiteralWidth(options.workspaceWidth)) {
+            this._sizesClass += `controls-PageTemplate_content_width_${options.workspaceWidth}`;
+        }
+        if (this._isLiteralWidth(options.minWidth)) {
+            this._sizesClass += ` controls-PageTemplate_content_minWidth_${options.minWidth}`;
+        }
+        if (this._isLiteralWidth(options.maxWidth)) {
+            this._sizesClass += ` controls-PageTemplate_content_maxWidth_${options.maxWidth}`;
+        }
     }
 
     protected _registerHandler(event: Event, registerType: string,
@@ -137,8 +196,10 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
             minSavedWidth: this._minSavedWidth,
             maxSavedWidth: this._maxSavedWidth,
             popupOptions: {
-                minWidth: this._options.minWidth,
-                maxWidth: this._options.maxWidth,
+                minWidth: this._isLiteralWidth(this._options.minWidth) ?
+                                                        themeConstants[this._options.minWidth] : this._options.minWidth,
+                maxWidth: this._isLiteralWidth(this._options.maxWidth) ?
+                                                        themeConstants[this._options.maxWidth] : this._options.maxWidth,
                 stackWidth: this._templateWorkSpaceWidth,
                 propStorageId: this._options.propStorageId,
                 templateOptions: {}
@@ -147,20 +208,28 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         };
     }
 
-    private _updateProperties(options: IPageTemplate): void {
-        this._canResize = StackPageWrapper._canResize(options.propStorageId, this._workspaceWidth,
-            options.minWidth, options.maxWidth);
-        this._minWidth = options.minWidth;
+    private _updateProperties(propStorageId: string, minWidth: number, maxWidth: number, workspaceWidth: number): void {
+        this._canResize = StackPageWrapper._canResize(propStorageId, this._workspaceWidth,
+            minWidth, maxWidth);
+        this._minWidth = minWidth;
         // Если размер фиксирован
-        if (this._workspaceWidth && !options.minWidth && !options.maxWidth) {
-            this._minWidth = options.workspaceWidth;
+        if (this._workspaceWidth && !minWidth && !maxWidth) {
+            this._minWidth = workspaceWidth;
         }
     }
 
-    private _updateOffset(options: IPageTemplate = this._options): void {
+    private _updateOffset(minWidth: number = this._options.minWidth,
+                          maxWidth: number = this._options.maxWidth
+    ): void {
+        if (this._isLiteralWidth(minWidth)) {
+            minWidth = this._getNumberWidth(minWidth);
+        }
+        if (this._isLiteralWidth(maxWidth)) {
+            maxWidth = this._getNumberWidth(maxWidth);
+        }
         // protect against wrong options
-        this._maxOffset = Math.max(options.maxWidth - this._workspaceWidth - this._rightPanelWidth, 0);
-        this._minOffset = Math.max(this._workspaceWidth - options.minWidth - this._rightPanelWidth, 0);
+        this._maxOffset = Math.max(maxWidth - this._workspaceWidth - this._rightPanelWidth, 0);
+        this._minOffset = Math.max(this._workspaceWidth - minWidth - this._rightPanelWidth, 0);
     }
 
     private _validateWidth(options: IPageTemplate, width: number): number {

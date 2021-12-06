@@ -2,7 +2,6 @@ import {loadModule} from 'Controls/_popup/utils/moduleHelper';
 import {Control} from 'UI/Base';
 import {IBasePopupOptions} from 'Controls/_popup/interface/IBasePopupOptions';
 import {PageController as DSPageController, IPageConfig} from 'Controls/dataSource';
-import Confirmation from 'Controls/_popup/Opener/Confirmation';
 
 interface IPageTemplateOptions {
     pageTemplate: string;
@@ -80,10 +79,12 @@ class PageController {
                 Страница с указанным идентификатором имеет некорректное описание.
                 В описании должен быть workspaceConfig с заданным templateName.
             `;
-            Confirmation.openPopup({
-                type: 'ok',
-                style: 'danger',
-                message
+            import('Controls/popup').then((popupLib) => {
+                popupLib.Confirmation.openPopup({
+                    type: 'ok',
+                    style: 'danger',
+                    message
+                });
             });
             throw new Error(message);
         }

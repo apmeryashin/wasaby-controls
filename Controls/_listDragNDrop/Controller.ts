@@ -9,6 +9,7 @@ import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource
 import {process} from 'Controls/error';
 import {factory} from 'Types/chain';
 import { Model } from 'Types/entity';
+import {TouchDetect} from 'Env/Touch';
 
 type StrategyConstructor<P> = new (model: IDraggableCollection<P>, draggableItem: IDraggableItem) => IDragStrategy<P>;
 
@@ -141,19 +142,29 @@ export default class Controller<P> {
 
    /**
     * Проверяет можно ли начать перетаскивание
+    * @param readOnly
+    * @param itemsDragNDrop
     * @param canStartDragNDropOption
     * @param event
-    * @param isTouch
+    * @param isDragging
     */
    static canStartDragNDrop(
+       readOnly: boolean,
+       itemsDragNDrop: boolean,
        canStartDragNDropOption: boolean | Function,
        event: SyntheticEvent<MouseEvent>,
-       isTouch: boolean
+       isDragging: boolean
    ): boolean {
-      return (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
-          && !event.nativeEvent.button
-          && !(event.target as Element).closest('.controls-List_DragNDrop__notDraggable')
-          && !isTouch;
+      const target = event.target;
+      const allowByTarget = target instanceof Element &&
+              !target.closest('.controls-List_DragNDrop__notDraggable');
+      return !readOnly &&
+          !isDragging &&
+          itemsDragNDrop &&
+          (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption()) &&
+          allowByTarget &&
+          (!event.nativeEvent || !event.nativeEvent.button) &&
+          !TouchDetect.getInstance().isTouch();
    }
 
    /**

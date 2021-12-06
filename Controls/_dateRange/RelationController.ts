@@ -1,7 +1,9 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import Model from './RelationController/Model';
+import Model, {IModel} from './RelationController/Model';
 import * as template from 'wml!Controls/_dateRange/RelationController/RelationController';
 import {Date as WSDate} from 'Types/entity';
+
+interface IRelationController extends IControlOptions, IModel {}
 
 /**
  * Контроллер, который позволяет связать несколько контролов для ввода периода.
@@ -19,15 +21,15 @@ import {Date as WSDate} from 'Types/entity';
  * @author Красильников А.С.
  */
 
-export default class RelationController extends Control<IControlOptions> {
+export default class RelationController extends Control<IRelationController> {
     protected _template: TemplateFunction = template;
     protected _model: Model;
 
-    protected _beforeMount(options): void {
+    protected _beforeMount(options: IRelationController): void {
         this._model = new Model(options);
     }
 
-    protected _beforeUpdate(options): void {
+    protected _beforeUpdate(options: IRelationController): void {
         this._model.update(options);
     }
 
@@ -35,7 +37,8 @@ export default class RelationController extends Control<IControlOptions> {
         this._model = null;
     }
 
-    protected _onRelationWrapperRangeChanged(event, start, end, controlNumber, bindType): void {
+    protected _onRelationWrapperRangeChanged(event: Event, start: Date, end: Date,
+                                             controlNumber: number, bindType: string): void {
         const ranges = this._model.ranges;
         const oldBindType = this._model.bindType;
         this._model.updateRanges(start, end, controlNumber, bindType);
@@ -45,7 +48,7 @@ export default class RelationController extends Control<IControlOptions> {
         }
     }
 
-    protected _onRelationButtonBindTypeChanged(event, bindType): void {
+    protected _onRelationButtonBindTypeChanged(event: Event, bindType: string): void {
         if (bindType !== this._model.bindType) {
             this._model.bindType = bindType;
             this._notify('bindTypeChanged', [this._model.bindType]);
@@ -62,16 +65,16 @@ export default class RelationController extends Control<IControlOptions> {
         this._notifyRangeChanged(this._model.ranges);
     }
 
-    private _notifyRangeChanged(newRanges, ranges?): void {
+    private _notifyRangeChanged(newRanges: Date[][], ranges?: Date[][]): void {
         let changed = false;
-        for (const i in newRanges) {
-            if (newRanges.hasOwnProperty(i)) {
-                if (!ranges || ranges[i][0] !== newRanges[i][0]) {
-                    this._notify('startValue' + i + 'Changed', [newRanges[i][0]]);
+        for (const index in newRanges) {
+            if (newRanges.hasOwnProperty(index)) {
+                if (!ranges || ranges[index][0] !== newRanges[index][0]) {
+                    this._notify('startValue' + index + 'Changed', [newRanges[index][0]]);
                     changed = true;
                 }
-                if (!ranges || ranges[i][1] !== newRanges[i][1]) {
-                    this._notify('endValue' + i + 'Changed', [newRanges[i][1]]);
+                if (!ranges || ranges[index][1] !== newRanges[index][1]) {
+                    this._notify('endValue' + index + 'Changed', [newRanges[index][1]]);
                     changed = true;
                 }
             }

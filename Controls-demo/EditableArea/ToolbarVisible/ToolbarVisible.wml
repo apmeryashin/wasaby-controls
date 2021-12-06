@@ -4,8 +4,8 @@
       <Controls.editableArea:View
          autoEdit="{{true}}"
          toolbarVisible="{{false}}"
-         editObject="{{_editObject}}">
-         <Controls.editableArea:Base bind:value="content.editObject.text">
+         editingObject="{{_editingObject}}">
+         <Controls.editableArea:Base bind:value="content.editingObject.text">
             <ws:editorTemplate>
                <Controls.input:Text contrastBackground="{{true}}" attr:class="controls-Input_negativeOffset"/>
             </ws:editorTemplate>
@@ -17,8 +17,8 @@
       <Controls.editableArea:View
          autoEdit="{{true}}"
          toolbarVisible="{{true}}"
-         editObject="{{_editObject}}">
-         <Controls.editableArea:Base bind:value="content.editObject.text">
+         editingObject="{{_editingObject}}">
+         <Controls.editableArea:Base bind:value="content.editingObject.text">
             <ws:editorTemplate>
                <Controls.input:Text contrastBackground="{{true}}" attr:class="controls-Input_negativeOffset"/>
             </ws:editorTemplate>

@@ -100,6 +100,13 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
     private _isUnmounted: boolean = false;
     private _isUpdatedItems: boolean = false;
     private _hasMainTab: boolean;
+    private _defaultSelectedStyle: string = 'primary';
+    private _defaultUnselectedStyle: string = 'secondary';
+    private _selectedItemStyleMap: object = {
+        primary: 'primary',
+        secondary: 'secondary',
+        unaccented: 'default'
+    };
 
     protected _beforeMount(options: ITabsOptions,
                            context: object,
@@ -119,6 +126,11 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
             });
         } else {
             Logger.error('Controls/tabs:Buttons: Опции items и source не заданы.', this);
+        }
+
+        if (options.style) {
+            Logger.warn('Controls/tabs:Buttons: Опции style устарела.' +
+                ' Используйте опции: fontColorStyle, selectedStyle.', this);
         }
     }
 
@@ -279,7 +291,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
 
     protected _updateMarkerCssClass(options: ITabsButtonsOptions): void {
         const style = TabsButtons._prepareStyle(options.style);
-        this._markerCssClass = `controls-Tabs__marker_style-${style} controls-Tabs__marker_thickness`;
+        this._markerCssClass = `controls-Tabs__marker_style-${this._options.selectedStyle || style || this._defaultSelectedStyle} controls-Tabs__marker_thickness`;
     }
 
     protected _onItemClick(event: SyntheticEvent<MouseEvent>, key: string): void {
@@ -395,21 +407,26 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
         const classes = [];
         const options = this._options;
         const style = TabsButtons._prepareStyle(options.style);
+        let fontColorStyle = '';
         if (item.isMainTab) {
             classes.push('controls-Tabs__item_view_main');
-            if (item[options.keyProperty] === options.selectedKey) {
-                classes.push('controls-Tabs__item_state_selected ');
-            }
         } else if (item[options.keyProperty] === options.selectedKey) {
-            classes.push(`controls-Tabs_style_${style}__item_state_selected`);
+            fontColorStyle = (this._options.selectedStyle || this._selectedItemStyleMap[style]) ||
+                this._options.fontColorStyle ||
+                this._defaultSelectedStyle;
+
             if (style === 'unaccented') {
                 classes.push('controls-Tabs__item_view_selected_style_unaccented');
             } else {
                 classes.push('controls-Tabs__item_view_selected');
             }
-            classes.push('controls-Tabs__item_state_selected ');
         } else {
             classes.push('controls-Tabs__item_state_default');
+            fontColorStyle = this._options.fontColorStyle || this._defaultUnselectedStyle;
+        }
+
+        if (!item.isMainTab) {
+            classes.push(`controls-text-${fontColorStyle}`);
         }
         return classes.join(' ');
     }
@@ -450,7 +467,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
                 // Если маркеры которые рисуются с абсолютной позицией не инициализированы, то нарисуем маркер
                 // внутри вкладки. Это можно сделать быстрее. Но невозможно анимировано передвигать его между вкладками.
                 // Инициализируем и переключимся на другой механизм маркеров после ховера.
-                classes.push(`controls-Tabs_style_${style}__item-marker_state_selected`);
+                classes.push(`controls-Tabs_style_${this._options.selectedStyle || style || this._defaultSelectedStyle}__item-marker_state_selected`);
             } else {
                 classes.push('controls-Tabs__item-marker_state_default');
             }
@@ -575,7 +592,6 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
 
     static getDefaultOptions(): ITabsOptions {
         return {
-            style: 'primary',
             inlineHeight: 's',
             borderVisible: true,
             separatorVisible: true,
