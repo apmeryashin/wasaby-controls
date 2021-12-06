@@ -31,6 +31,7 @@ import {create as DiCreate} from 'Types/di';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
+import * as rk from 'i18n!Controls';
 
 export interface IListEditorOptions extends
     IControlOptions,
@@ -470,12 +471,14 @@ class ListEditor extends Control<IListEditorOptions> {
                     id: 'PinOff',
                     icon: 'icon-PinOff',
                     iconSize: 's',
+                    tooltip: rk('Открепить'),
                     showType: TItemActionShowType.TOOLBAR,
                     handler: this._handlePinClick.bind(this)
                 }, {
                     id: 'PinNull',
                     icon: 'icon-PinNull',
                     iconSize: 's',
+                    tooltip: rk('Закрепить'),
                     showType: TItemActionShowType.TOOLBAR,
                     handler: this._handlePinClick.bind(this)
                 }
