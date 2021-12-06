@@ -1959,7 +1959,9 @@ const _private = {
             options.itemActionsPosition === 'outside' &&
             !footer &&
             (!results || listViewModel.getResultsPosition() !== 'bottom') &&
-            !(self._shouldDrawNavigationButton && _private.isDemandNavigation(options.navigation)) &&
+            !(self._shouldDrawNavigationButton &&
+                (_private.isDemandNavigation(options.navigation) || _private.isCutNavigation(options.navigation))
+            ) &&
             (!hasHiddenItemsDown && !hasMoreDown || !_private.isInfinityNavigation(options.navigation))
         );
     },
