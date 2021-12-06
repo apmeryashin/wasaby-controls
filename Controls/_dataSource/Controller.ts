@@ -629,6 +629,11 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         return hasMoreData;
     }
 
+    // TODO удалить по https://online.sbis.ru/opendoc.html?guid=526806f8-b106-4e07-b88f-8f253eaa4636
+    setDataLoadCallback(callback: Function): void {
+        this._dataLoadCallbacks = [callback];
+    }
+
     addDataLoadCallback(callback: Function): void {
         if (!this._dataLoadCallbacks.includes(callback)) {
             this._dataLoadCallbacks.push(callback);
