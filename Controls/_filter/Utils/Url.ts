@@ -30,7 +30,8 @@ export function getQueryParamsByFilter(filterButtonItems: IFilterItem[]): IQuery
             filterItems.push({
                 name: item.name,
                 value: item.value,
-                textValue: item.textValue
+                textValue: item.textValue,
+                visibility: item.visibility
             });
         }
     }

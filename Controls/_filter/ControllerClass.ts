@@ -514,9 +514,9 @@ export default class FilterControllerClass extends mixin<
     }
 
     private _addToUrl(filterButtonItems: IFilterItem[]): void {
-        const items: IFilterItem[] = filterButtonItems/*.filter((item) => {
+        const items: IFilterItem[] = filterButtonItems.filter((item) => {
             return item.saveToUrl || (this._options.saveToUrl && !item.hasOwnProperty('saveToUrl'));
-        })*/;
+        });
 
         if (items.length) {
             updateUrlByFilter(items);
@@ -893,7 +893,8 @@ export default class FilterControllerClass extends mixin<
 function getCalculatedFilter(config) {
     const def = new Deferred();
     this._resolveHistoryItems(config.historyId, config.historyItems, config.prefetchParams).then((items) => {
-        this._setFilterItems(clone(config.filterButtonSource), clone(config.fastFilterSource), items);
+        const filterFromUrl = getFilterFromUrl();
+        this._setFilterItems(clone(config.filterButtonSource), clone(config.fastFilterSource), items, filterFromUrl);
         let calculatedFilter;
         try {
             calculatedFilter = this._calculateFilterByItems(
