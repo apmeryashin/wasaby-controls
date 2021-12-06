@@ -1707,6 +1707,22 @@ describe('Controls/list_clean/BaseControl', () => {
         );
         fakeInstance._shouldDrawNavigationButton = false;
 
+        assert.isTrue(
+            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside', navigation: {
+                    view: 'cut'
+                }}),
+            'itemActionsPosition is outside, padding is needed'
+        );
+
+        fakeInstance._shouldDrawNavigationButton = true;
+        assert.isFalse(
+            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside', navigation: {
+                    view: 'cut'
+                }}),
+            'itemActionsPosition is outside and cut button visible, no padding needed'
+        );
+        fakeInstance._shouldDrawNavigationButton = false;
+
         footer = true;
         assert.isFalse(
             BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside', navigation: {
