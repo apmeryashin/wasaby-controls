@@ -4,7 +4,7 @@ import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import * as data from 'Controls-demo/Popup/Edit/Page/data/data';
 import template = require('wml!Controls-demo/Popup/Edit/Page/Template');
-import {StackOpener} from 'Controls/popup';
+import {PageController as PopupPageController, StackOpener} from 'Controls/popup';
 import {PageController} from 'Controls/dataSource';
 import * as RecordSynchronizer from 'Controls/Utils/RecordSynchronizer';
 import 'wml!Controls-demo/Popup/Opener/resources/footer';
@@ -19,6 +19,7 @@ PageController.getPageConfig = (pageId) => {
     return Promise.resolve(PAGE_CONFIGS[pageId]);
 };
 
+PopupPageController.setPageTemplate('Controls-demo/Popup/Page/PageTemplate/PageTemplate');
 PageController.setDataLoaderModule('Controls-demo/Popup/Edit/Page/Loaders/DataLoader');
 
 const PAGE_CONFIGS = {
@@ -202,10 +203,16 @@ class Demo extends Control<IControlOptions> {
     }
 
     protected _clickHandler(event: Event, record: Model): void {
+        // const options = this._getOpenConfig(record);
+        // const meta = options.templateOptions;
+        // this._children.EditOpener.open(meta, options);
         this._stackOpener.open(this._getOpenConfig(record));
     }
 
     protected _addRecord(): void {
+        // const options = this._getOpenConfig();
+        // const meta = options.templateOptions;
+        // this._children.EditOpener.open(meta, options);
         this._stackOpener.open(this._getOpenConfig());
     }
 
