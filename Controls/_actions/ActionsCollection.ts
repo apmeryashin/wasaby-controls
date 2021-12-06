@@ -20,7 +20,6 @@ interface IPrefetchResult {
 }
 
 interface IActionsCollectionOptions {
-    listActions: IAction[];
     actions: IAction[];
     prefetch: IPrefetchResult[];
 }
@@ -31,7 +30,6 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     ObservableMixin
 ) {
     protected _actions: IBaseAction[];
-    protected _listActions: IBaseAction[];
     protected _toolbarItems: IAction[] = [];
     protected _prefetchData: Record<string | number, ILoadDataResult> = {};
     protected _options: IActionsCollectionOptions;
@@ -57,10 +55,6 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     private _initActions(options: IActionsCollectionOptions): void {
         this._childItems = {};
         this._actions = this._createActions(options.actions);
-        this._listActions = this._createActions(options.listActions);
-        this._listActions.forEach((action) => {
-            action.showType = showType.MENU;
-        });
     }
 
     update(options: IActionsCollectionOptions): void {
@@ -105,7 +99,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     }
 
     getActionById(id: unknown): IBaseAction {
-        return this._actions.concat(this._listActions).find((action) => action.id === id);
+        return this._actions.find((action) => action.id === id);
     }
 
     collectionChange(items: RecordSet, selection: ISelectionObject): void {
@@ -121,32 +115,16 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
         this._notifyConfigChanged();
     }
 
-    private _callChangeAction(methodName: string, changedArgs: unknown[]): void {
-        this._listActions.forEach((action) => {
-            if (action[methodName]) {
-                action[methodName].apply(action, changedArgs);
-            }
-        });
-    }
-
-    private _isListActionByItemId(id: number | string): boolean {
-        return !!this._listActions.find((action): boolean => {
-            return action.id === id;
-        });
-    }
-
     getToolbarItems(): IAction[] {
         return this._toolbarItems.filter((toolbarItem) => {
-            const isListAction = this._isListActionByItemId(toolbarItem.id);
-            return (this._operationsPanelVisible || !isListAction) && toolbarItem.visible;
+            return toolbarItem.visible;
         });
     }
 
     getMenuItems(): IAction[] {
         return this.getToolbarItems().filter((toolbarItem) => {
-            const isBasicAction = !this._isListActionByItemId(toolbarItem.id);
             const isToolbarItem = toolbarItem.showType === showType.TOOLBAR;
-            return !isToolbarItem && !(isBasicAction && this._operationsPanelVisible);
+            return !isToolbarItem;
         });
     }
 
@@ -159,7 +137,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     }
 
     private _updateToolbarItems(): void {
-        this._toolbarItems = this._getToolbarItemsByActions(this._actions.concat(this._listActions));
+        this._toolbarItems = this._getToolbarItemsByActions(this._actions);
     }
 
     private _itemChanged(): void {
@@ -170,13 +148,6 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     setActions(actions: IAction[]): void {
         if (!isEqual(actions, this._options.actions)) {
             this._options.actions = actions;
-            this._initActionsAndUpdateConfig();
-        }
-    }
-
-    setListActions(listActions: IAction[]): void {
-        if (!isEqual(listActions, this._options.listActions)) {
-            this._options.listActions = listActions;
             this._initActionsAndUpdateConfig();
         }
     }
