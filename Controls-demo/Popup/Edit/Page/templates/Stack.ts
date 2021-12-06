@@ -37,7 +37,7 @@ export default class Stack extends Control<IStackOptions> {
         }
         if (options.prefetchResult) {
             if (options.prefetchResult !== this._options.prefetchResult) {
-                this._record = options.prefetchResult.stackTemplate.data;
+                this._record = options.prefetchResult.data;
             }
         }
         if (options.record !== this._options.record) {
