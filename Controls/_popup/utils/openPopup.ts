@@ -1,10 +1,10 @@
 import {Logger} from 'UI/Utils';
 import {Control} from 'UI/Base';
 import BaseOpener, {ILoadDependencies, IBaseOpenerOptions} from 'Controls/_popup/Opener/BaseOpener';
+import loadPopupPageConfig from 'Controls/_popup/utils/loadPopupPageConfig';
 import {getModuleByName} from 'Controls/_popup/utils/moduleHelper';
 import CancelablePromise from 'Controls/_popup/utils/CancelablePromise';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
-import PageController from 'Controls/_popup/Page/Controller';
 
 export default function openPopup(config: IBaseOpenerOptions, controller: string,
                                   moduleName: string): CancelablePromise<string> {
@@ -49,12 +49,8 @@ export default function openPopup(config: IBaseOpenerOptions, controller: string
         };
 
         if (config.pageId) {
-            PageController.getPagePopupOptions(config.pageId, config).then((popupCfg) => {
-                // Защита от старых страниц, где не задан загрузчик. в этом случае открываемся по старой схеме
-                const template = popupCfg.templateOptions.pageTemplate || config.template;
-                PageController.loadModules(template).then(() => {
-                    openByConfig(popupCfg, controller);
-                }).catch(reject);
+            loadPopupPageConfig(config).then((popupCfg) => {
+                openByConfig(popupCfg, controller);
             }).catch(reject);
         } else {
             openByConfig(config, controller);
