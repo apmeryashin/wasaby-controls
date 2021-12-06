@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper controlsDemo__flexColumn">
+<div class="controlsDemo__wrapper controlsDemo__flexColumn controlsDemo_fixedWidth350">
    <div class="controlsDemo__mb1">
         <div class="controls-text-label">validationStatus: valid</div>
         <Controls.dropdown:Selector bind:selectedKeys="_selectedKeys"
