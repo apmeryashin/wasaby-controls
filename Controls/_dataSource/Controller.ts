@@ -237,7 +237,13 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     private _loadError: Error;
     private _processCollectionChangeEvent: boolean = true;
 
-    private _dataLoadCallback: Function;
+    /**
+     * Массив колбэков загрузки данных.
+     * Необходим массив, т.к. у нас может быть один SourceController на несколько списков,
+     * но каждый список должен узнать о загрузке данных.
+     * @private
+     */
+    private _dataLoadCallbacks: Function[] = [];
     private _nodeDataMoreLoadCallback: Function;
     // Необходимо для совместимости в случае, если dataLoadCallback задают на списке, а где-то сверху есть dataContainer
     private _dataLoadCallbackFromOptions: Function;
@@ -623,8 +629,17 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         return hasMoreData;
     }
 
-    setDataLoadCallback(callback: Function): void {
-        this._dataLoadCallback = callback;
+    addDataLoadCallback(callback: Function): void {
+        if (!this._dataLoadCallbacks.includes(callback)) {
+            this._dataLoadCallbacks.push(callback);
+        }
+    }
+
+    removeDataLoadCallback(callback: Function): void {
+        const index = this._dataLoadCallbacks.indexOf(callback);
+        if (index !== -1) {
+            this._dataLoadCallbacks.splice(index, 1);
+        }
     }
 
     setNodeDataMoreLoadCallback(callback: Function): void {
@@ -1078,8 +1093,8 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         this._loadError = null;
         this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
 
-        if (loadedInCurrentRoot && this._dataLoadCallback) {
-            dataLoadCallbackResult = this._dataLoadCallback(result, direction);
+        if (loadedInCurrentRoot && this._dataLoadCallbacks.length) {
+            dataLoadCallbackResult = Promise.all(this._dataLoadCallbacks.map((callback) => callback(result, direction)));
         } else if (this._nodeDataMoreLoadCallback) {
             // Вызываем только когда подгружают узел, определяется по loadedInCurrentRoot
             this._nodeDataMoreLoadCallback();

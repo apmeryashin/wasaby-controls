@@ -105,13 +105,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._expandedItemsFilter = this._expandedItemsFilterCheck.bind(this);
         this._additionalFilter = MenuControl._additionalFilterCheck.bind(this, options);
         this._limitHistoryFilter = this._limitHistoryCheck.bind(this);
+        this._updateAfterLoad = this._updateAfterLoad.bind(this);
 
         this._dataName = options.dataName + '_level_' + options.subMenuLevel;
 
         this._stack = new StackOpener();
 
         if (options.sourceController) {
-            options.sourceController.setDataLoadCallback(this._updateAfterLoad.bind(this));
+            options.sourceController.addDataLoadCallback(this._updateAfterLoad);
             const error = options.sourceController.getLoadError();
             if (error) {
                 this._processError(error);
@@ -191,7 +192,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _beforeUnmount(): void {
         if (this._options.sourceController) {
-            this._options.sourceController.setDataLoadCallback(null);
+            this._options.sourceController.removeDataLoadCallback(this._dataLoadCallback);
         }
         if (this._options.searchValue) {
             // items dropdown/_Controller'a обновляются по ссылке.

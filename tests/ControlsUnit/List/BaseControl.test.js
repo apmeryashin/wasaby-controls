@@ -6496,7 +6496,7 @@ define([
                      rawData: data,
                      keyProperty: 'id'
                   }),
-                  setDataLoadCallback: () => null,
+                  addDataLoadCallback: () => null,
                   hasMoreData: () => false
                };
                const newCfg = {
