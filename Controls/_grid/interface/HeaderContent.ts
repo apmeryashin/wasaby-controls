@@ -17,7 +17,7 @@
  *             <ws:template>
  *                <ws:partial template="Controls/grid:HeaderContent"  scope="{{_options}}">
  *                   <ws:contentTemplate>
- *                      {{contentTemplate.column.config.title}}
+ *                      {{contentTemplate.column.config.caption}}
  *                   </ws:contentTemplate>
  *                </ws:partial>
  *             </ws:template>
@@ -45,7 +45,7 @@ export default interface IHeaderContentOptions {
     *             <ws:template>
     *                <ws:partial template="Controls/grid:HeaderContent" scope="{{_options}}">
     *                   <ws:contentTemplate>
-    *                      {{contentTemplate.column.config.title}}
+    *                      {{contentTemplate.column.config.caption}}
     *                   </ws:contentTemplate>
     *                </ws:partial>
     *             </ws:template>
@@ -75,7 +75,7 @@ export default interface IHeaderContentOptions {
     * <!-- file2.wml -->
     * <ws:partial template="Controls/grid:HeaderContent" scope="{{_options}}">
     *    <ws:contentTemplate>
-    *       {{contentTemplate.column.config.title}}
+    *       {{contentTemplate.column.config.caption}}
     *    </ws:contentTemplate>
     * </ws:partial>
     * </pre>
@@ -103,7 +103,7 @@ export default interface IHeaderContentOptions {
     *
     * <pre class="brush: html">
     * <!-- file2.wml -->
-    * {{contentTemplate.column.config.title}}
+    * {{contentTemplate.column.config.caption}}
     * </pre>
     */
    contentTemplate?: string;
