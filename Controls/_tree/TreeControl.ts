@@ -11,7 +11,14 @@ import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
-import {Direction, IBaseSourceConfig, IFilterOptions, IHierarchyOptions, TKey} from 'Controls/interface';
+import {
+    Direction,
+    IBaseSourceConfig,
+    IFilterOptions,
+    IHierarchyOptions,
+    ISelectionObject,
+    TKey
+} from 'Controls/interface';
 import {
     BaseControl,
     convertReloadItemArgs,
@@ -934,8 +941,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         _private.toggleExpanded(this, dispItem);
     }
 
-    protected _getSourceControllerOptionsForGetDraggedItems(): ISourceControllerOptions {
-        const options = super._getSourceControllerOptionsForGetDraggedItems();
+    protected _getSourceControllerOptionsForGetDraggedItems(selection: ISelectionObject): ISourceControllerOptions {
+        const options = super._getSourceControllerOptionsForGetDraggedItems(selection);
 
         options.deepReload = true;
         options.expandedItems = this._expandController.getExpandedItems();
