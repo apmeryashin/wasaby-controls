@@ -73,6 +73,10 @@ export default class View extends List {
         this._viewModelConstructor = this._getModelConstructor();
     }
 
+    protected _getItemsContainerPadding(): null {
+        return null;
+    }
+
     protected _getModelConstructor(): string {
         return 'Controls/tile:TileCollection';
     }
