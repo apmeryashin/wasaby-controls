@@ -19,6 +19,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
     hasChildrenProperty?: string;
     searchBreadCrumbsItemTemplate?: TemplateFunction;
     expanderVisibility?: 'visible'|'hasChildren'|'hasChildrenOrHover';
+    nodeMoreCaption?: string;
     nodeLoadCallback?: TNodeLoadCallback;
     deepReload?: boolean;
     selectAncestors?: boolean;
@@ -139,6 +140,13 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  *
  * @demo Controls-demo/treeGridNew/NodeFooter/NodeFooterTemplate/Index
  * @see nodeFooterVisibilityCallback
+ * @see nodeLoadCallback
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#nodeMoreCaption
+ * @cfg {String} Пользовательский текст кнопки, расположенной в узле дерева и предназначенной для загрузки очередной пачки данных узла.
+ * @default undefined
  * @see nodeLoadCallback
  */
 

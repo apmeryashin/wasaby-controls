@@ -2,8 +2,12 @@ import { TemplateFunction } from 'UI/Base';
 import { Model } from 'Types/entity';
 import TreeItem from './TreeItem';
 
-export default class TreeNodeFooterItem extends TreeItem<null> {
-    readonly '[Controls/tree:TreeNodeFooterItem]': boolean;
+/**
+ * Хедер узла в иерархическом списке
+ */
+
+export default class TreeNodeHeaderItem extends TreeItem<null> {
+    readonly '[Controls/tree:TreeNodeHeaderItem]': boolean;
     readonly Markable: boolean = false;
     readonly DraggableItem: boolean = false;
     readonly SelectableItem: boolean = false;
@@ -11,10 +15,10 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
     readonly EdgeRowSeparatorItem: boolean = false;
     readonly ItemActionsItem: boolean = false;
 
-    protected _$moreFontColorStyle: string;
     protected _$moreCaption: string;
+    protected _$moreFontColorStyle: string;
 
-    readonly listInstanceName: string =  'controls-Tree__node-footer';
+    readonly listInstanceName: string =  'controls-Tree__node-header';
 
     readonly listElementName: string = 'item';
 
@@ -27,15 +31,19 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
     }
 
     getTemplate(): TemplateFunction | string {
-        return this._$owner.getNodeFooterTemplate() || 'Controls/tree:NodeFooterTemplate';
+        return 'Controls/tree:NodeHeaderTemplate';
     }
 
-    getNodeFooterTemplateMoreButton(): TemplateFunction {
-        return this._$owner.getNodeFooterTemplateMoreButton();
+    needMoreButton(): boolean {
+        return this.hasMoreStorage('backward');
+    }
+
+    getMoreCaption(): string {
+        return this._$moreCaption;
     }
 
     getItemClasses(): string {
-        return 'controls-ListView__itemV controls-Tree__nodeFooter';
+        return 'controls-ListView__itemV controls-Tree__nodeHeader';
     }
 
     getContentClasses(): string {
@@ -47,22 +55,14 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
 
         classes = classes.replace(
            'controls-TreeGrid__row-expanderPadding',
-           'controls-TreeGrid__node-footer-expanderPadding'
+           'controls-TreeGrid__node-header-expanderPadding'
         );
 
         return classes;
     }
 
-    shouldDisplayVisibleFooter(content: TemplateFunction): boolean {
-        return this.hasMoreStorage('forward') || !!content;
-    }
-
     getMoreFontColorStyle(): string {
         return this._$moreFontColorStyle;
-    }
-
-    getMoreCaption(): string {
-        return this._$moreCaption;
     }
 
     setMoreFontColorStyle(moreFontColorStyle: string): void {
@@ -81,10 +81,10 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
     }
 }
 
-Object.assign(TreeNodeFooterItem.prototype, {
-    '[Controls/tree:TreeNodeFooterItem]': true,
-    _moduleName: 'Controls/tree:TreeNodeFooterItem',
-    _instancePrefix: 'tree-node-footer-item-',
+Object.assign(TreeNodeHeaderItem.prototype, {
+    '[Controls/tree:TreeNodeHeaderItem]': true,
+    _moduleName: 'Controls/tree:TreeNodeHeaderItem',
+    _instancePrefix: 'tree-node-header-item-',
     _$moreFontColorStyle: null,
     _$moreCaption: null
 });

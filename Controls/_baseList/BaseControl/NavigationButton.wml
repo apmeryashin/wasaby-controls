@@ -28,6 +28,6 @@
             viewMode="link"
             fontSize="{{ linkFontSize }}"
             fontColorStyle="{{ linkFontColorStyle }}"
-            caption="{{ rk('Еще') + ' ' + (linkLabel || '...') }}"
+            caption="{{ loadMoreCaption || (rk('Еще') + ' ' + (linkLabel || '...')) }}"
             readOnly="{{ false }}"/>
 </ws:else>

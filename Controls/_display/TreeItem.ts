@@ -21,6 +21,11 @@ export interface IOptions<T extends Model> extends ICollectionItemOptions<T>, IE
     parent?: TreeItem<T>;
 }
 
+export interface IHasMore {
+    forward: boolean;
+    backward: boolean;
+}
+
 interface ISerializableState<T> extends ICollectionItemSerializableState<T> {
     $options: IOptions<T>;
 }
@@ -86,11 +91,13 @@ export default class TreeItem<T extends Model = Model> extends mixin<
      * Признак, означающий что в узле можно еще подгрузить данные
      * @protected
      */
-    protected _$hasMore: boolean;
+    protected _$hasMore: IHasMore;
     // TODO должен быть указан парвильный тип, но сейчас футеры есть только в триГриде
     //  и если указать типом TreeGridNodeFooterRow, то будет неправильная зависимость
 
     private _nodeFooter: TreeItem;
+
+    private _nodeHeader: TreeItem;
     /**
      * Признак, что узел является целью при перетаскивании
      * @private
@@ -288,19 +295,32 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return children.at(children.getCount() - 1);
     }
 
-    hasMoreStorage(): boolean {
+    getHasMoreStorage(): IHasMore {
         return this._$hasMore;
     }
 
-    setHasMoreStorage(hasMore: boolean): void {
-        if (this._$hasMore !== hasMore) {
-            this._$hasMore = hasMore;
+    hasMoreStorage(direction: string): boolean {
+        return this._$hasMore[direction];
+    }
 
-            const nodeFooter = this.getNodeFooter();
-            if (nodeFooter) {
-                nodeFooter.setHasMoreStorage(hasMore);
+    setHasMoreStorage(hasMore: IHasMore): void {
+        const hasChanges = this._$hasMore.forward !== hasMore.forward || this._$hasMore.backward !== hasMore.backward;
+        if (hasChanges) {
+            if (this._$hasMore.forward !== hasMore.forward) {
+                const nodeFooter = this.getNodeFooter();
+                if (nodeFooter) {
+                    nodeFooter.setHasMoreStorage(hasMore);
+                }
             }
 
+            if (this._$hasMore.backward !== hasMore.backward) {
+                const nodeHeader = this.getNodeHeader();
+                if (nodeHeader) {
+                    nodeHeader.setHasMoreStorage(hasMore);
+                }
+            }
+
+            this._$hasMore = hasMore;
             this._nextVersion();
         }
     }
@@ -311,6 +331,14 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
     getNodeFooter(): TreeItem {
         return this._nodeFooter;
+    }
+
+    setNodeHeader(nodeHeader: TreeItem): void {
+        this._nodeHeader = nodeHeader;
+    }
+
+    getNodeHeader(): TreeItem {
+        return this._nodeHeader;
     }
 
     getNodeFooterTemplate(): TemplateFunction {
@@ -534,7 +562,10 @@ Object.assign(TreeItem.prototype, {
     _$hasChildrenByRecordSet: false,
     _$childrenProperty: '',
     _$hasChildrenProperty: '',
-    _$hasMore: false,
+    _$hasMore: {
+        forward: false,
+        backward: false
+    },
     _$displayExpanderPadding: false,
     _$expanderIconSize: 'default',
     _$expanderIconStyle: 'default',

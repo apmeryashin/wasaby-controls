@@ -884,8 +884,14 @@ define([
          recordSet.setMetaData({ more: moreDataRecordSet });
          sourceController._updateQueryPropertiesByItems(recordSet);
          const hasMoreResult = {
-            1: true,
-            2: false
+            1: {
+               forward: true,
+               backward: false
+            },
+            2: {
+               forward: false,
+               backward: false
+            }
          };
          assert.deepEqual(hasMoreResult, tree.TreeControl._private.prepareHasMoreStorage(sourceController, [1, 2]),
             'Invalid value returned from "prepareHasMoreStorage(sourceControllers)".');
@@ -1817,7 +1823,10 @@ define([
                  resolver();
              });
              await treeControl.reload();
-             assert.isTrue(methodSpy.withArgs({0: false, 1: false}).called);
+             assert.isTrue(methodSpy.withArgs({
+                0: { forward: false, backward: false },
+                1: { forward: false, backward: false }
+             }).called);
              localSandbox.reset();
          });
       });

@@ -383,7 +383,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          for (let index = 0; index < selectedNodes.length; index++) {
             const nodeKey = selectedNodes[index];
             let countItemsSelectedInNode;
-            if (this._model.getHasMoreStorage()[nodeKey]) {
+            const nodeHasMoreData = this._model.getHasMoreStorage()[nodeKey];
+            if (nodeHasMoreData && (nodeHasMoreData.forward || nodeHasMoreData.backward)) {
                 countItemsSelectedInNode = null;
             } else {
                const node = this._getItem(nodeKey);
@@ -722,7 +723,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       let result = true;
 
-      const hasMore = node['[Controls/_display/TreeItem]'] && node.hasMoreStorage();
+      const hasMore = node['[Controls/_display/TreeItem]'] &&
+          (node.hasMoreStorage('forward') || node.hasMoreStorage('backward'));
       if (childes.getCount() && !hasMore) {
          for (let i = 0; i < childes.getCount(); i++) {
             const child = childes.at(i);
