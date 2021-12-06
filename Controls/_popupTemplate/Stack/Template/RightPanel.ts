@@ -18,6 +18,7 @@ export default class RightPanel extends Control<IRightPanelOptions> {
     protected _isOutsidePanel: boolean = true;
 
     protected _beforeMount(options: IRightPanelOptions): void {
+        this._getTemplateName = this._getTemplateName.bind(this);
         this._rightBottomTemplate = ManagerController.getRightPanelBottomTemplate();
         if (!ManagerController.hasRightPanel() && options.toolbarContentTemplate && !this._hasWidthForRightPanel()) {
             this._isOutsidePanel = false;
@@ -60,7 +61,7 @@ export default class RightPanel extends Control<IRightPanelOptions> {
     // подсказок. Передадим метод, который по DOM определит имя шаблона. Другого способа узнать имя шаблона окна пока
     // нет, оставим поддержку полукостыля на нашем уровне.
     protected _getTemplateName(): string {
-        const rightPanelElement = document.querySelector('.controls-Popup');
-        return rightPanelElement.getAttribute('templateName') || '';
+        const popupContainer = this._container.closest('.controls-Popup');
+        return popupContainer ? popupContainer.getAttribute('templateName') : '';
     }
 }
