@@ -265,7 +265,7 @@ define(
                };
                menuOptions.sourceController = {
                   getLoadError: () => new Error('error'),
-                  setDataLoadCallback: () => {isDataLoadCallbackSetted = true;}
+                  addDataLoadCallback: () => {isDataLoadCallbackSetted = true;}
                };
                menuControl._processError = () => {
                   isErrorProcessed = true;

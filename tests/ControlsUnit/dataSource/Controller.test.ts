@@ -390,19 +390,32 @@ describe('Controls/dataSource:SourceController', () => {
         });
 
         it('load with dataLoadCallback from setter',  async () => {
-            let dataLoadCallbackCalled = false;
+            let dataLoadCallbackCalled1 = false;
+            let dataLoadCallbackCalled2 = false;
+            let dataLoadCallbackCalled3 = false;
             const controller = getController();
-            controller.setDataLoadCallback(() => {
-                dataLoadCallbackCalled = true;
+            controller.addDataLoadCallback(() => {
+                dataLoadCallbackCalled1 = true;
             });
+            controller.addDataLoadCallback(() => {
+                dataLoadCallbackCalled2 = true;
+            });
+
+            const dataLoadCallback3 = () => {
+                dataLoadCallbackCalled3 = true;
+            };
+            controller.addDataLoadCallback(dataLoadCallback3);
+            controller.removeDataLoadCallback(dataLoadCallback3);
             await controller.load();
-            ok(dataLoadCallbackCalled);
+            ok(dataLoadCallbackCalled1);
+            ok(dataLoadCallbackCalled2);
+            ok(!dataLoadCallbackCalled3);
         });
 
         it('load any root with dataLoadCallback from setter',  async () => {
             let dataLoadCallbackCalled = false;
             const controller = getController();
-            controller.setDataLoadCallback(() => {
+            controller.addDataLoadCallback(() => {
                 dataLoadCallbackCalled = true;
             });
             await controller.load(null, 'testRoot');
@@ -419,7 +432,7 @@ describe('Controls/dataSource:SourceController', () => {
             const promise = new Promise((resolve) => {
                 promiseResolver = resolve;
             });
-            controller.setDataLoadCallback(() => {
+            controller.addDataLoadCallback(() => {
                 return promise;
             });
             const reloadPromise = controller.reload().then(() => {

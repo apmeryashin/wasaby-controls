@@ -3394,7 +3394,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
-            this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+            this._sourceController.addDataLoadCallback(this._dataLoadCallback);
             _private.validateSourceControllerOptions(this, newOptions);
         }
 
@@ -4325,7 +4325,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (newOptions.sourceController) {
                 if (sourceControllerChanged) {
                     this._sourceController = newOptions.sourceController;
-                    this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+                    this._sourceController.addDataLoadCallback(this._dataLoadCallback);
                 }
 
                 if (newOptions.loading) {
@@ -4726,7 +4726,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (!this._options.sourceController) {
                 this._sourceController.destroy();
             } else {
-                this._sourceController.setDataLoadCallback(null);
+                this._sourceController.removeDataLoadCallback(this._dataLoadCallback);
             }
             this._sourceController = null;
         }
