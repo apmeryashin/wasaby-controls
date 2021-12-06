@@ -2640,7 +2640,7 @@ const _private = {
             selection = DndController.getSelectionForDragNDrop(self._listViewModel, selection, draggableKey);
 
             self._dndListController = _private.createDndListController(self._listViewModel, draggableItem, self._options);
-            const options = self._getSourceControllerOptionsForGetDraggedItems();
+            const options = self._getSourceControllerOptionsForGetDraggedItems(selection);
             return self._dndListController.getDraggableKeys(selection, options).then((items) => {
                 let dragStartResult = self._notify('dragStart', [items, draggableKey]);
 
@@ -6324,19 +6324,17 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._sourceController?.updateOptions(options);
     }
 
-    protected _getSourceControllerOptionsForGetDraggedItems(): ISourceControllerOptions {
+    protected _getSourceControllerOptionsForGetDraggedItems(selection: ISelectionObject): ISourceControllerOptions {
         const options: ISourceControllerOptions = {...this._options};
         options.dataLoadCallback = null;
         options.dataLoadErrback = null;
         options.navigationParamsChangedCallback = null;
 
         const newFilter = cClone(options.filter) || {};
-        if (this._selectionController) {
-            newFilter.selection = selectionToRecord({
-                selected: this._selectionController.getSelection().selected,
-                excluded: this._selectionController.getSelection().excluded
-            }, 'adapter.sbis', this._options.selectionType);
-        }
+        newFilter.selection = selectionToRecord({
+            selected: selection.selected,
+            excluded: selection.excluded
+        }, 'adapter.sbis', this._options.selectionType);
         options.filter = newFilter;
 
         if (options.navigation) {
