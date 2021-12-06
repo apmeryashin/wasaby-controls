@@ -129,7 +129,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _afterMount(): void {
         if (this._options.menuOpenedCallback) {
-            this._options.menuOpenedCallback();
+            this._options.menuOpenedCallback(this._options.root);
         }
     }
 
