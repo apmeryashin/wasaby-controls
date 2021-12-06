@@ -541,6 +541,7 @@ class ListEditor extends Control<IListEditorOptions> {
         selectedKeys: string[]|number[],
         {emptyKey, selectedAllKey, multiSelect}: IListEditorOptions
     ): void {
+        const selectAllKey = selectedAllKey !== undefined ? selectedAllKey : null;
         const resetKey = emptyKey !== undefined ? emptyKey : selectedAllKey;
         if (selectedKeys && !multiSelect) {
             this._markedKey = !selectedKeys.length || selectedKeys[0] === resetKey ? resetKey : selectedKeys[0];
