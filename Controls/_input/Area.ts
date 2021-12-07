@@ -50,6 +50,12 @@ import 'css!Controls/input';
  * @demo Controls-demo/Input/Area/TextAlign/Index
  */
 
+/**
+ * @name Controls/_input/Area#readOnly
+ * @cfg {Boolean}
+ * @demo Controls-demo/Input/Group/ReadOnly/Index
+ */
+
 export default class Area extends BaseText<IAreaOptions> {
     protected _template: TemplateFunction = template;
 
