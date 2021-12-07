@@ -5619,6 +5619,7 @@ define([
                      keyProperty: 'id'
                   }),
                   setDataLoadCallback: () => null,
+                  subscribe: () => null,
                   hasMoreData: () => false
                };
                const newCfg = {
