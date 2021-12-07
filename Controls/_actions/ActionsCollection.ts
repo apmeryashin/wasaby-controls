@@ -110,6 +110,14 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
         this._callChangeAction('onSelectionChanged', [items, selection]);
     }
 
+    private _callChangeAction(methodName: string, changedArgs: unknown[]): void {
+        this._actions.forEach((action) => {
+            if (action[methodName]) {
+                action[methodName].apply(action, changedArgs);
+            }
+        });
+    }
+
     setOperationsPanelVisible(state: boolean): void {
         this._operationsPanelVisible = state;
         this._notifyConfigChanged();

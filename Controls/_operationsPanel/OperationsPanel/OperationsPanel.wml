@@ -35,6 +35,16 @@
         <ws:partial attr:class="controls-operationsPanelV__rightTemplate {{ _initialized ? '' : 'ws-invisible' }}"
                     template="{{_options.rightTemplate}}"/>
     </ws:if>
+    <ws:if data="{{_options.newDesign}}">
+        <div class="controls-operationsPanelV__multiSelector_separator"></div>
+        <div class="controls-operationsPanelNew__closeButton
+                    controls-icon
+                    controls-fontweight-bold
+                    icon-Close
+                    controls-icon_size-m
+                    controls-icon_style-unaccented"
+             on:click="_close()"></div>
+    </ws:if>
     <Controls.event:Listener event="controlResize"
                              on:controlResize="_onResize()"/>
 </div>

@@ -22,6 +22,11 @@
    height: var(--height_operationsPanel);
 }
 
+.controls-operationsPanelV_newDesign .controls-operationsPanelV__multiSelector_separator {
+   --separator_length_operationsPanel: 12px;
+   --separator_color_operationsPanel: #e4e4e4;
+}
+
 .controls-operationsPanelV_initialized.controls-operationsPanelV_newDesign {
    background-color: var(--secondary_background-color);
    border-radius: var(--border-radius_s);
@@ -57,4 +62,8 @@
    http://jsfiddle.net/bnycf4a9/
    */
    height: 1px;
+}
+
+.ws-is-hover .controls-operationsPanelNew__closeButton:hover {
+   cursor: pointer;
 }

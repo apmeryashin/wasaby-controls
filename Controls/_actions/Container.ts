@@ -37,7 +37,6 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     constructor(cfg: IControlOptions, context?: object) {
         super(cfg, context);
         this._updateActions = this._updateActions.bind(this);
-        this._operationsPanelVisibleChanged = this._operationsPanelVisibleChanged.bind(this);
         this._actionsChanged = this._actionsChanged.bind(this);
         this._selectionChanged = this._selectionChanged.bind(this);
         this._filterChanged = this._filterChanged.bind(this);
@@ -86,10 +85,6 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         });
     }
 
-    protected _operationsPanelVisibleChanged(e: SyntheticEvent, state: boolean): void {
-        this._actionsCollection.setOperationsPanelVisible(state);
-    }
-
     protected _selectionChanged(e: SyntheticEvent, selection: ISelectionObject): void {
         this._actionsCollection.selectionChange(this._sourceController.getItems(), selection);
     }
@@ -133,8 +128,6 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             this._sourceController.subscribe('itemsChanged', this._updateActions);
         }
         if (this._operationsController) {
-            this._operationsController.subscribe('operationsPanelVisibleChanged',
-                this._operationsPanelVisibleChanged);
             this._operationsController.subscribe('selectionChanged', this._selectionChanged);
             this._operationsController.subscribe('actionsChanged', this._actionsChanged);
         }
@@ -149,10 +142,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             this._sourceController.unsubscribe('itemsChanged', this._updateActions);
         }
         if (this._operationsController) {
-            this._operationsController.unsubscribe('operationsPanelVisibleChanged',
-                this._operationsPanelVisibleChanged);
             this._operationsController.unsubscribe('selectionChanged', this._selectionChanged);
-            this._operationsController.unsubscribe('operationsMenuVisibleChanged', this._operationsPanelVisibleChanged);
             this._operationsController.unsubscribe('actionsChanged', this._actionsChanged);
         }
         if (this._filterController) {
