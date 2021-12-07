@@ -7,13 +7,15 @@ import {
 } from 'Types/entity';
 import {merge} from 'Types/object';
 import {IAction} from './IAction';
-import {IExecuteCommandParams} from 'Controls/operations';
+import {IExecuteCommandParams, ControllerClass as OperationsController} from 'Controls/operations';
+import {ControllerClass as FilterController} from 'Controls/filter';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {IToolBarItem} from 'Controls/toolbars';
 import {RecordSet} from 'Types/collection';
 import {DataSet} from 'Types/source';
 
 export interface IBaseAction {
-    execute: (options: unknown) => Promise<unknown>;
+    execute: (options: Partial<IExecuteOptions>) => Promise<unknown>;
 }
 export interface ICommandOptions {
     [key: string]: any;
@@ -40,6 +42,13 @@ export interface IBaseActionOptions {
     parent?: string | number;
     permissions?: string[];
     requiredLevel: string[];
+}
+
+export interface IExecuteOptions {
+    operationsController?: OperationsController;
+    filterController?: FilterController;
+    sourceController?: SourceController;
+    [key: string]: unknown;
 }
 
 const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType', 'template', 'order'];
@@ -126,7 +135,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         EventRaisingMixin.call(this, options);
     }
 
-    execute(options): Promise<unknown> {
+    execute(options: Partial<IExecuteOptions>): Promise<unknown> | void {
         return this._executeCommand(options);
     }
 
@@ -138,7 +147,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         // for override
     }
 
-    private _executeCommand(options): Promise<unknown> {
+    private _executeCommand(options): Promise<unknown> | void {
         if (this.commandName) {
             const commandOptions = this._getCommandOptions(options);
             return this._createCommand(commandOptions, this.commandName).then((commandClass) => {
