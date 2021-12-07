@@ -15,7 +15,7 @@
     <module id="0641abed-e0fb-4f42-990c-4c24bdbd7555" name="DemoStand"/>
     <module id="4220f331-8217-437b-810c-8c4479323a27" name="EnvConfig"/>
     <module id="e4bbd0f2-f7ce-404e-88b2-5130d105b770" name="ParametersWebAPI"/>
-    <module id="74e20c2f-4545-4210-9148-2d05b3cd12fc" name="ParametersLocalAPI"/>
+    <module id="f9771b31-df2d-48ac-8d01-2586a920bcc7" name="ParametersServiceAPI"/>
   </depends>
 
   <load_after/>
