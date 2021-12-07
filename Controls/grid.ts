@@ -114,6 +114,11 @@ import {
 } from 'Controls/_grid/display/Collection';
 
 export {
+    GridControl,
+    IGridControlOptions
+} from 'Controls/_grid/GridControl';
+
+export {
     default as GridMixin,
     TColspanCallbackResult,
     TColspanCallback,

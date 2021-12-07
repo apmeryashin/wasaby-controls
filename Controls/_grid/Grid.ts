@@ -1,10 +1,11 @@
-import { ListControl as viewTemplate, View as List } from 'Controls/baseList';
+import { View as List } from 'Controls/baseList';
 import * as GridView from 'Controls/_grid/GridView';
 import GridViewTable from 'Controls/_grid/GridViewTable';
 import { isFullGridSupport } from 'Controls/display';
 import { TemplateFunction } from 'UI/Base';
 import { IOptions as IGridOptions } from './display/mixins/Grid';
 import {Logger} from 'UICommon/Utils';
+import {GridControl} from './GridControl';
 
 /**
  * Контрол "Таблица" позволяет отображать данные из различных источников в виде таблицы.
@@ -70,9 +71,9 @@ import {Logger} from 'UICommon/Utils';
  * @demo Controls-demo/gridNew/Base/Index
  */
 
-export default class Grid extends List {
+export default class Grid<TControl extends GridControl = GridControl> extends List<GridControl> {
     protected _viewName: TemplateFunction = null;
-    protected _viewTemplate: TemplateFunction = viewTemplate;
+    protected _viewTemplate: TControl = GridControl;
 
     _beforeMount(options: IGridOptions): Promise<void>|void {
         const superResult = super._beforeMount(options);

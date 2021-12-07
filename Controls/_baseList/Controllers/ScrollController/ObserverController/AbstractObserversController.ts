@@ -33,8 +33,8 @@ export type TObserversCallback = (event: TIntersectionEvent) => void;
 
 export interface IAbstractObserversControllerBaseOptions {
     listControl: Control;
-    listContainer: HTMLElement;
-    viewportSize: number;
+    listContainer?: HTMLElement;
+    viewportSize?: number;
     triggersQuerySelector: string;
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
@@ -78,7 +78,7 @@ export abstract class AbstractObserversController {
     constructor(options: IAbstractObserversControllerOptions) {
         this._listControl = options.listControl;
         this._listContainer = options.listContainer;
-        this._viewportSize = options.viewportSize;
+        this._viewportSize = options.viewportSize || 0;
         this._triggersQuerySelector = options.triggersQuerySelector;
         this._triggersVisibility = options.triggersVisibility;
         this._observersCallback = options.observersCallback;
@@ -190,10 +190,10 @@ export abstract class AbstractObserversController {
     // endregion OnCollectionChange
 
     private _recalculateOffsets(): void {
-        const newTopTriggerOffset = this._triggersPositions.backward
+        const newTopTriggerOffset = this._triggersPositions.backward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.backward;
-        const newBottomTriggerOffset = this._triggersPositions.forward
+        const newBottomTriggerOffset = this._triggersPositions.forward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.forward;
 
