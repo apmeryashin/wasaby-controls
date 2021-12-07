@@ -70,6 +70,7 @@ export default interface IRichTemplateOptions {
      * @cfg {ImageSize} Размер изображения.
      * @remark При горизональном расположении изображений размер фото фиксированный.
      * @default s
+     * @demo Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/HorizontalImageSize/Index
      * @see imagePosition
      * @see imageViewMode
      * @see imageEffect
