@@ -1,7 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupSliding/Template/Template';
 import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISlidingPanelTemplate';
-import {detection} from 'Env/Env';
 
 export enum DESKTOP_MODE {
     STACK = 'stack',

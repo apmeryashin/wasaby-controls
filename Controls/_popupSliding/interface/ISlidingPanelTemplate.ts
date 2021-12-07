@@ -47,9 +47,9 @@ export interface ISlidingPanelTemplate {
  * @cfg {object} Содержит сведения о позиционировании шторки.
  * @remark
  * При открытии шторки с помощью {@link Controls/popup:SlidingPanelOpener}, в шаблон передаётся значение для опции slidingPanelOptions.
- * Его рекомендуется использовать для конфигурации Controls/popupSliding:Template, что и показано в следующем примере.
+ * Необходимо использовать его для конфигурации Controls/popupSliding:Template, как показано в следующем примере.
  * <pre>
  * <Controls.popupSliding:Template slidingPanelOptions="{{_options.slidingPanelOptions}}" />
  * </pre>
- * Значение опции задавать вручную не нужно.
+ * Конфигурировать значение в ручную не нужно, необходимо только проксировать значение приходящее в шаблон.
  */
