@@ -6952,7 +6952,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const draggableItem = this._dndListController.getDraggableItem();
             if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
                 const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
-                this._dndListController.setDragPosition(newPosition);
+                // Если индекс === -1, значит изначально элемента не было в коллекции и нужно завершить днд,
+                // т.к. мышку увели из этого списка.
+                if (newPosition.index === -1) {
+                    this._dndListController.endDrag();
+                } else {
+                    this._dndListController.setDragPosition(newPosition);
+                }
             } else {
                 // если перетаскиваемого элемента нет в модели, значит мы перетащили элемент в другой список
                 this._dndListController.endDrag();
