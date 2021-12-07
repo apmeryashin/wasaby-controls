@@ -397,14 +397,6 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    protected _registerHandler(event: SyntheticEvent, type: string): void {
-        // Если среди родителей панели фильтров будет Browser, то все команды ПМО, посылаемые через
-        // Register будут долетать до списков внутри панели фильтров
-        if (event.type === 'register' && type === 'selectedTypeChanged') {
-            event.stopPropagation();
-        }
-    }
-
     private _getValue(value: string[] | number[]): string[] | number[] {
         return this._isEmptyKeySelected(value) ? [] : value;
     }
