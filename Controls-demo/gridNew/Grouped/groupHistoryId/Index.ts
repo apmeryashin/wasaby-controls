@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/gridNew/Grouped/groupHistoryId/groupHistoryId';
 import {Memory} from 'Types/source';
 import {IColumn} from 'Controls/grid';
-import { UserConfig } from 'EnvConfig/Config';
+import { USER } from 'ParametersWebAPI/Scope';
 import {Tasks} from 'Controls-demo/gridNew/DemoHelpers/Data/Tasks';
 
 export default class extends Control {
@@ -26,7 +26,7 @@ export default class extends Control {
     protected readonly GROUP_HISTORY_ID_NAME: string = 'MY_NEWS';
 
     protected _beforeMount(): void {
-        UserConfig.setParam('LIST_COLLAPSED_GROUP_' + this.GROUP_HISTORY_ID_NAME, JSON.stringify(['Крайнов Дмитрий']));
+        USER.set('LIST_COLLAPSED_GROUP_' + this.GROUP_HISTORY_ID_NAME, JSON.stringify(['Крайнов Дмитрий']));
         this._viewSource = new Memory({
             keyProperty: 'key',
             data: Tasks.getData()
