@@ -1,8 +1,26 @@
 import * as sinon from 'sinon';
+import {assert} from 'chai';
 import {BaseControl, IBaseControlOptions} from 'Controls/list';
 import {RecordSet} from 'Types/collection';
 import {CollectionItem} from 'Controls/display';
 import {Model} from 'Types/entity';
+import {CrudEntityKey} from 'Types/source';
+
+const getData = (dataCount: number = 0) => {
+    const rawData = [];
+
+    for (let i = 0; i < dataCount; i++) {
+        rawData.push({
+            key: i,
+            title: 'title' + i
+        });
+    }
+
+    return new RecordSet({
+        keyProperty: 'key',
+        rawData
+    });
+};
 
 describe('Controls/_baseList/BaseControl/HoverFreezeController', () => {
     let baseControl: BaseControl;

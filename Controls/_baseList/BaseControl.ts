@@ -2911,10 +2911,17 @@ const _private = {
     },
 
     freezeHoveredItem(self: BaseControl, item: CollectionItem<Model> & {dispItem: CollectionItem<Model>}): void {
-        const startIndex = self._listViewModel.getStartIndex();
-        const itemIndex = self._listViewModel.getIndex(item.dispItem || item);
+        const listContainer = self.getItemsContainer();
+        // TODO Надо перевести работу HoverFreeze на item-key, тогда вот это всё туда уйдёт.
+        //   https://online.sbis.ru/opendoc.html?guid=2b8e4422-4185-4ad8-834d-d1283375b385
+        const htmlNodeIndex = [].slice.call(listContainer.children).findIndex((itemContainer: HTMLElement) => (
+            itemContainer.getAttribute('item-key') === item.getContents().getKey()
+        )) + 1;
 
-        const htmlNodeIndex = itemIndex - startIndex + 1;
+        if (!htmlNodeIndex) {
+            return;
+        }
+
         const hoveredContainers = HoverFreeze.getHoveredItemContainers(
             self._container,
             htmlNodeIndex,
