@@ -12,7 +12,7 @@
                backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                backButtonClass="{{_backButtonClass}}"
                counterCaption="{{ _getCounterCaption(_items) }}"
-               showArrowOutsideOfBackButton="{{!_breadCrumbsItems && !_options.rootVisible}}"
+               showArrowOutsideOfBackButton="{{!_breadCrumbsItems && !_options.rootVisible && !_options.feature1182709671}}"
                backButtonStyle="{{ _options.backButtonStyle }}"
                backButtonIconStyle="{{ _options.backButtonIconStyle }}"
                backButtonFontColorStyle="{{ _options.backButtonFontColorStyle }}"
@@ -40,7 +40,14 @@
                "
             >
                <ws:if data="{{_options.feature1182709671}}">
-                  <div class="controls-BreadCrumbsPath__pathButton-wrapper">
+                  <div class="
+                     controls-BreadCrumbsPath__pathButton-wrapper
+                     {{
+                        (_backButtonCaption && !_options.withoutBackButton)
+                           ? 'controls-BreadCrumbsPath__pathButton-wrapper_offset-left'
+                           : ''
+                     }}
+                  ">
                      <Controls._breadcrumbs.PathButton
                         path="{{_items}}"
                         source="{{_options.pathButtonSource}}"
