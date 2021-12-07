@@ -19,10 +19,9 @@ export const getFontWidth = (text, size) => {
                 generateErrorMessage();
             }
         }
-    } else {
-        generateErrorMessage();
+        return getFontWidthWithFonts(fonts, text, size);
     }
-    return getFontWidthWithFonts(fonts, text, size);
+    return 0;
 };
 
 const generateErrorMessage = () => {
