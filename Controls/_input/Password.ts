@@ -50,6 +50,24 @@ class Password extends Base {
     protected _defaultValue: string = '';
     private _passwordVisible: boolean = false;
     protected _controlName: string = 'Password';
+    protected _oldIsVisibleButton: boolean = false;
+
+    protected _afterRender(): void {
+        const isVisibleButton = this._isVisibleButton();
+        if (isVisibleButton !== this._oldIsVisibleButton && isVisibleButton) {
+            this._oldIsVisibleButton = isVisibleButton;
+            // При вставке большого текста, происходит ситуация, когда каретка пропадает.
+            // Это связано с тем, что после появления кнопки показа пароля, поле ввода уменьшилось,
+            // но не произошел подскролл в самый конец.
+            // Поэтому меняем позицию каретки на 1 позицию влево, и после возвращаем на место, чтобы произошел подскролл
+            // https://online.sbis.ru/opendoc.html?guid=2e7f6c1b-0008-4c14-9365-e4befc8b9725
+            const selection = this._viewModel.selection;
+            this._viewModel.selection = selection.end - 1;
+            this._viewModel.selection = selection;
+        } else {
+            this._oldIsVisibleButton = isVisibleButton;
+        }
+    }
 
     protected _getViewModelOptions(options: IPasswordOptions): object {
         return {
