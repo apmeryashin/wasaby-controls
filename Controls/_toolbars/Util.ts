@@ -49,7 +49,11 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem,
     const viewMode = isVerticalDirection ? 'toolButton' : item.get('viewMode');
     const caption = item.get('caption');
 
-    if (typeof icon === 'undefined' && typeof caption === 'undefined') {
+    if (
+        typeof icon === 'undefined' &&
+        typeof caption === 'undefined' &&
+        typeof item.get(toolbarOptions.parentProperty) === 'undefined'
+    ) {
         Logger.error('Controls.toolbars.View: У элемента не задан "icon" и "caption". Элемент тулбара может отображаться некорректно');
     }
 
