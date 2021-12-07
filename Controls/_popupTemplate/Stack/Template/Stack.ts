@@ -44,6 +44,7 @@ const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
  * @implements Controls/popupTemplate:IPopupTemplate
  * @implements Controls/popupTemplate:IPopupTemplateBase
  * @demo Controls-demo/PopupTemplate/Stack/HeaderBorderVisible/Index
+ * @demo Controls-demo/PopupTemplate/Stack/DoubleSideContent/Index
  */
 
 class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemplate {
