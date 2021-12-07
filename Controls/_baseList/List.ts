@@ -8,7 +8,7 @@ import template = require('wml!Controls/_baseList/List');
 import viewName = require('Controls/_baseList/ListView');
 import {default as ListControl} from 'Controls/_baseList/BaseControl';
 import {default as Data} from 'Controls/_baseList/Data';
-import {ISelectionObject, IBaseSourceConfig, TKey} from 'Controls/interface';
+import {ISelectionObject, IBaseSourceConfig, TKey, IItemsContainerPaddingOption} from 'Controls/interface';
 import {DataSet, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import 'css!Controls/baseList';
 import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
@@ -41,6 +41,7 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @implements Controls/marker:IMarkerList
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/list:IListNavigation
+ * @implements Controls/interface:IItemsContainerPadding
  *
  * @author Авраменко А.С.
  * @public
@@ -105,6 +106,10 @@ implements IMovableList, IRemovableList {
 
     protected _keyDownHandler() {
         /* For override  */
+    }
+
+    protected _getItemsContainerPadding(options): IItemsContainerPaddingOption|null {
+        return options.itemsContainerPadding;
     }
 
     protected _getModelConstructor(): string|Function {
@@ -205,7 +210,13 @@ implements IMovableList, IRemovableList {
             multiSelectPosition: 'default',
             stickyHeader: true,
             stickyResults: true,
-            style: 'default'
+            style: 'default',
+            itemsContainerPadding: {
+                top: 'default',
+                bottom: 'default',
+                left: 'default',
+                right: 'default'
+            }
         };
     }
 }

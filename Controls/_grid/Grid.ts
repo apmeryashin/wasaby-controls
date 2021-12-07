@@ -115,7 +115,13 @@ Grid.getDefaultOptions = () => ({
     stickyColumnsCount: 1,
     rowSeparatorSize: null,
     columnSeparatorSize: null,
-    isFullGridSupport: isFullGridSupport()
+    isFullGridSupport: isFullGridSupport(),
+    itemsContainerPadding: {
+        top: 'default',
+        bottom: 'default',
+        left: 'default',
+        right: 'default'
+    }
 });
 
 Object.defineProperty(Grid, 'defaultProps', {

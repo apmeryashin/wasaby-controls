@@ -3,47 +3,8 @@ import {IControlOptions, Control} from 'UI/Base';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
-import {IPromiseSelectableOptions, ISelectionTypeOptions, IItemPaddingOptions, TKey} from 'Controls/interface';
 import {IEditingPropertyGrid} from 'Controls/_propertyGrid/interface/IEditingPropertyGrid';
-
-type TPadding = 'null'|'m';
-
-/**
- * Интерфейс для опции {@link Controls/_propertyGrid/IPropertyGrid#itemsContainerPadding itemsContainerPadding}.
- * @interface Controls/_propertyGrid/IItemsContainerPadding
- * @public
- * @author Герасимов А.М.
- */
-interface IItemsContainerPadding {
-    /**
-     * @cfg Название опции записи.
-     * @see bottom
-     * @see top
-     * @see right
-     */
-    left: TPadding;
-    /**
-     * @cfg Иконка опции записи.
-     * @see bottom
-     * @see top
-     * @see left
-     */
-    right: TPadding;
-    /**
-     * @cfg Идентификатор опции записи.
-     * @see bottom
-     * @see right
-     * @see left
-     */
-    top: TPadding;
-    /**
-     * @cfg Расположение опции записи.
-     * @see top
-     * @see right
-     * @see left
-     */
-    bottom: TPadding;
-}
+import {IPromiseSelectableOptions, ISelectionTypeOptions, IItemPaddingOptions, TKey, IItemsContainerPaddingOption} from 'Controls/interface';
 
 export type TCaptionPosition = 'left'|'top';
 
@@ -271,20 +232,6 @@ export interface IPropertyGridOptions extends
      */
     captionColumnOptions?: IPropertyGridColumnOptions;
     withoutLevelPadding?: boolean;
-    /**
-     * @name Controls/_propertyGrid/IPropertyGrid#itemsContainerPadding
-     * @cfg {Controls/propertyGrid:IItemsContainerPadding} Задаёт внешние отступы редактора свойств.
-     * @demo Controls-demo/PropertyGridNew/ItemsContainerPadding/Index
-     * @example
-     * <pre class="brush: html; highlight: [3]">
-     * <!-- WML -->
-     * <Controls.propertyGrid:PropertyGrid>
-     *    <ws:itemsContainerPadding top="null" bottom="null" left="null" right="null"/>
-     * </Controls.propertyGrid:PropertyGrid>
-     * </pre>
-     * @see itemPadding
-     */
-    itemsContainerPadding?: IItemsContainerPadding;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#multiSelectAccessibilityProperty
      * @cfg {Controls/display:MultiSelectAccessibility} Имя поля записи, в котором хранится состояние видимости чекбокса.
