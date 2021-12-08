@@ -1,13 +1,13 @@
-<div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell demo-checkboxTriState__default">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div data-qa="controlsDemo-checkboxContrastBackground__false" class="controlsDemo__cell demo-checkboxTriState__default">
         <div class="controls-text-label">ContrastBackground=false</div>
         <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value1" contrastBackground="{{false}}"/>
     </div>
-    <div class="controlsDemo__cell demo-checkboxTriState__triState">
+    <div data-qa="controlsDemo-checkboxContrastBackground__true" class="controlsDemo__cell demo-checkboxTriState__triState">
         <div class="controls-text-label">ContrastBackground=true</div>
         <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value2" contrastBackground="{{true}}"/>
     </div>
-    <div class="controlsDemo__cell demo-checkboxTriState__triState">
+    <div data-qa="controlsDemo-checkboxContrastBackground__triStateTrue" class="controlsDemo__cell demo-checkboxTriState__triState">
         <div class="controls-text-label">ContrastBackground=true, triState=true</div>
         <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value3" triState="{{true}}" contrastBackground="{{true}}"/>
     </div>
