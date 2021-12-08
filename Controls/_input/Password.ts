@@ -53,6 +53,10 @@ class Password extends Base {
     protected _oldIsVisibleButton: boolean = false;
 
     protected _afterRender(): void {
+        this._recalculateLocationCaret();
+    }
+
+    private _recalculateLocationCaret(): void {
         const isVisibleButton = this._isVisibleButton();
         if (isVisibleButton !== this._oldIsVisibleButton && isVisibleButton) {
             this._oldIsVisibleButton = isVisibleButton;
