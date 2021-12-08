@@ -14,6 +14,14 @@ import cInstance = require('Core/core-instance');
  * * value — проверяемое значение.
  * * doNotValidate:Boolean — требуется ли валидация.
  *
+ * Типы проверяемых значений:
+ * * Number
+ * * String
+ * * Object
+ * * Date
+ * * Array
+ * * RecordSet(Любой класс наследующийся от Types/collection:List)
+ *
  * Типы возвращаемых значений:
  *
  * * true — значение прошло проверку на валидность.
