@@ -6682,11 +6682,17 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _draggingItemMouseMove(targetItem: CollectionItem, event: MouseEvent): boolean {
+        const targetIsDraggableItem
+            = this._dndListController.getDraggableItem()?.getContents() === targetItem.getContents();
+        if (targetIsDraggableItem) {
+            return false;
+        }
+
         const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event);
         const dragPosition = this._dndListController.calculateDragPosition({
             targetItem, mouseOffsetInTargetItem
         });
-        if (dragPosition) {
+        if (dragPosition && !isEqual(this._dndListController.getDragPosition(), dragPosition)) {
             const changeDragTarget = this._notify(
                 'changeDragTarget',
                 [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]
@@ -7687,7 +7693,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      * @private
      */
     private _getDndTargetRow(event: MouseEvent): Element {
-        if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
+        if (
+            !event.target ||
+            !event.target.classList ||
+            !event.target.parentNode ||
+            !event.target.parentNode.classList
+        ) {
             return event.target as Element;
         }
 

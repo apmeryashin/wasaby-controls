@@ -846,14 +846,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
         if (changedPosition) {
             const dndListController = this.getDndListController();
-            const targetIsNotDraggableItem = dndListController.getDraggableItem()?.getContents() !== item.getContents();
-            if (item['[Controls/_display/TreeItem]'] && item.isNode() !== null && targetIsNotDraggableItem) {
+            if (item['[Controls/_display/TreeItem]'] && item.isNode() !== null) {
                 const position = dndListController.getDragPosition();
                 this._clearTimeoutForExpandOnDrag();
                 if (
                     !item['[Controls/_tile/mixins/TileItem]'] &&
                     !item.isExpanded() &&
-                    targetIsNotDraggableItem &&
                     position.position === 'on'
                 ) {
                     this._startCountDownForExpandNode(item, this._expandNodeOnDrag);
