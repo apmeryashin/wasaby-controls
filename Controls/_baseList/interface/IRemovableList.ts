@@ -12,14 +12,14 @@ export interface IRemovableList {
      * Удаляет элементы из источника данных по идентификаторам элементов коллекции.
      * @function Controls/_list/interface/IRemovableList#removeItems
      * @param {Controls/interface:ISelectionObject} items Массив элементов для удаления.
-     * @returns {Promise}
+     * @returns {Promise<String | void>}
      */
 
     /*
      * Removes items from the data source by identifiers of the items in the collection.
      * @function Controls/_list/interface/IRemovableList#removeItems
      * @param {Controls/interface:ISelectionObject} items Array of items to be removed.
-     * @returns {Promise}
+     * @returns {Promise<String | void>}
      */
     removeItems(items: ISelectionObject): Promise<void>;
 
@@ -27,14 +27,14 @@ export interface IRemovableList {
      * Удаляет с подтверждением элементы из источника данных по идентификаторам элементов коллекции.
      * @function Controls/_list/interface/IRemovableList#removeItemsWithConfirmation
      * @param {Controls/interface:ISelectionObject} items Массив элементов для удаления.
-     * @returns {Promise}
+     * @returns {Promise<String | void>}
      */
 
     /*
      * Removes items with confirmation from the data source by identifiers of the items in the collection.
      * @function Controls/_list/interface/IRemovableList#removeItemsWithConfirmation
      * @param {Controls/interface:ISelectionObject} items Array of items to be removed.
-     * @returns {Promise}
+     * @returns {Promise<String | void>}
      */
     removeItemsWithConfirmation(items: ISelectionObject): Promise<void>;
 }
