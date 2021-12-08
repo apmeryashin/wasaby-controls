@@ -56,6 +56,8 @@ interface IItemsFactoryOptions<S> {
     hasMore?: boolean;
     expanderIconSize?: TExpanderIconSize;
     expanderIconStyle?: TExpanderIconStyle;
+    hasNodeWithChildren?: boolean;
+    task1183995188?: boolean;
 }
 
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
@@ -310,6 +312,11 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     protected _$nodeFooterVisibilityCallback: TNodeFooterVisibilityCallback;
 
     protected _$moreFontColorStyle: string;
+
+    /**
+     * @TODO https://online.sbis.ru/opendoc.html?guid=2c0962d8-8f37-4504-bd60-77427e4c33d4
+     */
+    protected _$task1183995188: boolean;
 
     /**
      * Стратегия перетаскивания записей
@@ -998,6 +1005,11 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }
 
+            options.task1183995188 = this._$task1183995188;
+            if (this._$task1183995188 && options.node !== null) {
+                options.hasNodeWithChildren = this._getHasNodeWithChildren(options.contents);
+            }
+
             if (this.getHasMoreStorage() && this.getHasMoreStorage()[key]) {
                 options.hasMore = true;
             }
@@ -1283,30 +1295,56 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     // region HasNodeWithChildren
 
-    protected _recountHasNodeWithChildren(): void {
-        // hasNodeWithChildren нужно считать по рекордсету,
-        // т.к. ,когда срабатывает событие reset, элементы проекции еще не созданы
-        if (!this.getCollection().getCount()) {
-            return;
-        }
-
+    protected _getHasNodeWithChildren(parent: Model): boolean {
         let hasNodeWithChildren = false;
+        // TODO убрать кривую проверку, после переноса nodeTypeProperty в Tree
+        //  https://online.sbis.ru/opendoc.html?guid=ccebc1db-8f2c-48bd-a8f3-b5910668b598
+        const nodeTypeProperty = this.getNodeTypeProperty && this.getNodeTypeProperty();
+        const nodeProperty = this.getNodeProperty();
+        const hasChildrenProperty = this.getHasChildrenProperty();
 
-        const collection = this.getCollection();
-        for (let i = 0; i < collection.getCount(); i++) {
-            const item = collection.at(i);
-            const isNode = item.get(this.getNodeProperty()) !== null;
-            // TODO убрать кривую проверку, после переноса nodeTypeProperty в Tree
-            //  https://online.sbis.ru/opendoc.html?guid=ccebc1db-8f2c-48bd-a8f3-b5910668b598
-            const isGroupNode = item.get(this.getNodeTypeProperty && this.getNodeTypeProperty());
-            const hasChildren = this.getHasChildrenProperty()
-                ? item.get(this.getHasChildrenProperty())
+        const children = this.getChildrenByRecordSet(parent);
+        for (let i = 0; i < children.length; i++) {
+            const item = children[i];
+            const isNode = item.get(nodeProperty) !== null;
+            const isGroupNode = item.get(nodeTypeProperty);
+            const hasChildren = hasChildrenProperty
+                ? item.get(hasChildrenProperty)
                 : !!this.getChildrenByRecordSet(item).length;
             if (isNode && hasChildren && !isGroupNode) {
                 hasNodeWithChildren = true;
                 break;
             }
         }
+        return hasNodeWithChildren;
+    }
+
+    /**
+     * Обновляет состояние hasNodeWithChildren внутри узлов.
+     * @private
+     */
+    protected _updateItemsHasNodeWithChildren(): void {
+        this._getItems().forEach((item) => {
+            if (item.isNode() !== null) {
+                item.setHasNodeWithChildren(this._getHasNodeWithChildren(item.getContents()));
+            }
+        });
+        this._nextVersion();
+    }
+
+    protected _recountHasNodeWithChildren(): void {
+        // hasNodeWithChildren нужно считать по рекордсету,
+        // т.к. ,когда срабатывает событие reset, элементы проекции еще не созданы
+        if (!this.getCollection().getCount()) {
+            return;
+        }
+        if (this._$task1183995188) {
+            // Обновляем состояние HasNodeWithChildren на Items. Глобальное при этом не используем.
+            this._updateItemsHasNodeWithChildren();
+            return;
+        }
+
+        let hasNodeWithChildren = this._getHasNodeWithChildren(null);
 
         // Добавляемого элемента нет в рекордсете, поэтому учитываем его отдельно
         if (this.getStrategyInstance(AddStrategy) && !hasNodeWithChildren) {
@@ -1463,5 +1501,6 @@ Object.assign(Tree.prototype, {
     _$hasMoreStorage: {},
     _$collapsedItems: [],
     _$expandedItems: [],
+    _$task1183995188: false,
     _root: null
 });

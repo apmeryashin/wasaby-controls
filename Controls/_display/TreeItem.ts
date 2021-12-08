@@ -82,6 +82,11 @@ export default class TreeItem<T extends Model = Model> extends mixin<
      */
     protected _$expanderIconStyle: TExpanderIconStyle;
 
+    protected _$hasNodeWithChildren: boolean;
+
+    // @TODO https://online.sbis.ru/opendoc.html?guid=2c0962d8-8f37-4504-bd60-77427e4c33d4
+    protected _$task1183995188: boolean;
+
     /**
      * Признак, означающий что в узле можно еще подгрузить данные
      * @protected
@@ -265,6 +270,17 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return changed;
     }
 
+    getHasNodeWithChildren(): boolean {
+        return this._$hasNodeWithChildren;
+    }
+
+    setHasNodeWithChildren(hasNodeWithChildren: boolean): void {
+        if (this._$hasNodeWithChildren !== hasNodeWithChildren) {
+            this._$hasNodeWithChildren = hasNodeWithChildren;
+            this._nextVersion();
+        }
+    }
+
     /**
      * Возвращает название свойства, содержащего дочерние элементы узла
      */
@@ -357,7 +373,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
     shouldDisplayExpanderBlock(): boolean {
         return this._$owner.getExpanderVisibility() === 'hasChildren'
-            ? this._$owner.hasNodeWithChildren()
+            ? this.getParent().getHasNodeWithChildren() || this._$owner.hasNodeWithChildren()
             : this._$owner.hasNode();
     }
 
@@ -534,6 +550,8 @@ Object.assign(TreeItem.prototype, {
     _$hasChildrenByRecordSet: false,
     _$childrenProperty: '',
     _$hasChildrenProperty: '',
+    _$hasNodeWithChildren: false,
+    _$task1183995188: false,
     _$hasMore: false,
     _$displayExpanderPadding: false,
     _$expanderIconSize: 'default',

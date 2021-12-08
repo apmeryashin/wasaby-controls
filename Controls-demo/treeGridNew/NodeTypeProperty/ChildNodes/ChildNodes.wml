@@ -8,6 +8,8 @@
             rowSeparatorSize="s"
             colspanCallback="{{ _colspanCallback }}"
             useNewNodeFooters="{{ true }}"
+            expanderVisibility="hasChildren"
+            hasChildrenProperty="hasChild"
             navigation="{{ _navigation }}"
             columns="{{ _columns }}"
             bind:expandedItems="_expandedItems"

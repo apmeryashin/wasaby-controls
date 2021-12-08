@@ -206,7 +206,8 @@ export default class TreeGridDataRow<T extends Model = Model>
     // Убираем ExpanderPadding для подуровней TreeGridGroupRow
     shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
         const should = super.shouldDisplayExpanderPadding(tmplExpanderIcon, tmplExpanderSize);
-        return should && (this._$parent.isRoot() || !(this._$parent as unknown as TreeGridDataRow).GroupNodeItem);
+        return should && (this._$task1183995188 ||
+            this._$parent.isRoot() || !(this._$parent as unknown as TreeGridDataRow).GroupNodeItem);
     }
 
     // endregion overrides
