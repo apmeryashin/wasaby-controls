@@ -186,7 +186,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
  * @name Controls/_decorator/IMoney#underline
  * @cfg {Controls/_decorator/IMoney/TUnderline.typedef} Вариант подчеркивания.
  * @default none
- * @demo Controls-demo/Decorator/Money/Underline/Index
+ * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
  */
 
 
