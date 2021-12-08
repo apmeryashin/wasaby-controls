@@ -8,6 +8,8 @@ import {
 import { Model } from 'Types/entity';
 import {CrudEntityKey} from 'Types/source';
 
+const DRAG_MAX_OFFSET = 0.5;
+
 export interface IDraggableFlatCollection<T extends IDraggableItem = IDraggableItem> extends IDraggableCollection {
     getCount(): number;
     at(index: number): T;
@@ -40,7 +42,9 @@ export default class Flat<
     /**
      * Запускает расчет позиции
      */
-    calculatePosition({currentPosition, targetItem}: IDragStrategyParams<IDragPosition<T>, T>): IDragPosition<T> {
+    calculatePosition(
+        {currentPosition, targetItem, mouseOffsetInTargetItem}: IDragStrategyParams<IDragPosition<T>, T>
+    ): IDragPosition<T> {
         if (targetItem === null) {
             return this._startPosition;
         }
@@ -53,23 +57,27 @@ export default class Flat<
             return currentPosition;
         }
 
-        let prevIndex = -1;
-        if (currentPosition) {
-            prevIndex = currentPosition.index;
-        } else if (this._draggableItem) {
-            prevIndex = this._startPosition.index;
-        }
-
         let position;
         const targetIndex = this._model.getIndex(targetItem);
-        if (prevIndex === -1) {
-            position = 'before';
-        } else if (targetIndex > prevIndex) {
-            position = 'after';
-        } else if (targetIndex < prevIndex) {
-            position = 'before';
-        } else if (targetIndex === prevIndex) {
-            position = currentPosition && currentPosition.position === 'after' ? 'before' : 'after';
+        if (mouseOffsetInTargetItem) {
+            position = mouseOffsetInTargetItem.top <= DRAG_MAX_OFFSET ? 'before' : 'after';
+        } else {
+            let prevIndex = -1;
+            if (currentPosition) {
+                prevIndex = currentPosition.index;
+            } else if (this._draggableItem) {
+                prevIndex = this._startPosition.index;
+            }
+
+            if (prevIndex === -1) {
+                position = 'before';
+            } else if (targetIndex > prevIndex) {
+                position = 'after';
+            } else if (targetIndex < prevIndex) {
+                position = 'before';
+            } else if (targetIndex === prevIndex) {
+                position = currentPosition && currentPosition.position === 'after' ? 'before' : 'after';
+            }
         }
 
         // Логика для свернутых групп
