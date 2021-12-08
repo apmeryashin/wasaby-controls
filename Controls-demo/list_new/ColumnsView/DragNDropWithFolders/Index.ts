@@ -10,6 +10,7 @@ export default class RenderDemo extends Control {
     protected _viewSource: Memory;
     private _dataArray: Array<{id: number, title: string, parent: string, node: boolean|null}>;
     protected _selectedKeys: Number[] = [];
+    protected _useColumns: boolean = true;
 
     protected _beforeMount(): void {
         this._dataArray = [

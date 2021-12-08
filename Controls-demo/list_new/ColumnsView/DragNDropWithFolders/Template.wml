@@ -1,31 +1,41 @@
+<ws:template name="list">
+   <Controls.scroll:Container attr:class="controlsDemo__height400 controlsDemo__minWidth600 controlsDemo__maxWidth800">
+      <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
+         <Controls.operations:Controller bind:selectedKeys="_selectedKeys">
+            <div>
+               <Controls.list:Mover name="listMover"/>
+               <Controls.list:Container>
+                  <Controls.explorer:View
+                          keyProperty="id"
+                          displayProperty="title"
+                          itemsDragNDrop="{{true}}"
+                          parentProperty="parent"
+                          nodeProperty="node"
+                          on:dragEnd="_dragEnd()"
+
+                          columnsCount="{{3}}"
+                          useColumns="{{useColumnsProp}}"
+
+                          viewMode="list">
+                     <ws:itemTemplate>
+                        <ws:partial template="Controls/columns:ItemTemplate" attr:class="controlsDemo__height36_item"></ws:partial>
+                     </ws:itemTemplate>
+                  </Controls.explorer:View>
+               </Controls.list:Container>
+            </div>
+         </Controls.operations:Controller>
+      </Controls.list:DataContainer>
+   </Controls.scroll:Container>
+</ws:template>
+
 <div class="controlsDemo__wrapper controlsDemo__maxWidth800">
-      <div class="controlsDemo__inline-flex">
-         <Controls.scroll:Container attr:class="controlsDemo__height400 controlsDemo__minWidth600 controlsDemo__maxWidth800">
-            <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
-               <Controls.operations:Controller bind:selectedKeys="_selectedKeys">
-                  <div>
-                     <Controls.list:Mover name="listMover"/>
-                     <Controls.list:Container>
-                        <Controls.explorer:View
-                                keyProperty="id"
-                                displayProperty="title"
-                                itemsDragNDrop="{{true}}"
-                                parentProperty="parent"
-                                nodeProperty="node"
-                                on:dragEnd="_dragEnd()"
-
-                                columnsCount="{{3}}"
-                                useColumns="{{true}}"
-
-                                viewMode="list">
-                           <ws:itemTemplate>
-                              <ws:partial template="Controls/columns:ItemTemplate" attr:class="controlsDemo__height36_item"></ws:partial>
-                           </ws:itemTemplate>
-                        </Controls.explorer:View>
-                     </Controls.list:Container>
-                  </div>
-               </Controls.operations:Controller>
-            </Controls.list:DataContainer>
-         </Controls.scroll:Container>
-      </div>
+   <div class="controlsDemo__inline-flex controlsDemo__flexColumn">
+      <Controls.toggle:Checkbox bind:value="_useColumns" caption="useColumns" />
+      <ws:if data="{{_useColumns}}">
+         <ws:partial template="list" useColumnsProp="{{true}}"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial template="list" useColumnsProp="{{false}}"/>
+      </ws:else>
+   </div>
 </div>
