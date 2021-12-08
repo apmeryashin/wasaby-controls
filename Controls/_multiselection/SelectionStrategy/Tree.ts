@@ -130,16 +130,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    unselectAll(selection: ISelection): ISelection {
-      let cloneSelection = clone(selection);
-
-      if (this._entryPath && this._entryPath.length) {
-         cloneSelection = this._unselectAllInRoot(cloneSelection);
-      } else {
-         cloneSelection.selected.length = 0;
-         cloneSelection.excluded.length = 0;
-      }
-
-      return cloneSelection;
+      // По стандарту: unselectAll предназначен для снятия отметки со всех записей, не зависимо от фильтрации
+      return {selected: [], excluded: []};
    }
 
    toggleAll(selection: ISelection, hasMoreData: boolean): ISelection {

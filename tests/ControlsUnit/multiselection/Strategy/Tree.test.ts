@@ -622,7 +622,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          strategy._rootId = 2;
          let selection = { selected: [2, 5], excluded: [2, 3] };
          selection = strategy.unselectAll(selection);
-         assert.deepEqual(selection.selected, [5]);
+         assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
       });
 
