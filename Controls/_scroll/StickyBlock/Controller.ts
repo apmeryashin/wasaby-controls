@@ -12,9 +12,10 @@ import {
 import {SHADOW_VISIBILITY as SCROLL_SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
 import StickyBlock from 'Controls/_scroll/StickyBlock';
 import fastUpdate from './FastUpdate';
-import {IPositionOrientation} from './StickyBlock/Utils';
+import {IPositionOrientation} from './../StickyBlock/Utils';
 import SizeAndVisibilityObserver, {STACK_OPERATION} from 'Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import getDecomposedPosition from './../StickyBlock/Utils/getDecomposedPosition';
 
 // @ts-ignore
 
@@ -312,7 +313,7 @@ class StickyHeaderController {
             this._headers[header.id].offset = {};
         } else if (operation === STACK_OPERATION.add) {
             const headerPosition = this._headers[header.id].position;
-            const positions = this._getDecomposedPosition(headerPosition);
+            const positions = getDecomposedPosition(headerPosition);
 
             positions.forEach((position) => {
                 const inHeadersStack = this._headersStack[position].some((headerId) => headerId === header.id);
@@ -595,7 +596,7 @@ class StickyHeaderController {
     private _addToHeadersStack(id: number,
                                headerPosition: IPositionOrientation,
                                needUpdateOffset: boolean = false): void {
-        const positions = this._getDecomposedPosition(headerPosition);
+        const positions = getDecomposedPosition(headerPosition);
         positions.forEach((position) => {
             const headersStack = this._headersStack[position];
             const newHeaderOffset = this._getHeaderOffset(id, position, needUpdateOffset);
@@ -618,32 +619,6 @@ class StickyHeaderController {
             index = index === -1 ? headersStack.length : index;
             headersStack.splice(index, 0, id);
         });
-    }
-
-    private _getDecomposedPosition(headerPosition: IPositionOrientation): POSITION[] {
-        const positions = [];
-        switch (headerPosition.vertical) {
-            case 'top':
-            case 'bottom':
-                positions.push(headerPosition.vertical);
-                break;
-            case 'topBottom':
-                positions.push('top');
-                positions.push('bottom');
-                break;
-        }
-
-        switch (headerPosition.horizontal) {
-            case 'left':
-            case 'right':
-                positions.push(headerPosition.horizontal);
-                break;
-            case 'leftRight':
-                positions.push('left');
-                positions.push('right');
-                break;
-        }
-        return positions;
     }
 
     private _updateFixedInitially(position: POSITION): void {
