@@ -5,9 +5,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeHistoryId/WithExpandedItems/WithExpandedItems';
 import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
-// Патч нужен, чтобы демка не выдавала ошибки
-import 'Controls-demo/Utils/WebApiScopePatch';
-
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
