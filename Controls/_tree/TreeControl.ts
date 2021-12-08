@@ -384,48 +384,6 @@ const _private = {
     },
 
     /**
-     * Получаем по event.target строку списка
-     * @param event
-     * @private
-     * @remark это нужно для того, чтобы когда event.target это содержимое строки, которое по высоте меньше 20 px,
-     *  то проверка на 10px сверху и снизу сработает неправильно и нельзя будет навести на узел(position='on')
-     */
-    getTargetRow(self: TreeControl, event: SyntheticEvent): Element {
-        if (!event.target ||
-            !event.target.classList ||
-            !event.target.parentNode ||
-            !event.target.parentNode.classList) {
-            return event.target;
-        }
-
-        const startTarget = event.target;
-        let target = startTarget;
-
-        const condition = () => {
-            // В плитках элемент с классом controls-ListView__itemV имеет нормальные размеры,
-            // а в обычном списке данный элемент будет иметь размер 0x0
-            if (self._listViewModel['[Controls/_tile/Tile]']) {
-                return !target.classList.contains('controls-ListView__itemV');
-            } else {
-                return !target.parentNode.classList.contains('controls-ListView__itemV');
-            }
-        };
-
-        while (condition()) {
-            target = target.parentNode;
-
-            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
-            if (!target.classList || !target.parentNode || !target.parentNode.classList
-               || target.classList.contains('controls-BaseControl')) {
-                target = startTarget;
-                break;
-            }
-        }
-
-        return target;
-    },
-
-    /**
      * Возвращает идентификаторы раскрытых узлов. В случае если переданные expandedItems не равны
      * [ALL_EXPANDED_VALUE], то вернутся копия переданного массива. В противном случае вернутся идентификаторы
      * всех узлов, присутствующих в указанных items
@@ -890,8 +848,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const dndListController = this.getDndListController();
         const targetIsNotDraggableItem = dndListController.getDraggableItem()?.getContents() !== dispItem.getContents();
         if (dispItem['[Controls/_display/TreeItem]'] && dispItem.isNode() !== null && targetIsNotDraggableItem) {
-            const targetElement = _private.getTargetRow(this, event);
-            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event, targetElement);
+            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event);
             const dragTargetPosition = dndListController.calculateDragPosition({
                 targetItem: dispItem,
                 mouseOffsetInTargetItem
@@ -986,30 +943,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         this._timeoutForExpandOnDrag = setTimeout(() => {
             expandNode(item);
         }, EXPAND_ON_DRAG_DELAY);
-    }
-
-    private _calculateMouseOffsetInItem(event: SyntheticEvent<MouseEvent>,
-                                        targetElement: Element): {top: number, bottom: number} {
-        let result = null;
-
-        if (targetElement) {
-            const dragTargetRect = targetElement.getBoundingClientRect();
-
-            result = { top: null, bottom: null };
-
-            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
-
-            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
-            if (this._listViewModel['[Controls/_tile/Tile]']) {
-                result.top = (mouseCoords.x - dragTargetRect.left) / dragTargetRect.width;
-                result.bottom = (dragTargetRect.right - mouseCoords.x) / dragTargetRect.width;
-            } else {
-                result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
-                result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
-            }
-        }
-
-        return result;
     }
 
     // endregion Drag
