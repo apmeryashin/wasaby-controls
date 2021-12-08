@@ -17,6 +17,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
     const fakeSourceController = {
         hasMoreData: (direction: string, root: string) => root != null && root !== '3',
         setDataLoadCallback: () => {},
+        subscribe: () => {},
         getState: () => ({}),
         getItems: () => new RecordSet({
             keyProperty: 'id',

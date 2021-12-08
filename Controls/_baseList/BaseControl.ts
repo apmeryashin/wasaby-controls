@@ -23,6 +23,7 @@ import {IHashMap} from 'Types/declarations';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass, Container as ValidateContainer} from 'Controls/validate';
 import {Logger} from 'UI/Utils';
+import {Object as EventObject} from 'Env/Event';
 
 import { TouchDetect } from 'Env/Touch';
 import {
@@ -3196,7 +3197,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
-            this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+            this._sourceController.subscribe('dataLoad', this._dataLoadCallback);
             _private.validateSourceControllerOptions(this, newOptions);
         }
 
@@ -3218,7 +3219,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._doBeforeMount(newOptions);
     }
 
-    private _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+    private _dataLoadCallback(event: EventObject, items: RecordSet, direction: IDirection): Promise<void> | void {
         this._beforeDataLoadCallback(items, direction);
 
         if (items.getCount()) {
@@ -3244,9 +3245,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (_private.hasHoverFreezeController(this)) {
                 this._hoverFreezeController.unfreezeHover();
             }
-            return this.isEditing() && !isEndEditProcessing ?
-                this._cancelEdit(true) :
-                void 0;
+            event.setResult(
+                this.isEditing() && !isEndEditProcessing
+                ? this._cancelEdit(true)
+                : void 0
+            );
+            return;
         }
 
         _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
@@ -3260,7 +3264,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._isMounted && this._scrollController) {
             _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
             this.startBatchAdding(direction);
-            return this._scrollController.getScrollStopPromise();
+
+            event.setResult(this._scrollController.getScrollStopPromise());
+            return;
         }
     }
 
@@ -3943,7 +3949,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (newOptions.sourceController) {
                 if (sourceControllerChanged) {
                     this._sourceController = newOptions.sourceController;
-                    this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+                    this._sourceController.subscribe('dataLoad', this._dataLoadCallback);
                 }
 
                 if (newOptions.loading) {
@@ -4313,7 +4319,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (!this._options.sourceController) {
                 this._sourceController.destroy();
             } else {
-                this._sourceController.setDataLoadCallback(null);
+                this._sourceController.unsubscribe('dataLoad', this._dataLoadCallback);
             }
             this._sourceController = null;
         }
