@@ -231,7 +231,7 @@ Object.defineProperty(List, 'defaultProps', {
 });
 /**
  * @name Controls/_list/List#itemPadding
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef}
+ * @cfg {Controls/_interface/IItemPadding/ItemPadding.typedef}
  * @demo Controls-demo/list_new/ItemPadding/DifferentPadding/Index В примере заданы горизонтальные отступы.
  * @demo Controls-demo/list_new/ItemPadding/NoPadding/Index В примере отступы отсутствуют.
  */

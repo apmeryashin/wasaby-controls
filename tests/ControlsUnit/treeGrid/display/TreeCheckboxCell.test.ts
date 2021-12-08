@@ -27,7 +27,9 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterCell', () => {
             isActive: () => false,
             hasColumnScroll: () => false,
             isEditing: () => false,
-            isMarked: () => false
+            isMarked: () => false,
+            shouldDisplayMarker: () => false,
+            isDragTargetNode: () => false
         };
     });
 
@@ -44,6 +46,13 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterCell', () => {
             const cell = new TreeCheckboxCell({owner: mockedOwner, column: { width: '' }});
             const classes = cell.getWrapperClasses('default');
             CssClassesAssert.notInclude(classes, 'controls-TreeGridView__dragTargetNode controls-TreeGridView__dragTargetNode_first');
+        });
+
+        it('item is marked', () => {
+            mockedOwner.shouldDisplayMarker = () => true;
+            const cell = new TreeCheckboxCell({owner: mockedOwner, column: { width: '' }, style: 'default'});
+            const classes = cell.getWrapperClasses('default');
+            CssClassesAssert.include(classes, 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default');
         });
     });
 });

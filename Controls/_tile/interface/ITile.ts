@@ -37,7 +37,7 @@
  */
 
 /**
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef} Конфигурация внешних отступов плитки.
+ * @cfg {Controls/_interface/IItemPadding/ItemPadding.typedef} Конфигурация внешних отступов плитки.
  * @name Controls/_tile/interface/ITile#itemsContainerPadding
  * @demo Controls-demo/tileNew/ItemsContainerPadding/Index
  * @example

@@ -101,6 +101,7 @@ class Password extends Base {
         this._rightFieldWrapper.scope.horizontalPadding = options.horizontalPadding;
         this._rightFieldWrapper.scope.isVisibleButton = this._isVisibleButton.bind(this);
         this._rightFieldWrapper.scope.isVisiblePassword = this._isVisiblePassword.bind(this);
+        this._rightFieldWrapper.scope.revealable = options.revealable;
     }
 
     protected _getTooltip(): string {
