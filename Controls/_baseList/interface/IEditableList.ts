@@ -280,7 +280,7 @@ export interface IEditingConfig {
 }
 
 /**
- * @typedef {Promise<void | IOperationCanceledResult>} TAsyncOperationResult
+ * @typedef {Promise<void | IOperationCanceledResult>} Controls/_baseList/interface/IEditableList/TAsyncOperationResult
  * @description Результат выполнения методов {@link beginAdd}, {@link beginEdit}, {@link cancelEdit} и {@link commitEdit}.
  */
 type TAsyncOperationResult = Promise<void | IOperationCanceledResult>;

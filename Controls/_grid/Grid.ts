@@ -135,7 +135,7 @@ Object.defineProperty(Grid, 'defaultProps', {
 
 /**
  * @name Controls/_grid/Grid#itemPadding
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef}
+ * @cfg {Controls/_interface/IItemPadding/ItemPadding.typedef}
  * @demo Controls-demo/gridNew/ItemPaddingNull/Index
  */
 

@@ -25,7 +25,7 @@ export default interface IItemsContainerPadding {
 
 /**
  * @name Controls/_interface/IItemsContainerPadding#itemsContainerPadding
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef} Конфигурация внешних отступов
+ * @cfg {Controls/_interface/IItemPadding/ItemPadding.typedef} Конфигурация внешних отступов
  * @example
  * <pre class="brush: html; highlight: [4-8]">
  * <!-- WML -->

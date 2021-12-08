@@ -6,6 +6,7 @@ import {editing} from 'Controls/list';
  *
  * @public
  * @author Авраменко А.С.
+ * @extends Controls/list:IEditableList
  * @see Controls/editableArea:View
  * @remark
  * Разница между этим интерфейсом и {@link Controls/editableArea:View Controls/editableArea:View} заключается в том, что первый используется в списках, а второй — вне их (например, на вкладках).
