@@ -7473,7 +7473,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
                 const newPosition = this._dndListController.calculateDragPosition(
                     {targetItem: null, mouseOffsetInTargetItem: null}
-                );                // Если индекс === -1, значит изначально элемента не было в коллекции и нужно завершить днд,
+                );
+                // Если индекс === -1, значит изначально элемента не было в коллекции и нужно завершить днд,
                 // т.к. мышку увели из этого списка.
                 if (newPosition.index === -1) {
                     this._dndListController.endDrag();
