@@ -13,7 +13,7 @@ import {
 } from 'Controls/_scroll/StickyBlock/Utils';
 import {SHADOW_VISIBILITY} from './Utils';
 import fastUpdate from './FastUpdate';
-import getDecomposedPosition from './../StickyBlock/Utils/getDecomposedPosition';
+import {getDecomposedPosition, getDecomposedPositionFromString} from './../StickyBlock/Utils/getDecomposedPosition';
 import template = require('wml!Controls/_scroll/StickyBlock/Group');
 
 interface IHeaderData extends IRegisterEventData {
@@ -87,9 +87,13 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     protected _isShadowVisibleByController: {
         top: SHADOW_VISIBILITY_BY_CONTROLLER;
         bottom: SHADOW_VISIBILITY_BY_CONTROLLER;
+        left: SHADOW_VISIBILITY_BY_CONTROLLER;
+        right: SHADOW_VISIBILITY_BY_CONTROLLER;
     } = {
         top: SHADOW_VISIBILITY_BY_CONTROLLER.auto,
-        bottom: SHADOW_VISIBILITY_BY_CONTROLLER.auto
+        bottom: SHADOW_VISIBILITY_BY_CONTROLLER.auto,
+        left: SHADOW_VISIBILITY_BY_CONTROLLER.auto,
+        right: SHADOW_VISIBILITY_BY_CONTROLLER.auto
     };
 
     protected _headers: IHeadersMap = {};
@@ -221,25 +225,30 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     protected _fixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
         event.stopImmediatePropagation();
         if (!fixedHeaderData.isFakeFixed) {
-            if (!!fixedHeaderData.fixedPosition) {
-                const headersIds: number[] = this._stickyHeadersIds[fixedHeaderData.fixedPosition];
-                headersIds.push(fixedHeaderData.id);
-                // Если это не первый заголовок в группе, то группа уже знает надо ли отображить тень,
-                // сообщим это заголовку.
-                if (headersIds.length > 1) {
-                    if (this._isShadowVisible) {
-                        this._headers[fixedHeaderData.id].inst.updateShadowVisible([fixedHeaderData.id]);
-                    } else {
-                        this._headers[fixedHeaderData.id].inst.updateShadowVisible([]);
+            if (!!fixedHeaderData.prevPosition) {
+                getDecomposedPositionFromString(fixedHeaderData.prevPosition).forEach((pos) => {
+                    if (this._stickyHeadersIds[pos].indexOf(fixedHeaderData.id) > -1) {
+                        this._stickyHeadersIds[pos].splice(
+                            this._stickyHeadersIds[pos].indexOf(fixedHeaderData.id), 1
+                        );
                     }
-                }
-            } else if (
-                !!fixedHeaderData.prevPosition &&
-                this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1
-            ) {
-                this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(
-                    this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1
-                );
+                });
+            }
+
+            if (!!fixedHeaderData.fixedPosition) {
+                getDecomposedPositionFromString(fixedHeaderData.fixedPosition).forEach((pos) => {
+                    const headersIds: number[] = this._stickyHeadersIds[pos];
+                    headersIds.push(fixedHeaderData.id);
+                    // Если это не первый заголовок в группе, то группа уже знает надо ли отображить тень,
+                    // сообщим это заголовку.
+                    if (headersIds.length > 1) {
+                        if (this._isShadowVisible) {
+                            this._headers[fixedHeaderData.id].inst.updateShadowVisible([fixedHeaderData.id]);
+                        } else {
+                            this._headers[fixedHeaderData.id].inst.updateShadowVisible([]);
+                        }
+                    }
+                });
             }
         }
 
@@ -251,7 +260,12 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                 this._fixed = true;
                 this._isShadowVisible = true;
             }
-            this._notifyFixed(fixedHeaderData);
+            getDecomposedPositionFromString(fixedHeaderData.fixedPosition).forEach((p) => {
+                this._notifyFixed({
+                    ...fixedHeaderData,
+                    fixedPosition: p
+                });
+            });
         } else if (!fixedHeaderData.fixedPosition && this._fixed &&
                 this._stickyHeadersIds.top.length === 0 && this._stickyHeadersIds.bottom.length === 0) {
             if (!fixedHeaderData.isFakeFixed) {
@@ -372,7 +386,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                 data.inst[POSITION.bottom] = this._offset[POSITION.bottom];
             }
 
-            for (const position of [POSITION.top, POSITION.bottom]) {
+            for (const position of [POSITION.top, POSITION.bottom, POSITION.left, POSITION.right]) {
                 data.inst.updateShadowVisibility(this._isShadowVisibleByController[position], position);
             }
 

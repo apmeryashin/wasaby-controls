@@ -56,23 +56,42 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
         }
     }
 
-    setStickyFixed(topFixed: boolean, bottomFixed: boolean, needUpdate: boolean = true): void {
+    setStickyFixed(topFixed: boolean,
+                   bottomFixed: boolean,
+                   leftFixed: boolean,
+                   rightFixed: boolean,
+                   needUpdate: boolean = true): void {
         let isTopStateChanged = false;
         let isBottomStateChanged = false;
+        let isLeftStateChanged = false;
+        let isRightStateChanged = false;
+
         if (this._models.top) {
             isTopStateChanged = this._models.top.setStickyFixed(topFixed);
         }
         if (this._models.bottom) {
             isBottomStateChanged = this._models.bottom.setStickyFixed(bottomFixed);
         }
+        if (this._models.left) {
+            isLeftStateChanged = this._models.left.setStickyFixed(leftFixed);
+        }
+        if (this._models.right) {
+            isRightStateChanged = this._models.right.setStickyFixed(rightFixed);
+        }
         // Возможна ситуация когда, до события фиксации заголовков, список говорит что надо всегда отображать
         // тень сверху, и состояние рассчитывается без информации о том, что есть зафиксированные заголовки.
         // В этом случае нам нужна синхронизация.
         // tslint:disable:max-line-length
-        if ((isTopStateChanged || isBottomStateChanged) &&
-            (needUpdate ||
+        if (
+            (isTopStateChanged || isBottomStateChanged) &&
+            (
+                needUpdate ||
                 (this._models.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE && isTopStateChanged) ||
-                (this._models.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE && isBottomStateChanged))) {
+                (this._models.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE && isBottomStateChanged) ||
+                (this._models.left?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE && isLeftStateChanged) ||
+                (this._models.right?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE && isRightStateChanged)
+            )
+        ) {
             this._nextVersion();
         }
         // tslint:enable:max-line-length

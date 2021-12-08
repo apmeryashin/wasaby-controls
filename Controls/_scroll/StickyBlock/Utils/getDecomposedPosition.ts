@@ -1,6 +1,6 @@
 import {IPositionOrientation, POSITION} from './../../StickyBlock/Utils';
 
-export default function getDecomposedPosition(headerPosition: Record<keyof IPositionOrientation, string>): POSITION[] {
+export function getDecomposedPosition(headerPosition: Record<keyof IPositionOrientation, string>): POSITION[] {
     const positions = [];
     switch (headerPosition.vertical) {
         case 'top':
@@ -22,6 +22,17 @@ export default function getDecomposedPosition(headerPosition: Record<keyof IPosi
             positions.push('left');
             positions.push('right');
             break;
+    }
+    return positions;
+}
+
+export function getDecomposedPositionFromString(headerPosition: string): POSITION[] {
+    const positions = [];
+
+    for (const fPosition of [POSITION.left, POSITION.right, POSITION.top, POSITION.bottom]) {
+        if (headerPosition.toLowerCase().indexOf(fPosition) !== -1) {
+            positions.push(fPosition);
+        }
     }
     return positions;
 }

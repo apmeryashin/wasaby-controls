@@ -15,13 +15,15 @@ import fastUpdate from './FastUpdate';
 import {IPositionOrientation} from './../StickyBlock/Utils';
 import SizeAndVisibilityObserver, {STACK_OPERATION} from 'Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import getDecomposedPosition from './../StickyBlock/Utils/getDecomposedPosition';
+import {getDecomposedPosition} from './../StickyBlock/Utils/getDecomposedPosition';
 
 // @ts-ignore
 
 interface IShadowVisibility {
     top: SCROLL_SHADOW_VISIBILITY;
     bottom: SCROLL_SHADOW_VISIBILITY;
+    left: SCROLL_SHADOW_VISIBILITY;
+    right: SCROLL_SHADOW_VISIBILITY;
 }
 
 interface IStickyHeaderController {
@@ -53,7 +55,9 @@ class StickyHeaderController {
     private _options: IStickyHeaderController = {};
     private _shadowVisibility: IShadowVisibility = {
         top: SCROLL_SHADOW_VISIBILITY.AUTO,
-        bottom: SCROLL_SHADOW_VISIBILITY.AUTO
+        bottom: SCROLL_SHADOW_VISIBILITY.AUTO,
+        left: SCROLL_SHADOW_VISIBILITY.AUTO,
+        right: SCROLL_SHADOW_VISIBILITY.AUTO
     };
 
     // TODO: Избавиться от передачи контрола доработав логику ResizeObserverUtil
@@ -67,7 +71,9 @@ class StickyHeaderController {
         };
         this._fixedHeadersStack = {
             top: [],
-            bottom: []
+            bottom: [],
+            left: [],
+            right: []
         };
         this._options.fixedCallback = options.fixedCallback;
         this._options.resizeCallback = options.resizeCallback;
@@ -194,9 +200,13 @@ class StickyHeaderController {
     }
 
     setShadowVisibility(topShadowVisibility: SCROLL_SHADOW_VISIBILITY,
-                        bottomShadowVisibility: SCROLL_SHADOW_VISIBILITY): void {
+                        bottomShadowVisibility: SCROLL_SHADOW_VISIBILITY,
+                        leftShadowVisibility: SCROLL_SHADOW_VISIBILITY,
+                        rightShadowVisibility: SCROLL_SHADOW_VISIBILITY): void {
         this._shadowVisibility[POSITION.top] = topShadowVisibility;
         this._shadowVisibility[POSITION.bottom] = bottomShadowVisibility;
+        this._shadowVisibility[POSITION.left] = leftShadowVisibility;
+        this._shadowVisibility[POSITION.right] = rightShadowVisibility;
         this._updateShadowsVisibility();
         // Если есть только что зарегистрированные и не просчитанные заголовки, что бы не было мигания теней,
         // сразу, синхронно не дожидаясь срабатывания IntersectionObserver посчитаем зафиксированы ли ониё.
@@ -206,7 +216,7 @@ class StickyHeaderController {
     }
 
     _updateShadowsVisibility(): void {
-        for (const position of [POSITION.top, POSITION.bottom]) {
+        for (const position of [POSITION.top, POSITION.bottom, POSITION.left, POSITION.right]) {
             const headersStack: [] = this._headersStack[position];
             const lastHeaderId = this._getLastFixedHeaderWithShadowId(position);
             for (const headerId of headersStack) {
