@@ -368,7 +368,7 @@
  *    </ws:itemTemplate>
  * </Controls.tile:View>
  * </pre>
- * @demo Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/Index
+ * @demo Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/ActionMode/Index
  */
 
 /**
@@ -380,7 +380,7 @@
 /**
  * @name Controls/_tile/interface/ITile#actionMenuViewMode
  * @cfg {ActionMenuViewMode} Вид отображения меню опций записи.
- * @demo Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/Index
+ * @demo Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/ActionMenuViewMode/Index
  */
 
 /**
