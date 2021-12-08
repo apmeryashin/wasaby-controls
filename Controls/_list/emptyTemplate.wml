@@ -1,20 +1,9 @@
-<ws:if data="{{ task1184007849 }}">
-  <div class="{{ item.getContentClasses({
+<div class="{{ item.getContentClasses({
     'align': align,
     'isEditing': isEditing,
     'topSpacing': topSpacing,
     'bottomSpacing': bottomSpacing
   }) }}"
-       attr:data-qa="empty">
-    <ws:partial template="{{ contentTemplate }}" item="{{ item }}"/>
-  </div>
-</ws:if>
-<ws:else>
-  <div class="controls-ListView__empty
-              controls-ListView__empty-textAlign_{{ align || 'center'}}
-              controls-ListView__empty_topSpacing_{{topSpacing || 'l'}}
-              controls-ListView__empty_bottomSpacing_{{bottomSpacing || 'l'}}"
-       attr:data-qa="empty">
-    <ws:partial template="{{contentTemplate}}"/>
-  </div>
-</ws:else>
+     attr:data-qa="empty">
+  <ws:partial template="{{ contentTemplate }}" item="{{ item }}"/>
+</div>
