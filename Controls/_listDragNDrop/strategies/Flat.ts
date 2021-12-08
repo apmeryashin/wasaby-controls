@@ -57,28 +57,8 @@ export default class Flat<
             return currentPosition;
         }
 
-        let position;
         const targetIndex = this._model.getIndex(targetItem);
-        if (mouseOffsetInTargetItem) {
-            position = mouseOffsetInTargetItem.top <= DRAG_MAX_OFFSET ? 'before' : 'after';
-        } else {
-            let prevIndex = -1;
-            if (currentPosition) {
-                prevIndex = currentPosition.index;
-            } else if (this._draggableItem) {
-                prevIndex = this._startPosition.index;
-            }
-
-            if (prevIndex === -1) {
-                position = 'before';
-            } else if (targetIndex > prevIndex) {
-                position = 'after';
-            } else if (targetIndex < prevIndex) {
-                position = 'before';
-            } else if (targetIndex === prevIndex) {
-                position = currentPosition && currentPosition.position === 'after' ? 'before' : 'after';
-            }
-        }
+        const position = mouseOffsetInTargetItem.top <= DRAG_MAX_OFFSET ? 'before' : 'after';
 
         // Логика для свернутых групп
         if (targetItem['[Controls/_display/GroupItem]'] && targetIndex > 0) {
