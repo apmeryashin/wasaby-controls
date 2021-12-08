@@ -1280,7 +1280,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         item.getContents().addField({name: 'editingValue', type: 'string', defaultValue: item.getPropertyValue()});
         return this._getItemActionsController()
             .then(() => {
-                this._listModel.setHoveredItem(item);
                 this._updateItemActions(this._listModel, this._options, item);
             });
     }
