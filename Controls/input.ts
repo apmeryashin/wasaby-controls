@@ -23,7 +23,7 @@ export {default as Text} from 'Controls/_input/Text';
 export {default as Number} from 'Controls/_input/Number';
 export {default as Mask} from 'Controls/_input/Mask';
 export {default as Phone} from 'Controls/_input/Phone';
-export {default as Password} from 'Controls/_input/Password';
+export {default as Password, IPasswordOptions} from 'Controls/_input/Password';
 export {default as Label, ILabelOptions} from 'Controls/_input/Label';
 export {default as TimeInterval} from 'Controls/_input/TimeInterval';
 export {default as Money} from 'Controls/_input/Money';
@@ -48,7 +48,6 @@ export {IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility,
     getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_input/interface/IBorderVisibility';
 export {IBorderVisibilityArea, TBorderVisibilityArea, getOptionBorderVisibilityAreaTypes} from './_input/interface/IBorderVisibilityArea';
 export {IFieldTemplate, IFieldTemplateOptions} from './_input/interface/IFieldTemplate';
-export {IPasswordOptions} from 'Controls/_input/Password';
 export {IMaxLengthOptions} from 'Controls/_input/interface/IMaxLength';
 
 // Helpers
