@@ -841,41 +841,27 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     // region Drag
 
-    protected _draggingItemMouseMove(itemData: TreeItem, event: SyntheticEvent<MouseEvent>): void {
-        super._draggingItemMouseMove(itemData, event);
+    protected _draggingItemMouseMove(item: TreeItem, event: MouseEvent): boolean {
+        const changedPosition = super._draggingItemMouseMove(item, event);
 
-        const dispItem = itemData;
-        const dndListController = this.getDndListController();
-        const targetIsNotDraggableItem = dndListController.getDraggableItem()?.getContents() !== dispItem.getContents();
-        if (dispItem['[Controls/_display/TreeItem]'] && dispItem.isNode() !== null && targetIsNotDraggableItem) {
-            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event);
-            const dragTargetPosition = dndListController.calculateDragPosition({
-                targetItem: dispItem,
-                mouseOffsetInTargetItem
-            });
-
-            if (dragTargetPosition) {
-                const result = this._notify('changeDragTarget', [
-                    dndListController.getDragEntity(),
-                    dragTargetPosition.dispItem.getContents(),
-                    dragTargetPosition.position
-                ]);
-
-                if (result !== false) {
-                    const changedPosition = dndListController.setDragPosition(dragTargetPosition);
-                    if (changedPosition) {
-                        this._clearTimeoutForExpandOnDrag();
-                        if (
-                            !dispItem['[Controls/_tile/mixins/TileItem]'] &&
-                            !dispItem.isExpanded() &&
-                            targetIsNotDraggableItem && dragTargetPosition.position === 'on'
-                        ) {
-                            this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
-                        }
-                    }
+        if (changedPosition) {
+            const dndListController = this.getDndListController();
+            const targetIsNotDraggableItem = dndListController.getDraggableItem()?.getContents() !== item.getContents();
+            if (item['[Controls/_display/TreeItem]'] && item.isNode() !== null && targetIsNotDraggableItem) {
+                const position = dndListController.getDragPosition();
+                this._clearTimeoutForExpandOnDrag();
+                if (
+                    !item['[Controls/_tile/mixins/TileItem]'] &&
+                    !item.isExpanded() &&
+                    targetIsNotDraggableItem &&
+                    position.position === 'on'
+                ) {
+                    this._startCountDownForExpandNode(item, this._expandNodeOnDrag);
                 }
             }
         }
+
+        return changedPosition;
     }
 
     protected _beforeStartDrag(draggedKey: CrudEntityKey): void {

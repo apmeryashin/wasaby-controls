@@ -6376,9 +6376,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     ? this._options.dragScrolling : !this._options.itemsDragNDrop
             );
         }
-        if (this._unprocessedDragEnteredItem) {
-            this._unprocessedDragEnteredItem = null;
-        }
         if (!hasDragScrolling) {
             _private.startDragNDrop(this, domEvent, itemData);
         } else {
@@ -6645,10 +6642,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        if (this._dndListController) {
-            this._unprocessedDragEnteredItem = itemData;
-            this._processItemMouseEnterWithDragNDrop(itemData, nativeEvent);
-        }
         if (itemData.ItemActionsItem) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
@@ -6665,8 +6658,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     }
 
-    _itemMouseMove(event, itemData, nativeEvent) {
-        this._notify('itemMouseMove', [itemData.item, nativeEvent]);
+    private _itemMouseMove(event: SyntheticEvent, item: CollectionItem, nativeEvent: MouseEvent): void {
+        this._notify('itemMouseMove', [item.item, nativeEvent]);
         const hoverFreezeController = this._hoverFreezeController;
         if (!this._addShowActionsClass &&
             (!this._dndListController || !this._dndListController.isDragging()) &&
@@ -6677,37 +6670,36 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._dndListController && this._dndListController.isDragging()) {
-            this._draggingItemMouseMove(itemData, nativeEvent);
+            this._draggingItemMouseMove(item, nativeEvent);
         }
-        if (hoverFreezeController && itemData.ItemActionsItem) {
-            const itemKey = _private.getPlainItemContents(itemData).getKey();
-            const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
+        if (hoverFreezeController && item.ItemActionsItem) {
+            const itemKey = _private.getPlainItemContents(item).getKey();
+            const itemIndex = this._listViewModel.getIndex(item.dispItem || item);
             hoverFreezeController.setDelayedHoverItem(
                 itemKey, nativeEvent, itemIndex, this._listViewModel.getStartIndex()
             );
         }
     }
 
-    _draggingItemMouseMove(targetItem: CollectionItem, event: SyntheticEvent): void {
-        if (this._options.useNewDndLogic) {
-            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event);
-            const dragPosition = this._dndListController.calculateDragPosition({
-                targetItem, mouseOffsetInTargetItem
-            });
-            if (dragPosition) {
-                const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
-                if (changeDragTarget !== false) {
-                    this._dndListController.setDragPosition(dragPosition);
-                }
+    protected _draggingItemMouseMove(targetItem: CollectionItem, event: MouseEvent): boolean {
+        const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event);
+        const dragPosition = this._dndListController.calculateDragPosition({
+            targetItem, mouseOffsetInTargetItem
+        });
+        if (dragPosition) {
+            const changeDragTarget = this._notify(
+                'changeDragTarget',
+                [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]
+            );
+            if (changeDragTarget !== false) {
+                return this._dndListController.setDragPosition(dragPosition);
             }
         }
+        return false;
     }
 
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
-        if (this._dndListController) {
-            this._unprocessedDragEnteredItem = null;
-        }
         if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this)) {
             this._hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
         }
@@ -7461,14 +7453,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._dndListController.startDrag(dragObject.entity);
 
-        // Cобытие mouseEnter на записи может сработать до dragStart.
-        // И тогда перемещение при наведении не будет обработано.
-        // В таком случае обрабатываем наведение на запись сейчас.
-        // TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
-        if (this._unprocessedDragEnteredItem) {
-            this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
-        }
-
         // Показываем плашку, если утащили мышь за пределы списка, до
         // того как выполнился запрос за перетаскиваемыми записями
         const hasSorting = this._options.sorting && this._options.sorting.length;
@@ -7561,32 +7545,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._dndListController.startDrag(dragObject.entity);
                 }
             }
-        }
-    }
-
-    _processItemMouseEnterWithDragNDrop(itemData: CollectionItem, event: MouseEvent): void {
-        let dragPosition;
-        const targetItem = itemData;
-        const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
-        if (this._dndListController.isDragging() && !targetIsNode && this._documentDragging) {
-            dragPosition = this._dndListController.calculateDragPosition({
-                targetItem,
-                mouseOffsetInTargetItem: this._options.useNewDndLogic ? this._calculateMouseOffsetInItem(event) : null
-            });
-            if (dragPosition) {
-                const changeDragTarget = this._notify(
-                    'changeDragTarget',
-                    [
-                        this._dndListController.getDragEntity(),
-                        dragPosition.dispItem.getContents(),
-                        dragPosition.position
-                    ]
-                );
-                if (changeDragTarget !== false) {
-                    this._dndListController.setDragPosition(dragPosition);
-                }
-            }
-            this._unprocessedDragEnteredItem = null;
         }
     }
 

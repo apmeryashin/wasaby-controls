@@ -2492,68 +2492,6 @@ define([
          });
       });
 
-      it('_processItemMouseEnterWithDragNDrop', () => {
-         const ctrl = new lists.BaseControl({});
-         const dragEntity = { entity: 'entity' },
-               itemData = {
-                  dispItem: {
-                     getContents: () => {}
-                  }
-               },
-               dragPosition = {
-                  dispItem: {
-                     getContents: () => {}
-                  },
-                  position: 'after'
-               };
-
-         let notifyResult = false,
-            notifyCalled = false,
-            setDragPositionCalled = false;
-
-         ctrl._dndListController = {
-            isDragging() {
-               return false;
-            },
-            getDragEntity() {
-               return dragEntity;
-            },
-            calculateDragPosition(params) {
-               assert.deepEqual(params.targetItem, itemData);
-               return dragPosition;
-            },
-            setDragPosition(position) {
-               assert.deepEqual(position, dragPosition);
-               setDragPositionCalled = true;
-            }
-         };
-
-         ctrl._notify = (eventName, args) => {
-            notifyCalled = true;
-            assert.equal(eventName, 'changeDragTarget');
-            assert.deepEqual(args[0], dragEntity);
-            assert.equal(args[1], dragPosition.dispItem.getContents());
-            assert.equal(args[2], 'after');
-            return notifyResult;
-         };
-
-         ctrl._processItemMouseEnterWithDragNDrop(itemData);
-         assert.isFalse(notifyCalled);
-
-         ctrl._dndListController.isDragging = () => { return true; };
-         ctrl._documentDragging = true;
-         ctrl._processItemMouseEnterWithDragNDrop(itemData);
-         assert.isTrue(notifyCalled);
-         assert.isFalse(setDragPositionCalled);
-         assert.isNull(ctrl._unprocessedDragEnteredItem);
-
-         notifyResult = true;
-         ctrl._processItemMouseEnterWithDragNDrop(itemData);
-         assert.isTrue(notifyCalled);
-         assert.isTrue(setDragPositionCalled);
-         assert.isNull(ctrl._unprocessedDragEnteredItem);
-      });
-
       describe('Calling animation handlers', () => {
          let deactivateSwipeCalled;
          let stopItemAnimationCalled;
