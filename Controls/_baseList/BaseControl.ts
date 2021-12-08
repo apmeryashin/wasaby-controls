@@ -6380,7 +6380,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._unprocessedDragEnteredItem = null;
         }
         if (!hasDragScrolling) {
-            _private.startDragNDrop(this, domEvent, itemData);
+            // dragStartDelay нужен, чтобы была возможность выше отменить днд. То есть, за заданное время, контрол
+            // выше может выполнить свои действия и уже на событие dragStart дать однозначный ответ.
+            // Нужно например, чтобы начать dragScroll в канбане, но если прошло dragStartDelay, то должен быть DnD.
+            if (this._options.dragStartDelay) {
+                setTimeout(() => {
+                    _private.startDragNDrop(this, domEvent, itemData);
+                }, this._options.dragStartDelay);
+            } else {
+                _private.startDragNDrop(this, domEvent, itemData);
+            }
         } else {
             this._savedItemMouseDownEventArgs = {event, itemData, domEvent};
         }
