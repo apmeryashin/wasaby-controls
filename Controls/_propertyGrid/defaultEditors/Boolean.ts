@@ -28,7 +28,6 @@ import 'Controls/toggle';
  * @author Герасимов А.М.
  */
 
-// @ts-ignore
 class BooleanEditor extends Control implements IEditor {
     protected _template: Function = template;
     protected _options: IEditorOptions;

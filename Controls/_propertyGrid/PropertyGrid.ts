@@ -190,7 +190,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
     }
 
-    protected _afterRender(oldOptions?: IPropertyGridOptions, oldContext?: any): void {
+    protected _afterRender(oldOptions?: IPropertyGridOptions, oldContext?: unknown): void {
         // Активация поля ввода должна происходить после рендера.
         if (
             this._editInPlaceController &&
@@ -263,7 +263,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return itemContents !== constView.hiddenGroup;
     }
 
-    private _getCollapsedGroups(collapsedGroups: Array<string | number> = []): Record<string, boolean> {
+    private _getCollapsedGroups(collapsedGroups: [string | number] = []): Record<string, boolean> {
         return collapsedGroups.reduce((acc: Record<string, boolean>, key: string): Record<string, boolean> => {
             acc[key] = true;
             return acc;
@@ -312,7 +312,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return resultEditingObject;
     }
 
-    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: any): void {
+    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: unknown): void {
         const name = item.get(this._listModel.getKeyProperty());
         this._editingObject = this._updatePropertyValue(this._editingObject, name, value);
         this._notify('editingObjectChanged', [this._editingObject]);
@@ -603,9 +603,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _collectionChangedHandler(
         event: SyntheticEvent,
         action: string,
-        newItems: Array<CollectionItem<Model>>,
+        newItems: [CollectionItem<Model>],
         newItemsIndex: number,
-        removedItems: Array<CollectionItem<Model>>
+        removedItems: [CollectionItem<Model>]
     ): void {
         const options = this._options || {};
         const handleSelection =
@@ -725,7 +725,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             return;
         }
 
-        let dragEndResult: Promise<any> | undefined;
+        let dragEndResult: Promise<unknown> | undefined;
         if (this._insideDragging && this._dndController) {
             const targetPosition = this._dndController.getDragPosition();
             if (targetPosition && targetPosition.dispItem) {
@@ -933,7 +933,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _createDndController(
         model: TPropertyGridCollection,
         draggableItem: CollectionItem,
-        options: any
+        options: unknown
     ): DndController<IDragStrategyParams> {
         let strategy;
         if (options.parentProperty) {
@@ -1032,7 +1032,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return target;
     }
 
-    startValidation({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
+    startValidation({item}: IPropertyGridValidatorArguments): [string | boolean] | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
         const validatorArgs = {
