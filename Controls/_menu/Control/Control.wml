@@ -1,7 +1,7 @@
 <Controls.scroll:ScrollContextProvider pagingVisible="{{ false }}">
    <Controls.dataSource:error.Container viewConfig="{{_errorConfig}}">
       <div class="controls_breadcrumbs_theme-{{_options.theme}} controls_dropdownPopup_theme-{{_options.theme}} controls-menu"
-           attr:data-name="{{_options.dataName + '_level_' + (_options.subMenuLevel) + (_options.root ? ('_key_' + _options.root))}}"
+           attr:data-name="{{_dataName}}"
            attr:data-index="{{_options.subMenuLevel}}" attr:ws-no-focus="true">
          <ws:if data="{{_listModel}}">
             <Controls.scroll:Container attr:class="controls-ScrollContainer__flex
@@ -13,7 +13,7 @@
                <Controls._menu.Render scope="{{_options}}"
                                       listModel="{{_listModel}}"
                                       needStickyHistoryItems="{{_needStickyHistoryItems}}"
-                                      dataName="{{_dataName}}"
+                                      dataName="{{_options.dataName}}"
                                       on:itemClick="_itemClick()"
                                       on:itemSwipe="_itemSwipe()"
                                       on:itemActionMouseDown="_itemActionMouseDown()"
