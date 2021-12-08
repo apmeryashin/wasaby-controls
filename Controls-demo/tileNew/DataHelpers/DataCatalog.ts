@@ -381,13 +381,13 @@ export const Gadgets = {
             id: 1,
             icon: 'icon-DownloadNew',
             title: 'download',
-            showType: 2
+            showType: 0
         },
         {
             id: 2,
             icon: 'icon-Signature',
             title: 'signature',
-            showType: 1
+            showType: 0
         },
         {
             id: 3,
