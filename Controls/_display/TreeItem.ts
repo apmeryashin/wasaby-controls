@@ -372,8 +372,10 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     }
 
     shouldDisplayExpanderBlock(): boolean {
+        const hasNodeWithChildren = this._$task1183995188 ? this.getParent().getHasNodeWithChildren() :
+            this._$owner.hasNodeWithChildren();
         return this._$owner.getExpanderVisibility() === 'hasChildren'
-            ? this.getParent().getHasNodeWithChildren() || this._$owner.hasNodeWithChildren()
+            ? hasNodeWithChildren
             : this._$owner.hasNode();
     }
 
