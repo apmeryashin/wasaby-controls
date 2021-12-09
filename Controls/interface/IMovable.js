@@ -45,13 +45,13 @@ define('Controls/interface/IMovable', [
     */
 
    /**
-    * @typedef {String} BeforeItemsMoveResult
+    * @typedef {String} Controls/interface/IMovable/BeforeItemsMoveResult
     * @variant Custom Ваша собственная логика перемещения предметов.
     * @variant MoveInItems Перемещение в списке без вызова из источника перемещения.
     */
 
    /*
-    * @typedef {String} BeforeItemsMoveResult
+    * @typedef {String} Controls/interface/IMovable/BeforeItemsMoveResult
     * @variant Custom Your own logic of moving items.
     * @variant MoveInItems Move in the list without calling move on source.
     */
@@ -172,7 +172,7 @@ define('Controls/interface/IMovable', [
     * @param {Array.<String>|Array.<Number>} movedItems Массив элементов перемещения.
     * @param {Types/entity:Record|String|Number} target Целевой элемент перемещения.
     * @param {MovePosition} position Положение перемещения.
-    * @returns {BeforeItemsMoveResult}
+    * @returns {Controls/interface/IMovable/BeforeItemsMoveResult.typedef}
     * @example
     * В следующем примере показано, как переопределить логику перемещения элементов по умолчанию.
     * <pre class="brush: html">
@@ -197,7 +197,7 @@ define('Controls/interface/IMovable', [
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {Types/entity:Record|String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
-    * @returns {BeforeItemsMoveResult}
+    * @returns {Controls/interface/IMovable/BeforeItemsMoveResult.typedef}
     * @example
     * The following example shows how to override the default items move logic.
     * <pre class="brush: html">

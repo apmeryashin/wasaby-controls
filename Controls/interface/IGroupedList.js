@@ -13,6 +13,7 @@ define('Controls/interface/IGroupedList', [
    /**
     * @name Controls/interface/IGroupedList#groupProperty
     * @cfg {String} Имя свойства, содержащего идентификатор {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} элемента списка.
+    * @remark При группировке не поддерживается функционал {@link Controls/list:IListNavigation#moveMarkerOnScrollPaging установки маркера при изменении страницы c помощью кнопок навигации.}.
     * @see groupTemplate
     * @see collapsedGroups
     * @see groupHistoryId
