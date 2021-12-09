@@ -352,7 +352,7 @@ export interface IPropertyGridOptions extends
  * @event Controls/_propertyGrid/IPropertyGrid#toggledEditorsChanged Происходит при скрытии или показе редакторов.
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {String[]} Список идентификаторов скрытых редакторов.
- * @param {String} Идентификаторов последнего скрытого или показанного редактора.
+ * @param {String} Идентификатор последнего скрытого или показанного редактора.
  * @demo Controls-demo/PropertyGridNew/Source/ToggleEditorButtonIcon/Index
  * @see toggleEditorButtonIcon
  * @see toggledEditors
