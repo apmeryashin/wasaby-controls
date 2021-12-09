@@ -26,7 +26,11 @@
 
       <div class="
          controls-Back__icon-wrapper
-         controls-Back__icon-wrapper_offset-{{_offsetSize}}
+         {{
+            _options.beforeCaptionTemplate || _options.caption
+               ? ('controls-Back__icon-wrapper_offset-' + _offsetSize)
+               : ''
+         }}
          {{_options.iconViewMode === 'functionalButton' ? 'ws-align-items-center' : 'ws-align-items-baseline'}}
       ">
          <ws:if data="{{_options.iconViewMode === 'functionalButton'}}">
