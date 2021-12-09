@@ -43,6 +43,10 @@ export default class CheckboxCell<
             wrapperClasses += ` controls-Grid__row-cell__last-${this.getStyle()}`;
         }
 
+        if (this.getOwner().shouldDisplayMarker()) {
+            wrapperClasses += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${this.getStyle()}`;
+        }
+
         if (this.isEditing()) {
             wrapperClasses += ' controls-Grid__row-cell-editing';
         }

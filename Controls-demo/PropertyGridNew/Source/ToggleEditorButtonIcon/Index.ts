@@ -1,4 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {object} from 'Types/util';
+
 import * as template from 'wml!Controls-demo/PropertyGridNew/Source/ToggleEditorButtonIcon/Index';
 
 export default class Demo extends Control<IControlOptions> {
@@ -11,8 +14,7 @@ export default class Demo extends Control<IControlOptions> {
         this._editingObject = {
             description: true,
             tileView: false,
-            showBackgroundImage: true,
-            showVideo: true
+            showBackgroundImage: true
         };
 
         this._typeDescription = [
@@ -27,16 +29,31 @@ export default class Demo extends Control<IControlOptions> {
             {
                 name: 'showVideo',
                 caption: 'Показывать видео',
-                toggleEditorButtonIcon: 'icon-TFVideoMessage'
+                toggleEditorButtonIcon: 'icon-TFVideoMessage',
+                editorTemplateName: 'Controls/propertyGrid:BooleanEditor'
             },
             {
                 name: 'showBackgroundImage',
                 caption: 'Показывать изображение',
-                toggleEditorButtonIcon: 'icon-Question2'
+                toggleEditorButtonIcon: 'icon-Question2',
+                editorTemplateName: 'Controls/propertyGrid:BooleanEditor'
             }
         ];
 
         this._toggledEditors = ['showBackgroundImage'];
+    }
+
+    protected _toggledEditorsChangedHandler(e: SyntheticEvent, toggledEditors: string[]): void {
+        if (toggledEditors !== this._toggledEditors) {
+            const editingObject = object.clone(this._editingObject);
+            Object.keys(editingObject)
+                .forEach((editorName: string) => {
+                    if (toggledEditors.includes(editorName)) {
+                        delete editingObject[editorName];
+                    }
+                });
+            this._editingObject = editingObject;
+        }
     }
 
     static _styles: string[] = ['Controls-demo/PropertyGridNew/PropertyGrid'];
