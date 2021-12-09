@@ -48,6 +48,7 @@ import {
     InputHelper as EditInPlaceInputHelper, TAsyncOperationResult
 } from 'Controls/editInPlace';
 import {Container as ValidateContainer, ControllerClass as ValidationController} from 'Controls/validate';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
@@ -427,12 +428,12 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         this._toggledEditors[currentEditorName] = value;
         this._listModel.setToggledEditors(this._toggledEditors);
 
-        const toggledEditorsNames = Object.keys(this._toggledEditors)
+        const oldToggledEditors = Object.keys(this._toggledEditors);
+        const newToggledEditors = oldToggledEditors
             .reduce((acc, key) => !this._toggledEditors[key] ? acc.concat([key]) : acc, []);
-        const hidden = toggledEditorsNames.indexOf(currentEditorName) !== -1 ? [toggledEditorsNames] : [];
-        const shown = toggledEditorsNames.indexOf(currentEditorName) === -1 ? [toggledEditorsNames] : [];
 
-        this._notify('toggledEditorsChanged', [toggledEditorsNames, hidden, shown]);
+        const diff = ArraySimpleValuesUtil.getArrayDifference(oldToggledEditors, newToggledEditors);
+        this._notify('toggledEditorsChanged', [newToggledEditors, diff.added, diff.removed]);
         this._listModel.setFilter(this._displayFilter.bind(this));
     }
 
