@@ -27,6 +27,7 @@
               draggable="{{_options.draggable}}"
               backgroundStyle="transparent"
               borderStyle="{{_options.borderStyle}}"
+              hoverBorderStyle="{{_options.hoverBorderStyle}}"
               borderSize="{{_options.borderSize}}"
               searchPlaceholder="{{_options.searchPlaceholder}}"
               minSearchLength="{{_options.minSearchLength}}"

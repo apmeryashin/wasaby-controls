@@ -3,6 +3,7 @@
                 controls-StickyTemplate
                 {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder'}}
                 controls-StickyTemplate-borderStyle-{{_options.borderStyle}}
+                controls-StickyTemplate-hoverBorderStyle-{{_options.hoverBorderStyle}}
                 controls-StickyTemplate-borderSize-{{_options.borderSize}}
                 {{_options.shadowVisible ? 'controls-StickyTemplate-shadow'}}
                 {{_options.draggable ? 'ws-window-draggable'}}"
