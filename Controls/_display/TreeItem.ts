@@ -284,7 +284,10 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     }
 
     setHasNode(hasNode: boolean): void {
-        this._$hasNode = hasNode;
+        if (this._$hasNodeWithChildren !== hasNode) {
+            this._$hasNode = hasNode;
+            this._nextVersion();
+        }
     }
 
     getHasNodeWithChildren(): boolean {
@@ -389,10 +392,11 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     }
 
     shouldDisplayExpanderBlock(): boolean {
-        const parentHasNodeWithChildren = this._$task1183995188 ? this.getParent().getHasNodeWithChildren() :
-            this._$owner.hasNodeWithChildren();
-        const parentHasNode = this._$task1183995188 ? this.getParent().getHasNode() : this._$owner.hasNode();
-        return this._$owner.getExpanderVisibility() === 'hasChildren' ? parentHasNodeWithChildren : parentHasNode;
+        if (this._$owner.getExpanderVisibility() === 'hasChildren') {
+            return this._$task1183995188 ? this.getParent().getHasNodeWithChildren() :
+                this._$owner.hasNodeWithChildren();
+        }
+        return this._$task1183995188 ? this.getParent().getHasNode() : this._$owner.hasNode();
     }
 
     shouldDisplayExpander(expanderIcon?: string, position: 'default'|'right' = 'default'): boolean {
