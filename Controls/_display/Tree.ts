@@ -1006,8 +1006,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
             options.task1183995188 = this._$task1183995188;
             if (this._$task1183995188 && options.node !== null) {
-                options.hasNodeWithChildren = this._getHasNodeWithChildren(options.contents);
-                options.hasNode = this._getHasNode(options.contents);
+                options.hasNodeWithChildren = this._getHasNode(options.contents, true);
+                options.hasNode = this._getHasNode(options.contents, false);
             }
 
             if (this.getHasMoreStorage() && this.getHasMoreStorage()[key]) {
@@ -1295,38 +1295,18 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     // region HasNodeWithChildren
 
-    protected _getHasNodeWithChildren(parent: Model): boolean {
-        let hasNodeWithChildren = false;
-        // TODO убрать кривую проверку, после переноса nodeTypeProperty в Tree
-        //  https://online.sbis.ru/opendoc.html?guid=ccebc1db-8f2c-48bd-a8f3-b5910668b598
-        const nodeTypeProperty = this.getNodeTypeProperty && this.getNodeTypeProperty();
-        const nodeProperty = this.getNodeProperty();
-        const hasChildrenProperty = this.getHasChildrenProperty();
-
-        const children = this.getChildrenByRecordSet(parent);
-        for (let i = 0; i < children.length; i++) {
-            const item = children[i];
-            const isNode = item.get(nodeProperty) !== null;
-            const isGroupNode = item.get(nodeTypeProperty);
-            const hasChildren = hasChildrenProperty
-                ? item.get(hasChildrenProperty)
-                : !!this.getChildrenByRecordSet(item).length;
-            if (isNode && hasChildren && !isGroupNode) {
-                hasNodeWithChildren = true;
-                break;
-            }
-        }
-        return hasNodeWithChildren;
-    }
-
-    /**
-     * Обновляет состояние hasNodeWithChildren внутри узлов.
-     * @private
-     */
+    // Обновляет состояние hasNodeWithChildren внутри узлов.
     protected _updateItemsHasNodeWithChildren(): void {
         this._getItems().forEach((item) => {
             if (item.isNode() !== null) {
-                item.setHasNodeWithChildren(this._getHasNodeWithChildren(item.getContents()));
+                item.setHasNodeWithChildren(this._getHasNode({
+                    collection: this,
+                    parent: item.getContents(),
+                    nodeProperty: this._$nodeProperty,
+                    considerHasChildren: true,
+                    hasChildrenProperty: this.getHasChildrenProperty(),
+                    nodeTypeProperty: this._$nodeTypeProperty
+                }));
             }
         });
         this._nextVersion();
@@ -1344,7 +1324,14 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             this._updateItemsHasNodeWithChildren();
         }
 
-        let hasNodeWithChildren = this._getHasNodeWithChildren(this.getRoot().getContents());
+        let hasNodeWithChildren = this._getHasNode({
+            collection: this,
+            parent: this.getRoot().getContents(),
+            nodeProperty: this._$nodeProperty,
+            considerHasChildren: true,
+            hasChildrenProperty: this.getHasChildrenProperty(),
+            nodeTypeProperty: this._$nodeTypeProperty
+        });
 
         // Добавляемого элемента нет в рекордсете, поэтому учитываем его отдельно
         if (this.getStrategyInstance(AddStrategy) && !hasNodeWithChildren) {
@@ -1371,29 +1358,55 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     // region HasNode
 
-    protected _getHasNode(parent: Model): boolean {
+    protected _getHasNode(params: {
+        collection: Tree;
+        parent: Model,
+        nodeProperty: string;
+        nodeTypeProperty: string;
+        considerHasChildren: boolean;
+        hasChildrenProperty?: string;
+    }): boolean {
         let hasNode = false;
-        const nodeTypeProperty = this.getNodeTypeProperty && this.getNodeTypeProperty();
-        const nodeProperty = this.getNodeProperty();
-
-        const children = this.getChildrenByRecordSet(parent);
+        const children = params.collection.getChildrenByRecordSet(params.collection.getRoot().contents);
         for (let i = 0; i < children.length; i++) {
             const item = children[i];
-            const isNode = item.get(nodeProperty) !== null;
-            const isGroupNode = item.get(nodeTypeProperty);
-            if (isNode && !isGroupNode) {
-                hasNode = true;
-                break;
-            }
-        }
+            const isNode = object.getPropertyValue(item, params.nodeProperty) !== null;
+            const isGroupNode = object.getPropertyValue(item, params.nodeTypeProperty) === 'group';
 
+            // Проходимся только по узлам, которые не являются группами
+            if (!isNode || isGroupNode) {
+                continue;
+            }
+
+            // Если метод должен учитывать наличие узлов в узлах, берём его у дочернего элемента или
+            // рекурсивно считаем по рекордсету относительно текущего item
+            if (params.considerHasChildren) {
+                if (params.hasChildrenProperty ?
+                    object.getPropertyValue(item, params.hasChildrenProperty) :
+                    this.getChildrenByRecordSet(item).length > 0) {
+                    hasNode = true;
+                    break;
+                }
+            }
+
+            // Выходим из цикла, если нашли хотя бы один узел, подходящий под условие
+            hasNode = true;
+            break;
+        }
         return hasNode;
     }
 
+    // Обновляет состояние hasNode внутри узлов.
     protected _updateItemsHasNode(): void {
         this._getItems().forEach((item) => {
             if (item.isNode() !== null) {
-                item.setHasNode(this._getHasNode(item.getContents()));
+                item.setHasNode(this._getHasNode({
+                    collection: this,
+                    parent: item.getContents(),
+                    nodeProperty: this._$nodeProperty,
+                    considerHasChildren: false,
+                    nodeTypeProperty: this._$nodeTypeProperty
+                }));
             }
         });
         this._nextVersion();
@@ -1405,7 +1418,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             // Обновляем состояние HasNodeWithChildren на Items.
             this._updateItemsHasNode();
         }
-        const hasNode = this._getHasNode(this.getRoot().getContents());
+        const hasNode = this._getHasNode({
+            collection: this,
+            parent: this.getRoot().getContents(),
+            nodeProperty: this._$nodeProperty,
+            considerHasChildren: false,
+            nodeTypeProperty: this._$nodeTypeProperty
+        });
         this._setHasNode(hasNode);
     }
 
