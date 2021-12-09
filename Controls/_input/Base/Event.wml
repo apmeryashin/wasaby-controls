@@ -1,4 +1,5 @@
 <ws:partial template="{{content}}"
+            scope="{{_options}}"
             on:cut="_cutHandler()"
             on:copy="_copyHandler()"
             on:keyup="_keyUpHandler()"
