@@ -199,6 +199,7 @@ export default class Button extends BaseDropdown {
     _beforeMount(options: IButtonOptions,
                  context: object,
                  receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
+        this._closeMenuOnOutsideClick = options.closeMenuOnOutsideClick;
         this._offsetClassName = cssStyleGeneration(options);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._controller = new Controller(this._getControllerOptions(options));
@@ -298,6 +299,9 @@ export default class Button extends BaseDropdown {
     }
 
     _openMenu(popupOptions?: IStickyPopupOptions, key?: TKey): Promise<any> {
+        if (popupOptions && popupOptions.closeOnOutsideClick) {
+            this._closeMenuOnOutsideClick = popupOptions.closeOnOutsideClick;
+        }
         let config;
         if (key) {
             config = Merge(this._getMenuPopupConfig(),  {
@@ -328,7 +332,7 @@ export default class Button extends BaseDropdown {
                 templateOptions: {
                     closedSubMenuKey: key
                 }
-            })
+            });
         } else {
             this._controller.closeMenu();
         }
@@ -362,7 +366,7 @@ export default class Button extends BaseDropdown {
     }
 
     protected _deactivated(): void {
-        if (this._options.closeMenuOnOutsideClick) {
+        if (this._closeMenuOnOutsideClick) {
             this.closeMenu();
         }
     }

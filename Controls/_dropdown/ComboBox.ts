@@ -11,7 +11,7 @@ import {ISingleSelectableOptions, IBorderStyleOptions, IValidationStatusOptions,
    IInputPlaceholderOptions, IContrastBackgroundOptions, IContrastBackground} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
-import {IStickyPopupOptions} from 'Controls/popup';
+import {IStickyPopupOptions, IStickyPosition} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/popup';
 import {RecordSet} from 'Types/collection';
@@ -87,20 +87,20 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
    protected _value: string;
    protected _placeholder: string | Function;
    protected _horizontalPadding: string;
+   protected _targetPoint: IStickyPosition = {
+      vertical: 'bottom'
+   };
 
    _beforeMount(options: IComboboxOptions,
                 context: object,
                 receivedState: DropdownReceivedState): Promise<void | DropdownReceivedState> {
+      this._borderStyle = this._getBorderStyle(options.borderStyle, options.validationStatus);
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._readOnly = options.readOnly;
       this._updateHorizontalPadding(options);
-      this._targetPoint = {
-         vertical: 'bottom'
-      };
 
       this._controller = new Controller(this._getControllerOptions(options));
-      this._borderStyle = this._getBorderStyle(options.borderStyle, options.validationStatus);
       return loadItems(this._controller, receivedState, options);
    }
 
