@@ -1006,8 +1006,22 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
             options.task1183995188 = this._$task1183995188;
             if (this._$task1183995188 && options.node !== null) {
-                options.hasNodeWithChildren = this._getHasNode(options.contents, true);
-                options.hasNode = this._getHasNode(options.contents, false);
+                options.hasNodeWithChildren = this._getHasNode({
+                    collection: this,
+                    parent: options.contents,
+                    nodeProperty: this._$nodeProperty,
+                    considerHasChildren: true,
+                    hasChildrenProperty: this.getHasChildrenProperty(),
+                    nodeTypeProperty: this._$nodeTypeProperty
+                });
+                options.hasNode = this._getHasNode({
+                    collection: this,
+                    parent: options.contents,
+                    nodeProperty: this._$nodeProperty,
+                    considerHasChildren: false,
+                    hasChildrenProperty: this.getHasChildrenProperty(),
+                    nodeTypeProperty: this._$nodeTypeProperty
+                });
             }
 
             if (this.getHasMoreStorage() && this.getHasMoreStorage()[key]) {
