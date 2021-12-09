@@ -1383,7 +1383,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             if (params.considerHasChildren) {
                 if (params.hasChildrenProperty ?
                     object.getPropertyValue(item, params.hasChildrenProperty) :
-                    this.getChildrenByRecordSet(item).length > 0) {
+                    params.collection.getChildrenByRecordSet(item).length > 0) {
                     hasNode = true;
                     break;
                 }
