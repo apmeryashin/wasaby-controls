@@ -3,6 +3,7 @@ import {isHidden} from 'Controls/_scroll/StickyBlock/Utils';
 import {getClosestControl} from 'UI/NodeCollector';
 import StickyBlock from 'Controls/_scroll/StickyBlock';
 import Group from 'Controls/_scroll/StickyBlock/Group';
+import {IRegisterEventData} from 'Controls/_scroll/StickyBlock/Utils';
 
 interface IHeightEntry {
     key: HTMLElement;
@@ -89,8 +90,9 @@ export default class SizeAndVisibilityObserver {
         }
     }
 
-    private _groupInObject(group: Group, object: object): boolean {
-        const groupInObject = Object.entries(object).find(([, updateGroup]) => updateGroup.index === group.index);
+    private _groupInObject(group: IRegisterEventData, object: object): boolean {
+        const groupInObject = Object.entries(object).find(([, updateGroup]) =>
+            updateGroup.header.id === group.id);
         return !!groupInObject;
     }
 
