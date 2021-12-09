@@ -396,9 +396,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (this._listModel) {
             this._dragEnter(this._getDragObject());
         }
-        this._getItemActionsController().then(() => {
-            this._updateItemActions(this._listModel, this._options);
-        });
+        if (!this._editInPlaceController || !this._editInPlaceController.isEditing()) {
+            this._getItemActionsController().then(() => {
+                this._updateItemActions(this._listModel, this._options);
+            });
+        }
     }
 
     protected _itemActionMouseDown(event: SyntheticEvent<MouseEvent>,
@@ -1298,7 +1300,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         item.getContents().addField({name: 'editingValue', type: 'string', defaultValue: item.getPropertyValue()});
         return this._getItemActionsController()
             .then(() => {
-                this._listModel.setHoveredItem(item);
                 this._updateItemActions(this._listModel, this._options, item);
             });
     }
