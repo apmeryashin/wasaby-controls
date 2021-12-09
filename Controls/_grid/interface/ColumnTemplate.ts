@@ -245,4 +245,13 @@ export default interface IColumnTemplateOptions {
      * @default default
      */
     markerClassName?: TMarkerClassName;
+
+    /**
+     * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
+     * @remark
+     * В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
+     * Дополнительно о подсветке строки таблицы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grid/background/#hover здесь}.
+     * @default true
+     */
+    highlightOnHover?: boolean;
 }
