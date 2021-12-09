@@ -6167,7 +6167,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = itemData;
-            this._processItemMouseEnterWithDragNDrop(itemData);
+            this._processItemMouseEnterWithDragNDrop(itemData, nativeEvent);
         }
         if (itemData.ItemActionsItem) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
@@ -6204,7 +6204,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _draggingItemMouseMove(item: CollectionItem, event: SyntheticEvent): void { }
+    _draggingItemMouseMove(targetItem: CollectionItem, event: SyntheticEvent): void {
+        if (this._options.useNewDndLogic) {
+            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event);
+            const dragPosition = this._dndListController.calculateDragPosition({
+                targetItem, mouseOffsetInTargetItem
+            });
+            if (dragPosition) {
+                const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
+                if (changeDragTarget !== false) {
+                    this._dndListController.setDragPosition(dragPosition);
+                }
+            }
+        }
+    }
 
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
@@ -6966,8 +6979,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._dndListController && this._dndListController.isDragging() && this._documentDragging) {
             const draggableItem = this._dndListController.getDraggableItem();
             if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
-                const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
-                // Если индекс === -1, значит изначально элемента не было в коллекции и нужно завершить днд,
+                const newPosition = this._dndListController.calculateDragPosition(
+                    {targetItem: null, mouseOffsetInTargetItem: null}
+                );                // Если индекс === -1, значит изначально элемента не было в коллекции и нужно завершить днд,
                 // т.к. мышку увели из этого списка.
                 if (newPosition.index === -1) {
                     this._dndListController.endDrag();
@@ -7038,12 +7052,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _processItemMouseEnterWithDragNDrop(itemData): void {
+    _processItemMouseEnterWithDragNDrop(itemData: CollectionItem, event: MouseEvent): void {
         let dragPosition;
         const targetItem = itemData;
         const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
         if (this._dndListController.isDragging() && !targetIsNode && this._documentDragging) {
-            dragPosition = this._dndListController.calculateDragPosition({targetItem});
+            dragPosition = this._dndListController.calculateDragPosition({
+                targetItem,
+                mouseOffsetInTargetItem: this._options.useNewDndLogic ? this._calculateMouseOffsetInItem(event) : null
+            });
             if (dragPosition) {
                 const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
                 if (changeDragTarget !== false) {
@@ -7157,6 +7174,68 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._unregisterMouseUp();
         this._dragEntity = null;
         this._startEvent = null;
+    }
+
+    protected _calculateMouseOffsetInItem(event: MouseEvent): {top: number, bottom: number} {
+        let result = null;
+
+        const targetElement = this._getDndTargetRow(event);
+
+        if (targetElement) {
+            const dragTargetRect = targetElement.getBoundingClientRect();
+
+            result = { top: null, bottom: null };
+
+            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
+
+            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
+            if (this._listViewModel['[Controls/_tile/Tile]']) {
+                result.top = (mouseCoords.x - dragTargetRect.left) / dragTargetRect.width;
+                result.bottom = (dragTargetRect.right - mouseCoords.x) / dragTargetRect.width;
+            } else {
+                result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
+                result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Получаем по event.target строку списка
+     * @param event
+     * @private
+     */
+    private _getDndTargetRow(event: MouseEvent): Element {
+        if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
+            return event.target as Element;
+        }
+
+        const startTarget = event.target;
+        let target = startTarget;
+
+        const condition = () => {
+            // В плитках элемент с классом controls-ListView__itemV имеет нормальные размеры,
+            // а в обычном списке данный элемент будет иметь размер 0x0
+            if (this._listViewModel['[Controls/_tile/Tile]']) {
+                return !target.classList.contains('controls-ListView__itemV');
+            } else {
+                return !target.parentNode.classList.contains('controls-ListView__itemV');
+            }
+        };
+
+        while (condition()) {
+            target = target.parentNode;
+
+            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
+            if (!target.classList || !target.parentNode || !target.parentNode.classList
+                || target.classList.contains('controls-BaseControl')) {
+                target = startTarget;
+                break;
+            }
+        }
+
+        return target as Element;
     }
 
     _registerMouseMove(): void {
