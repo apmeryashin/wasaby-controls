@@ -425,11 +425,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     protected _toggleEditor(event: SyntheticEvent, item: Model, value: boolean): void {
         const currentEditorName: string = item.get(this._listModel.getKeyProperty());
         this._toggledEditors = {...this._toggledEditors};
+        const oldToggledEditors = Object.keys(this._toggledEditors)
+            .reduce((acc, key) => !this._toggledEditors[key] ? acc.concat([key]) : acc, []);
+
         this._toggledEditors[currentEditorName] = value;
         this._listModel.setToggledEditors(this._toggledEditors);
 
-        const oldToggledEditors = Object.keys(this._toggledEditors);
-        const newToggledEditors = oldToggledEditors
+        const newToggledEditors = Object.keys(this._toggledEditors)
             .reduce((acc, key) => !this._toggledEditors[key] ? acc.concat([key]) : acc, []);
 
         const diff = ArraySimpleValuesUtil.getArrayDifference(oldToggledEditors, newToggledEditors);
