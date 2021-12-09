@@ -3,6 +3,7 @@ import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
 import GroupItem from './GroupItem';
+import EmptyTemplateItem from './EmptyTemplateItem';
 import {Model, Model as EntityModel} from 'Types/entity';
 import IItemsStrategy from './IItemsStrategy';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
@@ -721,6 +722,8 @@ export default class Collection<
     protected _$bottomPadding: string;
 
     protected _$roundBorder: IRoundBorder;
+
+    protected _emptyTemplateItem: EmptyTemplateItem;
 
     protected _$emptyTemplate: TemplateFunction;
 
@@ -2569,9 +2572,21 @@ export default class Collection<
         return this._$rightPadding;
     }
 
+    getEmptyTemplateItem(): EmptyTemplateItem {
+        if (!this._emptyTemplateItem && this._$emptyTemplate) {
+            this._emptyTemplateItem = new EmptyTemplateItem({
+                owner: this,
+                template: this._$emptyTemplate,
+                templateOptions: this._$emptyTemplateOptions
+            });
+        }
+        return this._emptyTemplateItem;
+    }
+
     setEmptyTemplate(emptyTemplate: TemplateFunction): boolean {
         if (this._$emptyTemplate !== emptyTemplate) {
             this._$emptyTemplate = emptyTemplate;
+            this._emptyTemplateItem = null;
             this._nextVersion();
             return true;
         }
