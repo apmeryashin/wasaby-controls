@@ -1,28 +1,32 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth1700">
-    <div class="controlsDemo__cell demo-checkboxGroupIndex__base">
-        <Router.router:Reference attr:class="controls-text-label"
-                                 state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/toggle/CheckboxGroup/Base/Index' }}">
-            <a href="{{content.href}}">Базовая настройка группы чекбоксов</a>
-        </Router.router:Reference>
-        <Controls-demo.toggle.CheckboxGroup.Base.Index/>
+    <div class="controlsDemo__flexRow">
+        <div class="controlsDemo__cell demo-checkboxGroupIndex__base controlsDemo__flexColumn">
+            <Router.router:Reference attr:class="controls-text-label"
+                                     state="/Controls-demo/app/:app"
+                                     app="{{ 'Controls-demo/toggle/CheckboxGroup/Base/Index' }}">
+                <a href="{{content.href}}">Базовая настройка группы чекбоксов</a>
+            </Router.router:Reference>
+            <Controls-demo.toggle.CheckboxGroup.Base.Index/>
+        </div>
+        
+        <div class="controlsDemo__cell demo-checkboxGroupIndex__hierarchy controlsDemo__flexColumn controlsDemo__ml2">
+            <Router.router:Reference attr:class="controls-text-label"
+                                     state="/Controls-demo/app/:app"
+                                     app="{{ 'Controls-demo/toggle/CheckboxGroup/ParentProperty/Index' }}">
+                <a data-qa="controlsDemo-checkboxGroup__linkHierarhy" href="{{content.href}}">Группа чекбоксов с иерархией</a>
+            </Router.router:Reference>
+            <Controls-demo.toggle.CheckboxGroup.ParentProperty.Index/>
+        </div>
     </div>
 
-    <div class="controlsDemo__cell demo-checkboxGroupIndex__horizontal">
-        <Router.router:Reference attr:class="controls-text-label"
-                                 state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/toggle/CheckboxGroup/Direction/Index' }}">
-            <a href="{{content.href}}">Горизонтальное расположение группы чекбоксов</a>
-        </Router.router:Reference>
-        <Controls-demo.toggle.CheckboxGroup.Direction.Index/>
-    </div>
-
-    <div class="controlsDemo__cell demo-checkboxGroupIndex__hierarchy">
-        <Router.router:Reference attr:class="controls-text-label"
-                                 state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/toggle/CheckboxGroup/ParentProperty/Index' }}">
-            <a href="{{content.href}}">Группа чекбоксов с иерархией</a>
-        </Router.router:Reference>
-        <Controls-demo.toggle.CheckboxGroup.ParentProperty.Index/>
+    <div class="controlsDemo__flexRow">
+        <div class="controlsDemo__cell demo-checkboxGroupIndex__horizontal controlsDemo__flexColumn">
+            <Router.router:Reference attr:class="controls-text-label"
+                                     state="/Controls-demo/app/:app"
+                                     app="{{ 'Controls-demo/toggle/CheckboxGroup/Direction/Index' }}">
+                <a href="{{content.href}}">Горизонтальное расположение группы чекбоксов</a>
+            </Router.router:Reference>
+            <Controls-demo.toggle.CheckboxGroup.Direction.Index/>
+        </div>
     </div>
 </div>
