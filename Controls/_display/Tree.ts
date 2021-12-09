@@ -1378,7 +1378,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 continue;
             }
 
-            // Если метод должен учитывать наличие узлов в узлах, берём его у дочернего элемента или
+            // Если метод должен учитывать наличие детей в узлах, берём hasChildren у дочернего элемента или
             // рекурсивно считаем по рекордсету относительно текущего item
             if (params.considerHasChildren) {
                 if (params.hasChildrenProperty ?
