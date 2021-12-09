@@ -203,6 +203,7 @@ export default class TreeGridDataRow<T extends Model = Model>
         return this._$hasStickyGroup;
     }
 
+    // @TODO Удалить метод после решения https://online.sbis.ru/opendoc.html?guid=2c0962d8-8f37-4504-bd60-77427e4c33d4
     // Убираем ExpanderPadding для подуровней TreeGridGroupRow
     shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
         const should = super.shouldDisplayExpanderPadding(tmplExpanderIcon, tmplExpanderSize);

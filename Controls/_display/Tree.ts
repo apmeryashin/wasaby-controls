@@ -313,9 +313,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     protected _$moreFontColorStyle: string;
 
-    /**
-     * @TODO https://online.sbis.ru/opendoc.html?guid=2c0962d8-8f37-4504-bd60-77427e4c33d4
-     */
+    // @TODO https://online.sbis.ru/opendoc.html?guid=2c0962d8-8f37-4504-bd60-77427e4c33d4
     protected _$task1183995188: boolean;
 
     /**
@@ -1339,6 +1337,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             return;
         }
         if (this._$task1183995188) {
+            // @TODO https://online.sbis.ru/opendoc.html?guid=2c0962d8-8f37-4504-bd60-77427e4c33d4
             // Обновляем состояние HasNodeWithChildren на Items. Глобальное при этом не используем.
             this._updateItemsHasNodeWithChildren();
             return;
