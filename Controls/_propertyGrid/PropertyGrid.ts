@@ -426,9 +426,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         this._toggledEditors = {...this._toggledEditors};
         this._toggledEditors[currentEditorName] = value;
         this._listModel.setToggledEditors(this._toggledEditors);
+
         const toggledEditorsNames = Object.keys(this._toggledEditors)
             .reduce((acc, key) => !this._toggledEditors[key] ? acc.concat([key]) : acc, []);
-        this._notify('toggledEditorsChanged', [toggledEditorsNames, currentEditorName]);
+        const hidden = toggledEditorsNames.indexOf(currentEditorName) !== -1 ? [toggledEditorsNames] : [];
+        const shown = toggledEditorsNames.indexOf(currentEditorName) === -1 ? [toggledEditorsNames] : [];
+
+        this._notify('toggledEditorsChanged', [toggledEditorsNames, hidden, shown]);
         this._listModel.setFilter(this._displayFilter.bind(this));
     }
 
