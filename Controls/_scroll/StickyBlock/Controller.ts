@@ -6,7 +6,7 @@ import {
     POSITION,
     SHADOW_VISIBILITY,
     SHADOW_VISIBILITY_BY_CONTROLLER,
-    TRegisterEventData,
+    IRegisterEventData,
     TYPE_FIXED_HEADERS
 } from './Utils';
 import {SHADOW_VISIBILITY as SCROLL_SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
@@ -41,7 +41,7 @@ class StickyHeaderController {
     private _fixedHeadersStack: object;
     // Если созданный заголвок невидим, то мы не можем посчитать его позицию.
     // Учтем эти заголовки после ближайшего события ресайза.
-    private _delayedHeaders: TRegisterEventData[] = [];
+    private _delayedHeaders: IRegisterEventData[] = [];
     private _initialized: boolean = false;
     private _syncUpdate: boolean = false;
     private _updateTopBottomInitialized: boolean = false;
@@ -207,7 +207,7 @@ class StickyHeaderController {
             const lastHeaderId = this._getLastFixedHeaderWithShadowId(position);
             for (const headerId of headersStack) {
                 if (this._fixedHeadersStack[position].includes(headerId)) {
-                    const header: TRegisterEventData = this._headers[headerId];
+                    const header: IRegisterEventData = this._headers[headerId];
                     let visibility: SHADOW_VISIBILITY_BY_CONTROLLER = SHADOW_VISIBILITY_BY_CONTROLLER.auto;
 
                     if (header.inst.shadowVisibility !== SHADOW_VISIBILITY.hidden) {
@@ -238,7 +238,7 @@ class StickyHeaderController {
         }
     }
 
-    registerHandler(event, data: TRegisterEventData, register: boolean, syncUpdate: boolean = false, syncDomOptimization: boolean = true): Promise<void> {
+    registerHandler(event, data: IRegisterEventData, register: boolean, syncUpdate: boolean = false, syncDomOptimization: boolean = true): Promise<void> {
         if (!syncDomOptimization && register) {
             data.inst.setSyncDomOptimization(syncDomOptimization);
         }
@@ -251,7 +251,7 @@ class StickyHeaderController {
         return promise;
     }
 
-    _register(data: TRegisterEventData, register: boolean, syncUpdate: boolean = false): Promise<void> {
+    _register(data: IRegisterEventData, register: boolean, syncUpdate: boolean = false): Promise<void> {
         if (register) {
             this._headers[data.id] = {
                 ...data,
@@ -446,7 +446,7 @@ class StickyHeaderController {
 
         return fastUpdate.measure(() => {
             const newHeaders: [] = [];
-            this._delayedHeaders = this._delayedHeaders.filter((header: TRegisterEventData) => {
+            this._delayedHeaders = this._delayedHeaders.filter((header: IRegisterEventData) => {
                 if (!isHidden(header.inst.getHeaderContainer())) {
                     this._sizeObserver.observe(header.inst);
                     const headerPosition = header.position;
@@ -705,7 +705,7 @@ class StickyHeaderController {
         return index === (srcArray.length - 1);
     }
 
-    private _getGeneralParentNode(header0: TRegisterEventData, header1: TRegisterEventData): Node {
+    private _getGeneralParentNode(header0: IRegisterEventData, header1: IRegisterEventData): Node {
         let parentElementOfHeader0 = header0.inst.getHeaderContainer().parentElement;
         const parentElementOfHeader1 = header1.inst.getHeaderContainer().parentElement;
         while (parentElementOfHeader0 !== parentElementOfHeader1 && parentElementOfHeader0 !== document.body) {
@@ -733,9 +733,9 @@ class StickyHeaderController {
         this._resetSticky();
 
         fastUpdate.measure(() => {
-            let header: TRegisterEventData,
-                curHeader: TRegisterEventData,
-                prevHeader: TRegisterEventData;
+            let header: IRegisterEventData,
+                curHeader: IRegisterEventData,
+                prevHeader: IRegisterEventData;
 
             // Проверяем, имеет ли заголовок в родителях прямых родителей предыдущих заголовков.
             // Если имеет, значит заголовки находятся в одном контейнере -> высчитываем offset и добавляем к заголовку.
@@ -796,7 +796,7 @@ class StickyHeaderController {
         return promise;
     }
 
-    private _getHeaderSize(header: TRegisterEventData, position: POSITION): number {
+    private _getHeaderSize(header: IRegisterEventData, position: POSITION): number {
         if (position === POSITION.left || position === POSITION.right) {
             return header.inst.width + header.inst.offsetLeft;
         } else {
