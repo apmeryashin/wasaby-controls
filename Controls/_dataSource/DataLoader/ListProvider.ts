@@ -157,7 +157,9 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
                 filterHistoryItems,
                 operationsController
             );
-            if (!!loadConfig.filterButtonSource &&
+            if (
+                !!loadConfig.filterButtonSource &&
+                filterController &&
                 this._isNeedLoadFilterData(filterController.getFilterButtonItems())
             ) {
                 loadFilterDataPromise = this._loadFilterData(
