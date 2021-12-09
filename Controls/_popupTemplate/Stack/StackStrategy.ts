@@ -8,10 +8,11 @@ import {
 } from 'Controls/popup';
 import {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 import {IStackItem} from 'Controls/_popupTemplate/Stack/StackController';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 // Minimum popup indentation from the right edge
 const MINIMAL_PANEL_DISTANCE = 48;
-
+const SIZES_PROPERTIES = ['width', 'minWidth', 'maxWidth', 'height', 'minHeight', 'maxHeight'];
 export class StackStrategy {
     /**
      * Returns popup position
@@ -51,7 +52,7 @@ export class StackStrategy {
         if (position.width && position.maxWidth < position.width) {
             position.width = position.maxWidth;
         }
-
+        this._scaleSizesByZoom(position);
         return position;
     }
 
@@ -71,6 +72,27 @@ export class StackStrategy {
     getMaxPanelWidth(stackParentCoords: IPopupPosition): number {
         // window.innerWidth брать нельзя, при масштабировании на ios значение меняется, что влияет на ширину панелей.
         return document.body.clientWidth - MINIMAL_PANEL_DISTANCE - stackParentCoords.right;
+    }
+
+    /**
+     * В сучае когда для панели заданы статические значения размеров их нужно смасштабировтаь относительно зума,
+     * чтобы у нас не оказалась панель шириной больше, чем размер доступной области.
+     * Пример:
+     * Задают у панели ширину 950 с расчетом на то, что минимальная ширина экрана 1024
+     * С учетом зума 1,5 ширина доступной области будет 1024 / 1,5 ~ 680, тогда панелль будет шире экрана.
+     * @param position
+     * @private
+     */
+    private _scaleSizesByZoom(position: IPopupPosition): void {
+        const zoom = DimensionsMeasurer.getZoomValue(document?.body);
+        if (zoom && zoom !== 1) {
+            SIZES_PROPERTIES.forEach((prop) => {
+                const currentValue = position[prop];
+                if (currentValue && typeof currentValue === 'number') {
+                    position[prop] = currentValue / zoom;
+                }
+            });
+        }
     }
 
     private _getRightPosition(tCoords, isAboveMaximizePopup: boolean): number {
