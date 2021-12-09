@@ -82,6 +82,15 @@ export default class TreeItem<T extends Model = Model> extends mixin<
      */
     protected _$expanderIconStyle: TExpanderIconStyle;
 
+    /**
+     * Признак, означающий что у данного узла есть дочерние узлы
+     */
+    protected _$hasNode: boolean;
+
+    /**
+     * Признак, означающий что у данного узла есть дочерние узлы с детьми
+     * @private
+     */
     protected _$hasNodeWithChildren: boolean;
 
     // @TODO https://online.sbis.ru/opendoc.html?guid=2c0962d8-8f37-4504-bd60-77427e4c33d4
@@ -270,6 +279,14 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return changed;
     }
 
+    getHasNode(): boolean {
+        return this._$hasNode;
+    }
+
+    setHasNode(hasNode: boolean): void {
+        this._$hasNode = hasNode;
+    }
+
     getHasNodeWithChildren(): boolean {
         return this._$hasNodeWithChildren;
     }
@@ -372,11 +389,10 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     }
 
     shouldDisplayExpanderBlock(): boolean {
-        const hasNodeWithChildren = this._$task1183995188 ? this.getParent().getHasNodeWithChildren() :
+        const parentHasNodeWithChildren = this._$task1183995188 ? this.getParent().getHasNodeWithChildren() :
             this._$owner.hasNodeWithChildren();
-        return this._$owner.getExpanderVisibility() === 'hasChildren'
-            ? hasNodeWithChildren
-            : this._$owner.hasNode();
+        const parentHasNode = this._$task1183995188 ? this.getParent().getHasNode() : this._$owner.hasNode();
+        return this._$owner.getExpanderVisibility() === 'hasChildren' ? parentHasNodeWithChildren : parentHasNode;
     }
 
     shouldDisplayExpander(expanderIcon?: string, position: 'default'|'right' = 'default'): boolean {
@@ -550,6 +566,7 @@ Object.assign(TreeItem.prototype, {
     _$parent: undefined,
     _$node: null,
     _$hasChildrenByRecordSet: false,
+    _$hasNode: false,
     _$hasNodeWithChildren: false,
     _$task1183995188: false,
     _$childrenProperty: '',

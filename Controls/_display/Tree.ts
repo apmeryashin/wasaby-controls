@@ -56,6 +56,7 @@ interface IItemsFactoryOptions<S> {
     hasMore?: boolean;
     expanderIconSize?: TExpanderIconSize;
     expanderIconStyle?: TExpanderIconStyle;
+    hasNode?: boolean;
     hasNodeWithChildren?: boolean;
     task1183995188?: boolean;
 }
@@ -1006,6 +1007,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             options.task1183995188 = this._$task1183995188;
             if (this._$task1183995188 && options.node !== null) {
                 options.hasNodeWithChildren = this._getHasNodeWithChildren(options.contents);
+                options.hasNode = this._getHasNode(options.contents);
             }
 
             if (this.getHasMoreStorage() && this.getHasMoreStorage()[key]) {
@@ -1342,7 +1344,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             this._updateItemsHasNodeWithChildren();
         }
 
-        let hasNodeWithChildren = this._getHasNodeWithChildren(null);
+        let hasNodeWithChildren = this._getHasNodeWithChildren(this.getRoot().getContents());
 
         // Добавляемого элемента нет в рекордсете, поэтому учитываем его отдельно
         if (this.getStrategyInstance(AddStrategy) && !hasNodeWithChildren) {
@@ -1369,18 +1371,41 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     // region HasNode
 
-    protected _recountHasNode(): void {
-        const itemsInRoot = this.getChildren(this.getRoot());
-
+    protected _getHasNode(parent: Model): boolean {
         let hasNode = false;
-        for (let i = 0; i < itemsInRoot.getCount(); i++) {
-            const item = itemsInRoot.at(i);
-            if (item['[Controls/_display/TreeItem]'] && item.isNode() !== null) {
+        const nodeTypeProperty = this.getNodeTypeProperty && this.getNodeTypeProperty();
+        const nodeProperty = this.getNodeProperty();
+
+        const children = this.getChildrenByRecordSet(parent);
+        for (let i = 0; i < children.length; i++) {
+            const item = children[i];
+            const isNode = item.get(nodeProperty) !== null;
+            const isGroupNode = item.get(nodeTypeProperty);
+            if (isNode && !isGroupNode) {
                 hasNode = true;
                 break;
             }
         }
 
+        return hasNode;
+    }
+
+    protected _updateItemsHasNode(): void {
+        this._getItems().forEach((item) => {
+            if (item.isNode() !== null) {
+                item.setHasNode(this._getHasNode(item.getContents()));
+            }
+        });
+        this._nextVersion();
+    }
+
+    protected _recountHasNode(): void {
+        if (this._$task1183995188) {
+            // @TODO https://online.sbis.ru/opendoc.html?guid=2c0962d8-8f37-4504-bd60-77427e4c33d4
+            // Обновляем состояние HasNodeWithChildren на Items.
+            this._updateItemsHasNode();
+        }
+        const hasNode = this._getHasNode(this.getRoot().getContents());
         this._setHasNode(hasNode);
     }
 
