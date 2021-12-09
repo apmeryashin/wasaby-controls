@@ -8,7 +8,7 @@ import {IScrollbarsOptions} from './Interface/IScrollbars';
 import ScrollbarModel, {Offsets} from './ScrollbarModel';
 import {IScrollState} from '../Utils/ScrollState';
 import {SCROLL_MODE} from './Type';
-import ContainerBase from 'Controls/_scroll/ContainerBase';
+import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
 
 interface ISerializeState {
     overflowHidden: boolean;
@@ -186,10 +186,10 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
-    getScrollContainerClasses(): string {
+    getScrollContainerClasses(options: IContainerBaseOptions): string {
         let css = '';
         if (this._useNativeScrollbar) {
-            css += this._getOverflowClass();
+            css += this._getOverflowClass(options);
             if (!this._options.scrollbarVisible) {
                 css += this._getHideNativeScrollbarCssClass();
             }
@@ -198,7 +198,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             if (this._overflowHidden) {
                 css += ' controls-Scroll__content_hidden';
             } else {
-                css += this._getOverflowClass();
+                css += this._getOverflowClass(options);
             }
         }
         return css;
@@ -208,8 +208,8 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         return ' controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hideNativeScrollbar_ff-ie-edge';
     }
 
-    private _getOverflowClass(): string {
-        switch (this._options.scrollOrientation) {
+    private _getOverflowClass(options: IContainerBaseOptions): string {
+        switch (options.scrollOrientation) {
             case SCROLL_MODE.VERTICAL:
                 return ' controls-Scroll-ContainerBase__scroll_vertical';
             case SCROLL_MODE.HORIZONTAL:
