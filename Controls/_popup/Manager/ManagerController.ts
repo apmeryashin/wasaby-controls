@@ -24,6 +24,7 @@ export default {
     _container: null,
     _indicator: null,
     _contentData: null,
+    _rightTemplate: null,
     _rightBottomTemplate: null,
     _popupHeaderTheme: undefined,
     _theme: undefined,
@@ -169,15 +170,15 @@ export default {
     },
 
     hasRightPanel(): boolean {
-        return !!this._rightBottomTemplate || !isNewEnvironment();
+        return !!this._rightBottomTemplate || !!this._rightTemplate || !isNewEnvironment();
     },
 
-    setRightTemplate(): void {
-        // удалить метод, сейчас в качестве заглушки
+    setRightTemplate(template: string): void {
+        this._rightTemplate = template;
     },
 
     getRightTemplate(): string {
-        // удалить метод, сейчас в качестве заглушки
+        return this._rightTemplate;
     },
 
     _getModuleByModuleName(moduleName: string, callback: Function): void {
