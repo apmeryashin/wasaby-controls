@@ -15,6 +15,7 @@ import fastUpdate from './FastUpdate';
 import {IPositionOrientation} from './../StickyBlock/Utils';
 import SizeAndVisibilityObserver, {STACK_OPERATION} from 'Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import Group from './Group';
 import {getDecomposedPosition} from './../StickyBlock/Utils/getDecomposedPosition';
 
 // @ts-ignore
@@ -240,7 +241,14 @@ class StickyHeaderController {
                         } else {
                             // Принудительно отключим тени у всех заголовков кроме последнего если они сконфигурированы
                             // отображать тень только у последнего.
-                            if (isLastVisibleModes(header.inst.shadowVisibility) && (headerId !== lastHeaderId)) {
+                            if (
+                                !(
+                                    (position === POSITION.left || position === POSITION.right) &&
+                                    header.inst instanceof Group &&
+                                    !header.position.vertical && header.position.horizontal
+                                ) &&
+                                isLastVisibleModes(header.inst.shadowVisibility) && (headerId !== lastHeaderId)
+                            ) {
                                 visibility = SHADOW_VISIBILITY_BY_CONTROLLER.hidden;
                             }
                         }
@@ -751,7 +759,7 @@ class StickyHeaderController {
                     }
                     curHeader = null;
                     offsets[position][headerId] = offset;
-                    if (header.mode === 'stackable') {
+                    if (header.mode === 'stackable' && header.position.vertical && (position === 'left' || position === 'right')) {
                         if (!this._isLastIndex(this._headersStack[position], i)) {
                             const curHeaderId = this._headersStack[position][i + 1];
                             curHeader = this._headers[curHeaderId];

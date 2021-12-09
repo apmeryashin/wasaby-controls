@@ -154,6 +154,14 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         this._setOffset(value, POSITION.bottom);
     }
 
+    set left(value: number) {
+        this._setOffset(value, POSITION.left);
+    }
+
+    set right(value: number) {
+        this._setOffset(value, POSITION.right);
+    }
+
     get shadowVisibility(): SHADOW_VISIBILITY {
         // TODO: сделать чтобы видимость теней явно задавалась через опцию на группе.
         // https://online.sbis.ru/opendoc.html?guid=4e5cd2c6-a2ec-4619-b9c4-fafbb21fc4b8
@@ -458,10 +466,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         this._updateTopBottom(this._delayedHeaders, true);
     }
 
-    private _setVerticalOffsets(header: IHeaderData, offsets: object): void {
-        const stickyPosition = header.inst.position;
+    private _setVerticalOffsets(header: IHeaderData, stickyPosition: string, offsets: object): void {
         for (const position of [POSITION.top, POSITION.bottom]) {
-            if (stickyPosition.vertical.indexOf(position) !== -1) {
+            if (stickyPosition.indexOf(position) !== -1) {
                 const offset = header.inst.getOffset(this._container, position);
                 this._headers[header.id][position] = offset;
                 offsets[position][header.id] = this._offset[position] + offset;
@@ -469,12 +476,11 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         }
     }
 
-    private _setHorizontalOffsets(header: IHeaderData, offsets: object): void {
-        const stickyPosition = header.inst.position;
+    private _setHorizontalOffsets(header: IHeaderData, stickyPosition: string, offsets: object): void {
         // TODO: Опция StickyBlock.mode не позволяет задать разные значения для разных направлений.
         //  Поэтому пока стаканье в группе поддерживаю только по горизонтали.
         for (const position of [POSITION.left, POSITION.right]) {
-            if (stickyPosition.horizontal && stickyPosition.horizontal.toLowerCase().indexOf(position) !== -1) {
+            if (stickyPosition.toLowerCase().indexOf(position) !== -1) {
                 const headerIdx = this._headersStack[position].indexOf(header.id);
                 const prevHeaderIdx = headerIdx > 0 ? headerIdx - 1 : 0;
                 const prevHeader = this._headers[this._headersStack[position][prevHeaderIdx]];
@@ -497,15 +503,19 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             left: {},
             right: {}
         };
-        let header: IRegisterEventData;
         this.resetSticky();
 
         fastUpdate.measure(() => {
             const headersIds = Array.isArray(headerStore) ? headerStore : Object.keys(headerStore);
             for (const headerId of headersIds) {
-                header = this._headers[headerId];
-                this._setVerticalOffsets(header, offsets);
-                this._setHorizontalOffsets(header, offsets);
+                const header: IRegisterEventData = this._headers[headerId];
+                const position = header.inst.position;
+                if (position.vertical) {
+                    this._setVerticalOffsets(header, position.vertical, offsets);
+                }
+                if (position.horizontal) {
+                    this._setHorizontalOffsets(header, position.horizontal, offsets);
+                }
             }
             if (needResetDelayedHeaders) {
                 this._delayedHeaders = [];

@@ -840,7 +840,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // The top observer has a height of 1 pixel. In order to track when it is completely hidden
         // beyond the limits of the scrollable container, taking into account round-off errors,
         // it should be located with an offset of -3 pixels from the upper border of the container.
-        let coord: number = this._stickyHeadersHeight[position] + 2;
+        let coord: number = (this._stickyHeadersHeight[position] || 0) + 2;
         if (StickyBlock.getDevicePixelRatio() !== 1) {
             coord += 1;
         }
@@ -913,8 +913,10 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _updateShadowStyles(mode: MODE, shadowVisibility: SHADOW_VISIBILITY, position: IPositionOrientation): void {
         this._isTopShadowVisible = this._isShadowVisible(POSITION.top, mode, shadowVisibility, position);
         this._isBottomShadowVisible = this._isShadowVisible(POSITION.bottom, mode, shadowVisibility, position);
-        this._isLeftShadowVisible = this._isShadowVisible(POSITION.left, mode, shadowVisibility, position);
-        this._isRightShadowVisible = this._isShadowVisible(POSITION.right, mode, shadowVisibility, position);
+        if (this.position && this.position.horizontal) {
+            this._isLeftShadowVisible = this._isShadowVisible(POSITION.left, mode, shadowVisibility, position);
+            this._isRightShadowVisible = this._isShadowVisible(POSITION.right, mode, shadowVisibility, position);
+        }
         this._restoreBottomShadowHiddenClass();
     }
 
