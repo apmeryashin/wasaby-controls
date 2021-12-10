@@ -5,7 +5,7 @@ import { default as ItemsView } from 'Controls/_tree/ItemsTree';
 import TreeCollection from 'Controls/_tree/display/TreeCollection';
 import TreeNodeFooterItem from 'Controls/_tree/display/TreeNodeFooterItem';
 import TreeNodeHeaderItem from 'Controls/_tree/display/TreeNodeHeaderItem';
-import TreeItem from 'Controls/_tree/display/TreeItem';
+import TreeItem, { IOptions as ITreeItemOptions } from 'Controls/_tree/display/TreeItem';
 import { default as View } from 'Controls/_tree/Tree';
 import {INodeFooterTemplate} from 'Controls/_tree/interface/INodeFooterTemplate';
 import { default as IItemTemplateOptions } from 'Controls/_tree/interface/ItemTemplate';
@@ -31,6 +31,7 @@ export {
     ItemsView,
     TreeCollection,
     TreeItem,
+    ITreeItemOptions,
     View,
     TreeNodeFooterItem,
     TreeNodeHeaderItem,

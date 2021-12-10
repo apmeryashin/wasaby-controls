@@ -1,0 +1,62 @@
+<div class="controlsDemo__wrapper controlsDemo__maxWidth1000">
+    <Controls.scroll:Container attr:class="controlsDemo__height800">
+        <Controls.expandedCompositeTree:View
+                source="{{_viewSource}}"
+                keyProperty="key"
+                parentProperty="parent"
+                nodeProperty="type"
+                on:itemClick="_onItemClick()">
+            <ws:compositeViewConfig
+                    keyProperty="key"
+                    itemPadding="{{ { top: 's', bottom: 's' } }}"
+                    roundBorder="{{ { tr: 's', tl: 's', br: 's', bl: 's' } }}"
+                    imageProperty="image"
+                    tileMode="static"
+                    tileWidth="{{ 320 }}"
+                    tileScalingMode="none"
+                    displayProperty="caption">
+                <ws:itemTemplate>
+                    <ws:partial template="Controls/tile:RichTemplate"
+                                scope="{{ itemTemplate }}"
+                                imagePosition="left"
+                                imageViewMode="rectangle"
+                                imageSize="5xl"
+                                titleLines="2"
+                                contentPadding="s"
+                                description="{{ itemTemplate.item.contents.renderData.weight }}">
+                        <ws:footerTemplate>
+                            <div class="ControlsDemo-expandedCompositeTree__tileTemplate-footer">
+                                <Controls.decorator:Money
+                                        value="{{ itemTemplate.item.contents.renderData.price }}"
+                                        fontSize="3xl"
+                                        fontWeight="bold"
+                                        fontColorStyle="danger"/>
+                            </div>
+                        </ws:footerTemplate>
+                    </ws:partial>
+                </ws:itemTemplate>
+            </ws:compositeViewConfig>
+            <ws:itemTemplate>
+                <ws:partial template="Controls/expandedCompositeTree:ItemTemplate"
+                            scope="{{ itemTemplate }}"
+                            cursor="default"
+                            highlightOnHover="{{ false }}">
+                    <ws:contentTemplate>
+                        <ws:if data="{{ itemTemplate.item.contents.parent === null }}">
+                            <Controls.heading:Title caption="{{ itemTemplate.item.contents.caption }}"
+                                                    readOnly="{{ true }}"
+                                                    fontSize="5xl"/>
+                        </ws:if>
+                        <ws:else>
+                            <Controls.heading:Title caption="{{ itemTemplate.item.contents.caption }}"
+                                                    readOnly="{{ true }}"
+                                                    fontSize="m"
+                                                    fontColorStyle="unaccented"/>
+                        </ws:else>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls.expandedCompositeTree:View>
+    </Controls.scroll:Container>
+    <div>{{_infoData}}</div>
+</div>
