@@ -12,15 +12,19 @@ import {
 import {SHADOW_VISIBILITY as SCROLL_SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
 import StickyBlock from 'Controls/_scroll/StickyBlock';
 import fastUpdate from './FastUpdate';
-import {IPositionOrientation} from './StickyBlock/Utils';
+import {IPositionOrientation} from './../StickyBlock/Utils';
 import SizeAndVisibilityObserver, {STACK_OPERATION} from 'Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import Group from './Group';
+import {getDecomposedPosition} from './../StickyBlock/Utils/getDecomposedPosition';
 
 // @ts-ignore
 
 interface IShadowVisibility {
     top: SCROLL_SHADOW_VISIBILITY;
     bottom: SCROLL_SHADOW_VISIBILITY;
+    left: SCROLL_SHADOW_VISIBILITY;
+    right: SCROLL_SHADOW_VISIBILITY;
 }
 
 interface IStickyHeaderController {
@@ -52,7 +56,9 @@ class StickyHeaderController {
     private _options: IStickyHeaderController = {};
     private _shadowVisibility: IShadowVisibility = {
         top: SCROLL_SHADOW_VISIBILITY.AUTO,
-        bottom: SCROLL_SHADOW_VISIBILITY.AUTO
+        bottom: SCROLL_SHADOW_VISIBILITY.AUTO,
+        left: SCROLL_SHADOW_VISIBILITY.AUTO,
+        right: SCROLL_SHADOW_VISIBILITY.AUTO
     };
 
     // TODO: Избавиться от передачи контрола доработав логику ResizeObserverUtil
@@ -66,7 +72,9 @@ class StickyHeaderController {
         };
         this._fixedHeadersStack = {
             top: [],
-            bottom: []
+            bottom: [],
+            left: [],
+            right: []
         };
         this._options.fixedCallback = options.fixedCallback;
         this._options.resizeCallback = options.resizeCallback;
@@ -193,9 +201,13 @@ class StickyHeaderController {
     }
 
     setShadowVisibility(topShadowVisibility: SCROLL_SHADOW_VISIBILITY,
-                        bottomShadowVisibility: SCROLL_SHADOW_VISIBILITY): void {
+                        bottomShadowVisibility: SCROLL_SHADOW_VISIBILITY,
+                        leftShadowVisibility: SCROLL_SHADOW_VISIBILITY,
+                        rightShadowVisibility: SCROLL_SHADOW_VISIBILITY): void {
         this._shadowVisibility[POSITION.top] = topShadowVisibility;
         this._shadowVisibility[POSITION.bottom] = bottomShadowVisibility;
+        this._shadowVisibility[POSITION.left] = leftShadowVisibility;
+        this._shadowVisibility[POSITION.right] = rightShadowVisibility;
         this._updateShadowsVisibility();
         // Если есть только что зарегистрированные и не просчитанные заголовки, что бы не было мигания теней,
         // сразу, синхронно не дожидаясь срабатывания IntersectionObserver посчитаем зафиксированы ли ониё.
@@ -205,7 +217,7 @@ class StickyHeaderController {
     }
 
     _updateShadowsVisibility(): void {
-        for (const position of [POSITION.top, POSITION.bottom]) {
+        for (const position of [POSITION.top, POSITION.bottom, POSITION.left, POSITION.right]) {
             const headersStack: [] = this._headersStack[position];
             const lastHeaderId = this._getLastFixedHeaderWithShadowId(position);
             for (const headerId of headersStack) {
@@ -229,7 +241,14 @@ class StickyHeaderController {
                         } else {
                             // Принудительно отключим тени у всех заголовков кроме последнего если они сконфигурированы
                             // отображать тень только у последнего.
-                            if (isLastVisibleModes(header.inst.shadowVisibility) && (headerId !== lastHeaderId)) {
+                            if (
+                                !(
+                                    (position === POSITION.left || position === POSITION.right) &&
+                                    header.inst instanceof Group &&
+                                    !header.position.vertical && header.position.horizontal
+                                ) &&
+                                isLastVisibleModes(header.inst.shadowVisibility) && (headerId !== lastHeaderId)
+                            ) {
                                 visibility = SHADOW_VISIBILITY_BY_CONTROLLER.hidden;
                             }
                         }
@@ -312,7 +331,7 @@ class StickyHeaderController {
             this._headers[header.id].offset = {};
         } else if (operation === STACK_OPERATION.add) {
             const headerPosition = this._headers[header.id].position;
-            const positions = this._getDecomposedPosition(headerPosition);
+            const positions = getDecomposedPosition(headerPosition);
 
             positions.forEach((position) => {
                 const inHeadersStack = this._headersStack[position].some((headerId) => headerId === header.id);
@@ -595,7 +614,7 @@ class StickyHeaderController {
     private _addToHeadersStack(id: number,
                                headerPosition: IPositionOrientation,
                                needUpdateOffset: boolean = false): void {
-        const positions = this._getDecomposedPosition(headerPosition);
+        const positions = getDecomposedPosition(headerPosition);
         positions.forEach((position) => {
             const headersStack = this._headersStack[position];
             const newHeaderOffset = this._getHeaderOffset(id, position, needUpdateOffset);
@@ -618,32 +637,6 @@ class StickyHeaderController {
             index = index === -1 ? headersStack.length : index;
             headersStack.splice(index, 0, id);
         });
-    }
-
-    private _getDecomposedPosition(headerPosition: IPositionOrientation): POSITION[] {
-        const positions = [];
-        switch (headerPosition.vertical) {
-            case 'top':
-            case 'bottom':
-                positions.push(headerPosition.vertical);
-                break;
-            case 'topBottom':
-                positions.push('top');
-                positions.push('bottom');
-                break;
-        }
-
-        switch (headerPosition.horizontal) {
-            case 'left':
-            case 'right':
-                positions.push(headerPosition.horizontal);
-                break;
-            case 'leftRight':
-                positions.push('left');
-                positions.push('right');
-                break;
-        }
-        return positions;
     }
 
     private _updateFixedInitially(position: POSITION): void {
@@ -766,7 +759,10 @@ class StickyHeaderController {
                     }
                     curHeader = null;
                     offsets[position][headerId] = offset;
-                    if (header.mode === 'stackable') {
+                    if (
+                        header.mode === 'stackable' && header.position?.vertical &&
+                        (position === 'top' || position === 'bottom')
+                    ) {
                         if (!this._isLastIndex(this._headersStack[position], i)) {
                             const curHeaderId = this._headersStack[position][i + 1];
                             curHeader = this._headers[curHeaderId];
