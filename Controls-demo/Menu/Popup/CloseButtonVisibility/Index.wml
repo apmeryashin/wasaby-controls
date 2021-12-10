@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper controlsDemo__flexColumn controlsDemo__width-max-content">
+<div class="controlsDemo__wrapper controlsDemo__flexColumn controlsDemo__width-max-content controlsDemo__inline-block">
    <div class="controlsDemo__cell">
       <Router.router:Reference attr:class="controls-text-label"
                                state="/Controls-demo/app/:app"
