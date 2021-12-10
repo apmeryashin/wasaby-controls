@@ -210,10 +210,15 @@ export default class TreeGridDataRow<T extends Model = Model>
 
         const parentIsGroup = this.getParent().GroupNodeItem;
         if (parentIsGroup) {
-            const hasNodeInGroup = factory(this.getParent().getChildren())
-                .toArray()
-                .some((it) => it.isNode() !== null);
-            return should && hasNodeInGroup;
+            const childNodes = factory(this.getParent().getChildren()).toArray().filter((it) => (it.isNode() !== null));
+            const hasChildNode = !!childNodes.length;
+            const hasChildNodeWithChilds = childNodes.some((it) => {
+                return it.getHasChildrenProperty() ? it.hasChildren() : it.hasChildrenByRecordSet();
+            });
+            const allowByChilds = this.getOwner().getExpanderVisibility() === 'hasChildren'
+                ? hasChildNodeWithChilds
+                : hasChildNode;
+            return should && allowByChilds;
         } else {
             return should;
         }
