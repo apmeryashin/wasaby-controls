@@ -6,6 +6,20 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {IMaxLengthOptions} from 'Controls/_input/interface/IMaxLength';
 import 'css!Controls/input';
 
+/*
+ *  Control that hides all entered characters and shows replacer-symbols in place of them.
+ *  Visibility of entered text can be toggled by clicking on 'eye' icon.
+ *  <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">Configured Inputs Demo.</a>.
+ *
+ * @class Controls/_input/Password
+ * @extends Controls/_input/Base
+ *
+ * @public
+ * @demo Controls-demo/Input/Password/Base/Index
+ *
+ * @author Красильников А.С.
+ */
+
 /**
  * Поле ввода пароля.
  *
@@ -27,21 +41,6 @@ import 'css!Controls/input';
  *
  * @author Красильников А.С.
  */
-
-/*
- *  Control that hides all entered characters and shows replacer-symbols in place of them.
- *  Visibility of entered text can be toggled by clicking on 'eye' icon.
- *  <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">Configured Inputs Demo.</a>.
- *
- * @class Controls/_input/Password
- * @extends Controls/_input/Base
- *
- * @public
- * @demo Controls-demo/Input/Password/Base/Index
- *
- * @author Красильников А.С.
- */
-
 export interface IPasswordOptions extends IBaseInputOptions, IMaxLengthOptions {
     passwordVisible?: boolean;
 }
