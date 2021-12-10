@@ -400,7 +400,8 @@ define([
             const component = createComponent(scroll.Group, options);
             component._stickyRegisterHandler(event, data, true);
             sinon.stub(component, '_notify');
-            component._stickyRegisterHandler(event, {id: 3, inst: data.inst}, true);
+            const position = { vertical: null, horizontal: null };
+            component._stickyRegisterHandler(event, {id: 3, inst: data.inst, position}, true);
 
             sinon.assert.notCalled(component._notify);
          });
@@ -416,10 +417,11 @@ define([
 
          it('should not generate event on not last header unregistered', function() {
             const component = createComponent(scroll.Group, options);
+            const position = { vertical: null, horizontal: null };
             component._stickyRegisterHandler(event, data, true);
-            component._stickyRegisterHandler(event, {id: 3, inst: data.inst}, true);
+            component._stickyRegisterHandler(event, {id: 3, inst: data.inst, position}, true);
             sinon.stub(component, '_notify');
-            component._stickyRegisterHandler(event, {id: 3, inst: data.inst}, false);
+            component._stickyRegisterHandler(event, {id: 3, inst: data.inst, position}, false);
 
             sinon.assert.notCalled(component._notify);
             sinon.restore();

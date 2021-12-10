@@ -154,7 +154,7 @@ describe('Controls/scroll:Container ShadowsModel', () => {
                      component._models.top._visibilityByInnerComponents = test.topVisibilityByInnerComponents;
                 }
 
-                component.setStickyFixed(test.topFixed, test.bottomFixed, test.needUpdate);
+                component.setStickyFixed(test.topFixed, test.bottomFixed, false, false, test.needUpdate);
                 if (test.shouldCallNextVersion) {
                     sinon.assert.called(component._nextVersion);
                 } else {
@@ -207,7 +207,7 @@ describe('Controls/scroll:Container ShadowsModel', () => {
                 ...getShadowsDefaultOptions(),
                 scrollOrientation: SCROLL_MODE.VERTICAL
             });
-            shadows.setStickyFixed(true, true);
+            shadows.setStickyFixed(true, true, false, false);
             const version = shadows.getVersion();
             shadows.updateVisibilityByInnerComponents({
                 top: SHADOW_VISIBILITY.VISIBLE,

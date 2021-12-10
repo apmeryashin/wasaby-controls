@@ -98,9 +98,13 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _isShadowVisibleByController: {
         top: SHADOW_VISIBILITY_BY_CONTROLLER;
         bottom: SHADOW_VISIBILITY_BY_CONTROLLER;
+        left: SHADOW_VISIBILITY_BY_CONTROLLER;
+        right: SHADOW_VISIBILITY_BY_CONTROLLER;
     } = {
         top: SHADOW_VISIBILITY_BY_CONTROLLER.auto,
-        bottom: SHADOW_VISIBILITY_BY_CONTROLLER.auto
+        bottom: SHADOW_VISIBILITY_BY_CONTROLLER.auto,
+        left: SHADOW_VISIBILITY_BY_CONTROLLER.auto,
+        right: SHADOW_VISIBILITY_BY_CONTROLLER.auto
     };
     private _stickyHeadersHeight: IOffset = {
         top: null,
@@ -140,10 +144,19 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     protected _isBottomShadowVisible: boolean = false;
     protected _isTopShadowVisible: boolean = false;
+    protected _isLeftShadowVisible: boolean = false;
+    protected _isRightShadowVisible: boolean = false;
 
     protected _topObserverStyle: string = '';
     protected _bottomObserverStyle: string = '';
-    protected _canShadowVisible: { top: boolean, bottom: boolean } = { top: false, bottom: false };
+    protected _leftObserverStyle: string = '';
+    protected _rightObserverStyle: string = '';
+    protected _canShadowVisible: {
+        top: boolean;
+        bottom: boolean;
+        left: boolean;
+        right: boolean;
+    } = {top: false, bottom: false, left: false, right: false};
 
     private _stickyDestroy: boolean = false;
     private _scroll: HTMLElement;
@@ -316,6 +329,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             topTarget: children.observationTargetTop,
             bottomLeftTarget: children.observationTargetBottomLeft,
             bottomRightTarget: children.observationTargetBottomRight,
+            leftTarget: children.observationTargetLeft,
+            rightTarget: children.observationTargetRight,
             position: this._options.position
         });
 
@@ -606,6 +621,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         this._observer.observe(children.observationTargetTop);
         this._observer.observe(children.observationTargetBottomLeft);
         this._observer.observe(children.observationTargetBottomRight);
+        this._observer.observe(children.observationTargetLeft);
+        this._observer.observe(children.observationTargetRight);
     }
 
     /**
@@ -823,7 +840,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // The top observer has a height of 1 pixel. In order to track when it is completely hidden
         // beyond the limits of the scrollable container, taking into account round-off errors,
         // it should be located with an offset of -3 pixels from the upper border of the container.
-        let coord: number = this._stickyHeadersHeight[position] + 2;
+        let coord: number = (this._stickyHeadersHeight[position] || 0) + 2;
         if (StickyBlock.getDevicePixelRatio() !== 1) {
             coord += 1;
         }
@@ -896,6 +913,10 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _updateShadowStyles(mode: MODE, shadowVisibility: SHADOW_VISIBILITY, position: IPositionOrientation): void {
         this._isTopShadowVisible = this._isShadowVisible(POSITION.top, mode, shadowVisibility, position);
         this._isBottomShadowVisible = this._isShadowVisible(POSITION.bottom, mode, shadowVisibility, position);
+        if (this.position && this.position.horizontal) {
+            this._isLeftShadowVisible = this._isShadowVisible(POSITION.left, mode, shadowVisibility, position);
+            this._isRightShadowVisible = this._isShadowVisible(POSITION.right, mode, shadowVisibility, position);
+        }
         this._restoreBottomShadowHiddenClass();
     }
 
@@ -906,18 +927,31 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         }
     }
 
+    private _getOppositePosition(position: POSITION): POSITION {
+        switch (position) {
+            case POSITION.top:
+                return POSITION.bottom;
+            case POSITION.bottom:
+                return POSITION.top;
+            case POSITION.left:
+                return POSITION.right;
+            case POSITION.right:
+                return POSITION.left;
+        }
+    }
+
     protected _isShadowVisible(shadowPosition: POSITION, mode: MODE,
                                shadowVisibility: SHADOW_VISIBILITY, position: IPositionOrientation): boolean {
         // The shadow from above is shown if the element is fixed from below,
         // from below if the element is fixed from above.
-        const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
+        const fixedPosition = this._getOppositePosition(shadowPosition);
 
         if (this._initialShowShadow && position.vertical === fixedPosition) {
             return true;
         }
 
         if (this._isShadowVisibleByController[fixedPosition] !== SHADOW_VISIBILITY_BY_CONTROLLER.auto &&
-            this._model?.fixedPosition === fixedPosition) {
+            this._model?.fixedPosition.toLowerCase().indexOf(fixedPosition) !== -1) {
             return this._isShadowVisibleByController[fixedPosition] === SHADOW_VISIBILITY_BY_CONTROLLER.visible;
         }
 
@@ -926,7 +960,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         return !!(
             shadowEnabled &&
             (
-                (this._model && this._model.fixedPosition === fixedPosition) ||
+                (this._model && this._model.fixedPosition.toLowerCase().indexOf(fixedPosition) !== -1) ||
                 (!this._model && this._isStickyShadowVisible)
             ) &&
             (
@@ -939,11 +973,21 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     private _isShadowVisibleByScrollState(shadowPosition: POSITION): boolean {
-        const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
+        const canScroll = (orientation: 'vertical' | 'horizontal'): boolean => {
+            const scrollState = this._scrollState[`${orientation}Position`];
+            const isBackward = shadowPosition === (orientation === 'vertical' ? POSITION.top : POSITION.left);
+            const isForward = shadowPosition === (orientation === 'vertical' ? POSITION.bottom : POSITION.right);
 
-        return  !!(this._scrollState.verticalPosition &&
-            (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
-                shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END));
+            return !!(
+                scrollState && (
+                    isForward && scrollState !== SCROLL_POSITION.START ||
+                    isBackward && scrollState !== SCROLL_POSITION.END
+                )
+            );
+        };
+
+        return shadowPosition === POSITION.top || shadowPosition === POSITION.bottom ?
+            canScroll('vertical') : canScroll('horizontal');
     }
 
     _updateComputedStyle(): void {
@@ -1019,10 +1063,14 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _updateCanShadowVisible(options: IStickyHeaderOptions): void {
         const stickyPosition = options.position;
         const verticalPosition = (stickyPosition?.vertical || '').toLowerCase();
+        const horizontalPosition = (stickyPosition?.horizontal || '').toLowerCase();
         const top: boolean = verticalPosition.includes(POSITION.bottom);
         const bottom: boolean = verticalPosition.includes(POSITION.top);
-        if (this._canShadowVisible.top !== top || this._canShadowVisible.bottom !== bottom) {
-            this._canShadowVisible = { top, bottom };
+        const left: boolean = horizontalPosition.includes(POSITION.right);
+        const right: boolean = horizontalPosition.includes(POSITION.left);
+        if (this._canShadowVisible.top !== top || this._canShadowVisible.bottom !== bottom ||
+            this._canShadowVisible.left !== left || this._canShadowVisible.right !== right) {
+            this._canShadowVisible = { top, bottom, left, right };
         }
     }
 

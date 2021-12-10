@@ -60,6 +60,9 @@ export = simpleExtend.extend({
       // Необходимость двух нижних обсёрверов описана в методе _updateStateIntersection.
       this._bottomLeftTarget = config.bottomLeftTarget;
       this._bottomRightTarget = config.bottomRightTarget;
+      this._rightTarget = config.rightTarget;
+      this._leftTarget = config.leftTarget;
+
       this._position = config.position;
       this._updateStateIntersection = this._updateStateIntersection.bind(this);
    },
@@ -113,9 +116,13 @@ export = simpleExtend.extend({
          case this._bottomLeftTarget:
          case this._bottomRightTarget:
             return 'bottom';
+         case this._leftTarget:
+            return 'left';
+         case this._rightTarget:
+            return 'right';
          default:
-             Logger.error('Controls/_scroll/StickyBlock/Model: Unexpected target');
-             return 'bottom';
+            Logger.error('Controls/_scroll/StickyBlock/Model: Unexpected target');
+            return 'bottom';
       }
    },
 
@@ -124,23 +131,40 @@ export = simpleExtend.extend({
     * @returns {String} Determines whether the content is fixed.
     * @private
     */
-   _getFixedPosition() {
-      let result = '';
+   _getFixedPosition(): string {
+       let result = '';
+       let hasVertical = false;
 
-      if (
-          this._position.vertical &&
-          this._position.vertical?.indexOf('top') !== -1 &&
-          !this._intersection.top && this._intersection.bottom
-      ) {
-         result = 'top';
-      } else if (
-          this._position.vertical &&
-          this._position.vertical?.toLowerCase().indexOf('bottom') !== -1 &&
-          !this._intersection.bottom && this._intersection.top
-      ) {
-         result = 'bottom';
-      }
+       if (
+           this._position.vertical &&
+           this._position.vertical?.indexOf('top') !== -1 &&
+           !this._intersection.top && this._intersection.bottom
+       ) {
+           result = 'top';
+           hasVertical = true;
+       } else if (
+           this._position.vertical &&
+           this._position.vertical?.toLowerCase().indexOf('bottom') !== -1 &&
+           !this._intersection.bottom && this._intersection.top
+       ) {
+           result = 'bottom';
+           hasVertical = true;
+       }
 
-      return result;
+       if (
+           this._position.horizontal &&
+           this._position.horizontal?.indexOf('left') !== -1 &&
+           !this._intersection.left && this._intersection.right
+       ) {
+           result += hasVertical ? 'Left' : 'left';
+       } else if (
+           this._position.horizontal &&
+           this._position.horizontal?.toLowerCase().indexOf('right') !== -1 &&
+           !this._intersection.right && this._intersection.left
+       ) {
+           result += hasVertical ? 'Right' : 'right';
+       }
+
+       return result;
    }
 });
