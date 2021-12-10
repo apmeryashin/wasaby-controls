@@ -3321,7 +3321,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _popupOptions = null;
     private _scrollController: ScrollController;
     private _listVirtualScrollController: ListVirtualScrollController;
-    private _useNewScroll: boolean = false;
+    private _useNewScroll: boolean = true;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -4012,7 +4012,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._isMounted = true;
 
         if (this._useNewScroll) {
-            this._listVirtualScrollController.setListContainer(this._container);
             this._listVirtualScrollController.afterMountListControl();
         }
 
@@ -7136,6 +7135,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         if (this._useNewScroll) {
+            // Обновляем ListContainer вместе с ItemsContainer, т.к. списочные триггеры лежат в ItemsContainer.
+            // И при изменении ItemsContainer, нужно обновить триггеры.
+            this._listVirtualScrollController.setListContainer(this._container);
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
         }
         this._viewReady = true;
