@@ -26,7 +26,6 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  * @author Герасимов А.М.
  */
 
-// @ts-ignore
 class StringEditor extends Control implements IEditor {
     protected _template: Function = template;
     protected _options: IEditorOptions;

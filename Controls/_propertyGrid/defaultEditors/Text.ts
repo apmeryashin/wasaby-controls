@@ -27,7 +27,6 @@ import StringEditor = require('Controls/_propertyGrid/defaultEditors/String');
  * @author Герасимов А.М.
  */
 
-// @ts-ignore
 class TextEditor extends StringEditor {
     protected _template: Function = template;
 }

@@ -29,6 +29,7 @@ export interface IPropertyGridColumnOptions {
 
 export type TTypeDescription = IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
 export type TEditingObject = Model | Record<string, unknown>;
+export type TCollapsedGroupsElement = string|number;
 export interface IPropertyGridOptions extends
     IControlOptions,
     IPromiseSelectableOptions,
@@ -183,7 +184,7 @@ export interface IPropertyGridOptions extends
      * @see groupTemplate
      * @demo Controls-demo/PropertyGridNew/CollapsedGroups/Index
      */
-    collapsedGroups?: Array<string|number>;
+    collapsedGroups?: TCollapsedGroupsElement[];
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#nodeProperty
      * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
