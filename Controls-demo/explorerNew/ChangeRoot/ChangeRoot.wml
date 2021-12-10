@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper">
         <h4>Current root: {{'' + _root}}</h4>
         <Controls.buttons:Button
-        attr:data-qa="ControlsDemo_ChangeRoot_change"
+        attr:data-qa="ControlsDemo_ChangeRoot__change"
         caption="Change Root to {{_root === null ? 1 : null}}" on:click="_onToggleRoot()"/>
         <Controls.explorer:View
             source="{{_viewSource}}"
