@@ -1031,6 +1031,9 @@ define([
             component._headers = {
                header0: {
                   mode: 'stackable',
+                  position: {
+                    vertical: 'top'
+                  },
                   container: {
                      id: 0,
                      closest: () => false
@@ -1049,6 +1052,9 @@ define([
                },
                header1: {
                   mode: 'stackable',
+                  position: {
+                      vertical: 'top'
+                  },
                   container: {
                      id: 1,
                      closest: () => false
@@ -1067,6 +1073,9 @@ define([
                },
                header2: {
                   mode: 'stackable',
+                  position: {
+                      vertical: 'top'
+                  },
                   container: {
                      id: 2,
                      closest: () => false

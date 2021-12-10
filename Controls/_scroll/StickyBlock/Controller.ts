@@ -759,7 +759,10 @@ class StickyHeaderController {
                     }
                     curHeader = null;
                     offsets[position][headerId] = offset;
-                    if (header.mode === 'stackable' && header.position.vertical && (position === 'left' || position === 'right')) {
+                    if (
+                        header.mode === 'stackable' && header.position?.vertical &&
+                        (position === 'top' || position === 'bottom')
+                    ) {
                         if (!this._isLastIndex(this._headersStack[position], i)) {
                             const curHeaderId = this._headersStack[position][i + 1];
                             curHeader = this._headers[curHeaderId];
