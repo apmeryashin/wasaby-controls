@@ -284,6 +284,9 @@ export default class Controller implements IDropdownController {
          this._sourceController.cancelLoading();
          this._sourceController = null;
       }
+      if (isHistorySource(this._source)) {
+         this._source.setDataLoadCallback(null);
+      }
       this._setItemsAndMenuSource(null);
       this._closeDropdownList();
       this._sticky = null;
