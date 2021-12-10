@@ -3,7 +3,13 @@ import {IControlOptions, Control} from 'UI/Base';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
-import {IPromiseSelectableOptions, ISelectionTypeOptions, IItemPaddingOptions, TKey} from 'Controls/interface';
+import {
+    IPromiseSelectableOptions,
+    ISelectionTypeOptions,
+    IItemPaddingOptions,
+    TKey,
+    TFontSize
+} from 'Controls/interface';
 import {IEditingPropertyGrid} from 'Controls/_propertyGrid/interface/IEditingPropertyGrid';
 
 type TPadding = 'null'|'m';
@@ -307,6 +313,22 @@ export interface IPropertyGridOptions extends
      * @cfg {TemplateFunction|String} Пользовательский шаблон множественного выбора.
      */
     multiSelectTemplate?: Function;
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#captionFontColorStyle
+     * @cfg {String} Цвет текста заголовков редакторов.
+     * @variant unaccented
+     * @variant label
+     * @default label
+     * @remark Значение fontColorStyle, заданное в {{Controls/_propertyGrid/IProperty#captionOptions опциях заголовка редактора}} имеет больший приоритет.
+     */
+    captionFontColorStyle: 'label' | 'unaccented';
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#captionFontSize
+     * @cfg {Controls/_interface/IFontSize/TFontSize.typedef} Размер шрифта заголовков редакторов.
+     * @default m
+     * @remark Значение fontSize, заданное в {{Controls/_propertyGrid/IProperty#captionOptions опциях заголовка редактора}} имеет больший приоритет.
+     */
+    captionFontSize: TFontSize;
     captionPosition?: TCaptionPosition;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#toggledEditors
