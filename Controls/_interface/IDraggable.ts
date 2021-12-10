@@ -239,19 +239,25 @@ export default interface IDraggable {
  * @param {Types/entity:Record} target Область, в которую перемещают объект.
  * @param {MovePosition} position Положение перемещения.
  * @example
- * В следующем примере показано, как перемещать элементы с помощью {@link Controls/list:Mover}.
- * <pre class="brush: html; highlight: [4]">
+ * В следующем примере показано, как перемещать элементы с помощью встроенных методов списочного контрола.
+ * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
- *    <Controls.list:View on:dragEnd="_dragEnd()" itemsDragNDrop="{{true}}" />
- *    <Controls.list:Mover name="listMover" />
+ *    <Controls.list:View name="list" on:dragEnd="_dragEnd()" itemsDragNDrop="{{true}}" />
  * </Controls.list:DataContainer>
  * </pre>
  *
  * <pre class="brush: js;">
  * // JavaScript
- * _dragEnd: function(event, entity, target, position) {
- *    this._children.listMover.moveItems(entity.getItems(), target, position);
+ * _dragEnd(event: SyntheticEvent, entity: IDragObject, target: Model, position: 'after'|'before'|'on') {
+ *    const selection = {
+ *        selected: entity.getItems(),
+ *        excluded: []
+ *    }
+ *    this._children.list.moveItems(selection, target.getKey(), position)
+ *      .then((result) => {
+ *          this._children.list.reload();
+ *      });
  * },
  * _beforeMount: function() {
  *    this._viewSource = new Source({...});

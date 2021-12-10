@@ -323,6 +323,9 @@ export class MoveController {
             result.message = null;
             result.isError = false;
         }
+        if (targetKey && typeof targetKey !== 'string' && typeof targetKey !== 'number') {
+            result.message = 'MoveController: Target key should be null or Types/source:CrudEntityKey';
+        }
         if ([LOCAL_MOVE_POSITION.On, LOCAL_MOVE_POSITION.After, LOCAL_MOVE_POSITION.Before].indexOf(position) === -1) {
             result.message = 'MoveController: position must correspond with Types/source:LOCAL_MOVE_POSITION type';
         }

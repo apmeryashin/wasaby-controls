@@ -706,7 +706,10 @@ export interface IGridControl extends IList {
 /**
  * @event Происходит при клике на {@link /doc/platform/developmentapl/interface-development/controls/list/grid/columns/visual/tag/ тег} внутри ячейки таблицы.
  * @name Controls/_grid/display/interface/IGridControl#tagClick
- * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр элемента списка, на котором было вызвано событие.
+ * @param {number} columnIndex порядковый номер колонки, на которой было вызвано событие.
+ * @param {UICommon/Events:SyntheticEvent} event Дескриптор события мыши. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
  * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:IColumn#tagStyleProperty tagStyleProperty} у колонки.
  * @see tagStyle
  * @see tagHover
@@ -715,7 +718,10 @@ export interface IGridControl extends IList {
 /**
  * @event Происходит при наведении курсора мыши на {@link /doc/platform/developmentapl/interface-development/controls/list/grid/columns/visual/tag/ тег} внутри ячейки таблицы.
  * @name Controls/_grid/display/interface/IGridControl#tagHover
- * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр элемента списка, на котором было вызвано событие.
+ * @param {number} columnIndex порядковый номер колонки, на которой было вызвано событие.
+ * @param {UICommon/Events:SyntheticEvent} event Дескриптор события мыши. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
  * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:IColumn#tagStyleProperty tagStyleProperty} у колонки.
  * @see tagClick
  */

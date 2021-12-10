@@ -262,7 +262,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  */
 
 /**
- * @name Controls/_treeGrid/View#expanderPosition
+ * @name Controls/_tree/View#expanderPosition
  * @cfg {TExpanderPosition} Расположение иконки для узла и скрытого узла.
  * @default default
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.

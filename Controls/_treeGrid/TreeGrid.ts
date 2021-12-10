@@ -122,5 +122,8 @@ export default class TreeGrid extends Grid<TreeGridControl> implements ITreeGrid
  * @function
  * @param {String|Number} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
  * @param {Controls/_list/interface/IReloadItemOptions} options настройки перезагрузки итема.
+ * @remark Возвращаемый результат зависит от указанного в options значения {@link Controls/_list/interface/IReloadItemOptions#method method}.
+ * При значении 'read' возвращается запрошенная запись, а при значении 'query' возвращается RecordSet с дочерними элементами для загруженного узла.
+ * @returns {Promise<Model | RecordSet>} В случае успешной загрузки возвращается запрошенная запись или RecordSet с дочерними элементами для загруженного узла.
  * @see Controls/_list/interface/IReloadItemOptions#hierarchyReload
  */
