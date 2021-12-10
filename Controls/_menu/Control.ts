@@ -106,7 +106,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._additionalFilter = MenuControl._additionalFilterCheck.bind(this, options);
         this._limitHistoryFilter = this._limitHistoryCheck.bind(this);
 
-        this._dataName = options.dataName + '_level_' + options.subMenuLevel;
+        this._dataName = options.dataName + '_root_' + options.root;
 
         this._stack = new StackOpener();
 
@@ -129,7 +129,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _afterMount(): void {
         if (this._options.menuOpenedCallback) {
-            this._options.menuOpenedCallback();
+            this._options.menuOpenedCallback(this._options.root);
         }
     }
 
@@ -1055,9 +1055,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return hasAdditional;
     }
 
-    private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: string): void {
-        const dataName = this._dataName + '_item_' + key;
-        const target = this._container.querySelector(`[data-name=${dataName}]`);
+    private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: string) {
+        const dataName = this._options.dataName + '_item_' + key;
+        const target = this._container.querySelector(`[data-target=${dataName}]`);
         const item = this._listModel.getItemBySourceKey(key);
         if (item && this._canOpenSubMenu(item)) {
             this._preventCloseSubMenu = true;

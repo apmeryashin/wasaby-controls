@@ -28,7 +28,8 @@ describe('Controls/grid_clean/Display/DataCell', () => {
             isEditing: () => false,
             getEditingBackgroundStyle: () => 'default',
             isActive: () => true,
-            hasMultiSelectColumn: () => false
+            hasMultiSelectColumn: () => false,
+            shouldDisplayMarker: () => false
         };
 
         it('should add background-color class', () => {

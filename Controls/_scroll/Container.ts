@@ -326,7 +326,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
-        return this._scrollbars.getScrollContainerClasses();
+        return this._scrollbars.getScrollContainerClasses(options);
     }
 
     protected _getContentWrapperCssClass(): string {
@@ -831,6 +831,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @variant vertical Скроллирование по вертикали
  * @variant horizontal Скроллирование по горизонтали
  * @variant verticalHorizontal Скроллирование по вертикали и по горизонтали
+ * @variant none Скроллирование отключено
  */
 
 /**

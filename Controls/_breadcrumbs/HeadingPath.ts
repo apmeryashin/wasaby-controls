@@ -198,6 +198,15 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         return lastItem?.get('counterCaption');
     }
 
+    /**
+     * Вернет true, если иконка действия (шеврон) в кнопке "Назад" должна показываться дез наезда на её заголовок.
+     * Шеврон показыватется без наезда только если полсе кнопки нет никакого содерхимого (иконка "домик",
+     * хлебные крошки или кнопка меню).
+     */
+    protected _isActionButtonOutside(): boolean {
+        return !this._breadCrumbsItems && !this._options.rootVisible && !this._options.feature1182709671;
+    }
+
     private _getCrumbsWidth(options: IHeadingPath, getTextWidth: Function = this._getTextWidth): {backButtonWidth: number, breadCrumbsWidth: number} {
         const crumbsWidthArr = calculateBreadcrumbsUtil.getItemsWidth(this._breadCrumbsItems, options, getTextWidth);
         return {

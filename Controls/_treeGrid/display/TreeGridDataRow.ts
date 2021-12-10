@@ -14,6 +14,7 @@ import {IColumn, IInitializeColumnsOptions} from 'Controls/grid';
 import {Model} from 'Types/entity';
 import TreeCheckboxCell from './TreeCheckboxCell';
 import {ITreeGridDataCellOptions} from './TreeGridDataCell';
+import { factory } from 'Types/chain';
 
 export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T>, IDisplaySearchValueOptions {
     owner: TreeGridCollection<T>;
@@ -206,7 +207,21 @@ export default class TreeGridDataRow<T extends Model = Model>
     // Убираем ExpanderPadding для подуровней TreeGridGroupRow
     shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
         const should = super.shouldDisplayExpanderPadding(tmplExpanderIcon, tmplExpanderSize);
-        return should && (this._$parent.isRoot() || !(this._$parent as unknown as TreeGridDataRow).GroupNodeItem);
+
+        const parentIsGroup = this.getParent().GroupNodeItem;
+        if (parentIsGroup) {
+            const childNodes = factory(this.getParent().getChildren()).toArray().filter((it) => (it.isNode() !== null));
+            const hasChildNode = !!childNodes.length;
+            const hasChildNodeWithChilds = childNodes.some((it) => {
+                return it.getHasChildrenProperty() ? it.hasChildren() : it.hasChildrenByRecordSet();
+            });
+            const allowByChilds = this.getOwner().getExpanderVisibility() === 'hasChildren'
+                ? hasChildNodeWithChilds
+                : hasChildNode;
+            return should && allowByChilds;
+        } else {
+            return should;
+        }
     }
 
     // endregion overrides

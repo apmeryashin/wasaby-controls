@@ -419,7 +419,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
     private _subscribeOnResizeEvent(options: ILookupInputOptions): void {
         if (!this._subscribedOnResizeEvent && this._isNeedCalculatingSizes(options)) {
-            RegisterUtil(this, 'controlResize', this._resize);
+            RegisterUtil(this, 'controlResize', this._resize, {listenAll: true});
             this._subscribedOnResizeEvent = true;
         }
     }

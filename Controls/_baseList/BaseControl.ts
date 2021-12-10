@@ -23,6 +23,7 @@ import {IHashMap} from 'Types/declarations';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass, Container as ValidateContainer} from 'Controls/validate';
 import {Logger} from 'UI/Utils';
+import {Object as EventObject} from 'Env/Event';
 
 import { TouchDetect } from 'Env/Touch';
 import {
@@ -1230,7 +1231,7 @@ const _private = {
                 self._children.listView?.getTopLoadingTrigger(),
                 self._children.listView?.getBottomLoadingTrigger()
             );
-            self._indicatorsController?.setViewportFilled(self._viewSize > self._viewportSize && self._viewportSize);
+            self._updateViewportFilledInIndicatorsController();
         }
         return self._viewSize;
     },
@@ -3203,7 +3204,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
-            this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+            this._sourceController.subscribe('dataLoad', this._dataLoadCallback);
             _private.validateSourceControllerOptions(this, newOptions);
         }
 
@@ -3225,7 +3226,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._doBeforeMount(newOptions);
     }
 
-    private _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+    private _dataLoadCallback(event: EventObject, items: RecordSet, direction: IDirection): Promise<void> | void {
         this._beforeDataLoadCallback(items, direction);
 
         if (items.getCount()) {
@@ -3251,9 +3252,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (_private.hasHoverFreezeController(this)) {
                 this._hoverFreezeController.unfreezeHover();
             }
-            return this.isEditing() && !isEndEditProcessing ?
-                this._cancelEdit(true) :
-                void 0;
+            event.setResult(
+                this.isEditing() && !isEndEditProcessing
+                ? this._cancelEdit(true)
+                : void 0
+            );
+            return;
         }
 
         _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
@@ -3267,7 +3271,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._isMounted && this._scrollController) {
             _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
             this.startBatchAdding(direction);
-            return this._scrollController.getScrollStopPromise();
+
+            event.setResult(this._scrollController.getScrollStopPromise());
+            return;
         }
     }
 
@@ -3457,8 +3463,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._children.listView?.getTopLoadingTrigger(),
             this._children.listView?.getBottomLoadingTrigger()
         );
-        // viewSize обновляется раньше чем viewportSize, поэтому проверяем что viewportSize уже есть
-        this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
+        this._updateViewportFilledInIndicatorsController();
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
             const result = this._scrollController.scrollPositionChange({scrollTop}, false);
@@ -3950,7 +3955,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (newOptions.sourceController) {
                 if (sourceControllerChanged) {
                     this._sourceController = newOptions.sourceController;
-                    this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+                    this._sourceController.subscribe('dataLoad', this._dataLoadCallback);
                 }
 
                 if (newOptions.loading) {
@@ -4320,7 +4325,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (!this._options.sourceController) {
                 this._sourceController.destroy();
             } else {
-                this._sourceController.setDataLoadCallback(null);
+                this._sourceController.unsubscribe('dataLoad', this._dataLoadCallback);
             }
             this._sourceController = null;
         }
@@ -5906,7 +5911,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._unprocessedDragEnteredItem = null;
         }
         if (!hasDragScrolling) {
-            _private.startDragNDrop(this, domEvent, itemData);
+            // dragStartDelay нужен, чтобы была возможность выше отменить днд. То есть, за заданное время, контрол
+            // выше может выполнить свои действия и уже на событие dragStart дать однозначный ответ.
+            // Нужно например, чтобы начать dragScroll в канбане, но если прошло dragStartDelay, то должен быть DnD.
+            if (this._options.dragStartDelay) {
+                setTimeout(() => {
+                    _private.startDragNDrop(this, domEvent, itemData);
+                }, this._options.dragStartDelay);
+            } else {
+                _private.startDragNDrop(this, domEvent, itemData);
+            }
         } else {
             this._savedItemMouseDownEventArgs = {event, itemData, domEvent};
         }
@@ -6159,7 +6173,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = itemData;
-            this._processItemMouseEnterWithDragNDrop(itemData);
+            this._processItemMouseEnterWithDragNDrop(itemData, nativeEvent);
         }
         if (itemData.ItemActionsItem) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
@@ -6196,7 +6210,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _draggingItemMouseMove(item: CollectionItem, event: SyntheticEvent): void { }
+    _draggingItemMouseMove(targetItem: CollectionItem, event: SyntheticEvent): void {
+        if (this._options.useNewDndLogic) {
+            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event);
+            const dragPosition = this._dndListController.calculateDragPosition({
+                targetItem, mouseOffsetInTargetItem
+            });
+            if (dragPosition) {
+                const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
+                if (changeDragTarget !== false) {
+                    this._dndListController.setDragPosition(dragPosition);
+                }
+            }
+        }
+    }
 
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
@@ -6716,6 +6743,31 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         };
     }
 
+    private _updateViewportFilledInIndicatorsController(): void {
+        let viewportFilled;
+
+        // viewportSize и viewSize обновляются не одновременно. Чтобы корректно посчитать viewportFilled,
+        // дожидаемся когда оба значения есть.
+        if (!this._viewportSize || !this._viewSize) {
+            viewportFilled = false;
+        } else {
+            const container = this._children?.viewContainer || this._container[0] || this._container;
+            // Не учитываем высоту индикаторов порционного поиска по viewSize.
+            // Т.к. они стикаются и при остановке поиска скрываются.
+            // То есть если эти индикаторы учитывается во viewSize,
+            // то после остановки поиска останется свободное место во вьюпорте.
+            const portionedSearchIndicators = container.querySelectorAll && container.querySelectorAll('.controls-BaseControl__portionedSearch') || [];
+            let portionedSearchIndicatorsHeight = 0;
+            portionedSearchIndicators.forEach((it) => {
+                portionedSearchIndicatorsHeight += it.clientHeight;
+            });
+
+            viewportFilled = this._viewSize - portionedSearchIndicatorsHeight > this._viewportSize;
+        }
+
+        this._indicatorsController?.setViewportFilled(viewportFilled);
+    }
+
     private _destroyIndicatorsController(): void {
         this._indicatorsController.destroy();
         this._indicatorsController = null;
@@ -6958,8 +7010,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._dndListController && this._dndListController.isDragging() && this._documentDragging) {
             const draggableItem = this._dndListController.getDraggableItem();
             if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
-                const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
-                this._dndListController.setDragPosition(newPosition);
+                const newPosition = this._dndListController.calculateDragPosition(
+                    {targetItem: null, mouseOffsetInTargetItem: null}
+                );                // Если индекс === -1, значит изначально элемента не было в коллекции и нужно завершить днд,
+                // т.к. мышку увели из этого списка.
+                if (newPosition.index === -1) {
+                    this._dndListController.endDrag();
+                } else {
+                    this._dndListController.setDragPosition(newPosition);
+                }
             } else {
                 // если перетаскиваемого элемента нет в модели, значит мы перетащили элемент в другой список
                 this._dndListController.endDrag();
@@ -7024,12 +7083,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _processItemMouseEnterWithDragNDrop(itemData): void {
+    _processItemMouseEnterWithDragNDrop(itemData: CollectionItem, event: MouseEvent): void {
         let dragPosition;
         const targetItem = itemData;
         const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
         if (this._dndListController.isDragging() && !targetIsNode && this._documentDragging) {
-            dragPosition = this._dndListController.calculateDragPosition({targetItem});
+            dragPosition = this._dndListController.calculateDragPosition({
+                targetItem,
+                mouseOffsetInTargetItem: this._options.useNewDndLogic ? this._calculateMouseOffsetInItem(event) : null
+            });
             if (dragPosition) {
                 const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
                 if (changeDragTarget !== false) {
@@ -7143,6 +7205,68 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._unregisterMouseUp();
         this._dragEntity = null;
         this._startEvent = null;
+    }
+
+    protected _calculateMouseOffsetInItem(event: MouseEvent): {top: number, bottom: number} {
+        let result = null;
+
+        const targetElement = this._getDndTargetRow(event);
+
+        if (targetElement) {
+            const dragTargetRect = targetElement.getBoundingClientRect();
+
+            result = { top: null, bottom: null };
+
+            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
+
+            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
+            if (this._listViewModel['[Controls/_tile/Tile]']) {
+                result.top = (mouseCoords.x - dragTargetRect.left) / dragTargetRect.width;
+                result.bottom = (dragTargetRect.right - mouseCoords.x) / dragTargetRect.width;
+            } else {
+                result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
+                result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Получаем по event.target строку списка
+     * @param event
+     * @private
+     */
+    private _getDndTargetRow(event: MouseEvent): Element {
+        if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
+            return event.target as Element;
+        }
+
+        const startTarget = event.target;
+        let target = startTarget;
+
+        const condition = () => {
+            // В плитках элемент с классом controls-ListView__itemV имеет нормальные размеры,
+            // а в обычном списке данный элемент будет иметь размер 0x0
+            if (this._listViewModel['[Controls/_tile/Tile]']) {
+                return !target.classList.contains('controls-ListView__itemV');
+            } else {
+                return !target.parentNode.classList.contains('controls-ListView__itemV');
+            }
+        };
+
+        while (condition()) {
+            target = target.parentNode;
+
+            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
+            if (!target.classList || !target.parentNode || !target.parentNode.classList
+                || target.classList.contains('controls-BaseControl')) {
+                target = startTarget;
+                break;
+            }
+        }
+
+        return target as Element;
     }
 
     _registerMouseMove(): void {
