@@ -61,6 +61,7 @@ interface IEditingUserOptions {
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
 type TValidatorResultElement = string|boolean;
+type TCollectionItem = CollectionItem<Model>;
 
 interface IPropertyGridValidatorArguments {
     item: PropertyGridCollectionItem<Model>;
@@ -604,9 +605,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _collectionChangedHandler(
         event: SyntheticEvent,
         action: string,
-        newItems: [CollectionItem<Model>],
+        newItems: TCollectionItem[],
         newItemsIndex: number,
-        removedItems: [CollectionItem<Model>]
+        removedItems: TCollectionItem[]
     ): void {
         const options = this._options || {};
         const handleSelection =
