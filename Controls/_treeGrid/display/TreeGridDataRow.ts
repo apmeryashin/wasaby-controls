@@ -31,6 +31,7 @@ export default class TreeGridDataRow<T extends Model = Model>
     readonly DisplayItemActions: boolean = true;
     readonly DisplaySearchValue: boolean = true;
     readonly Markable: boolean = true;
+    readonly Fadable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly EnumerableItem: boolean = true;
     readonly EdgeRowSeparatorItem: boolean = true;

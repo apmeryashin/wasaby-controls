@@ -40,6 +40,8 @@ import {INavigationOptionValue, INavigationSourceConfig, IRoundBorder} from 'Con
 import {Footer, IOptions as IFooterOptions} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
+import {CrudEntityKey} from 'Types/source';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -774,6 +776,8 @@ export default class Collection<
     protected _$itemActionsPosition: TItemActionsPosition;
 
     protected _$navigation: INavigationOptionValue;
+
+    protected _$fadedKeys: CrudEntityKey[];
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -2374,6 +2378,38 @@ export default class Collection<
 
     // endregion Drag-N-Drop
 
+    getFadedKeys(): CrudEntityKey[] {
+        return this._$fadedKeys || [];
+    }
+    setFadedKeys(fadedKeys: CrudEntityKey[]): void {
+        if (isEqual(this.getFadedKeys(), fadedKeys)) {
+            return;
+        }
+
+        const diff = ArraySimpleValuesUtil.getArrayDifference(this.getFadedKeys(), fadedKeys);
+
+        // запоминаем все изменения и отправляем их за один раз. Вместо множества событий от каждого элемента
+        const session = this._startUpdateSession();
+
+        diff.added.forEach((id) => {
+            const item = this.getItemBySourceKey(id, false);
+            if (item && item.Fadable) {
+                item.setFaded(true);
+            }
+        });
+
+        diff.removed.forEach((id) => {
+            const item = this.getItemBySourceKey(id, false);
+            if (item && item.Fadable) {
+                item.setFaded(false);
+            }
+        });
+
+        this._finishUpdateSession(session);
+        this._$fadedKeys = [...fadedKeys];
+        this._nextVersion();
+    }
+
     getItemTemplateProperty(): string {
         return this._$itemTemplateProperty;
     }
@@ -3499,6 +3535,8 @@ export default class Collection<
             options.isFirstItem = false;
             options.isLastItem = false;
             options.stickyCallback = this._$stickyCallback;
+            const key = object.getPropertyValue<CrudEntityKey>(options.contents, this._$keyProperty);
+            options.faded = this.getFadedKeys().includes(key);
 
             return create(options.itemModule || this._itemModule, options);
         };
@@ -4343,6 +4381,7 @@ Object.assign(Collection.prototype, {
     _$footerTemplate: null,
     _$stickyFooter: false,
     _$stickyCallback: null,
+    _$fadedKeys: [],
     _$moreButtonVisibility: MoreButtonVisibility.visible,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

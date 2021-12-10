@@ -202,6 +202,9 @@ const ListView = Control.extend(
             if (!isEqual(this._options.roundBorder, newOptions.roundBorder)) {
                 this._listModel.setRoundBorder(newOptions.roundBorder);
             }
+            if (!isEqual(this._options.fadedKeys, newOptions.fadedKeys)) {
+                this._listModel.setFadedKeys(newOptions.fadedKeys);
+            }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
 
             this._applyNewOptionsAfterReload(this._options, newOptions);

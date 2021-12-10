@@ -56,6 +56,7 @@ export interface IOptions<T extends Model = Model> {
     roundBorder?: object;
     isTopSeparatorEnabled?: boolean;
     isBottomSeparatorEnabled?: boolean;
+    faded?: boolean;
 }
 
 export interface ISerializableState<T extends Model = Model> extends IDefaultSerializableState {
@@ -113,6 +114,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     readonly '[Types/_entity/IInstantiable]': boolean;
     readonly Markable: boolean = true;
+    readonly Fadable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly EnumerableItem: boolean = true;
     readonly EdgeRowSeparatorItem: boolean = true;
@@ -180,7 +182,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     protected _$rowSeparatorSize: string;
 
     protected _$dragged: boolean;
-
+    protected _$faded: boolean;
     protected _$theme: string;
 
     protected _$style: string;
@@ -557,8 +559,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             classes += 'controls-ListView__checkbox-onhover';
         }
 
-        if (this.isDragged()) {
-            classes += ' controls-ListView__itemContent_dragging';
+        if (this.isFaded()) {
+            classes += ' controls-ListView__itemContent_faded';
         }
         return classes;
     }
@@ -784,6 +786,22 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     getBackgroundStyle(): string {
         return this._$backgroundStyle;
+    }
+
+    getFadedClass(): string {
+        return this.isFaded() ? ' controls-ListView__itemContent_faded' : '';
+    }
+
+    setFaded(faded: boolean): void {
+        if (this._$faded === faded) {
+            return;
+        }
+        this._$faded = faded;
+        this._nextVersion();
+    }
+
+    isFaded(): boolean {
+        return this.isDragged() || this._$faded;
     }
 
     // region Drag-n-drop
@@ -1054,6 +1072,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         const rowSeparatorSize = this.getRowSeparatorSize();
         let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses()}`;
         contentClasses += ` controls-ListView__itemContent_${this.getStyle()}`;
+        contentClasses += this.getFadedClass();
 
         if (rowSeparatorSize && this._$isTopSeparatorEnabled) {
             contentClasses += ` controls-ListView__rowSeparator_size-${rowSeparatorSize}`;
@@ -1066,9 +1085,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         if (isAnimatedForSelection) {
             contentClasses += ' controls-ListView__item_rightSwipeAnimation';
         }
-        if (this.isDragged()) {
-            contentClasses += ' controls-ListView__itemContent_dragging';
-        }
+
         return contentClasses;
     }
 
@@ -1358,6 +1375,7 @@ Object.assign(CollectionItem.prototype, {
     _$hasMoreDataUp: false,
     _$isFirstStickedItem: false,
     _$stickyCallback: null,
+    _$faded: false,
     _contentsIndex: undefined,
     _version: 0,
     _counters: null,

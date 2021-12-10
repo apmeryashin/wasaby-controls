@@ -74,6 +74,9 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
         if (this.isDragged()) {
             result += ' controls-ColumnsView__item_dragging';
         }
+        if (this.isDragged() || this.isFaded()) {
+            result += ' controls-ColumnsView__item_faded';
+        }
         if (this.isDragTargetNode()) {
             result += ' controls-ColumnsView__dragTargetNode';
         }
@@ -87,7 +90,9 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
 
     getContentClasses(): string {
         // Тут должен быть вызов метода суперкласса, НО нам не нужны почти все классы, которые он предлагает
-        return ' controls-ColumnsView__itemContent';
+        let contentClasses = ' controls-ColumnsView__itemContent';
+        contentClasses += this.getFadedClass();
+        return contentClasses;
     }
 
     getItemActionClasses(itemActionsPosition: string): string {

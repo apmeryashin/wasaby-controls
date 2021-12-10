@@ -438,9 +438,7 @@ export default class Cell<
             contentClasses += ` controls-Grid__item_background-hover_${hoverBackgroundStyle}`;
         }
 
-        if (this.getOwner().isDragged()) {
-            contentClasses += ' controls-ListView__itemContent_dragging';
-        }
+        contentClasses += this.getOwner().getFadedClass();
 
         return contentClasses;
     }
