@@ -41,6 +41,16 @@ class Mask extends Base {
     protected _notifyHandler: Function = EventUtils.tmplNotify;
     protected _controlName: string = 'Mask';
 
+    protected _beforeMount(options): void {
+        super._beforeMount.apply(this, arguments);
+        const lastChar = 10;
+        if (options.mask.length > lastChar && options.replacer) {
+            const warnMessage = `${this._moduleName}: В контрол передана слишком длинная маска (больше 10 символов), это
+                                                                   может сказаться на проблемах с производительностью.`;
+            Logger.warn(`${warnMessage}`, this);
+        }
+    }
+
     protected _beforeUpdate(newOptions): void {
         const oldValue: string = this._viewModel.value;
         super._beforeUpdate.apply(this, arguments);
