@@ -31,6 +31,7 @@ import {create as DiCreate} from 'Types/di';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
+import * as rk from 'i18n!Controls';
 
 export interface IListEditorOptions extends
     IControlOptions,
@@ -179,13 +180,14 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
-        const {propertyValue, sourceController} = options;
+        const {propertyValue, sourceController, filter, additionalTextProperty, displayProperty, source} = options;
         const valueChanged =
             !isEqual(propertyValue, this._options.propertyValue) &&
             !isEqual(propertyValue, this._selectedKeys);
-        const filterChanged = !isEqual(options.filter, this._options.filter);
-        const displayPropertyChanged = options.displayProperty !== this._options.displayProperty;
-        const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
+        const filterChanged = !isEqual(filter, this._options.filter);
+        const displayPropertyChanged = displayProperty !== this._options.displayProperty;
+        const additionalDataChanged = additionalTextProperty !== this._options.additionalTextProperty;
+        const sourceChanged = source !== this._options.source;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = propertyValue;
             this._setColumns(options);
@@ -198,7 +200,7 @@ class ListEditor extends Control<IListEditorOptions> {
             this._setMarkedKey(this._selectedKeys, options);
         }
 
-        if (sourceController && filterChanged) {
+        if (sourceController && (filterChanged || sourceChanged)) {
             sourceController.updateOptions({
                 ...options,
                 filter: this._filter
@@ -397,14 +399,6 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    protected _registerHandler(event: SyntheticEvent, type: string): void {
-        // Если среди родителей панели фильтров будет Browser, то все команды ПМО, посылаемые через
-        // Register будут долетать до списков внутри панели фильтров
-        if (event.type === 'register' && type === 'selectedTypeChanged') {
-            event.stopPropagation();
-        }
-    }
-
     private _getValue(value: string[] | number[]): string[] | number[] {
         return this._isEmptyKeySelected(value) ? [] : value;
     }
@@ -418,7 +412,6 @@ class ListEditor extends Control<IListEditorOptions> {
             displayProperty,
             keyProperty,
             imageProperty,
-            filterViewMode,
             additionalTextProperty,
             markerStyle
         }: IListEditorOptions
@@ -427,7 +420,7 @@ class ListEditor extends Control<IListEditorOptions> {
             displayProperty,
             keyProperty,
             textOverflow: 'ellipsis',
-            fontSize: (filterViewMode === 'filterPanelStack' || markerStyle !== 'primary') ? 'm' : 'l',
+            fontSize: markerStyle !== 'primary' ? 'm' : 'l',
             width: 'auto',
             template: TitleColumn
         }];
@@ -471,12 +464,14 @@ class ListEditor extends Control<IListEditorOptions> {
                     id: 'PinOff',
                     icon: 'icon-PinOff',
                     iconSize: 's',
+                    tooltip: rk('Открепить'),
                     showType: TItemActionShowType.TOOLBAR,
                     handler: this._handlePinClick.bind(this)
                 }, {
                     id: 'PinNull',
                     icon: 'icon-PinNull',
                     iconSize: 's',
+                    tooltip: rk('Закрепить'),
                     showType: TItemActionShowType.TOOLBAR,
                     handler: this._handlePinClick.bind(this)
                 }
@@ -538,7 +533,16 @@ class ListEditor extends Control<IListEditorOptions> {
         selectedKeys: string[]|number[],
         {emptyKey, selectedAllKey, multiSelect}: IListEditorOptions
     ): void {
-        const resetKey = emptyKey !== undefined ? emptyKey : selectedAllKey;
+        let resetKey;
+
+        if (emptyKey !== undefined) {
+            resetKey = emptyKey;
+        } else if (selectedAllKey !== undefined) {
+            resetKey = selectedAllKey;
+        } else {
+            resetKey = null;
+        }
+
         if (selectedKeys && !multiSelect) {
             this._markedKey = !selectedKeys.length || selectedKeys[0] === resetKey ? resetKey : selectedKeys[0];
         }

@@ -38,7 +38,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
         this._setPositionSide(newOptions.stickyPosition);
         this._borderStyle = InfoboxTemplate._setBorderStyle(newOptions.style as TStyle, newOptions.validationStatus);
         if (newOptions.closeButtonVisibility !== undefined) {
-            Logger.warn('Controls/popupTemplate:Infobox : Используется устаревшая опция closeButtonVisibility' +
+            Logger.error('Controls/popupTemplate:Infobox : Используется устаревшая опция closeButtonVisibility' +
                                                                                      ' используйте closeButtonVisible');
         }
     }

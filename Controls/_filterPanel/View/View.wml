@@ -1,99 +1,69 @@
-<div class="controls_filterPanel_theme-{{_options.theme}}
-            controls_filter_theme-{{_options.theme}} controls-FilterViewPanel">
-    <Controls.scroll:Container attr:class="controls-FilterViewPanel__scroll" backgroundStyle="{{_options.style || 'default'}}">
-        <ws:if data="{{_viewModel.hasBasicItems()}}">
-            <ws:if data="{{_options.viewMode === 'filterPanelStack'}}">
-                <Controls.scroll:StickyBlock backgroundStyle="transparent">
-                    <div class="controls-FilterViewPanel__header
-                            controls-FilterViewPanel__header_backgroundStyle-{{_options.backgroundStyle}}">
-                        <Controls.icon:Icon icon="icon-FilterNew"
-                                            attr:class="controls-FilterViewPanel__filter-icon"/>
-                        <Controls.heading:Title caption="{{rk('Отбираются')}}"
-                                                fontSize="3xl"
-                                                readOnly="{{true}}"
-                                                fontColorStyle="secondary"
-                                                attr:class="controls-FilterViewPanel__filter-caption"/>
-                        <Controls.buttons:Button viewMode="functionalButton"
-                                                 icon="icon-Yes"
-                                                 iconSize="s"
-                                                 iconStyle="contrast"
-                                                 buttonStyle="success"
-                                                 caption="{{null}}"
-                                                 inlineHeight="m"
-                                                 attr:class="controls-FilterViewPanel__applyButton controls-FilterViewPanel_header__applyButton"
-                                                 on:click="_applyFilter()"/>
-                        <ws:if data="{{!_viewModel.isFilterReseted()}}">
-                            <Controls.buttons:Button viewMode="linkButton"
-                                                     caption="{{rk('Сбросить')}}"
-                                                     fontColorStyle="label"
-                                                     fontSize="xs"
-                                                     on:click="_resetFilter()"/>
-                        </ws:if>
-                    </div>
-                </Controls.scroll:StickyBlock>
-            </ws:if>
-
-         <Controls.propertyGrid:PropertyGrid
-                 editingObject="{{_viewModel.getEditingObject()}}"
-                 typeDescription="{{_viewModel.getBasicFilterItems()}}"
-                 collapsedGroups="{{_viewModel.getCollapsedGroups()}}"
-                 itemPadding="{{_itemPadding}}"
-                 groupProperty="name"
-                 on:editingObjectChanged="_editingObjectChanged()"
-                 on:groupClick="_groupClick()"
-                 attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}
-                          controls-FilterViewPanel__propertyGrid_viewMode-{{_options.viewMode}}">
-             <ws:itemsContainerPadding top="null" left="xl" right="xl" bottom="m"/>
-             <ws:itemTemplate>
-               <ws:partial template="Controls/propertyGrid:ItemTemplate"
-                           attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
-                                       controls-FilterViewPanel__propertyGrid_itemTemplate_style-{{_options.style}}"/>
+<ws:template name="propertyGrid">
+    <ws:if data="{{_viewModel.hasBasicItems()}}">
+        <Controls.propertyGrid:PropertyGrid
+                editingObject="{{_viewModel.getEditingObject()}}"
+                typeDescription="{{_viewModel.getBasicFilterItems()}}"
+                collapsedGroups="{{_viewModel.getCollapsedGroups()}}"
+                itemPadding="{{_itemPadding}}"
+                groupProperty="name"
+                on:editingObjectChanged="_editingObjectChanged()"
+                on:groupClick="_groupClick()"
+                attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}
+                              controls-FilterViewPanel__propertyGrid_viewMode-{{_options.viewMode}}">
+            <ws:itemsContainerPadding top="null" left="xl" right="xl" bottom="m"/>
+            <ws:itemTemplate>
+                <ws:partial template="Controls/propertyGrid:ItemTemplate"
+                            attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
+                                           controls-FilterViewPanel__propertyGrid_itemTemplate_style-{{_options.style}}"/>
             </ws:itemTemplate>
             <ws:groupTemplate>
-               <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate"
-                           scope="{{groupTemplate}}"
-                           viewMode="{{_options.viewMode}}"
-                           resetCaption="{{_resetCaption}}"
-                           style="{{_options.style}}"
-                           groupItems="{{_viewModel.getGroupItems()}}"/>
+                <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate"
+                            scope="{{groupTemplate}}"
+                            viewMode="{{_options.viewMode}}"
+                            resetCaption="{{_resetCaption}}"
+                            style="{{_options.style}}"
+                            groupItems="{{_viewModel.getGroupItems()}}"/>
             </ws:groupTemplate>
-         </Controls.propertyGrid:PropertyGrid>
-      </ws:if>
-      <ws:if data="{{_viewModel.hasExtendedItems()}}">
-         <div class="controls-FilterViewPanel__additional-editors-container">
-            <ws:if data="{{_viewModel.hasBasicItems()}}">
-               <div class="controls-FilterViewPanel__additional-caption controls-FilterViewPanel__additional-_options.backgroundStyle">
-                  {{rk('Еще можно отобрать')}}
-               </div>
-            </ws:if>
-            <ws:else>
-               <div class="controls-FilterViewPanel__additional-header">
-                  <Controls.icon:Icon icon="icon-FilterNew"
-                                      attr:class="controls-FilterViewPanel__filter-icon"/>
-                  <Controls.heading:Title caption="{{rk('Можно отобрать')}}"
-                                          fontSize="3xl"
-                                          readOnly="{{true}}"
-                                          fontColorStyle="secondary"
-                                          attr:class="controls-FilterViewPanel__filter-caption"/>
-               </div>
-            </ws:else>
-            <div class="controls-FilterViewPanel__additional-editors">
-               <ws:for data="filter in _viewModel.getExtendedFilterItems()">
-                  <Controls.Container.Async templateName="{{filter.editorTemplateName}}">
-                     <ws:partial template="{{content.resolvedTemplate}}"
-                                 scope="{{filter.editorOptions}}"
-                                 viewMode="{{filter.viewMode}}"
-                                 value="{{filter.value}}"
-                                 on:propertyValueChanged="_propertyValueChanged(filter)"/>
-                  </Controls.Container.Async>
-               </ws:for>
+        </Controls.propertyGrid:PropertyGrid>
+    </ws:if>
+</ws:template>
+
+<ws:template name="extendedItems">
+    <ws:if data="{{_viewModel.hasExtendedItems()}}">
+        <Controls._filterPanel.ExtendedItems viewModel="{{_viewModel}}"
+                                             on:extendedItemsChanged="_handleExtendedItemsChanged()"/>
+    </ws:if>
+</ws:template>
+
+<ws:template name="historyItems">
+    <ws:if data="{{_options.historyId}}">
+        <Controls._filterPanel.History historyId="{{_options.historyId}}"
+                                       source="{{_viewModel.getSource()}}"
+                                       on:historyItemClick="_handleHistoryItemClick()"/>
+    </ws:if>
+</ws:template>
+
+<div class="controls_filterPanel_theme-{{_options.theme}}
+            controls_filter_theme-{{_options.theme}} controls-FilterViewPanel">
+    <ws:if data="{{_options.orientation === 'vertical'}}">
+        <Controls.scroll:Container backgroundStyle="{{_options.style || 'default'}}" attr:class="controls-FilterViewPanel__scroll controls-FilterViewPanel__scroll-{{_options.viewMode}}">
+            <ws:partial template="propertyGrid"/>
+            <ws:partial template="extendedItems" attr:class="controls-FilterPanelPopup__extendedItems-vertical"/>
+            <ws:partial template="historyItems"/>
+        </Controls.scroll:Container>
+    </ws:if>
+    <ws:else>
+        <div class="controls_filterPanel-horizontal">
+            <div class="controls_filterPanel-horizontal__column">
+                <ws:partial template="propertyGrid"/>
+                <ws:partial template="extendedItems"/>
             </div>
-         </div>
-      </ws:if>
-      <ws:if data="{{_options.historyId}}">
-         <Controls._filterPanel.History historyId="{{_options.historyId}}"
-                                        source="{{_viewModel.getSource()}}"
-                                        on:historyItemClick="_handleHistoryItemClick()"/>
-      </ws:if>
-   </Controls.scroll:Container>
+            <ws:if data="{{_options.historyId}}">
+                <div class="controls_filterPanel-horizontal__separator"></div>
+            </ws:if>
+            <div class="controls_filterPanel-horizontal__column">
+                <ws:partial template="historyItems"/>
+            </div>
+        </div>
+    </ws:else>
 </div>

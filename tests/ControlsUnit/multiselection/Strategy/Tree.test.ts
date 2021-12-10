@@ -268,7 +268,12 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             parentProperty: 'parent',
             nodeProperty: 'node',
             expandedItems: [null],
-            hasMoreStorage: {2: true}
+            hasMoreStorage: {
+               2: {
+                  backward: false,
+                  forward: true
+               }
+            }
          });
          const strategy = new TreeSelectionStrategy({
             selectDescendants: true,
@@ -617,7 +622,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          strategy._rootId = 2;
          let selection = { selected: [2, 5], excluded: [2, 3] };
          selection = strategy.unselectAll(selection);
-         assert.deepEqual(selection.selected, [5]);
+         assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
       });
 
@@ -1320,7 +1325,10 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       it('selected node with more data', () => {
          const selection = {selected: [6], excluded: []};
          model.setHasMoreStorage({
-            6: true
+            6: {
+               backward: false,
+               forward: true
+            }
          });
          const treeStrategyWithNodesMoreData = new TreeSelectionStrategy({
              selectAncestors: true,

@@ -369,7 +369,7 @@ export default class Controller implements IDropdownController {
          IndicatorOpener.hide(indicatorId);
       }).then(
           () => {
-             const count = this._items.getCount();
+             const count = this._items?.getCount() || 0;
              if (count > 1 || count === 1 &&
                  (this._options.emptyText || this._options.selectedAllText || this._options.footerContentTemplate)) {
                 this._createMenuSource(this._items);

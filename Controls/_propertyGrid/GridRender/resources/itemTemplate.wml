@@ -44,11 +44,13 @@
         <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden'}}">
             <ws:if data="{{captionPosition === 'top'}}">
                 <div style="{{getCheckboxStyles(collectionItem, captionPosition, true)}}"
-                     class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}"></div>
+                     class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                            {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}"></div>
             </ws:if>
             <div style="{{getCheckboxStyles(collectionItem, captionPosition)}}"
                  class="controls-PropertyGrid__cell_checkbox
-                        {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}">
+                        {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                        {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}">
                 <ws:partial template="{{collectionItem.getMultiSelectTemplate()}}"
                             item="{{collectionItem}}"/>
             </div>
@@ -57,6 +59,7 @@
                     {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                     {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                     {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                    {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}
                     {{collectionItem.getItemPaddingClasses(1)}}
                     js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor-caption"
@@ -87,7 +90,7 @@
             <ws:if data="{{!collectionItem.getEditorTemplateName() && collectionItem.shouldDisplayActions()}}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
                     <ws:partial
-                            attr:class="{{collectionItem.isHovered() ? 'controls-PropertyGrid__gridLayout_showActions'}}"
+                            attr:class="{{collectionItem.isHovered() || collectionItem.isEditing() ? 'controls-PropertyGrid__gridLayout_showActions'}}"
                             template="{{ itemActionsTemplate }}" />
                 </ws:if>
             </ws:if>
@@ -100,10 +103,10 @@
     </ws:if>
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
         <div class="controls-PropertyGrid__gridLayout_editor
-                   {{ !item.caption || _options.captionPosition === 'top' ? 'controls-PropertyGrid__gridLayout_editor_justify_center' }}
                    {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                    {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                   {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}
                    {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}
                    js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor"
@@ -120,13 +123,13 @@
                 <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
                             caption="{{item.caption}}"
                             attr:class="controls-PropertyGrid__editor_control
-                                    {{ item.caption && _options.captionPosition !== 'top' ? 'controls-PropertyGrid__editor_control_stretch' }}"
+                                    {{ item.caption ? 'controls-PropertyGrid__editor_control_stretch' }}"
                             scope="{{_options}}"/>
             </ws:else>
             <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
                     <ws:partial
-                            attr:class="{{collectionItem.isHovered() ? 'controls-PropertyGrid__gridLayout_showActions'}}"
+                            attr:class="{{collectionItem.isHovered() || collectionItem.isEditing()? 'controls-PropertyGrid__gridLayout_showActions'}}"
                             template="{{ itemActionsTemplate }}" />
                 </ws:if>
             </ws:if>

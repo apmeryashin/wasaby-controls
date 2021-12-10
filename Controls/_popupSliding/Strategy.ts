@@ -202,11 +202,7 @@ class Strategy {
      * @private
      */
     private _getWindowHeight(): number {
-        if (constants.isBrowserPlatform) {
-            const visualViewport = window.visualViewport;
-            return visualViewport ? DimensionsMeasurer.getVisualViewportDimensions().height :
-                                                                   DimensionsMeasurer.getWindowDimensions().innerHeight;
-        }
+        return DimensionsMeasurer.getVisualViewportDimensions().height;
     }
 
     /**
@@ -215,11 +211,7 @@ class Strategy {
      * @private
      */
     private _getWindowWidth(): number {
-        if (constants.isBrowserPlatform) {
-            const visualViewport = window.visualViewport;
-            return visualViewport ? DimensionsMeasurer.getVisualViewportDimensions().width :
-                                                                    DimensionsMeasurer.getWindowDimensions().innerWidth;
-        }
+        return DimensionsMeasurer.getVisualViewportDimensions().width;
     }
 
     /**

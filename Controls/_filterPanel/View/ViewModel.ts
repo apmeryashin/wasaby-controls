@@ -1,12 +1,12 @@
 import {IFilterItem} from 'Controls/filter';
 import {TemplateFunction} from 'UI/Base';
 import IExtendedPropertyValue from '../_interface/IExtendedPropertyValue';
-import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
 import {VersionableMixin} from 'Types/entity';
 import {mixin} from 'Types/util';
 import {FilterUtils} from 'Controls/filter';
 import * as coreClone from 'Core/core-clone';
+import {MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS} from 'Controls/_filterPanel/Constants';
 import {RecordSet} from 'Types/collection';
 import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource';
 
@@ -157,6 +157,31 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
+    getAdditionalColumns(isAdditionalListExpanded: boolean): object {
+        const extendedItems = this.getExtendedFilterItems();
+        const countColumnItems = extendedItems.length / 2;
+        const maxCountVisibleItems = isAdditionalListExpanded ? countColumnItems : MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
+        const columns = {
+            right: [],
+            left: []
+        };
+
+        extendedItems.forEach((item, index) => {
+            if (columns.left.length < maxCountVisibleItems && !(index % 2)) {
+                columns.left.push(item);
+            } else if (columns.right.length < maxCountVisibleItems) {
+                columns.right.push(item);
+            }
+        });
+
+        return columns;
+    }
+
+    needToCutColumnItems(): boolean {
+        const extendedItems = this.getExtendedFilterItems();
+        return extendedItems.length / 2 > MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
+    }
+
     getBasicFilterItems(): IFilterItem[] {
         return this._getItemsByViewMode('basic');
     }
@@ -238,7 +263,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     }
 
     resetFilter(): void {
-        this._source = object.clone(this._source);
+        this._source = coreClone(this._source);
         FilterUtils.resetFilter(this._source);
         this._resetSourceViewMode();
         this._collapsedGroups = [];
@@ -248,7 +273,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     }
 
     resetFilterItem(name: string): void {
-        this._source = object.clone(this._source);
+        this._source = coreClone(this._source);
         const item = this._source.find((filterItem) => filterItem.name === name);
         item.value = item.resetValue;
         item.textValue = '';

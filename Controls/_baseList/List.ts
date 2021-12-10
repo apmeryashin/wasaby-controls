@@ -8,7 +8,7 @@ import template = require('wml!Controls/_baseList/List');
 import viewName = require('Controls/_baseList/ListView');
 import {default as ListControl} from 'Controls/_baseList/BaseControl';
 import {default as Data} from 'Controls/_baseList/Data';
-import {ISelectionObject, IBaseSourceConfig, TKey} from 'Controls/interface';
+import {ISelectionObject, IBaseSourceConfig, TKey, IItemsContainerPaddingOption} from 'Controls/interface';
 import {DataSet, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import 'css!Controls/baseList';
 import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
@@ -41,6 +41,7 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @implements Controls/marker:IMarkerList
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/list:IListNavigation
+ * @implements Controls/interface:IItemsContainerPadding
  *
  * @author Авраменко А.С.
  * @public
@@ -79,15 +80,17 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @demo Controls-demo/list_new/Base/Index
  */
 
-export default class List extends Control /** @lends Controls/_list/List.prototype */
+export default class List<
+    TControl extends ListControl = ListControl
+> extends Control /** @lends Controls/_list/List.prototype */
 implements IMovableList, IRemovableList {
     protected _template: TemplateFunction = template;
     protected _viewName = viewName;
-    protected _viewTemplate: unknown = ListControl;
+    protected _viewTemplate: TControl = ListControl;
     protected _viewModelConstructor = null;
     protected _itemsSelector: string = '.controls-ListView__itemV';
     protected _children: {
-        listControl: ListControl,
+        listControl: TControl,
         data: Data
     };
 
@@ -103,6 +106,10 @@ implements IMovableList, IRemovableList {
 
     protected _keyDownHandler() {
         /* For override  */
+    }
+
+    protected _getItemsContainerPadding(options): IItemsContainerPaddingOption|null {
+        return options.itemsContainerPadding;
     }
 
     protected _getModelConstructor(): string|Function {
@@ -203,7 +210,13 @@ implements IMovableList, IRemovableList {
             multiSelectPosition: 'default',
             stickyHeader: true,
             stickyResults: true,
-            style: 'default'
+            style: 'default',
+            itemsContainerPadding: {
+                top: 'default',
+                bottom: 'default',
+                left: 'default',
+                right: 'default'
+            }
         };
     }
 }
@@ -218,7 +231,7 @@ Object.defineProperty(List, 'defaultProps', {
 });
 /**
  * @name Controls/_list/List#itemPadding
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef}
+ * @cfg {Controls/_interface/IItemPadding/ItemPadding.typedef}
  * @demo Controls-demo/list_new/ItemPadding/DifferentPadding/Index В примере заданы горизонтальные отступы.
  * @demo Controls-demo/list_new/ItemPadding/NoPadding/Index В примере отступы отсутствуют.
  */

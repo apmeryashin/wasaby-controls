@@ -191,6 +191,20 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         return this._$emptyGridRow;
     }
 
+    getAllGridColumns(): Array<{className?: string}> {
+        let result: Array<{className?: string}> =
+            this._$columns.map(() => ({className: 'js-controls-Grid__columnScroll__relativeCell'}));
+
+        if (this.hasMultiSelectColumn()) {
+            result = [{}, ...result];
+        }
+
+        if (this.hasItemActionsSeparatedCell()) {
+            result = [...result, {}];
+        }
+        return result;
+    }
+
     setEmptyTemplateOptions(options: object): void {
         this.getEmptyGridRow()?.setRowTemplateOptions(options);
     }

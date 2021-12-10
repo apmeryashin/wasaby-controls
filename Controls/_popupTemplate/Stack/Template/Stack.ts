@@ -44,6 +44,7 @@ const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
  * @implements Controls/popupTemplate:IPopupTemplate
  * @implements Controls/popupTemplate:IPopupTemplateBase
  * @demo Controls-demo/PopupTemplate/Stack/HeaderBorderVisible/Index
+ * @demo Controls-demo/PopupTemplate/Stack/DoubleSideContent/Index
  */
 
 class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemplate {
@@ -62,7 +63,7 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
         this._prepareTheme();
         this._maximizeButtonClickCallback = this.changeMaximizedState.bind(this);
         if (options.closeButtonVisibility !== undefined) {
-            Logger.warn('Controls/popupTemplate:Stack : Используется устаревшая опция closeButtonVisibility,' +
+            Logger.error('Controls/popupTemplate:Stack : Используется устаревшая опция closeButtonVisibility,' +
                                                                                     ' используйте closeButtonVisible');
         }
     }

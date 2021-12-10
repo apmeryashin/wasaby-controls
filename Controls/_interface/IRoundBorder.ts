@@ -10,29 +10,32 @@
 export type TRoundBorderSize = 'null' | 'xs' | 's' | 'm' | 'l' | 'xl' | '3xs' | '2xs';
 
 /**
+ * Интерфейс конфигурации скругления углов записей.
  * @interface Controls/_interface/IRoundBorder
+ * @description
+ * Настройка скругления производится для каждого угла записи.
  * @public
  * @author Аверкиев П.А.
  */
 export interface IRoundBorder {
 
     /**
-     * @name {Controls/_interface/TRoundBorderSize.typedef} tl Левый верхний угол
+     * Левый верхний угол
      */
     tl: TRoundBorderSize;
 
     /**
-     * @name {Controls/_interface/TRoundBorderSize.typedef} tr Правый верхний угол.
+     * Правый верхний угол.
      */
     tr: TRoundBorderSize;
 
     /**
-     * @name {Controls/_interface/TRoundBorderSize.typedef} bl Левый нижний угол.
+     * Левый нижний угол.
      */
     bl: TRoundBorderSize;
 
     /**
-     * @name {Controls/_interface/TRoundBorderSize.typedef} br Правый нижний угол.
+     * Правый нижний угол.
      */
     br: TRoundBorderSize;
 }

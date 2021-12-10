@@ -265,6 +265,17 @@ describe('Controls/dataSource:loadData', () => {
     it('load with default load timeout', async () => {
         const fakeTimer = useFakeTimers();
         const source = getSource();
+        const filterDescription = [{
+            name: 'tasks',
+            type: 'list',
+            value: [],
+            resetValue: [],
+            textValue: '',
+            editorOptions: {
+                source: getSource(),
+                filter: {}
+            }
+        }];
         source.query = () => new Promise(() => {
             Promise.resolve().then(() => {
                 fakeTimer.tick(40000);
@@ -272,6 +283,7 @@ describe('Controls/dataSource:loadData', () => {
         });
         const loadDataConfig = {
             source,
+            filterDescription,
             filter: {}
         };
 
@@ -300,21 +312,21 @@ describe('Controls/dataSource:loadData', () => {
                 }
             }
         },
-            {
-                name: 'contacts',
-                type: 'list',
-                value: ['1'],
-                resetValue: ['2'],
-                textValue: '',
-                editorOptions: {
-                    source: getSource(),
-                    historyId: 'history',
-                    keyProperty: 'id',
-                    filter: {
-                        myContacts: true
-                    }
+        {
+            name: 'contacts',
+            type: 'list',
+            value: ['1'],
+            resetValue: ['2'],
+            textValue: '',
+            editorOptions: {
+                source: getSource(),
+                historyId: 'history',
+                keyProperty: 'id',
+                filter: {
+                    myContacts: true
                 }
-            }];
+            }
+        }];
         const loadDataConfigWithFilter = {
             type: 'list',
             source: getSource(),

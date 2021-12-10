@@ -55,7 +55,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
 
     protected _beforeMount(options: IPopupTemplateOptions): void {
         if (options.closeButtonVisibility !== undefined) {
-            Logger.warn('Controls/popupTemplate:Sticky : Используется устаревшая опция closeButtonVisibility,' +
+            Logger.error('Controls/popupTemplate:Sticky : Используется устаревшая опция closeButtonVisibility,' +
                                                                                      ' используйте closeButtonVisible');
         }
     }

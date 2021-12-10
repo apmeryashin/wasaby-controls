@@ -324,7 +324,7 @@ export interface IStickyOpener extends IOpener {
  *     });
  * }
  * </pre>
- * @return Promise<string|indefined>
+ * @return {Promise<string|undefined>}
  * @see close
  * @see closePopup
  */

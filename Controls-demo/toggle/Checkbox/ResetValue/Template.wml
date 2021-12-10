@@ -1,13 +1,13 @@
-<div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell demo-checkboxTriState__default">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
+    <div data-qa="controlsDemo-checkboxResetValue__false" class="controlsDemo__cell demo-checkboxTriState__default">
         <div class="controls-text-label">resetValue=false</div>
         <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value1" resetValue="{{false}}"/>
     </div>
-    <div class="controlsDemo__cell demo-checkboxTriState__triState">
+    <div data-qa="controlsDemo-checkboxResetValue__true" class="controlsDemo__cell demo-checkboxTriState__triState">
         <div class="controls-text-label">resetValue=true</div>
         <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value2" resetValue="{{true}}"/>
     </div>
-    <div class="controlsDemo__cell demo-checkboxTriState__triState">
+    <div data-qa="controlsDemo-checkboxResetValue__null" class="controlsDemo__cell demo-checkboxTriState__triState">
         <div class="controls-text-label">resetValue=null</div>
         <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value3" triState="{{true}}" resetValue="{{null}}"/>
     </div>

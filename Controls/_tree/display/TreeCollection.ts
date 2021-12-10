@@ -97,5 +97,6 @@ Object.assign(TreeCollection.prototype, {
     '[Controls/tree:TreeCollection]': true,
     _moduleName: 'Controls/tree:TreeCollection',
     _itemModule: 'Controls/tree:TreeItem',
-    _nodeFooterModule: 'Controls/tree:TreeNodeFooterItem'
+    _nodeFooterModule: 'Controls/tree:TreeNodeFooterItem',
+    _nodeHeaderModule: 'Controls/tree:TreeNodeHeaderItem'
 });

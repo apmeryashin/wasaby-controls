@@ -73,6 +73,10 @@ export default class View extends List {
         this._viewModelConstructor = this._getModelConstructor();
     }
 
+    protected _getItemsContainerPadding(): null {
+        return null;
+    }
+
     protected _getModelConstructor(): string {
         return 'Controls/tile:TileCollection';
     }
@@ -80,7 +84,8 @@ export default class View extends List {
     static getDefaultOptions(): object {
         return {
             actionAlignment: 'vertical',
-            actionCaptionPosition: 'none'
+            actionCaptionPosition: 'none',
+            itemsContainerPadding: null
         };
     }
 }

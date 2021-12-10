@@ -197,8 +197,9 @@ describe('Controls/scroll:ContainerBase', () => {
          };
 
          sinon.stub(control, '_generateEvent');
-         sinon.stub(control, '_sendByListScrollRegistrar');
-         sinon.stub(control, '_sendScrollMoveAsync');
+         sinon.stub(control._listCompatible, 'generateCompatibleEvents');
+         sinon.stub(control._listCompatible, 'onRegisterNewListScrollComponent');
+         sinon.stub(control._listCompatible, 'sendByListScrollRegistrar');
       });
 
       afterEach(() => {
@@ -431,7 +432,7 @@ describe('Controls/scroll:ContainerBase', () => {
          sinon.stub(control._registrars.listScroll, 'register');
          sinon.stub(control._registrars.scroll, 'register');
          sinon.stub(control, '_onRegisterNewComponent');
-         sinon.stub(control, '_onRegisterNewListScrollComponent');
+         control._scrollModel = {};
 
          const registerTypes = ['scrollStateChanged', 'listScroll', 'scroll'];
          registerTypes.forEach((registerType) => {
@@ -738,7 +739,7 @@ describe('Controls/scroll:ContainerBase', () => {
       });
    });
 
-   describe('_onRegisterNewListScrollComponent', () => {
+   describe('onRegisterNewListScrollComponent', () => {
       it('should propagate event to registered component', () => {
          const registeredControl: string = 'registeredControl';
          const control: ContainerBase = new ContainerBase(options);
@@ -775,7 +776,9 @@ describe('Controls/scroll:ContainerBase', () => {
          control._afterMount();
 
          sinon.stub(control._registrars.listScroll, 'startOnceTarget');
-         control._onRegisterNewListScrollComponent(registeredControl);
+         control._listCompatible.onRegisterNewListScrollComponent(
+             control._registrars.listScroll, control._scrollModel, registeredControl
+         );
          sinon.assert.calledWith(control._registrars.listScroll.startOnceTarget, registeredControl, 'cantScroll');
          sinon.assert.calledWith(control._registrars.listScroll.startOnceTarget, registeredControl, 'viewportResize');
          sinon.restore();

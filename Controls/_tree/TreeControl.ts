@@ -11,7 +11,14 @@ import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
-import {Direction, IBaseSourceConfig, IFilterOptions, IHierarchyOptions, TKey} from 'Controls/interface';
+import {
+    Direction,
+    IBaseSourceConfig,
+    IFilterOptions,
+    IHierarchyOptions,
+    ISelectionObject,
+    TKey
+} from 'Controls/interface';
 import {
     BaseControl,
     checkReloadItemArgs,
@@ -35,6 +42,7 @@ import {
     getReloadItemsHierarchy,
     getRootsForHierarchyReload
 } from 'Controls/_tree/utils';
+import {IHasMoreStorage} from 'Controls/_display/Tree';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -257,22 +265,25 @@ const _private = {
     prepareHasMoreStorage(
         sourceController: NewSourceController,
         expandedItems: TKey[],
-        currentHasMore: Record<string, boolean>
-    ): Record<string, boolean> {
+        currentHasMore: IHasMoreStorage
+    ): IHasMoreStorage {
         const hasMore = {...currentHasMore};
 
         expandedItems.forEach((nodeKey) => {
-            hasMore[nodeKey] = sourceController ? sourceController.hasMoreData('down', nodeKey) : false;
+            hasMore[nodeKey] = {
+                backward: sourceController ? sourceController.hasMoreData('up', nodeKey) : false,
+                forward: sourceController ? sourceController.hasMoreData('down', nodeKey) : false
+            };
         });
 
         return hasMore;
     },
 
-    loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey): Promise<RecordSet> {
+    loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey, direction: IDirection = 'down'): Promise<RecordSet> {
         const sourceController = self.getSourceController();
 
         self._displayGlobalIndicator();
-        return sourceController.load('down', nodeKey).then((list) => {
+        return sourceController.load(direction, nodeKey).then((list) => {
                 self.stopBatchAdding();
                 self._needRestoreScroll = true;
                 return list;
@@ -370,48 +381,6 @@ const _private = {
         }
 
         return src;
-    },
-
-    /**
-     * Получаем по event.target строку списка
-     * @param event
-     * @private
-     * @remark это нужно для того, чтобы когда event.target это содержимое строки, которое по высоте меньше 20 px,
-     *  то проверка на 10px сверху и снизу сработает неправильно и нельзя будет навести на узел(position='on')
-     */
-    getTargetRow(self: TreeControl, event: SyntheticEvent): Element {
-        if (!event.target ||
-            !event.target.classList ||
-            !event.target.parentNode ||
-            !event.target.parentNode.classList) {
-            return event.target;
-        }
-
-        const startTarget = event.target;
-        let target = startTarget;
-
-        const condition = () => {
-            // В плитках элемент с классом controls-ListView__itemV имеет нормальные размеры,
-            // а в обычном списке данный элемент будет иметь размер 0x0
-            if (self._listViewModel['[Controls/_tile/Tile]']) {
-                return !target.classList.contains('controls-ListView__itemV');
-            } else {
-                return !target.parentNode.classList.contains('controls-ListView__itemV');
-            }
-        };
-
-        while (condition()) {
-            target = target.parentNode;
-
-            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
-            if (!target.classList || !target.parentNode || !target.parentNode.classList
-               || target.classList.contains('controls-BaseControl')) {
-                target = startTarget;
-                break;
-            }
-        }
-
-        return target;
     },
 
     /**
@@ -551,7 +520,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
         // Можно грузить если это раскрытый узел в котором есть не загруженные данные и не задан футер списка и нет
         // данных для загрузки в дочернем узле
-        return item.isNode() !== null && item.isExpanded() && item.hasMoreStorage() &&
+        return item.isNode() !== null && item.isExpanded() && item.hasMoreStorage('forward') &&
             !this._options.footerTemplate && !hasMoreParentData;
     }
 
@@ -823,10 +792,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return _private.toggleExpanded(this, item);
     }
 
-    protected _onloadMore(e, dispItem?): void {
+    protected _onloadMore(e, dispItem?, direction?: IDirection): void {
         if (dispItem) {
             const nodeKey = dispItem.getContents().getKey();
-            _private.loadNodeChildren(this, nodeKey);
+            _private.loadNodeChildren(this, nodeKey, direction);
         } else {
             super._onloadMore(e);
         }
@@ -872,42 +841,25 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     // region Drag
 
-    protected _draggingItemMouseMove(itemData: TreeItem, event: SyntheticEvent<MouseEvent>): void {
-        super._draggingItemMouseMove(itemData, event);
+    protected _draggingItemMouseMove(item: TreeItem, event: MouseEvent): boolean {
+        const changedPosition = super._draggingItemMouseMove(item, event);
 
-        const dispItem = itemData;
-        const dndListController = this.getDndListController();
-        const targetIsNotDraggableItem = dndListController.getDraggableItem()?.getContents() !== dispItem.getContents();
-        if (dispItem['[Controls/_display/TreeItem]'] && dispItem.isNode() !== null && targetIsNotDraggableItem) {
-            const targetElement = _private.getTargetRow(this, event);
-            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event, targetElement);
-            const dragTargetPosition = dndListController.calculateDragPosition({
-                targetItem: dispItem,
-                mouseOffsetInTargetItem
-            });
-
-            if (dragTargetPosition) {
-                const result = this._notify('changeDragTarget', [
-                    dndListController.getDragEntity(),
-                    dragTargetPosition.dispItem.getContents(),
-                    dragTargetPosition.position
-                ]);
-
-                if (result !== false) {
-                    const changedPosition = dndListController.setDragPosition(dragTargetPosition);
-                    if (changedPosition) {
-                        this._clearTimeoutForExpandOnDrag();
-                        if (
-                            !dispItem['[Controls/_tile/mixins/TileItem]'] &&
-                            !dispItem.isExpanded() &&
-                            targetIsNotDraggableItem && dragTargetPosition.position === 'on'
-                        ) {
-                            this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
-                        }
-                    }
+        if (changedPosition) {
+            const dndListController = this.getDndListController();
+            if (item['[Controls/_display/TreeItem]'] && item.isNode() !== null) {
+                const position = dndListController.getDragPosition();
+                this._clearTimeoutForExpandOnDrag();
+                if (
+                    !item['[Controls/_tile/mixins/TileItem]'] &&
+                    !item.isExpanded() &&
+                    position.position === 'on'
+                ) {
+                    this._startCountDownForExpandNode(item, this._expandNodeOnDrag);
                 }
             }
         }
+
+        return changedPosition;
     }
 
     protected _beforeStartDrag(draggedKey: CrudEntityKey): void {
@@ -943,8 +895,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         _private.toggleExpanded(this, dispItem);
     }
 
-    protected _getSourceControllerOptionsForGetDraggedItems(): ISourceControllerOptions {
-        const options = super._getSourceControllerOptionsForGetDraggedItems();
+    protected _getSourceControllerOptionsForGetDraggedItems(selection: ISelectionObject): ISourceControllerOptions {
+        const options = super._getSourceControllerOptionsForGetDraggedItems(selection);
 
         options.deepReload = true;
         options.expandedItems = this._expandController.getExpandedItems();
@@ -975,30 +927,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         this._timeoutForExpandOnDrag = setTimeout(() => {
             expandNode(item);
         }, EXPAND_ON_DRAG_DELAY);
-    }
-
-    private _calculateMouseOffsetInItem(event: SyntheticEvent<MouseEvent>,
-                                        targetElement: Element): {top: number, bottom: number} {
-        let result = null;
-
-        if (targetElement) {
-            const dragTargetRect = targetElement.getBoundingClientRect();
-
-            result = { top: null, bottom: null };
-
-            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
-
-            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
-            if (this._listViewModel['[Controls/_tile/Tile]']) {
-                result.top = (mouseCoords.x - dragTargetRect.left) / dragTargetRect.width;
-                result.bottom = (dragTargetRect.right - mouseCoords.x) / dragTargetRect.width;
-            } else {
-                result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
-                result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
-            }
-        }
-
-        return result;
     }
 
     // endregion Drag

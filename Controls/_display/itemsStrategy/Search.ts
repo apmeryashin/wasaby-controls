@@ -285,6 +285,7 @@ export default class SearchStrategy<S extends Model, T extends TreeItem<S> = Tre
             if (item
                 && item['[Controls/_display/TreeItem]']
                 && !item['[Controls/treeGrid:TreeGridNodeFooterRow]']
+                && !item['[Controls/treeGrid:TreeGridNodeHeaderRow]']
                 && !item['[Controls/treeGrid:TreeGridGroupDataRow]']) {
                 if (item.isNode()) {
                     // Check if there is a special item within the breadcrumbs

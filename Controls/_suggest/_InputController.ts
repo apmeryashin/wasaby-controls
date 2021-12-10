@@ -1043,10 +1043,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _select(event: SyntheticEvent, item: Model): void {
       const newItem = item || event;
+      const tabsSelectedKey = this._tabsSelectedKey;
 
       this._close();
       this._closePopup();
-      this._notify('choose', [newItem]);
+      this._notify('choose', [newItem, tabsSelectedKey]);
 
       if (this._options.historyId) {
          this._getHistoryService().addCallback((historyService) => {

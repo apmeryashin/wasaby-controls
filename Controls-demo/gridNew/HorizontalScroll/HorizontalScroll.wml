@@ -1,0 +1,13 @@
+<div class="controlsDemo__wrapper">
+    <Controls.scroll:Container attr:style="width: 600px; height: 400px" shadowMode="js" scrollOrientation="verticalHorizontal" newColumnScroll="{{ true }}">
+        <Controls.grid:View
+                keyProperty="key"
+                source="{{_viewSource}}"
+                columns="{{_columns}}"
+                backgroundStyle="default"
+                newColumnScroll="{{ true }}"
+                stickyColumnsCount="{{1}}">
+            <ws:virtualColumnScrollConfig pageSize="{{ 20 }}"/>
+        </Controls.grid:View>
+    </Controls.scroll:Container>
+</div>

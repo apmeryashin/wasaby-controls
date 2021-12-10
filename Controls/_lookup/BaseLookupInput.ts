@@ -207,16 +207,16 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         this._calculateSizes(this._options);
     }
 
-    private _activated(): void {
+    protected _activated(): void {
         this._active = true;
     }
 
-    private _deactivated(): void {
+    protected _deactivated(): void {
         this._active = false;
         this.closeSuggest();
     }
 
-    private _suggestStateChanged(event: SyntheticEvent, state: boolean): void {
+    protected _suggestStateChanged(event: SyntheticEvent, state: boolean): void {
         if (
             (this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) &&
             this._suggestState
@@ -374,12 +374,12 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         }
     }
 
-    private _changeValueHandler(event: SyntheticEvent, value: string): void {
+    protected _changeValueHandler(event: SyntheticEvent, value: string): void {
         this._setInputValue(this._options, value);
         this._notifyValueChanged(value);
     }
 
-    private _choose(event: SyntheticEvent, item: Model): void {
+    protected _choose(event: SyntheticEvent, item: Model, tabsSelectedKey?: string): void {
         // move focus to input after select, because focus will be lost after closing popup
         this._activateLookup();
 
@@ -387,11 +387,11 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         // необходимо что бы событие selectedKeysChanged сработало после valueChanged
         // дабы в propertyGrid панели фильтра выставилось значение из выбранных ключей а не из поля ввода
         this._resetInputValue();
-        this._notify('choose', [item]);
-        this._addItem(item);
+        this._addItem(item, tabsSelectedKey);
+        this._notify('choose', [item, tabsSelectedKey]);
     }
 
-    private _crossClick(event: SyntheticEvent, item: Model): void {
+    protected _crossClick(event: SyntheticEvent, item: Model): void {
         /* move focus to input, because focus will be lost after removing dom element */
         if (!this._infoboxOpened) {
             this._activateLookup(false);
@@ -416,13 +416,13 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         return placeholder;
     }
 
-    private _isShowCollection(): boolean {
+    protected _isShowCollection(): boolean {
         return !this._isEmpty() && !!(this._maxVisibleItems || this._options.readOnly);
     }
 
     private _subscribeOnResizeEvent(options: ILookupInputOptions): void {
         if (!this._subscribedOnResizeEvent && this._isNeedCalculatingSizes(options)) {
-            RegisterUtil(this, 'controlResize', this._resize);
+            RegisterUtil(this, 'controlResize', this._resize, {listenAll: true});
             this._subscribedOnResizeEvent = true;
         }
     }

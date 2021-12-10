@@ -103,16 +103,16 @@ export default View;
 
 /**
  * @name Controls/_spoiler/View#headingFontSize
- * @cfg {Enum} Размер шрифта заголовка.
+ * @cfg {Controls/interface:IFontSize} Размер шрифта заголовка.
  * @see Controls/spoiler:Heading#fontSize
  */
 /**
  * @name Controls/_spoiler/View#headingFontWeight
- * @cfg {Enum} Насыщенность шрифта заголовка.
+ * @cfg {Controls/interface:IFontWeight} Насыщенность шрифта заголовка.
  * @see Controls/spoiler:Heading#fontWeight
  */
 /**
  * @name Controls/_spoiler/View#headingFontColorStyle
- * @cfg {Enum} Стиль цвета текста и иконки заголовка.
+ * @cfg {Controls/interface:IFontColorStyle} Стиль цвета текста и иконки заголовка.
  * @see Controls/spoiler:Heading#fontColorStyle
  */

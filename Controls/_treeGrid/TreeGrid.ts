@@ -1,11 +1,11 @@
 import { View as Grid } from 'Controls/grid';
-import { TreeControl } from 'Controls/tree';
 import { TemplateFunction } from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import { descriptor } from 'Types/entity';
 import { CrudEntityKey } from 'Types/source';
 import TreeGridView from 'Controls/_treeGrid/TreeGridView';
 import TreeGridViewTable from 'Controls/_treeGrid/TreeGridViewTable';
+import { TreeGridControl } from './TreeGridControl';
 import { Model } from 'Types/entity';
 import { isFullGridSupport } from 'Controls/display';
 import ITreeGrid, {IOptions as ITreeGridOptions} from 'Controls/_treeGrid/interface/ITreeGrid';
@@ -46,10 +46,10 @@ import 'css!Controls/treeGrid';
  * @author Авраменко А.С.
  * @demo Controls-demo/treeGridNew/Base/TreeGridView/Index
  */
-export default class TreeGrid extends Grid implements ITreeGrid {
+export default class TreeGrid extends Grid<TreeGridControl> implements ITreeGrid {
     protected _viewName: TemplateFunction = null;
-    protected _viewTemplate: TemplateFunction = TreeControl;
-    protected _children: {listControl: TreeControl};
+    protected _viewTemplate: TemplateFunction = TreeGridControl;
+    protected _children: {listControl: TreeGridControl};
 
     _beforeMount(options: ITreeGridOptions): Promise<void> {
 
@@ -122,5 +122,8 @@ export default class TreeGrid extends Grid implements ITreeGrid {
  * @function
  * @param {String|Number} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
  * @param {Controls/_list/interface/IReloadItemOptions} options настройки перезагрузки итема.
+ * @remark Возвращаемый результат зависит от указанного в options значения {@link Controls/_list/interface/IReloadItemOptions#method method}.
+ * При значении 'read' возвращается запрошенная запись, а при значении 'query' возвращается RecordSet с дочерними элементами для загруженного узла.
+ * @returns {Promise<Model | RecordSet>} В случае успешной загрузки возвращается запрошенная запись или RecordSet с дочерними элементами для загруженного узла.
  * @see Controls/_list/interface/IReloadItemOptions#hierarchyReload
  */

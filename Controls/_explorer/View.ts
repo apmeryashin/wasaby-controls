@@ -57,30 +57,35 @@ const VIEW_NAMES = {
     search: SearchView,
     tile: null,
     table: TreeGridView,
-    list: ListView
+    list: ListView,
+    columns: null
 };
 
 const MARKER_STRATEGY = {
     list: SingleColumnStrategy,
     tile: SingleColumnStrategy,
-    table: SingleColumnStrategy
+    table: SingleColumnStrategy,
+    columns: MultiColumnStrategy
 };
 
 const ITEM_GETTER = {
-    list: undefined
+    list: undefined,
+    columns: undefined
 };
 
 const VIEW_TABLE_NAMES = {
     search: SearchViewTable,
     tile: null,
     table: TreeGridViewTable,
-    list: ListView
+    list: ListView,
+    columns: null
 };
 const VIEW_MODEL_CONSTRUCTORS = {
     search: 'Controls/searchBreadcrumbsGrid:SearchGridCollection',
     tile: null,
     table: 'Controls/treeGrid:TreeGridCollection',
-    list: 'Controls/treeGrid:TreeGridCollection'
+    list: 'Controls/treeGrid:TreeGridCollection',
+    columns: null
 };
 
 const EXPLORER_CONSTANTS = {
@@ -210,6 +215,7 @@ export default class Explorer extends Control<IExplorerOptions> {
     };
 
     protected _itemsSelector: string = '.controls-ListView__itemV';
+    protected _itemContainerGetter: string;
     //endregion
 
     //region private fields
@@ -1007,22 +1013,28 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
     }
 
-    private _setViewConfig(viewMode: TExplorerViewMode): void {
+    private _resolveViewMode(viewMode: TExplorerViewMode, useColumns: boolean) {
+        return viewMode === 'list' && useColumns ? 'columns' : viewMode;
+    }
+
+    private _setViewConfig(viewMode: TExplorerViewMode, useColumns: boolean): void {
+        const resolvedViewMode = this._resolveViewMode(viewMode, useColumns);
+
         if (isFullGridSupport()) {
-            this._viewName = VIEW_NAMES[viewMode];
+            this._viewName = VIEW_NAMES[resolvedViewMode];
         } else {
-            this._viewName = VIEW_TABLE_NAMES[viewMode];
+            this._viewName = VIEW_TABLE_NAMES[resolvedViewMode];
         }
 
         this._setInitBreadCrumbsMode();
-        this._markerStrategy = MARKER_STRATEGY[viewMode];
-        this._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
-        this._itemContainerGetter = ITEM_GETTER[viewMode];
+        this._markerStrategy = MARKER_STRATEGY[resolvedViewMode];
+        this._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[resolvedViewMode];
+        this._itemContainerGetter = ITEM_GETTER[resolvedViewMode];
     }
 
     private _setViewModeSync(viewMode: TExplorerViewMode, cfg: IExplorerOptions): void {
         this._viewMode = viewMode;
-        this._setViewConfig(this._viewMode);
+        this._setViewConfig(this._viewMode, cfg.useColumns);
         this._applyNewVisualOptions();
 
         if (this._isMounted) {
@@ -1036,10 +1048,14 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
         let action: Promise<void> | void;
 
-        if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-            action = this._loadTileViewMode();
-        } else if (viewMode === 'list' && cfg.useColumns) {
-            action = this._loadColumnsViewMode();
+        const resolvedViewMode = this._resolveViewMode(viewMode, cfg.useColumns);
+
+        if (!VIEW_MODEL_CONSTRUCTORS[resolvedViewMode]) {
+            if (resolvedViewMode === 'columns') {
+                action = this._loadColumnsViewMode();
+            } else {
+                action = this._loadTileViewMode();
+            }
         } else {
             return this._setViewModeSync(viewMode, cfg);
         }
@@ -1160,10 +1176,10 @@ export default class Explorer extends Control<IExplorerOptions> {
 
     private _loadColumnsViewMode(): Promise<void> | void {
         return executeSyncOrAsync(['Controls/columns'], (columns) => {
-            VIEW_NAMES.list = columns.ViewTemplate;
-            MARKER_STRATEGY.list = MultiColumnStrategy;
-            ITEM_GETTER.list = columns.ItemContainerGetter;
-            VIEW_MODEL_CONSTRUCTORS.list = 'Controls/columns:ColumnsCollection';
+            VIEW_NAMES.columns = columns.ViewTemplate;
+            VIEW_TABLE_NAMES.columns = columns.ViewTemplate;
+            ITEM_GETTER.columns = columns.ItemContainerGetter;
+            VIEW_MODEL_CONSTRUCTORS.columns = 'Controls/columns:ColumnsCollection';
         });
     }
 
@@ -1421,7 +1437,10 @@ Object.defineProperty(Explorer, 'defaultProps', {
 
 /**
  * @name Controls/_explorer/View#breadcrumbsDisplayMode
- * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
+ * @cfg {String} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
+ * @variant default
+ * @variant multiline
+ * @default default
  * @see afterBreadCrumbsTemplate
  */
 

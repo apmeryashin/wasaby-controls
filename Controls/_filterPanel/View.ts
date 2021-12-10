@@ -49,6 +49,7 @@ export interface IViewPanelOptions {
     viewMode: string;
     useStore?: boolean;
     style?: string;
+    orientation: string;
 }
 
 export default class View extends Control<IViewPanelOptions> {
@@ -91,37 +92,17 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _handleHistoryItemClick(event: SyntheticEvent, filterValue: object): void {
         this._viewModel.setEditingObjectValue(filterValue.name, filterValue.editorValue);
-        if (this._options.viewMode === 'default') {
-            this._notifyChanges();
-        }
-    }
-
-    protected _resetFilter(): void {
-        this._viewModel.resetFilter();
         this._notifyChanges();
-    }
-
-    protected _applyFilter(editorGroup: string): void {
-        this._notifyChanges();
-        this._notify('filterApplied');
     }
 
     protected _editingObjectChanged(event: SyntheticEvent, editingObject: Record<string, any>): void {
         this._viewModel.setEditingObject(editingObject);
-        this._notifyFilterItemChanged();
-    }
-
-    protected _propertyValueChanged(event: SyntheticEvent, filterItem: IFilterItem, itemValue: object): void {
-        this._viewModel.setEditingObjectValue(filterItem.name, itemValue);
-        if (this._options.viewMode === 'default') {
-            this._notifyChanges();
-        }
+        this._notifyChanges();
     }
 
     protected _groupClick(e: SyntheticEvent, dispItem: GroupItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
         const itemContents = dispItem.getContents() as string;
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
-        const isResultClick = clickEvent?.target.closest('.controls-FilterViewPanel__group-result_wrapper');
         const isExpanderClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupExpander');
         this._viewModel.handleGroupClick(itemContents, isExpanderClick);
         if (isResetClick) {
@@ -130,27 +111,18 @@ export default class View extends Control<IViewPanelOptions> {
         this._notify('collapsedGroupsChanged', [this._viewModel.getCollapsedGroups()]);
     }
 
+    protected _handleExtendedItemsChanged(): void {
+        this._notifyChanges();
+    }
+
     private _resetFilterItem(dispItem: GroupItem<Model>): void {
         const itemContent = dispItem.getContents();
         this._viewModel.resetFilterItem(itemContent);
-        this._notifyFilterItemChanged();
-    }
-
-    private _notifyFilterItemChanged(): void {
-        if (this._options.viewMode === 'default') {
-            this._notifyChanges();
-        } else {
-            const newSource = this._getUpdatedSource(coreClone(this._options.source), this._viewModel.getSource());
-            this._notify('sourceChanged', [newSource]);
-        }
+        this._notifyChanges();
     }
 
     private _notifyChanges(): void {
         const newSource = this._getUpdatedSource(coreClone(this._options.source), this._viewModel.getSource());
-        this._notify('sendResult', [{
-            items: newSource,
-            filter: this._viewModel.getEditingObject()
-        }], {bubbling: true});
         this._notify('filterChanged', [this._viewModel.getEditingObject()]);
         this._notify('sourceChanged', [newSource]);
     }
@@ -173,6 +145,11 @@ export default class View extends Control<IViewPanelOptions> {
         });
         return target;
     }
+
+    resetFilter(): void {
+        this._viewModel.resetFilter();
+        this._notifyChanges();
+    }
 }
 
 Object.defineProperty(View, 'defaultProps', {
@@ -183,7 +160,8 @@ Object.defineProperty(View, 'defaultProps', {
         return {
             backgroundStyle: 'default',
             viewMode: 'default',
-            style: 'default'
+            style: 'default',
+            orientation: 'vertical'
         };
     }
 });

@@ -22,6 +22,7 @@ import {IHashMap} from 'Types/declarations';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass, Container as ValidateContainer} from 'Controls/validate';
 import {Logger} from 'UI/Utils';
+import {Object as EventObject} from 'Env/Event';
 
 import { TouchDetect } from 'Env/Touch';
 import {
@@ -1352,6 +1353,17 @@ const _private = {
     },
 
     getViewSize(self, update = false): number {
+        // TODO: Распутать эту страннейшую логику обновления размеров, ресайза по сути, в методе
+        //  [GET]ViewSize. Это явно должно быть отдельно, но пока это единственная точка ресайза контента.
+        if (self._container && !self._viewWidth) {
+            const container = self._children?.viewContainer || self._container[0] || self._container;
+            if (
+                self._viewSize !== container.clientHeight ||
+                self._viewWidth !== container.clientWidth
+            ) {
+                self._onContentResized(container.clientWidth, container.clientHeight);
+            }
+        }
         if (self._container && (!self._viewSize || update)) {
             const container = self._children?.viewContainer || self._container[0] || self._container;
             if (self._viewSize !== container.clientHeight) {
@@ -2131,7 +2143,9 @@ const _private = {
             options.itemActionsPosition === 'outside' &&
             !footer &&
             (!results || listViewModel.getResultsPosition() !== 'bottom') &&
-            !(self._shouldDrawNavigationButton && _private.isDemandNavigation(options.navigation)) &&
+            !(self._shouldDrawNavigationButton &&
+                (_private.isDemandNavigation(options.navigation) || _private.isCutNavigation(options.navigation))
+            ) &&
             (!hasHiddenItemsDown && !hasMoreDown || !_private.isInfinityNavigation(options.navigation))
         );
     },
@@ -2856,7 +2870,7 @@ const _private = {
 
             self._dndListController =
                 _private.createDndListController(self._listViewModel, draggableItem, self._options);
-            const options = self._getSourceControllerOptionsForGetDraggedItems();
+            const options = self._getSourceControllerOptionsForGetDraggedItems(selection);
             return self._dndListController.getDraggableKeys(selection, options).then((items) => {
                 let dragStartResult = self._notify('dragStart', [items, draggableKey]);
 
@@ -3425,7 +3439,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
-            this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+            this._sourceController.subscribe('dataLoad', this._dataLoadCallback);
             _private.validateSourceControllerOptions(this, newOptions);
         }
 
@@ -3437,7 +3451,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.initializeNavigation(this, newOptions);
 
-        if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
+        if (
+            !newOptions.newColumnScroll &&
+            newOptions.columnScroll &&
+            newOptions.columnScrollStartPosition === 'end'
+        ) {
             const shouldPrevent = newOptions.preventServerSideColumnScroll;
             this._useServerSideColumnScroll = typeof shouldPrevent === 'boolean' ? !shouldPrevent : true;
         }
@@ -3447,7 +3466,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._doBeforeMount(newOptions);
     }
 
-    private _dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+    private _dataLoadCallback(event: EventObject, items: RecordSet, direction: IDirection): Promise<void> | void {
         this._beforeDataLoadCallback(items, direction);
 
         if (items.getCount()) {
@@ -3475,9 +3494,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (_private.hasHoverFreezeController(this)) {
                 this._hoverFreezeController.unfreezeHover();
             }
-            return this.isEditing() && !isEndEditProcessing ?
-                this._cancelEdit(true) :
-                void 0;
+            event.setResult(
+                this.isEditing() && !isEndEditProcessing
+                ? this._cancelEdit(true)
+                : void 0
+            );
+            return;
         }
 
         _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
@@ -3491,7 +3513,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._isMounted && this._scrollController) {
             _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
             this.startBatchAdding(direction);
-            return this._scrollController.getScrollStopPromise();
+
+            event.setResult(this._scrollController.getScrollStopPromise());
+            return;
         }
     }
 
@@ -3604,7 +3628,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._removedItems = [];
     }
 
-    _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
+    protected _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
         let items;
         let collapsedGroups;
 
@@ -3996,7 +4020,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             window.addEventListener('resize', this._onWindowResize);
         }
 
-        if (this._useServerSideColumnScroll) {
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
+        if (!this._options.newColumnScroll && this._useServerSideColumnScroll) {
             this._useServerSideColumnScroll = false;
         }
 
@@ -4212,9 +4237,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _keyDownLeft(event): void {
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
         // Сначала обрабатываем скролл колонок, если не было проскролено, то двигаем маркер
-        // TODO: Должно уехать в GridControl
-        if (event.nativeEvent.shiftKey) {
+        if (!this._options.newColumnScroll && event.nativeEvent.shiftKey) {
             if (this._options.columnScroll && this._children.listView.keyDownLeft()) {
                 return;
             }
@@ -4223,9 +4248,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _keyDownRight(event): void {
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
         // Сначала обрабатываем скролл колонок, если не было проскролено, то двигаем маркер
-        // TODO: Должно уехать в GridControl
-        if (event.nativeEvent.shiftKey) {
+        if (!this._options.newColumnScroll && event.nativeEvent.shiftKey) {
             if (this._options.columnScroll && this._children.listView.keyDownRight()) {
                 return;
             }
@@ -4374,7 +4399,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (newOptions.sourceController) {
                 if (sourceControllerChanged) {
                     this._sourceController = newOptions.sourceController;
-                    this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+                    this._sourceController.subscribe('dataLoad', this._dataLoadCallback);
                 }
 
                 if (newOptions.loading) {
@@ -4783,7 +4808,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (!this._options.sourceController) {
                 this._sourceController.destroy();
             } else {
-                this._sourceController.setDataLoadCallback(null);
+                this._sourceController.unsubscribe('dataLoad', this._dataLoadCallback);
             }
             this._sourceController = null;
         }
@@ -6408,7 +6433,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let hasDragScrolling = false;
         const contents = _private.getPlainItemContents(itemData);
         this._mouseDownItemKey = contents.getKey();
-        if (this._options.columnScroll) {
+        if (!this._options.newColumnScroll && this._options.columnScroll) {
             // Не должно быть завязки на горизонтальный скролл.
             // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
             hasDragScrolling = this._isColumnScrollVisible && (
@@ -6416,11 +6441,17 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     ? this._options.dragScrolling : !this._options.itemsDragNDrop
             );
         }
-        if (this._unprocessedDragEnteredItem) {
-            this._unprocessedDragEnteredItem = null;
-        }
         if (!hasDragScrolling) {
-            _private.startDragNDrop(this, domEvent, itemData);
+            // dragStartDelay нужен, чтобы была возможность выше отменить днд. То есть, за заданное время, контрол
+            // выше может выполнить свои действия и уже на событие dragStart дать однозначный ответ.
+            // Нужно например, чтобы начать dragScroll в канбане, но если прошло dragStartDelay, то должен быть DnD.
+            if (this._options.dragStartDelay) {
+                setTimeout(() => {
+                    _private.startDragNDrop(this, domEvent, itemData);
+                }, this._options.dragStartDelay);
+            } else {
+                _private.startDragNDrop(this, domEvent, itemData);
+            }
         } else {
             this._savedItemMouseDownEventArgs = {event, itemData, domEvent};
         }
@@ -6685,10 +6716,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        if (this._dndListController) {
-            this._unprocessedDragEnteredItem = itemData;
-            this._processItemMouseEnterWithDragNDrop(itemData);
-        }
         if (itemData.ItemActionsItem) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
@@ -6705,8 +6732,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     }
 
-    _itemMouseMove(event, itemData, nativeEvent) {
-        this._notify('itemMouseMove', [itemData.item, nativeEvent]);
+    private _itemMouseMove(event: SyntheticEvent, item: CollectionItem, nativeEvent: MouseEvent): void {
+        this._notify('itemMouseMove', [item.item, nativeEvent]);
         const hoverFreezeController = this._hoverFreezeController;
         if (!this._addShowActionsClass &&
             (!this._dndListController || !this._dndListController.isDragging()) &&
@@ -6717,24 +6744,42 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._dndListController && this._dndListController.isDragging()) {
-            this._draggingItemMouseMove(itemData, nativeEvent);
+            this._draggingItemMouseMove(item, nativeEvent);
         }
-        if (hoverFreezeController && itemData.ItemActionsItem) {
-            const itemKey = _private.getPlainItemContents(itemData).getKey();
-            const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
+        if (hoverFreezeController && item.ItemActionsItem) {
+            const itemKey = _private.getPlainItemContents(item).getKey();
+            const itemIndex = this._listViewModel.getIndex(item.dispItem || item);
             hoverFreezeController.setDelayedHoverItem(
                 itemKey, nativeEvent, itemIndex, this._listViewModel.getStartIndex()
             );
         }
     }
 
-    _draggingItemMouseMove(item: CollectionItem, event: SyntheticEvent): void {/* For override  */}
+    protected _draggingItemMouseMove(targetItem: CollectionItem, event: MouseEvent): boolean {
+        const targetIsDraggableItem
+            = this._dndListController.getDraggableItem()?.getContents() === targetItem.getContents();
+        if (targetIsDraggableItem) {
+            return false;
+        }
+
+        const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event);
+        const dragPosition = this._dndListController.calculateDragPosition({
+            targetItem, mouseOffsetInTargetItem
+        });
+        if (dragPosition && !isEqual(this._dndListController.getDragPosition(), dragPosition)) {
+            const changeDragTarget = this._notify(
+                'changeDragTarget',
+                [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]
+            );
+            if (changeDragTarget !== false) {
+                return this._dndListController.setDragPosition(dragPosition);
+            }
+        }
+        return false;
+    }
 
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
-        if (this._dndListController) {
-            this._unprocessedDragEnteredItem = null;
-        }
         if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this)) {
             this._hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
         }
@@ -6874,19 +6919,17 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._sourceController?.updateOptions(options);
     }
 
-    protected _getSourceControllerOptionsForGetDraggedItems(): ISourceControllerOptions {
+    protected _getSourceControllerOptionsForGetDraggedItems(selection: ISelectionObject): ISourceControllerOptions {
         const options: ISourceControllerOptions = {...this._options};
         options.dataLoadCallback = null;
         options.dataLoadErrback = null;
         options.navigationParamsChangedCallback = null;
 
         const newFilter = cClone(options.filter) || {};
-        if (this._selectionController) {
-            newFilter.selection = selectionToRecord({
-                selected: this._selectionController.getSelection().selected,
-                excluded: this._selectionController.getSelection().excluded
-            }, 'adapter.sbis', this._options.selectionType);
-        }
+        newFilter.selection = selectionToRecord({
+            selected: selection.selected,
+            excluded: selection.excluded
+        }, 'adapter.sbis', this._options.selectionType);
         options.filter = newFilter;
 
         if (options.navigation) {
@@ -7080,6 +7123,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _getItemsContainer(): HTMLElement {/* For override  */}
     getItemsContainer() {
         return this._getItemsContainer();
+    }
+
+    _onContentResized(width: number, height: number): void {
+        // TODO: После переписывания метода getViewSize, тут будет обновление размеров.
     }
 
     _viewUnmount(): void {
@@ -7507,14 +7554,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._dndListController.startDrag(dragObject.entity);
 
-        // Cобытие mouseEnter на записи может сработать до dragStart.
-        // И тогда перемещение при наведении не будет обработано.
-        // В таком случае обрабатываем наведение на запись сейчас.
-        // TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
-        if (this._unprocessedDragEnteredItem) {
-            this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
-        }
-
         // Показываем плашку, если утащили мышь за пределы списка, до
         // того как выполнился запрос за перетаскиваемыми записями
         const hasSorting = this._options.sorting && this._options.sorting.length;
@@ -7533,8 +7572,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._dndListController && this._dndListController.isDragging() && this._documentDragging) {
             const draggableItem = this._dndListController.getDraggableItem();
             if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
-                const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
-                this._dndListController.setDragPosition(newPosition);
+                const newPosition = this._dndListController.calculateDragPosition(
+                    {targetItem: null, mouseOffsetInTargetItem: null}
+                );
+                // Если индекс === -1, значит изначально элемента не было в коллекции и нужно завершить днд,
+                // т.к. мышку увели из этого списка.
+                if (newPosition.index === -1) {
+                    this._dndListController.endDrag();
+                } else {
+                    this._dndListController.setDragPosition(newPosition);
+                }
             } else {
                 // если перетаскиваемого элемента нет в модели, значит мы перетащили элемент в другой список
                 this._dndListController.endDrag();
@@ -7599,29 +7646,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._dndListController.startDrag(dragObject.entity);
                 }
             }
-        }
-    }
-
-    _processItemMouseEnterWithDragNDrop(itemData): void {
-        let dragPosition;
-        const targetItem = itemData;
-        const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
-        if (this._dndListController.isDragging() && !targetIsNode && this._documentDragging) {
-            dragPosition = this._dndListController.calculateDragPosition({targetItem});
-            if (dragPosition) {
-                const changeDragTarget = this._notify(
-                    'changeDragTarget',
-                    [
-                        this._dndListController.getDragEntity(),
-                        dragPosition.dispItem.getContents(),
-                        dragPosition.position
-                    ]
-                );
-                if (changeDragTarget !== false) {
-                    this._dndListController.setDragPosition(dragPosition);
-                }
-            }
-            this._unprocessedDragEnteredItem = null;
         }
     }
 
@@ -7733,6 +7757,73 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._startEvent = null;
     }
 
+    protected _calculateMouseOffsetInItem(event: MouseEvent): {top: number, bottom: number} {
+        let result = null;
+
+        const targetElement = this._getDndTargetRow(event);
+
+        if (targetElement) {
+            const dragTargetRect = targetElement.getBoundingClientRect();
+
+            result = { top: null, bottom: null };
+
+            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
+
+            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
+            if (this._listViewModel['[Controls/_tile/Tile]']) {
+                result.top = (mouseCoords.x - dragTargetRect.left) / dragTargetRect.width;
+                result.bottom = (dragTargetRect.right - mouseCoords.x) / dragTargetRect.width;
+            } else {
+                result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
+                result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Получаем по event.target строку списка
+     * @param event
+     * @private
+     */
+    private _getDndTargetRow(event: MouseEvent): Element {
+        if (
+            !event.target ||
+            !event.target.classList ||
+            !event.target.parentNode ||
+            !event.target.parentNode.classList
+        ) {
+            return event.target as Element;
+        }
+
+        const startTarget = event.target;
+        let target = startTarget;
+
+        const condition = () => {
+            // В плитках элемент с классом controls-ListView__itemV имеет нормальные размеры,
+            // а в обычном списке данный элемент будет иметь размер 0x0
+            if (this._listViewModel['[Controls/_tile/Tile]']) {
+                return !target.classList.contains('controls-ListView__itemV');
+            } else {
+                return !target.parentNode.classList.contains('controls-ListView__itemV');
+            }
+        };
+
+        while (condition()) {
+            target = target.parentNode;
+
+            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
+            if (!target.classList || !target.parentNode || !target.parentNode.classList
+                || target.classList.contains('controls-BaseControl')) {
+                target = startTarget;
+                break;
+            }
+        }
+
+        return target as Element;
+    }
+
     _registerMouseMove(): void {
         this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
         this._notify('register', ['touchmove', this, this._onTouchMove], {bubbling: true});
@@ -7784,31 +7875,17 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._needBottomPadding = _private.needBottomPadding(this, options);
     }
 
-    // TODO: Должно переехать в GridControl, когда он появится.
     _onToggleHorizontalScroll(e, visibility: boolean): void {
-        this._isColumnScrollVisible = visibility;
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
+        if (!this._options.newColumnScroll) {
+            this._isColumnScrollVisible = visibility;
+        }
     }
 
-    // TODO: Должно переехать в GridControl, когда он появится.
     isColumnScrollVisible(): boolean {
-        return this._isColumnScrollVisible;
-    }
-
-    scrollToLeft(): void {
-        if (this._children.listView.scrollToLeft) {
-            this._children.listView.scrollToLeft();
-        }
-    }
-
-    scrollToRight(): void {
-        if (this._children.listView.scrollToRight) {
-            this._children.listView.scrollToRight();
-        }
-    }
-
-    scrollToColumn(columnIndex: number): void {
-        if (this._children.listView.scrollToColumn) {
-            this._children.listView.scrollToColumn(columnIndex);
+        // TODO: Не переношу в грид контрол, т.к. этот код удалится в 22.1000.
+        if (!this._options.newColumnScroll) {
+            return this._isColumnScrollVisible;
         }
     }
 

@@ -1,5 +1,6 @@
 .controls-MasterDetail {
    display: flex;
+   --list-content_air: var(--content_air);
 }
 
 .controls-MasterDetail-contrast {
@@ -180,11 +181,7 @@
    right: calc(-1 * var(--resizingLine_mobile_offset-left_masterDetail));
    width: var(--resizingLine_mobile_thickness_masterDetail);
 
-   .controls-ResizingLine__areaWrapper_horizontal {
+   .controls-ResizingLine_mobile__areaWrapper_horizontal {
       width: calc(var(--resizingLine_mobile_thickness_masterDetail) - var(--resizingLine_mobile_offset-left_masterDetail));
    }
-}
-
-.controls-MasterDetail__content_air {
-   padding-top: var(--content_air);
 }

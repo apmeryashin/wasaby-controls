@@ -37,7 +37,7 @@
  */
 
 /**
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef} Конфигурация внешних отступов плитки.
+ * @cfg {Controls/_interface/IItemPadding/ItemPadding.typedef} Конфигурация внешних отступов плитки.
  * @name Controls/_tile/interface/ITile#itemsContainerPadding
  * @demo Controls-demo/tileNew/ItemsContainerPadding/Index
  * @example
@@ -368,7 +368,7 @@
  *    </ws:itemTemplate>
  * </Controls.tile:View>
  * </pre>
- * @demo Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/Index
+ * @demo Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/ActionMode/Index
  */
 
 /**
@@ -380,7 +380,7 @@
 /**
  * @name Controls/_tile/interface/ITile#actionMenuViewMode
  * @cfg {ActionMenuViewMode} Вид отображения меню опций записи.
- * @demo Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/Index
+ * @demo Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/ActionMenuViewMode/Index
  */
 
 /**
@@ -446,6 +446,7 @@
 /**
  * @name Controls/_tile/interface/ITile#roundBorder
  * @cfg {Controls/_interface/ITileRoundBorder} Cкругление углов элемента плитки.
+ * @demo Controls-demo/tileNew/RoundBorder/Index
  */
 
 /**

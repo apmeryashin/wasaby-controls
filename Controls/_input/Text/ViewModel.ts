@@ -5,7 +5,7 @@ import {IText} from 'Controls/decorator';
 
 export interface IViewModelOptions {
     maxLength?: number;
-    constraint?: string;
+    constraint?: string | RegExp;
     punycodeToUnicode?: (punycode: string) => string;
 }
 
@@ -53,8 +53,13 @@ class ViewModel extends BaseViewModel<string, IViewModelOptions> {
 
     private static URL: RegExp = /^(https?:\/\/|)([\s\S]*?)(\/|)$/;
 
-    private static _limitChars(splitValue: ISplitValue, constraint: string): void {
-        const constraintRegExp: RegExp = new RegExp(constraint, 'g');
+    private static _limitChars(splitValue: ISplitValue, constraint: string | RegExp): void {
+        let constraintRegExp: RegExp;
+        if (constraint instanceof RegExp) {
+            constraintRegExp = constraint;
+        } else {
+            constraintRegExp = new RegExp(constraint, 'g');
+        }
         const match: RegExpMatchArray | null = splitValue.insert.match(constraintRegExp);
 
         splitValue.insert = match ? match.join('') : '';

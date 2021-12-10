@@ -1,0 +1,36 @@
+<div class="controlsDemo__wrapper">
+  <div class="controlsDemo_m">
+     <div class="controls-text-label">default searchDelay</div>
+      <Controls.browser:Browser
+              source="{{_source}}"
+              searchParam="title"
+              keyProperty="id">
+          <div>
+              <Controls.search:InputContainer>
+                  <Controls.search:Input/>
+              </Controls.search:InputContainer>
+              <Controls.list:Container>
+                  <Controls.list:View/>
+              </Controls.list:Container>
+          </div>
+      </Controls.browser:Browser>
+  </div>
+  <div class="controlsDemo_m">
+      <div class="controls-text-label">searchDelay = "1000"</div>
+      <Controls.browser:Browser
+              source="{{_source}}"
+              searchParam="title"
+              searchDelay="1000"
+              keyProperty="id">
+          <div>
+              <Controls.search:InputContainer>
+                  <Controls.search:Input/>
+              </Controls.search:InputContainer>
+              <Controls.list:Container>
+                 <Controls.list:View/>
+              </Controls.list:Container>
+          </div>
+      </Controls.browser:Browser>
+  </div>
+
+</div>

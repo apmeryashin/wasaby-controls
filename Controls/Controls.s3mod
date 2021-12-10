@@ -17,7 +17,6 @@
       <module id="832cda0a-e19c-4ffc-a1d1-47edbb6b7501" name="I18n"/>
       <module id="37e402f1-2fb0-4b73-81c5-113cf94dbf1c" name="WasabyLoader"/>
       <module id="e4bbd0f2-f7ce-404e-88b2-5130d105b770" name="ParametersWebAPI"/>
-      <module id="f9771b31-df2d-48ac-8d01-2586a920bcc7" name="ParametersServiceAPI"/>
     </depends>
 
   <load_after/>

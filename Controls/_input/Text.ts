@@ -105,3 +105,9 @@ Object.defineProperty(Text, 'defaultProps', {
  * }
  * </pre>
  */
+
+/**
+ * @name Controls/_input/Text#readOnly
+ * @cfg {Boolean}
+ * @demo Controls-demo/Input/Group/ReadOnly/Index
+ */
