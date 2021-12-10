@@ -185,6 +185,10 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
       }
    }
 
+   protected _close(): void {
+      this._notify('expandedChanged', [false]);
+   }
+
    protected _itemClickHandler(event: SyntheticEvent<null>, item: Record, nativeEvent: MouseEvent): void {
       const selectedKeysCount = this._options.operationsController?.getSelectedKeysCount();
       let selection;
@@ -210,7 +214,8 @@ Object.defineProperty(OperationsPanel, 'defaultProps', {
    get(): Partial<IOperationsPanelOptions> {
       return {
          itemTemplate: ToolbarItemTemplate,
-         fontColorStyle: 'operationsPanel'
+         fontColorStyle: 'operationsPanel',
+         expanded: false
       };
    }
 });

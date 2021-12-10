@@ -15,4 +15,3 @@
  */
 
 export {default as OperationsPanel} from './_operationsPanel/OperationsPanel';
-export {default as Panel} from './_operationsPanel/Panel';
