@@ -124,7 +124,7 @@ function getSegmentSizeToHide(params: IGetSegmentSizeToHideParams): number {
     }
 }
 
-function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
+function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): number {
     let segmentSize = 0;
     let endIndex = params.currentRange.endIndex - 1;
     const itemsSizes = params.itemsSizes;
@@ -139,7 +139,7 @@ function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): numb
     return segmentSize;
 }
 
-function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): number {
+function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
     let segmentSize = 0;
     let start = params.currentRange.startIndex;
     let itemsSizesSum = 0;
