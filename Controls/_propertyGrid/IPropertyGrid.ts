@@ -320,6 +320,7 @@ export interface IPropertyGridOptions extends
      * @variant label
      * @default label
      * @remark Значение fontColorStyle, заданное в {{Controls/_propertyGrid/IProperty#captionOptions опциях заголовка редактора}} имеет больший приоритет.
+     * @demo Controls-demo/PropertyGridNew/CaptionOptions/Index
      */
     captionFontColorStyle: 'label' | 'unaccented';
     /**
@@ -327,6 +328,7 @@ export interface IPropertyGridOptions extends
      * @cfg {Controls/_interface/IFontSize/TFontSize.typedef} Размер шрифта заголовков редакторов.
      * @default m
      * @remark Значение fontSize, заданное в {{Controls/_propertyGrid/IProperty#captionOptions опциях заголовка редактора}} имеет больший приоритет.
+     * @demo Controls-demo/PropertyGridNew/CaptionOptions/Index
      */
     captionFontSize: TFontSize;
     captionPosition?: TCaptionPosition;
