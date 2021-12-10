@@ -1,0 +1,6 @@
+<Controls.popupTemplate:NotificationSimple name="myOpenerSuccess"
+                                           text="Success"
+                                           style="success"
+                                           icon="icon-Vacation"
+                                           attr:class="controlsDemo-Notification__success">
+</Controls.popupTemplate:NotificationSimple>

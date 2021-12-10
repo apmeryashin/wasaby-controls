@@ -2913,10 +2913,12 @@ const _private = {
 
     freezeHoveredItem(self: BaseControl, item: CollectionItem<Model> & {dispItem: CollectionItem<Model>}): void {
         const listContainer = self.getItemsContainer();
-        // TODO Надо перевести работу HoverFreeze на item-key, тогда вот это всё туда уйдёт.
+        // TODO HoverFreeze для ItemActions работает с виртуальным скроллом благодаря тому, что там всегда предаётся
+        //  событие mouseEnter. Надо перевести его на item-key, тогда вот это всё уйдёт туда.
         //   https://online.sbis.ru/opendoc.html?guid=2b8e4422-4185-4ad8-834d-d1283375b385
+        const itemKey = '' + item.getContents().getKey();
         const htmlNodeIndex = [].slice.call(listContainer.children).findIndex((itemContainer: HTMLElement) => (
-            itemContainer.getAttribute('item-key') === item.getContents().getKey()
+            itemContainer.getAttribute('item-key') === itemKey
         )) + 1;
 
         if (!htmlNodeIndex) {

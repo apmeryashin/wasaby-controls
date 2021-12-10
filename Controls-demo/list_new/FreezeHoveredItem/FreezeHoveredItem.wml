@@ -1,0 +1,12 @@
+<div class="controlsDemo__wrapper">
+    <Controls.scroll:Container attr:class="controlsDemo__maxWidth500 controlsDemo_line-height18" attr:style="max-height: 250px">
+        <Controls.list:View name="list"
+                            source="{{_viewSource}}"
+                            keyProperty="key"
+                            on:itemMouseEnter="_onItemMouseEnter()"
+                            on:itemMouseLeave="_onItemMouseLeave()"
+                            navigation="{{_navigation}}">
+            <ws:virtualScrollConfig pageSize="{{20}}"/>
+        </Controls.list:View>
+    </Controls.scroll:Container>
+</div>
