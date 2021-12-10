@@ -60,11 +60,11 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
     }
 
     keyDownLeft(): Promise<void> {
-        return this._scrollToPage('backward');
+        return this.scrollToPage('backward');
     }
 
     keyDownRight(): Promise<void> {
-        return this._scrollToPage('forward');
+        return this.scrollToPage('forward');
     }
 
     protected _onCollectionChange(): void {

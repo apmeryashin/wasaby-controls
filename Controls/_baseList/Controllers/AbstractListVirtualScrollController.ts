@@ -263,6 +263,23 @@ export abstract class AbstractListVirtualScrollController<
         this._keepScrollPosition = false;
     }
 
+    contentResized(contentSize: number): void {
+        this._scrollController.contentResized(contentSize);
+        const changed = this._scrollController.contentResized(contentSize);
+        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+            this._scrollController.updateItemsSizes();
+        }
+    }
+
+    viewportResized(viewportSize: number): void {
+        const changed = this._scrollController.viewportResized(viewportSize);
+        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+            this._scrollController.updateItemsSizes();
+        }
+    }
+
+    // region ScrollTo
+
     scrollToItem(key: TItemKey, position?: string, force?: boolean): Promise<void> {
         const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
 
@@ -280,20 +297,69 @@ export abstract class AbstractListVirtualScrollController<
         return promise;
     }
 
-    contentResized(contentSize: number): void {
-        this._scrollController.contentResized(contentSize);
-        const changed = this._scrollController.contentResized(contentSize);
-        if (changed && !this._itemsRangeScheduledSizeUpdate) {
-            this._scrollController.updateItemsSizes();
+    /**
+     * Скроллит к переданной странице.
+     * Скроллит так, чтобы было видно последний элемент с предыдущей страницы, чтобы не потерять "контекст".
+     * Смещает диапазон, возвращает промис с ключом записи верхней полностью видимой записи.
+     * @param direction Условная страница, к которой нужно скроллить. (Следующая, предыдущая)
+     * @private
+     */
+    scrollToPage(direction: IDirection): Promise<CrudEntityKey> {
+        this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
+        return Promise.resolve(this._getFirstVisibleItemKey());
+
+        // TODO SCROLL по идее нужно скролить к EdgeItem, чтобы не терялся контекст.
+        //  Но нужно сперва завести новый скролл на текущих тестах.
+        /*const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
+        // TODO SCROLL юниты
+        if (!edgeItem) {
+            return Promise.resolve(null);
         }
+
+        const item = this._collection.at(edgeItem.index);
+        const itemKey = item.getContents().getKey();
+        const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
+        return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());*/
     }
 
-    viewportResized(viewportSize: number): void {
-        const changed = this._scrollController.viewportResized(viewportSize);
-        if (changed && !this._itemsRangeScheduledSizeUpdate) {
-            this._scrollController.updateItemsSizes();
-        }
+    /**
+     * Скроллит к переданному краю списка.
+     * Смещает диапазон, возвращает промис с индексами крайних видимых полностью элементов.
+     * @param edge Край списка
+     * @private
+     */
+    scrollToEdge(edge: IDirection): Promise<CrudEntityKey> {
+        const itemIndex = edge === 'backward' ? 0 : this._collection.getCount() - 1;
+        const item = this._collection.at(itemIndex);
+        const itemKey = item.getContents().getKey();
+        const scrollPosition = edge === 'forward' ? 'top' : 'bottom';
+        return this.scrollToItem(itemKey, scrollPosition, true).then(() => {
+            const promise = new Promise<void>((resolver) => this._doScrollCompletedCallback = resolver);
+
+            // Делаем подскролл, чтобы список отскролился к самому краю
+            // Делаем через scheduleScroll, чтобы если что успел отрисоваться, например отступ под пэйджинг
+            this._scheduleScroll({
+                type: 'doScroll',
+                params: {
+                    scrollParam: edge === 'backward' ? 'top' : 'bottom'
+                }
+            });
+
+            return promise.then(() => this._getFirstVisibleItemKey());
+        });
     }
+
+    protected _getFirstVisibleItemKey(): CrudEntityKey {
+        if (!this._collection || !this._collection.getCount()) {
+            return null;
+        }
+
+        const firstVisibleItemIndex = this._scrollController.getFirstVisibleItemIndex();
+        const item = this._collection.at(firstVisibleItemIndex);
+        return item.getContents().getKey();
+    }
+
+    // endregion ScrollTo
 
     // region Triggers
 
