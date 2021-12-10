@@ -199,6 +199,7 @@ export abstract class AbstractListVirtualScrollController<
 
     afterMountListControl(): void {
         this._renderCollectionChanges = true;
+        this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledCheckTriggerVisibility();
         this._renderCollectionChanges = false;
@@ -264,7 +265,6 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     contentResized(contentSize: number): void {
-        this._scrollController.contentResized(contentSize);
         const changed = this._scrollController.contentResized(contentSize);
         if (changed && !this._itemsRangeScheduledSizeUpdate) {
             this._scrollController.updateItemsSizes();
@@ -281,9 +281,12 @@ export abstract class AbstractListVirtualScrollController<
     // region ScrollTo
 
     scrollToItem(key: TItemKey, position?: string, force?: boolean): Promise<void> {
-        const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
-
         const itemIndex = this._collection.getIndexByKey(key);
+        if (itemIndex === -1) {
+            return Promise.resolve();
+        }
+
+        const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
         if (rangeChanged || this._scheduledScrollParams) {
             this._scheduleScroll({

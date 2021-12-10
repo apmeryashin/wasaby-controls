@@ -408,9 +408,6 @@ const _private = {
                 self._afterItemsSet(options);
             }
 
-            if (self._listViewModel) {
-                _private.initListViewModelHandler(self, self._listViewModel);
-            }
             _private.prepareFooter(self, options, self._sourceController);
 
             self._shouldNotifyOnDrawItems = true;
@@ -804,7 +801,7 @@ const _private = {
 
                 if (self._useNewScroll) {
                     self._listVirtualScrollController.setAdditionalTriggersOffsets({
-                        backward: self._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                        backward: self._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0,
                         forward: self._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
                     });
                 }
@@ -828,7 +825,7 @@ const _private = {
 
                     if (self._useNewScroll) {
                         self._listVirtualScrollController.setAdditionalTriggersOffsets({
-                            backward: self._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                            backward: self._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0,
                             forward: self._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
                         });
                     }
@@ -1854,8 +1851,10 @@ const _private = {
     },
 
     initListViewModelHandler(self, model) {
-        model.subscribe('onCollectionChange', self._onCollectionChanged);
-        model.subscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
+        if (model) {
+            model.subscribe('onCollectionChange', self._onCollectionChanged);
+            model.subscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
+        }
     },
 
     /**
@@ -3668,6 +3667,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.createScrollController(self, newOptions);
         self._createListVirtualScrollController(newOptions);
         self._createIndicatorsController(newOptions);
+
+        // Подписываться на коллекцию нужно после listVirtualScrollController,
+        // чтобы в первую очередь обновились start, stop индексы, а потом уже выполнялись другие действия.
+        _private.initListViewModelHandler(self, self._listViewModel);
     }
 
     _initKeyProperty(options: TOptions): void {
@@ -4136,7 +4139,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (this._useNewScroll) {
             this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0,
                 forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
             });
         }
@@ -4337,6 +4340,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (this._useNewScroll) {
                 this._listVirtualScrollController.setCollection(this._listViewModel);
             }
+            // Подписываться на коллекцию нужно после listVirtualScrollController,
+            // чтобы в первую очередь обновились start, stop индексы, а потом уже выполнялись другие действия.
+            _private.initListViewModelHandler(this, this._listViewModel);
 
             // observersController нужно обновить до скроллКонтроллера,
             // т.к. scrollController получает опции из _observersController
@@ -4416,6 +4422,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (this._useNewScroll) {
                         this._listVirtualScrollController.setCollection(this._listViewModel);
                     }
+                    // Подписываться на коллекцию нужно после listVirtualScrollController,
+                    // чтобы в первую очередь обновились start, stop индексы, а потом уже выполнялись другие действия.
+                    _private.initListViewModelHandler(this, this._listViewModel);
                     this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
                     this._updateScrollController(newOptions);
                     this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
@@ -4692,7 +4701,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (this._useNewScroll) {
             this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0,
                 forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
             });
             this._listVirtualScrollController.beforeUpdateListControl();
@@ -5171,7 +5180,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
                 if (this._useNewScroll) {
                     this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                        backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                        backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0,
                         forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
                     });
                 }
@@ -5401,9 +5410,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (keepNavigation) {
             if (this._useNewScroll) {
                 this._listVirtualScrollController.enableKeepScrollPosition();
-            } else {
-                this._keepScrollAfterReload = true;
             }
+            this._keepScrollAfterReload = true;
             if (!sourceConfig) {
                 if (this._options.navigation?.source === 'position') {
                     const maxLimit = Math.max(this._options.navigation.sourceConfig.limit, this._items.getCount());
@@ -6835,7 +6843,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             if (this._useNewScroll) {
                 this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                    backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                    backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0,
                     forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
                 });
             }
@@ -7301,7 +7309,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
                 if (this._useNewScroll) {
                     this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                        backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
+                        backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0,
                         forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
                     });
                 }
