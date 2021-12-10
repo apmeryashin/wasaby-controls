@@ -298,12 +298,12 @@ export type TAsyncOperationResult = Promise<void | IOperationCanceledResult>;
 export interface IOperationCanceledResult { canceled: true; }
 
 /**
- * @typedef {Enum} TAddPosition
+ * @typedef {Enum} Controls/list:IEditableList/TAddPosition
  * @description Допустимые значения для свойства {@link Controls/list:IEditingConfig#addPosition addPosition}.
  * @variant top В начале.
  * @variant bottom В конце.
  */
-type TAddPosition = 'top' | 'bottom';
+export type TAddPosition = 'top' | 'bottom';
 
 /**
  * @typedef {Enum} TSequentialEditingMode

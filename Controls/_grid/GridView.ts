@@ -21,6 +21,10 @@ import {IOptions as IGridOptions} from './display/mixins/Grid';
 
 /**
  * Представление таблицы
+ * @class Controls/_grid/GridView
+ * @extends Controls/list:ListView
+ * @author Авраменко А.С.
+ * @public
  */
 const GridView = ListView.extend([ColumnScrollViewMixin], {
     _template: GridTemplate,

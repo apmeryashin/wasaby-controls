@@ -287,6 +287,12 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
 /**
  * @name Controls/_tree/interface/ITreeControl#deepReload
  * @cfg {Boolean} Определяет, нужно ли выполнять перезагрузку с сохранением развернутых узлов.
+ * @description
+ * Поробно про мультинавигацию можно прочесть в статьях:
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/node/managing-node-expand/#multi-navigation Перезагрузка дерева с сохранением развернутых узлов},
+ * * {@link /doc/platform/developmentapl/service-development/service-contract/logic/list/contract/#request-navigation-page-multinavigation Контракт списочного контрола},
+ * * {@link /doc/platform/developmentapl/service-development/service-contract/logic/list/navigate/multinavigation/ Множественная навигация в списочных контролах}.
+ *
  * @remark
  * Перезагрузка выполняется с сохранением развернутых узлов, даже при изменении опций filter, source, sorting и тд.
  * В поле фильтра, указанное в parentProperty будет отправлен массив развернутых узлов.
@@ -314,6 +320,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  *          rs = Test.DeclList(ДопПоля, Фильтр, Сортировка, Навигация)
  *      return rs
  * </pre>
+ * @see Controls/interface:IBasePositionSourceConfig#multiNavigation
  */
 
 /**
