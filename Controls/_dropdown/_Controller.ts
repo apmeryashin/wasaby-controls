@@ -1,4 +1,4 @@
-import {StickyOpener} from 'Controls/popup';
+import {IStickyPopupOptions, StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
 import {IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
@@ -56,6 +56,7 @@ export default class Controller implements IDropdownController {
    private _filter: object;
    private _selectedItems: RecordSet<Model>;
    private _sticky: StickyOpener;
+   private _popupOptions: IStickyPopupOptions = {};
 
    constructor(options: IDropdownControllerOptions) {
       this._options = options;
@@ -341,6 +342,10 @@ export default class Controller implements IDropdownController {
 
    getItems(): RecordSet<Model> {
       return this._items;
+   }
+
+   getPopupOptions(): IStickyPopupOptions {
+      return this._popupOptions;
    }
 
    private _open(popupOptions?: object): Promise<unknown[]> {
