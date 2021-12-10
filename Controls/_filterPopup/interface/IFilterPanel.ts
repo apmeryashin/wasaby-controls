@@ -19,6 +19,7 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  orientation: TOrientation;
  headingCaption: string;
  headingStyle: string;
+ headingFontSize: string;
  applyButtonCaption: string;
  applyButtonStyle?: TButtonStyle;
 }

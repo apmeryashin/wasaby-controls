@@ -12,8 +12,7 @@
 </ws:template>
 <div class="controls_filterPopup_theme-{{_options.theme}} controls-AdditionalParamsRender">
    <ws:if data="{{_options.headingCaption}}">
-      <div
-         class="controls-AdditionalParamsRender__heading">
+      <div class="controls-AdditionalParamsRender__heading controls-text-unaccented controls-fontsize-xs">
          {{_options.headingCaption}}
       </div>
    </ws:if>

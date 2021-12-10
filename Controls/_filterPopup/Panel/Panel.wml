@@ -45,6 +45,7 @@
                                      headerBackgroundStyle="transparent"
                                      backgroundStyle="transparent"
                                      headingFontColorStyle="{{_options.headingStyle}}"
+                                     headingFontSize="{{_options.headingFontSize}}"
                                      attr:class="controls_filterPopup_theme-{{_options.theme}}
                                                  controls_filter_theme-{{_options.theme}}
                                                  controls-PanelFilter
@@ -63,16 +64,18 @@
                                            on:click="_resetFilter()"
                                            viewMode="link"
                                            name="resetButton"
+                                           fontSize="xs"
                                            fontColorStyle="filterResetButton"
                                            attr:tabindex="-1"
                                            inlineHeight="m"
-                                           caption="{[По умолчанию]}"
-                                           tooltip="{[По умолчанию]}"
+                                           caption="{[Сбросить]}"
+                                           tooltip="{[Сбросить]}"
                                            attr:data-qa="FilterPanel__resetButton" />
                </ws:if>
-               <Controls.buttons:Button viewMode="button"
+               <Controls.buttons:Button viewMode="functionalButton"
                                         buttonStyle="{{_options.applyButtonStyle}}"
-                                        caption="{{_options.applyButtonCaption}}"
+                                        icon="icon-Yes"
+                                        iconStyle="contrast"
                                         on:click="_applyFilter()"
                                         attr:tabindex="1"
                                         attr:ws-autofocus="true"
