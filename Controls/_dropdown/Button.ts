@@ -328,7 +328,7 @@ export default class Button extends BaseDropdown {
                 templateOptions: {
                     closedSubMenuKey: key
                 }
-            })
+            });
         } else {
             this._controller.closeMenu();
         }
@@ -362,7 +362,7 @@ export default class Button extends BaseDropdown {
     }
 
     protected _deactivated(): void {
-        if (this._options.closeMenuOnOutsideClick) {
+        if (this._controller.getPopupOptions().closeOnOutsideClick ?? this._options.closeMenuOnOutsideClick) {
             this.closeMenu();
         }
     }
