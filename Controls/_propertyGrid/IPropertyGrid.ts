@@ -51,7 +51,7 @@ interface IItemsContainerPadding {
     bottom: TPadding;
 }
 
-export type TCaptionPosition = 'left'|'top';
+export type TCaptionPosition = 'left' | 'top' | 'none';
 
 /**
  * Интерфейс для опций {@link Controls/propertyGrid:IPropertyGrid#editorColumnOptions editorColumnOptions} и {@link Controls/propertyGrid:IPropertyGrid#captionColumnOptions captionColumnOptions}.
@@ -345,8 +345,9 @@ export interface IPropertyGridOptions extends
  * @name Controls/_propertyGrid/IPropertyGrid#captionPosition
  * @cfg {String} Расположение заголовка редактора.
  * @default left
- * @variant left
- * @variant top
+ * @variant left слева
+ * @variant top сверху
+ * @variant none заголовки не выводятся
  * @demo Controls-demo/PropertyGridNew/CaptionPosition/Index
  */
 
