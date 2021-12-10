@@ -7144,9 +7144,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         if (this._useNewScroll) {
-            // Обновляем ListContainer вместе с ItemsContainer, т.к. списочные триггеры лежат в ItemsContainer.
-            // И при изменении ItemsContainer, нужно обновить триггеры.
-            this._listVirtualScrollController.setListContainer(this._container);
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
         }
         this._viewReady = true;
