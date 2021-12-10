@@ -326,7 +326,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
-        return this._scrollbars.getScrollContainerClasses();
+        return this._scrollbars.getScrollContainerClasses(options);
     }
 
     protected _getContentWrapperCssClass(): string {
