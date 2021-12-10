@@ -1,5 +1,5 @@
 <ws:partial template="{{_options.content}}"
-            attr:class="controls-PopupPreviewer__content"
+            attr:class="controls-PopupPreviewer"
             on:mouseenter="_contentMouseenterHandler()"
             on:mousemove="_contentMousemoveHandler()"
             on:mouseleave="_contentMouseleaveHandler()"
