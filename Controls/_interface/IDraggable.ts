@@ -248,8 +248,8 @@ export default interface IDraggable {
  * </pre>
  *
  * <pre class="brush: js;">
- * // JavaScript
- * _dragEnd(event: SyntheticEvent, entity: IDragObject, target: Model, position: 'after'|'before'|'on') {
+ * // TypeScript
+ * protected _dragEnd(event: SyntheticEvent, entity: IDragObject, target: Model, position: 'after'|'before'|'on'): void {
  *    const selection = {
  *        selected: entity.getItems(),
  *        excluded: []
@@ -259,7 +259,7 @@ export default interface IDraggable {
  *          this._children.list.reload();
  *      });
  * },
- * _beforeMount: function() {
+ * protected _beforeMount(): void {
  *    this._viewSource = new Source({...});
  * }
  * </pre>

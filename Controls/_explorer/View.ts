@@ -1437,10 +1437,10 @@ Object.defineProperty(Explorer, 'defaultProps', {
 
 /**
  * @name Controls/_explorer/View#breadcrumbsDisplayMode
+ * @cfg {String} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
  * @variant default
  * @variant multiline
  * @default default
- * @cfg {String} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
  * @see afterBreadCrumbsTemplate
  */
 
