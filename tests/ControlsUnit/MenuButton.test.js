@@ -426,7 +426,7 @@ define(
             let opened = true;
             menu._controller.getPopupOptions = () => { return {}; };
             menu._controller.closeMenu = () => { opened = false; };
-            menu._closeMenuOnOutsideClick = true;
+            menu._options.closeMenuOnOutsideClick = true;
             menu._deactivated();
             assert.isFalse(opened);
          });
