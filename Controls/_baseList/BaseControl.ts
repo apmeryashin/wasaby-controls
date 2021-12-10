@@ -4012,6 +4012,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._isMounted = true;
 
         if (this._useNewScroll) {
+            this._listVirtualScrollController.setListContainer(this._container);
             this._listVirtualScrollController.afterMountListControl();
         }
 
