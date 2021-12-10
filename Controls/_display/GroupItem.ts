@@ -3,7 +3,6 @@ import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './Expandable
 import {mixin} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import GroupMixin from './GroupMixin';
-import {TFontColorStyle, TFontSize, TFontWeight, TTextTransform} from 'Controls/interface';
 
 interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
 }

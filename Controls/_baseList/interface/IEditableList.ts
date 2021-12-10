@@ -280,10 +280,10 @@ export interface IEditingConfig {
 }
 
 /**
- * @typedef {Promise<void | IOperationCanceledResult>} Controls/_baseList/interface/IEditableList/TAsyncOperationResult
+ * @typedef {Promise<void | IOperationCanceledResult>} TAsyncOperationResult
  * @description Результат выполнения методов {@link beginAdd}, {@link beginEdit}, {@link cancelEdit} и {@link commitEdit}.
  */
-type TAsyncOperationResult = Promise<void | IOperationCanceledResult>;
+export type TAsyncOperationResult = Promise<void | IOperationCanceledResult>;
 
 /**
  * @typedef {Object} IOperationCanceledResult
@@ -295,15 +295,15 @@ type TAsyncOperationResult = Promise<void | IOperationCanceledResult>;
  * * запуска редактирования по месту.
  * * при ошибке валидации.
  */
-interface IOperationCanceledResult { canceled: true; }
+export interface IOperationCanceledResult { canceled: true; }
 
 /**
- * @typedef {Enum} TAddPosition
+ * @typedef {Enum} Controls/list:IEditableList/TAddPosition
  * @description Допустимые значения для свойства {@link Controls/list:IEditingConfig#addPosition addPosition}.
  * @variant top В начале.
  * @variant bottom В конце.
  */
-type TAddPosition = 'top' | 'bottom';
+export type TAddPosition = 'top' | 'bottom';
 
 /**
  * @typedef {Enum} TSequentialEditingMode

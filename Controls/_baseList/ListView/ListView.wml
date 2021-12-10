@@ -45,8 +45,9 @@
          </ws:if>
       </div>
 
-      <ws:if data="{{_options.emptyTemplate}}">
-         <ws:partial template="{{_options.emptyTemplate}}"/>
+      <ws:if data="{{ _listModel.getEmptyTemplateItem() }}">
+         <ws:partial template="{{ _listModel.getEmptyTemplateItem().getTemplate(_options.emptyTemplate) }}"
+                     item="{{ _listModel.getEmptyTemplateItem() }}"/>
       </ws:if>
 
       <!--Bottom loading trigger-->

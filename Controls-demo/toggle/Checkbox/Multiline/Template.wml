@@ -1,9 +1,9 @@
-<div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth350">
+    <div data-qa="controlsDemo-checkboxMultiline__true" class="controlsDemo__cell">
         <div class="controls-text-label">multiline=true</div>
         <Controls.toggle:Checkbox attr:class="controlsDemo_fixedWidth300" caption="{{_caption}}" bind:value="_value1" multiline="{{true}}"/>
     </div>
-    <div class="controlsDemo__cell">
+    <div data-qa="controlsDemo-checkboxMultiline__false" class="controlsDemo__cell">
         <div class="controls-text-label">multiline=false</div>
         <Controls.toggle:Checkbox attr:class="controlsDemo_fixedWidth300" caption="{{_caption}}" tooltip="{{_caption}}" bind:value="_value2" multiline="{{false}}"/>
     </div>

@@ -9,7 +9,7 @@ import {factory} from 'Types/chain';
 import {object} from 'Types/util';
 import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
-import {IPropertyGridOptions, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';
+import {IPropertyGridOptions, TEditingObject, TCollapsedGroupsElement} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
 import {Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
@@ -48,6 +48,7 @@ import {
     InputHelper as EditInPlaceInputHelper, TAsyncOperationResult
 } from 'Controls/editInPlace';
 import {Container as ValidateContainer, ControllerClass as ValidationController} from 'Controls/validate';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 const DRAGGING_OFFSET = 10;
 const DRAG_SHIFT_LIMIT = 4;
@@ -60,6 +61,8 @@ interface IEditingUserOptions {
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
+type TValidatorResultElement = string|boolean;
+type TCollectionItem = CollectionItem<Model>;
 
 interface IPropertyGridValidatorArguments {
     item: PropertyGridCollectionItem<Model>;
@@ -190,7 +193,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
     }
 
-    protected _afterRender(oldOptions?: IPropertyGridOptions, oldContext?: any): void {
+    protected _afterRender(oldOptions?: IPropertyGridOptions, oldContext?: unknown): void {
         // Активация поля ввода должна происходить после рендера.
         if (
             this._editInPlaceController &&
@@ -263,7 +266,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return itemContents !== constView.hiddenGroup;
     }
 
-    private _getCollapsedGroups(collapsedGroups: Array<string | number> = []): Record<string, boolean> {
+    private _getCollapsedGroups(collapsedGroups: TCollapsedGroupsElement[] = []): Record<string, boolean> {
         return collapsedGroups.reduce((acc: Record<string, boolean>, key: string): Record<string, boolean> => {
             acc[key] = true;
             return acc;
@@ -312,7 +315,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return resultEditingObject;
     }
 
-    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: any): void {
+    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: unknown): void {
         const name = item.get(this._listModel.getKeyProperty());
         this._editingObject = this._updatePropertyValue(this._editingObject, name, value);
         this._notify('editingObjectChanged', [this._editingObject]);
@@ -396,9 +399,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (this._listModel) {
             this._dragEnter(this._getDragObject());
         }
-        this._getItemActionsController().then(() => {
-            this._updateItemActions(this._listModel, this._options);
-        });
+        if (!this._editInPlaceController || !this._editInPlaceController.isEditing()) {
+            this._getItemActionsController().then(() => {
+                this._updateItemActions(this._listModel, this._options);
+            });
+        }
     }
 
     protected _itemActionMouseDown(event: SyntheticEvent<MouseEvent>,
@@ -421,12 +426,19 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _toggleEditor(event: SyntheticEvent, item: Model, value: boolean): void {
+        const currentEditorName: string = item.get(this._listModel.getKeyProperty());
         this._toggledEditors = {...this._toggledEditors};
-        this._toggledEditors[item.get(this._listModel.getKeyProperty())] = value;
-        this._listModel.setToggledEditors(this._toggledEditors);
-        const toggledEditorsNames = Object.keys(this._toggledEditors)
+        const oldToggledEditors = Object.keys(this._toggledEditors)
             .reduce((acc, key) => !this._toggledEditors[key] ? acc.concat([key]) : acc, []);
-        this._notify('toggledEditorsChanged', [toggledEditorsNames]);
+
+        this._toggledEditors[currentEditorName] = value;
+        this._listModel.setToggledEditors(this._toggledEditors);
+
+        const newToggledEditors = Object.keys(this._toggledEditors)
+            .reduce((acc, key) => !this._toggledEditors[key] ? acc.concat([key]) : acc, []);
+
+        const diff = ArraySimpleValuesUtil.getArrayDifference(oldToggledEditors, newToggledEditors);
+        this._notify('toggledEditorsChanged', [newToggledEditors, diff.added, diff.removed]);
         this._listModel.setFilter(this._displayFilter.bind(this));
     }
 
@@ -603,9 +615,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _collectionChangedHandler(
         event: SyntheticEvent,
         action: string,
-        newItems: Array<CollectionItem<Model>>,
+        newItems: TCollectionItem[],
         newItemsIndex: number,
-        removedItems: Array<CollectionItem<Model>>
+        removedItems: TCollectionItem[]
     ): void {
         const options = this._options || {};
         const handleSelection =
@@ -725,7 +737,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             return;
         }
 
-        let dragEndResult: Promise<any> | undefined;
+        let dragEndResult: Promise<unknown> | undefined;
         if (this._insideDragging && this._dndController) {
             const targetPosition = this._dndController.getDragPosition();
             if (targetPosition && targetPosition.dispItem) {
@@ -933,7 +945,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _createDndController(
         model: TPropertyGridCollection,
         draggableItem: CollectionItem,
-        options: any
+        options: unknown
     ): DndController<IDragStrategyParams> {
         let strategy;
         if (options.parentProperty) {
@@ -1032,7 +1044,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return target;
     }
 
-    startValidation({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
+    startValidation({item}: IPropertyGridValidatorArguments): TValidatorResultElement[] | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
         const validatorArgs = {
@@ -1298,7 +1310,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         item.getContents().addField({name: 'editingValue', type: 'string', defaultValue: item.getPropertyValue()});
         return this._getItemActionsController()
             .then(() => {
-                this._listModel.setHoveredItem(item);
                 this._updateItemActions(this._listModel, this._options, item);
             });
     }

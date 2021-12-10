@@ -23,7 +23,7 @@
  * @includes IReloadItemOptions Controls/_list/interface/IReloadItemOptions
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IMovableList Controls/_baseList/interface/IMovableList
- * @includes IMoveDialogTemplate Controls/_baseList/interface/IMovableList
+ * @includes IMoveDialogTemplate Controls/_baseList/interface/IMovableList/IMoveDialogTemplate
  * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes ItemsView Controls/list:ItemsView
  * @includes IVirtualScrollConfig Controls/_baseList/interface/IVirtualScrollConfig
@@ -63,7 +63,7 @@
  * @includes IList Controls/_list/interface/IList
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IMovableList Controls/_baseList/interface/IMovableList
- * @includes IMoveDialogTemplate Controls/_baseList/interface/IMovableList
+ * @includes IMoveDialogTemplate Controls/_baseList/interface/IMovableList/IMoveDialogTemplate
  * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes ItemsView Controls/list:ItemsView
  * @includes IVirtualScrollConfig Controls/_baseList/interface/IVirtualScrollConfig

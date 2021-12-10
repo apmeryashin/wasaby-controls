@@ -1,4 +1,4 @@
-import {StickyOpener} from 'Controls/popup';
+import {IStickyPopupOptions, StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
 import {IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
@@ -56,6 +56,7 @@ export default class Controller implements IDropdownController {
    private _filter: object;
    private _selectedItems: RecordSet<Model>;
    private _sticky: StickyOpener;
+   private _popupOptions: IStickyPopupOptions = {};
 
    constructor(options: IDropdownControllerOptions) {
       this._options = options;
@@ -284,6 +285,9 @@ export default class Controller implements IDropdownController {
          this._sourceController.cancelLoading();
          this._sourceController = null;
       }
+      if (isHistorySource(this._source)) {
+         this._source.setDataLoadCallback(null);
+      }
       this._setItemsAndMenuSource(null);
       this._closeDropdownList();
       this._sticky = null;
@@ -340,6 +344,10 @@ export default class Controller implements IDropdownController {
       return this._items;
    }
 
+   getPopupOptions(): IStickyPopupOptions {
+      return this._popupOptions;
+   }
+
    private _open(popupOptions?: object): Promise<unknown[]> {
       if (this._options.readOnly) {
          return Promise.resolve();
@@ -369,7 +377,7 @@ export default class Controller implements IDropdownController {
          IndicatorOpener.hide(indicatorId);
       }).then(
           () => {
-             const count = this._items.getCount();
+             const count = this._items?.getCount() || 0;
              if (count > 1 || count === 1 &&
                  (this._options.emptyText || this._options.selectedAllText || this._options.footerContentTemplate)) {
                 this._createMenuSource(this._items);

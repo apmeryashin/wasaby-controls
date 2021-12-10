@@ -29,6 +29,7 @@ export interface IPropertyGridColumnOptions {
 
 export type TTypeDescription = IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
 export type TEditingObject = Model | Record<string, unknown>;
+export type TCollapsedGroupsElement = string|number;
 export interface IPropertyGridOptions extends
     IControlOptions,
     IPromiseSelectableOptions,
@@ -183,7 +184,7 @@ export interface IPropertyGridOptions extends
      * @see groupTemplate
      * @demo Controls-demo/PropertyGridNew/CollapsedGroups/Index
      */
-    collapsedGroups?: Array<string|number>;
+    collapsedGroups?: TCollapsedGroupsElement[];
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#nodeProperty
      * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
@@ -298,7 +299,9 @@ export interface IPropertyGridOptions extends
 /**
  * @event Controls/_propertyGrid/IPropertyGrid#toggledEditorsChanged Происходит при скрытии или показе редакторов.
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {String[]} Список идентификаторов скрытых редакторов.
+ * @param {String[]} Список идентификаторов всех скрытых редакторов.
+ * @param {String[]} Список идентификаторов, которые были скрыты перед вызовом события.
+ * @param {String[]} Список идентификаторов, которые были показаны перед вызовом события.
  * @demo Controls-demo/PropertyGridNew/Source/ToggleEditorButtonIcon/Index
  * @see toggleEditorButtonIcon
  * @see toggledEditors

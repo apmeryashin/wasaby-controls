@@ -47,7 +47,7 @@
                              template="{{_options.toolbarContentTemplate}}"
                              direction="horizontal"
                              scope="{{_options}}"
-                             attr:class="controls-margin_left-l ws-align-self-end"/>
+                             attr:class="controls-margin_left-l controls-margin_right-s ws-align-self-end"/>
                   </ws:if>
                </div>
             </ws:if>

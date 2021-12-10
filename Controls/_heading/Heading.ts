@@ -40,6 +40,7 @@ export interface IHeadingOptions
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:TTextTransform
  * @public
  * @author Красильников А.С.
  *
