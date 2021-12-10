@@ -131,37 +131,54 @@
    stroke: var(--readonly_marker-box_border-color_checkbox);
 }
 
-.controls-CheckboxMarker__icon-border_enabled-contrast {
-   fill: var(--background-color);
-   stroke: var(--unaccented_border-color);
-}
-
-.controls-CheckboxMarker__icon-border_disabled-contrast {
-   fill: var(--background-color);
-   stroke: var(--readonly_marker-box_border-color_checkbox);
-}
-
 .controls-CheckboxMarker__icon-border-state-true {
    stroke: transparent;
 }
 
 .controls-CheckboxMarker_contrast {
-   .controls-CheckboxMarker__state-null__icon-color__enabled {
-      fill: var(--background-color);
+   .controls-CheckboxMarker__style-primary {
+      .controls-CheckboxMarker__icon-subtract {
+         fill: transparent;
+      }
+
+      .controls-CheckboxMarker__state-null__icon-color__enabled {
+         fill: var(--background-color);
+      }
+
+      .controls-CheckboxMarker__icon-border-state-true,
+      .controls-CheckboxMarker__icon-border-state-null {
+         fill: var(--marker_color);
+         stroke: var(--marker_color);
+      }
+
+      .controls-CheckboxMarker__icon-checked-color_enabled {
+         fill: var(--background-color);
+      }
    }
 
-   .controls-CheckboxMarker__icon-subtract {
-      fill: transparent;
-   }
+   .controls-CheckboxMarker__style-default {
+      .controls-CheckboxMarker__icon-subtract {
+         fill: var(--unaccented_border-color);
+      }
 
-   .controls-CheckboxMarker__icon-border-state-true,
-   .controls-CheckboxMarker__icon-border-state-null {
-      fill: var(--marker_color);
-      stroke: var(--marker_color);
-   }
+      .controls-CheckboxMarker__icon-border-state-true,
+      .controls-CheckboxMarker__icon-border-state-null,
+      .controls-CheckboxMarker__icon-border_enabled {
+         fill: var(--background-color);
+      }
 
-   .controls-CheckboxMarker__icon-checked-color_enabled {
-      fill: var(--background-color);
+      .controls-CheckboxMarker__icon-border_disabled {
+         fill: var(--background-color);
+         stroke: var(--readonly_marker-box_border-color_checkbox);
+      }
+
+      .controls-CheckboxMarker__state-null__icon-color__enabled {
+         fill: var(--marker_color);
+      }
+
+      .controls-CheckboxMarker__icon-checked-color_enabled {
+         fill: var(--marker_color);
+      }
    }
 }
 

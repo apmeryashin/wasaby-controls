@@ -28,7 +28,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
    value?: boolean | null;
    multiline?: boolean;
    horizontalPadding?: string;
-   backgroundStyle?: 'contrast' | 'default';
+   checkboxStyle?: 'primary' | 'default';
 }
 
 const mapTriState = {false: true, true: null, null: false};
@@ -116,7 +116,7 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
          contrastBackground: false,
          multiline: true,
          horizontalPadding: 'default',
-         backgroundStyle: 'default'
+         checkboxStyle: 'primary'
       };
    }
 
@@ -358,11 +358,11 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @demo Controls-demo/toggle/Checkbox/ResetValue/Index
  */
 /**
- * @name Controls/_toggle/Checkbox#backgroundStyle
+ * @name Controls/_toggle/Checkbox#checkboxStyle
  * @cfg {String} Цвет заливки чекбокса
- * @variant contrast
  * @variant default
- * @default default
- * @demo Controls-demo/toggle/Checkbox/BackgroundStyle/Index
+ * @variant primary
+ * @default primary
+ * @demo Controls-demo/toggle/Checkbox/CheckboxStyle/Index
  */
 export default Checkbox;

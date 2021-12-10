@@ -1,0 +1,10 @@
+<div class="controlsDemo__wrapper controlsDemo__background">
+    <div class="controlsDemo__cell demo-checkboxTriState__default">
+        <div class="controls-text-label">CheckboxStyle=default</div>
+        <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value1" contrastBackground="{{true}}" checkboxStyle="default"/>
+    </div>
+    <div class="controlsDemo__cell demo-checkboxTriState__triState">
+        <div class="controls-text-label">CheckboxStyle=primary</div>
+        <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value2" contrastBackground="{{true}}" checkboxStyle="primary"/>
+    </div>
+</div>
