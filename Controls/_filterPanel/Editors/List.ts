@@ -146,6 +146,7 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _itemsReadyCallback: Function = null;
     protected _markedKey: string|number;
     protected _expandedItems: TKey[] = [];
+    protected _footerButtonText: string = null;
 
     protected _beforeMount(options: IListEditorOptions): void|Promise<RecordSet> {
         const {sourceController} = options;
@@ -192,6 +193,7 @@ class ListEditor extends Control<IListEditorOptions> {
             this._selectedKeys = propertyValue;
             this._setColumns(options);
             this._navigation = this._getNavigation(options);
+            this._setFooterButtonText(this._selectedKeys);
         }
         if (filterChanged || valueChanged) {
             this._setFilter(valueChanged ? this._selectedKeys : null, options);
@@ -226,6 +228,7 @@ class ListEditor extends Control<IListEditorOptions> {
         this._items = items;
         this._addSyntheticItemsToOriginItems(items, this._options);
         this._items.subscribe('onCollectionChange', this._onCollectionChange);
+        this._setFooterButtonText(this._selectedKeys);
     }
 
     protected _onCollectionChange(): void {
@@ -388,6 +391,7 @@ class ListEditor extends Control<IListEditorOptions> {
         }
         this._setMarkedKey(this._selectedKeys, this._options);
         this._setColumns(this._options);
+        this._setFooterButtonText(this._selectedKeys);
         this._notify('propertyValueChanged', [{value: this._getValue(this._selectedKeys)}], {bubbling: true});
     }
 
@@ -602,6 +606,21 @@ class ListEditor extends Control<IListEditorOptions> {
             this._popupOpener = mode === 'dialog' ? new DialogOpener() : new StackOpener();
         }
         return this._popupOpener;
+    }
+
+    private _setFooterButtonText(selectedKeys: number[] | string[]): void {
+        let hiddenItemsCount = 0;
+        selectedKeys.forEach((itemId) => {
+            const itemRecord = this._items.getRecordById(itemId);
+            if (!itemRecord) {
+                hiddenItemsCount++;
+            }
+        });
+        if (hiddenItemsCount) {
+            this._footerButtonText = `${rk('Еще')} ${hiddenItemsCount}`;
+        } else {
+            this._footerButtonText = null;
+        }
     }
 
     static getDefaultOptions(): object {
