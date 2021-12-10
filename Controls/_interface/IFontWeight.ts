@@ -1,5 +1,5 @@
 /**
- * @typedef {String} TFontWeight
+ * @typedef {String} Controls/_interface/IFontWeight/TFontWeight
  * @description Допустимые значения для опции {@link Controls/interface:IFontWeight#fontWeight fontWeight}.
  * @variant default начертание, которое задается при помощи переменной темы оформления
  * @variant normal нормальное начертание
@@ -10,7 +10,7 @@ export type TFontWeight = 'default' | 'normal' | 'bold';
 export interface IFontWeightOptions {
     /**
      * @name Controls/_interface/IFontWeight#fontWeight
-     * @cfg {TFontWeight} Насыщенность шрифта.
+     * @cfg {Controls/_interface/IFontWeight/TFontWeight.typedef} Насыщенность шрифта.
      * @default default
      * @demo Controls-demo/Decorator/Money/FontWeight/Index
      */

@@ -1,47 +1,52 @@
 <ws:template name="headingPath">
-   <ws:if data="{{_needCrumbs}}">
-      <Controls.Container.Async templateName="Controls/breadcrumbs:HeadingPath">
-         <ws:partial template="{{ content.resolvedTemplate }}"
-                     scope="{{_options}}"
-                     name="Path"
-                     items="{{_options.breadCrumbsItems}}"
-                     displayMode="{{_options.breadcrumbsDisplayMode}}"
+   <div class="
+      controls-Explorer__PathWrapper
+      {{_options.backButtonIconViewMode === 'functionalButton' ? 'controls-Explorer__PathWrapper_offset-left'}}
+   ">
+      <ws:if data="{{_needCrumbs}}">
+         <Controls.Container.Async templateName="Controls/breadcrumbs:HeadingPath">
+            <ws:partial template="{{ content.resolvedTemplate }}"
+                        scope="{{_options}}"
+                        name="Path"
+                        items="{{_options.breadCrumbsItems}}"
+                        displayMode="{{_options.breadcrumbsDisplayMode}}"
 
-                     withoutBackButton="{{_withoutBackButton}}"
-                     backButtonIconViewMode="{{_options.backButtonIconViewMode}}"
-                     backButtonBeforeCaptionTemplate="{{_options.backButtonBeforeCaptionTemplate}}"
+                        withoutBackButton="{{_withoutBackButton}}"
+                        backButtonIconViewMode="{{_options.backButtonIconViewMode}}"
+                        backButtonBeforeCaptionTemplate="{{_options.backButtonBeforeCaptionTemplate}}"
 
-                     pathButtonCaption="{{_options.breadcrumbsPathButtonCaption}}"
-                     pathButtonSource="{{_options.source}}"
-                     pathButtonFilter="{{_options.filter}}"
-                     pathButtonSorting="{{_options.sorting}}"
-                     pathButtonNavigation="{{_options.navigation}}"
-                     pathButtonKeyProperty="{{_options.keyProperty}}"
-                     pathButtonNodeProperty="{{_options.nodeProperty}}"
-                     pathButtonParentProperty="{{_options.parentProperty}}"
-                     pathButtonDisplayProperty="{{_options.displayProperty}}"
-                     pathButtonHasChildrenProperty="{{_options.hasChildrenProperty}}"
+                        pathButtonCaption="{{_options.breadcrumbsPathButtonCaption}}"
+                        pathButtonSource="{{_options.source}}"
+                        pathButtonFilter="{{_options.filter}}"
+                        pathButtonSorting="{{_options.sorting}}"
+                        pathButtonNavigation="{{_options.navigation}}"
+                        pathButtonKeyProperty="{{_options.keyProperty}}"
+                        pathButtonNodeProperty="{{_options.nodeProperty}}"
+                        pathButtonParentProperty="{{_options.parentProperty}}"
+                        pathButtonDisplayProperty="{{_options.displayProperty}}"
+                        pathButtonHasChildrenProperty="{{_options.hasChildrenProperty}}"
 
-                     attr:class="controls-Explorer__Path"
-                     on:backButtonClick="_notifyHandler('backButtonClick')"
-                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                     on:arrowActivated="_notifyHandler('arrowActivated')"
-                     on:itemClick="_notifyHandler('itemClick')"
-                     on:itemMouseDown="_notifyHandler('itemMouseDown')"
-                     on:arrowClick="_notifyHandler('arrowClick')"
+                        attr:class="controls-Explorer__Path"
+                        on:backButtonClick="_notifyHandler('backButtonClick')"
+                        on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                        on:arrowActivated="_notifyHandler('arrowActivated')"
+                        on:itemClick="_notifyHandler('itemClick')"
+                        on:itemMouseDown="_notifyHandler('itemMouseDown')"
+                        on:arrowClick="_notifyHandler('arrowClick')"
+            />
+         </Controls.Container.Async>
+      </ws:if>
+
+      <ws:if data="{{_options.afterBreadCrumbsTemplate}}">
+         <ws:partial
+            template="{{_options.afterBreadCrumbsTemplate}}"
+            attr:class="
+               controls-Explorer__afterBreadCrumbsTemplate
+               {{!_needCrumbs ? 'controls-Explorer__afterBreadCrumbsTemplate_width_full'}}
+            "
          />
-      </Controls.Container.Async>
-   </ws:if>
-
-   <ws:if data="{{_options.afterBreadCrumbsTemplate}}">
-      <ws:partial
-         template="{{_options.afterBreadCrumbsTemplate}}"
-         attr:class="
-            controls-Explorer__afterBreadCrumbsTemplate
-            {{!_needCrumbs ? 'controls-Explorer__afterBreadCrumbsTemplate_width_full'}}
-         "
-      />
-   </ws:if>
+      </ws:if>
+   </div>
 </ws:template>
 
 <ws:if data="{{!_needCrumbs && !_options.afterBreadCrumbsTemplate}}">
@@ -57,14 +62,10 @@
          backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
          attr:class="controls-Explorer__HeadingPath-{{_options.style}}"
       >
-         <div class="controls-Explorer__PathWrapper">
-            <ws:partial template="headingPath" />
-         </div>
+         <ws:partial template="headingPath"/>
       </Controls.scroll:StickyBlock>
    </ws:if>
    <ws:else>
-      <div class="controls-Explorer__PathWrapper">
-         <ws:partial template="headingPath"/>
-      </div>
+      <ws:partial template="headingPath"/>
    </ws:else>
 </ws:else>
