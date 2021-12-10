@@ -29,6 +29,7 @@ export interface IPropertyGridColumnOptions {
 
 export type TTypeDescription = IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
 export type TEditingObject = Model | Record<string, unknown>;
+export type TCollapsedGroupsElement = string|number;
 export interface IPropertyGridOptions extends
     IControlOptions,
     IPromiseSelectableOptions,

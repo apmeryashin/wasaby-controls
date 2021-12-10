@@ -9,7 +9,7 @@ import {factory} from 'Types/chain';
 import {object} from 'Types/util';
 import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
-import {IPropertyGridOptions, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';
+import {IPropertyGridOptions, TEditingObject, TCollapsedGroupsElement} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
 import {Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
@@ -60,6 +60,7 @@ interface IEditingUserOptions {
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
+type TValidatorResultElement = string|boolean;
 
 interface IPropertyGridValidatorArguments {
     item: PropertyGridCollectionItem<Model>;
@@ -263,7 +264,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return itemContents !== constView.hiddenGroup;
     }
 
-    private _getCollapsedGroups(collapsedGroups: [string | number] = []): Record<string, boolean> {
+    private _getCollapsedGroups(collapsedGroups: TCollapsedGroupsElement[] = []): Record<string, boolean> {
         return collapsedGroups.reduce((acc: Record<string, boolean>, key: string): Record<string, boolean> => {
             acc[key] = true;
             return acc;
@@ -1032,7 +1033,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return target;
     }
 
-    startValidation({item}: IPropertyGridValidatorArguments): [string | boolean] | boolean {
+    startValidation({item}: IPropertyGridValidatorArguments): TValidatorResultElement[] | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
         const validatorArgs = {
