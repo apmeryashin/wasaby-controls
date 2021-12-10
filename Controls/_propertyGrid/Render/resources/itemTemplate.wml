@@ -28,6 +28,8 @@
                     attr:tabindex="-1"
                     caption="{{item.caption || item.name}}"
                     collectionItem="{{collectionItem}}"
+                    fontColorStyle="{{item.captionOptions && item.captionOptions.fontColorStyle || captionFontColorStyle}}"
+                    fontSize="{{item.captionOptions && item.captionOptions.fontSize || fontSize}}"
                     scope="{{item.captionOptions}}"/>
     </ws:else>
     <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && captionPosition === 'top'}}">

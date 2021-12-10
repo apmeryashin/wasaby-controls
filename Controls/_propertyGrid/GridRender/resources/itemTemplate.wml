@@ -24,6 +24,8 @@
 <ws:template name="defaultCaptionTemplate">
     <ws:partial template="label"
                 caption="{{item.caption}}"
+                fontColorStyle="{{item.captionOptions && item.captionOptions.fontColorStyle || captionFontColorStyle}}"
+                fontSize="{{item.captionOptions && item.captionOptions.fontSize || fontSize}}"
                 scope="{{item.captionOptions}}"
                 attr:class="controls-PropertyGrid__editor-caption
                                         controls-PropertyGrid__gridLayout_editor-caption-baseline"

@@ -6,6 +6,7 @@ import * as getType from 'Core/helpers/getType';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {IGridCollectionOptions} from 'Controls/grid';
+import {ILabelOptions} from 'Controls/input';
 
 /**
  * Элемент коллеции propertyGrid
