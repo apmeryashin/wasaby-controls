@@ -184,7 +184,7 @@ export interface IPropertyGridOptions extends
      * @see groupTemplate
      * @demo Controls-demo/PropertyGridNew/CollapsedGroups/Index
      */
-    collapsedGroups?: [string|number];
+    collapsedGroups?: TCollapsedGroupsElement[];
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#nodeProperty
      * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
