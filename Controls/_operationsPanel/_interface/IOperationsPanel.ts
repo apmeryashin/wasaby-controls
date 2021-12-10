@@ -29,4 +29,5 @@ export interface IOperationsPanelOptions extends IControlOptions {
     listMarkedKey?: TKey;
     root: TKey;
     fontColorStyle?: string;
+    expanded?: boolean;
 }

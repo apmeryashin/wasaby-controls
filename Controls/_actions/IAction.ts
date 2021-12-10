@@ -10,6 +10,7 @@ export interface IAction extends IToolBarItem {
     viewCommandName?: string;
     viewCommandOptions?: unknown;
     permissions?: string[];
+    permissionsLevel?: number;
     requiredLevel?: string;
     visible?: boolean;
     prefetchResultId?: string;
