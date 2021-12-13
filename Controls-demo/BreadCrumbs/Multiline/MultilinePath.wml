@@ -18,8 +18,7 @@
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">MultilinePath in miniCard</div>
-        <Controls.popup:PreviewerTarget attr:class="ControlsDemo-Previewer__previewer"
-                                        trigger="click" >
+        <Controls.popup:PreviewerTarget trigger="click" >
             <ws:content>
                 <div class="controls-text-label">Click me</div>
             </ws:content>
