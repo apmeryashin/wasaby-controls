@@ -3,7 +3,13 @@ import {IControlOptions, Control} from 'UI/Base';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
-import {IPromiseSelectableOptions, ISelectionTypeOptions, IItemPaddingOptions, TKey} from 'Controls/interface';
+import {
+    IPromiseSelectableOptions,
+    ISelectionTypeOptions,
+    IItemPaddingOptions,
+    TKey,
+    TFontSize
+} from 'Controls/interface';
 import {IEditingPropertyGrid} from 'Controls/_propertyGrid/interface/IEditingPropertyGrid';
 
 type TPadding = 'null'|'m';
@@ -45,7 +51,7 @@ interface IItemsContainerPadding {
     bottom: TPadding;
 }
 
-export type TCaptionPosition = 'left'|'top';
+export type TCaptionPosition = 'left' | 'top' | 'none';
 
 /**
  * Интерфейс для опций {@link Controls/propertyGrid:IPropertyGrid#editorColumnOptions editorColumnOptions} и {@link Controls/propertyGrid:IPropertyGrid#captionColumnOptions captionColumnOptions}.
@@ -307,6 +313,24 @@ export interface IPropertyGridOptions extends
      * @cfg {TemplateFunction|String} Пользовательский шаблон множественного выбора.
      */
     multiSelectTemplate?: Function;
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#captionFontColorStyle
+     * @cfg {String} Цвет текста заголовков редакторов.
+     * @variant unaccented
+     * @variant label
+     * @default label
+     * @remark Значение fontColorStyle, заданное в {{Controls/_propertyGrid/IProperty#captionOptions опциях заголовка редактора}} имеет больший приоритет.
+     * @demo Controls-demo/PropertyGridNew/CaptionOptions/Index
+     */
+    captionFontColorStyle: 'label' | 'unaccented';
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#captionFontSize
+     * @cfg {Controls/_interface/IFontSize/TFontSize.typedef} Размер шрифта заголовков редакторов.
+     * @default m
+     * @remark Значение fontSize, заданное в {{Controls/_propertyGrid/IProperty#captionOptions опциях заголовка редактора}} имеет больший приоритет.
+     * @demo Controls-demo/PropertyGridNew/CaptionOptions/Index
+     */
+    captionFontSize: TFontSize;
     captionPosition?: TCaptionPosition;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#toggledEditors
@@ -321,8 +345,9 @@ export interface IPropertyGridOptions extends
  * @name Controls/_propertyGrid/IPropertyGrid#captionPosition
  * @cfg {String} Расположение заголовка редактора.
  * @default left
- * @variant left
- * @variant top
+ * @variant left слева
+ * @variant top сверху
+ * @variant none заголовки не выводятся
  * @demo Controls-demo/PropertyGridNew/CaptionPosition/Index
  */
 
