@@ -575,6 +575,6 @@ export class Calculator {
     private static _hasItemsOutRangeToDirection(direction: IDirection,
                                                 range: IItemsRange,
                                                 totalCount: number): boolean {
-        return direction === 'backward' ? range.startIndex > 0 : range.endIndex < (totalCount - 1);
+        return direction === 'backward' ? range.startIndex > 0 : range.endIndex < totalCount;
     }
 }

@@ -304,7 +304,8 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
         const indexLine = Math.max(MIN_RATIO_INDEX_LINE, Math.min(MAX_RATIO_INDEX_LINE, indexLineRatio));
 
         for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
-            if (itemsSizes[i].offset < (fixedScrollPosition + viewportSize * indexLine)) {
+            const itemOffset = itemsSizes[i].offset - placeholders.backward;
+            if (itemOffset < (fixedScrollPosition + viewportSize * indexLine)) {
                 activeElementIndex = i;
             } else {
                 break;
