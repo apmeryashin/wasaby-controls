@@ -510,7 +510,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     getEditingConfig(): IEditingConfig {
-        return this._$owner.getEditingConfig();
+        return this.getOwner().getEditingConfig();
     }
 
     // TODO: Убрать columnIndex.
