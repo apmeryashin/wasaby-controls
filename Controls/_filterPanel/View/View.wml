@@ -8,8 +8,12 @@
                 groupProperty="name"
                 on:editingObjectChanged="_editingObjectChanged()"
                 on:groupClick="_groupClick()"
-                attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}">
-            <ws:itemsContainerPadding top="null" left="null" right="xl" bottom="m"/>
+                attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.viewMode}}
+                            controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}">
+            <ws:itemsContainerPadding top="null"
+                                      left="{{_options.viewMode === 'default' ? 'xl' : 'null'}}"
+                                      right="xl"
+                                      bottom="m"/>
             <ws:itemTemplate>
                 <ws:partial template="Controls/propertyGrid:ItemTemplate"
                             attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
@@ -30,6 +34,7 @@
 <ws:template name="extendedItems">
     <ws:if data="{{_viewModel.hasExtendedItems()}}">
         <Controls._filterPanel.ExtendedItems viewModel="{{_viewModel}}"
+                                             viewMode="{{_options.viewMode}}"
                                              on:extendedItemsChanged="_handleExtendedItemsChanged()"/>
     </ws:if>
 </ws:template>
@@ -45,9 +50,12 @@
 <div class="controls_filterPanel_theme-{{_options.theme}}
             controls_filter_theme-{{_options.theme}} controls-FilterViewPanel">
     <ws:if data="{{_options.orientation === 'vertical'}}">
-        <Controls.scroll:Container backgroundStyle="{{_options.style || 'default'}}" attr:class="controls-FilterViewPanel__scroll controls-FilterViewPanel__scroll-{{_options.viewMode}}">
+        <Controls.scroll:Container backgroundStyle="{{_options.style || 'default'}}"
+                                   attr:class="controls-FilterViewPanel__scroll
+                                                controls-FilterViewPanel__scroll-{{_options.viewMode}}">
             <ws:partial template="propertyGrid"/>
-            <ws:partial template="extendedItems" attr:class="controls-FilterPanelPopup__extendedItems-vertical"/>
+            <ws:partial template="extendedItems" attr:class="controls-FilterPanelPopup__extendedItems-vertical
+                                                             controls-FilterPanelPopup__extendedItems-vertical-{{_options.viewMode}}"/>
             <ws:partial template="historyItems" attr:class="controls-FilterPanelPopup__history-vertical"/>
         </Controls.scroll:Container>
     </ws:if>

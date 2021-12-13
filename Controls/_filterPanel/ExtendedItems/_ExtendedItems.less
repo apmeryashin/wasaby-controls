@@ -2,7 +2,6 @@
    flex-grow: 1;
    padding-bottom: var(--offset_m);
    background-color: var(--unaccented_background-color);
-   padding-left: calc(var(--offset_m) + var(--icon-size_2xs) + var(--offset_xs));
 }
 
 .controls-FilterViewPanel__additional-caption {
@@ -51,12 +50,33 @@
    height: var(--inline_height_s);
    padding: var(--offset_3xs) var(--additional-editor_horizontal-offset_filterViewPanel);
    margin-bottom: var(--offset_2xs);
-   margin-right: auto;
    border-radius: var(--border-radius_m);
+}
+
+.controls-FilterViewPanel__additional-editor-popup {
+   margin-right: auto;
+}
+
+.controls-FilterViewPanel__additional-editor-default {
+   background: var(--pale_contrast_background-color);
+   margin-right: var(--offset_xs);
+}
+
+.controls-FilterPanelPopup__extendedItems-vertical-default {
+   padding-left: var(--offset_xl);
+}
+
+.controls-FilterPanelPopup__extendedItems-vertical-popup {
+   padding-top: var(--offset_l);
+   padding-left: calc(var(--offset_m) + var(--icon-size_2xs) + var(--offset_xs));
 }
 
 .ws-is-hover {
    .controls-FilterViewPanel__additional-editor:hover {
       background: var(--unaccented_hover_same_background-color);
+   }
+
+   .controls-FilterViewPanel__additional-editor-default:hover {
+      background: var(--pale_hover_contrast_background-color);
    }
 }
