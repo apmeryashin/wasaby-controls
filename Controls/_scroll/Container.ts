@@ -22,7 +22,7 @@ import {
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import fastUpdate from './StickyBlock/FastUpdate';
 import StickyHeaderController from './StickyBlock/Controller';
-import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS, MODE} from './StickyBlock/Utils';
+import {IFixedEventData, IRegisterEventData, TYPE_FIXED_HEADERS, MODE} from './StickyBlock/Utils';
 import StickyBlock from './StickyBlock';
 import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
@@ -654,7 +654,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
-    _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
+    _stickyRegisterHandler(event: SyntheticEvent<Event>, data: IRegisterEventData, register: boolean): void {
         // Синхронно Посчитаем и обновим информацию о фиксации заголовков только если известно,
         // что надо отображать тень сверху. Что бы лишний раз не лазить в дом, в других сценариях,
         // состояние заголовков обновится асинхронно по срабатыванию IntersectionObserver.

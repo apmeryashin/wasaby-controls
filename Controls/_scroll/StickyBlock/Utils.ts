@@ -47,14 +47,14 @@ export const enum MODE {
     notsticky = 'notsticky'
 }
 
-export type TRegisterEventData = {
+export interface IRegisterEventData {
    id: number;
    inst?: StickyBlock;
    container: HTMLElement;
    position?: string;
    mode?: string;
    shadowVisibility: SHADOW_VISIBILITY;
-};
+}
 
 export type IFixedEventData = {
    // Id заголовка
