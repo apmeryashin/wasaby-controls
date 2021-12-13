@@ -91,8 +91,11 @@ export default class SizeAndVisibilityObserver {
     }
 
     private _groupInObject(group: IRegisterEventData, object: object): boolean {
-        const groupInObject = Object.entries(object).find(([, updateGroup]) =>
-            (updateGroup.header?.id ?? updateGroup.id) === group.id);
+        const groupInObject = Object.entries(object).find(([, updateGroup]) => {
+            // В метод могут передать как массив групп (IRegisterEventData), так и массив заголовков, у которых есть
+            // поле header. См. вызовы метода в _resizeObserverCallback.
+            return (updateGroup.header?.id ?? updateGroup.id) === group.id;
+        });
         return !!groupInObject;
     }
 
