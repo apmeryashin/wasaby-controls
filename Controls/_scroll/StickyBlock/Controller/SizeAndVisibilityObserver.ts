@@ -3,6 +3,7 @@ import {isHidden} from 'Controls/_scroll/StickyBlock/Utils';
 import {getClosestControl} from 'UI/NodeCollector';
 import StickyBlock from 'Controls/_scroll/StickyBlock';
 import Group from 'Controls/_scroll/StickyBlock/Group';
+import {TRegisterEventData} from 'Controls/_scroll/StickyBlock/Utils';
 
 interface IHeightEntry {
     key: HTMLElement;
@@ -89,8 +90,12 @@ export default class SizeAndVisibilityObserver {
         }
     }
 
-    private _groupInObject(group: Group, object: object): boolean {
-        const groupInObject = Object.entries(object).find(([, updateGroup]) => updateGroup.index === group.index);
+    private _groupInObject(group: TRegisterEventData, object: object): boolean {
+        const groupInObject = Object.entries(object).find(([, updateGroup]) => {
+            // В метод могут передать как массив групп (TRegisterEventData), так и массив заголовков, у которых есть
+            // поле header. См. вызовы метода в _resizeObserverCallback.
+            return (updateGroup.header?.id ?? updateGroup.id) === group.id;
+        });
         return !!groupInObject;
     }
 
