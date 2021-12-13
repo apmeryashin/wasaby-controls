@@ -18,10 +18,10 @@
     <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && captionPosition !== 'top'}}">
         <ws:partial template="{{collectionItem.getMultiSelectTemplate()}}" item="{{collectionItem}}" />
     </ws:if>
-    <ws:if data="{{item.captionTemplate}}">
+    <ws:if data="{{item.captionTemplate && captionPosition !== 'none'}}">
         <ws:partial template="{{item.captionTemplate}}" item="{{item}}"/>
     </ws:if>
-    <ws:else data="{{item.caption !== '' && !item.editorOptions.jumpingLabel}}">
+    <ws:else data="{{item.caption !== '' && captionPosition !== 'none' && !item.editorOptions.jumpingLabel}}">
         <ws:partial template="label"
                     attr:data-qa="controls-PropertyGrid__editor-caption"
                     attr:class="controls-PropertyGrid__editor-caption
@@ -29,6 +29,8 @@
                     attr:tabindex="-1"
                     caption="{{item.caption || item.name}}"
                     collectionItem="{{collectionItem}}"
+                    fontColorStyle="{{item.captionOptions && item.captionOptions.fontColorStyle || captionFontColorStyle}}"
+                    fontSize="{{item.captionOptions && item.captionOptions.fontSize || captionFontSize}}"
                     scope="{{item.captionOptions}}"/>
     </ws:else>
     <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && captionPosition === 'top'}}">

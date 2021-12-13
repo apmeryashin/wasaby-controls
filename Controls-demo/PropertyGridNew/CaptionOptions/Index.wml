@@ -3,6 +3,8 @@
         <div class="controls-text-label">captionOptions</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
+                captionFontColorStyle="unaccented"
+                captionFontSize="s"
                 typeDescription="{{_typeDescription}}" />
     </div>
 </div>

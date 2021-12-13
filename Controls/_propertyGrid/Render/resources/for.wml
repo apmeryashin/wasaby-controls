@@ -13,6 +13,8 @@
             keyProperty="{{listModel.getKeyProperty()}}"
             collapsedGroups="{{collapsedGroups}}"
             captionPosition="{{captionPosition}}"
+            captionFontColorStyle="{{captionFontColorStyle}}"
+            captionFontSize="{{captionFontSize}}"
             multiSelectVisibility="{{_options.multiSelectVisibility}}"
             on:mouseenter="_mouseEnterHandler(item)"
             on:mousemove="_mouseMoveHandler(item)"
