@@ -83,6 +83,7 @@ type IDoScrollUtil = (scrollParam: IScrollParam) => void;
 type IUpdateShadowsUtil = (hasItems: IHasItemsOutRange) => void;
 type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
 type IUpdateVirtualNavigationUtil = (hasItems: IHasItemsOutRange) => void;
+type IUpdateDrawingIndicatorUtil = (direction: IDirection, visible: boolean) => void;
 type IHasItemsOutRangeChangedCallback = (hasItems: IHasItemsOutRange) => void;
 export type IAbstractItemsSizesControllerConstructor =
     new (options: IAbstractItemsSizesControllerOptions) => AbstractItemsSizesController;
@@ -106,7 +107,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
     updateShadowsUtil?: IUpdateShadowsUtil;
     updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
-    hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
+    updateDrawingIndicatorUtil?: IUpdateDrawingIndicatorUtil;
 
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
@@ -118,6 +119,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
 
     itemsEndedCallback: IItemsEndedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
+    hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 }
 
 export abstract class AbstractListVirtualScrollController<
@@ -135,6 +137,7 @@ export abstract class AbstractListVirtualScrollController<
     private readonly _updateShadowsUtil?: IUpdateShadowsUtil;
     private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     private readonly _updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
+    private readonly _updateDrawingIndicatorUtil?: IUpdateDrawingIndicatorUtil;
     private readonly _hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
     /**
@@ -154,6 +157,7 @@ export abstract class AbstractListVirtualScrollController<
     private _scheduledScrollParams: IScheduledScrollParams;
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
     private _scheduledCheckTriggersVisibility: boolean;
+    private _scheduledHideDrawingIndicatorDirection: IDirection;
 
     /**
      * Колбэк, который вызывается когда завершился скролл к элементу. Скролл к элементу вызывается асинхронно.
@@ -181,6 +185,7 @@ export abstract class AbstractListVirtualScrollController<
         this._updateShadowsUtil = options.updateShadowsUtil;
         this._updatePlaceholdersUtil = options.updatePlaceholdersUtil;
         this._updateVirtualNavigationUtil = options.updateVirtualNavigationUtil;
+        this._updateDrawingIndicatorUtil = options.updateDrawingIndicatorUtil;
         this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
 
         this._setCollectionIterator(options.virtualScrollConfig.mode);
@@ -231,6 +236,7 @@ export abstract class AbstractListVirtualScrollController<
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll();
         this._handleScheduledCheckTriggerVisibility();
+        this._handleScheduledHideDrawingIndicator();
 
         if (this._collectionIndexesWasChanged) {
             this._collectionIndexesWasChanged = false;
@@ -481,6 +487,11 @@ export abstract class AbstractListVirtualScrollController<
                 } as IEdgeItemCalculatingParams
             });
         }
+
+        if (this._updateDrawingIndicatorUtil) {
+            this._updateDrawingIndicatorUtil(params.shiftDirection, true);
+            this._scheduleHideDrawingIndicator(params.shiftDirection);
+        }
     }
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
@@ -520,6 +531,17 @@ export abstract class AbstractListVirtualScrollController<
         if (this._scheduledCheckTriggersVisibility) {
             this._scheduledCheckTriggersVisibility = false;
             this._scrollController.checkTriggersVisibility();
+        }
+    }
+
+    private _scheduleHideDrawingIndicator(indicatorDirection: IDirection): void {
+        this._scheduledHideDrawingIndicatorDirection = indicatorDirection;
+    }
+
+    private _handleScheduledHideDrawingIndicator(): void {
+        if (this._scheduledHideDrawingIndicatorDirection) {
+            this._updateDrawingIndicatorUtil(this._scheduledHideDrawingIndicatorDirection, false);
+            this._scheduledHideDrawingIndicatorDirection = null;
         }
     }
 

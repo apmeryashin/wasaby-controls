@@ -3992,6 +3992,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 }
             },
 
+            updateDrawingIndicatorUtil: (direction, visible) => {
+                const compatibleDirection = direction === 'forward' ? 'bottom' : 'top';
+                const indicatorDomElement = this._getIndicatorDomElement(compatibleDirection);
+                if (visible) {
+                    this._indicatorsController.displayDrawingIndicator(indicatorDomElement, compatibleDirection);
+                } else {
+                    this._indicatorsController.hideDrawingIndicator(indicatorDomElement, compatibleDirection);
+                }
+            },
+
             activeElementChangedCallback: (activeElementIndex) => {
                 this._notify('activeElementChanged', [activeElementIndex]);
             },
