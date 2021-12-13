@@ -56,7 +56,7 @@
              <ws:partial template="Controls/grid:FooterTemplate">
                  <div class="controls-EditorList__footer">
                      <Controls.toggle:BigSeparator contrastBackground="{{false}}"
-                                                   buttonCaption="{{_footerButtonText}}"
+                                                   caption="{{_footerButtonText}}"
                                                    iconSize="l"
                                                    on:click="_handleFooterClick()"/>
                  </div>
