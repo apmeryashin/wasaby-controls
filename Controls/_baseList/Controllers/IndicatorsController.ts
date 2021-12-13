@@ -275,7 +275,7 @@ export default class IndicatorsController {
      * @void
      */
     displayDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
-        if (!this._shouldHandleDrawingIndicator(position)) {
+        if (!this._shouldHandleDrawingIndicator(position) || !indicatorElement) {
             return;
         }
 
@@ -295,7 +295,7 @@ export default class IndicatorsController {
      * @param position Позиция индикатора
      */
     hideDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
-        if (!this._shouldHandleDrawingIndicator(position)) {
+        if (!this._shouldHandleDrawingIndicator(position) || !indicatorElement) {
             return;
         }
 
