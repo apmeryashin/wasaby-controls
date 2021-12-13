@@ -42,6 +42,7 @@ import {
     IAdditionalTriggersOffsets
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
+import { IVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll';
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
@@ -88,6 +89,8 @@ export type IAbstractItemsSizesControllerConstructor =
 export type IAbstractObserversControllerConstructor =
     new (options: IAbstractObserversControllerOptions) => AbstractObserversController;
 
+export const HIDDEN_ITEM_SELECTOR = '.controls-ListView__hiddenContainer';
+
 export interface IAbstractListVirtualScrollControllerOptions {
     collection: Collection;
     listControl: Control;
@@ -124,6 +127,7 @@ export abstract class AbstractListVirtualScrollController<
     protected _collection: Collection;
     protected _scrollController: ScrollController;
     private _itemSizeProperty: string;
+    private _virtualScrollMode: IVirtualScrollMode;
     private _keepScrollPosition: boolean = false;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
@@ -170,6 +174,7 @@ export abstract class AbstractListVirtualScrollController<
         this._initCollection(options.collection);
 
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
+        this._virtualScrollMode = options.virtualScrollConfig.mode;
 
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
@@ -191,6 +196,11 @@ export abstract class AbstractListVirtualScrollController<
 
     setItemsContainer(itemsContainer: HTMLElement): void {
         this._scrollController.setItemsContainer(itemsContainer);
+    }
+
+    setItemsQuerySelector(newItemsQuerySelector: string): void {
+        const itemsQuerySelector = this._correctItemsSelector(newItemsQuerySelector, this._virtualScrollMode);
+        this._scrollController.setItemsQuerySelector(itemsQuerySelector);
     }
 
     setListContainer(listContainer: HTMLElement): void {
@@ -395,6 +405,10 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     protected _getScrollControllerOptions(options: TOptions): IScrollControllerOptions {
+        const itemsQuerySelector = this._correctItemsSelector(
+            options.itemsQuerySelector,
+            options.virtualScrollConfig.mode
+        );
         return {
             listControl: options.listControl,
             virtualScrollConfig: options.virtualScrollConfig,
@@ -402,7 +416,7 @@ export abstract class AbstractListVirtualScrollController<
             itemsContainer: options.itemsContainer,
             listContainer: options.listContainer,
 
-            itemsQuerySelector: options.itemsQuerySelector,
+            itemsQuerySelector,
             itemsSizeControllerConstructor: this._getItemsSizeControllerConstructor(),
             observerControllerConstructor: this._getObserversControllerConstructor(),
             triggersQuerySelector: options.triggersQuerySelector,
@@ -575,7 +589,7 @@ export abstract class AbstractListVirtualScrollController<
         });
     }
 
-    private _setCollectionIterator(mode: 'remove' | 'hide'): void {
+    private _setCollectionIterator(mode: IVirtualScrollMode): void {
         switch (mode) {
             case 'hide':
                 VirtualScrollHideController.setup(
@@ -588,6 +602,21 @@ export abstract class AbstractListVirtualScrollController<
                 );
                 break;
         }
+    }
+
+    /**
+     * Корректирует селктор элементов.
+     * Если виртуальный скролл настроен скрывать записи вне диапазона, то нужно в селекторе исключить скрытые записи.
+     * @param selector
+     * @param virtualScrollMode
+     * @private
+     */
+    private _correctItemsSelector(selector: string, virtualScrollMode: IVirtualScrollMode): string {
+        let correctedSelector = selector;
+        if (virtualScrollMode === 'hide') {
+            correctedSelector += `:not(${HIDDEN_ITEM_SELECTOR})`;
+        }
+        return correctedSelector;
     }
 
     private _getGivenItemsSizes(): IItemsSizes|null {
