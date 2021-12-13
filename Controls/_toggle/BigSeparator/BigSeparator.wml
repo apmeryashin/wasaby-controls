@@ -21,7 +21,8 @@
      class="controls_toggle_theme-{{_options.theme}} controls-BigSeparator
             controls-BigSeparator__{{_options.value ? 'expanded' : 'collapsed'}}">
     <ws:if data="{{_options.caption}}">
-        <div class="controls-BigSeparator-caption">
+        <div class="controls-BigSeparator-caption
+                   {{(_options.contrastBackground) ? 'controls-BigSeparator-contrast' : 'controls-BigSeparator-same'}}">
             {{_options.caption}}
         </div>
     </ws:if>
