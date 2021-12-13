@@ -1,17 +1,17 @@
 <ws:template name="pinned">
-   <span title="{{item.get('pinned') ? rk('Открепить') : rk('Закрепить')}}" class="{{item.get('pinned') ? 'icon-Pin controls-HistoryList__iconPin-active' : 'icon-PinNull controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin controls-HistoryList__iconPin"
+   <span title="{{item.get('pinned') ? rk('Открепить') : rk('Закрепить')}}" class="{{item.get('pinned') ? 'icon-PinOff controls-icon_style-secondary controls-HistoryList__iconPin-default' : 'icon-PinNull controls-icon_style-secondary controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin"
          on:click="_onPinClick(item)" data-qa="HistoryList__iconPin"></span>
 </ws:template>
 
 <ws:template name="favorite">
-   <span class="{{item.get('pinned') || item.get('client') ? 'icon-Favorite controls-HistoryList__iconPin-active controls-HistoryList__iconPin-active' : 'icon-Unfavorite controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin controls-HistoryList__iconPin}}"
+   <span class="{{item.get('pinned') || item.get('client') ? 'icon-Favorite controls-HistoryList__iconPin-default' : 'icon-Unfavorite controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin}}"
          on:click="_onFavoriteClick(item, text)"></span>
 </ws:template>
 
 <ws:template name="itemContent">
    <div on:swipe="_itemSwipe(item)"
       class="controls-HistoryList__itemWrapper controls-HistoryList_{{_options.orientation}}__itemWrapper" data-qa="HistoryList__item">
-      <div class="controls-HistoryList__item controls-HistoryList_{{_options.orientation}}__item {{item.get('pinned') || item.get('client') ? 'controls-HistoryList__item_pinned'}}"
+      <div class="controls-HistoryList__item controls-text-label {{item.get('pinned') || item.get('client') ? 'controls-HistoryList__item_pinned'}}"
            on:click="_clickHandler(item)" title="{{text}}">{{text}}</div>
       <ws:partial
          attr:class="{{item === _swipeItem ? 'controls-HistoryList__iconSwipe'}}"
@@ -23,8 +23,8 @@
 
 <div class="controls_filterPopup_theme-{{_options.theme}} controls-HistoryList">
    <ws:if data="{{_items.getCount()}}">
-      <div class="controls-HistoryList__heading">{[Ранее отбирались]}</div>
-      <div class="controls-HistoryList__content {{_isMaxHeight && _options.orientation === 'vertical' ? 'controls-HistoryList_block-maxHeight' : ''}}">
+      <div class="controls-HistoryList__heading controls-text-label controls-fontsize-xs">{[Ранее отбирались]}</div>
+      <div class="{{_isMaxHeight && _options.orientation === 'vertical' ? 'controls-HistoryList_block-maxHeight' : ''}}">
          <ws:for data="index, item in _items">
             <ws:if data="{{index < _historyCount}}">
                <ws:partial template="itemContent"

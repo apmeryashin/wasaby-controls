@@ -10,9 +10,9 @@
                additionalTemplate="{{_options.itemTemplate}}"
                column="{{direction}}"/>
 </ws:template>
-<div class="controls_filterPopup_theme-{{_options.theme}} controls-AdditionalParamsRender">
+<div class="controls_filterPopup_theme-{{_options.theme}}">
    <ws:if data="{{_options.headingCaption}}">
-      <div class="controls-AdditionalParamsRender__heading controls-text-unaccented controls-fontsize-xs">
+      <div class="controls-AdditionalParamsRender__heading controls-text-label controls-fontsize-xs">
          {{_options.headingCaption}}
       </div>
    </ws:if>

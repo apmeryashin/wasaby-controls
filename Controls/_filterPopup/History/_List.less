@@ -1,7 +1,6 @@
 .controls-HistoryList__itemWrapper {
    display: inline-flex;
    align-items: center;
-   justify-content: space-between;
    cursor: pointer;
    height: var(--history_item_height_filterPanel);
    width: 100%;
@@ -17,11 +16,11 @@
 }
 
 .controls-HistoryList__heading {
-   font-size: var(--font-size_l);
-   color: var(--history_heading_text-color_filterPanel);
    height: var(--inline_height_default);
    display: inline-flex;
    align-items: center;
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
 }
 
 .controls-HistoryList__content {
@@ -34,7 +33,6 @@
    text-overflow: ellipsis;
    margin-right: var(--offset_m);
    font-size: var(--item_font-size_filterPanel);
-   width: 100%;
    flex-shrink: 1;
 }
 

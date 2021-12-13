@@ -5,7 +5,7 @@
             itemTemplate="{{_options.itemTemplate}}"
             columnProperty="{{_options.columnProperty}}"
             groupProperty="{{_options.groupProperty}}"
-            headingCaption="{[ЕЩЕ МОЖНО ОТОБРАТЬ]}"
+            headingCaption="{[Еще можно отобрать]}"
             arrowVisible="{{_arrowVisible}}"
             arrowExpanded="{{_arrowExpanded}}"
             on:propertyChanged="_updateItem()"
