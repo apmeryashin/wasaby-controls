@@ -608,19 +608,9 @@ class ListEditor extends Control<IListEditorOptions> {
         return this._popupOpener;
     }
 
-    private _setFooterButtonText(selectedKeys: number[] | string[]): void {
-        let hiddenItemsCount = 0;
-        selectedKeys.forEach((itemId) => {
-            const itemRecord = this._items.getRecordById(itemId);
-            if (!itemRecord) {
-                hiddenItemsCount++;
-            }
-        });
-        if (hiddenItemsCount) {
-            this._footerButtonText = `${rk('Еще')} ${hiddenItemsCount}`;
-        } else {
-            this._footerButtonText = null;
-        }
+    private _setFooterButtonText(selectedKeys: string[]): void {
+        const hiddenItems = selectedKeys.filter((itemId) => !this._items.getRecordById(itemId));
+        this._footerButtonText = hiddenItems.length ? `${rk('Еще')} ${hiddenItems.length}` : null;
     }
 
     static getDefaultOptions(): object {

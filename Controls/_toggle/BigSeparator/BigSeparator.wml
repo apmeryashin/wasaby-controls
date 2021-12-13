@@ -19,21 +19,28 @@
 
 <div on:click="_clickHandler()"
      class="controls_toggle_theme-{{_options.theme}} controls-BigSeparator
-            controls-BigSeparator-size-{{_options.iconSize}}
             controls-BigSeparator__{{_options.value ? 'expanded' : 'collapsed'}}">
-    <div class="controls-BigSeparator-{{_options.readOnly ? 'readonly' : 'iconContainer'}}
-                {{(_options.contrastBackground) ? 'controls-BigSeparator-contrast' : 'controls-BigSeparator-same'}}
-                controls-BigSeparator-container-icon-size-{{_options.iconSize}}">
-        <ws:if data="{{_options.value}}">
-            <ws:partial template="arrowIcon" rotate="0"></ws:partial>
-        </ws:if>
-        <ws:else>
-            <ws:if data="{{_options.viewMode === 'arrow'}}">
-                <ws:partial template="arrowIcon" rotate="180"></ws:partial>
+    <ws:if data="{{_options.buttonCaption}}">
+        <div class="controls-BigSeparator-caption">
+            {{_options.buttonCaption}}
+        </div>
+    </ws:if>
+    <ws:else>
+        <div class="controls-BigSeparator-{{_options.readOnly ? 'readonly' : 'iconContainer'}}
+                    {{(_options.contrastBackground) ? 'controls-BigSeparator-contrast' : 'controls-BigSeparator-same'}}
+                    controls-BigSeparator-container-icon-size-{{_options.iconSize}}
+                    controls-BigSeparator-size-{{_options.iconSize}}">
+            <ws:if data="{{_options.value}}">
+                <ws:partial template="arrowIcon" rotate="0"></ws:partial>
             </ws:if>
             <ws:else>
-                <ws:partial template="ellipsisIcon"></ws:partial>
+                <ws:if data="{{_options.viewMode === 'arrow'}}">
+                    <ws:partial template="arrowIcon" rotate="180"></ws:partial>
+                </ws:if>
+                <ws:else>
+                    <ws:partial template="ellipsisIcon"></ws:partial>
+                </ws:else>
             </ws:else>
-        </ws:else>
-    </div>
+        </div>
+    </ws:else>
 </div>
