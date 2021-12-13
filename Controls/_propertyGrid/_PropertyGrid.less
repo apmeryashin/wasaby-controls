@@ -81,6 +81,12 @@
    margin-right: var(--booleanEditor_offset_propertyGrid);
 }
 
+.controls-PropertyGrid__cell_editing > .controls-itemActionsV,
+.controls-PropertyGrid__editor:hover > .controls-itemActionsV {
+   opacity: 1;
+   visibility: visible;
+}
+
 .ws-is-hover {
    .controls-PropertyGrid__row_highlightOnHover:hover {
       background-color: var(--hover_background-color);
@@ -88,11 +94,6 @@
 
    .controls-PropertyGrid__row_highlightOnHover:hover .controls-ListView__multiSelect__borderCircle {
       stroke: var(--border-color);
-   }
-
-   .controls-PropertyGrid__editor:hover > .controls-itemActionsV {
-      opacity: 1;
-      visibility: visible;
    }
 }
 
