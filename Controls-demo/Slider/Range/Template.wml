@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper ws-flexbox">
-    <div class="wrapper">
+    <div data-qa="controlsDemo-SliderBase__column1" class="wrapper">
         <div class="controlsDemo__cell">
             <Router.router:Reference attr:class="controls-text-label"
                                      state="/Controls-demo/app/:app"
@@ -41,7 +41,7 @@
             <Controls-demo.Slider.Range.Precision.Index/>
         </div>
     </div>
-    <div class="wrapper">
+    <div data-qa="controlsDemo-SliderBase__column2" class="wrapper">
         <div class="controlsDemo__cell">
             <Router.router:Reference attr:class="controls-text-label"
                                      state="/Controls-demo/app/:app"

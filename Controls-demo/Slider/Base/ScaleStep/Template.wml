@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
-    <div class="controlsDemo__cell">
+    <div data-qa="controlsDemo-Slider__scaleStep10" class="controlsDemo__cell">
         <div class="controls-text-label">scaleStep=10</div>
         <Controls.slider:Base
                 maxValue="{{100}}"
@@ -8,7 +8,7 @@
                 scaleStep="{{10}}"
         />
     </div>
-    <div class="controlsDemo__cell">
+    <div data-qa="controlsDemo-Slider__scaleStep100" class="controlsDemo__cell">
         <div class="controls-text-label">scaleStep=100</div>
         <Controls.slider:Base
                 maxValue="{{100}}"
