@@ -253,16 +253,15 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     contentResized(contentSize: number): void {
-        this._scrollController.contentResized(contentSize);
         const changed = this._scrollController.contentResized(contentSize);
-        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+        if (changed) {
             this._scrollController.updateItemsSizes();
         }
     }
 
     viewportResized(viewportSize: number): void {
         const changed = this._scrollController.viewportResized(viewportSize);
-        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+        if (changed) {
             this._scrollController.updateItemsSizes();
         }
     }
