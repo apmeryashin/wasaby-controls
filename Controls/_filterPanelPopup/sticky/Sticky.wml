@@ -3,7 +3,7 @@
                                headingIcon="Controls-icons/common:icon-Filter"
                                headingIconSize="2xs"
                                headingIconStyle="primaryFilter"
-                               headingFontSize="l"
+                               headingFontSize="xl"
                                headingFontColorStyle="primary"
                                headingFontWeight="normal"
                                headingCaption="{{_options.headingCaption || _headingCaption}}"
@@ -46,7 +46,7 @@
         <div class="controls-FilterPanelPopup-normal">
             <Controls.filterPanel:View name="filterPanel"
                                        source="{{_options.items}}"
-                                       viewMode="cloud"
+                                       viewMode="popup"
                                        backgroundStyle="{{_options.orientation === 'horizontal' ? 'default' : 'contrast'}}"
                                        orientation="{{_options.orientation}}"
                                        collapsedGroups="{{_options.collapsedGroups}}"

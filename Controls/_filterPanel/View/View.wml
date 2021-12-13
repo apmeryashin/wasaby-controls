@@ -8,9 +8,8 @@
                 groupProperty="name"
                 on:editingObjectChanged="_editingObjectChanged()"
                 on:groupClick="_groupClick()"
-                attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}
-                              controls-FilterViewPanel__propertyGrid_viewMode-{{_options.viewMode}}">
-            <ws:itemsContainerPadding top="null" left="xl" right="xl" bottom="m"/>
+                attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}">
+            <ws:itemsContainerPadding top="null" left="null" right="xl" bottom="m"/>
             <ws:itemTemplate>
                 <ws:partial template="Controls/propertyGrid:ItemTemplate"
                             attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
@@ -49,7 +48,7 @@
         <Controls.scroll:Container backgroundStyle="{{_options.style || 'default'}}" attr:class="controls-FilterViewPanel__scroll controls-FilterViewPanel__scroll-{{_options.viewMode}}">
             <ws:partial template="propertyGrid"/>
             <ws:partial template="extendedItems" attr:class="controls-FilterPanelPopup__extendedItems-vertical"/>
-            <ws:partial template="historyItems"/>
+            <ws:partial template="historyItems" attr:class="controls-FilterPanelPopup__history-vertical"/>
         </Controls.scroll:Container>
     </ws:if>
     <ws:else>
@@ -62,7 +61,7 @@
                 <div class="controls_filterPanel-horizontal__separator"></div>
             </ws:if>
             <div class="controls_filterPanel-horizontal__column">
-                <ws:partial template="historyItems"/>
+                <ws:partial template="historyItems" attr:class="controls-FilterPanelPopup__history-horizontal"/>
             </div>
         </div>
     </ws:else>

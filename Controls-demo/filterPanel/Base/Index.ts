@@ -30,20 +30,61 @@ export default class extends Control {
         });
         this._filterButtonSource = [
             {
-                group: 'Отдел',
-                name: 'department',
-                resetValue: [],
+                group: 'Город',
+                name: 'city',
+                editorTemplateName: 'Controls/filterPanel:DropdownEditor',
+                resetValue: ['1'],
                 caption: '',
-                value: [],
+                value: ['1'],
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:ListEditor',
+                viewMode: 'extended',
                 editorOptions: {
-                    keyProperty: 'department',
-                    displayProperty: 'title',
                     source: new Memory({
-                        data,
-                        keyProperty: 'department'
-                    })
+                        keyProperty: 'id',
+                        data: [
+                            { id: '1', title: 'Yaroslavl' },
+                            { id: '2', title: 'Moscow' },
+                            { id: '3', title: 'St-Petersburg' },
+                            { id: '4', title: 'Astrahan' },
+                            { id: '5', title: 'Arhangelsk' }
+                        ]
+                    }),
+                    displayProperty: 'title',
+                    keyProperty: 'id',
+                    extendedCaption: 'Город'
+                }
+            }, {
+                caption: '',
+                name: 'booleanEditor',
+                editorTemplateName: 'Controls/filterPanel:TextEditor',
+                resetValue: false,
+                viewMode: 'extended',
+                value: false,
+                editorOptions: {
+                    filterValue: true,
+                    extendedCaption: 'Без рабочих групп'
+                }
+            }, {
+                group: 'Должность',
+                name: 'position',
+                editorTemplateName: 'Controls/filterPanel:DropdownEditor',
+                resetValue: ['1'],
+                caption: '',
+                value: ['1'],
+                textValue: '',
+                viewMode: 'extended',
+                editorOptions: {
+                    source: new Memory({
+                        keyProperty: 'id',
+                        data: [
+                            { id: '1', title: 'Разработчик' },
+                            { id: '2', title: 'Тестировщик' },
+                            { id: '3', title: 'Сборщик' }
+                        ]
+                    }),
+                    displayProperty: 'title',
+                    keyProperty: 'id',
+                    extendedCaption: 'Должность'
                 }
             }
         ];

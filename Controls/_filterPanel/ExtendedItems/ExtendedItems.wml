@@ -15,7 +15,8 @@
                                 scope="{{filter.editorOptions}}"
                                 viewMode="{{filter.viewMode}}"
                                 value="{{filter.value}}"
-                                attr:class="controls-FilterViewPanel__additional-editor"
+                                attr:class="controls-FilterViewPanel__additional-editor
+                                            {{!_viewModel.hasBasicItems() ? 'controls-FilterViewPanel__additional-editor_without-basic'}}"
                                 on:propertyValueChanged="_extendedValueChanged(filter)"/>
                 </Controls.Container.Async>
             </ws:for>

@@ -2,11 +2,11 @@
    flex-grow: 1;
    padding-bottom: var(--offset_m);
    background-color: var(--unaccented_background-color);
+   padding-left: calc(var(--offset_m) + var(--icon-size_2xs) + var(--offset_xs));
 }
 
 .controls-FilterViewPanel__additional-caption {
    margin-right: var(--offset_m);
-   margin-left: var(--offset_xl);
    margin-bottom: var(--offset_xs);
    letter-spacing: 0.1em;
    text-transform: uppercase;
@@ -17,7 +17,7 @@
    flex-wrap: wrap;
    width: 100%;
    box-sizing: border-box;
-   padding-left: calc(var(--offset_xl) - var(--additional-editor_horizontal-offset_filterViewPanel));
+   margin-left: calc(-1 * var(--offset_st));
    padding-right: var(--offset_m);
 }
 
@@ -30,6 +30,10 @@
 
 .controls-FilterViewPanel__additional-editor {
    display: inline-block;
+}
+
+.controls-FilterViewPanel__additional-editor_without-basic {
+   font-size: var(--font-size_l);
 }
 
 .controls-FilterViewPanel-additional__footer {
