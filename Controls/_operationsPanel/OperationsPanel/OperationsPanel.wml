@@ -1,4 +1,6 @@
-<div class="controls_operations_theme-{{_options.theme}} controls-operationsPanelV{{ _initialized ? ' controls-operationsPanelV_initialized' : ' controls-operationsPanelV_notInitialized' }}">
+<div class="controls_operations_theme-{{_options.theme}}
+            controls-operationsPanelV{{ _initialized ? ' controls-operationsPanelV_initialized' : ' controls-operationsPanelV_notInitialized' }}
+            {{_options.newDesign ? 'controls-operationsPanelV_newDesign' : ''}}">
     <Controls.operations:MultiSelector selectedKeys="{{ _options.selectedKeys }}"
                                        excludedKeys="{{ _options.excludedKeys }}"
                                        selectionCountMode="{{_options.selectionCountMode}}"
@@ -32,6 +34,16 @@
     <ws:if data="{{_options.rightTemplate}}">
         <ws:partial attr:class="controls-operationsPanelV__rightTemplate {{ _initialized ? '' : 'ws-invisible' }}"
                     template="{{_options.rightTemplate}}"/>
+    </ws:if>
+    <ws:if data="{{_options.newDesign}}">
+        <div class="controls-operationsPanelV__multiSelector_separator"></div>
+        <div class="controls-operationsPanelNew__closeButton
+                    controls-icon
+                    controls-fontweight-bold
+                    icon-Close
+                    controls-icon_size-m
+                    controls-icon_style-unaccented"
+             on:click="_close()"></div>
     </ws:if>
     <Controls.event:Listener event="controlResize"
                              on:controlResize="_onResize()"/>

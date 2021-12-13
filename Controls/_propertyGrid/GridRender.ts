@@ -121,7 +121,7 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
         return this._getItemIndex(item) - 1;
     }
 
-    protected _propertyValueChanged(e: SyntheticEvent<Event>, item: Model, value: Record<string, any>): void {
+    protected _propertyValueChanged(e: SyntheticEvent<Event>, item: Model, value: Record<string, unknown>): void {
         e.stopPropagation();
         this._notify('propertyValueChanged', [item, value]);
     }

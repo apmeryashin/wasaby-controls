@@ -363,7 +363,7 @@ export default class Button extends BaseDropdown {
     }
 
     protected _deactivated(): void {
-        if (this._options.closeMenuOnOutsideClick) {
+        if (this._controller.getPopupOptions().closeOnOutsideClick ?? this._options.closeMenuOnOutsideClick) {
             this.closeMenu();
         }
     }

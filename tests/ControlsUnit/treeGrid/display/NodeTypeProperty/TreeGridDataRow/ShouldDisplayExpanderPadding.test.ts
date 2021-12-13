@@ -1,7 +1,8 @@
 import {assert} from 'chai';
 import {Model} from 'Types/entity';
 import {TreeItem} from 'Controls/display';
-import {TreeGridCollection, TreeGridDataRow, TreeGridGroupDataRow} from 'Controls/treeGrid';
+import {TreeGridCollection, TreeGridDataRow} from 'Controls/treeGrid';
+import { RecordSet } from 'Types/collection';
 
 describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridDataRow/ShouldDisplayExpanderPadding', () => {
     const owner = {
@@ -16,38 +17,47 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridDataRow/ShouldDispl
         owner
     });
 
-    it('should return false when direct parent is TreeGridGroupDataRow', () => {
-        const parent = new TreeGridGroupDataRow({
-            contents: new Model({
-                rawData: {
-                    id: 1,
-                    nodeType: 'group',
-                    parent: null,
-                    node: true,
-                    hasChildren: true
-                },
+    it('should display expander padding for items inside groupNode by has node inside groupNode', () => {
+        const collection = new TreeGridCollection({
+            collection: new RecordSet({
+                rawData: [
+                    {
+                        id: 1,
+                        nodeType: 'group',
+                        parent: null,
+                        node: true,
+                        hasChildren: true
+                    }, {
+                        id: 11,
+                        nodeType: null,
+                        parent: 1,
+                        node: null,
+                        hasChildren: true
+                    }, {
+                        id: 12,
+                        nodeType: null,
+                        parent: 1,
+                        node: null,
+                        hasChildren: true
+                    }
+                ],
                 keyProperty: 'id'
             }),
+            root: null,
             columns: [],
-            owner,
-            parent: root
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'node',
+            hasChildrenProperty: 'hasChildren',
+            nodeTypeProperty: 'nodeType',
+            expandedItems: [null]
         });
-        const child = new TreeGridDataRow({
-            contents: new Model({
-                rawData: {
-                    id: 11,
-                    nodeType: null,
-                    parent: 1,
-                    node: true,
-                    hasChildren: true
-                },
-                keyProperty: 'id'
-            }),
-            columns: [],
-            parent,
-            owner
-        });
-        assert.isFalse(child.shouldDisplayExpanderPadding(null, null));
+
+        assert.isFalse(collection.at(1).shouldDisplayExpanderPadding(null, null));
+        assert.isFalse(collection.at(2).shouldDisplayExpanderPadding(null, null));
+
+        collection.at(1).getContents().set('node', true);
+        assert.isTrue(collection.at(2).shouldDisplayExpanderPadding(null, null));
     });
 
     it('should return true when direct parent is not TreeGridGroupDataRow', () => {

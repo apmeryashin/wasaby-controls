@@ -133,11 +133,11 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         return `property-grid-item-${this.getContents().get(this._$keyProperty)}`;
     }
 
-    getPropertyValue(): any {
+    getPropertyValue(): unknown {
         return this._$propertyValue;
     }
 
-    setPropertyValue(editingObject: Object | Model | Record<string, any>): void {
+    setPropertyValue(editingObject: Object | Model | Record<string, unknown>): void {
         const itemContents = this.getContents();
         this._$propertyValue = object.getPropertyValue(editingObject, itemContents.get(this._$keyProperty));
         this._nextVersion();

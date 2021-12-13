@@ -140,24 +140,19 @@ export abstract class AbstractListVirtualScrollController<
     private readonly _updateDrawingIndicatorUtil?: IUpdateDrawingIndicatorUtil;
     private readonly _hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
-    /**
-     * Флаг, который означает что текущий цикл синхронизации был вызван изменением индексов коллекции
-     * @private
-     */
-    private _collectionIndexesWasChanged: boolean = false;
-
-    /**
-     * Флаг, который означает что в текущий момент мы отрисовываем изменения коллекции.
-     * Нужно для того, чтобы вызвать запланированное обновление размер элементов именно после отрисовки этих элементов.
-     * @private
-     */
-    private _renderCollectionChanges: boolean = false;
-
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
     private _scheduledCheckTriggersVisibility: boolean;
     private _scheduledHideDrawingIndicatorDirection: IDirection;
+    private _doAfterSynchronizationCallback: Function;
+
+    /**
+     * Стейт используется, чтобы определить что сейчас идет синхронизация.
+     * Нужно для того, чтобы не менять индексы уже во время синхронизации.
+     * @private
+     */
+    private _synchronizationInProgress: boolean;
 
     /**
      * Колбэк, который вызывается когда завершился скролл к элементу. Скролл к элементу вызывается асинхронно.
@@ -213,18 +208,13 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterMountListControl(): void {
-        this._renderCollectionChanges = true;
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledCheckTriggerVisibility();
-        this._renderCollectionChanges = false;
     }
 
     beforeUpdateListControl(): void {
-        // Этот цикл синхронизации мог быть вызван не изменением коллекции
-        if (this._collectionIndexesWasChanged) {
-            this._renderCollectionChanges = true;
-        }
+        this._synchronizationInProgress = true;
     }
 
     beforeRenderListControl(): void {
@@ -242,11 +232,10 @@ export abstract class AbstractListVirtualScrollController<
         this._handleScheduledCheckTriggerVisibility();
         this._handleScheduledHideDrawingIndicator();
 
-        if (this._collectionIndexesWasChanged) {
-            this._collectionIndexesWasChanged = false;
-        }
-        if (this._renderCollectionChanges) {
-            this._renderCollectionChanges = false;
+        this._synchronizationInProgress = false;
+        if (this._doAfterSynchronizationCallback) {
+            this._doAfterSynchronizationCallback();
+            this._doAfterSynchronizationCallback = null;
         }
     }
 
@@ -286,6 +275,8 @@ export abstract class AbstractListVirtualScrollController<
 
     contentResized(contentSize: number): void {
         const changed = this._scrollController.contentResized(contentSize);
+        // contentResized может сработать до afterRender.
+        // Поэтому если запланировано обновление размеров, то мы его должны обязательно сделать на afterRender
         if (changed && !this._itemsRangeScheduledSizeUpdate) {
             this._scrollController.updateItemsSizes();
         }
@@ -293,6 +284,8 @@ export abstract class AbstractListVirtualScrollController<
 
     viewportResized(viewportSize: number): void {
         const changed = this._scrollController.viewportResized(viewportSize);
+        // viewportResized может сработать до afterRender.
+        // Поэтому если запланировано обновление размеров, то мы его должны обязательно сделать на afterRender
         if (changed && !this._itemsRangeScheduledSizeUpdate) {
             this._scrollController.updateItemsSizes();
         }
@@ -463,38 +456,49 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
-        this._collectionIndexesWasChanged = true;
-        this._scheduleUpdateItemsSizes(params.range);
-        // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
-        // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
-        // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
-        this._scheduleCheckTriggersVisibility();
+        // Нельзя изменять индексы во время синхронизации, т.к. возможно что afterRender будет вызван другими измениями.
+        // Из-за этого на afterRender не будет еще отрисован новый диапазон, он отрисуется на следующую синхронизацию.
+        this._doAfterSynchronization(() => {
+            this._scheduleUpdateItemsSizes(params.range);
+            // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
+            // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
+            // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
+            this._scheduleCheckTriggersVisibility();
 
-        // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
-        // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
-        // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
-        // PS. ОБРАТИТЬ ВНИМАНИЕ! Восстанавливать скролл нужно ВСЕГДА, т.к. если записи добавляются в самое начало,
-        // то startIndex не изменится, а изменится только endIndex, но по факту это изменение startIndex.
-        this._applyIndexes(params.range.startIndex, params.range.endIndex);
+            // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
+            // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
+            // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
+            // PS. ОБРАТИТЬ ВНИМАНИЕ! Восстанавливать скролл нужно ВСЕГДА, т.к. если записи добавляются в самое начало,
+            // то startIndex не изменится, а изменится только endIndex, но по факту это изменение startIndex.
+            this._applyIndexes(params.range.startIndex, params.range.endIndex);
 
-        // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
-        // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
-        // и мы будем знать актуальную scrollPosition.
-        // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
-        if (params.shiftDirection !== null) {
-            this._scheduleScroll({
-                type: 'calculateRestoreScrollParams',
-                params: {
-                    direction: params.shiftDirection,
-                    range: params.oldRange,
-                    placeholders: params.oldPlaceholders
-                } as IEdgeItemCalculatingParams
-            });
+            // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
+            // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
+            // и мы будем знать актуальную scrollPosition.
+            // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
+            if (params.shiftDirection !== null) {
+                this._scheduleScroll({
+                    type: 'calculateRestoreScrollParams',
+                    params: {
+                        direction: params.shiftDirection,
+                        range: params.oldRange,
+                        placeholders: params.oldPlaceholders
+                    } as IEdgeItemCalculatingParams
+                });
 
-            if (this._updateDrawingIndicatorUtil) {
-                this._updateDrawingIndicatorUtil(params.shiftDirection, true);
-                this._scheduleHideDrawingIndicator(params.shiftDirection);
+                if (this._updateDrawingIndicatorUtil) {
+                    this._updateDrawingIndicatorUtil(params.shiftDirection, true);
+                    this._scheduleHideDrawingIndicator(params.shiftDirection);
+                }
             }
+        });
+    }
+
+    private _doAfterSynchronization(callback: Function): void {
+        if (this._synchronizationInProgress) {
+            this._doAfterSynchronizationCallback = callback;
+        } else {
+            callback();
         }
     }
 
@@ -519,9 +523,7 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     private _handleScheduledUpdateItemsSizes(): void {
-        // Обновляем размеры, только тогда, когда отрендирились изменения коллекции.
-        // Т.к. мы планировали обновить размеры после изменения индексов.
-        if (this._itemsRangeScheduledSizeUpdate && this._renderCollectionChanges) {
+        if (this._itemsRangeScheduledSizeUpdate) {
             this._scrollController.updateItemsSizes(this._itemsRangeScheduledSizeUpdate);
             this._itemsRangeScheduledSizeUpdate = null;
         }
