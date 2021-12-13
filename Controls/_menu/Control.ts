@@ -237,15 +237,24 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>,
                               item: CollectionItem<Model>,
-                              sourceEvent: SyntheticEvent<MouseEvent>): void {
-        // menu:Control могут положить в пункт меню, от такого пунта открывать подменю не нужно
-        // TODO: https://online.sbis.ru/opendoc.html?guid=6fdbc4ca-d19a-46b3-ad68-24fceefa8ed0
+                              sourceEvent: SyntheticEvent<MouseEvent>) {
         if (item.getContents() instanceof Model && !this._isTouch() &&
             !this._options.isDragging &&
             sourceEvent.target.closest('.controls-menu') === this._container) {
-            this._clearClosingTimout();
-            this._setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
+            this._hoveredTarget = sourceEvent.target;
+        }
+    }
 
+    protected _itemMouseMove(event: SyntheticEvent<MouseEvent>,
+                             item: CollectionItem<Model>,
+                             sourceEvent: SyntheticEvent<MouseEvent>): void {
+        // menu:Control могут положить в пункт меню, от такого пунта открывать подменю не нужно
+        // TODO: https://online.sbis.ru/opendoc.html?guid=6fdbc4ca-d19a-46b3-ad68-24fceefa8ed0
+        if (item.getContents() instanceof Model && !this._isTouch() && this._subDropdownItem !== item &&
+            !this._options.isDragging &&
+            sourceEvent.target.closest('.controls-menu') === this._container) {
+            this._clearClosingTimout();
+            this._setItemParamsOnHandle(item, sourceEvent.nativeEvent);
             this._checkOpenedMenu(sourceEvent.nativeEvent, item);
             this._startOpeningTimeout();
         }
@@ -539,10 +548,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _setItemParamsOnHandle(
         item: CollectionItem<Model>,
-        target: EventTarget,
         nativeEvent: MouseEvent): void {
         this._hoveredItem = item;
-        this._hoveredTarget = target;
         this._enterEvent = nativeEvent;
     }
 
