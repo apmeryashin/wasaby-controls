@@ -254,14 +254,18 @@ export abstract class AbstractListVirtualScrollController<
 
     contentResized(contentSize: number): void {
         const changed = this._scrollController.contentResized(contentSize);
-        if (changed) {
+        // contentResized может сработать до afterRender.
+        // Поэтому если запланировано обновление размеров, то мы его должны обязательно сделать на afterRender
+        if (changed && !this._itemsRangeScheduledSizeUpdate) {
             this._scrollController.updateItemsSizes();
         }
     }
 
     viewportResized(viewportSize: number): void {
         const changed = this._scrollController.viewportResized(viewportSize);
-        if (changed) {
+        // viewportResized может сработать до afterRender.
+        // Поэтому если запланировано обновление размеров, то мы его должны обязательно сделать на afterRender
+        if (changed && !this._itemsRangeScheduledSizeUpdate) {
             this._scrollController.updateItemsSizes();
         }
     }
