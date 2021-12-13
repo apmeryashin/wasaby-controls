@@ -15,7 +15,8 @@ export default class Demo extends Control<IControlOptions> {
                 name: 'description',
                 caption: 'Описание',
                 captionOptions: {
-                    fontSize: 'xl'
+                    fontSize: 'xl',
+                    fontColorStyle: 'label'
                 },
                 editorOptions: {
                     minLines: 3
