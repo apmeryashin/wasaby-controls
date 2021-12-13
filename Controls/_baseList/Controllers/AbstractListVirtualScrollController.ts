@@ -486,11 +486,11 @@ export abstract class AbstractListVirtualScrollController<
                     placeholders: params.oldPlaceholders
                 } as IEdgeItemCalculatingParams
             });
-        }
 
-        if (this._updateDrawingIndicatorUtil) {
-            this._updateDrawingIndicatorUtil(params.shiftDirection, true);
-            this._scheduleHideDrawingIndicator(params.shiftDirection);
+            if (this._updateDrawingIndicatorUtil) {
+                this._updateDrawingIndicatorUtil(params.shiftDirection, true);
+                this._scheduleHideDrawingIndicator(params.shiftDirection);
+            }
         }
     }
 
