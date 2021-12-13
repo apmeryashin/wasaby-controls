@@ -58,6 +58,7 @@
                      <Controls.toggle:BigSeparator contrastBackground="{{false}}"
                                                    caption="{{_footerButtonText}}"
                                                    iconSize="l"
+                                                   fontSize="xs"
                                                    on:click="_handleFooterClick()"/>
                  </div>
              </ws:partial>

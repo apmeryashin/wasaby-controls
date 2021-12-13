@@ -22,6 +22,7 @@
             controls-BigSeparator__{{_options.value ? 'expanded' : 'collapsed'}}">
     <ws:if data="{{_options.caption}}">
         <div class="controls-BigSeparator-caption
+                   controls-fontsize-{{_options.fontSize}}
                    {{(_options.contrastBackground) ? 'controls-BigSeparator-contrast' : 'controls-BigSeparator-same'}}">
             {{_options.caption}}
         </div>
