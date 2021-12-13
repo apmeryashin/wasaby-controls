@@ -16,7 +16,8 @@
         </div>
     </ws:if>
 
-    <div class="controls-StackTemplate-content_wrapper">
+    <div class="controls-StackTemplate-content_wrapper
+{{_options.backgroundStyle === _options.headerBackgroundStyle ? (_options.backgroundStyle === 'default') ? 'controls-StackTemplate_backgroundColor' : 'controls-background-' + _options.backgroundStyle)}}">
         <div class="controls-StackTemplate-content">
             <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}">
                 <ws:partial template="Controls/_popupTemplate/Stack/Template/Header" scope="{{_options}}"
