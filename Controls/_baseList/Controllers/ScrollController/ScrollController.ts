@@ -388,9 +388,9 @@ export class ScrollController {
      * @return {boolean} Изменился ли диапазон отображаемых записей.
      */
     scrollToItem(itemIndex: number): boolean {
-        // TODO не забыть про InertialScrolling
-        const rangeResult = this._calculator.shiftRangeToIndex(itemIndex);
-        return rangeResult.indexesChanged;
+        const result = this._calculator.shiftRangeToIndex(itemIndex);
+        this._processCalculatorResult(result);
+        return result.indexesChanged;
     }
 
     /**

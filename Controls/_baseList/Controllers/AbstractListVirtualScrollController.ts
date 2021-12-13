@@ -228,7 +228,11 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     beforeRenderListControl(): void {
-        this._handleScheduledScroll();
+        // На beforeRender нам нужно только считать параметры для восстановления скролла.
+        // Все остальные типы скролла выполняются на afterRender, когда записи уже отрисовались.
+        if (this._scheduledScrollParams && this._scheduledScrollParams.type === 'calculateRestoreScrollParams') {
+            this._handleScheduledScroll();
+        }
     }
 
     afterRenderListControl(): void {
