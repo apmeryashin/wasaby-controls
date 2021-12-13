@@ -15,6 +15,11 @@ export const enum STACK_OPERATION {
     remove = 'remove'
 }
 
+interface IUpdateHeaders {
+    header?: IRegisterEventData;
+    operation?: string;
+}
+
 export default class SizeAndVisibilityObserver {
     private _resizeObserver: ResizeObserverUtil;
     protected _initialized: boolean = false;
@@ -78,7 +83,7 @@ export default class SizeAndVisibilityObserver {
         return this._headers[id].inst instanceof Group;
     }
 
-    private _getGroupByHeader(header: StickyBlock) {
+    private _getGroupByHeader(header: StickyBlock): IRegisterEventData {
         for (const headerId in this._headers) {
             if (this._isGroup(headerId)) {
                 const groupChildren = this._headers[headerId].inst.getChildrenHeaders();
@@ -90,9 +95,10 @@ export default class SizeAndVisibilityObserver {
         }
     }
 
-    private _groupInObject(group: IRegisterEventData, object: object): boolean {
-        const groupInObject = Object.entries(object).find(([, updateGroup]) =>
-            (updateGroup.header?.id ?? updateGroup.id) === group.id);
+    private _groupInObject(group: IRegisterEventData, object: IUpdateHeaders | IRegisterEventData): boolean {
+        const groupInObject = Object.entries(object).find(([, updateGroup]) => {
+            return ((updateGroup as IUpdateHeaders).header?.id ?? (updateGroup as IRegisterEventData).id) === group.id;
+        });
         return !!groupInObject;
     }
 
@@ -106,7 +112,7 @@ export default class SizeAndVisibilityObserver {
         let heightChanged = false;
         let operation;
         let groupHeader;
-        const updateHeaders = {};
+        const updateHeaders: IUpdateHeaders = {};
         const updateGroups = {};
         for (const entry of entries) {
             const header = this._getHeaderFromNode(entry.target);
