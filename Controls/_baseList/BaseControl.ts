@@ -1378,7 +1378,7 @@ const _private = {
                 self._children.listView?.getTopLoadingTrigger(),
                 self._children.listView?.getBottomLoadingTrigger()
             );
-            self._indicatorsController?.setViewportFilled(self._viewSize > self._viewportSize && self._viewportSize);
+            self._updateViewportFilledInIndicatorsController();
         }
         return self._viewSize;
     },
@@ -3734,8 +3734,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._children.listView?.getTopLoadingTrigger(),
             this._children.listView?.getBottomLoadingTrigger()
         );
-        // viewSize обновляется раньше чем viewportSize, поэтому проверяем что viewportSize уже есть
-        this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
+        this._updateViewportFilledInIndicatorsController();
         if (scrollTop !== undefined && this._scrollController) {
             this._scrollTop = scrollTop;
             const result = this._scrollController.scrollPositionChange({scrollTop}, false);
@@ -7322,6 +7321,31 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             attachLoadDownTriggerToNull: !!options.attachLoadDownTriggerToNull,
             stopDisplayPortionedSearchCallback
         };
+    }
+
+    private _updateViewportFilledInIndicatorsController(): void {
+        let viewportFilled;
+
+        // viewportSize и viewSize обновляются не одновременно. Чтобы корректно посчитать viewportFilled,
+        // дожидаемся когда оба значения есть.
+        if (!this._viewportSize || !this._viewSize) {
+            viewportFilled = false;
+        } else {
+            const container = this._children?.viewContainer || this._container[0] || this._container;
+            // Не учитываем высоту индикаторов порционного поиска по viewSize.
+            // Т.к. они стикаются и при остановке поиска скрываются.
+            // То есть если эти индикаторы учитывается во viewSize,
+            // то после остановки поиска останется свободное место во вьюпорте.
+            const portionedSearchIndicators = container.querySelectorAll && container.querySelectorAll('.controls-BaseControl__portionedSearch') || [];
+            let portionedSearchIndicatorsHeight = 0;
+            portionedSearchIndicators.forEach((it) => {
+                portionedSearchIndicatorsHeight += it.clientHeight;
+            });
+
+            viewportFilled = this._viewSize - portionedSearchIndicatorsHeight > this._viewportSize;
+        }
+
+        this._indicatorsController?.setViewportFilled(viewportFilled);
     }
 
     private _destroyIndicatorsController(): void {

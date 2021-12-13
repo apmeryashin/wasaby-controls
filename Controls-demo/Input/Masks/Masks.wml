@@ -14,6 +14,6 @@
    <div class="controlsDemo__cell">
       <div class="controls-text-label">Автомобильные номера</div>
       <div class="controls-text-label">mask = ['L ddd LL ddd', 'L dddd dd', 'ddd LL d dd', 'LL dddd dd', 'xxxxxxxxxxxxxxxxxxxx']</div>
-      <Controls.input:Mask placeholder="А 000 АА 00" mask="{{_masks}}" bind:value="_value" attr:class="ControlsDemo-MaskInput_cardField"/>
+      <Controls.input:Mask placeholder="А 000 АА 00" mask="{{_masks}}" bind:value="_value" attr:class="ControlsDemo-MaskInput_carField"/>
    </div>
 </div>

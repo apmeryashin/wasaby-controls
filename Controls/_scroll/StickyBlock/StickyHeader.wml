@@ -13,7 +13,15 @@
          ></div>
       </ws:if>
 
+      <ws:if data="{{_canShadowVisible.left}}">
+          <!-- We use visibility style instead of "display: none;" statement to prevent jumps when scrolling on iPad -->
+          <div class="controls-Scroll__shadow controls-StickyHeader__shadow-left controls-Scroll__shadow_vertical
+                 {{ !_isLeftShadowVisible ? ' ws-invisible' }}" data-qa="StickyHeader__shadow-left"
+          ></div>
+      </ws:if>
+
       <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop" style="{{ _getObserverStyle('top', _options.offsetTop, _options.shadowVisibility) }}"></div>
+      <div name="observationTargetLeft" class="controls-StickyHeader__observationTargetLeft" style="{{ _getObserverStyle('left', 0, _options.shadowVisibility) }}"></div>
       <!-- Remove scope="{{_options}}" after complete https://online.sbis.ru/opendoc.html?guid=dd8d85ac-2024-41f6-b9b3-550b4413b566 -->
       <ws:partial template="{{_options.content}}"
                   attr:class="controls-StickyHeader__content"
@@ -21,8 +29,16 @@
                   isHeaderFixed="{{!!_model.fixedPosition}}"
                   on:arrowClick="_notifyHandler('arrowClick')"
                   on:controlResize="_selfResizeHandler()"/>
+      <div name="observationTargetRight" class="controls-StickyHeader__observationTargetRight" style="{{ _getObserverStyle('right', 0, _options.shadowVisibility) }}"></div>
       <div name="observationTargetBottomLeft" class="controls-StickyHeader__observationTargetBottomLeft" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
       <div name="observationTargetBottomRight" class="controls-StickyHeader__observationTargetBottomRight" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
+
+      <ws:if data="{{_canShadowVisible.right}}">
+          <!-- We use visibility style instead of "display: none;" statement to prevent jumps when scrolling on iPad -->
+          <div class="controls-Scroll__shadow controls-StickyHeader__shadow-right controls-Scroll__shadow_vertical
+                {{ !_isRightShadowVisible ? ' ws-invisible' }}" data-qa="StickyHeader__shadow-right"
+          ></div>
+      </ws:if>
 
       <ws:if data="{{_canShadowVisible.bottom}}">
          <!--We use visibility style insted of "display: none;" statement to prevent jumps when scrolling on iPad -->

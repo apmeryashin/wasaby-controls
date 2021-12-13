@@ -189,7 +189,7 @@ export default interface IProperty {
      * </pre>
      * @see editorTemplateName
      */
-    editorOptions?: Record<string, any>;
+    editorOptions?: Record<string, unknown>;
     editorClass?: string;
     /**
      * @cfg {String} Тип свойства.
