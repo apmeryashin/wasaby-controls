@@ -25,4 +25,17 @@
             </ws:itemTemplate>
         </Controls.propertyGrid:PropertyGrid>
     </div>
+
+    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controls-Demo__wide-propertyGrid">
+        <div class="controls-text-label">captionPosition = none</div>
+        <Controls.propertyGrid:PropertyGrid
+                bind:editingObject="_editingObject"
+                typeDescription="{{_typeDescription}}"
+                captionPosition="none">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/propertyGrid:ItemTemplate"
+                            scope="{{itemTemplate}}"/>
+            </ws:itemTemplate>
+        </Controls.propertyGrid:PropertyGrid>
+    </div>
 </div>

@@ -13,6 +13,8 @@
                     itemTemplate="{{_options.itemTemplate}}"
                     toggleEditorsTemplate="{{_toggleEditorsTemplate}}"
                     captionPosition="{{_options.captionPosition}}"
+                    captionFontColorStyle="{{_options.captionFontColorStyle}}"
+                    captionFontSize="{{_options.captionFontSize}}"
                     multiSelectVisibility="{{_options.multiSelectVisibility}}"/>
     </div>
 </div>
