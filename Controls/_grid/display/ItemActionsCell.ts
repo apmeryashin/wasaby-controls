@@ -48,7 +48,7 @@ export default class ItemActionsCell extends Cell<null, Row<null>> implements II
     }
 
     shouldDisplayItemActions(): boolean {
-        return !!this._$owner.DisplayItemActions && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
+        return !!this._$owner.DisplayItemActions && (this._$owner.shouldDisplayActions());
     }
 }
 

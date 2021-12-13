@@ -625,7 +625,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     shouldDisplayActions(): boolean {
-        return this.hasVisibleActions() || this.isEditing();
+        const editingConfig = this.getEditingConfig();
+        // Не нужно показывать блок с ItemActions, если нет ни одной видимой кнопки,
+        // И в настройках редактирования отключен тулбар.
+        return this.hasVisibleActions() ||
+               (this.isEditing() && (!editingConfig || editingConfig.toolbarVisibility === true));
     }
 
     hasActionWithIcon(): boolean {
