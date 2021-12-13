@@ -18,6 +18,7 @@
                                       on:itemSwipe="_itemSwipe()"
                                       on:itemActionMouseDown="_itemActionMouseDown()"
                                       on:itemMouseEnter="_itemMouseEnter()"
+                                      on:itemMouseMove="_itemMouseMove()"
                                       on:checkBoxClick="_checkBoxClick()"
 
                                       on:mouseenter="_mouseEnterHandler()"
