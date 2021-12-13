@@ -3,6 +3,7 @@ import {isHidden} from 'Controls/_scroll/StickyBlock/Utils';
 import {getClosestControl} from 'UI/NodeCollector';
 import StickyBlock from 'Controls/_scroll/StickyBlock';
 import Group from 'Controls/_scroll/StickyBlock/Group';
+import {IRegisterEventData} from 'Controls/_scroll/StickyBlock/Utils';
 
 interface IHeightEntry {
     key: HTMLElement;
@@ -12,6 +13,11 @@ interface IHeightEntry {
 export const enum STACK_OPERATION {
     add = 'add',
     remove = 'remove'
+}
+
+interface IUpdateHeaders {
+    header?: IRegisterEventData;
+    operation?: string;
 }
 
 export default class SizeAndVisibilityObserver {
@@ -77,7 +83,7 @@ export default class SizeAndVisibilityObserver {
         return this._headers[id].inst instanceof Group;
     }
 
-    private _getGroupByHeader(header: StickyBlock) {
+    private _getGroupByHeader(header: StickyBlock): IRegisterEventData {
         for (const headerId in this._headers) {
             if (this._isGroup(headerId)) {
                 const groupChildren = this._headers[headerId].inst.getChildrenHeaders();
@@ -89,8 +95,10 @@ export default class SizeAndVisibilityObserver {
         }
     }
 
-    private _groupInObject(group: Group, object: object): boolean {
-        const groupInObject = Object.entries(object).find(([, updateGroup]) => updateGroup.index === group.index);
+    private _groupInObject(group: IRegisterEventData, object: IUpdateHeaders | IRegisterEventData): boolean {
+        const groupInObject = Object.entries(object).find(([, updateGroup]) => {
+            return ((updateGroup as IUpdateHeaders).header?.id ?? (updateGroup as IRegisterEventData).id) === group.id;
+        });
         return !!groupInObject;
     }
 
@@ -104,7 +112,7 @@ export default class SizeAndVisibilityObserver {
         let heightChanged = false;
         let operation;
         let groupHeader;
-        const updateHeaders = {};
+        const updateHeaders: IUpdateHeaders = {};
         const updateGroups = {};
         for (const entry of entries) {
             const header = this._getHeaderFromNode(entry.target);
