@@ -359,10 +359,12 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  */
 /**
  * @name Controls/_toggle/Checkbox#checkboxStyle
- * @cfg {String} Цвет заливки чекбокса
+ * @cfg {String} Цвет заливки чекбокса.
+ * Внимание: опция работает только в паре с опцией {@link contrastBackground}
  * @variant default
  * @variant primary
  * @default primary
  * @demo Controls-demo/toggle/Checkbox/CheckboxStyle/Index
+ * @see contrastBackground
  */
 export default Checkbox;

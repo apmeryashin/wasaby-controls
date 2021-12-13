@@ -58,7 +58,8 @@ class CheckboxMarker extends Control<ICheckboxMarkerOptions> {
 
 /**
  * @name Controls/_toggle/CheckboxMarker#checkboxStyle
- * @cfg {String} Цвет заливки чекбокса
+ * @cfg {String} Цвет заливки чекбокса.
+ * Внимание: опция работает только в паре с опцией {@link contrastBackground}
  * @variant primary
  * @variant default
  * @default primary
