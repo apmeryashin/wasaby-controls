@@ -4634,6 +4634,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.updateItemActionsOnce(this, newOptions);
         }
 
+        if (!isEqual(this._options.fadedKeys, newOptions.fadedKeys)) {
+            this._listModel.setFadedKeys(newOptions.fadedKeys);
+        }
+
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
         }
