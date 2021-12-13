@@ -41,10 +41,10 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
     iconSize?: string;
 
     /**
-     * @name Controls/_toggle/BigSeparator#buttonCaption
+     * @name Controls/_toggle/BigSeparator#caption
      * @cfg {String} Текст кнопки.
      */
-    buttonCaption?: string;
+    caption?: string;
 }
 
 /**

@@ -20,9 +20,9 @@
 <div on:click="_clickHandler()"
      class="controls_toggle_theme-{{_options.theme}} controls-BigSeparator
             controls-BigSeparator__{{_options.value ? 'expanded' : 'collapsed'}}">
-    <ws:if data="{{_options.buttonCaption}}">
+    <ws:if data="{{_options.caption}}">
         <div class="controls-BigSeparator-caption">
-            {{_options.buttonCaption}}
+            {{_options.caption}}
         </div>
     </ws:if>
     <ws:else>
