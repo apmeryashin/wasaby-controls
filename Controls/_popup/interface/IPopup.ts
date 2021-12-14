@@ -138,6 +138,8 @@ export interface IPopupController {
 
     popupResizingLine(item: IPopupItem, offset: number): boolean;
 
+    popupResizingArrow(item: IPopupItem, offset: number): boolean;
+
     elementAnimated(item: IPopupItem, container: HTMLElement): boolean;
 
     elementMaximized(item: IPopupItem, container: HTMLElement, state: boolean): boolean;

@@ -91,6 +91,15 @@ class DialogController extends BaseController {
         return (new Deferred()).callback();
     }
 
+    popupResizingArrow(item: IDialogItem, offset: object): boolean {
+        const newWidthValue = (item.position.width || item.sizes.width) + offset.x;
+        const newHeightValue = (item.position.height || item.sizes.height) + offset.y;
+
+        item.position.width = Math.abs(newWidthValue);
+        item.position.height = Math.abs(newHeightValue);
+        return true;
+    }
+
     getDefaultConfig(item: IDialogItem): void|Promise<void> {
         const {
             horizontal: horisontalProperty,

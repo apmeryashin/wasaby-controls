@@ -178,6 +178,10 @@ abstract class BaseController implements IPopupController {
         return false;
     }
 
+    popupResizingArrow(item: IPopupItem, offset: object): boolean {
+        return false;
+    }
+
     popupMouseEnter(item: IPopupItem): boolean {
         if (item.popupOptions.autoClose) {
             if (item.closeId) {

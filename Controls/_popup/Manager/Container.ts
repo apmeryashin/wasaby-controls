@@ -68,6 +68,19 @@ class Container extends Control<IControlOptions> {
         }
     }
 
+    protected _getCloseButtonVisible(popupItem: IPopupItem): boolean {
+        if (popupItem.popupOptions.templateOptions.closeButtonViewMode === 'external') {
+            let result = popupItem.popupOptions.templateOptions.closeButtonVisible;
+            this._popupItems.forEach((item) => {
+                if (item.popupOptions.modal && popupItem !== item) {
+                    result = false;
+                }
+            });
+            return result;
+        }
+        return popupItem.popupOptions.templateOptions.closeButtonVisible;
+    }
+
     protected _onTemplateMounted(popupId: string): void {
         this._mountedPopups.add(popupId);
         const popup = this.getPopupById(popupId);

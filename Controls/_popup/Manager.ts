@@ -464,6 +464,16 @@ class Manager {
         return false;
     }
 
+    protected _popupResizingArrow(id: string, offset: number): boolean {
+        const element = this.find(id);
+        if (element) {
+            element.controller.popupResizingArrow(element, offset);
+            Manager._notifyEvent('managerPopupUpdated', [element, this._popupItems]);
+            return true;
+        }
+        return false;
+    }
+
     protected _popupUpdated(id: string): boolean {
         const element = this.find(id);
         if (element) {

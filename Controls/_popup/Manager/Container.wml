@@ -37,6 +37,7 @@
                    zoom: {{item.position.zoom}};"
                                        scope="{{item.popupOptions}}"
                                        position="{{item.position}}"
+                                       closeButtonVisible="{{_getCloseButtonVisible(item)}}"
         />
     </ws:for>
 </div>

@@ -6,13 +6,14 @@ import {getRoundClass} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
 import {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/popupTemplate';
+import {IBorderRadiusOptions} from 'Controls/interface';
 
-export interface IDialogTemplateOptions extends IControlOptions, IPopupTemplateOptions {
-
-   draggable?: boolean;
-   headerBackgroundStyle?: string;
-   headerBorderVisible?: boolean;
-   backgroundStyle?: string;
+export interface IDialogTemplateOptions extends IControlOptions, IPopupTemplateOptions, IBorderRadiusOptions {
+    draggable?: boolean;
+    headerBackgroundStyle?: string;
+    headerBorderVisible?: boolean;
+    backgroundStyle?: string;
+    resizable?: boolean;
 }
 
 interface IDragObject {
@@ -30,6 +31,7 @@ interface IDragObject {
  *
  * @public
  * @author Красильников А.С.
+ * @implements Controls/interface:IBorderRadius
  * @implements Controls/popupTemplate:IPopupTemplate
  * @implements Controls/popupTemplate:IPopupTemplateBase
  * @demo Controls-demo/PopupTemplate/Dialog/Index
@@ -46,6 +48,10 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
             Logger.error('Controls/popupTemplate:Dialog : Используется устаревшая опция closeButtonVisibility,' +
                                                                                      ' используйте closeButtonVisible');
         }
+    }
+
+    protected _onResizingOffset(event: Event, offset: object): void {
+        this._notify('popupResizingArrow', [offset], {bubbling: true});
     }
 
     protected _beforeUpdate(options: IDialogTemplateOptions): void {
@@ -110,18 +116,20 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
             headingFontSize: '3xl',
             closeButtonVisible: true,
             closeButtonViewMode: 'linkButton',
-            closeButtonTransparent: true
+            closeButtonTransparent: true,
+            borderRadius: 's',
+            resizable: false
         };
     }
 }
 
 Object.defineProperty(DialogTemplate, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
+    enumerable: true,
+    configurable: true,
 
-   get(): object {
-      return DialogTemplate.getDefaultOptions();
-   }
+    get(): object {
+        return DialogTemplate.getDefaultOptions();
+    }
 });
 
 /**
@@ -173,6 +181,20 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
  * @name Controls/_popupTemplate/Dialog/Template/DialogTemplate#maximize
  * @cfg {Boolean} Режим отображения окна во весь экран. Влияет на видимость границы и тени диалогового окна.
  * @see headerBorderVisible
+ */
+
+/**
+ * @name Controls/_popupTemplate/Dialog/Template/DialogTemplate#borderRadius
+ * @cfg {BorderRadius}
+ * @default s
+ * @demo Controls-demo/PopupTemplate/Dialog/borderRadius/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Dialog/Template/DialogTemplate#resizable
+ * @cfg {boolean} Определяет возможность изменения размера окна
+ * @default false
+ * @demo Controls-demo/Popup/Dialog/Resizable/Index
  */
 
 export default DialogTemplate;
