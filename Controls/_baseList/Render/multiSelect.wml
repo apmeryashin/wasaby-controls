@@ -8,7 +8,7 @@
                     value="{{ item.isSelected() }}"/>
     </ws:if>
     <ws:else>
-        <Controls.Container.Async templateName="Controls/toggle:CheckboxMarker" item="{{ item }}">
+        <Controls.Container.Async templateName="Controls/toggle:CheckboxMarker" templateOptions="{{ {'item': item} }}">
             <ws:partial template="{{ content.resolvedTemplate }}"
                         attr:tabindex="-1"
                         attr:class="{{ multiSelectClasses || item.getMultiSelectClasses(backgroundColorStyle, cursor, highlightOnHover) }}"
