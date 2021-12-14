@@ -72,9 +72,10 @@
                                                  tooltip="{[Сбросить]}"
                                                  attr:data-qa="FilterPanel__resetButton"/>
                     </ws:if>
-                    <Controls.buttons:Button viewMode="functionalButton"
+                    <Controls.buttons:Button viewMode="{{_options.applyButtonCaption ? 'button' : 'functionalButton'}}"
                                              buttonStyle="{{_options.applyButtonStyle}}"
-                                             icon="icon-Yes"
+                                             caption="{{_options.applyButtonCaption}}"
+                                             icon="{{!_options.applyButtonCaption ? 'icon-Yes'}}"
                                              iconStyle="contrast"
                                              on:click="_applyFilter()"
                                              attr:tabindex="1"

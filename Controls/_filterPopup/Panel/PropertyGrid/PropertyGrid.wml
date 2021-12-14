@@ -11,6 +11,7 @@
                   <div class="controls-FilterPanel__PropertyGrid__item
                               {{index === _lastVisibleIndex ? 'controls-FilterPanel__PropertyGrid__lastItem' : 'controls-FilterPanel__PropertyGrid__notLastItem'}}" data-qa="FilterPanel__PropertyGrid__item">
                      <ws:partial template="{{content.resolvedTemplate}}"
+                                 attr:class="controls-fontsize-2xl"
                                  item="{{content.item}}"
                                  templateOptions="{{_options.itemTemplate.templateOptions}}"
                                  on:valueChanged="_valueChangedHandler(index)"
