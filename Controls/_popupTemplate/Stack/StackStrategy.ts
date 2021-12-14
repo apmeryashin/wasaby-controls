@@ -8,6 +8,7 @@ import {
 } from 'Controls/popup';
 import {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 import {IStackItem} from 'Controls/_popupTemplate/Stack/StackController';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 // Minimum popup indentation from the right edge
 const MINIMAL_PANEL_DISTANCE = 48;
@@ -51,7 +52,7 @@ export class StackStrategy {
         if (position.width && position.maxWidth < position.width) {
             position.width = position.maxWidth;
         }
-
+        this._fixMinWidthForZoom(position, tCoords);
         return position;
     }
 
@@ -71,6 +72,29 @@ export class StackStrategy {
     getMaxPanelWidth(stackParentCoords: IPopupPosition): number {
         // window.innerWidth брать нельзя, при масштабировании на ios значение меняется, что влияет на ширину панелей.
         return document.body.clientWidth - MINIMAL_PANEL_DISTANCE - stackParentCoords.right;
+    }
+
+    /**
+     * В сучае когда для панели заданы статические значения размеров их нужно ограничить размером экрана,
+     * чтобы у нас не оказалась панель шириной больше, чем размер доступной области.
+     * Это происходит, т.к. размеры задают с учетом того, что экран не может быть меньше 1024,
+     * а при зуме размеры пикселей увеличиваются и body занимает меньше пикселей, чем есть на экране
+     * Пример:
+     * Задают у панели ширину 950 с расчетом на то, что минимальная ширина экрана 1024
+     * С учетом зума 1,5 ширина доступной области будет 1024 / 1,5 ~ 680, тогда панелль будет шире экрана.
+     * @param position
+     * @param parentCoords
+     * @private
+     */
+    private _fixMinWidthForZoom(position: IPopupPosition, parentCoords: IPopupPosition): void {
+        const zoom = DimensionsMeasurer.getZoomValue(document?.body);
+        const maxPanelWidth = this.getMaxPanelWidth(parentCoords);
+        if (zoom && zoom !== 1 && position.minWidth && position.minWidth > maxPanelWidth) {
+            position.minWidth = maxPanelWidth;
+            if (position.width) {
+                position.width = maxPanelWidth;
+            }
+        }
     }
 
     private _getRightPosition(tCoords, isAboveMaximizePopup: boolean): number {
