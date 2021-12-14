@@ -1495,27 +1495,7 @@ const _private = {
             if (self._indicatorsController) {
                 switch (action) {
                     case IObservable.ACTION_RESET:
-                        // прерывать поиск нужнно до вызова onCollectionReset.
-                        // onCollectionReset при необходимости запустит порционный поиск.
-                        if (_private.isPortionedLoad(self)) {
-                            // Событие reset коллекции приводит к остановке активного порционного поиска.
-                            // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
-                            self._indicatorsController.endDisplayPortionedSearch();
-
-                            // после ресета пытаемся подгрузить данные, возможно вернули не целую страницу
-                            _private.tryLoadToDirectionAgain(self);
-                        }
-
-                        if (!_private.isPortionedLoad(self) && self._indicatorsController.isDisplayedPortionedSearch()) {
-                            self._indicatorsController.endDisplayPortionedSearch();
-                        }
-
-                        // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
-                        // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
-                        const hasMoreData = _private.getHasMoreData(self);
-                        self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
-
-                        self._indicatorsController.onCollectionReset();
+                        self._indicatorsControllerOnCollectionReset();
                         break;
                     case IObservable.ACTION_ADD:
                         self._indicatorsController.onCollectionAdd();
@@ -3901,6 +3881,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
             this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
+            this._indicatorsControllerOnCollectionReset();
 
             // При пересоздании коллекции будет скрыт верхний триггер и индикатор,
             // чтобы не было лишней подгрузки при отрисовке нового списка.
@@ -3965,6 +3946,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
                     this._updateScrollController(newOptions);
                     this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
+                    this._indicatorsControllerOnCollectionReset();
                     if (_private.hasMarkerController(this)) {
                         _private.getMarkerController(this).updateOptions({
                             model: this._listViewModel,
@@ -6734,6 +6716,30 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             attachLoadDownTriggerToNull: !!options.attachLoadDownTriggerToNull,
             stopDisplayPortionedSearchCallback
         };
+    }
+
+    private _indicatorsControllerOnCollectionReset(): void {
+        // прерывать поиск нужнно до вызова onCollectionReset.
+        // onCollectionReset при необходимости запустит порционный поиск.
+        if (_private.isPortionedLoad(this)) {
+            // Событие reset коллекции приводит к остановке активного порционного поиска.
+            // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
+            this._indicatorsController.endDisplayPortionedSearch();
+
+            // после ресета пытаемся подгрузить данные, возможно вернули не целую страницу
+            _private.tryLoadToDirectionAgain(this);
+        }
+
+        if (!_private.isPortionedLoad(this) && this._indicatorsController.isDisplayedPortionedSearch()) {
+            this._indicatorsController.endDisplayPortionedSearch();
+        }
+
+        // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
+        // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
+        const hasMoreData = _private.getHasMoreData(this);
+        this._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
+
+        this._indicatorsController.onCollectionReset();
     }
 
     private _updateViewportFilledInIndicatorsController(): void {
