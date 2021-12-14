@@ -181,7 +181,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    static getDefaultOptions(): Object {
         return {
             itemTemplate: ItemTemplate,
-            itemsLayout: 'default'
+            itemsLayout: 'default',
+            backgroundStyle: 'lookupSelectedCollection'
         };
     }
 }
