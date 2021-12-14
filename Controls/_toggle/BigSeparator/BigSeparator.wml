@@ -7,13 +7,13 @@
     </svg>
 </ws:template>
 <ws:template name="ellipsisIcon">
-<svg version="1.1" id="iconExpanded" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-     viewBox="0 0 22 4" style="enable-background:new 0 0 22 4;" xml:space="preserve"
-     class="controls-BigSeparator-icon{{_options.readOnly ? '-readonly' : ''}}
+    <svg version="1.1" id="iconExpanded" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+         viewBox="0 0 22 4" style="enable-background:new 0 0 22 4;" xml:space="preserve"
+         class="controls-BigSeparator-icon{{_options.readOnly ? '-readonly' : ''}}
                 controls-BigSeparator-iconExpanded-size-{{_options.iconSize}}">
         <circle class="st0" cx="2" cy="2" r="2"/>
-    <circle class="st0" cx="11" cy="2" r="2"/>
-    <circle class="st0" cx="20" cy="2" r="2"/>
+        <circle class="st0" cx="11" cy="2" r="2"/>
+        <circle class="st0" cx="20" cy="2" r="2"/>
     </svg>
 </ws:template>
 
@@ -21,19 +21,19 @@
      class="controls_toggle_theme-{{_options.theme}} controls-BigSeparator
             controls-BigSeparator-size-{{_options.iconSize}}
             controls-BigSeparator__{{_options.value ? 'expanded' : 'collapsed'}}">
-<div class="controls-BigSeparator-{{_options.readOnly ? 'readonly' : 'iconContainer'}}
+    <div class="controls-BigSeparator-{{_options.readOnly ? 'readonly' : 'iconContainer'}}
                 {{(_options.contrastBackground) ? 'controls-BigSeparator-contrast' : 'controls-BigSeparator-same'}}
                 controls-BigSeparator-container-icon-size-{{_options.iconSize}}">
-    <ws:if data="{{_options.value}}">
-        <ws:partial template="arrowIcon" rotate="0"></ws:partial>
-    </ws:if>
-    <ws:else>
-        <ws:if data="{{_options.viewMode === 'arrow'}}">
-            <ws:partial template="arrowIcon" rotate="180"></ws:partial>
+        <ws:if data="{{_options.value}}">
+            <ws:partial template="arrowIcon" rotate="0"></ws:partial>
         </ws:if>
         <ws:else>
-            <ws:partial template="ellipsisIcon"></ws:partial>
+            <ws:if data="{{_options.viewMode === 'arrow'}}">
+                <ws:partial template="arrowIcon" rotate="180"></ws:partial>
+            </ws:if>
+            <ws:else>
+                <ws:partial template="ellipsisIcon"></ws:partial>
+            </ws:else>
         </ws:else>
-    </ws:else>
-</div>
+    </div>
 </div>
