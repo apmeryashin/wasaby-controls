@@ -62,7 +62,6 @@
                      </ws:if>
                      <ws:else>
                          <Controls.toggle:BigSeparator contrastBackground="{{false}}"
-                                                       caption="{{_footerButtonText}}"
                                                        iconSize="l"
                                                        fontSize="xs"/>
                      </ws:else>
