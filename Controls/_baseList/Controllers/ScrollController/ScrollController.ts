@@ -153,11 +153,7 @@ export class ScrollController {
             givenItemsSizes: options.givenItemsSizes
         });
 
-        this._indexesInitializedCallback(this._calculator.getRange());
-        this._hasItemsOutRangeChangedCallback({
-            backward: this._calculator.hasItemsOutRange('backward'),
-            forward: this._calculator.hasItemsOutRange('forward')
-        });
+        this._processInitialize();
     }
 
     viewportResized(viewportSize: number): boolean {
@@ -343,7 +339,7 @@ export class ScrollController {
         const itemsSizes = this._itemsSizesController.resetItems(totalCount);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        const result = this._calculator.resetItems(totalCount, keepPosition);
+        this._calculator.resetItems(totalCount, keepPosition);
 
         const hasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),
@@ -360,7 +356,7 @@ export class ScrollController {
             this.setForwardTriggerPosition('offset');
         }
 
-        this._processCalculatorResult(result);
+        this._processInitialize();
     }
 
     // endregion Collection changes
@@ -510,6 +506,14 @@ export class ScrollController {
                 shiftDirection: result.shiftDirection
             });
         }
+    }
+
+    private _processInitialize(): void {
+        this._indexesInitializedCallback(this._calculator.getRange());
+        this._hasItemsOutRangeChangedCallback({
+            backward: this._calculator.hasItemsOutRange('backward'),
+            forward: this._calculator.hasItemsOutRange('forward')
+        });
     }
 
     // endregion Private API
