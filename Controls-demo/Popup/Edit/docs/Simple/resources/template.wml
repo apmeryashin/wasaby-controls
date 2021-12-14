@@ -1,0 +1,36 @@
+<Controls.popupTemplate:Stack headingCaption="Создание записи"
+                              attr:style="width:{{_options.width}}px">
+    <ws:headerContentTemplate>
+        <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+            <Controls.buttons:Button caption="Создать"
+                                     on:click="_update()"
+                                     attr:class="demo-MyFormController__save"/>
+        </div>
+    </ws:headerContentTemplate>
+    <ws:bodyContentTemplate>
+        <div>
+            <Controls.form:Controller name="formController"
+                                      source="{{_options.source}}"
+                                      bind:record="_record"
+                                      initializingWay="{{_options.initializingWay}}">
+                <div>
+                    <div class="controls-MyFormController__block">
+                        <div class="controls-MyFormController__row controls-MyFormController__title">Автор:</div>
+                        <div class="controls-MyFormController__row">
+                            <Controls.input:Text bind:value="content.record.name"
+                                                 class="demo-MyFormController__name"/>
+                        </div>
+                    </div>
+
+                    <div class="controls-MyFormController__block">
+                        <div class="controls-MyFormController__row controls-MyFormController__title">Запись:</div>
+                        <div class="controls-MyFormController__row">
+                            <Controls.input:Text bind:value="content.record.description"
+                                                 class="demo-MyFormController__price"/>
+                        </div>
+                    </div>
+                </div>
+            </Controls.form:Controller>
+        </div>
+    </ws:bodyContentTemplate>
+</Controls.popupTemplate:Stack>
