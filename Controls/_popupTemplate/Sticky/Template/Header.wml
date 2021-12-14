@@ -16,6 +16,7 @@
             <Controls.heading:Title caption="{{_options.headingCaption}}"
                                     fontColorStyle="{{_options.headingFontColorStyle}}"
                                     fontSize="{{_options.headingFontSize}}"
+                                    textTransform="{{_options.headingTextTransform}}"
                                     readOnly="{{true}}"
                                     fontWeight="{{_options.headingFontWeight}}"
                                     tooltip="{{_options.headingCaption}}"/>
