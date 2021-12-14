@@ -2917,14 +2917,14 @@ const _private = {
         //  событие mouseEnter. Надо перевести его на item-key, тогда вот это всё уйдёт туда.
         //   https://online.sbis.ru/opendoc.html?guid=2b8e4422-4185-4ad8-834d-d1283375b385
         const itemKey = item.getContents().getKey();
-        const itemSelector = `${_private.getViewUniqueClass(self)} .controls-ListView__itemV[item-key="${itemKey}"]`;
+        const itemSelector = `.${_private.getViewUniqueClass(self)} .controls-ListView__itemV[item-key="${itemKey}"]`;
         const itemNode = self._container.querySelector(itemSelector);
 
         if (!itemNode) {
             return;
         }
 
-        const htmlNodeIndex = [].indexOf.call(listContainer.children, itemNode);
+        const htmlNodeIndex = [].indexOf.call(listContainer.children, itemNode) + 1;
         const hoveredContainers = HoverFreeze.getHoveredItemContainers(
             self._container,
             htmlNodeIndex,
