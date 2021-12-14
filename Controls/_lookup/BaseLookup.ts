@@ -53,7 +53,7 @@ export default abstract class
     protected _beforeUpdate(newOptions: ILookupOptions): Promise<SelectedItems>|void|boolean {
         const updateResult = this._lookupController.update(newOptions);
         const updateResultCallback = () => {
-            this._afterItemsChanged();
+            this._afterItemsChanged(newOptions);
         };
 
         if (updateResult instanceof Promise) {
@@ -136,9 +136,9 @@ export default abstract class
         return selectedKeys;
     }
 
-    private _afterItemsChanged(): void {
+    private _afterItemsChanged(options?: ILookupOptions): void {
         this._itemsChanged(this._items = this._lookupController.getItems());
-        this._notifyChanges();
+        this._notifyChanges(options);
     }
 
     private _setItems(items: SelectedItems): void {
@@ -146,15 +146,16 @@ export default abstract class
         this._lookupController.setItems(items);
     }
 
-    private _notifyChanges(): void {
+    private _notifyChanges(options?: ILookupOptions): void {
         const controller = this._lookupController;
-        this._notifySelectedKeysChanged(controller.getSelectedKeys());
+        this._notifySelectedKeysChanged(controller.getSelectedKeys(), options);
         this._notify('itemsChanged', [controller.getItems()]);
         this._notify('textValueChanged', [controller.getTextValue()]);
     }
 
-    protected _notifySelectedKeysChanged(newSelectedKeys: TKey[]): void {
-        const {added, removed} = ArrayUtil.getArrayDifference(this._getSelectedKeys(this._options), newSelectedKeys);
+    protected _notifySelectedKeysChanged(newSelectedKeys: TKey[], options?: ILookupOptions): void {
+        const {added, removed} =
+            ArrayUtil.getArrayDifference(this._getSelectedKeys(options ?? this._options), newSelectedKeys);
         if (added?.length || removed?.length) {
             this._notify('selectedKeysChanged', [newSelectedKeys, added, removed]);
         }
