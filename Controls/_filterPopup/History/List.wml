@@ -1,5 +1,5 @@
 <ws:template name="pinned">
-   <span title="{{item.get('pinned') ? rk('Открепить') : rk('Закрепить')}}" class="{{item.get('pinned') ? 'icon-PinOff controls-icon_style-secondary controls-HistoryList__iconPin-default' : 'icon-PinNull controls-icon_style-secondary controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin"
+   <span title="{{item.get('pinned') ? rk('Открепить') : rk('Закрепить')}}" class="{{item.get('pinned') ? 'icon-PinOff controls-HistoryList__iconPin-default' : 'icon-PinNull controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin"
          on:click="_onPinClick(item)" data-qa="HistoryList__iconPin"></span>
 </ws:template>
 
@@ -24,7 +24,7 @@
 <div class="controls_filterPopup_theme-{{_options.theme}} controls-HistoryList">
    <ws:if data="{{_items.getCount()}}">
       <div class="controls-HistoryList__heading controls-text-label controls-fontsize-xs">{[Ранее отбирались]}</div>
-      <div class="{{_isMaxHeight && _options.orientation === 'vertical' ? 'controls-HistoryList_block-maxHeight' : ''}}">
+      <div class="controls-HistoryList_block {{_isMaxHeight && _options.orientation === 'vertical' ? 'controls-HistoryList_block-maxHeight' : ''}}">
          <ws:for data="index, item in _items">
             <ws:if data="{{index < _historyCount}}">
                <ws:partial template="itemContent"
