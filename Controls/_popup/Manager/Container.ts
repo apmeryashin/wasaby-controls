@@ -69,8 +69,8 @@ class Container extends Control<IControlOptions> {
     }
 
     protected _getCloseButtonVisible(popupItem: IPopupItem): boolean {
-        if (popupItem.popupOptions.templateOptions.closeButtonViewMode === 'external') {
-            let result = popupItem.popupOptions.templateOptions.closeButtonVisible;
+        if (popupItem.popupOptions?.templateOptions?.closeButtonViewMode === 'external') {
+            let result = popupItem.popupOptions?.templateOptions?.closeButtonVisible;
             this._popupItems.forEach((item) => {
                 if (item.popupOptions.modal && popupItem !== item) {
                     result = false;
@@ -78,7 +78,7 @@ class Container extends Control<IControlOptions> {
             });
             return result;
         }
-        return popupItem.popupOptions.templateOptions.closeButtonVisible;
+        return popupItem.popupOptions?.templateOptions?.closeButtonVisible;
     }
 
     protected _onTemplateMounted(popupId: string): void {
