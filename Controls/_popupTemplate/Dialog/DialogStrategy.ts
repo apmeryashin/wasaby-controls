@@ -33,7 +33,7 @@ export class DialogStrategy {
      */
     getPosition(windowData: IPopupPosition = {}, containerSizes: IPopupSizes, item: IDialogItem): Position {
         const popupOptions = item.popupOptions;
-        const limitedSizes = this._calculateLimitOfSizes(popupOptions, windowData);
+        const limitedSizes = this._calculateLimitOfSizes(item, windowData);
         const {minWidth, maxWidth, minHeight, maxHeight} = limitedSizes;
 
         const positionCoordinates = this._getPositionCoordinates(windowData, containerSizes, item, limitedSizes);
@@ -295,8 +295,10 @@ export class DialogStrategy {
         };
     }
 
-    private _calculateLimitOfSizes(popupOptions: IDialogPopupOptions = {}, windowData: IPopupPosition): ILimitingSizes {
+    private _calculateLimitOfSizes(item: IDialogItem, windowData: IPopupPosition): ILimitingSizes {
+        const popupOptions = item.popupOptions;
         let maxHeight = popupOptions.maxHeight || windowData.height;
+        const itemMinHeight = this._getMinHeight(item, windowData);
         if (popupOptions.fittingMode === 'overflow') {
             maxHeight = windowData.height;
         } else {
@@ -304,7 +306,7 @@ export class DialogStrategy {
                 maxHeight = windowData.height - popupOptions.top;
             }
         }
-        const minHeight = Math.min(popupOptions.minHeight, maxHeight);
+        const minHeight = Math.min(itemMinHeight, maxHeight);
         maxHeight = Math.min(maxHeight, windowData.height);
 
         if (minHeight) {
@@ -313,10 +315,18 @@ export class DialogStrategy {
 
         return {
             minWidth: popupOptions.minWidth,
-            minHeight: Math.min(popupOptions.minHeight, maxHeight),
+            minHeight: Math.min(itemMinHeight, maxHeight),
             maxHeight,
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
         };
+    }
+
+    private _getMinHeight(item: IDialogItem, windowData: IPopupPosition): number {
+        // Размер, который сохраняется при развороте не должен ломать ресайзы рабочей области и вылезать за нее
+        if (item.resizeMinHeight) {
+            return Math.min(item.resizeMinHeight, windowData.height);
+        }
+        return item.popupOptions.minHeight;
     }
 
     private _calculateValue(
