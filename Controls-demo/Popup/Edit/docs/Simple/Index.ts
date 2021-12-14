@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import template = require('wml!Controls-demo/Popup/Edit/docs/Simple/Template');
+import {data, gridColumns, gridHeader} from 'Controls-demo/Popup/Edit/docs/resources/data';
 import 'wml!Controls-demo/List/Grid/DemoName';
 import 'wml!Controls-demo/List/Grid/DemoItem';
 import 'css!Controls-demo/Controls-demo';
@@ -13,34 +14,11 @@ class Simple extends Control<IControlOptions> {
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: [
-                {
-                    id: 0,
-                    name: 'Anna',
-                    description: 'First note in this registry'
-                }
-            ]
+            data,
+            filter: (item) => item.get('id') === '0'
         });
-        this._gridColumns = [
-            {
-                displayProperty: 'name',
-                width: '100px',
-                template: 'wml!Controls-demo/List/Grid/DemoName'
-            },
-            {
-                displayProperty: 'description',
-                width: '450px',
-                template: 'wml!Controls-demo/List/Grid/DemoName'
-            }
-        ];
-        this._gridHeader = [
-            {
-                title: 'Автор'
-            },
-            {
-                title: 'Запись'
-            }
-        ];
+        this._gridColumns = gridColumns;
+        this._gridHeader = gridHeader;
     }
 
     protected _clickHandler(): void {
@@ -60,6 +38,7 @@ class Simple extends Control<IControlOptions> {
             opener: this,
             width: 400,
             templateOptions: {
+                type: 'Simple',
                 source: this._viewSource,
                 initializingWay: 'create'
             }
