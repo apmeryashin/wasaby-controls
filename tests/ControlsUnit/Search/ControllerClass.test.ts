@@ -266,6 +266,25 @@ describe('Controls/search:ControllerClass', () => {
             assert.ok(searchController.getRoot() === 'myRoot');
          });
 
+         it('update filter while searching', async () => {
+            const sourceController = getSourceController(getHierarchyOptions());
+            let searchControllerOptions = {
+               sourceController,
+               ...getHierarchyOptions()
+            };
+            const searchController = getSearchController(searchControllerOptions);
+            searchController.setPath(getPath());
+            await searchController.search('testSearchValue');
+            searchControllerOptions = {...searchControllerOptions};
+            searchControllerOptions.root = 'myRoot';
+            searchControllerOptions.filter = {
+               testField: 'testValue'
+            };
+            searchController.update(searchControllerOptions);
+            searchController.reset(true);
+            assert.ok(searchController.getRoot() === 'myRoot');
+         });
+
          it('update with same root while searching', async() => {
             const sourceController = getSourceController(getHierarchyOptions());
             let searchControllerOptions = {
