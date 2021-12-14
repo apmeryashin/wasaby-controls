@@ -10,7 +10,6 @@ import { IGridControl } from 'Controls/grid';
 export type TGroupNodeVisibility = 'hasdata' | 'visible';
 
 export interface IOptions extends ITreeOptions {
-    nodeTypeProperty?: string;
     groupNodeVisibility?: TGroupNodeVisibility;
     deepScrollLoad?: boolean;
 }
