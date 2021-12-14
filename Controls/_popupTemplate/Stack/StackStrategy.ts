@@ -8,6 +8,7 @@ import {
 } from 'Controls/popup';
 import {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 import {IStackItem} from 'Controls/_popupTemplate/Stack/StackController';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 // Minimum popup indentation from the right edge
 const MINIMAL_PANEL_DISTANCE = 48;
