@@ -40,12 +40,12 @@ define(
             return menuControl;
          };
 
-         it('_itemMouseEnter', function() {
+         it('_itemMouseMove', function() {
             let menuRender = getRender();
             let actualData;
             let isStopped = false;
             menuRender._notify = (e, d) => {
-               if (e === 'itemMouseEnter') {
+               if (e === 'itemMouseMove') {
                   actualData = d;
                }
             };
@@ -53,7 +53,7 @@ define(
                type: 'click',
                stopPropagation: () => {isStopped = true;}
             };
-            menuRender._itemMouseEnter(event, { key: 1 }, 'event');
+            menuRender._itemMouseMove(event, { key: 1 }, 'event');
             assert.deepEqual(actualData[0], { key: 1 });
             assert.deepEqual(actualData[1], 'event');
             assert.isTrue(isStopped);
