@@ -6,16 +6,10 @@ import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import * as sinon from 'sinon';
 
-function getLookupOptions(): Partial<ILookupOptions> {
-    return {
-        source: getSource(),
-        selectedKeys: []
-    };
-}
-
 async function getBaseLookup(options?: Partial<ILookupOptions>, receivedState?: RecordSet): Promise<Lookup> {
     const lookupOptions = {
-        ...getLookupOptions(),
+        source: getSource(),
+        selectedKeys: [],
         ...options
     };
     const lookup = new Lookup();
@@ -133,21 +127,6 @@ describe('Controls/lookup:Input', () => {
             assert.ok(isDataLoadCallbackCalled);
         });
 
-    });
-
-    describe('_beforeUpdate', () => {
-        it('selectedKeys changed in new options', () => {
-            it('selectedKeys changed in options', async () => {
-                const lookup = await getBaseLookup({
-                    selectedKeys: [1]
-                });
-                const stub = sinon.stub(lookup, '_notify');
-                const lookupOptions = getLookupOptions();
-                lookupOptions.selectedKeys = ['test'];
-                await lookup._beforeUpdate(lookupOptions);
-                stub.notCalledWith('selectedKeysChanged');
-            });
-        });
     });
 
     describe('handlers', () => {
