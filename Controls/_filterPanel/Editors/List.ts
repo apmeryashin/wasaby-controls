@@ -146,7 +146,7 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _itemsReadyCallback: Function = null;
     protected _markedKey: string|number;
     protected _expandedItems: TKey[] = [];
-    protected _footerButtonText: string = null;
+    protected _hiddenItemsCount: number = null;
 
     protected _beforeMount(options: IListEditorOptions): void|Promise<RecordSet> {
         const {sourceController} = options;
@@ -193,7 +193,7 @@ class ListEditor extends Control<IListEditorOptions> {
             this._selectedKeys = propertyValue;
             this._setColumns(options);
             this._navigation = this._getNavigation(options);
-            this._setFooterButtonText(this._selectedKeys);
+            this._setHiddenItemsCount(this._selectedKeys);
         }
         if (filterChanged || valueChanged) {
             this._setFilter(valueChanged ? this._selectedKeys : null, options);
@@ -228,7 +228,7 @@ class ListEditor extends Control<IListEditorOptions> {
         this._items = items;
         this._addSyntheticItemsToOriginItems(items, this._options);
         this._items.subscribe('onCollectionChange', this._onCollectionChange);
-        this._setFooterButtonText(this._selectedKeys);
+        this._setHiddenItemsCount(this._selectedKeys);
     }
 
     protected _onCollectionChange(): void {
@@ -391,7 +391,7 @@ class ListEditor extends Control<IListEditorOptions> {
         }
         this._setMarkedKey(this._selectedKeys, this._options);
         this._setColumns(this._options);
-        this._setFooterButtonText(this._selectedKeys);
+        this._setHiddenItemsCount(this._selectedKeys);
         this._notify('propertyValueChanged', [{value: this._getValue(this._selectedKeys)}], {bubbling: true});
     }
 
@@ -608,9 +608,9 @@ class ListEditor extends Control<IListEditorOptions> {
         return this._popupOpener;
     }
 
-    private _setFooterButtonText(selectedKeys: string[]): void {
+    private _setHiddenItemsCount(selectedKeys: string[]): void {
         const hiddenItems = selectedKeys.filter((itemId) => !this._items.getRecordById(itemId));
-        this._footerButtonText = hiddenItems.length ? `${rk('Еще')} ${hiddenItems.length}` : null;
+        this._hiddenItemsCount = hiddenItems.length;
     }
 
     static getDefaultOptions(): object {
