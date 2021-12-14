@@ -514,10 +514,6 @@ export class ScrollController {
             backward: this._calculator.hasItemsOutRange('backward'),
             forward: this._calculator.hasItemsOutRange('forward')
         });
-        this._placeholdersChangedCallback({
-            backward: 0,
-            forward: 0
-        });
     }
 
     // endregion Private API
