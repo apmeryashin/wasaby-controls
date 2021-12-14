@@ -1,0 +1,61 @@
+<div attr:style="width: 600px;margin-top: 20px">
+    <Controls.popupTemplate:Stack headingCaption="Запись">
+        <ws:headerContentTemplate>
+            <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+                <Controls.buttons:Button caption="{{_isReadOnlyFields ? 'Изменить' : 'Сохранить'}}"
+                                         class="controlsDemo__mr1"
+                                         on:click="_clickHandler()"
+                                         viewMode="link"/>
+                <Controls.buttons:Button caption="Отправить"
+                                         on:click="_update()"
+                                         attr:class="demo-MyFormController__save"/>
+            </div>
+        </ws:headerContentTemplate>
+        <ws:bodyContentTemplate>
+            <div>
+                <Controls.form:Controller name="formController"
+                                          source="{{_source}}"
+                                          bind:record="_record">
+                    <div>
+                        <div class="controls-MyFormController__block">
+                            <div class="controls-MyFormController__row controls-MyFormController__title">Имя:</div>
+                            <div class="controls-MyFormController__row">
+                                <Controls.input:Text bind:value="content.record.name"
+                                                     readOnly="{{_isReadOnlyFields}}"
+                                                     class="demo-MyFormController__name"/>
+                            </div>
+                        </div>
+
+                        <div class="controls-MyFormController__block">
+                            <div class="controls-MyFormController__row controls-MyFormController__title">Место:</div>
+                            <div class="controls-MyFormController__row">
+                                <Controls.input:Text bind:value="content.record.origin"
+                                                     readOnly="{{_isReadOnlyFields}}"
+                                                     class="demo-MyFormController__origin"/>
+                            </div>
+                        </div>
+
+                        <div class="controls-MyFormController__block">
+                            <div class="controls-MyFormController__row controls-MyFormController__title">Занимаемая должность:</div>
+                            <div class="controls-MyFormController__row">
+                                <Controls.input:Text bind:value="content.record.position"
+                                                     readOnly="{{_isReadOnlyFields}}"
+                                                     class="demo-MyFormController__position"/>
+                            </div>
+                        </div>
+
+                        <div class="controls-MyFormController__block">
+                            <div class="controls-MyFormController__row controls-MyFormController__title">Дополнительная информация:</div>
+                            <div class="controls-MyFormController__row">
+                                <Controls.input:Text bind:value="content.record.additionalInfo"
+                                                     readOnly="{{_isReadOnlyFields}}"
+                                                     class="demo-MyFormController__additionalInfo"/>
+                            </div>
+                        </div>
+                    </div>
+                </Controls.form:Controller>
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.popupTemplate:Stack>
+    <Controls.popup:Confirmation name="confirmation"/>
+</div>

@@ -1,0 +1,11 @@
+<Controls.list:DataContainer source="{{_viewSource}}"
+                             attr:class="controlsDemo__wrapper__padding-left"
+                             keyProperty="id">
+    <div>
+        <div class="controls-text-label">Демонстрационный пример функционала документа, находящегося в отдельной
+                                                                            вкладке, нажмите изменить что-бы начать</div>
+        <div class="ws-flexbox ws-align-items-center ws-justify-content-center">
+            <Controls-demo.Popup.Edit.docs.ExternalView.resources.Stack source="{{_viewSource}}"/>
+        </div>
+    </div>
+</Controls.list:DataContainer>
