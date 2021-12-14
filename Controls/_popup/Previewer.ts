@@ -1,12 +1,12 @@
 import {Control, TemplateFunction} from 'UI/Base';
+import * as template from 'wml!Controls/_popup/Previewer/Previewer';
 import {IPreviewerPopupOptions} from 'Controls/_popup/interface/IPreviewerOpener';
 import {IPreviewer, IPreviewerOptions} from 'Controls/_popup/interface/IPreviewer';
 import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import PreviewerOpener from './Opener/Previewer';
-import 'css!Controls/popup';
-import template = require('wml!Controls/_popup/Previewer/Previewer');
 import {CalmTimer} from 'Controls/_popup/utils/FastOpen';
+import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
 const CALM_DELAY: number = 300; // During what time should not move the mouse to start opening the popup.
 /**
@@ -41,7 +41,12 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
         });
     }
 
+    protected _afterMount(options?: IPreviewerOptions): void {
+        RegisterUtil(this, 'scroll', this._scrollHandler.bind(this), {listenAll: true});
+    }
+
     protected _beforeUnmount(): void {
+        UnregisterUtil(this, 'scroll', {listenAll: true});
         this._calmTimer.stop();
     }
 
@@ -149,8 +154,10 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     }
 
     protected _scrollHandler(event: SyntheticEvent<MouseEvent>): void {
-        if (this._options.actionOnScroll === 'close') {
-            this._close(event);
+        if (this._isOpened) {
+            if (this._options.actionOnScroll === 'close') {
+                this._close(event);
+            }
         }
     }
 

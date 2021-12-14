@@ -124,6 +124,7 @@ export function getStickyConfig(item: IStickyItem, sizes: IPopupSizes = {}): ISt
 }
 
 export function getStickyDefaultPosition(item, target) {
+    const sizes = calcSizes(item.popupOptions);
     const position = {
         top: -10000,
         left: -10000,
@@ -131,8 +132,8 @@ export function getStickyDefaultPosition(item, target) {
         maxWidth: item.popupOptions.maxWidth || _getWindowWidth(target),
         minHeight: item.popupOptions.minHeight,
         maxHeight: item.popupOptions.maxHeight || _getWindowHeight(target),
-        width: item.popupOptions.width,
-        height: item.popupOptions.height,
+        width: sizes.width,
+        height: sizes.height,
 
         // Error on ios when position: absolute container is created outside the screen and stretches the page
         // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
