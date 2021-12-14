@@ -182,7 +182,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
         return {
             itemTemplate: ItemTemplate,
             itemsLayout: 'default',
-            backgroundStyle: 'lookupSelectedCollection'
+            backgroundStyle: 'default'
         };
     }
 }
