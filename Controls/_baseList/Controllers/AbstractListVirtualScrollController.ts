@@ -409,6 +409,7 @@ export abstract class AbstractListVirtualScrollController<
                     startIndex: range.startIndex,
                     endIndex: range.endIndex
                 });
+                this._scheduleCheckTriggersVisibility();
                 this._applyIndexes(range.startIndex, range.endIndex);
             },
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
