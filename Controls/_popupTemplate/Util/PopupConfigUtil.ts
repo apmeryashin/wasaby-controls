@@ -160,7 +160,7 @@ export function getRoundClass({hasRoundedBorder, options, type}): string {
                 if (options.footerContentTemplate) {
                     return `controls-PopupTemplate__roundBorder_top controls_border-radius-${options.borderRadius || 's'}`;
                 } else {
-                    return 'controls-PopupTemplate__roundBorder';
+                    return `controls-PopupTemplate__roundBorder controls_border-radius-${options.borderRadius || 's'}`;
                 }
             } else {
                 if (!options.footerContentTemplate) {

@@ -9,7 +9,7 @@
                                closeButtonVisible="{{ !!_options.stickyPosition }}"
                                stickyPosition="{{ _options.stickyPosition }}"
                                closeButtonViewMode="external"
-                               attr:class="controls-PeriodLiteDialog__shadow">
+                               attr:class="controls-PeriodLiteDialog__shadow controls-PeriodLiteDialog__sticky">
 <ws:bodyContentTemplate>
    <Controls.dataSource:error.Container
            name="errorContainer" viewConfig="{{_errorViewConfig}}">
