@@ -5,14 +5,6 @@
               value="{{ _isMobile }}"
               captions="{{ ['Мобильный', 'Десктоп'] }}"/>
       <div class="ControlDemo__SlidingPanel-setting">
-         <Controls.input:Label caption="minHeight"/>
-         <Controls.input:Number bind:value="_minHeight"/>
-      </div>
-      <div class="ControlDemo__SlidingPanel-setting">
-         <Controls.input:Label caption="maxHeight"/>
-         <Controls.input:Number bind:value="_maxHeight"/>
-      </div>
-      <div class="ControlDemo__SlidingPanel-setting">
          <Controls.input:Label caption="modal"/>
          <Controls.toggle:Switch bind:value="_modal"/>
       </div>
@@ -52,18 +44,43 @@
          <Controls.input:Label caption="desktop popup width"/>
          <Controls.input:Number bind:value="_desktopWidth"/>
       </div>
-      <div class="ControlDemo__SlidingPanel-setting">
-         <Controls.input:Label caption="heightList"/>
-         <div class="ws-flexbox ws-flex-column">
-            <ws:for data="index in _stepsCount">
-               <Controls.input:Number
-                       attr:class="ControlDemo__SlidingPanel-setting"
-                       on:valueChanged="_heightListInputValueChanged(index)"
-                       value="{{ _heightList[index] }}"/>
-            </ws:for>
-         </div>
-         <Controls.buttons:Button caption="Добавить шаг" on:click="_addHeightListStep()"/>
+      <div class="ws-flexbox">
+         <Controls.input:Label caption="Height definition"/>
+         <Controls.toggle:DoubleSwitch
+                 attr:class="controls-margin_left-m"
+                 bind:value="_heightListActivated"
+                 captions="{{ ['heightList', 'minMaxHeight'] }}"/>
       </div>
+      <ws:if data="{{ _heightListActivated }}">
+         <div class="ControlDemo__SlidingPanel-setting">
+            <div class="ws-flexbox ws-flex-column">
+               <Controls.input:Label caption="heightList"/>
+               <ws:for data="index in _stepsCount">
+                  <div class="ws-flexbox">
+                     <Controls.input:Number
+                             attr:class="ControlDemo__SlidingPanel-setting"
+                             on:valueChanged="_heightListInputValueChanged(index)"
+                             value="{{ _heightList[index] }}"/>
+                     <Controls.buttons:Button
+                          attr:class="controls-margin_left-m"
+                          caption="Удалить"
+                          on:click="_removeStep(index)"/>
+                  </div>
+               </ws:for>
+            </div>
+            <Controls.buttons:Button caption="Добавить шаг" on:click="_addHeightListStep()"/>
+         </div>
+      </ws:if>
+      <ws:else>
+         <div class="ControlDemo__SlidingPanel-setting">
+            <Controls.input:Label caption="minHeight"/>
+            <Controls.input:Number bind:value="_minHeight"/>
+         </div>
+         <div class="ControlDemo__SlidingPanel-setting">
+            <Controls.input:Label caption="maxHeight"/>
+            <Controls.input:Number bind:value="_maxHeight"/>
+         </div>
+      </ws:else>
       <Controls.buttons:Button caption="Открыть шторку" on:click="_openSlidingPanelHandler()"/>
    </div>
 </Controls.Application>
