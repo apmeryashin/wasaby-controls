@@ -55,6 +55,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @implements  Controls/input:IBorderVisibility
  * @implements Controls/input:IPadding
  * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IBackgroundStyle
  *
  * @public
  * @author Герасимов А.М.
