@@ -465,6 +465,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}`;
         markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}_topPadding-${topPadding}`;
+        markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}_topPadding-${topPadding}_${markerClassName}`;
         markerClass += ` controls-ListView__itemV_marker-${this.getMarkerPosition()}`;
         return markerClass;
     }
