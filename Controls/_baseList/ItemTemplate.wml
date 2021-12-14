@@ -38,7 +38,7 @@
             </ws:else>
         </div>
     </ws:else>
-    <ws:if data="{{ (item || itemData).hasVisibleActions() || (item || itemData).isEditing() }}">
+    <ws:if data="{{ (item || itemData).shouldDisplayActions() }}">
         <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
             <ws:partial template="{{ swipeTemplate }}"
                         itemData="{{itemData}}"
