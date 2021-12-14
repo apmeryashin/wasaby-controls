@@ -7,6 +7,7 @@ import {SyntheticEvent} from 'UI/Vdom';
 class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
     protected _isMobile: boolean = true;
+    protected _heightListActivated: boolean = false;
     protected _minHeight: number = 300;
     protected _maxHeight: number = 700;
     protected _position: string[] = ['bottom'];
@@ -62,9 +63,15 @@ class Index extends Control<IControlOptions> {
         this._stepsCount++;
     }
 
+    protected _removeStep(event: SyntheticEvent<InputEvent>, index: number): void {
+        this._heightList.splice(index, 1);
+        this._stepsCount--;
+        this._heightList = [...this._heightList];
+    }
+
     protected _heightListInputValueChanged(event: SyntheticEvent<InputEvent>, index: number, value: number): void {
         this._heightList[index] = value;
-        this._forceUpdate();
+        this._heightList = [...this._heightList];
     }
 
     protected _openSlidingPanelHandler(event: Event, isInsideRestrictive: boolean): void {
@@ -74,10 +81,10 @@ class Index extends Control<IControlOptions> {
             modal: this._modal,
             desktopMode: this._desktopMode[0],
             slidingPanelOptions: {
-                minHeight: this._minHeight,
-                maxHeight: this._maxHeight,
+                minHeight: this._heightListActivated ? undefined : this._minHeight,
+                maxHeight: this._heightListActivated ? undefined : this._maxHeight,
                 position: this._position[0],
-                heightList: this._heightList,
+                heightList: this._heightListActivated ? this._heightList : undefined,
                 autoHeight: this._autoHeight
             },
             dialogOptions: {
