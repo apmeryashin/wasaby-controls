@@ -101,6 +101,25 @@ define(
             UIUtils.Logger.error = error;
          });
 
+         it('check warn console on mask length', function() {
+            let message = '';
+            const cfg = {
+               mask: 'dddd-dd-dd-dddd',
+               replacer: '0',
+               value: '111111111111'
+            };
+            const warn = UIUtils.Logger.warn;
+            const component = createComponent(input.Mask, cfg);
+            UIUtils.Logger.warn = function(arg1) {
+               message = arg1;
+            };
+            component._afterMount(cfg);
+            const warnMessage = `${component._moduleName}: В контрол передана слишком длинная маска (больше 10 символов), это
+                                                                   может сказаться на проблемах с производительностью.`;
+            assert.equal(message, warnMessage);
+            UIUtils.Logger.warn = warn;
+         });
+
          it('calcReplacer', function() {
             var calcReplacer = input.Mask._calcReplacer;
 
