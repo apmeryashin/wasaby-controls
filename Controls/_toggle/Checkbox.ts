@@ -28,6 +28,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
    value?: boolean | null;
    multiline?: boolean;
    horizontalPadding?: string;
+   checkboxStyle?: 'primary' | 'default';
 }
 
 const mapTriState = {false: true, true: null, null: false};
@@ -114,7 +115,8 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
          validationStatus: 'valid',
          contrastBackground: false,
          multiline: true,
-         horizontalPadding: 'default'
+         horizontalPadding: 'default',
+         checkboxStyle: 'primary'
       };
    }
 
@@ -354,5 +356,15 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @name Controls/_toggle/Checkbox#resetValue
  * @cfg
  * @demo Controls-demo/toggle/Checkbox/ResetValue/Index
+ */
+/**
+ * @name Controls/_toggle/Checkbox#checkboxStyle
+ * @cfg {String} Цвет заливки чекбокса.
+ * Внимание: опция работает только в паре с опцией {@link contrastBackground}
+ * @variant default
+ * @variant primary
+ * @default primary
+ * @demo Controls-demo/toggle/Checkbox/CheckboxStyle/Index
+ * @see contrastBackground
  */
 export default Checkbox;

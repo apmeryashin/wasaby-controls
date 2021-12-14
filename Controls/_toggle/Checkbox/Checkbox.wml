@@ -11,6 +11,7 @@
                         value="{{_options.value}}"
                         triState="{{_options.triState}}"
                         contrastBackground="{{_options.contrastBackground}}"
+                        checkboxStyle="{{_options.checkboxStyle}}"
                         resetValue="{{_options.resetValue}}"
                         horizontalPadding="{{_options.horizontalPadding}}"
                         on:keyup="_keyUpHandler()"/>
