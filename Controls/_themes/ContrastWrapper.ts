@@ -19,6 +19,7 @@ export default class ContrastWrapper extends Control<IControlOptions> {
 
     private static _getVariables(): object {
         return {
+            '--label_text-color': '#666',
             '--item_hover_background-color_list': '#E5E7EB',
             '--item_editing_background-color_list': '#D9DBDE',
             '--separator_color': '#EAEAEA',
