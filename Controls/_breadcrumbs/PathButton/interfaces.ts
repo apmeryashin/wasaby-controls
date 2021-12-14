@@ -2,7 +2,7 @@ import {IControlOptions} from 'UI/Base';
 import {Path} from 'Controls/dataSource';
 import {
     ICaptionOptions,
-    IFilterOptions,
+    IFilterOptions, IHeightOptions,
     IHierarchyOptions, INavigationOptions, INavigationPageSourceConfig, INavigationPositionSourceConfig,
     ISortingOptions,
     ISourceOptions
@@ -26,7 +26,8 @@ export interface IPathButton
         ITreeControlOptions,
         ICaptionOptions,
         ISortingOptions,
-        INavigationOptions<INavigationPositionSourceConfig | INavigationPageSourceConfig> {
+        INavigationOptions<INavigationPositionSourceConfig | INavigationPageSourceConfig>,
+        IHeightOptions {
 
     /**
      * @cfg {Controls/breadcrumbs#Path} Текущий отображаемый путь

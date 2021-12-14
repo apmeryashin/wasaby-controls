@@ -6,6 +6,7 @@ import {SlidingPanelOpener} from 'Controls/popup';
 import {IPathButton} from 'Controls/_breadcrumbs/PathButton/interfaces';
 import * as template from 'wml!Controls/_breadcrumbs/PathButton/PathButton';
 import * as rk from 'i18n!SBIS3';
+import {descriptor as EntityDescriptor} from 'Types/entity';
 
 /**
  * Контрол кнопки меню для хлебных крошек. При клике открывается popup со списком всех узлов в виде дерева.
@@ -46,6 +47,10 @@ export default class PathButton extends Control<IPathButton> {
     //region base props
     protected _options: IPathButton;
     protected _template: TemplateFunction = template;
+    //endregion
+
+    //region template props
+    protected _size: string;
     //endregion
 
     //region private props
@@ -153,4 +158,20 @@ export default class PathButton extends Control<IPathButton> {
         };
     }
     //endregion
+
+    static getDefaultOptions(): object {
+        return {
+            inlineHeight: 'm'
+        };
+    }
+
+    static getOptionTypes(): object {
+        return {
+            inlineHeight: EntityDescriptor(String).oneOf([
+                's',
+                'm',
+                'l'
+            ])
+        };
+    }
 }
