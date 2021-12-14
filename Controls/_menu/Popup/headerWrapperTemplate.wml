@@ -8,7 +8,7 @@
                     controls-Menu__popup-icon_wrapper_width-{{_options.headingIconSize || _options.iconSize || 'm'}}">
             <Controls.icon:Icon iconSize="{{_options.iconSize || 'm'}}"
                                 icon="{{_options.icon}}"
-                                class="controls-Menu__popup_headerIcon" />
+                                iconStyle="secondary" />
         </div>
     </ws:if>
     <ws:if data="{{_options.content}}">

@@ -333,6 +333,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
            menuTemplateOptions.itemPadding = {
                left: 's'
            };
+           menuTemplateOptions.itemsSpacing = 'xs';
         }
 
         return menuTemplateOptions;
