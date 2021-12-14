@@ -259,6 +259,7 @@ const template = function(data, attr, context, isVdom, sets, forceCompatible, ge
          attrsToDecorate = {
             // _isRootElement ничего не поменяет в инферно, но нужен в реакте.
             _isRootElement: attr._isRootElement,
+            refForContainer: attr.refForContainer,
             attributes: attr.attributes,
             events,
             context: attr.context
