@@ -160,8 +160,10 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
 
     static getDefaultOptions(): IStickyTemplateOptions {
         return {
-            headingFontSize: 'l',
-            headingFontColorStyle: 'secondary',
+            headingFontSize: 'xs',
+            headingFontColorStyle: 'label',
+            headingTextTransform: 'uppercase',
+            headingFontWeight: 'normal',
             closeButtonVisible: true,
             shadowVisible: false,
             backgroundStyle: 'default',

@@ -71,7 +71,7 @@
                </ws:if>
                <Controls._menu.Control
                        name="menuControl"
-                       attr:class="controls-Menu__popup-list controls-Menu__popup-list-padding-{{_verticalDirection}}"
+                       attr:class="controls-Menu__popup-list"
                        isDragging="{{_options.isDragging}}"
                        dropdownClassName="{{_options.dropdownClassName}}"
                        selectorOpenCallback="{{_options.selectorOpenCallback}}"
@@ -132,6 +132,7 @@
                        openedSubMenuKey="{{_options.openedSubMenuKey}}"
                        openedSubMenuOptions="{{_options.openedSubMenuOptions}}"
                        closedSubMenuKey="{{_options.closedSubMenuKey}}"
+                       itemsSpacing="{{_options.itemsSpacing}}"
                        footerContentTemplate="{{footerContent}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:rightTemplateClick="_sendResult('rightTemplateClick')"

@@ -1323,7 +1323,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         subMenuDirection: 'right',
         itemAlign: 'right',
         subMenuLevel: 0,
-        maxHistoryVisibleItems: 10
+        maxHistoryVisibleItems: 10,
+        itemsSpacing: '3xs'
     };
 
     private static _isPinIcon(target: EventTarget): boolean {
