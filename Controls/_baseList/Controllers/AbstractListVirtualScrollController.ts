@@ -38,7 +38,8 @@ import {
     ITriggersPositions,
     ITriggersOffsetCoefficients,
     ITriggersVisibility,
-    ITriggerPosition
+    ITriggerPosition,
+    IAdditionalTriggersOffsets
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
 
@@ -81,6 +82,7 @@ type IDoScrollUtil = (scrollParam: IScrollParam) => void;
 type IUpdateShadowsUtil = (hasItems: IHasItemsOutRange) => void;
 type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
 type IUpdateVirtualNavigationUtil = (hasItems: IHasItemsOutRange) => void;
+type IHasItemsOutRangeChangedCallback = (hasItems: IHasItemsOutRange) => void;
 export type IAbstractItemsSizesControllerConstructor =
     new (options: IAbstractItemsSizesControllerOptions) => AbstractItemsSizesController;
 export type IAbstractObserversControllerConstructor =
@@ -101,10 +103,12 @@ export interface IAbstractListVirtualScrollControllerOptions {
     updateShadowsUtil?: IUpdateShadowsUtil;
     updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
+    hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
     triggersPositions: ITriggersPositions;
+    additionalTriggersOffsets: IAdditionalTriggersOffsets;
 
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
@@ -123,14 +127,24 @@ export abstract class AbstractListVirtualScrollController<
     private _keepScrollPosition: boolean = false;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
-    private readonly _doScrollUtil: IDoScrollUtil;
+    protected readonly _doScrollUtil: IDoScrollUtil;
     private readonly _updateShadowsUtil?: IUpdateShadowsUtil;
     private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     private readonly _updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
+    private readonly _hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
+    private _scheduledCheckTriggersVisibility: boolean;
+    private _scheduledProcessIndexesChanged: IIndexesChangedParams;
+
+    /**
+     * Стейт используется, чтобы определить что сейчас идет синхронизация.
+     * Нужно для того, чтобы не менять индексы уже во время синхронизации.
+     * @private
+     */
+    private _synchronizationInProgress: boolean;
 
     /**
      * Колбэк, который вызывается когда завершился скролл к элементу. Скролл к элементу вызывается асинхронно.
@@ -157,6 +171,7 @@ export abstract class AbstractListVirtualScrollController<
         this._updateShadowsUtil = options.updateShadowsUtil;
         this._updatePlaceholdersUtil = options.updatePlaceholdersUtil;
         this._updateVirtualNavigationUtil = options.updateVirtualNavigationUtil;
+        this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
 
         this._setCollectionIterator(options.virtualScrollConfig.mode);
         this._createScrollController(options);
@@ -177,14 +192,27 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.setListContainer(listContainer);
     }
 
+    afterMountListControl(): void {
+        this._handleScheduledUpdateHasItemsOutRange();
+        this._handleScheduledCheckTriggerVisibility();
+    }
+
+    beforeUpdateListControl(): void {
+        this._synchronizationInProgress = true;
+    }
+
     beforeRenderListControl(): void {
         this._handleScheduledScroll();
     }
 
     afterRenderListControl(): void {
-        this._updateItemsSizes();
+        this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll();
+        this._handleScheduledCheckTriggerVisibility();
+        this._handleScheduledProcessIndexesChanged();
+
+        this._synchronizationInProgress = false;
     }
 
     saveScrollPosition(): void {
@@ -193,7 +221,7 @@ export abstract class AbstractListVirtualScrollController<
         // достижение триггера долнжо подгрузить данные). В этом случае восстановление скролла будет запланировано
         // в indexesChangedCallback.
         if (!this._scheduledScrollParams) {
-            const edgeItem = this._scrollController.getEdgeVisibleItem({ direction: 'forward' });
+            const edgeItem = this._scrollController.getEdgeVisibleItem({ direction: 'backward' });
             this._scheduleScroll({
                 type: 'restoreScroll',
                 params: edgeItem
@@ -221,6 +249,26 @@ export abstract class AbstractListVirtualScrollController<
         this._keepScrollPosition = false;
     }
 
+    contentResized(contentSize: number): void {
+        const changed = this._scrollController.contentResized(contentSize);
+        // contentResized может сработать до afterRender.
+        // Поэтому если запланировано обновление размеров, то мы его должны обязательно сделать на afterRender
+        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+            this._scrollController.updateItemsSizes();
+        }
+    }
+
+    viewportResized(viewportSize: number): void {
+        const changed = this._scrollController.viewportResized(viewportSize);
+        // viewportResized может сработать до afterRender.
+        // Поэтому если запланировано обновление размеров, то мы его должны обязательно сделать на afterRender
+        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+            this._scrollController.updateItemsSizes();
+        }
+    }
+
+    // region ScrollTo
+
     scrollToItem(key: TItemKey, position?: string, force?: boolean): Promise<void> {
         const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
 
@@ -238,13 +286,69 @@ export abstract class AbstractListVirtualScrollController<
         return promise;
     }
 
-    contentResized(contentSize: number): void {
-        this._scrollController.contentResized(contentSize);
+    /**
+     * Скроллит к переданной странице.
+     * Скроллит так, чтобы было видно последний элемент с предыдущей страницы, чтобы не потерять "контекст".
+     * Смещает диапазон, возвращает промис с ключом записи верхней полностью видимой записи.
+     * @param direction Условная страница, к которой нужно скроллить. (Следующая, предыдущая)
+     * @private
+     */
+    scrollToPage(direction: IDirection): Promise<CrudEntityKey> {
+        this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
+        return Promise.resolve(this._getFirstVisibleItemKey());
+
+        // TODO SCROLL по идее нужно скролить к EdgeItem, чтобы не терялся контекст.
+        //  Но нужно сперва завести новый скролл на текущих тестах.
+        /*const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
+        // TODO SCROLL юниты
+        if (!edgeItem) {
+            return Promise.resolve(null);
+        }
+
+        const item = this._collection.at(edgeItem.index);
+        const itemKey = item.getContents().getKey();
+        const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
+        return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());*/
     }
 
-    viewportResized(viewportSize: number): void {
-        this._scrollController.viewportResized(viewportSize);
+    /**
+     * Скроллит к переданному краю списка.
+     * Смещает диапазон, возвращает промис с индексами крайних видимых полностью элементов.
+     * @param edge Край списка
+     * @private
+     */
+    scrollToEdge(edge: IDirection): Promise<CrudEntityKey> {
+        const itemIndex = edge === 'backward' ? 0 : this._collection.getCount() - 1;
+        const item = this._collection.at(itemIndex);
+        const itemKey = item.getContents().getKey();
+        const scrollPosition = edge === 'forward' ? 'top' : 'bottom';
+        return this.scrollToItem(itemKey, scrollPosition, true).then(() => {
+            const promise = new Promise<void>((resolver) => this._doScrollCompletedCallback = resolver);
+
+            // Делаем подскролл, чтобы список отскролился к самому краю
+            // Делаем через scheduleScroll, чтобы если что успел отрисоваться, например отступ под пэйджинг
+            this._scheduleScroll({
+                type: 'doScroll',
+                params: {
+                    scrollParam: edge === 'backward' ? 'top' : 'bottom'
+                }
+            });
+
+            return promise.then(() => this._getFirstVisibleItemKey());
+        });
     }
+
+    protected _getFirstVisibleItemKey(): CrudEntityKey {
+        if (!this._collection || !this._collection.getCount()) {
+            return null;
+        }
+
+        const firstVisibleItemIndex = this._scrollController.getFirstVisibleItemIndex();
+        const item = this._collection.at(firstVisibleItemIndex);
+        return item.getContents().getKey();
+    }
+
+    // endregion ScrollTo
 
     // region Triggers
 
@@ -262,6 +366,10 @@ export abstract class AbstractListVirtualScrollController<
 
     setForwardTriggerPosition(position: ITriggerPosition): void {
         this._scrollController.setForwardTriggerPosition(position);
+    }
+
+    setAdditionalTriggersOffsets(additionalTriggersOffsets: IAdditionalTriggersOffsets): void {
+        this._scrollController.setAdditionalTriggersOffsets(additionalTriggersOffsets);
     }
 
     // endregion Triggers
@@ -288,6 +396,7 @@ export abstract class AbstractListVirtualScrollController<
             triggersVisibility: options.triggersVisibility,
             triggersOffsetCoefficients: options.triggersOffsetCoefficients,
             triggersPositions: options.triggersPositions,
+            additionalTriggersOffsets: options.additionalTriggersOffsets,
 
             scrollPosition: 0,
             viewportSize: options.virtualScrollConfig.viewportHeight || 0,
@@ -300,6 +409,7 @@ export abstract class AbstractListVirtualScrollController<
                     startIndex: range.startIndex,
                     endIndex: range.endIndex
                 });
+                this._scheduleCheckTriggersVisibility();
                 this._applyIndexes(range.startIndex, range.endIndex);
             },
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
@@ -308,6 +418,7 @@ export abstract class AbstractListVirtualScrollController<
             },
             hasItemsOutRangeChangedCallback: (hasItemsOutRange: IHasItemsOutRange): void => {
                 this._scheduleUpdateHasItemsOutRange(hasItemsOutRange);
+                this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
             },
             activeElementChangedCallback: options.activeElementChangedCallback,
             itemsEndedCallback: options.itemsEndedCallback
@@ -315,7 +426,32 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
+        // Нельзя изменять индексы во время синхронизации, т.к. возможно что afterRender будет вызван другими измениями.
+        // Из-за этого на afterRender не будет еще отрисован новый диапазон, он отрисуется на следующую синхронизацию.
+        if (this._synchronizationInProgress) {
+            this._scheduleProcessIndexesChanged(params);
+        } else {
+            this._processIndexesChanged(params);
+        }
+    }
+
+    private _scheduleProcessIndexesChanged(params: IIndexesChangedParams): void {
+        this._scheduledProcessIndexesChanged = params;
+    }
+
+    private _handleScheduledProcessIndexesChanged(): void {
+        if (this._scheduledProcessIndexesChanged) {
+            this._processIndexesChanged(this._scheduledProcessIndexesChanged);
+        }
+    }
+
+    private _processIndexesChanged(params: IIndexesChangedParams): void {
         this._scheduleUpdateItemsSizes(params.range);
+        // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
+        // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
+        // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
+        this._scheduleCheckTriggersVisibility();
+
         // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
         // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
         // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
@@ -327,14 +463,16 @@ export abstract class AbstractListVirtualScrollController<
         // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
         // и мы будем знать актуальную scrollPosition.
         // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
-        this._scheduleScroll({
-            type: 'calculateRestoreScrollParams',
-            params: {
-                direction: params.shiftDirection,
-                range: params.oldRange,
-                placeholders: params.oldPlaceholders
-            } as IEdgeItemCalculatingParams
-        });
+        if (params.shiftDirection !== null) {
+            this._scheduleScroll({
+                type: 'calculateRestoreScrollParams',
+                params: {
+                    direction: params.shiftDirection,
+                    range: params.oldRange,
+                    placeholders: params.oldPlaceholders
+                } as IEdgeItemCalculatingParams
+            });
+        }
     }
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
@@ -357,10 +495,21 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
-    private _updateItemsSizes(): void {
+    private _handleScheduledUpdateItemsSizes(): void {
         if (this._itemsRangeScheduledSizeUpdate) {
             this._scrollController.updateItemsSizes(this._itemsRangeScheduledSizeUpdate);
             this._itemsRangeScheduledSizeUpdate = null;
+        }
+    }
+
+    private _scheduleCheckTriggersVisibility() {
+        this._scheduledCheckTriggersVisibility = true;
+    }
+
+    private _handleScheduledCheckTriggerVisibility(): void {
+        if (this._scheduledCheckTriggersVisibility) {
+            this._scheduledCheckTriggersVisibility = false;
+            this._scrollController.checkTriggersVisibility();
         }
     }
 
@@ -524,27 +673,6 @@ export abstract class AbstractListVirtualScrollController<
                 break;
             }
         }
-    }
-
-    /**
-     * Скроллит к переданной странице.
-     * Скроллит так, чтобы было видно последний элемент с предыдущей страницы, чтобы не потерять "контекст".
-     * Смещает диапазон, возвращает промис с индексами крайних видимых полностью элементов.
-     * @param pageDirection Условная страница, к которой нужно скроллить. (Следующая, предыдущая, начальная, конечная)
-     * @private
-     */
-    protected _scrollToPage(pageDirection: IPageDirection): Promise<CrudEntityKey> {
-        let itemIndex;
-        if (pageDirection === 'forward' || pageDirection === 'backward') {
-            const edgeItem = this._scrollController.getEdgeVisibleItem({direction: pageDirection});
-            itemIndex = edgeItem.index;
-        } else {
-            itemIndex = pageDirection === 'start' ? 0 : this._collection.getCount() - 1;
-        }
-
-        const item = this._collection.getItemBySourceIndex(itemIndex);
-        const itemKey = item.getContents().getKey();
-        return this.scrollToItem(itemKey).then(() => itemKey);
     }
 
     protected abstract _applyIndexes(startIndex: number, endIndex: number): void;

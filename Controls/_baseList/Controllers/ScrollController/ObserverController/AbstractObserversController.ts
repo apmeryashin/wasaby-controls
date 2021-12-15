@@ -2,6 +2,7 @@ import type { EdgeIntersectionObserver } from 'Controls/scroll';
 import { Control } from 'UI/Base';
 import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { Logger } from 'UI/Utils';
+import {isEqual} from 'Types/object';
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
 
@@ -29,6 +30,11 @@ export interface ITriggersOffsetCoefficients {
     forward: number;
 }
 
+export interface IAdditionalTriggersOffsets {
+    backward: number;
+    forward: number;
+}
+
 export type TObserversCallback = (event: TIntersectionEvent) => void;
 
 export interface IAbstractObserversControllerBaseOptions {
@@ -39,6 +45,7 @@ export interface IAbstractObserversControllerBaseOptions {
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
     triggersPositions: ITriggersPositions;
+    additionalTriggersOffsets: IAdditionalTriggersOffsets;
 }
 
 export interface IAbstractObserversControllerOptions extends IAbstractObserversControllerBaseOptions {
@@ -57,6 +64,9 @@ export abstract class AbstractObserversController {
     private _triggersQuerySelector: string;
     private _viewportSize: number;
 
+    private _scrollPosition: number;
+    private _contentSize: number;
+
     private _triggersOffsetCoefficients: ITriggersOffsetCoefficients;
 
     /**
@@ -68,6 +78,18 @@ export abstract class AbstractObserversController {
 
     private _triggersVisibility: ITriggersVisibility;
     private _triggersOffsets: ITriggersOffsets = {
+        backward: 0,
+        forward: 0
+    };
+
+    /**
+     * Размеры дополнительного отступа для триггеров.
+     * Используется, чтобы позиционировать триггер от ромашки, а не от края списка.
+     * Можно избавиться, если позиционировать триггер с помощью transform=`translateY({offset}px), но
+     * нужн решить проблему с пробелом перед списком, если триггер релативный https://jsfiddle.net/hg7qc8s1/49/
+     * @private
+     */
+    private _additionalTriggersOffsets: IAdditionalTriggersOffsets = {
         backward: 0,
         forward: 0
     };
@@ -85,10 +107,10 @@ export abstract class AbstractObserversController {
 
         this._triggersOffsetCoefficients = options.triggersOffsetCoefficients;
         this._triggersPositions = options.triggersPositions;
+        this._additionalTriggersOffsets = options.additionalTriggersOffsets;
 
         if (this._listContainer) {
             this._updateTriggers();
-            this._recalculateOffsets();
         }
     }
 
@@ -98,7 +120,6 @@ export abstract class AbstractObserversController {
             this._observer.destroy();
         }
         this._updateTriggers();
-        this._recalculateOffsets();
     }
 
     setTriggersQuerySelector(newTriggersQuerySelector: string): void {
@@ -107,7 +128,6 @@ export abstract class AbstractObserversController {
             this._observer.destroy();
         }
         this._updateTriggers();
-        this._recalculateOffsets();
     }
 
     setViewportSize(size: number): ITriggersOffsets {
@@ -119,6 +139,18 @@ export abstract class AbstractObserversController {
         }
 
         return this.getTriggersOffsets();
+    }
+
+    setScrollPosition(position: number): void {
+        if (this._scrollPosition !== position) {
+            this._scrollPosition = position;
+        }
+    }
+
+    setContentSize(size: number): void {
+        if (this._contentSize !== size) {
+            this._contentSize = size;
+        }
     }
 
     setBackwardTriggerPosition(position: ITriggerPosition): ITriggersOffsets {
@@ -139,8 +171,27 @@ export abstract class AbstractObserversController {
         return this.getTriggersOffsets();
     }
 
+    setAdditionalTriggersOffsets(additionalTriggersOffsets: IAdditionalTriggersOffsets): ITriggersOffsets {
+        if (!isEqual(this._additionalTriggersOffsets, additionalTriggersOffsets)) {
+            this._additionalTriggersOffsets = additionalTriggersOffsets;
+            this._recalculateOffsets();
+        }
+
+        return this.getTriggersOffsets();
+    }
+
     getTriggersOffsets(): ITriggersOffsets {
         return this._triggersOffsets;
+    }
+
+    checkTriggersVisibility(): void {
+        // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
+        if (this._isTriggerVisible('forward')) {
+            this._observersCallback('bottomIn');
+        }
+        if (this._isTriggerVisible('backward')) {
+            this._observersCallback('topIn');
+        }
     }
 
     // region TriggerVisibility
@@ -181,7 +232,7 @@ export abstract class AbstractObserversController {
     // region OnCollectionChange
 
     resetItems(totalCount: number): ITriggersOffsets {
-        // Прижимаем к триггер к краю, чтобы после перезагрузки не было лишних подгрузок
+        // Прижимаем триггер к краю, чтобы после перезагрузки не было лишних подгрузок
         this.setBackwardTriggerPosition('null');
         this.setForwardTriggerPosition('null');
         return this.getTriggersOffsets();
@@ -190,21 +241,31 @@ export abstract class AbstractObserversController {
     // endregion OnCollectionChange
 
     private _recalculateOffsets(): void {
-        const newTopTriggerOffset = this._triggersPositions.backward === 'null'
+        let newBackwardTriggerOffset = this._triggersPositions.backward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.backward;
-        const newBottomTriggerOffset = this._triggersPositions.forward === 'null'
+        let newForwardTriggerOffset = this._triggersPositions.forward === 'null'
             ? 0
             : this._viewportSize * this._triggersOffsetCoefficients.forward;
 
+        newBackwardTriggerOffset += this._additionalTriggersOffsets.backward;
+        newForwardTriggerOffset += this._additionalTriggersOffsets.forward;
+
+        const backwardTriggerOffsetChanged = this._triggersOffsets.backward !== newBackwardTriggerOffset;
+        const forwardTriggerOffsetChanged = this._triggersOffsets.forward !== newForwardTriggerOffset;
+
         this._triggersOffsets = {
-            backward: newTopTriggerOffset,
-            forward: newBottomTriggerOffset
+            backward: newBackwardTriggerOffset,
+            forward: newForwardTriggerOffset
         };
 
         if (this._triggers && this._triggers.length) {
-            this._applyTriggerOffset(this._triggers[0], 'backward', this._triggersOffsets.backward);
-            this._applyTriggerOffset(this._triggers[1], 'forward', this._triggersOffsets.forward);
+            if (backwardTriggerOffsetChanged) {
+                this._applyTriggerOffset(this._triggers[0], 'backward', this._triggersOffsets.backward);
+            }
+            if (forwardTriggerOffsetChanged) {
+                this._applyTriggerOffset(this._triggers[1], 'forward', this._triggersOffsets.forward);
+            }
         }
     }
 
@@ -220,8 +281,26 @@ export abstract class AbstractObserversController {
 
         this._triggers[0].style.display = this._triggersVisibility.backward ? '' : 'none';
         this._triggers[1].style.display = this._triggersVisibility.forward ? '' : 'none';
+        this._applyTriggerOffset(this._triggers[0], 'backward', this._triggersOffsets.backward);
+        this._applyTriggerOffset(this._triggers[1], 'forward', this._triggersOffsets.forward);
 
         this._observer = this._createTriggersObserver(this._listControl, this._observersCallback, ...this._triggers);
+    }
+
+    private _isTriggerVisible(direction: IDirection): boolean {
+        const scrollPosition = this._scrollPosition;
+        const contentSize = this._contentSize;
+        const viewportSize = this._viewportSize;
+
+        if (direction === 'backward') {
+            const backwardViewportPosition = scrollPosition;
+            const backwardTriggerPosition = this._triggersOffsets.backward;
+            return backwardTriggerPosition >= backwardViewportPosition;
+        } else {
+            const forwardViewportPosition = scrollPosition + viewportSize;
+            const forwardTriggerPosition = contentSize - this._triggersOffsets.forward;
+            return forwardTriggerPosition <= forwardViewportPosition;
+        }
     }
 
     protected abstract _createTriggersObserver(component: Control,
