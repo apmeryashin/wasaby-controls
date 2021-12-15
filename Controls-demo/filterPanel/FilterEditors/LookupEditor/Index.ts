@@ -34,11 +34,10 @@ export default class extends Control {
         });
         this._filterButtonSource = [
             {
-                group: 'Город',
+                caption: 'Город',
                 name: 'city',
                 editorTemplateName: 'Controls/filterPanel:LookupEditor',
                 resetValue: [],
-                caption: '',
                 value: ['1'],
                 textValue: '',
                 viewMode: 'basic',
