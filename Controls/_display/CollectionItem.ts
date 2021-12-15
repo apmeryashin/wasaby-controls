@@ -457,15 +457,18 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     getMarkerClasses(markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
         const topPadding = (itemPadding.top || this.getTopPadding() || 'l');
+        const imageMarkerVariants = ['image-xs', 'image-s', 'image-m', 'image-l'];
+        const style = this.getStyle();
         let markerClass = 'controls-ListView__itemV_marker controls-ListView__itemV_marker_';
         if (markerClassName === 'default') {
             markerClass += 'height';
         } else {
             markerClass += `padding-${topPadding}_${markerClassName}`;
         }
-        markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}`;
-        markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}_topPadding-${topPadding}`;
-        markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}_topPadding-${topPadding}_${markerClassName}`;
+        markerClass += ` controls-ListView__itemV_marker_${style}`;
+        if (style !== 'master' || !imageMarkerVariants.includes(markerClassName)) {
+            markerClass += ` controls-ListView__itemV_marker_${style}_topPadding-${topPadding}`;
+        }
         markerClass += ` controls-ListView__itemV_marker-${this.getMarkerPosition()}`;
         return markerClass;
     }
