@@ -5532,6 +5532,7 @@ define([
                      rawData: data,
                      keyProperty: 'id'
                   }),
+                  getKeyProperty: () => 'id',
                   setDataLoadCallback: () => null,
                   subscribe: () => null,
                   hasMoreData: () => false
@@ -5543,9 +5544,16 @@ define([
                   loading: true
                };
                baseControl._beforeUpdate(newCfg);
+               baseControl.saveOptions(newCfg);
 
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+
+               sourceController.isLoading = () => false;
+               baseControl._beforeUpdate(newCfg);
+
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
          });
       });
