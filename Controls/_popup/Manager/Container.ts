@@ -109,14 +109,16 @@ class Container extends Control<IControlOptions> {
 
     private _calcOverlayIndex(popupItems: List<IPopupItem>): void {
         let maxModalPopup;
+        let maxModalPopupIndex;
         popupItems.each((item: IPopupItem, index: number) => {
             if (item.modal) {
                 if (!maxModalPopup || item.currentZIndex > maxModalPopup.currentZIndex) {
                     maxModalPopup = item;
-                    this._overlayIndex = index;
+                    maxModalPopupIndex = index;
                 }
             }
         });
+        this._overlayIndex = maxModalPopupIndex;
     }
 
     removePopupItem(popupItems: List<IPopupItem>, removedItem: IPopupItem, removeCallback: Function): void {
