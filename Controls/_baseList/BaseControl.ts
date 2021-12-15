@@ -408,9 +408,6 @@ const _private = {
                 self._afterItemsSet(options);
             }
 
-            if (self._listViewModel) {
-                _private.initListViewModelHandler(self, self._listViewModel);
-            }
             _private.prepareFooter(self, options, self._sourceController);
 
             self._shouldNotifyOnDrawItems = true;
@@ -803,10 +800,9 @@ const _private = {
                 }
 
                 if (self._useNewScroll) {
-                    self._listVirtualScrollController.setAdditionalTriggersOffsets({
-                        backward: self._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
-                        forward: self._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
-                    });
+                    self._listVirtualScrollController.setAdditionalTriggersOffsets(
+                        self._getAdditionalTriggersOffsets()
+                    );
                 }
 
                 return addedItems;
@@ -827,10 +823,9 @@ const _private = {
                     self._indicatorsController.recountIndicators(direction);
 
                     if (self._useNewScroll) {
-                        self._listVirtualScrollController.setAdditionalTriggersOffsets({
-                            backward: self._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
-                            forward: self._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
-                        });
+                        self._listVirtualScrollController.setAdditionalTriggersOffsets(
+                            self._getAdditionalTriggersOffsets()
+                        );
                     }
                 }
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
@@ -974,11 +969,11 @@ const _private = {
     loadToDirectionIfNeed(self, direction, filter?: {}) {
         const sourceController = self._sourceController;
         const hasMoreData = self._hasMoreData(direction);
-        const allowLoadByLoadedItems =
-            _private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig)
+        const allowLoadByLoadedItems = self._useNewScroll ||
+            (_private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig)
             && !self._options.disableVirtualScroll ?
                 !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
-                true;
+                true);
         const allowLoadBySource =
             sourceController &&
             hasMoreData &&
@@ -1831,8 +1826,11 @@ const _private = {
     },
 
     initListViewModelHandler(self, model) {
-        model.subscribe('onCollectionChange', self._onCollectionChanged);
-        model.subscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
+        if (model) {
+            model.subscribe('onCollectionChange', self._onCollectionChanged);
+            model.subscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
+            model.subscribe('indexesChanged', self._onIndexesChanged);
+        }
     },
 
     /**
@@ -3400,6 +3398,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._intersectionObserverHandler = this._intersectionObserverHandler.bind(this);
         this._onCollectionChanged = this._onCollectionChanged.bind(this);
         this._onAfterCollectionChanged = this._onAfterCollectionChanged.bind(this);
+        this._onIndexesChanged = this._onIndexesChanged.bind(this);
         this._setMarkedKeyAfterPaging = this._setMarkedKeyAfterPaging.bind(this);
     }
 
@@ -3605,6 +3604,23 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._removedItems = [];
     }
 
+    private _onIndexesChanged(
+        event: SyntheticEvent,
+        startIndex: number,
+        endIndex: number,
+        shiftDirection: IDirectionNew
+    ): void {
+        if (shiftDirection) {
+            // Если у нас долго отрисовываются записи(дольше 2с), то мы показываем индикаторы отрисовки.
+            // Эта ситуация в частности актуальна для ScrollViewer.
+            this._drawingIndicatorDirection = shiftDirection === 'forward' ? 'bottom' : 'top';
+            this._indicatorsController.displayDrawingIndicator(
+                this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                this._drawingIndicatorDirection
+            );
+        }
+    }
+
     protected _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
         let items;
         let collapsedGroups;
@@ -3645,6 +3661,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.createScrollController(self, newOptions);
         self._createListVirtualScrollController(newOptions);
         self._createIndicatorsController(newOptions);
+
+        // Подписываться на коллекцию нужно после listVirtualScrollController,
+        // чтобы в первую очередь обновились start, stop индексы, а потом уже выполнялись другие действия.
+        _private.initListViewModelHandler(self, self._listViewModel);
     }
 
     _initKeyProperty(options: TOptions): void {
@@ -3889,10 +3909,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 backward: this._sourceController && this._sourceController.hasMoreData('up') ? 'null' : 'offset',
                 forward: this._sourceController && this._sourceController.hasMoreData('down') ? 'null' : 'offset'
             },
-            additionalTriggersOffsets: {
-                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
-                forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
-            },
+            additionalTriggersOffsets: this._getAdditionalTriggersOffsets(),
             totalCount: this._listViewModel.getCount(),
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
@@ -3978,6 +3995,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
+    private _getAdditionalTriggersOffsets(): IAdditionalTriggersOffsets {
+        return {
+            backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0,
+            forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0
+        };
+    }
+
     private _setMarkedKeyAfterPaging(key: CrudEntityKey): void {
         if (_private.getMarkerController(this).shouldMoveMarkerOnScrollPaging()) {
             this._changeMarkedKey(key);
@@ -3990,6 +4014,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._useNewScroll) {
             this._listVirtualScrollController.setListContainer(this._container);
             this._listVirtualScrollController.afterMountListControl();
+            if (this._options.activeElement) {
+                this._listVirtualScrollController.scrollToItem(this._options.activeElement, 'top', true);
+            }
         }
 
         if (constants.isBrowserPlatform) {
@@ -4111,10 +4138,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._useNewScroll) {
-            this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
-                forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
-            });
+            this._listVirtualScrollController.setAdditionalTriggersOffsets(this._getAdditionalTriggersOffsets());
         }
 
         // TODO SCROLL по идее это не нужно с новым скроллом, т.к. мы в новом контроллере проверим видимость триггера
@@ -4313,6 +4337,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (this._useNewScroll) {
                 this._listVirtualScrollController.setCollection(this._listViewModel);
             }
+            // Подписываться на коллекцию нужно после listVirtualScrollController,
+            // чтобы в первую очередь обновились start, stop индексы, а потом уже выполнялись другие действия.
+            _private.initListViewModelHandler(this, this._listViewModel);
 
             // observersController нужно обновить до скроллКонтроллера,
             // т.к. scrollController получает опции из _observersController
@@ -4393,6 +4420,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (this._useNewScroll) {
                         this._listVirtualScrollController.setCollection(this._listViewModel);
                     }
+                    // Подписываться на коллекцию нужно после listVirtualScrollController,
+                    // чтобы в первую очередь обновились start, stop индексы, а потом уже выполнялись другие действия.
+                    _private.initListViewModelHandler(this, this._listViewModel);
                     this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
                     this._updateScrollController(newOptions);
                     this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
@@ -4672,10 +4702,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._useNewScroll) {
-            this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
-                forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
-            });
+            this._listVirtualScrollController.setAdditionalTriggersOffsets(this._getAdditionalTriggersOffsets());
             this._listVirtualScrollController.beforeUpdateListControl();
         }
 
@@ -4809,6 +4836,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._listViewModel) {
             this._listViewModel.unsubscribe('onCollectionChange', this._onCollectionChanged);
             this._listViewModel.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChanged);
+            this._listViewModel.unsubscribe('indexesChanged', this._onIndexesChanged);
             // коллекцию дестроим только, если она была создана в BaseControl(не передана в опциях)
             if (!this._options.collection) {
                 this._listViewModel.destroy();
@@ -5151,10 +5179,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 }
 
                 if (this._useNewScroll) {
-                    this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                        backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
-                        forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
-                    });
+                    this._listVirtualScrollController.setAdditionalTriggersOffsets(
+                        this._getAdditionalTriggersOffsets()
+                    );
                 }
 
                 this._handleLoadToDirection = false;
@@ -5382,9 +5409,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (keepNavigation) {
             if (this._useNewScroll) {
                 this._listVirtualScrollController.enableKeepScrollPosition();
-            } else {
-                this._keepScrollAfterReload = true;
             }
+            this._keepScrollAfterReload = true;
             if (!sourceConfig) {
                 if (this._options.navigation?.source === 'position') {
                     const maxLimit = Math.max(this._options.navigation.sourceConfig.limit, this._items.getCount());
@@ -6815,10 +6841,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
 
             if (this._useNewScroll) {
-                this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                    backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
-                    forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
-                });
+                this._listVirtualScrollController.setAdditionalTriggersOffsets(this._getAdditionalTriggersOffsets());
             }
         }
 
@@ -7278,10 +7301,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._indicatorsController.displayTopIndicator(true);
 
                 if (this._useNewScroll) {
-                    this._listVirtualScrollController.setAdditionalTriggersOffsets({
-                        backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0,
-                        forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT : 0
-                    });
+                    this._listVirtualScrollController.setAdditionalTriggersOffsets(
+                        this._getAdditionalTriggersOffsets()
+                    );
                 }
             }
 
@@ -7361,8 +7383,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _getIndicatorDomElement(direction: 'top'|'bottom'): HTMLElement {
         return direction === 'top'
-            ? this._children.listView.getTopIndicator()
-            : this._children.listView.getBottomIndicator();
+            ? this._children.listView?.getTopIndicator()
+            : this._children.listView?.getBottomIndicator();
     }
 
     private _countGlobalIndicatorPosition(): number {

@@ -1784,34 +1784,6 @@ define([
          assert.isTrue(ctrl._needBottomPadding);
       });
 
-      it('_needBottomPadding after reload in beforeUpdate', async function() {
-         let cfg = {
-            viewName: 'Controls/List/ListView',
-            itemActionsPosition: 'outside',
-            keyProperty: 'id',
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               collection: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: 'Controls/display:Collection',
-            source: undefined,
-         };
-         let cfgWithSource = await getCorrectBaseControlConfigAsync({
-            ...cfg,
-            source: source
-         });
-         var ctrl = correctCreateBaseControl(cfg);
-         ctrl._beforeMount(cfg);
-         ctrl.saveOptions(cfg);
-         assert.isFalse(ctrl._needBottomPadding);
-
-         ctrl._beforeUpdate(cfgWithSource);
-         assert.isTrue(ctrl._needBottomPadding);
-      });
-
       it('_needBottomPadding without list view model', function() {
          assert.doesNotThrow(() => {
             lists.BaseControl._private.needBottomPadding({}, null)
@@ -5582,37 +5554,6 @@ define([
 
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
-            });
-
-            it('set marked key after load items', async () => {
-               const cfg = {
-                  viewModelConstructor: 'Controls/display:Collection',
-                  keyProperty: 'id',
-                  markerVisibility: 'visible'
-               };
-               const baseControl = new lists.BaseControl();
-               baseControl.saveOptions(cfg);
-               baseControl._environment = {};
-               baseControl._notify = (eventName, params) => {
-                  if (eventName === 'beforeMarkedKeyChanged') {
-                     return params[0];
-                  }
-               };
-               const notifySpy = sinon.spy(baseControl, '_notify');
-               await baseControl._beforeMount(cfg);
-               assert.doesNotThrow(baseControl._beforeUpdate.bind(baseControl, cfg));
-
-               const items = new collection.RecordSet({
-                  rawData: [
-                     {id: 1},
-                     {id: 2}
-                  ],
-                  keyProperty: 'id'
-               });
-               baseControl._beforeUpdate({...cfg, items});
-
-               assert.isTrue(notifySpy.withArgs('beforeMarkedKeyChanged', [1]).called);
-               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
             });
          });
       });

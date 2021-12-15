@@ -42,6 +42,7 @@ import {
     IAdditionalTriggersOffsets
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
+import { IVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll';
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
@@ -88,6 +89,8 @@ export type IAbstractItemsSizesControllerConstructor =
 export type IAbstractObserversControllerConstructor =
     new (options: IAbstractObserversControllerOptions) => AbstractObserversController;
 
+export const HIDDEN_ITEM_SELECTOR = '.controls-ListView__hiddenContainer';
+
 export interface IAbstractListVirtualScrollControllerOptions {
     collection: Collection;
     listControl: Control;
@@ -103,7 +106,6 @@ export interface IAbstractListVirtualScrollControllerOptions {
     updateShadowsUtil?: IUpdateShadowsUtil;
     updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
-    hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
     triggersVisibility: ITriggersVisibility;
     triggersOffsetCoefficients: ITriggersOffsetCoefficients;
@@ -115,6 +117,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
 
     itemsEndedCallback: IItemsEndedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
+    hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 }
 
 export abstract class AbstractListVirtualScrollController<
@@ -124,6 +127,7 @@ export abstract class AbstractListVirtualScrollController<
     protected _collection: Collection;
     protected _scrollController: ScrollController;
     private _itemSizeProperty: string;
+    private _virtualScrollMode: IVirtualScrollMode;
     private _keepScrollPosition: boolean = false;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
@@ -137,7 +141,7 @@ export abstract class AbstractListVirtualScrollController<
     private _scheduledScrollParams: IScheduledScrollParams;
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
     private _scheduledCheckTriggersVisibility: boolean;
-    private _scheduledProcessIndexesChanged: IIndexesChangedParams;
+    private _handleChangedIndexesAfterSynchronizationCallback: Function;
 
     /**
      * Стейт используется, чтобы определить что сейчас идет синхронизация.
@@ -165,6 +169,7 @@ export abstract class AbstractListVirtualScrollController<
         this._initCollection(options.collection);
 
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
+        this._virtualScrollMode = options.virtualScrollConfig.mode;
 
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
@@ -188,11 +193,17 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.setItemsContainer(itemsContainer);
     }
 
+    setItemsQuerySelector(newItemsQuerySelector: string): void {
+        const itemsQuerySelector = this._correctItemsSelector(newItemsQuerySelector, this._virtualScrollMode);
+        this._scrollController.setItemsQuerySelector(itemsQuerySelector);
+    }
+
     setListContainer(listContainer: HTMLElement): void {
         this._scrollController.setListContainer(listContainer);
     }
 
     afterMountListControl(): void {
+        this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledCheckTriggerVisibility();
     }
@@ -202,7 +213,11 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     beforeRenderListControl(): void {
-        this._handleScheduledScroll();
+        // На beforeRender нам нужно только считать параметры для восстановления скролла.
+        // Все остальные типы скролла выполняются на afterRender, когда записи уже отрисовались.
+        if (this._scheduledScrollParams && this._scheduledScrollParams.type === 'calculateRestoreScrollParams') {
+            this._handleScheduledScroll();
+        }
     }
 
     afterRenderListControl(): void {
@@ -210,9 +225,12 @@ export abstract class AbstractListVirtualScrollController<
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll();
         this._handleScheduledCheckTriggerVisibility();
-        this._handleScheduledProcessIndexesChanged();
 
         this._synchronizationInProgress = false;
+        if (this._handleChangedIndexesAfterSynchronizationCallback) {
+            this._handleChangedIndexesAfterSynchronizationCallback();
+            this._handleChangedIndexesAfterSynchronizationCallback = null;
+        }
     }
 
     saveScrollPosition(): void {
@@ -270,9 +288,12 @@ export abstract class AbstractListVirtualScrollController<
     // region ScrollTo
 
     scrollToItem(key: TItemKey, position?: string, force?: boolean): Promise<void> {
-        const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
-
         const itemIndex = this._collection.getIndexByKey(key);
+        if (itemIndex === -1) {
+            return Promise.resolve();
+        }
+
+        const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
         if (rangeChanged || this._scheduledScrollParams) {
             this._scheduleScroll({
@@ -381,6 +402,10 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     protected _getScrollControllerOptions(options: TOptions): IScrollControllerOptions {
+        const itemsQuerySelector = this._correctItemsSelector(
+            options.itemsQuerySelector,
+            options.virtualScrollConfig.mode
+        );
         return {
             listControl: options.listControl,
             virtualScrollConfig: options.virtualScrollConfig,
@@ -388,7 +413,7 @@ export abstract class AbstractListVirtualScrollController<
             itemsContainer: options.itemsContainer,
             listContainer: options.listContainer,
 
-            itemsQuerySelector: options.itemsQuerySelector,
+            itemsQuerySelector,
             itemsSizeControllerConstructor: this._getItemsSizeControllerConstructor(),
             observerControllerConstructor: this._getObserversControllerConstructor(),
             triggersQuerySelector: options.triggersQuerySelector,
@@ -404,14 +429,7 @@ export abstract class AbstractListVirtualScrollController<
             totalCount: this._collection.getCount(),
             givenItemsSizes: this._getGivenItemsSizes(),
 
-            indexesInitializedCallback: (range: IItemsRange): void => {
-                this._scheduleUpdateItemsSizes({
-                    startIndex: range.startIndex,
-                    endIndex: range.endIndex
-                });
-                this._scheduleCheckTriggersVisibility();
-                this._applyIndexes(range.startIndex, range.endIndex);
-            },
+            indexesInitializedCallback: this._indexesInitializedCallback.bind(this),
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
             placeholdersChangedCallback: (placeholders: IPlaceholders): void => {
                 this._updatePlaceholdersUtil(placeholders);
@@ -425,45 +443,16 @@ export abstract class AbstractListVirtualScrollController<
         };
     }
 
+    private _indexesInitializedCallback(range: IItemsRange): void {
+        this._handleChangedIndexes(range, null);
+    }
+
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
-        // Нельзя изменять индексы во время синхронизации, т.к. возможно что afterRender будет вызван другими измениями.
-        // Из-за этого на afterRender не будет еще отрисован новый диапазон, он отрисуется на следующую синхронизацию.
-        if (this._synchronizationInProgress) {
-            this._scheduleProcessIndexesChanged(params);
-        } else {
-            this._processIndexesChanged(params);
-        }
-    }
-
-    private _scheduleProcessIndexesChanged(params: IIndexesChangedParams): void {
-        this._scheduledProcessIndexesChanged = params;
-    }
-
-    private _handleScheduledProcessIndexesChanged(): void {
-        if (this._scheduledProcessIndexesChanged) {
-            this._processIndexesChanged(this._scheduledProcessIndexesChanged);
-        }
-    }
-
-    private _processIndexesChanged(params: IIndexesChangedParams): void {
-        this._scheduleUpdateItemsSizes(params.range);
-        // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
-        // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
-        // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
-        this._scheduleCheckTriggersVisibility();
-
-        // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
-        // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
-        // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
-        // PS. ОБРАТИТЬ ВНИМАНИЕ! Восстанавливать скролл нужно ВСЕГДА, т.к. если записи добавляются в самое начало,
-        // то startIndex не изменится, а изменится только endIndex, но по факту это изменение startIndex.
-        this._applyIndexes(params.range.startIndex, params.range.endIndex);
-
-        // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
-        // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
-        // и мы будем знать актуальную scrollPosition.
-        // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
-        if (params.shiftDirection !== null) {
+        this._handleChangedIndexes(params.range, params.shiftDirection, () => {
+            // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
+            // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
+            // и мы будем знать актуальную scrollPosition.
+            // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
             this._scheduleScroll({
                 type: 'calculateRestoreScrollParams',
                 params: {
@@ -472,6 +461,45 @@ export abstract class AbstractListVirtualScrollController<
                     placeholders: params.oldPlaceholders
                 } as IEdgeItemCalculatingParams
             });
+        });
+    }
+
+    /**
+     * Обрабатывает новые индексы сразу же или после выполнения текущей синхронизации.
+     * Для дополнительной обработки можно передать handleAdditionallyCallback
+     * @param range Новый диапазон
+     * @param handleAdditionallyCallback Коллбэк с дополнительными действиями
+     * @private
+     */
+    private _handleChangedIndexes(
+        range: IItemsRange,
+        shiftDirection: IDirection,
+        handleAdditionallyCallback?: Function
+    ): void {
+        const callback = () => {
+            this._scheduleUpdateItemsSizes(range);
+            // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
+            // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
+            // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
+            this._scheduleCheckTriggersVisibility();
+            // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
+            // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
+            // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
+            // PS. ОБРАТИТЬ ВНИМАНИЕ! Восстанавливать скролл нужно ВСЕГДА, т.к. если записи добавляются в самое начало,
+            // то startIndex не изменится, а изменится только endIndex, но по факту это изменение startIndex.
+            this._applyIndexes(range.startIndex, range.endIndex, shiftDirection);
+
+            if (handleAdditionallyCallback) {
+                handleAdditionallyCallback();
+            }
+        };
+
+        // Нельзя изменять индексы во время синхронизации, т.к. возможно что afterRender будет вызван другими измениями.
+        // Из-за этого на afterRender не будет еще отрисован новый диапазон, он отрисуется на следующую синхронизацию.
+        if (this._synchronizationInProgress) {
+            this._handleChangedIndexesAfterSynchronizationCallback = callback;
+        } else {
+            callback();
         }
     }
 
@@ -579,7 +607,7 @@ export abstract class AbstractListVirtualScrollController<
         });
     }
 
-    private _setCollectionIterator(mode: 'remove' | 'hide'): void {
+    private _setCollectionIterator(mode: IVirtualScrollMode): void {
         switch (mode) {
             case 'hide':
                 VirtualScrollHideController.setup(
@@ -592,6 +620,21 @@ export abstract class AbstractListVirtualScrollController<
                 );
                 break;
         }
+    }
+
+    /**
+     * Корректирует селктор элементов.
+     * Если виртуальный скролл настроен скрывать записи вне диапазона, то нужно в селекторе исключить скрытые записи.
+     * @param selector
+     * @param virtualScrollMode
+     * @private
+     */
+    private _correctItemsSelector(selector: string, virtualScrollMode: IVirtualScrollMode): string {
+        let correctedSelector = selector;
+        if (virtualScrollMode === 'hide') {
+            correctedSelector += `:not(${HIDDEN_ITEM_SELECTOR})`;
+        }
+        return correctedSelector;
     }
 
     private _getGivenItemsSizes(): IItemsSizes|null {
@@ -675,7 +718,7 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
-    protected abstract _applyIndexes(startIndex: number, endIndex: number): void;
+    protected abstract _applyIndexes(startIndex: number, endIndex: number, shiftDirection: IDirection): void;
 }
 
 // Как работает pageDown/pageUp:
