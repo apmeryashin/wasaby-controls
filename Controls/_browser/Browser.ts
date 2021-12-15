@@ -1013,7 +1013,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             // Если Browser строится по sourceController'у со страницы, то и фильтр должен обновляться на странице
             // в противном случае происходит рассинхрон фильтров в контексте и в контроллере
             // Решается тут https://online.saby.ru/opendoc.html?guid=6c15ea37-fdf6-4dc8-a8fa-d54bd7be01bb
-            const filter = this._getSearchControllerSync().reset(!!this._options.sourceController);
+            const searchController = this._getSearchControllerSync();
+            searchController.reset(!this._options.sourceController);
+            const filter = searchController.getFilter();
             if (!isEqual(this._filter, filter)) {
                 this._filterChanged(null, filter);
             }
