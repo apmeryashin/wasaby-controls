@@ -1,7 +1,13 @@
 <ws:if data="{{caption || icon}}">
-    <div class="{{icon ? 'controls-Checkbox_iconInCaption' :
-                 'controls-Checkbox__caption controls-Checkbox__caption'}}
-                  controls-Checkbox__caption-color__{{readOnly ? 'disabled':'enabled'}}{{!multiline ? ' ws-ellipsis'}}">
+    <div class="{{icon ? 'controls-Checkbox_iconInCaption' : 'controls-Checkbox__caption controls-Checkbox__caption'}}
+                {{
+                    readOnly ?
+                        ' controls-Checkbox__caption-color__disabled' :
+                    fontColorStyle ?
+                        ' controls-text-' + fontColorStyle :
+                        ' controls-Checkbox__caption-color__enabled'
+                }}
+                {{!multiline ? ' ws-ellipsis'}}">
         <ws:if data="{{caption}}">
             <ws:partial template="{{caption}}"/>
         </ws:if>
