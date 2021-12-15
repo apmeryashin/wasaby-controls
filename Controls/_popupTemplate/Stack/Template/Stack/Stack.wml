@@ -62,8 +62,7 @@
             </ws:if>
 
             <ws:if data="{{_options.footerContentTemplate }}">
-                <div class="controls-StackTemplate__bottomArea
-                            {{_options.backgroundStyle === 'default' ? 'controls-StackTemplate_backgroundColor' : 'controls-background-' + _options.backgroundStyle}}">
+                <div class="controls-StackTemplate__bottomArea {{_getBackgroundColor()}}">
                     <ws:partial template="{{_options.footerContentTemplate}}"
                                 scope="{{_options}}"
                                 bodyContentTemplate="{{null}}"

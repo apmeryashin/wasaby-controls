@@ -74,9 +74,8 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
     }
 
     protected _getBackgroundColor(): string {
-        const bgStyle = this._options.backgroundStyle;
-        return bgStyle === 'default' ? 'controls-StackTemplate_backgroundColor' :
-            'controls-background-' + bgStyle;
+        return this._options.backgroundStyle === 'default' ? 'controls-StackTemplate_backgroundColor' :
+            'controls-background-' + this._options.backgroundStyle;
     }
 
     protected _getWrapperBackgroundColor(): string {
