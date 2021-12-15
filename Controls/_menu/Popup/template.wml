@@ -133,6 +133,7 @@
                        openedSubMenuKey="{{_options.openedSubMenuKey}}"
                        openedSubMenuOptions="{{_options.openedSubMenuOptions}}"
                        closedSubMenuKey="{{_options.closedSubMenuKey}}"
+                       footerContentTemplate="{{footerContent}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:rightTemplateClick="_sendResult('rightTemplateClick')"
                        on:moreButtonClick="_sendResult('selectorDialogOpened')"
