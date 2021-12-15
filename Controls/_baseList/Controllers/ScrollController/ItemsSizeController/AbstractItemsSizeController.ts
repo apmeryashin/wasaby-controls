@@ -1,4 +1,4 @@
-import type { IItemsRange } from './ScrollController';
+import type { IItemsRange } from '../ScrollController';
 import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
 
