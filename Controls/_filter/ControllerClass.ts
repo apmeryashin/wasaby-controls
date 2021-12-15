@@ -518,9 +518,9 @@ export default class FilterControllerClass extends mixin<
             return;
         }
 
-        const items: IFilterItem[] = filterButtonItems.filter((item) => {
+        const items: IFilterItem[] = filterButtonItems/*.filter((item) => {
             return item.saveToUrl || (this._options.saveToUrl && !item.hasOwnProperty('saveToUrl'));
-        });
+        })*/;
 
         if (items.length) {
             updateUrlByFilter(items);

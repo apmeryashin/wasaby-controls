@@ -1,7 +1,9 @@
 import {query} from 'Application/Env';
 import {isEqual, isEmpty} from 'Types/object';
 import {History, MaskResolver} from 'Router/router';
+import {Serializer} from 'UI/State';
 import {IFilterItem} from 'Controls/_filter/View/interface/IFilterItem';
+import {getConfig} from 'Application/Env';
 
 interface IQueryParams {
     /**
@@ -36,10 +38,11 @@ export function getQueryParamsByFilter(filterButtonItems: IFilterItem[]): IQuery
         }
     }
 
+    const applicationSerializer = new Serializer();
     let queryParams = {};
 
     if (filterItems.length) {
-        queryParams = {filter: JSON.stringify(filterItems)};
+        queryParams = {filter: JSON.stringify(filterItems, applicationSerializer.serialize)};
     }
 
     return queryParams;
@@ -57,7 +60,14 @@ export function updateUrlByFilter(filterButtonItems: IFilterItem[]): void {
         queryParams.replace = true;
     }
     const state = MaskResolver.calculateQueryHref(queryParams);
-    const href = state.replace('/OnlineSbisRu', '');
+    const service = getConfig('appRoot');
+
+    let href;
+    if ((!service || service === '/')) {
+        const pageIndex = state.indexOf('/page/');
+        href = state.substring(pageIndex);
+    }
+
     History.replaceState({state, href});
 }
 
@@ -73,5 +83,7 @@ export function getFilterFromUrl(): void | IFilterItem[] {
         return;
     }
 
-    return JSON.parse(decodeURIComponent(urlFilter));
+    const applicationSerializer = new Serializer();
+
+    return JSON.parse(decodeURIComponent(urlFilter), applicationSerializer.deserialize);
 }
