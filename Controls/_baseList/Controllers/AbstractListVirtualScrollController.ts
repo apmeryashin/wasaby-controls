@@ -145,7 +145,7 @@ export abstract class AbstractListVirtualScrollController<
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
     private _scheduledCheckTriggersVisibility: boolean;
     private _scheduledHideDrawingIndicatorDirection: IDirection;
-    private _doAfterSynchronizationCallback: Function;
+    private _applyIndexesAfterSynchronizationCallback: Function;
 
     /**
      * Стейт используется, чтобы определить что сейчас идет синхронизация.
@@ -233,9 +233,9 @@ export abstract class AbstractListVirtualScrollController<
         this._handleScheduledHideDrawingIndicator();
 
         this._synchronizationInProgress = false;
-        if (this._doAfterSynchronizationCallback) {
-            this._doAfterSynchronizationCallback();
-            this._doAfterSynchronizationCallback = null;
+        if (this._applyIndexesAfterSynchronizationCallback) {
+            this._applyIndexesAfterSynchronizationCallback();
+            this._applyIndexesAfterSynchronizationCallback = null;
         }
     }
 
@@ -435,14 +435,7 @@ export abstract class AbstractListVirtualScrollController<
             totalCount: this._collection.getCount(),
             givenItemsSizes: this._getGivenItemsSizes(),
 
-            indexesInitializedCallback: (range: IItemsRange): void => {
-                this._scheduleUpdateItemsSizes({
-                    startIndex: range.startIndex,
-                    endIndex: range.endIndex
-                });
-                this._scheduleCheckTriggersVisibility();
-                this._applyIndexes(range.startIndex, range.endIndex);
-            },
+            indexesInitializedCallback: this._indexesInitializedCallback.bind(this),
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
             placeholdersChangedCallback: (placeholders: IPlaceholders): void => {
                 this._updatePlaceholdersUtil(placeholders);
@@ -456,10 +449,23 @@ export abstract class AbstractListVirtualScrollController<
         };
     }
 
+    private _indexesInitializedCallback(range: IItemsRange): void {
+        // Нельзя изменять индексы во время синхронизации, т.к. возможно что afterRender будет вызван другими измениями.
+        // Из-за этого на afterRender не будет еще отрисован новый диапазон, он отрисуется на следующую синхронизацию.
+        this._applyIndexesAfterSynchronization(() => {
+            this._scheduleUpdateItemsSizes({
+                startIndex: range.startIndex,
+                endIndex: range.endIndex
+            });
+            this._scheduleCheckTriggersVisibility();
+            this._applyIndexes(range.startIndex, range.endIndex);
+        });
+    }
+
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
         // Нельзя изменять индексы во время синхронизации, т.к. возможно что afterRender будет вызван другими измениями.
         // Из-за этого на afterRender не будет еще отрисован новый диапазон, он отрисуется на следующую синхронизацию.
-        this._doAfterSynchronization(() => {
+        this._applyIndexesAfterSynchronization(() => {
             this._scheduleUpdateItemsSizes(params.range);
             // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
             // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
@@ -493,9 +499,9 @@ export abstract class AbstractListVirtualScrollController<
         });
     }
 
-    private _doAfterSynchronization(callback: Function): void {
+    private _applyIndexesAfterSynchronization(callback: Function): void {
         if (this._synchronizationInProgress) {
-            this._doAfterSynchronizationCallback = callback;
+            this._applyIndexesAfterSynchronizationCallback = callback;
         } else {
             callback();
         }
