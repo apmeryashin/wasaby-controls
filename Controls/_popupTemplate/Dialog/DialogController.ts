@@ -94,11 +94,8 @@ class DialogController extends BaseController {
     popupMovingSize(item: IDialogItem, offset: object): boolean {
         const newWidthValue = (item.position.width || item.sizes.width) + offset.x;
         const newHeightValue = (item.position.height || item.sizes.height) + offset.y;
-
-        // Может прийти offset, который больше размеров окна, из-за чего получаются отрицательные размеры окна.
-        // Поэтому задаем размеры через Math.abs
-        item.position.width = Math.abs(newWidthValue);
-        item.position.height = Math.abs(newHeightValue);
+        item.position.width = newWidthValue;
+        item.position.height = newHeightValue;
         return true;
     }
 
