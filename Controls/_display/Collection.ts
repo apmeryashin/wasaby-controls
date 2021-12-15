@@ -233,6 +233,7 @@ type TEditingMode = 'cell' | 'row';
 type TSequentialEditingMode = 'row' | 'none';
 
 /**
+ * Конфигурация редактирования по месту
  * @typedef {Object} IEditingConfig
  * @property {TEditingMode} [mode='row'] Режим редактирования раписей в таблице.
  * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.

@@ -1,5 +1,5 @@
 import {mixin} from 'Types/util';
-import {ITreeItemOptions, TreeItem, IItemPadding, TMarkerClassName, IGroupNode} from 'Controls/display';
+import {ITreeItemOptions, TreeItem, IGroupNode} from 'Controls/display';
 import {
     IGridRowOptions,
     GridCell,

@@ -18,7 +18,7 @@ import Tile, {
     TImageUrlResolver, TTileMode, TTileScalingMode, TTileSize
 } from './Tile';
 import { TItemActionsPosition } from 'Controls/itemActions';
-import {ITileRoundBorder} from 'Controls/interface';
+import {ITileRoundBorder, TFontColorStyle} from 'Controls/interface';
 import {TBackgroundColorStyle, TCursor } from 'Controls/list';
 import {toRgb, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 import {TPaddingSize} from 'Controls/interface';
@@ -1743,7 +1743,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTitleStyle} titleStyle Стиль заголовка
      * @param {boolean} hasTitle Признак, означающий что нужно отображать заголовок
      * @param {number} titleLines Кол-во строк в заголовке
-     * @param {string} titleColorStyle Стиль цвета заголовка
+     * @param {Controls/_interface/IFontColorStyle/TFontColorStyle.typedef} titleColorStyle Стиль цвета заголовка
      * @param {TTitlePosition} titlePosition Положение заголовка
      * @param {TImageViewMode} imageViewMode Режим отображения изображения
      */
@@ -1752,7 +1752,7 @@ export default abstract class TileItem<T extends Model = Model> {
         titleStyle?: TTitleStyle,
         hasTitle?: boolean,
         titleLines: number = 1,
-        titleColorStyle: string = 'default',
+        titleColorStyle: TFontColorStyle = 'default',
         titlePosition: TTitlePosition = 'underImage',
         imageViewMode: TImageViewMode = 'rectangle'
     ): string {

@@ -12,7 +12,7 @@ import {IItemsViewOptions, ItemsView as ListItemsView, ListControl as viewTempla
  * @class Controls/grid:ItemsView
  * @extends Controls/list:ItemsView
  * @implements Controls/list:IItemsView
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/list:IList
  * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
