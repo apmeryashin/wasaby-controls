@@ -7338,7 +7338,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // то после остановки поиска останется свободное место во вьюпорте.
             const portionedSearchIndicators = container.querySelectorAll && container.querySelectorAll('.controls-BaseControl__portionedSearch') || [];
             let portionedSearchIndicatorsHeight = 0;
-            portionedSearchIndicators.forEach((it) => {
+            Array.from(portionedSearchIndicators).forEach((it) => {
                 portionedSearchIndicatorsHeight += it.clientHeight;
             });
 
