@@ -123,7 +123,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             groupsItems[item.name] = {
                 caption: item.editorCaption,
                 expanderVisible: item.expanderVisible,
-                groupVisible: typeof item.editorCaption === 'string' || itemIndex,
+                groupVisible: typeof item.editorCaption === 'string',
                 textValue: item.textValue,
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };

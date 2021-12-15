@@ -53,11 +53,10 @@ export default class extends Control {
         });
         this._filterButtonData = [
             {
-                group: 'Количество сотрудников',
+                caption: 'Количество сотрудников',
                 name: 'amount',
                 editorTemplateName: 'Controls/filterPanel:NumberRangeEditor',
                 resetValue: [],
-                caption: '',
                 value: [],
                 textValue: '',
                 editorOptions: {
@@ -67,10 +66,9 @@ export default class extends Control {
                 }
             },
             {
-                group: 'Ответственный',
+                caption: 'Ответственный',
                 name: 'owner',
                 resetValue: [],
-                caption: '',
                 value: [],
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
