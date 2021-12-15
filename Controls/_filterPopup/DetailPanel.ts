@@ -320,11 +320,11 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
 
    static getDefaultOptions(): IFilterDetailPanelOptions {
       return {
-         headingCaption: rk('Отбираются'),
-         headingStyle: 'secondary',
+         headingCaption: rk('ОТБИРАЮТСЯ'),
+         headingStyle: 'primary',
+         headingFontSize: 'xl',
          orientation: 'vertical',
-         applyButtonCaption: rk('Отобрать'),
-         applyButtonStyle: 'primary',
+         applyButtonStyle: 'success',
          additionalPanelTemplate: 'Controls/filterPopup:AdditionalPanelTemplate'
       };
    }

@@ -1,5 +1,5 @@
 <ws:template name="pinned">
-   <span title="{{item.get('pinned') ? rk('Открепить') : rk('Закрепить')}}" class="{{item.get('pinned') ? 'icon-Pin controls-HistoryList__iconPin-active' : 'icon-PinNull controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin controls-HistoryList__iconPin"
+   <span title="{{item.get('pinned') ? rk('Открепить') : rk('Закрепить')}}" class="{{item.get('pinned') ? 'icon-Pin controls-HistoryList__iconPin-active' : 'icon-PinNull controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin"
          on:click="_onPinClick(item)" data-qa="HistoryList__iconPin"></span>
 </ws:template>
 
@@ -43,8 +43,7 @@
          <Controls.toggle:BigSeparator
                  value="{{!_isMaxHeight}}"
                  attr:ws-no-focus="{{true}}"
-                 viewMode="arrow"
-                 contrastBackground="{{false}}"
+                 contrastBackground="{{true}}"
                  on:click="_clickSeparatorHandler()"/>
       </div>
    </ws:if>

@@ -1,7 +1,6 @@
 .controls-HistoryList__itemWrapper {
    display: inline-flex;
    align-items: center;
-   justify-content: space-between;
    cursor: pointer;
    height: var(--history_item_height_filterPanel);
    width: 100%;
@@ -17,43 +16,43 @@
 }
 
 .controls-HistoryList__heading {
-   font-size: var(--font-size_l);
-   color: var(--history_heading_text-color_filterPanel);
+   font-size: var(--font-size_xs);
+   color: var(--label_text-color);
    height: var(--inline_height_default);
    display: inline-flex;
    align-items: center;
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
+   margin-left: var(--offset_2xl);
 }
 
 .controls-HistoryList__content {
-   margin-left: calc(var(--history_content_padding-left_filterPanel) - var(--history_heading_padding-left_filterPanel));
+   margin-left: 14px;
+   margin-right: 20px;
 }
 
 .controls-HistoryList__item {
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
-   margin-right: var(--offset_m);
    font-size: var(--item_font-size_filterPanel);
-   width: 100%;
    flex-shrink: 1;
+   padding: var(--offset_3xs) var(--history_content_horizontal-offset_filterPanel);
+   border-radius: var(--border-radius_m);
+}
+
+.ws-is-hover .controls-HistoryList__item:hover {
+   background: var(--unaccented_hover_same_background-color);
 }
 
 .controls-HistoryList_vertical__item {
-   color: var(--history_vertical_item_text-color_filterPanel);
+   color: var(--label_text-color);
 }
 
 .ws-is-hover {
    .controls-HistoryList__itemWrapper:hover {
-      .controls-HistoryList_vertical__item {
-         color: var(--history_vertical_item_text-color_filterPanel);
-      }
-
       .controls-HistoryList_horizontal__item {
          color: var(--unaccented_text-color);
-      }
-
-      .controls-HistoryList__item {
-         text-decoration: underline;
       }
 
       .controls-HistoryList__iconPin {
@@ -96,8 +95,14 @@
 }
 
 .controls-HistoryList__iconPin-default {
-   color: var(--history_item_pin-button_icon-color_filterPanel);
+   color: var(--label_icon-color);
    visibility: hidden;
+}
+
+.ws-is-hover {
+   .controls-HistoryList__iconPin-default:hover {
+      color: var(--label_hover_icon-color);
+   }
 }
 
 .controls-HistoryList__iconPin-active {

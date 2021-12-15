@@ -45,6 +45,7 @@
                                      headerBackgroundStyle="transparent"
                                      backgroundStyle="transparent"
                                      headingFontColorStyle="{{_options.headingStyle}}"
+                                     headingFontSize="{{_options.headingFontSize}}"
                                      attr:class="controls_filterPopup_theme-{{_options.theme}}
                                                  controls_filter_theme-{{_options.theme}}
                                                  controls-PanelFilter
@@ -70,9 +71,11 @@
                                            tooltip="{[По умолчанию]}"
                                            attr:data-qa="FilterPanel__resetButton" />
                </ws:if>
-               <Controls.buttons:Button viewMode="button"
+               <Controls.buttons:Button viewMode="{{_options.applyButtonCaption ? 'button' : 'functionalButton'}}"
                                         buttonStyle="{{_options.applyButtonStyle}}"
                                         caption="{{_options.applyButtonCaption}}"
+                                        icon="{{!_options.applyButtonCaption ? 'icon-Yes'}}"
+                                        iconStyle="contrast"
                                         on:click="_applyFilter()"
                                         attr:tabindex="1"
                                         attr:ws-autofocus="true"

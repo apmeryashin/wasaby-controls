@@ -1,10 +1,7 @@
 .controls-AdditionalParamsRender__items {
    display: flex;
    align-items: baseline;
-}
-
-.controls-AdditionalParamsRender__items {
-   margin-left: calc(var(--extended_content_padding-left_filterPanel) - var(--extended_heading_padding-left_filterPanel));
+   margin-left: var(--offset_2xl);
 }
 
 .controls-AdditionalParamsRender_block-maxHeight {
@@ -16,14 +13,14 @@
 }
 
 .controls-AdditionalParamsRender__heading {
+   font-size: var(--font-size_xs);
+   color: var(--label_text-color);
+   height: var(--inline_height_default);
    display: inline-flex;
    align-items: center;
-}
-
-.controls-AdditionalParamsRender__heading {
-   font-size: var(--font-size_l);
-   color: var(--extended_heading_text-color_filterPanel);
-   height: var(--inline_height_default);
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
+   margin-left: var(--offset_2xl);
 }
 
 .controls-AdditionalParamsRender__item {
