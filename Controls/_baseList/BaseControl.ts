@@ -971,11 +971,11 @@ const _private = {
     loadToDirectionIfNeed(self, direction, filter?: {}) {
         const sourceController = self._sourceController;
         const hasMoreData = self._hasMoreData(direction);
-        const allowLoadByLoadedItems =
-            _private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig)
+        const allowLoadByLoadedItems = self._useNewScroll ||
+            (_private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig)
             && !self._options.disableVirtualScroll ?
                 !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
-                true;
+                true);
         const allowLoadBySource =
             sourceController &&
             hasMoreData &&
@@ -4026,6 +4026,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._useNewScroll) {
             this._listVirtualScrollController.setListContainer(this._container);
             this._listVirtualScrollController.afterMountListControl();
+            if (this._options.activeElement) {
+                this._listVirtualScrollController.scrollToItem(this._options.activeElement, 'top', true);
+            }
         }
 
         if (constants.isBrowserPlatform) {
