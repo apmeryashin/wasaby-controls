@@ -136,9 +136,7 @@ export interface IPopupController {
 
     dragNDropOnPage(item: IPopupItem, container: HTMLElement, isInsideDrag: boolean, type: string): boolean;
 
-    popupResizingLine(item: IPopupItem, offset: number): boolean;
-
-    popupResizingArrow(item: IPopupItem, offset: number): boolean;
+    popupMovingSize(item: IPopupItem, offset: object): boolean;
 
     elementAnimated(item: IPopupItem, container: HTMLElement): boolean;
 

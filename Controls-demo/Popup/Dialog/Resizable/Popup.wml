@@ -1,8 +1,7 @@
 <div class="ControlsDemo-Popup-DialogDirection">
    <Controls.popupTemplate:Dialog
            headingCaption="PopupManager"
-           closeButtonViewMode="{{_options.closeButtonViewMode}}"
-           closeButtonVisible="{{_options.closeButtonVisible}}"
+           closeButtonViewMode="external"
            resizable="{{_options.resizable}}"
            draggable="{{ true }}">
       <ws:bodyContentTemplate>

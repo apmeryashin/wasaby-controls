@@ -51,7 +51,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     }
 
     protected _onResizingOffset(event: Event, offset: object): void {
-        this._notify('popupResizingArrow', [offset], {bubbling: true});
+        this._notify('popupMovingSize', [offset], {bubbling: true});
     }
 
     protected _beforeUpdate(options: IDialogTemplateOptions): void {

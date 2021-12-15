@@ -113,6 +113,17 @@
 .controls-DialogTemplate__close_external {
    right: calc(var(--inline_height_xl) / -2);
    margin-top: var(--offset_xs);
+
+   .controls-Button__close_external {
+      width: var(--inline_height_xl);
+      height: var(--inline_height_xl);
+   }
+}
+
+.controls-Popup__hidden-closeButton {
+   .controls-DialogTemplate__close_external {
+      visibility: hidden;
+   }
 }
 
 .controls-DialogTemplate__close_linkButton {

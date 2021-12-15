@@ -12,11 +12,11 @@ import {
     IPopupSizes
 } from 'Controls/_popup/interface/IPopup';
 import {goUpByControlTree} from 'UI/Focus';
-import { getClosestControl } from 'UI/NodeCollector';
+import {getClosestControl} from 'UI/NodeCollector';
 import {List} from 'Types/collection';
 import {Bus as EventBus} from 'Env/Event';
 import {constants, detection} from 'Env/Env';
-import { TouchDetect } from 'Env/Touch';
+import {TouchDetect} from 'Env/Touch';
 import {debounce} from 'Types/function';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
@@ -268,8 +268,8 @@ class Manager {
             }
         }
         return item && (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
-             item.popupState === item.controller.POPUP_STATE_DESTROYING ||
-             item.popupState === item.controller.POPUP_STATE_DESTROYED);
+            item.popupState === item.controller.POPUP_STATE_DESTROYING ||
+            item.popupState === item.controller.POPUP_STATE_DESTROYED);
     }
 
     private _subscribeToPageDragNDrop(): void {
@@ -299,13 +299,13 @@ class Manager {
             return;
         }
         this._popupItems.each((elem: IPopupItem, index: number) => {
-           if (item === elem) {
-               itemIndex = index;
-           } else if (itemIndex !== undefined) {
-               if (elem.parentId === item.parentId) {
-                   newIndex = index;
-               }
-           }
+            if (item === elem) {
+                itemIndex = index;
+            } else if (itemIndex !== undefined) {
+                if (elem.parentId === item.parentId) {
+                    newIndex = index;
+                }
+            }
         });
         if (itemIndex !== undefined && newIndex !== undefined) {
             this._popupItems.move(itemIndex, newIndex);
@@ -454,20 +454,14 @@ class Manager {
         item.contextIsTouch = this._contextIsTouch;
     }
 
-    protected _popupResizingLine(id: string, offset: number): boolean {
+    protected _popupMovingSize(id: string, offset: object | number): boolean {
         const element = this.find(id);
         if (element) {
-            element.controller.popupResizingLine(element, offset);
-            Manager._notifyEvent('managerPopupUpdated', [element, this._popupItems]);
-            return true;
-        }
-        return false;
-    }
-
-    protected _popupResizingArrow(id: string, offset: number): boolean {
-        const element = this.find(id);
-        if (element) {
-            element.controller.popupResizingArrow(element, offset);
+            let offsetValue: object = offset;
+            if (typeof offset === 'number') {
+                offsetValue = {x: offset};
+            }
+            element.controller.popupMovingSize(element, offsetValue);
             Manager._notifyEvent('managerPopupUpdated', [element, this._popupItems]);
             return true;
         }
@@ -522,7 +516,7 @@ class Manager {
 
     private _handlePopupWithOverlay(): void {
         const popupContainer = ManagerController.getContainer();
-        const popupItem = ManagerController.find(popupContainer.getOverlayId());
+        const popupItem = ManagerController.find(popupContainer.getOverlayIndex());
         if (popupItem && popupItem.popupState !== popupItem.controller.POPUP_STATE_INITIALIZING) {
             this._closePopupByOutsideClick(popupItem);
         }

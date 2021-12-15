@@ -161,7 +161,7 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         const newWidth = this._workspaceWidth + offset;
 
         const item = this._generateControllerItem();
-        StackController.popupResizingLine(item, offset);
+        StackController.popupMovingSize(item, {x: offset});
         this._minSavedWidth = item.minSavedWidth;
         this._maxSavedWidth = item.maxSavedWidth;
 

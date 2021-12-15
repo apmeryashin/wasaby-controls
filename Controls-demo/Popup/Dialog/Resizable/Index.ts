@@ -15,14 +15,12 @@ class Index extends Control<IControlOptions> {
     private _dialogOpener: DialogOpener;
 
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
-        this._dialogOpener = new DialogOpener();
+        this._dialogOpener = new DialogOpener(baseStackConfig);
     }
 
     protected _openDialogHandler(): void {
         this._dialogOpener.open({
-            ...baseStackConfig,
             templateOptions: {
-                closeButtonViewMode: 'external',
                 resizable: this._resizable
             }
         });

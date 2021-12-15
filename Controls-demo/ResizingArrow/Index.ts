@@ -12,8 +12,8 @@ class ResizingLine extends Control<IControlOptions> {
         const valueX = this._x + offset.x;
         const valueY = this._y + offset.y;
 
-        this._x = ResizingLine._limit(valueX);
-        this._y = ResizingLine._limit(valueY);
+        this._x = this._limit(valueX);
+        this._y = this._limit(valueY);
     }
 
     private static MIN_WIDTH: number = 100;
@@ -21,7 +21,7 @@ class ResizingLine extends Control<IControlOptions> {
 
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/ResizingArrow/ResizingArrow'];
 
-    private static _limit(value: number): number {
+    protected _limit(value: number): number {
         return  Math.max(ResizingLine.MIN_WIDTH, Math.min(value, ResizingLine.MAX_WIDTH));
     }
 }

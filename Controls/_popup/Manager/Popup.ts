@@ -242,13 +242,9 @@ class Popup extends Control<IPopupControlOptions> {
         ManagerController.notifyToManager('popupMouseLeave', [this._options.id]);
     }
 
-    protected _popupResizingLine(event: SyntheticEvent<Event>, offset: number): void {
-        ManagerController.notifyToManager('popupResizingLine', [this._options.id, offset]);
-    }
-
-    protected _popupResizingArrow(event: SyntheticEvent<Event>, offset: number): void {
+    protected _popupMovingSize(event: SyntheticEvent<Event>, offset: object | number): void {
         event.stopPropagation();
-        ManagerController.notifyToManager('popupResizingArrow', [this._options.id, offset]);
+        ManagerController.notifyToManager('popupMovingSize', [this._options.id, offset]);
     }
 
     protected _animated(event: SyntheticEvent<AnimationEvent>): void {

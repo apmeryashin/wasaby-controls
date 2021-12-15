@@ -4,5 +4,4 @@
         prefetchPromise="{{ _options._prefetchPromise }}"
         prefetchData="{{_options._prefetchData}}"
         isPrefetchDataMode="{{_options._isPrefetchDataMode}}"
-        closeButtonVisible="{{_options.closeButtonVisible}}"
         maximize="{{maximize}}" />
