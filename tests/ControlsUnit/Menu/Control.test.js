@@ -728,7 +728,7 @@ define(
             });
          });
 
-         describe('_itemMouseEnter', function() {
+         describe('_itemMouseMove', function() {
             let menuControl, handleStub;
             let sandbox;
             let isTouchStub;
@@ -751,25 +751,26 @@ define(
             });
 
             it('menu:Control in item', function() {
-               menuControl._itemMouseEnter('mouseenter', collectionItem, { target: {closest: () => 'newContainer'}, nativeEvent: 'nativeEvent' });
+               menuControl._itemMouseMove('mousemove', collectionItem, { target: {closest: () => 'newContainer'}, nativeEvent: 'nativeEvent' });
                assert.isTrue(handleStub.notCalled);
             });
 
             it('on groupItem', function() {
-               menuControl._itemMouseEnter('mouseenter', new display.GroupItem());
+               menuControl._itemMouseMove('mousemove', new display.GroupItem());
                assert.isTrue(handleStub.notCalled);
             });
 
             it('on collectionItem', function() {
                menuControl._itemMouseEnter('mouseenter', collectionItem, { target, nativeEvent: 'nativeEvent' });
-               assert.isTrue(handleStub.calledOnce);
                assert.deepEqual(menuControl._hoveredTarget, target);
+               menuControl._itemMouseMove('mousemove', collectionItem, { target: {closest: () => 'container'}, nativeEvent: 'nativeEvent' });
+               assert.isTrue(handleStub.calledOnce);
                assert.equal(menuControl._enterEvent, 'nativeEvent');
             });
 
             it('on touch devices', function() {
                isTouchStub.returns(true);
-               menuControl._itemMouseEnter('mouseenter', collectionItem, {target});
+               menuControl._itemMouseMove('mousemove', collectionItem, {target});
                assert.isTrue(handleStub.notCalled);
             });
 
@@ -783,14 +784,14 @@ define(
                });
 
                it('subMenu is close', function() {
-                  menuControl._itemMouseEnter('mouseenter', collectionItem, { target, nativeEvent: 'nativeEvent' });
+                  menuControl._itemMouseMove('mousemove', collectionItem, { target, nativeEvent: 'nativeEvent' });
                   assert.isTrue(handleStub.calledOnce);
                   assert.isFalse(isClosed);
                });
 
                it('subMenu is open, mouse on current item = subDropdownItem', function() {
                   this._subDropdownItem = collectionItem;
-                  menuControl._itemMouseEnter('mouseenter', collectionItem, { target, nativeEvent: 'nativeEvent' });
+                  menuControl._itemMouseMove('mousemove', collectionItem, { target, nativeEvent: 'nativeEvent' });
                   assert.isTrue(handleStub.calledOnce);
                   assert.isFalse(isClosed);
                });
