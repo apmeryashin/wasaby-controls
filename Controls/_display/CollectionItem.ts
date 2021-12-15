@@ -559,9 +559,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             classes += 'controls-ListView__checkbox-onhover';
         }
 
-        if (this.isFaded()) {
-            classes += ' controls-ListView__itemContent_faded';
-        }
+        classes += this.getFadedClass();
+
         return classes;
     }
 
@@ -789,7 +788,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     getFadedClass(): string {
-        return this.isFaded() ? ' controls-ListView__itemContent_faded' : '';
+        return (this.isFaded() || this.isDragged()) ? ' controls-ListView__itemContent_faded' : '';
     }
 
     setFaded(faded: boolean): void {
@@ -801,7 +800,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     isFaded(): boolean {
-        return this.isDragged() || this._$faded;
+        return this._$faded;
     }
 
     // region Drag-n-drop

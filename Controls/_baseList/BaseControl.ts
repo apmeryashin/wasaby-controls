@@ -128,6 +128,7 @@ import ObserversController, {
 import { selectionToRecord } from './resources/utils/getItemsBySelection';
 import { checkReloadItemArgs } from 'Controls/_baseList/resources/utils/helpers';
 import { DEFAULT_TRIGGER_OFFSET } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
+import {FadeController} from 'Controls/_baseList/Controllers/FadeController';
 
 //#endregion
 
@@ -2556,6 +2557,24 @@ const _private = {
         }
     },
 
+    getFadeController(self: BaseControl, options: IList = null): FadeController {
+        if (!self._fadeController) {
+            options = options ? options : self._options;
+            self._fadeController = new FadeController({
+                model: self._listViewModel,
+                fadedKeys: options.fadedKeys
+            });
+        }
+        return self._fadeController;
+    },
+
+    updateFadeController(self: BaseControl, options: IList): void {
+        _private.getFadeController(self, options).updateOptions({
+            model: self._listViewModel,
+            fadedKeys: options.fadedKeys
+        });
+    },
+
     // region Marker
 
     hasMarkerController(self: BaseControl): boolean {
@@ -3377,6 +3396,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _keepHorizontalScroll: boolean = false;
 
+    _fadeController: FadeController = null;
+
     //#endregion
 
     constructor(options, context) {
@@ -3529,7 +3550,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     const markedKey = controller.calculateMarkedKeyForVisible();
                     controller.setMarkedKey(markedKey);
                 }
-
+                if (newOptions.fadedKeys) {
+                    const fadeController = _private.getFadeController(this, newOptions);
+                    fadeController.applyStateToModel();
+                }
                 if (
                     newOptions.multiSelectVisibility !== 'hidden' &&
                     newOptions.selectedKeys &&
@@ -4634,9 +4658,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.updateItemActionsOnce(this, newOptions);
         }
 
-        if (!isEqual(this._options.fadedKeys, newOptions.fadedKeys)) {
-            this._listModel.setFadedKeys(newOptions.fadedKeys);
-        }
+        _private.updateFadeController(this, newOptions);
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;

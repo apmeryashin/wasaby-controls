@@ -2381,33 +2381,9 @@ export default class Collection<
     getFadedKeys(): CrudEntityKey[] {
         return this._$fadedKeys || [];
     }
+
     setFadedKeys(fadedKeys: CrudEntityKey[]): void {
-        if (isEqual(this.getFadedKeys(), fadedKeys)) {
-            return;
-        }
-
-        const diff = ArraySimpleValuesUtil.getArrayDifference(this.getFadedKeys(), fadedKeys);
-
-        // запоминаем все изменения и отправляем их за один раз. Вместо множества событий от каждого элемента
-        const session = this._startUpdateSession();
-
-        diff.added.forEach((id) => {
-            const item = this.getItemBySourceKey(id, false);
-            if (item && item.Fadable) {
-                item.setFaded(true);
-            }
-        });
-
-        diff.removed.forEach((id) => {
-            const item = this.getItemBySourceKey(id, false);
-            if (item && item.Fadable) {
-                item.setFaded(false);
-            }
-        });
-
-        this._finishUpdateSession(session);
         this._$fadedKeys = [...fadedKeys];
-        this._nextVersion();
     }
 
     getItemTemplateProperty(): string {
