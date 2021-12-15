@@ -26,11 +26,10 @@ export default class extends Control {
         });
         this._filterButtonSource = [
             {
-                group: 'Разработка',
+                caption: 'Разработка',
                 name: 'isDevelopment',
                 editorTemplateName: 'Controls-demo/filterPanel/CompositeFilter/resources/CheckboxEditor',
                 resetValue: false,
-                caption: '',
                 value: true,
                 textValue: '',
                 editorOptions: {

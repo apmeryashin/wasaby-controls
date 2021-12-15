@@ -37,11 +37,10 @@ export default class extends Control {
         });
         this._filterButtonSource = [
             {
-                group: 'Количество сотрудников',
+                caption: 'Количество сотрудников',
                 name: 'amount',
                 editorTemplateName: 'Controls/filterPanel:NumberRangeEditor',
                 resetValue: [],
-                caption: '',
                 value: [],
                 textValue: ''
             }

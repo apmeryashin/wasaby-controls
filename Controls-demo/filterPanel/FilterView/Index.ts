@@ -34,10 +34,9 @@ export default class extends Control {
         ];
         this._filterSource = [
             {
-                group: 'Ответственный',
+                caption: 'Ответственный',
                 name: 'owner',
                 resetValue: [],
-                caption: '',
                 value: [],
                 textValue: '',
                 viewMode: 'basic',
@@ -61,11 +60,10 @@ export default class extends Control {
                     })
                 }
             }, {
-                group: 'Пол',
+                caption: 'Пол',
                 name: 'gender',
                 resetValue: null,
                 expanderVisible: true,
-                caption: '',
                 value: '1',
                 textValue: 'Мужской',
                 viewMode: 'basic',

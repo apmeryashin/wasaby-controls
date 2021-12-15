@@ -11,11 +11,10 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._source = [
             {
-                group: 'Количество сотрудников',
+                caption: 'Количество сотрудников',
                 name: 'amount',
                 editorTemplateName: 'Controls/filterPanel:NumberRangeEditor',
                 resetValue: [],
-                caption: '',
                 value: [],
                 textValue: '',
                 editorOptions: {
