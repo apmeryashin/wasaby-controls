@@ -22,6 +22,23 @@ export class PinController<T = unknown> extends DataContext {
         this._callbacks.push(callback);
     }
 
+    unsubscribe(callback: CallbackType<T>): void {
+        const index = this._callbacks.indexOf(callback);
+        if (index >= 0) {
+            this._callbacks.splice(index, 1);
+        }
+    }
+
+    /**
+     * Временный метод для очистики стека закрепленных итемов.
+     * Понадобился как быстрое решение вот этой проблемы
+     * https://online.sbis.ru/opendoc.html?guid=a17584db-5cc5-429f-b975-c18dbc52e601
+     */
+    clearStack(): void {
+        this._stack = [];
+        this.processIntersect({} as IntersectionObserverSyntheticEntry);
+    }
+
     processIntersect(entries: IntersectionObserverSyntheticEntry): void {
         const pinnedData = this.updateStack([entries]);
 
