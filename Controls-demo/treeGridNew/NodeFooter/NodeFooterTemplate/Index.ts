@@ -29,7 +29,7 @@ export default class extends Control {
 
     protected _addButtonHandler(e: SyntheticEvent, item: TreeGridNodeFooterRow): void {
         const nodeKey = item.getNode().getContents().getKey();
-        Logger.info(`adding started for node ${nodeKey}`);
+        Logger.info(`Adding started for node ${nodeKey}`);
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
