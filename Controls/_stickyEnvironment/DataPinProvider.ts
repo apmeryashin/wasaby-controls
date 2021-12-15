@@ -33,6 +33,15 @@ export class DataPinProvider<T = unknown> extends Control<IControlOptions> {
         this._pinController = new PinController<T>();
     }
 
+    /**
+     * Временный метод для очистики стека закрепленных итемов.
+     * Понадобился как быстрое решение вот этой проблемы
+     * https://online.sbis.ru/opendoc.html?guid=a17584db-5cc5-429f-b975-c18dbc52e601
+     */
+    clearStack(): void {
+        this._pinController.clearStack();
+    }
+
     _getChildContext(): IPinConsumerContext {
         return {
             pinController: this._pinController
