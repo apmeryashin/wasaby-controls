@@ -8,6 +8,7 @@ import {
     ItemsSizeController,
     IItemsSizesControllerOptions
 } from './ScrollController/ItemsSizeController/ItemsSizeController';
+import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 export type IItemsSizesControllerConstructor = new (options: IItemsSizesControllerOptions) => ItemsSizeController;
 export type IObserversControllerConstructor = new (options: IObserversControllerOptions) => ObserversController;
@@ -20,7 +21,7 @@ export class ListVirtualScrollController extends AbstractListVirtualScrollContro
         return ItemsSizeController;
     }
 
-    protected _applyIndexes(startIndex: number, endIndex: number): void {
-        this._collection.setIndexes(startIndex, endIndex);
+    protected _applyIndexes(startIndex: number, endIndex: number, shiftDirection: IDirection): void {
+        this._collection.setIndexes(startIndex, endIndex, shiftDirection);
     }
 }

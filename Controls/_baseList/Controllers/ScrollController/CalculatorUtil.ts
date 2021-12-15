@@ -124,7 +124,7 @@ function getSegmentSizeToHide(params: IGetSegmentSizeToHideParams): number {
     }
 }
 
-function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
+function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): number {
     let segmentSize = 0;
     let endIndex = params.currentRange.endIndex - 1;
     const itemsSizes = params.itemsSizes;
@@ -139,7 +139,7 @@ function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): numb
     return segmentSize;
 }
 
-function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): number {
+function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
     let segmentSize = 0;
     let start = params.currentRange.startIndex;
     let itemsSizesSum = 0;
@@ -304,7 +304,8 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
         const indexLine = Math.max(MIN_RATIO_INDEX_LINE, Math.min(MAX_RATIO_INDEX_LINE, indexLineRatio));
 
         for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
-            if (itemsSizes[i].offset < (fixedScrollPosition + viewportSize * indexLine)) {
+            const itemOffset = itemsSizes[i].offset - placeholders.backward;
+            if (itemOffset < (fixedScrollPosition + viewportSize * indexLine)) {
                 activeElementIndex = i;
             } else {
                 break;
