@@ -308,11 +308,11 @@ export default class Button extends BaseDropdown {
                 }
             });
         } else {
-            config = Merge(this._getMenuPopupConfig(), popupOptions || {});
+            config = this._getMenuPopupConfig();
         }
         this._controller.setMenuPopupTarget(this._children.content);
 
-        return this._controller.openMenu(config);
+        return this._controller.openMenu(Merge(config, popupOptions || {}));
     }
 
     openMenu(popupOptions?: IStickyPopupOptions, key?: TKey): Promise<any> {
