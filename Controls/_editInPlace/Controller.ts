@@ -167,7 +167,7 @@ interface IEditInPlaceCallbacks {
 /**
  * Контроллер редактирования по месту.
  *
- * @public
+ * @private
  * @class Controls/_editInPlace/Controller
  * @author Родионов Е.А.
  */
@@ -176,7 +176,7 @@ interface IEditInPlaceCallbacks {
  * Edit in place controller.
  *
  * @mixes Types/_entity/DestroyableMixin
- * @public
+ * @private
  * @class Controls/_editInPlace/Controller
  * @author Rodionov E.A.
  */
