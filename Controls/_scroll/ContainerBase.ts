@@ -893,9 +893,17 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             if (scrollParam === 'bottom') {
                 this._setScrollTop(scrollHeight - clientHeight);
             } else if (scrollParam === 'pageUp') {
-                this._setScrollTop(currentScrollTop - clientHeight);
+                // Скроллим на минимально возможное значение
+                const newScrollTop = currentScrollTop < clientHeight ? 0 : currentScrollTop - clientHeight;
+                this._setScrollTop(newScrollTop);
             } else if (scrollParam === 'pageDown') {
-                this._setScrollTop(currentScrollTop + clientHeight);
+                let newScrollTop = currentScrollTop + clientHeight;
+                // Скроллим на максимально возможное значение
+                // Правлю для того, чтобы в ScrollModel и в событие отдали сразу актуальное значение
+                if (newScrollTop > scrollHeight - clientHeight) {
+                    newScrollTop = scrollHeight - clientHeight;
+                }
+                this._setScrollTop(newScrollTop);
             } else if (typeof scrollParam === 'number') {
                 this._setScrollTop(scrollParam, false, isVirtual);
             }

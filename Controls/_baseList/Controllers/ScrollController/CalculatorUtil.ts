@@ -75,6 +75,11 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
     const { direction, segmentSize, totalCount, pageSize, currentRange } = params;
     let { startIndex, endIndex } = currentRange;
 
+    // Меняем segmentSize так, чтобы заполнить pageSize. То есть возможна ситуация, что переданный segmentSize
+    // сместит диапазон так, что pageSize не будет заполнен.
+    const countItemsToFillPageSize = Math.max(pageSize - (endIndex - startIndex), 0);
+    const correctedSegmentSize = Math.max(segmentSize, countItemsToFillPageSize);
+
     if (!pageSize) {
         return {
             startIndex: 0,
@@ -85,7 +90,7 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
     // Нельзя скрывать записи на заданный segmentSize, т.к. этого может быть много и мы сразу же увидим триггер.
     const segmentSizeToHide = getSegmentSizeToHide(params);
     if (direction === 'backward') {
-        startIndex = Math.max(0, startIndex - segmentSize);
+        startIndex = Math.max(0, startIndex - correctedSegmentSize);
         if (startIndex >= totalCount) {
             startIndex = Math.max(0, totalCount - pageSize);
         }
@@ -93,7 +98,11 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
         endIndex = Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount));
     } else {
         // сперва считаем именно endIndex, т.к. startIndex зависит от нового значения endIndex
-        endIndex = Math.min(endIndex + segmentSize, totalCount);
+        endIndex = Math.min(endIndex + correctedSegmentSize, totalCount);
+        if (endIndex < pageSize && endIndex < totalCount) {
+            endIndex = Math.min(pageSize, totalCount);
+        }
+
         startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
     }
 

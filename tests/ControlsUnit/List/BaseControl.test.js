@@ -1142,6 +1142,10 @@ define([
          baseControl.saveOptions(cfg);
          baseControl._needScrollCalculation = true;
          baseControl._isScrollShown = true;
+         baseControl._listVirtualScrollController = {
+            contentResized(contentSize) {
+            }
+         };
          baseControl._loadOffset = {
             top: 10,
             bottom: 10

@@ -48,7 +48,9 @@ export default class History extends Control<IHistoryOptions> {
 
     protected _handleExpanderClick(): void {
         this._historyListExpanded = !this._historyListExpanded;
-        this._maxHistoryCount = this._historyListExpanded ? MAX_EXPANDED_COUNT_OF_VISIBLE_ITEMS : MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
+        this._maxHistoryCount = this._historyListExpanded
+            ? MAX_EXPANDED_COUNT_OF_VISIBLE_ITEMS
+            : MAX_COLLAPSED_COUNT_OF_VISIBLE_ITEMS;
     }
 
     protected _onPinClick(event: Event, item: Model): void {

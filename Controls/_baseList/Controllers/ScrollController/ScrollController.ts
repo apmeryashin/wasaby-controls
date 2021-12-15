@@ -7,6 +7,7 @@ import {
     AbstractObserversController,
     IAbstractObserversControllerBaseOptions,
     IAbstractObserversControllerOptions,
+    IAdditionalTriggersOffsets,
     ITriggerPosition,
     TIntersectionEvent
 } from './ObserverController/AbstractObserversController';
@@ -26,7 +27,11 @@ export interface IItemsRange {
  * на _beforeRender для восстановления скролла
  */
 export interface IIndexesChangedParams {
-    shiftDirection: IDirection;
+    /**
+     * Направление, в котором был смещен диапазон.
+     * @remark Возможно значение null. Это значит, что не возможно определить направление. Например, reset.
+     */
+    shiftDirection: IDirection|null;
     range: IItemsRange;
     oldRange: IItemsRange;
     oldPlaceholders: IPlaceholders;
@@ -98,6 +103,9 @@ export class ScrollController {
     private readonly _itemsEndedCallback: IItemsEndedCallback;
     private readonly _indexesInitializedCallback: IIndexesInitializedCallback;
 
+    private _viewportSize: number;
+    private _contentSize: number;
+
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
         this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
@@ -105,6 +113,9 @@ export class ScrollController {
         this._activeElementChangedCallback = options.activeElementChangedCallback;
         this._itemsEndedCallback = options.itemsEndedCallback;
         this._indexesInitializedCallback = options.indexesInitializedCallback;
+
+        this._viewportSize = options.viewportSize;
+        this._contentSize = options.contentSize;
 
         this._itemsSizesController = new options.itemsSizeControllerConstructor({
             itemsContainer: options.itemsContainer,
@@ -120,6 +131,7 @@ export class ScrollController {
             triggersVisibility: options.triggersVisibility,
             triggersOffsetCoefficients: options.triggersOffsetCoefficients,
             triggersPositions: options.triggersPositions,
+            additionalTriggersOffsets: options.additionalTriggersOffsets,
             observersCallback: this._observersCallback.bind(this)
         });
 
@@ -141,19 +153,30 @@ export class ScrollController {
             givenItemsSizes: options.givenItemsSizes
         });
 
-        this._indexesInitializedCallback(this._calculator.getRange());
-        this._hasItemsOutRangeChangedCallback({
-            backward: this._calculator.hasItemsOutRange('backward'),
-            forward: this._calculator.hasItemsOutRange('forward')
-        });
+        this._processInitialize();
     }
 
-    viewportResized(viewportSize: number): void {
-        const triggerOffsets = this._observersController.setViewportSize(viewportSize);
-        this._calculator.setTriggerOffsets(triggerOffsets);
-        this._calculator.setViewportSize(viewportSize);
+    viewportResized(viewportSize: number): boolean {
+        const changed = this._viewportSize !== viewportSize;
+        if (changed) {
+            this._viewportSize = viewportSize;
 
-        this._updateItemsSizes();
+            const triggerOffsets = this._observersController.setViewportSize(viewportSize);
+            this._calculator.setTriggerOffsets(triggerOffsets);
+            this._calculator.setViewportSize(viewportSize);
+        }
+        return changed;
+    }
+
+    contentResized(contentSize: number): boolean {
+        const changed = this._contentSize !== contentSize;
+        if (changed) {
+            this._contentSize = contentSize;
+
+            this._calculator.setContentSize(contentSize);
+            this._observersController.setContentSize(contentSize);
+        }
+        return changed;
     }
 
     getElement(key: CrudEntityKey): HTMLElement {
@@ -182,6 +205,15 @@ export class ScrollController {
     setForwardTriggerPosition(position: ITriggerPosition): void {
         const triggerOffsets = this._observersController.setForwardTriggerPosition(position);
         this._calculator.setTriggerOffsets(triggerOffsets);
+    }
+
+    setAdditionalTriggersOffsets(additionalTriggersOffsets: IAdditionalTriggersOffsets): void {
+        const triggersOffsets = this._observersController.setAdditionalTriggersOffsets(additionalTriggersOffsets);
+        this._calculator.setTriggerOffsets(triggersOffsets);
+    }
+
+    checkTriggersVisibility(): void {
+        this._observersController.checkTriggersVisibility();
     }
 
     // endregion Triggers
@@ -232,23 +264,13 @@ export class ScrollController {
 
     // region Update items sizes
 
-    updateItemsSizes(itemsRange: IItemsRange): void {
-        this._updateItemsSizes(itemsRange);
+    updateItemsSizes(itemsRange: IItemsRange = this._calculator.getRange()): void {
+        const newItemsSizes = this._itemsSizesController.updateItemsSizes(itemsRange);
+        this._calculator.updateItemsSizes(newItemsSizes);
     }
 
     updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
         this._calculator.updateGivenItemsSizes(itemsSizes);
-    }
-
-    contentResized(contentSize: number): void {
-        this._updateItemsSizes();
-        this._calculator.setContentSize(contentSize);
-    }
-
-    private _updateItemsSizes(itemsRange?: IItemsRange): void {
-        const range = itemsRange || this._calculator.getRange();
-        const newItemsSizes = this._itemsSizesController.updateItemsSizes(range);
-        this._calculator.updateItemsSizes(newItemsSizes);
     }
 
     // endregion Update items sizes
@@ -297,10 +319,11 @@ export class ScrollController {
      * @param count Кол-во удаленных элементов.
      */
     removeItems(position: number, count: number): void {
+        const result = this._calculator.removeItems(position, count);
+
         const itemsSizes = this._itemsSizesController.removeItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        const result = this._calculator.removeItems(position, count);
         this._processCalculatorResult(result);
     }
 
@@ -316,7 +339,7 @@ export class ScrollController {
         const itemsSizes = this._itemsSizesController.resetItems(totalCount);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        const result = this._calculator.resetItems(totalCount, keepPosition);
+        this._calculator.resetItems(totalCount, keepPosition);
 
         const hasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),
@@ -333,7 +356,7 @@ export class ScrollController {
             this.setForwardTriggerPosition('offset');
         }
 
-        this._processCalculatorResult(result);
+        this._processInitialize();
     }
 
     // endregion Collection changes
@@ -351,7 +374,7 @@ export class ScrollController {
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
         const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
         const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
-        return edgeItem.direction === 'backward' ? scrollPosition + beforeContentSize : scrollPosition;
+        return edgeItem.direction === 'forward' ? scrollPosition - beforeContentSize : scrollPosition;
     }
 
     /**
@@ -384,6 +407,7 @@ export class ScrollController {
     scrollPositionChange(position: number): void {
         const result = this._calculator.scrollPositionChange(position);
         this._processActiveElementIndexChanged(result);
+        this._observersController.setScrollPosition(position);
     }
 
     // endregion Scroll
@@ -482,6 +506,14 @@ export class ScrollController {
                 shiftDirection: result.shiftDirection
             });
         }
+    }
+
+    private _processInitialize(): void {
+        this._indexesInitializedCallback(this._calculator.getRange());
+        this._hasItemsOutRangeChangedCallback({
+            backward: this._calculator.hasItemsOutRange('backward'),
+            forward: this._calculator.hasItemsOutRange('forward')
+        });
     }
 
     // endregion Private API
