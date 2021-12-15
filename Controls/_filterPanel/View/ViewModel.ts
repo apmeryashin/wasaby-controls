@@ -124,7 +124,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 caption: item.editorCaption,
                 expanderVisible: item.expanderVisible,
                 resetButtonVisible: !isEqual(item.value, item.resetValue),
-                groupVisible: typeof item.editorCaption === 'string' || itemIndex,
+                groupVisible: typeof item.editorCaption === 'string',
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };
         });
