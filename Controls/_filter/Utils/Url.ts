@@ -60,6 +60,10 @@ export function updateUrlByFilter(filterButtonItems: IFilterItem[]): void {
         queryParams.replace = true;
     }
     const state = MaskResolver.calculateQueryHref(queryParams);
+
+    // Нужно убрать название точки входа (например, OnlineSbisRu) из ссылки на страницу.
+    // Если страница на сервисе, то точка входа в урл не добавляется и удалять ее, соответственно, не нужно.
+    // Высчитываем с какой позиции начинается чистый урл и убираем точку входа из урл.
     const service = getConfig('appRoot');
 
     let href;
