@@ -7,7 +7,7 @@
       on:keypress="_keyUpHandler()"
       data-qa="Lookup__link">
    <span class="controls-Lookup__link__text
-                {{_options.underline && _options.underline !== 'none'  && !_options.readOnly ? ('controls-Lookup__link-' + _options.underline)}}">
+                {{_options.underline && _options.underline !== 'none'  && !_options.readOnly ? ('controls-Lookup__link_underline-' + _options.underline)}}">
        {{_options.caption}}
    </span>
 </span>
