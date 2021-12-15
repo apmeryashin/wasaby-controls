@@ -145,7 +145,7 @@ export abstract class AbstractListVirtualScrollController<
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
     private _scheduledCheckTriggersVisibility: boolean;
     private _scheduledHideDrawingIndicatorDirection: IDirection;
-    private _scheduledProcessIndexesChanged: IIndexesChangedParams;
+    private _doAfterSynchronizationCallback: Function;
 
     /**
      * Стейт используется, чтобы определить что сейчас идет синхронизация.
@@ -231,9 +231,12 @@ export abstract class AbstractListVirtualScrollController<
         this._handleScheduledScroll();
         this._handleScheduledCheckTriggerVisibility();
         this._handleScheduledHideDrawingIndicator();
-        this._handleScheduledProcessIndexesChanged();
 
         this._synchronizationInProgress = false;
+        if (this._doAfterSynchronizationCallback) {
+            this._doAfterSynchronizationCallback();
+            this._doAfterSynchronizationCallback = null;
+        }
     }
 
     saveScrollPosition(): void {
@@ -456,53 +459,45 @@ export abstract class AbstractListVirtualScrollController<
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
         // Нельзя изменять индексы во время синхронизации, т.к. возможно что afterRender будет вызван другими измениями.
         // Из-за этого на afterRender не будет еще отрисован новый диапазон, он отрисуется на следующую синхронизацию.
-        if (this._synchronizationInProgress) {
-            this._scheduleProcessIndexesChanged(params);
-        } else {
-            this._processIndexesChanged(params);
-        }
-    }
+        this._doAfterSynchronization(() => {
+            this._scheduleUpdateItemsSizes(params.range);
+            // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
+            // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
+            // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
+            this._scheduleCheckTriggersVisibility();
 
-    private _scheduleProcessIndexesChanged(params: IIndexesChangedParams): void {
-        this._scheduledProcessIndexesChanged = params;
-    }
+            // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
+            // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
+            // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
+            // PS. ОБРАТИТЬ ВНИМАНИЕ! Восстанавливать скролл нужно ВСЕГДА, т.к. если записи добавляются в самое начало,
+            // то startIndex не изменится, а изменится только endIndex, но по факту это изменение startIndex.
+            this._applyIndexes(params.range.startIndex, params.range.endIndex);
 
-    private _handleScheduledProcessIndexesChanged(): void {
-        if (this._scheduledProcessIndexesChanged) {
-            this._processIndexesChanged(this._scheduledProcessIndexesChanged);
-        }
-    }
+            // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
+            // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
+            // и мы будем знать актуальную scrollPosition.
+            // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
+            this._scheduleScroll({
+                type: 'calculateRestoreScrollParams',
+                params: {
+                    direction: params.shiftDirection,
+                    range: params.oldRange,
+                    placeholders: params.oldPlaceholders
+                } as IEdgeItemCalculatingParams
+            });
 
-    private _processIndexesChanged(params: IIndexesChangedParams): void {
-        this._scheduleUpdateItemsSizes(params.range);
-        // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
-        // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
-        // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
-        this._scheduleCheckTriggersVisibility();
-
-        // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
-        // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
-        // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
-        // PS. ОБРАТИТЬ ВНИМАНИЕ! Восстанавливать скролл нужно ВСЕГДА, т.к. если записи добавляются в самое начало,
-        // то startIndex не изменится, а изменится только endIndex, но по факту это изменение startIndex.
-        this._applyIndexes(params.range.startIndex, params.range.endIndex);
-
-        // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
-        // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
-        // и мы будем знать актуальную scrollPosition.
-        // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
-        this._scheduleScroll({
-            type: 'calculateRestoreScrollParams',
-            params: {
-                direction: params.shiftDirection,
-                range: params.oldRange,
-                placeholders: params.oldPlaceholders
-            } as IEdgeItemCalculatingParams
+            if (this._updateDrawingIndicatorUtil) {
+                this._updateDrawingIndicatorUtil(params.shiftDirection, true);
+                this._scheduleHideDrawingIndicator(params.shiftDirection);
+            }
         });
+    }
 
-        if (this._updateDrawingIndicatorUtil) {
-            this._updateDrawingIndicatorUtil(params.shiftDirection, true);
-            this._scheduleHideDrawingIndicator(params.shiftDirection);
+    private _doAfterSynchronization(callback: Function): void {
+        if (this._synchronizationInProgress) {
+            this._doAfterSynchronizationCallback = callback;
+        } else {
+            callback();
         }
     }
 
