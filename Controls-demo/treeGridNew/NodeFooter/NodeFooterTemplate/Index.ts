@@ -1,7 +1,11 @@
 import {Control, TemplateFunction} from 'UI/Base';
+import { SyntheticEvent } from 'Vdom/Vdom';
+import { Logger } from 'UI/Utils';
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeFooter/NodeFooterTemplate/NodeFooterTemplate';
 import {CrudEntityKey, HierarchicalMemory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
+import { TreeGridNodeFooterRow } from 'Controls/treeGrid';
+
 import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 export default class extends Control {
@@ -21,6 +25,11 @@ export default class extends Control {
             data: Flat.getData(),
             filter: (): boolean => true
         });
+    }
+
+    protected _addButtonHandler(e: SyntheticEvent, item: TreeGridNodeFooterRow): void {
+        const nodeKey = item.getNode().getContents().getKey();
+        Logger.info(`adding started for node ${nodeKey}`);
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

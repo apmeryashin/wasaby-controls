@@ -133,20 +133,10 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @cfg {TemplateFunction|String|Controls/tree:INodeFooterTemplate} Пользовательский шаблон подвала развернутого узла в {@link Controls/treeGrid:View дереве с колонками}.
  * @default undefined
  * @remark
- * В области видимости шаблона доступна переменная **item**, из которой можно получить доступ к:
- *
- * * свойству **contents** — это объект, который содержит данные элемента, под которым отрисовывается шаблон.
- * * методу **getNode()** — возвращает узел, внутри которого отображается шаблон.
+ * В области видимости шаблона доступен объект **item**. Метод **item.getNode()** возвращает узел, внутри которого отображается шаблон.
  *
  * @demo Controls-demo/treeGridNew/NodeFooter/NodeFooterTemplate/Index
  * @see nodeFooterVisibilityCallback
- * @see nodeLoadCallback
- */
-
-/**
- * @name Controls/_tree/interface/ITreeControl#nodeMoreCaption
- * @cfg {String} Пользовательский текст кнопки, расположенной в узле дерева и предназначенной для загрузки очередной пачки данных узла.
- * @default undefined
  * @see nodeLoadCallback
  */
 
@@ -154,6 +144,13 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @name Controls/_tree/interface/ITreeControl#nodeFooterTemplate
  * @cfg {Function} Sets footer template that will be shown for every node.
  * @demo Controls-demo/treeGridNew/NodeFooter/NodeFooterTemplate/Index
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#nodeMoreCaption
+ * @cfg {String} Пользовательский текст кнопки, расположенной в узле дерева и предназначенной для загрузки очередной пачки данных узла.
+ * @default undefined
+ * @see nodeLoadCallback
  */
 
 /**
@@ -262,7 +259,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  */
 
 /**
- * @name Controls/_tree/View#expanderPosition
+ * @name Controls/_tree/interface/ITreeControl#expanderPosition
  * @cfg {TExpanderPosition} Расположение иконки для узла и скрытого узла.
  * @default default
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.

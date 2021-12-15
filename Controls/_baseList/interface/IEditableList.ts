@@ -213,11 +213,11 @@ export interface IEditingConfig {
     autoAdd?: boolean;
     /**
      * @name Controls/_list/interface/IEditingConfig#autoAddByApplyButton
-     * @cfg Отмена автоматического запуска добавления нового элемента, если завершение добавления предыдущего элемента происходит {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/item-actions/#visible кнопкой "Сохранить"} на {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи}.
+     * @cfg {Boolean} Отключение автоматического запуска добавления нового элемента, если добавление предыдущего элемента завершается нажатием {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/item-actions/#visible кнопки "Сохранить"} на {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи}.
      * @remark
      * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/auto/#add здесь}.
      * @variant true Автоматический запуск добавления включен.
-     * @variant false Автоматический запуск добавления отменен.
+     * @variant false Автоматический запуск добавления отключен.
      * @default true
      */
     autoAddByApplyButton?: boolean;
