@@ -37,10 +37,9 @@ export default class extends Control {
         });
         this._filterButtonData = [
             {
-                group: 'Ответственные',
+                caption: 'Ответственные',
                 name: 'owners',
                 resetValue: [],
-                caption: '',
                 value: ['Новиков Д.В.', 'Чеперегин А.С.'],
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
