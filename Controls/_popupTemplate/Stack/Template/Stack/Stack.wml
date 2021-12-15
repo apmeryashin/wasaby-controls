@@ -49,8 +49,7 @@
             </ws:else>
 
             <ws:if data="{{ _options.bodyContentTemplate }}">
-                <div class="controls-StackTemplate__content-area
-                        {{_options.backgroundStyle === 'default' ? 'controls-StackTemplate_backgroundColor' : 'controls-background-' + _options.backgroundStyle}}">
+                <div class="controls-StackTemplate__content-area {{_getBackgroundColor()}}">
                     <ws:partial template="{{_options.bodyContentTemplate}}"
                                 scope="{{_options}}"
                                 hasRightTemplate="{{_hasRightPanel}}"
@@ -63,8 +62,7 @@
             </ws:if>
 
             <ws:if data="{{_options.footerContentTemplate }}">
-                <div class="controls-StackTemplate__bottomArea
-                            {{_options.backgroundStyle === 'default' ? 'controls-StackTemplate_backgroundColor' : 'controls-background-' + _options.backgroundStyle}}">
+                <div class="controls-StackTemplate__bottomArea {{_getBackgroundColor()}}">
                     <ws:partial template="{{_options.footerContentTemplate}}"
                                 scope="{{_options}}"
                                 bodyContentTemplate="{{null}}"
