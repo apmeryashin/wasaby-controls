@@ -25,6 +25,27 @@
    height: 100%;
 }
 
+.controls-ListView__itemV_marker_master {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-ListView__itemV_marker_master::before {
+   content: '\200b';
+   font-size: var(--font-size_2xl);
+}
+
+.controls-ListView__itemV_marker_master::after {
+   content: '';
+   background-color: var(--marker_color);
+   width: var(--master-marker_thickness_list);
+   border-radius: var(--marker_border-radius_list);
+   height: 100%;
+}
+
 .controls-ListView__itemV_marker_padding-default_image-l,
 .controls-ListView__itemV_marker_padding-l_image-l {
    top: calc(var(--item_padding-top_l_list) + var(--item-separator_s_thickness_list));
@@ -829,27 +850,6 @@
 
 .ws-is-ie .controls-ListView__item__marked_master {
    background-color: var(--master_item_selected_background-color_list);
-}
-
-.controls-ListView__itemV_marker_master {
-   position: absolute;
-   top: 0;
-   bottom: 0;
-   display: inline-flex;
-   align-items: baseline;
-}
-
-.controls-ListView__itemV_marker_master::before {
-   content: '\200b';
-   font-size: var(--font-size_2xl);
-}
-
-.controls-ListView__itemV_marker_master::after {
-   content: '';
-   background-color: var(--marker_color);
-   width: var(--master-marker_thickness_list);
-   border-radius: var(--marker_border-radius_list);
-   height: 100%;
 }
 
 .controls-ListView__itemV_marker_master.controls-ListView__itemV_marker_height::after {
