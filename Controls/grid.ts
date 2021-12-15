@@ -149,6 +149,8 @@ export {
     IHeaderCell
 } from 'Controls/_grid/display/interface/IHeaderCell';
 
+export {IFooterColumn} from 'Controls/_grid/display/interface/IFooterColumn';
+
 export {IGridControl} from 'Controls/_grid/display/interface/IGridControl';
 export {IGridAbstractColumn} from 'Controls/_grid/display/interface/IGridAbstractColumn';
 
