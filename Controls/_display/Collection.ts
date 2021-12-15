@@ -2854,9 +2854,6 @@ export default class Collection<
     }
 
     setIndexes(start: number, stop: number, shiftDirection: IDirection): void {
-        const oldStartIndex = this.getStartIndex();
-        const oldStopIndex = this.getStopIndex();
-
         this.getViewIterator().setIndices(start, stop);
         this._notify('indexesChanged', start, stop, shiftDirection);
         // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
