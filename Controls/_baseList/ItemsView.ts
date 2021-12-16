@@ -32,7 +32,7 @@ export interface IItemsViewOptions extends IControlOptions {
  * @class Controls/list:ItemsView
  * @extends UI/Base:Control
  * @implements Controls/list:IItemsView
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/list:IList
  * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
