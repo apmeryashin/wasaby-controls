@@ -299,11 +299,11 @@ export abstract class AbstractObserversController {
         if (direction === 'backward') {
             const backwardViewportPosition = scrollPosition;
             const backwardTriggerPosition = this._triggersOffsets.backward;
-            return backwardTriggerPosition >= backwardViewportPosition;
+            return this._triggersVisibility.backward && backwardTriggerPosition >= backwardViewportPosition;
         } else {
             const forwardViewportPosition = scrollPosition + viewportSize;
             const forwardTriggerPosition = contentSize - this._triggersOffsets.forward;
-            return forwardTriggerPosition <= forwardViewportPosition;
+            return this._triggersVisibility.forward && forwardTriggerPosition <= forwardViewportPosition;
         }
     }
 

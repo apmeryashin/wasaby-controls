@@ -3986,7 +3986,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             activeElementChangedCallback: (activeElementIndex) => {
                 const activeItem = this._listViewModel.at(activeElementIndex);
-                this._notify('activeElementChanged', [activeItem.key]);
+                if (activeItem) {
+                    this._notify('activeElementChanged', [activeItem.key]);
+                }
             },
 
             itemsEndedCallback: (direction): void => {
