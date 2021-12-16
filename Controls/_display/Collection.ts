@@ -3511,7 +3511,7 @@ export default class Collection<
             options.isFirstItem = false;
             options.isLastItem = false;
             options.stickyCallback = this._$stickyCallback;
-            const key = object.getPropertyValue<CrudEntityKey>(options.contents, this._$keyProperty);
+            const key = options.contents && options.contents.getKey && options.contents.getKey();
             options.faded = this.getFadedKeys().includes(key);
 
             return create(options.itemModule || this._itemModule, options);
