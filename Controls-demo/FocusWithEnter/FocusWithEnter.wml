@@ -119,7 +119,6 @@
                         attr:class="controlsDemo__inline-flex controlsDemo__maxWidth800"
                         source="{{ _gridSource }}"
                         columns="{{ _gridColumns }}"
-                        rowSeparatorVisibility="{{ true }}"
                         keyProperty="key">
                     <ws:editingConfig>
                         <ws:Object editOnClick="{{ true }}" sequentialEditingMode="cell"/>

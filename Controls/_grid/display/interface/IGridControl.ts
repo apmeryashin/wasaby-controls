@@ -370,18 +370,9 @@ export interface IGridControl extends IList {
  * @default true
  */
 
-// TODO: Удалить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
 /**
- * @name Controls/_grid/display/interface/IGridControl#rowSeparatorVisibility
- * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена. Используйте опцию {@link Controls/grid:IGridControl#rowSeparatorSize rowSeparatorSize}.
- * @cfg {Boolean} Видимость разделителей строк.
- * @default false
- */
-
-/*
- * @name Controls/_grid/display/interface/IGridControl#rowSeparatorVisibility
- * @cfg {Boolean} Allows to visible or hide row separator.
- * @deprecated
+ * @name Controls/_grid/display/interface/IGridControl#stickyItemActions
+ * @cfg {Boolean} Включает прилипание операций над записью к правому краю прокручиваемой области при горизонтальном скролле.
  * @default false
  */
 

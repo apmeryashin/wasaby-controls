@@ -10,7 +10,6 @@
                           backgroundStyle="default"
                           markedKey="448390"
                           stickyHeader="{{true}}"
-                          rowSeparatorVisibility="{{true}}"
                           itemActions="{{_itemActions}}"
                           itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                           columns="{{_gridColumns}}"
