@@ -7,16 +7,6 @@
     <div class="demo-Grid__container"
          on:itemClick="_clickHandler()"
          attr:style="margin-top: 20px;">
-        <div class="ws-flexbox ws-align-items-baseline controlsDemo__wrapper__padding-left">
-            <Controls.buttons:Button attr:class="demo-PopupEditOpener__addRecord controlsDemo__mb1"
-                                     on:click="_addRecord()"
-                                     viewMode="functionalButton"
-                                     icon="icon-AddButtonNew"
-                                     iconStyle="label"
-                                     iconSize="s"
-                                     tooltip="Добавить запись"
-                                     buttonStyle="unaccented"/>
-        </div>
         <Controls.scroll:Container attr:class="demo-Grid__wrapper"
                                    attr:test_name="selected_record">
             <Controls.list:Container>
