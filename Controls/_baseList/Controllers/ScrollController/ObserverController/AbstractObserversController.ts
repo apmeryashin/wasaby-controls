@@ -64,8 +64,8 @@ export abstract class AbstractObserversController {
     private _triggersQuerySelector: string;
     private _viewportSize: number;
 
-    private _scrollPosition: number;
-    private _contentSize: number;
+    private _scrollPosition: number = 0;
+    private _contentSize: number = 0;
 
     private _triggersOffsetCoefficients: ITriggersOffsetCoefficients;
 
@@ -119,6 +119,10 @@ export abstract class AbstractObserversController {
         if (this._observer) {
             this._observer.destroy();
         }
+        this._updateTriggers();
+    }
+
+    updateTriggers(): void {
         this._updateTriggers();
     }
 

@@ -216,6 +216,10 @@ export class ScrollController {
         this._observersController.checkTriggersVisibility();
     }
 
+    updateTriggers(): void {
+        this._observersController.updateTriggers();
+    }
+
     // endregion Triggers
 
     // region Update DOM elements
