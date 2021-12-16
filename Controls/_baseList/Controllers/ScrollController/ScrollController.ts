@@ -152,8 +152,6 @@ export class ScrollController {
             contentSize: options.contentSize,
             givenItemsSizes: options.givenItemsSizes
         });
-
-        this._processInitialize();
     }
 
     viewportResized(viewportSize: number): boolean {

@@ -437,6 +437,14 @@ export abstract class AbstractListVirtualScrollController<
             hasItemsOutRangeChangedCallback: (hasItemsOutRange: IHasItemsOutRange): void => {
                 this._scheduleUpdateHasItemsOutRange(hasItemsOutRange);
                 this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
+
+                // Если у нас есть записи скрытые виртуальным скроллом, то мы точно должны показать триггер.
+                if (hasItemsOutRange.backward) {
+                    this.setBackwardTriggerVisible(true);
+                }
+                if (hasItemsOutRange.forward) {
+                    this.setForwardTriggerVisible(true);
+                }
             },
             activeElementChangedCallback: options.activeElementChangedCallback,
             itemsEndedCallback: options.itemsEndedCallback

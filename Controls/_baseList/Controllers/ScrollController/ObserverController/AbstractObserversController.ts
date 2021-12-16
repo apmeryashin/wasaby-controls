@@ -154,7 +154,6 @@ export abstract class AbstractObserversController {
     setContentSize(size: number): void {
         if (this._contentSize !== size) {
             this._contentSize = size;
-            this.checkTriggersVisibility();
         }
     }
 
