@@ -29,7 +29,7 @@ import TileView from './TileView';
  * @implements Controls/tile:ITile
  * @implements Controls/list:IClickableView
  * @implements Controls/marker:IMarkerList
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  *
  *
  * @author Авраменко А.С.
@@ -59,7 +59,7 @@ import TileView from './TileView';
  * @implements Controls/list:IClickableView
  * @implements Controls/marker:IMarkerList
  *
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  *
  *
  * @author Авраменко А.С.

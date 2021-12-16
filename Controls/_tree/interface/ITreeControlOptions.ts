@@ -359,7 +359,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  */
 
 /**
- * @typedef {String} Controls/_tree/interface/ITreeControl/ExpanderSize
+ * @typedef {String} Controls/_tree/interface/ITreeControl/TOffset
  * @description Допустимые значения для опций, которые задают размер отступа.
  * @variant s
  * @variant m
@@ -369,7 +369,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
 
 /**
  * @name Controls/_tree/interface/ITreeControl#expanderSize
- * @cfg {Controls/_tree/interface/ITreeControl/ExpanderSize.typedef} Размер области, который отведён под иконку узла или скрытого узла.
+ * @cfg {Controls/_tree/interface/ITreeControl/TOffset.typedef} Размер области, который отведён под иконку узла или скрытого узла.
  * @default s
  * @remark
  * Опции expanderSize на контроле и {@link Controls/treeGrid:ItemTemplate#expanderSize expanderSize на шаблоне элемента} не являются взаимоисключающими.
@@ -506,6 +506,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Разворачиваемый узел.
  * @remark
+ * Если во время разворота необходимо выполнить какое-то асинхронное действие, можно вернуть из обработчика события Promise<void>.
  * Что такое "узел" читайте в {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  * @see afterItemExpand
  */
@@ -562,6 +563,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Сворачиваемый узел.
  * @remark
+ * Если во время сворачивания необходимо выполнить какое-то асинхронное действие, можно вернуть из обработчика события Promise<void>.
  * Что такое "узел" читайте в {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  * @see itemCollapsed
  */

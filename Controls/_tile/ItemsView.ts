@@ -14,7 +14,7 @@ import TileView from 'Controls/_tile/TileView';
  * @implements Controls/interface/IItemTemplate
  * @implements Controls/interface/IGroupedList
  * @implements Controls/interface:IMultiSelectable
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/list:IList
  * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView

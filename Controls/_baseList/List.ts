@@ -33,7 +33,7 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @implements Controls/interface:ISorting
  * @implements Controls/interface:IDraggable
  * @implements Controls/interface/IGroupedList
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/list:IList
  * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
@@ -72,7 +72,7 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @implements Controls/list:IReloadableList
  * @implements Controls/marker:IMarkerList
  *
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  *
  *
  * @author Авраменко А.С.
