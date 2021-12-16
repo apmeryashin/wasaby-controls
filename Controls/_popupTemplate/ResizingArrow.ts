@@ -1,9 +1,7 @@
-import template = require('wml!Controls/_dragnDrop/ResizingArrow/ResizingArrow');
-import {IDragObject} from 'Controls/dragnDrop';
+import template = require('wml!Controls/_popupTemplate/ResizingArrow/ResizingArrow');
+import {ResizingBase, IDragObject, IResizingBase} from 'Controls/dragnDrop';
 import {TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {IResizingBase} from 'Controls/_dragnDrop/interface/IResizingBase';
-import ResizingBase from 'Controls/_dragnDrop/ResizingBase';
 import 'css!Controls/dragnDrop';
 
 interface IOffsetValue {
@@ -39,12 +37,12 @@ interface IDragObjectOffset {
  * * {@link /doc/platform/developmentapl/interface-development/controls/drag-n-drop/ руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dragnDrop.less переменные тем оформления}
  *
- * @class Controls/_dragnDrop/ResizingArrow
+ * @class Controls/_popupTemplate/ResizingArrow
  * @extends UI/Base:Control
  *
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/ResizingArrow/Index
+ * @demo Controls-demo/_popupTemplate/ResizingArrow/Index
  */
 class ResizingArrow extends ResizingBase<IResizingBase> {
     protected _template: TemplateFunction = template;
@@ -129,7 +127,7 @@ class ResizingArrow extends ResizingBase<IResizingBase> {
 
 /**
  * @event Происходит после перетаскивания мыши, когда клавиша мыши отпущена.
- * @name Controls/_dragnDrop/ResizingArrow#offset
+ * @name Controls/_popupTemplate/ResizingArrow#offset
  * @param {EventOffset} offset Значение сдвига
  */
 

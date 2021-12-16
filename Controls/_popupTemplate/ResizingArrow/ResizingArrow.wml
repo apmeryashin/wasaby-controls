@@ -12,13 +12,13 @@
                     <div class="controls-ResizingLine__cursor controls-ResizingArrow__cursor"></div>
                 </ws:if>
             </div>
-            <Controls._dragnDrop.Container name="dragNDrop"
+            <Controls.dragnDrop:Container name="dragNDrop"
                                            on:dragmove="_onDragHandler()"
                                            on:dragstart="_onStartDragHandler()"
                                            on:documentdragend="_onEndDragHandler()">
                 <div attr:class="controls-ResizingArrow__border"
                      on:mousedown="_beginDragHandler()" on:touchstart="_beginDragHandler()"></div>
-            </Controls._dragnDrop.Container>
+            </Controls.dragnDrop:Container>
         </div>
     </div>
 </ws:if>

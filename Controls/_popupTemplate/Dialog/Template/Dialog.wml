@@ -43,7 +43,7 @@
                                     {{!_options.maximize ? ('controls-PopupTemplate__roundBorder_bottom controls_border-radius-' + _options.borderRadius)}}"/>
         </ws:if>
         <ws:if data="{{_options.resizable}}">
-            <Controls.dragnDrop:ResizingArrow
+            <Controls._popupTemplate.ResizingArrow
                     attr:class="controls-DialogTemplate__resizingLine"
                     minOffset="{{_minOffset}}"
                     maxOffset="{{_maxOffset}}"

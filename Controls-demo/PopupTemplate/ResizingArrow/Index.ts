@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/ResizingArrow/ResizingArrow');
+import controlTemplate = require('wml!Controls-demo/PopupTemplate/ResizingArrow/ResizingArrow');
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 class ResizingLine extends Control<IControlOptions> {
@@ -16,14 +16,17 @@ class ResizingLine extends Control<IControlOptions> {
         this._y = this._limit(valueY);
     }
 
+    protected _limit(value: number): number {
+        return Math.max(ResizingLine.MIN_WIDTH, Math.min(value, ResizingLine.MAX_WIDTH));
+    }
+
     private static MIN_WIDTH: number = 100;
     private static MAX_WIDTH: number = 300;
 
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/ResizingArrow/ResizingArrow'];
-
-    protected _limit(value: number): number {
-        return  Math.max(ResizingLine.MIN_WIDTH, Math.min(value, ResizingLine.MAX_WIDTH));
-    }
+    static _styles: string[] = [
+        'Controls-demo/Controls-demo',
+        'Controls-demo/PopupTemplate/ResizingArrow/ResizingArrow'
+    ];
 }
 
 export default ResizingLine;
