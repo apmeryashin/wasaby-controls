@@ -66,9 +66,9 @@ class Popup extends Control<IPopupControlOptions> {
             this._prefetchData = options._prefetchData;
             this._isPrefetchDataMode = true;
         } else if (options._prefetchPromise) {
+            this._isPrefetchDataMode = true;
             waitPrefetchData(options._prefetchPromise).then((data: IPrefetchData) => {
                 this._prefetchData = data;
-                this._isPrefetchDataMode = true;
             });
         } else if (options.prefetchData) {
             // Если с прикладной стороны сами получили предзагруженные данные
