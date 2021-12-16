@@ -26,5 +26,5 @@ export interface IListNavigationOptions {
  * @event Происходит при изменении параметров {@link Controls/interface:INavigation#navigation навигации}.
  * @name Controls/_list/interface/IListNavigation#navigationParamsChanged
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {IBaseSourceConfig} params Параметры, с которыми происходила последнаяя загрузка данных в списке.
+ * @param {Controls/_interface/INavigation/IBaseSourceConfig.typedef} params Параметры, с которыми происходила последнаяя загрузка данных в списке.
  */

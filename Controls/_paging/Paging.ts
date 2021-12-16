@@ -1,20 +1,11 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import pagingTemplate = require('wml!Controls/_paging/Paging/Paging');
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {TNavigationPagingMode, TNavigationResetButtonMode} from 'Controls/interface';
+import {TNavigationPagingMode} from 'Controls/interface';
+import {IArrowState, TArrowStateVisibility} from 'Controls/_paging/interface/IArrowState';
 import 'css!Controls/paging';
 
 type TButtonState = 'normal' | 'disabled';
-type TArrowStateVisibility = 'visible' | 'hidden' | 'readonly';
-type TResetButtonState = TNavigationResetButtonMode | 'hidden';
-
-export interface IArrowState {
-    begin: TArrowStateVisibility;
-    prev: TArrowStateVisibility;
-    next: TArrowStateVisibility;
-    end: TArrowStateVisibility;
-    reset: TResetButtonState;
-}
 
 export interface IPagingOptions extends IControlOptions {
     showDigits: boolean;
@@ -211,21 +202,15 @@ export default Paging;
  * @variant Prev Кнопка "Назад".
  * @variant Next Кнопка "Вперёд".
  */
-/**
- * @typedef {Object} ArrowState
- * @property {TArrowStateVisibility} [begin] Управялет показом/скрытием кнопки "Переход в начало".
- * @property {TArrowStateVisibility} [prev] Управялет показом/скрытием кнопки "Переход к предыдущей странице".
- * @property {TArrowStateVisibility} [next] Управялет показом/скрытием кнопки "Переход к следующей странице".
- * @property {TArrowStateVisibility} [end] Управялет показом/скрытием кнопки "Переход в конец".
- */
+
 /**
  * @name Controls/_paging/Paging#arrowsState
- * @cfg {IArrowState} Опция управляет возможностью показа/скрытия кнопок в пэйджинге.
+ * @cfg {Controls/_paging/interface/IArrowState} Опция управляет возможностью показа/скрытия кнопок в пэйджинге.
  */
 
 /**
  * @name Controls/_paging/Paging#pagingMode
- * @cfg {TNavigationPagingMode} Внешний вид пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
+ * @cfg {Controls/_interface/INavigation/TNavigationPagingMode.typedef} Внешний вид пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
  */
 
 /**

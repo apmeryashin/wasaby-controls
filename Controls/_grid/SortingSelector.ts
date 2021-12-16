@@ -31,13 +31,6 @@ export interface ISortingParam {
      */
     title: string;
     /**
-     * @name Controls/grid:ISortingParam#value
-     * @cfg {String} Направление сортировки.
-     * @variant ASC
-     * @variant DESC
-     */
-    value: 'ASC' | 'DESC';
-    /**
      * @name Controls/grid:ISortingParam#icon
      * @cfg {String} Имя иконки, которая отображается в меню рядом с подписью (см. свойство title),
      * а также в заголовке выпадающего меню. Список иконок можно найти в демо-примере {@link Controls/grid:SortingSelector}.

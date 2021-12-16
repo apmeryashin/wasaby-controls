@@ -192,6 +192,14 @@ export interface INavigationPageSourceConfig extends IBasePageSourceConfig {
  * @description Source configuration for both page-based and position-based (cursor) navigation.
  */
 export type INavigationSourceConfig = INavigationPositionSourceConfig | INavigationPageSourceConfig;
+
+/**
+ * @typedef Controls/_interface/INavigation/IBaseSourceConfig
+ * @description
+ * Конфигурация источника данных для навигации. Может быть объектом, реализующим один из двух интерфейсов:
+ * * {@link Controls/interface:IBasePositionSourceConfig Конфигурация при курсорной навингации}.
+ * * {@link Controls/interface:IBasePageSourceConfig Конфигурация c фиксированным количеством загружаемых записей}.
+ */
 export type IBaseSourceConfig = IBasePositionSourceConfig | IBasePageSourceConfig;
 
 /**
@@ -204,7 +212,7 @@ export type TNavigationTotalInfo = 'basic' | 'extended';
 
 /**
  * @description Допустимые значения для параметра {@link Controls/interface:INavigationViewConfig#pagingMode pagingMode}.
- * @typedef {String} TNavigationPagingMode
+ * @typedef {String} Controls/_interface/INavigation/TNavigationPagingMode
  * @variant hidden Предназначен для отключения отображения пейджинга в реестре.
  * @variant basic Предназначен для пейджинга в реестре с подгрузкой по скроллу.
  * @variant edge Предназначен для пейджинга с отображением одной команды прокрутки. Отображается кнопка в конец, либо в начало, в зависимости от положения.
