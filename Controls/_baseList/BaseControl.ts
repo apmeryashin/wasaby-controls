@@ -4446,6 +4446,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             positionRestored = true;
         }
 
+        if (this._updateShadowModeBeforePaint) {
+            this._updateShadowModeBeforePaint();
+            this._updateShadowModeBeforePaint = null;
+        }
+
         if (this._scrollController) {
             let correctingHeight = 0;
 
@@ -4510,11 +4515,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
         this._actualPagingVisible = this._pagingVisible;
-
-        if (this._updateShadowModeBeforePaint) {
-            this._updateShadowModeBeforePaint();
-            this._updateShadowModeBeforePaint = null;
-        }
 
         if (this._resolveAfterBeginEdit) {
             this._resolveAfterBeginEdit();
