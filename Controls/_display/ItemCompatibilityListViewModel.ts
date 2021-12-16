@@ -27,7 +27,7 @@ export class ItemCompatibilityListViewModel implements IItemCompatibilityListVie
         return this.item.getKey ? this.item.getKey() : this.item;
     }
 
-    get itemKeyAttribute() {
+    get itemKeyAttribute(): string {
         // У записи ключ может быть null. Например, добавляемая по месту запись.
         // Чтобы этот ключ добавился в атрибут его нужно привести к строке.
         return String(this.key);
