@@ -502,7 +502,7 @@ export interface IReloadItemOptions {
  * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#hover Стиль подсветки строки} при наведении курсора мыши.
  * @default default
  * @remark
- * Позволяет определить произвольный фон колонки при наведении.
+ * Позволяет определить произвольный фон записи при наведении.
  * Для отключения цвета при наведении используйте значение "transparent"
  * Для определения собственных цветов при наведении, необходимо указать специальный hoverBackgroundStyle, а
  * также определить в своем less-файле стиль controls-ListView__item_highlightOnHover_@{yourBackgroundStyle}.
