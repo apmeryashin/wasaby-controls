@@ -271,7 +271,7 @@ export abstract class AbstractListVirtualScrollController<
         const changed = this._scrollController.contentResized(contentSize);
         // contentResized может сработать до afterRender.
         // Поэтому если запланировано обновление размеров, то мы его должны обязательно сделать на afterRender
-        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+        if (changed && !this._isScheduledUpdateItemsSizes()) {
             this._scrollController.updateItemsSizes();
         }
     }
@@ -280,7 +280,7 @@ export abstract class AbstractListVirtualScrollController<
         const changed = this._scrollController.viewportResized(viewportSize);
         // viewportResized может сработать до afterRender.
         // Поэтому если запланировано обновление размеров, то мы его должны обязательно сделать на afterRender
-        if (changed && !this._itemsRangeScheduledSizeUpdate) {
+        if (changed && !this._isScheduledUpdateItemsSizes()) {
             this._scrollController.updateItemsSizes();
         }
     }
@@ -505,6 +505,13 @@ export abstract class AbstractListVirtualScrollController<
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
         this._itemsRangeScheduledSizeUpdate = itemsRange;
+    }
+
+    private _isScheduledUpdateItemsSizes(): boolean {
+        // Обновление размеров элементов запланировано, если:
+        // 1. Непосредственно уже запланировано обновление размеров
+        // 2. Запланирована обработка новых индексов (это потом спровоцирует планирование обновления размеров)
+        return !!this._itemsRangeScheduledSizeUpdate || !!this._handleChangedIndexesAfterSynchronizationCallback;
     }
 
     private _scheduleUpdateHasItemsOutRange(hasItemsOutRange: IHasItemsOutRange): void {

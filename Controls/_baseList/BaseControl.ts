@@ -3613,6 +3613,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (shiftDirection) {
             // Если у нас долго отрисовываются записи(дольше 2с), то мы показываем индикаторы отрисовки.
             // Эта ситуация в частности актуальна для ScrollViewer.
+
+            // Если индикатор и так уже есть, то скрываем его. Показываться может только один индикатор отрисовки.
+            if (this._drawingIndicatorDirection) {
+                this._indicatorsController.hideDrawingIndicator(
+                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                    this._drawingIndicatorDirection
+                );
+            }
             this._drawingIndicatorDirection = shiftDirection === 'forward' ? 'bottom' : 'top';
             this._indicatorsController.displayDrawingIndicator(
                 this._getIndicatorDomElement(this._drawingIndicatorDirection),
@@ -3983,7 +3991,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             },
 
             activeElementChangedCallback: (activeElementIndex) => {
-                this._notify('activeElementChanged', [activeElementIndex]);
+                const activeItem = this._listViewModel.at(activeElementIndex);
+                const activeItemKey = activeItem.getContents().getKey();
+                this._notify('activeElementChanged', [activeItemKey]);
             },
 
             itemsEndedCallback: (direction): void => {

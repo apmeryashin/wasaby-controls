@@ -179,6 +179,7 @@ export class Calculator {
             const viewportSize = this._viewportSize;
             scrollPosition = itemOffset + edgeItem.borderDistance - viewportSize;
         }
+        scrollPosition = Math.max(scrollPosition, 0);
         const maxScrollPosition = Math.max(this._contentSize - this._viewportSize, 0);
         return scrollPosition > maxScrollPosition ? maxScrollPosition : scrollPosition;
     }
