@@ -105,6 +105,7 @@ export class ScrollController {
 
     private _viewportSize: number;
     private _contentSize: number;
+    private _scrollPosition: number;
 
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
@@ -407,9 +408,16 @@ export class ScrollController {
      * @param position
      */
     scrollPositionChange(position: number): void {
-        const result = this._calculator.scrollPositionChange(position);
-        this._processActiveElementIndexChanged(result);
-        this._observersController.setScrollPosition(position);
+        if (this._scrollPosition !== position) {
+            this._scrollPosition = position;
+            const result = this._calculator.scrollPositionChange(position);
+            this._processActiveElementIndexChanged(result);
+            this._observersController.setScrollPosition(position);
+        }
+    }
+
+    getScrollPosition(): number {
+        return this._scrollPosition;
     }
 
     // endregion Scroll
