@@ -21,7 +21,7 @@ export {hasScrollbar} from './_scroll/Utils/HasScrollbar';
 export {hasHorizontalScroll} from './_scroll/Utils/hasHorizontalScroll';
 export {IScrollState} from './_scroll/Utils/ScrollState';
 export {IScrollbars} from './_scroll/Container/Interface/IScrollbars';
-export {IShadows} from './_scroll/Container/Interface/IShadows';
+export {IShadows, SHADOW_MODE} from './_scroll/Container/Interface/IShadows';
 export {getScrollbarWidth, getScrollbarWidthByMeasuredBlock} from './_scroll/Utils/getScrollbarWidth';
 import {default as _Scrollbar} from 'Controls/_scroll/Scroll/Scrollbar';
 import _scrollContext from 'Controls/_scroll/Scroll/Context';
