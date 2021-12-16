@@ -24,7 +24,7 @@ export interface IItemsTreeGridOptions extends IItemsViewOptions, ITreeGridOptio
  * @class Controls/treeGrid:ItemsView
  * @extends Controls/grid:ItemsView
  * @implements Controls/list:IItemsView
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/list:IList
  * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView

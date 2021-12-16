@@ -25,7 +25,7 @@
  * @implements Controls/list:IReloadableList
  * @implements Controls/list:IMovableList
  * @implements Controls/list:IRemovableList
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/marker:IMarkerList
  * @author Авраменко А.С.
  * @public

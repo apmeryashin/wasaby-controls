@@ -4,13 +4,7 @@ import {Memory} from 'Types/source';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {CrudEntityKey} from 'Types/source';
-
-interface IArrowState {
-    begin: string;
-    prev: string;
-    next: string;
-    end: string;
-}
+import {IArrowState} from 'Controls/paging';
 
 interface IItem {
     title: string;

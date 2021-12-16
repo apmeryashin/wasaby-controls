@@ -241,7 +241,7 @@ export default interface IColumnTemplateOptions {
     tagStyle?: 'info' | 'danger' | 'primary' | 'success' | 'secondary';
 
     /**
-     * @cfg {Controls/display/TMarkerClassName.typedef} Размер маркера.
+     * @cfg {Controls/_display/interface/ICollectionItem/TMarkerClassName.typedef} Размер маркера.
      * @default default
      */
     markerClassName?: TMarkerClassName;
