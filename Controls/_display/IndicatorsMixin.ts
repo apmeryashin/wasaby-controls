@@ -17,6 +17,8 @@ export default abstract class IndicatorsMixin<T = Indicator> {
     protected _topIndicator: Indicator = null;
     protected _bottomIndicator: Indicator = null;
     protected _globalIndicator: Indicator = null;
+    protected _topDrawingIndicator: Indicator = null;
+    protected _bottomDrawingIndicator: Indicator = null;
 
     protected _$portionedSearchTemplate: TemplateFunction|string;
     protected _$continueSearchTemplate: TemplateFunction|string;
@@ -31,20 +33,36 @@ export default abstract class IndicatorsMixin<T = Indicator> {
 
     getTopIndicator(): Indicator {
         if (!this._topIndicator) {
+            // TODO SCROLL удалить инициализацию
             // сразу создаем верхний индикатор, он отображается с помощью display: none
             // это сделано только для того, чтобы можно было показывать индикатор при долгой отрисовке
-            this._createIndicator('top', EIndicatorState.Loading);
+            this._topIndicator = this._createIndicator('top', EIndicatorState.Loading);
         }
         return this._topIndicator;
     }
 
     getBottomIndicator(): Indicator {
         if (!this._bottomIndicator) {
+            // TODO SCROLL удалить инициализацию
             // сразу создаем верхний индикатор, он отображается с помощью display: none
             // это сделано только для того, чтобы можно было показывать индикатор при долгой отрисовке
-            this._createIndicator('bottom', EIndicatorState.Loading);
+            this._bottomIndicator = this._createIndicator('bottom', EIndicatorState.Loading);
         }
         return this._bottomIndicator;
+    }
+
+    getTopDrawingIndicator(): Indicator {
+        if (!this._topDrawingIndicator) {
+            this._topDrawingIndicator = this._createIndicator('top', EIndicatorState.Drawing);
+        }
+        return this._topDrawingIndicator;
+    }
+
+    getBottomDrawingIndicator(): Indicator {
+        if (!this._bottomDrawingIndicator) {
+            this._bottomDrawingIndicator = this._createIndicator('bottom', EIndicatorState.Drawing);
+        }
+        return this._bottomDrawingIndicator;
     }
 
     displayIndicator(position: TIndicatorPosition, state: TIndicatorState, topOffset?: number): void {
@@ -56,6 +74,7 @@ export default abstract class IndicatorsMixin<T = Indicator> {
             }
         } else {
             indicator = this._createIndicator(position, state);
+            this[this._getIndicatorName(position)] = indicator;
             indicator.display(state, topOffset);
             this._nextVersion();
         }
@@ -84,7 +103,7 @@ export default abstract class IndicatorsMixin<T = Indicator> {
     }
 
     private _createIndicator(position: TIndicatorPosition, state: TIndicatorState): Indicator {
-        const indicator = this.createItem({
+        return this.createItem({
             itemModule: this._indicatorModule,
             position,
             state,
@@ -93,10 +112,6 @@ export default abstract class IndicatorsMixin<T = Indicator> {
             portionedSearchTemplate: this._$portionedSearchTemplate,
             continueSearchTemplate: this._$continueSearchTemplate
         }) as unknown as Indicator;
-
-        const indicatorName = this._getIndicatorName(position);
-        this[indicatorName] = indicator;
-        return indicator;
     }
 
     abstract createItem(options: ILoadingIndicatorOptions): T;

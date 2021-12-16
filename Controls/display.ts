@@ -101,7 +101,14 @@ import NodeFooter from 'Controls/_display/NodeFooter';
 export { NodeFooter };
 
 import Indicator from 'Controls/_display/Indicator';
-export {default as Indicator, EIndicatorState, TIndicatorState} from 'Controls/_display/Indicator';
+export {
+    default as Indicator,
+    EIndicatorState,
+    TIndicatorState,
+    TIndicatorPosition,
+    TOP_DRAWING_INDICATOR_SELECTOR,
+    BOTTOM_DRAWING_INDICATOR_SELECTOR
+} from 'Controls/_display/Indicator';
 export {default as IndicatorsMixin, ITriggerOffset} from 'Controls/_display/IndicatorsMixin';
 export {default as GroupMixin} from 'Controls/_display/GroupMixin';
 export {TExpanderIconStyle, TExpanderIconSize} from 'Controls/_display/interface/ITree';

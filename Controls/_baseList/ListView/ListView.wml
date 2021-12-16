@@ -5,6 +5,10 @@
    "
 >
    <ws:if data="{{_listModel}}">
+      <!--Drawing indicator-->
+      <ws:partial template="{{_listModel.getTopDrawingIndicator().getTemplate()}}"
+                  item="{{_listModel.getTopDrawingIndicator()}}"
+                  on:click="_onIndicatorClick(_listModel.getTopDrawingIndicator())"/>
       <!--Top loading indicator-->
       <ws:partial if="{{ _listModel.getTopIndicator() }}"
                   template="{{_listModel.getTopIndicator().getTemplate()}}"
@@ -60,6 +64,10 @@
                   template="{{_listModel.getBottomIndicator().getTemplate()}}"
                   item="{{_listModel.getBottomIndicator()}}"
                   on:click="_onIndicatorClick(_listModel.getBottomIndicator())"/>
+      <!--Drawing indicator-->
+      <ws:partial template="{{_listModel.getBottomDrawingIndicator().getTemplate()}}"
+                  item="{{_listModel.getBottomDrawingIndicator()}}"
+                  on:click="_onIndicatorClick(_listModel.getBottomDrawingIndicator())"/>
 
       <ws:if data="{{_listModel.getFooter()}}">
          <ws:partial

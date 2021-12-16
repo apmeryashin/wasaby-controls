@@ -4,11 +4,12 @@ import {Model} from 'Types/entity';
 import {isEqual} from 'Types/object';
 
 export type TIndicatorPosition = 'top'|'bottom'|'global';
-export type TIndicatorState = 'portioned-search'|'continue-search'|'loading';
+export type TIndicatorState = 'portioned-search'|'continue-search'|'loading'|'drawing';
 export enum EIndicatorState {
     PortionedSearch= 'portioned-search',
     ContinueSearch= 'continue-search',
-    Loading= 'loading'
+    Loading= 'loading',
+    Drawing= 'drawing'
 }
 
 export interface IOptions extends ICollectionOptions<null> {
@@ -18,6 +19,9 @@ export interface IOptions extends ICollectionOptions<null> {
     portionedSearchTemplate: TemplateFunction|string;
     continueSearchTemplate: TemplateFunction|string;
 }
+
+export const TOP_DRAWING_INDICATOR_SELECTOR = 'js-controls-BaseControl__drawing-indicator-top';
+export const BOTTOM_DRAWING_INDICATOR_SELECTOR = 'js-controls-BaseControl__drawing-indicator-bottom';
 
 export default class Indicator extends CollectionItem<null> {
     readonly Markable: boolean = false;
@@ -82,6 +86,7 @@ export default class Indicator extends CollectionItem<null> {
     getContentTemplate(): TemplateFunction|string|void {
         switch (this._$state) {
             case 'loading':
+            case 'drawing':
                 return 'Controls/baseList:LoadingIndicatorItemTemplate';
             case 'portioned-search':
                 return this._$portionedSearchTemplate;
@@ -102,6 +107,14 @@ export default class Indicator extends CollectionItem<null> {
                 break;
             case 'continue-search':
                 classes += ' controls-BaseControl__continueSearch';
+                break;
+            case 'drawing':
+                if (this._$position === 'top') {
+                    classes += ` ${TOP_DRAWING_INDICATOR_SELECTOR}`;
+                }
+                if (this._$position === 'bottom') {
+                    classes += ` ${BOTTOM_DRAWING_INDICATOR_SELECTOR}`;
+                }
                 break;
         }
 
@@ -135,6 +148,10 @@ export default class Indicator extends CollectionItem<null> {
 
     isGlobalIndicator(): boolean {
         return this._$position === 'global';
+    }
+
+    isDrawingIndicator(): boolean {
+        return this._$state === 'drawing';
     }
 
     isDisplayed(): boolean {
