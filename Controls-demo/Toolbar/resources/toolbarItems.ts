@@ -312,7 +312,7 @@ export const data = {
             readOnly: true
         }, {
             id: '7',
-            showType: showType.MENU_TOOLBAR,
+            showType: showType.MENU,
             title: 'Проекту',
             '@parent': false,
             group: 'group2',

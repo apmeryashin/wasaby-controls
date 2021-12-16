@@ -52,4 +52,13 @@
         </Router.router:Reference>
         <Controls-demo.toggle.Checkbox.Multiline.Index/>
     </div>
+
+    <div class="controlsDemo__cell demo-checkboxIndex__fontColor">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/toggle/Checkbox/FontColorStyle/Index' }}">
+            <a href="{{content.href}}">Настройка цвета текста</a>
+        </Router.router:Reference>
+        <Controls-demo.toggle.Checkbox.FontColorStyle.Index/>
+    </div>
 </div>

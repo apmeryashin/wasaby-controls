@@ -68,8 +68,8 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     }
 
     protected _getEditorStyles(item: PropertyGridItem<Model>, captionPosition: string, colspan?: boolean): string {
-        const needColspan = captionPosition === 'top' || !(item.getContents().get('caption') ||
-                                                           item.getContents().get('isEditable'));
+        const needColspan = captionPosition === 'top' || captionPosition === 'none' ||
+            !(item.getContents().get('caption') || item.getContents().get('isEditable'));
         const rowIndex = this._getRowIndex(item, captionPosition, 2);
         const columnIndex = (this._isMultiSelect() ? 2 : 1) + (needColspan ? 0 : 1);
         let colspanIndex;
@@ -121,7 +121,7 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
         return this._getItemIndex(item) - 1;
     }
 
-    protected _propertyValueChanged(e: SyntheticEvent<Event>, item: Model, value: Record<string, any>): void {
+    protected _propertyValueChanged(e: SyntheticEvent<Event>, item: Model, value: Record<string, unknown>): void {
         e.stopPropagation();
         this._notify('propertyValueChanged', [item, value]);
     }

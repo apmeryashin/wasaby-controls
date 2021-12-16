@@ -41,7 +41,7 @@ import {Footer, IOptions as IFooterOptions} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
 import {CrudEntityKey} from 'Types/source';
-import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import {IDirection} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -2864,9 +2864,9 @@ export default class Collection<
         this._viewIterator = viewIterator;
     }
 
-    setIndexes(start: number, stop: number): void {
+    setIndexes(start: number, stop: number, shiftDirection: IDirection): void {
         this.getViewIterator().setIndices(start, stop);
-        this._notify('indexesChanged');
+        this._notify('indexesChanged', start, stop, shiftDirection);
         // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
         // тоже должны перерисоваться при изменении видимости чекбоксов
         this._updateItemsProperty('setMultiSelectVisibility', this._$multiSelectVisibility, 'setMultiSelectVisibility');

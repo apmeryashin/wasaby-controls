@@ -146,6 +146,8 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
 
     invalidate(): void {
         this._itemsOrder = null;
+        // нужно сбросить items, чтобы взять актуальные у source
+        this._items = null;
         return this.source.invalidate();
     }
 

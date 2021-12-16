@@ -9,7 +9,7 @@ import {factory} from 'Types/chain';
 import {object} from 'Types/util';
 import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
-import {IPropertyGridOptions, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';
+import {IPropertyGridOptions, TEditingObject, TCollapsedGroupsElement} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
 import {Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
@@ -61,6 +61,8 @@ interface IEditingUserOptions {
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
+type TValidatorResultElement = string|boolean;
+type TCollectionItem = CollectionItem<Model>;
 
 interface IPropertyGridValidatorArguments {
     item: PropertyGridCollectionItem<Model>;
@@ -191,7 +193,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
     }
 
-    protected _afterRender(oldOptions?: IPropertyGridOptions, oldContext?: any): void {
+    protected _afterRender(oldOptions?: IPropertyGridOptions, oldContext?: unknown): void {
         // Активация поля ввода должна происходить после рендера.
         if (
             this._editInPlaceController &&
@@ -264,7 +266,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return itemContents !== constView.hiddenGroup;
     }
 
-    private _getCollapsedGroups(collapsedGroups: Array<string | number> = []): Record<string, boolean> {
+    private _getCollapsedGroups(collapsedGroups: TCollapsedGroupsElement[] = []): Record<string, boolean> {
         return collapsedGroups.reduce((acc: Record<string, boolean>, key: string): Record<string, boolean> => {
             acc[key] = true;
             return acc;
@@ -313,7 +315,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return resultEditingObject;
     }
 
-    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: any): void {
+    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: unknown): void {
         const name = item.get(this._listModel.getKeyProperty());
         this._editingObject = this._updatePropertyValue(this._editingObject, name, value);
         this._notify('editingObjectChanged', [this._editingObject]);
@@ -613,9 +615,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _collectionChangedHandler(
         event: SyntheticEvent,
         action: string,
-        newItems: Array<CollectionItem<Model>>,
+        newItems: TCollectionItem[],
         newItemsIndex: number,
-        removedItems: Array<CollectionItem<Model>>
+        removedItems: TCollectionItem[]
     ): void {
         const options = this._options || {};
         const handleSelection =
@@ -735,7 +737,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             return;
         }
 
-        let dragEndResult: Promise<any> | undefined;
+        let dragEndResult: Promise<unknown> | undefined;
         if (this._insideDragging && this._dndController) {
             const targetPosition = this._dndController.getDragPosition();
             if (targetPosition && targetPosition.dispItem) {
@@ -943,7 +945,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _createDndController(
         model: TPropertyGridCollection,
         draggableItem: CollectionItem,
-        options: any
+        options: unknown
     ): DndController<IDragStrategyParams> {
         let strategy;
         if (options.parentProperty) {
@@ -1042,7 +1044,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return target;
     }
 
-    startValidation({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
+    startValidation({item}: IPropertyGridValidatorArguments): TValidatorResultElement[] | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
         const validatorArgs = {
@@ -1364,14 +1366,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return Promise.resolve(this._validateController);
     }
 
-    private static _rejectEditInPlacePromise(methodName: string): Promise<void> {
-        const msg = `PropertyGrid is in readOnly mode. Can't use ${methodName}()!`;
-        Logger.warn(msg);
-        return Promise.reject(msg);
-    }
-
-    // endregion editInPlace
-
     static defaultProps: Partial<IPropertyGridOptions> = {
         keyProperty: 'name',
         groupProperty: PROPERTY_GROUP_FIELD,
@@ -1383,6 +1377,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             right: 'm'
         }
     };
+
+    private static _rejectEditInPlacePromise(methodName: string): Promise<void> {
+        const msg = `PropertyGrid is in readOnly mode. Can't use ${methodName}()!`;
+        Logger.warn(msg);
+        return Promise.reject(msg);
+    }
+
+    // endregion editInPlace
 
     static getDefaultPropertyGridItem(): IPropertyGridItem {
         return {

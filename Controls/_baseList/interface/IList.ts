@@ -403,7 +403,9 @@ export interface IReloadItemOptions {
  * @function Controls/_list/interface/IList#reloadItem
  * @param {String|Number} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
  * @param {Controls/_list/interface/IReloadItemOptions} options Настройки перезагрузки итема.
- * @returns {Promise<Model>} В случае успешной загрузки, Promise вернет список отображаемых дочерних элементов для загруженного узла.
+ * @remark Возвращаемый результат зависит от указанного в options значения {@link Controls/_list/interface/IReloadItemOptions#method method}.
+ * При значении 'read' возвращается запрошенная запись, а при значении 'query' возвращается RecordSet с дочерними элементами для загруженного узла.
+ * @returns {Promise<Model | RecordSet>} В случае успешной загрузки возвращается запрошенная запись или RecordSet с дочерними элементами для загруженного узла.
  * @example
  * <pre class="brush: js">
  * _itemUpdated: function(id) {

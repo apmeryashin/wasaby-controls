@@ -80,7 +80,7 @@ export default interface IColumnTemplateOptions {
     *
     * Переменная **editArrowTemplate** позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в прикладном шаблоне для первой колонки. Переменную достаточно встроить в нужное место contentTemplate с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 4.
     *
-    * Переменная **expanderTemplate** доступна только, если шаблон используется в контроле {@link Controls/treeGrid:View}. С помощью переменной можно отобразить кнопку-экспандер в произвольном месте элемента. При этом опцию {@link Controls/treeGrid:View#expanderPosition expanderPosition} необходимо установить в значение custom. Переменную expanderTemplate достаточно встроить в нужное место contentTemplate с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 5.
+    * Переменная **expanderTemplate** доступна только, если шаблон используется в контроле {@link Controls/treeGrid:View}. С помощью переменной можно отобразить кнопку-экспандер в произвольном месте элемента. При этом опцию {@link Controls/_tree/interface/ITreeControl#expanderPosition expanderPosition} необходимо установить в значение custom. Переменную expanderTemplate достаточно встроить в нужное место contentTemplate с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 5.
     *
     * Переменная **itemActionsTemplate** — панель с [опциями записи](/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/).
     * @example
@@ -245,4 +245,13 @@ export default interface IColumnTemplateOptions {
      * @default default
      */
     markerClassName?: TMarkerClassName;
+
+    /**
+     * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
+     * @remark
+     * В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
+     * Дополнительно о подсветке строки таблицы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grid/background/#hover здесь}.
+     * @default true
+     */
+    highlightOnHover?: boolean;
 }

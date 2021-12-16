@@ -191,7 +191,7 @@ export default class Selector extends BaseDropdown {
    }
 
    _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
-      if (!isLeftMouseButton(event)) {
+      if (!isLeftMouseButton(event) || this._options.readOnly) {
          return;
       }
       this.openMenu();

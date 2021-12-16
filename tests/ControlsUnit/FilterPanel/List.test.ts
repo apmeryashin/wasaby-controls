@@ -127,6 +127,10 @@ describe('Controls/filterPanel:ListEditor', () => {
             const options = multiSelect ? getEditorOptionsWithMultiSelet() : getEditorOptions();
             listEditor._beforeMount(options);
             listEditor.saveOptions(options);
+            listEditor._items = new RecordSet({
+                rawData: [],
+                keyProperty: 'id'
+            });
             return listEditor;
         };
 

@@ -281,6 +281,11 @@ describe('Controls/_display/CollectionItem', () => {
     describe('actions', () => {
         let given: IChangedData<string>;
         const owner = {
+            getEditingConfig(): object {
+                return {
+                    toolbarVisibility: true
+                };
+            },
             notifyItemChange(item: CollectionItem<string>, property: string): void {
                 given.item = item;
                 given.property = property;

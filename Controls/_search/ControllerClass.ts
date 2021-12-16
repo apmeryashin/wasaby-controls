@@ -3,10 +3,19 @@ import {RecordSet} from 'Types/collection';
 import {NewSourceController} from 'Controls/dataSource';
 import {Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
-import {IHierarchyOptions, ISearchOptions, TKey, ISearchValueOptions, INavigationOptions, INavigationSourceConfig} from 'Controls/interface';
+import {
+   IHierarchyOptions,
+   ISearchOptions,
+   TKey,
+   ISearchValueOptions,
+   INavigationOptions,
+   INavigationSourceConfig,
+   IFilterOptions
+} from 'Controls/interface';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import * as getSwitcherStrFromData from 'Controls/_search/Misspell/getSwitcherStrFromData';
 import {factory as chainFactory} from 'Types/chain';
+import {isEqual} from 'Types/object';
 
 type TViewMode = 'search' | 'tile' | 'table' | 'list';
 
@@ -14,7 +23,8 @@ export interface ISearchControllerOptions extends ISearchOptions,
    IHierarchyOptions,
    IHierarchySearchOptions,
    ISearchValueOptions,
-   INavigationOptions<INavigationSourceConfig> {
+   INavigationOptions<INavigationSourceConfig>,
+   IFilterOptions {
    sourceController?: NewSourceController;
    root?: TKey;
    viewMode?: TViewMode;
@@ -213,13 +223,18 @@ export default class ControllerClass {
    update(options: Partial<ISearchControllerOptions>): boolean {
       let updateResult = false;
       const searchValue = options.hasOwnProperty('searchValue') ? options.searchValue : this._options.searchValue;
-      const {sourceController} = options;
+      const {sourceController, root, filter} = options;
+      const rootChanged = root !== this._options.root;
+      const filterChanged = !isEqual(this._getFilter(filter), this._getFilter(this._options.filter));
 
-      if (this._options.root !== options.root) {
-         if (this._root !== options.root) {
-            this._rootBeforeSearch = null;
-         }
-         this.setRoot(options.root);
+      // Если фильтр был изменён, то корень, из которого начинался поиск может не попасть под фильтр
+      // и сброс поиска приведёт к некорректному результату (окажемся в разделе, которого нет в данных)
+      if ((rootChanged && this._root !== root) || filterChanged) {
+         this._rootBeforeSearch = null;
+      }
+
+      if (rootChanged) {
+         this.setRoot(root);
       }
 
       if (sourceController && sourceController !== this._sourceController) {
@@ -339,11 +354,11 @@ export default class ControllerClass {
       this._path = ControllerClass._getPath(items);
    }
 
-   private _getFilter(): QueryWhereExpression<unknown> {
+   private _getFilter(filter?: QueryWhereExpression<unknown>): QueryWhereExpression<unknown> {
       if (this._searchValue) {
-         return this._getFilterWithSearchValue();
+         return this._getFilterWithSearchValue(filter);
       } else {
-         return this._getFilterWithoutSearchValue();
+         return this._getFilterWithoutSearchValue(filter);
       }
    }
 
@@ -371,8 +386,8 @@ export default class ControllerClass {
       }
    }
 
-   private _getFilterWithSearchValue(): QueryWhereExpression<unknown> {
-      const filter = {...this._sourceController.getFilter()};
+   private _getFilterWithSearchValue(searchFilter: QueryWhereExpression<unknown>): QueryWhereExpression<unknown> {
+      const filter = {...(searchFilter || this._sourceController.getFilter())};
       const {parentProperty, searchParam, startingWith} = this._options;
       let root;
       filter[searchParam] = this._searchValue;
@@ -396,8 +411,8 @@ export default class ControllerClass {
       return filter;
    }
 
-   private _getFilterWithoutSearchValue(): QueryWhereExpression<unknown> {
-      const filter = {...this._sourceController.getFilter()};
+   private _getFilterWithoutSearchValue(searchFilter?: QueryWhereExpression<unknown>): QueryWhereExpression<unknown> {
+      const filter = {...(searchFilter || this._sourceController.getFilter())};
       delete filter[this._options.searchParam];
 
       if (this._options.parentProperty && !this._hasHiearchyFilterBeforeSearch) {

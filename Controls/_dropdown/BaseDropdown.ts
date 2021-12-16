@@ -39,7 +39,7 @@ export abstract class BaseDropdown extends Control<IControlOptions, IDropdownRec
 
     protected _handleClick(event: SyntheticEvent): void {
         // stop bubbling event in edit mode, so the list does not handle click event.
-        if (!this._options.readOnly) {
+        if (this._controller.getItems() && !this._options.readOnly) {
             event.stopPropagation();
         }
     }

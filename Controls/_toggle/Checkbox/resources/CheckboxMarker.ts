@@ -6,6 +6,7 @@ export interface ICheckboxMarkerOptions extends IControlOptions {
     triState?: boolean;
     value?: boolean | null;
     horizontalPadding?: string;
+    checkboxStyle?: 'default' | 'primary';
 }
 /**
  * Контрол, отображающий элемент контрола "чекбокс" - галочку
@@ -22,7 +23,8 @@ export interface ICheckboxMarkerOptions extends IControlOptions {
 class CheckboxMarker extends Control<ICheckboxMarkerOptions> {
     protected _template: TemplateFunction = controlTemplate;
     static defaultProps: ICheckboxMarkerOptions = {
-        horizontalPadding: 'default'
+        horizontalPadding: 'default',
+        checkboxStyle: 'primary'
     };
 }
 
@@ -52,5 +54,14 @@ class CheckboxMarker extends Control<ICheckboxMarkerOptions> {
  * * True - чекбокс в состоянии "отмечено".
  * * False - чекбокс в состоянии "не отмечено". Это состояние по умолчанию.
  * * null - состояние чекбокса при включенной опции {@link triState}.
+ */
+
+/**
+ * @name Controls/_toggle/CheckboxMarker#checkboxStyle
+ * @cfg {String} Цвет заливки чекбокса.
+ * Внимание: опция работает только в паре с опцией {@link contrastBackground}
+ * @variant primary
+ * @variant default
+ * @default primary
  */
 export default CheckboxMarker;

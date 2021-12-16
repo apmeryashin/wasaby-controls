@@ -57,7 +57,7 @@ export default class PropertyGridCollection<S, T extends PropertyGridCollectionI
 
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
-        return function CollectionItemsFactory(options?: Record<string, any>): T {
+        return function CollectionItemsFactory(options?: Record<string, unknown>): T {
             options.editingObject = this._$editingObject;
             options.keyProperty = this._$keyProperty;
             return superFactory.call(this, options);

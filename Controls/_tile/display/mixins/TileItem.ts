@@ -564,7 +564,7 @@ export default abstract class TileItem<T extends Model = Model> {
         }
         const itemActionsPosition = itemActionsPositionTemplate
             || this.getOwner().getActionsTemplateConfig()?.itemActionsPosition;
-        return !this.isSwiped() && (this.hasVisibleActions() || this.isEditing()) && itemActionsPosition !== 'custom';
+        return !this.isSwiped() && this.shouldDisplayActions() && itemActionsPosition !== 'custom';
     }
 
     /**
@@ -582,7 +582,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * Должен ли отрисоваться темплейт операций над записью, который показывается при свайпе
      */
     shouldDisplaySwipeTemplate(): boolean {
-        return this.isSwiped() && (this.hasVisibleActions() || this.isEditing());
+        return this.isSwiped() && this.shouldDisplayActions();
     }
 
     /**
@@ -1603,7 +1603,7 @@ export default abstract class TileItem<T extends Model = Model> {
                        imageViewMode: TImageViewMode = 'rectangle'): boolean {
         switch (itemType) {
             case 'default':
-                return !!this.getDisplayValue() || this.hasVisibleActions() || this.isEditing();
+                return !!this.getDisplayValue() || this.shouldDisplayActions();
             case 'small':
             case 'medium':
             case 'rich':
@@ -2107,6 +2107,7 @@ export default abstract class TileItem<T extends Model = Model> {
     abstract isEditing(): boolean;
     abstract isDragged(): boolean;
     abstract hasVisibleActions(): boolean;
+    abstract shouldDisplayActions(): boolean;
     abstract shouldDisplayMarker(marker: boolean): boolean;
     abstract getDisplayProperty(): string;
     abstract getDisplayValue(): string;

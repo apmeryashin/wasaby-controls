@@ -6,6 +6,7 @@ import * as getType from 'Core/helpers/getType';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {IGridCollectionOptions} from 'Controls/grid';
+import {ILabelOptions} from 'Controls/input';
 
 /**
  * Элемент коллеции propertyGrid
@@ -57,12 +58,13 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         const classes = [];
         const editorClass = itemContents.get('editorClass');
         const caption = itemContents.get('caption');
+        const captionPosition = this.getOwner().getCaptionPosition();
 
         if (editorClass) {
             classes.push(editorClass);
         }
 
-        if (!caption || this.getOwner().getCaptionPosition() === 'top') {
+        if (!caption || captionPosition === 'top' || captionPosition === 'none') {
             classes.push('controls-PropertyGrid__editor-withoutCaption');
         }
 
@@ -133,11 +135,11 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         return `property-grid-item-${this.getContents().get(this._$keyProperty)}`;
     }
 
-    getPropertyValue(): any {
+    getPropertyValue(): unknown {
         return this._$propertyValue;
     }
 
-    setPropertyValue(editingObject: Object | Model | Record<string, any>): void {
+    setPropertyValue(editingObject: Object | Model | Record<string, unknown>): void {
         const itemContents = this.getContents();
         this._$propertyValue = object.getPropertyValue(editingObject, itemContents.get(this._$keyProperty));
         this._nextVersion();

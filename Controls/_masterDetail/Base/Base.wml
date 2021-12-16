@@ -23,7 +23,7 @@
                </Controls.scroll:Container>
             </ws:if>
             <ws:else>
-               <ws:partial template="masterContentTemplate" />
+               <ws:partial template="masterContentTemplate" attr:class="controls-MasterDetail_master-template"/>
             </ws:else>
          </Controls.event:Register>
       </div>
@@ -47,7 +47,10 @@
 
 <ws:template name="detail">
    <Controls.event:Register name="resizeDetectDetail" register="controlResize" attr:fixCompatible="1">
-      <div class="controls-MasterDetail_details ws-flexbox ws-flex-grow-1">
+      <div class="controls-MasterDetail_details ws-flexbox ws-flex-grow-1 {{_options.detailHeaderTemplate ? 'ws-flex-column' : ''}}">
+         <ws:if data="{{_options.detailHeaderTemplate}}">
+            <ws:partial template="{{_options.detailHeaderTemplate}}"/>
+         </ws:if>
          <ws:partial
                  attr:class="controls-MasterDetail_detailsContent
                              {{_options.masterPosition === 'right' ? 'ws-flex-grow-1'}}

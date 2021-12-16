@@ -11,6 +11,7 @@
                         value="{{_options.value}}"
                         triState="{{_options.triState}}"
                         contrastBackground="{{_options.contrastBackground}}"
+                        checkboxStyle="{{_options.checkboxStyle}}"
                         resetValue="{{_options.resetValue}}"
                         horizontalPadding="{{_options.horizontalPadding}}"
                         on:keyup="_keyUpHandler()"/>
@@ -18,6 +19,7 @@
                         readOnly="{{_options.value !== null && !_options.value ? _options.readOnly : false}}"
                         icon="{{_options.icon}}"
                         iconSize="{{_options.iconSize}}"
+                        fontColorStyle="{{_options.fontColorStyle}}"
                         iconStyle="{{_options.iconStyle}}"
                         multiline="{{_options.multiline}}"
                         caption="{{_options.caption}}"/>

@@ -247,7 +247,7 @@ export default class TreeTileCollectionItem<T extends Model = Model>
                 if (this.isNode()) {
                     classes = classes.replace(
                         'controls-fontsize-xl',
-                        'controls-fontsize-3xl'
+                        'controls-fontsize-4xl'
                     );
                 }
                 break;

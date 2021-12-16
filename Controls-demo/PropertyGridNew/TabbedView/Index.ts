@@ -3,6 +3,13 @@ import * as template from 'wml!Controls-demo/PropertyGridNew/TabbedView/TabbedVi
 
 import {Enum} from 'Types/collection';
 
+/**
+ * Демо контрола Controls/_propertyGrid/TabbedView
+ * @class Controls-demo/PropertyGridNew/TabbedView/Index
+ * @extends UI/Base:Control
+ * @author Сиряков М.К.
+ * @public
+ */
 export default class TabbedViewDemo extends Control {
     protected _template: TemplateFunction = template;
 

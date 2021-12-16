@@ -6,6 +6,8 @@ import {
    ITooltipOptions,
    ICaption,
    ICaptionOptions,
+   IFontColorStyle,
+   IFontColorStyleOptions,
    IIcon,
    IIconOptions,
    IIconSize,
@@ -23,11 +25,13 @@ import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions,
-    IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
+      IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions,
+      IFontColorStyleOptions  {
    triState?: boolean;
    value?: boolean | null;
    multiline?: boolean;
    horizontalPadding?: string;
+   checkboxStyle?: 'primary' | 'default';
 }
 
 const mapTriState = {false: true, true: null, null: false};
@@ -49,6 +53,7 @@ const mapBoolState = {true: false, false: true, null: true};
  * @implements Controls/interface:IIcon
  * @implements Controls/interface:IIconSize
  * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IValidationStatus
  * @implements Controls/interface:IResetValue
@@ -76,8 +81,9 @@ const mapBoolState = {true: false, false: true, null: true};
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
-class Checkbox extends Control<ICheckboxOptions> implements ICaption,
+class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColorStyle,
                                                             IIcon, ITooltip, IIconSize, IIconStyle, IValidationStatus {
+   '[Controls/_interface/IFontColorStyle]': boolean = true;
    '[Controls/_interface/ITooltip]': boolean = true;
    '[Controls/_interface/ICaption]': boolean = true;
    '[Controls/_interface/IIcon]': boolean = true;
@@ -114,7 +120,8 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
          validationStatus: 'valid',
          contrastBackground: false,
          multiline: true,
-         horizontalPadding: 'default'
+         horizontalPadding: 'default',
+         checkboxStyle: 'primary'
       };
    }
 
@@ -354,5 +361,34 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @name Controls/_toggle/Checkbox#resetValue
  * @cfg
  * @demo Controls-demo/toggle/Checkbox/ResetValue/Index
+ */
+/**
+ * @name Controls/_toggle/Checkbox#checkboxStyle
+ * @cfg {String} Цвет заливки чекбокса.
+ * Внимание: опция работает только в паре с опцией {@link contrastBackground}
+ * @variant default
+ * @variant primary
+ * @default primary
+ * @demo Controls-demo/toggle/Checkbox/CheckboxStyle/Index
+ * @see contrastBackground
+ */
+/**
+ * @typedef {String} TFontColorStyle
+ * @description Допустимые значения для опции {@link Controls/_toggle/Checkbox#fontColorStyle fontColorStyle}.
+ * @variant primary
+ * @variant secondary
+ * @variant success
+ * @variant warning
+ * @variant danger
+ * @variant unaccented
+ * @variant link
+ * @variant label
+ * @variant info
+ * @variant default
+ */
+/**
+ * @name Controls/_toggle/Checkbox#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста контрола.
+ * @demo Controls-demo/toggle/Checkbox/FontColorStyle/Index
  */
 export default Checkbox;

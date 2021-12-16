@@ -5,7 +5,7 @@ import {Body as PageBody, Head as PageHead} from 'Application/Page';
 
 import * as cBodyClasses from 'Core/BodyClasses';
 import * as getResourceUrl from 'Core/helpers/getResourceUrl';
-import {compatibility, constants, detection, IoC} from 'Env/Env';
+import {constants, detection, IoC} from 'Env/Env';
 import {TouchDetect} from 'Env/Touch';
 import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -449,7 +449,7 @@ export default class Application extends Control<IApplication> {
       if (this._touchController) {
          this._bodyClassesState.touch = this._touchController.isTouch();
       } else {
-         this._bodyClassesState.touch = !!compatibility.touch;
+         this._bodyClassesState.touch = !!detection.isMultiTouch;
       }
 
       this._bodyClassesState.hover = this._isHover();

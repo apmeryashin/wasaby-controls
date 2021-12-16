@@ -172,7 +172,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
 
         this._updateShadowsScrollState();
-        this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll);
+        this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll || (
+            this._options.newColumnScroll && this._scrollModel.canHorizontalScroll
+        ));
         this._containerLoadedResolve();
         this._containerLoaded = true;
 
@@ -206,15 +208,16 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._updateContentWrapperCssClass();
         }
 
+        if (options.scrollOrientation !== this._options.scrollOrientation) {
+            this._scrollbars.updateScrollbarsModels(options);
+            this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
+        }
         this._updateShadows(this._scrollModel, options);
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
         this._optimizeShadowClass = this._getOptimizeShadowClass();
         // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
         //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
         this._updateScrollContainerPaigingSccClass(options);
-        if (options.scrollOrientation !== this._options.scrollOrientation) {
-            this._scrollbars.updateScrollbarsModels(options);
-        }
         this._scrollbars.updateOptions(options);
         this._shadows.updateOptions(this._getShadowsModelOptions(options));
     }
@@ -297,10 +300,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
             this._paging?.update(this._scrollModel);
 
-            this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll);
-            this._stickyHeaderController.setShadowVisibility(
-                this._shadows.top?.getStickyHeadersShadowsVisibility(),
-                this._shadows.bottom?.getStickyHeadersShadowsVisibility());
+            this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll || (
+                this._options.newColumnScroll && this._scrollModel.canHorizontalScroll
+            ));
+            this._updateShadowVisibilityInController();
 
             this._updateScrollContainerPaigingSccClass(this._options);
         }
@@ -326,7 +329,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
-        return this._scrollbars.getScrollContainerClasses();
+        return this._scrollbars.getScrollContainerClasses(options);
     }
 
     protected _getContentWrapperCssClass(): string {
@@ -391,11 +394,18 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         if (this._shadows.hasVisibleShadow()) {
             this.initHeaderController();
         }
-        this._stickyHeaderController.setShadowVisibility(
-                this._shadows.top?.getStickyHeadersShadowsVisibility(),
-                this._shadows.bottom?.getStickyHeadersShadowsVisibility());
 
+        this._updateShadowVisibilityInController();
         this._updateStateAndGenerateEvents(this._scrollModel);
+    }
+
+    private _updateShadowVisibilityInController(): void {
+        this._stickyHeaderController.setShadowVisibility(
+            this._shadows.top?.getStickyHeadersShadowsVisibility(),
+            this._shadows.bottom?.getStickyHeadersShadowsVisibility(),
+            this._shadows.left?.getStickyHeadersShadowsVisibility(),
+            this._shadows.right?.getStickyHeadersShadowsVisibility()
+        );
     }
 
     // Сейчас наличие контента сверху и снизу мы определяем косвенно по информации от списков надо ли отображать тень.
@@ -627,15 +637,17 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         if (this._isOptimizeShadowEnabled) {
             this._shadows.updateScrollState(this._scrollModel, false);
         }
-        this._stickyHeaderController.setShadowVisibility(
-            this._shadows.top?.getStickyHeadersShadowsVisibility(),
-            this._shadows.bottom?.getStickyHeadersShadowsVisibility());
+        this._updateShadowVisibilityInController();
         const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
         this._shadows.setStickyFixed(
             this._stickyHeaderController.hasFixed(POSITION.TOP) &&
             this._stickyHeaderController.hasShadowVisible(POSITION.TOP),
             this._stickyHeaderController.hasFixed(POSITION.BOTTOM) &&
             this._stickyHeaderController.hasShadowVisible(POSITION.BOTTOM),
+            this._stickyHeaderController.hasFixed(POSITION.LEFT) &&
+            this._stickyHeaderController.hasShadowVisible(POSITION.LEFT),
+            this._stickyHeaderController.hasFixed(POSITION.RIGHT) &&
+            this._stickyHeaderController.hasShadowVisible(POSITION.RIGHT),
             needUpdate);
 
         const stickyHeaderOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP,

@@ -19,10 +19,9 @@ export default class extends Control {
 
         this._source = [
             {
-                group: 'Ответственный',
+                caption: 'Ответственный',
                 name: 'owner',
                 resetValue: [],
-                caption: '',
                 value: [],
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
@@ -49,10 +48,9 @@ export default class extends Control {
 
         this._sourceWithAdditional = [
             {
-                group: 'Ответственный',
+                caption: 'Ответственный',
                 name: 'owner',
                 resetValue: [],
-                caption: '',
                 value: [],
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',

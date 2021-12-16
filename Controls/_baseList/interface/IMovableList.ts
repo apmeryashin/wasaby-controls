@@ -16,6 +16,7 @@ export type TBeforeMoveCallback = (selection: ISelectionObject, target: Model | 
 
 /**
  * Интерфейс настройки {@link /doc/platform/developmentapl/interface-development/controls/list/actions/mover/#move-items-with-dialog диалогового окна} выбора целевой записи для перемещения.
+ * @interface Controls/_baseList/interface/IMovableList/IMoveDialogTemplate
  * @public
  * @author Аверкиев П.А.
  */

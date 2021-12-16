@@ -25,6 +25,7 @@ export type TBreadcrumbsVisibility = 'hidden' | 'visible';
  * @variant search Поиск.
  * @variant tile Плитка.
  * @variant list Плоский список.
+ * @default table Таблица.
  * @demo Controls-demo/Explorer/Explorer
  */
 

@@ -11,6 +11,7 @@
    flex-direction: column;
 }
 
+.controls-PropertyGrid__editor_captionPosition-none,
 .controls-PropertyGrid__editor_captionPosition-left {
    width: 100%;
 }
@@ -42,13 +43,10 @@
 }
 
 .controls-PropertyGrid__group {
-   margin-top: var(--offset_s);
-   margin-bottom: var(--offset_s);
-}
-
-.controls-PropertyGrid__group {
    display: flex;
    align-items: baseline;
+   margin-top: var(--offset_s);
+   margin-bottom: var(--offset_s);
 }
 
 .controls-PropertyGrid__group_expander-left {
@@ -63,11 +61,11 @@
    color: var(--unaccented_icon-color);
 }
 
-.ws-is-hover .controls-PropertyGrid__groupExpander:hover {
+.controls-PropertyGrid__groupExpander:active {
    color: var(--unaccented_hover_icon-color);
 }
 
-.controls-PropertyGrid__groupExpander:active {
+.ws-is-hover .controls-PropertyGrid__groupExpander:hover {
    color: var(--unaccented_hover_icon-color);
 }
 
@@ -81,6 +79,12 @@
    margin-right: var(--offset_s);
 }
 
+.controls-PropertyGrid__cell_editing > .controls-itemActionsV,
+.ws-is-hover .controls-PropertyGrid__editor:hover > .controls-itemActionsV {
+   opacity: 1;
+   visibility: visible;
+}
+
 .ws-is-hover {
    .controls-PropertyGrid__row_highlightOnHover:hover {
       background-color: var(--hover_background-color);
@@ -88,11 +92,6 @@
 
    .controls-PropertyGrid__row_highlightOnHover:hover .controls-ListView__multiSelect__borderCircle {
       stroke: var(--border-color);
-   }
-
-   .controls-PropertyGrid__editor:hover > .controls-itemActionsV {
-      opacity: 1;
-      visibility: visible;
    }
 }
 
@@ -293,13 +292,10 @@
 
 .controls-PropertyGrid__item_dragging {
    z-index: 2;
-}
-
-.controls-PropertyGrid__item_dragging {
    opacity: 0.6;
 }
 
-.controls-PropertyGrid__item_dragging:before {
+.controls-PropertyGrid__item_dragging::before {
    height: var(--item_dragging_shadow-height_list);
    box-shadow: 0 calc(-1 * var(--item_dragging_shadow-height_list)) var(--item_dragging_shadow-spread_list) var(--item_dragging_shadow-color_list);
    width: 100%;
@@ -308,7 +304,8 @@
    left: 0;
    content: '\200b';
 }
-.controls-PropertyGrid__item_dragging:after {
+
+.controls-PropertyGrid__item_dragging::after {
    height: var(--item_dragging_shadow-height_list);
    box-shadow: 0 var(--item_dragging_shadow-height_list) var(--item_dragging_shadow-spread_list) var(--item_dragging_shadow-color_list);
    width: 100%;

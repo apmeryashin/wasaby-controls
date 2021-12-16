@@ -153,7 +153,7 @@ class ModuleClass {
            if (capacityChanged) {
               step = getPeriodLengthInMonthByType(updatedPeriodType);
            } else {
-              step = Math.abs(updatedStartValue.getFullYear() - startValue.getFullYear()) * 12;
+              step = Math.abs(updatedStartValue.getFullYear() - (startValue?.getFullYear() || 0)) * 12;
            }
            this._resetSteps(step);
         }

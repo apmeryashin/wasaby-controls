@@ -741,8 +741,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     protected _reCountHierarchy(): void {
         const session = this._startUpdateSession();
 
-        const strategy = this.getStrategyInstance(AdjacencyListStrategy);
-        strategy.invalidate();
+        // invalidate нужно позвать у всех стратегий, а не только начиная с AdjacencyListStrategy
+        const itemsStrategy = this._getItemsStrategy();
+        itemsStrategy.invalidate();
         this._childrenMap = {};
 
         this._finishUpdateSession(session, true);
