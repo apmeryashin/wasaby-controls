@@ -11,7 +11,7 @@
                                 'controls-Tumbler__button-selected controls-Tumbler__button-selected'
                                         + (_options.contrastBackground ? '_contrast' : '_same')
                                         + (_backgroundPosition.isEmpty ? ' controls-Tumbler__button-selected_background' + (_options.contrastBackground ? '_contrast' : '_same')) :
-                                'controls-Tumbler__button-selected controls-Tumbler__button-unselected'
+                                'controls-Tumbler__button-unselected controls-Tumbler__button-unselected'
                                         + (_options.contrastBackground ? '_contrast' : '_same')
                                         + ' controls-Tumbler__button-underline' + (_options.contrastBackground ? '_contrast' : '_same')
                         }}"
