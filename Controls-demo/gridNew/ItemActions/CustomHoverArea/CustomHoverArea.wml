@@ -22,7 +22,7 @@
                                 <div class="item-area">
                                     <div class="item-area-content ws-flexbox ws-align-items-baseline
                                                 controls-ListView__item_showActions
-                                                controls-ListView__highlightOnHover_default_theme-default">
+                                                controls-ListView__highlightOnHover_default">
                                         <div class="ws-ellipsis controls-fontsize-l">country:&nbsp;{{ contentTemplate.item.getContents().get('country') }}</div>
                                         <ws:partial template="{{ contentTemplate.editArrowTemplate }}"/>
                                         <ws:partial template="{{contentTemplate.itemActionsTemplate}}" itemActionsClass="{{contentTemplate.itemActionsClass}}"/>
