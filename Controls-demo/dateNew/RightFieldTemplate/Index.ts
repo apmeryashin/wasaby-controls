@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as template 'wml!Controls-demo/dateNew/RightFieldTemplate/RightFieldTemplate';
+import * as template from 'wml!Controls-demo/dateNew/RightFieldTemplate/RightFieldTemplate';
 
 class DemoControl extends Control {
     protected _template: TemplateFunction = template;
