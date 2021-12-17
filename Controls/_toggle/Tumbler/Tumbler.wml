@@ -4,13 +4,15 @@
     controls-Tumbler__wrapper_{{_options.direction}}
      {{_options.direction === 'horizontal' ? 'controls-inlineheight-'+_options.inlineHeight}}" on:mouseenter="_mouseEnterHandler()" on:touchstart="_touchStartHandler()">
         <ws:for data="index, itemData in _options.items">
-            <div class="controls-Tumbler__button
-                        controls-Tumbler__button-{{_options.inlineHeight}}
-                        {{itemData[_options.keyProperty] !== _options.selectedKey && !_options.readOnly? 'controls-Tumbler__button-underline' + (_options.contrastBackground ? '_contrast' : '_same') }}
-                        controls-Tumbler__button-{{itemData[_options.keyProperty] === _options.selectedKey ? 'selected' : 'unselected'}}{{_options.contrastBackground ? '_contrast' : '_same'}}
+            <div class="controls-Tumbler__button controls-Tumbler__button-{{_options.inlineHeight}}
                         controls-Tumbler__button-{{_options.readOnly? 'disabled' : 'enabled'}}
-                        {{itemData[_options.keyProperty] === _options.selectedKey && _backgroundPosition.isEmpty ?
-                            'controls-Tumbler__button-selected_background' + (_options.contrastBackground ? '_contrast' : '_same') }}"
+                        {{
+                            itemData[_options.keyProperty] === _options.selectedKey ?
+                                'controls-Tumbler__button-selected controls-Tumbler__button-selected'
+                                        + (_options.contrastBackground ? '_contrast' : '_same')
+                                        + (_backgroundPosition.isEmpty ? ' controls-Tumbler__button-selected_background' + (_options.contrastBackground ? '_contrast' : '_same')) :
+                                'controls-Tumbler__button-underline' + (_options.contrastBackground ? '_contrast' : '_same')
+                        }}"
                  data-qa="controls-Tumbler__button"
                  on:click="_onItemClick(itemData)"
                  name="TumblerButton{{index}}">
