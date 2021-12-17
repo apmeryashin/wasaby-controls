@@ -42,7 +42,7 @@ import {
     IAdditionalTriggersOffsets
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
-import { IVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll';
+import { TVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll';
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
@@ -127,7 +127,7 @@ export abstract class AbstractListVirtualScrollController<
     protected _collection: Collection;
     protected _scrollController: ScrollController;
     private _itemSizeProperty: string;
-    private _virtualScrollMode: IVirtualScrollMode;
+    private _virtualScrollMode: TVirtualScrollMode;
     private _keepScrollPosition: boolean = false;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
@@ -607,7 +607,7 @@ export abstract class AbstractListVirtualScrollController<
         });
     }
 
-    private _setCollectionIterator(mode: IVirtualScrollMode): void {
+    private _setCollectionIterator(mode: TVirtualScrollMode): void {
         switch (mode) {
             case 'hide':
                 VirtualScrollHideController.setup(
@@ -629,7 +629,7 @@ export abstract class AbstractListVirtualScrollController<
      * @param virtualScrollMode
      * @private
      */
-    private _correctItemsSelector(selector: string, virtualScrollMode: IVirtualScrollMode): string {
+    private _correctItemsSelector(selector: string, virtualScrollMode: TVirtualScrollMode): string {
         let correctedSelector = selector;
         if (virtualScrollMode === 'hide') {
             correctedSelector += `:not(${HIDDEN_ITEM_SELECTOR})`;
