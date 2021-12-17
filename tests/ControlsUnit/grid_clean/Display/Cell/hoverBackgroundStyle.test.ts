@@ -17,6 +17,7 @@ describe('Controls/grid/Display/Cell/background/hoverBackgroundStyle', () => {
         getRowSeparatorSize: () => 's',
         hasMultiSelectColumn: () => false,
         getColumnIndex: () => 1,
+        getFadedClass: () => '',
 
         // methods for contentClasses
         getColumnsCount: () => 1,

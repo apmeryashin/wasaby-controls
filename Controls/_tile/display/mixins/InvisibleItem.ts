@@ -4,6 +4,7 @@
  */
 export default abstract class InvisibleItem {
     readonly Markable: boolean = false;
+    readonly Fadable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly EnumerableItem: boolean = false;
     readonly EdgeRowSeparatorItem: boolean = false;

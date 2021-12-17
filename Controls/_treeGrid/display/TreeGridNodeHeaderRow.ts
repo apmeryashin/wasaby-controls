@@ -10,6 +10,7 @@ import {IColumn, TColspanCallbackResult, TColumns} from 'Controls/grid';
 export default class TreeGridNodeHeaderRow extends TreeGridDataRow<null> {
     readonly '[Controls/treeGrid:TreeGridNodeHeaderRow]': boolean;
     readonly Markable: boolean = false;
+    readonly Fadable: boolean = false;
     readonly DraggableItem: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly EnumerableItem: boolean = false;

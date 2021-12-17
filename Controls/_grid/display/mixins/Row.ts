@@ -185,9 +185,7 @@ export default abstract class Row<T extends Model = Model> {
         classes += ' controls-GridView__checkbox';
         classes += ` controls-GridView__checkbox_position-${this.getOwner().getMultiSelectPosition()}`;
 
-        if (this.isDragged()) {
-            classes += ' controls-ListView__itemContent_dragging';
-        }
+        classes += this.getFadedClass();
 
         return classes;
     }
@@ -920,6 +918,8 @@ export default abstract class Row<T extends Model = Model> {
     protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
 
     protected abstract _nextVersion(): void;
+
+    abstract getFadedClass(): string;
 
     //endregion
 }

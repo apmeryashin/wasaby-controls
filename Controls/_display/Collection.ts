@@ -40,6 +40,7 @@ import {INavigationOptionValue, INavigationSourceConfig, IRoundBorder} from 'Con
 import {Footer, IOptions as IFooterOptions} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
+import {CrudEntityKey} from 'Types/source';
 import {IDirection} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 // tslint:disable-next-line:ban-comma-operator
@@ -776,6 +777,8 @@ export default class Collection<
     protected _$itemActionsPosition: TItemActionsPosition;
 
     protected _$navigation: INavigationOptionValue;
+
+    protected _$fadedKeys: CrudEntityKey[];
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -2376,6 +2379,14 @@ export default class Collection<
 
     // endregion Drag-N-Drop
 
+    getFadedKeys(): CrudEntityKey[] {
+        return this._$fadedKeys || [];
+    }
+
+    setFadedKeys(fadedKeys: CrudEntityKey[]): void {
+        this._$fadedKeys = [...fadedKeys];
+    }
+
     getItemTemplateProperty(): string {
         return this._$itemTemplateProperty;
     }
@@ -3501,6 +3512,8 @@ export default class Collection<
             options.isFirstItem = false;
             options.isLastItem = false;
             options.stickyCallback = this._$stickyCallback;
+            const key = options.contents && options.contents.getKey && options.contents.getKey();
+            options.faded = this.getFadedKeys().includes(key);
 
             return create(options.itemModule || this._itemModule, options);
         };
@@ -4345,6 +4358,7 @@ Object.assign(Collection.prototype, {
     _$footerTemplate: null,
     _$stickyFooter: false,
     _$stickyCallback: null,
+    _$fadedKeys: [],
     _$moreButtonVisibility: MoreButtonVisibility.visible,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
