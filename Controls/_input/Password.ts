@@ -6,6 +6,10 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {IMaxLengthOptions} from 'Controls/_input/interface/IMaxLength';
 import 'css!Controls/input';
 
+export interface IPasswordOptions extends IBaseInputOptions, IMaxLengthOptions {
+    passwordVisible?: boolean;
+}
+
 /*
  *  Control that hides all entered characters and shows replacer-symbols in place of them.
  *  Visibility of entered text can be toggled by clicking on 'eye' icon.
@@ -41,10 +45,6 @@ import 'css!Controls/input';
  *
  * @author Красильников А.С.
  */
-export interface IPasswordOptions extends IBaseInputOptions, IMaxLengthOptions {
-    passwordVisible?: boolean;
-}
-
 class Password extends Base {
     protected _defaultValue: string = '';
     private _passwordVisible: boolean = false;
