@@ -80,10 +80,10 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
 
         let classes = `controls-PropertyGrid__editor_spacingTop_${owner.getTopPadding()}
                        controls-PropertyGrid__editor_spacingBottom_${owner.getBottomPadding()}`;
-        if (gridColumnIndex !== totalColumns || totalColumns === 1) {
+        if (gridColumnIndex !== 1 || totalColumns === 1) {
             classes += ` controls-PropertyGrid__editor_spacingRight_${owner.getRightPadding()}`;
         }
-        if (gridColumnIndex !== totalColumns || totalColumns === 1 ||
+        if (gridColumnIndex !== 2 || totalColumns === 1 ||
             !(itemContents.get('caption') || itemContents.get('isEditable')) ||
             editorOptions?.jumpingLabel) {
             classes += ` controls-PropertyGrid__editor_spacingLeft_${owner.getLeftPadding()}`;
