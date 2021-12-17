@@ -1,0 +1,7 @@
+<div class="controlsDemo__wrapper">
+    <Controls.list:View
+            attr:class="controlsDemo__margin-top"
+            keyProperty="key"
+            source="{{_viewSource}}"
+    />
+</div>
