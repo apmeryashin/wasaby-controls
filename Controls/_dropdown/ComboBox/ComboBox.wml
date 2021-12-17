@@ -17,7 +17,7 @@
      on:focusout="_deactivated()">
     <div class="controls-ComboBox-wrapper" tabindex="0">
         <div class="controls-ComboBox__field controls-ComboBox__field_margin-{{_horizontalPadding}}">
-            <ws:if data="{{_placeholder && !_value}}">
+            <ws:if data="{{!_readOnly && _placeholder && !_value}}">
                 <div class="controls-ComboBox__placeholder">{{_placeholder}}</div>
             </ws:if>
             <ws:else>
