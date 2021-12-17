@@ -108,7 +108,7 @@
                    {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
                    {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}
-                   {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' || _options.captionPosition === 'none' ? 1 : 2)}}
+                   {{collectionItem.getItemPaddingClasses(2)}}
                    js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor"
              style="{{getEditorStyles(collectionItem, captionPosition, !(item.caption || collectionItem.isEditing()))}}">
