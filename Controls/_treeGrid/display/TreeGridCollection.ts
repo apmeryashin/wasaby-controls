@@ -10,7 +10,8 @@ import {
     IItemActionsTemplateConfig,
     IHasMoreData,
     ISessionItems,
-    IEditingConfig
+    IEditingConfig,
+    NODE_TYPE_PROPERTY_GROUP
 } from 'Controls/display';
 import {
     GridGroupRow,
@@ -55,7 +56,6 @@ export default class TreeGridCollection<
 > extends mixin<Tree<S, T>, GridMixin<S, T>>(Tree, GridMixin) {
     readonly '[Controls/treeGrid:TreeGridCollection]': boolean;
 
-    protected _$nodeTypeProperty: string;
     protected _$groupNodeVisibility: TGroupNodeVisibility;
     protected _$hasStickyGroup: boolean = false;
 
@@ -88,10 +88,6 @@ export default class TreeGridCollection<
         this._nextVersion();
     }
 
-    getNodeTypeProperty(): string {
-        return this._$nodeTypeProperty;
-    }
-
     setGroupNodeVisibility(groupNodeVisibility: TGroupNodeVisibility): void {
         this._$groupNodeVisibility = groupNodeVisibility;
         this._updateGroupNodeVisibility();
@@ -100,7 +96,8 @@ export default class TreeGridCollection<
 
     private _isGroupNodeVisible(record: Model): boolean {
         // Скрываем только группы.
-        if (this._$groupNodeVisibility !== 'hasdata' || record.get(this.getNodeTypeProperty()) !== 'group') {
+        if (this._$groupNodeVisibility !== 'hasdata' ||
+            record.get(this.getNodeTypeProperty()) !== NODE_TYPE_PROPERTY_GROUP) {
             return true;
         }
         return !this.getMetaData().singleGroupNode;
@@ -361,7 +358,7 @@ export default class TreeGridCollection<
 
         if (this._$nodeTypeProperty &&
             options.contents && typeof options.contents !== 'string' && !Array.isArray(options.contents) &&
-            options.contents.get(this._$nodeTypeProperty) === 'group') {
+            options.contents.get(this._$nodeTypeProperty) === NODE_TYPE_PROPERTY_GROUP) {
             return GroupNodeFactory.call(this, options);
         }
         return CollectionItemsFactory.call(this, options);
@@ -375,7 +372,7 @@ export default class TreeGridCollection<
         // в зависимости от наличия его дочерних узлов
         if (rootItems.length === 1 &&
             this._$nodeTypeProperty &&
-            rootItems[0].get(this._$nodeTypeProperty) === 'group') {
+            rootItems[0].get(this._$nodeTypeProperty) === NODE_TYPE_PROPERTY_GROUP) {
             return this.getChildrenByRecordSet(rootItems[0]).length > 1;
         }
         return rootItems.length > 1;
@@ -424,6 +421,5 @@ Object.assign(TreeGridCollection.prototype, {
     _itemModule: 'Controls/treeGrid:TreeGridDataRow',
     _nodeFooterModule: 'Controls/treeGrid:TreeGridNodeFooterRow',
     _nodeHeaderModule: 'Controls/treeGrid:TreeGridNodeHeaderRow',
-    _$groupNodeVisibility: 'visible',
-    _$nodeTypeProperty: null
+    _$groupNodeVisibility: 'visible'
 });
