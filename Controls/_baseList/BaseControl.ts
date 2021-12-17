@@ -955,9 +955,10 @@ const _private = {
         const isDemand = _private.isDemandNavigation(navigation);
         const isMaxCount = _private.isMaxCountNavigation(navigation);
         const isPages = _private.isPagesNavigation(navigation);
+        const isCut = _private.isCutNavigation(navigation);
         let result = true;
 
-        if (isDemand || isPages) {
+        if (isDemand || isPages || isCut) {
             result = false;
         } else if (isMaxCount) {
             result = _private.isItemsCountLessThenMaxCount(itemsCount, _private.getMaxCountFromNavigation(navigation));
