@@ -14,7 +14,6 @@
       borderVisibility="{{_options.borderVisibility}}"
       inlineHeight="{{_options.inlineHeight}}"
       contrastBackground="{{ _options.contrastBackground }}"
-      rightFieldTemplate="{{ _options.rightFieldTemplate }}"
       style="{{_options.style}}"
       tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
@@ -32,6 +31,12 @@
       on:tagClick="_proxyEvent('tagClick')"
       on:tagHover="_proxyEvent('tagHover')">
    </Controls._date.BaseInput>
+    <ws:if data="{{ _options.rightFieldTemplate }}">
+        <ws:partial
+                template="{{ _options.rightFieldTemplate }}"
+                value="{{ _options.value }}"
+        />
+    </ws:if>
     <ws:if data="{{ _options.calendarButtonVisible }}">
         <span class="controls-Input-DatePicker__buttonWrapper" attr:tabindex="-1">
             <span class="ws-flexbox ws-align-items-center controls-Input-DatePicker__buttonBaseLine" on:click="openPopup()">
