@@ -20,7 +20,7 @@
             <ws:partial template="Controls/tile:ItemTemplate" markerVisibility="hidden" hasTitle="{{tileItemTemplate.item.contents.isDocument}}"/>
         </ws:tileItemTemplate>
         <ws:emptyTemplate>
-            <ws:partial template="Controls/grid:EmptyTemplate">
+            <ws:partial template="Controls/list:EmptyTemplate">
                 <ws:contentTemplate>
                     Нет данных
                 </ws:contentTemplate>

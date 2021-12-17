@@ -16,6 +16,7 @@ class Demo extends Control {
     _selectedKeys3: number[] = [];
     _selectedKeys4: number[] = [];
     _excludedKeys: number[] = [];
+    _viewMode: string = 'tile';
     _itemActions: Array<{
         id: number;
         icon: string;

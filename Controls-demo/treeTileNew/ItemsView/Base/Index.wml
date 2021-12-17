@@ -12,11 +12,6 @@
       nodeProperty="parent@"
       items="{{_items}}"
       root="{{_root}}"
-      on:itemClick="_onItemClick()">
-      <ws:emptyTemplate>
-         <ws:partial template="Controls/list:EmptyTemplate">
-            <ws:contentTemplate>No data available!</ws:contentTemplate>
-         </ws:partial>
-      </ws:emptyTemplate>
-   </Controls.treeTile:ItemsView>
+      on:itemClick="_onItemClick()"
+   />
 </div>
