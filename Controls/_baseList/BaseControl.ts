@@ -7381,12 +7381,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController = null;
     }
 
-    private _getIndicatorDomElement(direction: 'top'|'bottom'): HTMLElement {
-        return direction === 'top'
-            ? this._children.listView?.getTopIndicator()
-            : this._children.listView?.getBottomIndicator();
-    }
-
     private _countGlobalIndicatorPosition(): number {
         return this._scrollTop + (this._viewportSize || this._viewSize) / 2 - INDICATOR_HEIGHT / 2;
     }
