@@ -1448,7 +1448,10 @@ const _private = {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
 
-        if (self._scrollController?.isRealScroll()) {
+        if (
+            self._scrollController?.isRealScroll() ||
+            self._useNewScroll && !self._scrollControllerInitializeChangeScroll
+        ) {
             self._scrolled = true;
         }
         // TODO SCROLL избавиться от scrollTop в BaseControl
@@ -1466,6 +1469,7 @@ const _private = {
             self._children.listView?.getTopLoadingTrigger(),
             self._children.listView?.getBottomLoadingTrigger()
         );
+        self._scrollControllerInitializeChangeScroll = false;
     },
 
     disablePagingNextButtons(self): void {
@@ -3582,7 +3586,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // TODO SCROLL по идее это нужно делать после релоада.
             if (action === IObservable.ACTION_RESET) {
                 // если есть данные и вниз и вверх, то скрываем триггер вверх, т.к. в первую очередь грузим вниз
-                if (this._hasMoreData('down') && this._hasMoreData('up')) {
+                if (
+                    this._hasMoreData('down') &&
+                    this._hasMoreData('up') &&
+                    this._options.attachLoadTopTriggerToNull
+                ) {
                     this._listVirtualScrollController.setBackwardTriggerVisible(false);
                     this._listVirtualScrollController.setForwardTriggerVisible(true);
                 }
@@ -3916,6 +3924,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             totalCount: this._listViewModel.getCount(),
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
+                this._scrollControllerInitializeChangeScroll = true;
                 return this._notify(
                     'scrollToElement',
                     [{ itemContainer: container, position, force }],
@@ -3924,10 +3933,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             },
 
             doScrollUtil: (scrollTop) => {
+                this._scrollControllerInitializeChangeScroll = true;
                 this._notify('doScroll', [scrollTop, true], { bubbling: true });
             },
 
             updatePlaceholdersUtil: (placeholders) => {
+                if (!this._isMounted) {
+                    return;
+                }
+
                 const convertedPlaceholders = {
                     top: placeholders.backward,
                     bottom: placeholders.forward

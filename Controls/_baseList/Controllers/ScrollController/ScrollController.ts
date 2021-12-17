@@ -103,9 +103,9 @@ export class ScrollController {
     private readonly _itemsEndedCallback: IItemsEndedCallback;
     private readonly _indexesInitializedCallback: IIndexesInitializedCallback;
 
-    private _viewportSize: number;
-    private _contentSize: number;
-    private _scrollPosition: number;
+    private _viewportSize: number = 0;
+    private _contentSize: number = 0;
+    private _scrollPosition: number = 0;
 
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
@@ -336,6 +336,10 @@ export class ScrollController {
      * @param keepPosition Нужно ли сохранить текущию позицию
      */
     resetItems(totalCount: number, keepPosition: boolean): void {
+        // Сбрасываем состояние контроллера.
+        this.scrollPositionChange(0);
+        this.contentResized(0);
+
         const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
@@ -523,6 +527,10 @@ export class ScrollController {
         this._hasItemsOutRangeChangedCallback({
             backward: this._calculator.hasItemsOutRange('backward'),
             forward: this._calculator.hasItemsOutRange('forward')
+        });
+        this._placeholdersChangedCallback({
+            backward: 0,
+            forward: 0
         });
     }
 
