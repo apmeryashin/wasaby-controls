@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Classes/Blocks/Layout/Index');
+import controlTemplate = require('wml!Controls-demo/Classes/Blocks/Layout/TwoColumn/Index');
 import 'css!Controls-demo/Classes/Blocks/Layout/Index';
 
 class ViewModes extends Control<IControlOptions> {
