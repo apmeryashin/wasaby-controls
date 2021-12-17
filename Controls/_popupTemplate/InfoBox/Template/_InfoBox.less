@@ -240,7 +240,7 @@
 
 .controls-InfoBoxTemplate__arrow-top {
    transform: rotate(-135deg);
-   top: calc(var(--arrow_side_length_infobox)/2 - var(--border-thickness));
+   top: calc(var(--arrow_side_length_infobox)/2 - var(--marker-thickness_infobox));
 }
 
 .controls-InfoBoxTemplate__arrow-bottom {
@@ -248,7 +248,7 @@
    bottom: calc(var(--arrow_side_length_infobox)/2);
 }
 
-@infoboxTemplate_arrow-indent: calc(var(--arrow_offset_infobox) + ((var(--arrow_base_length_infobox) - var(--arrow_side_length_infobox))/2) + var(--border-thickness));
+@infoboxTemplate_arrow-indent: calc(var(--arrow_offset_infobox) + ((var(--arrow_base_length_infobox) - var(--arrow_side_length_infobox))/2) + var(--marker-thickness_infobox));
 
 .controls-InfoBoxTemplate__arrow-top, .controls-InfoBoxTemplate__arrow-bottom {
    &.controls-InfoBoxTemplate__arrow-position-start {
@@ -262,7 +262,7 @@
 
 .controls-InfoBoxTemplate__arrow-left {
    transform: rotate(135deg);
-   left: calc(var(--arrow_side_length_infobox)/2 - var(--border-thickness));
+   left: calc(var(--arrow_side_length_infobox)/2 - var(--marker-thickness_infobox));
 }
 
 .controls-InfoBoxTemplate__arrow-right {
