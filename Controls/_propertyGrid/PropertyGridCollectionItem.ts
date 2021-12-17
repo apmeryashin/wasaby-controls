@@ -76,7 +76,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         const itemContents = this.getContents();
         const editorOptions = itemContents.get('editorOptions');
         const captionPosition = this.getOwner().getCaptionPosition();
-        const totalColumns = !gridColumnIndex || captionPosition !== 'left' ? 1 : 2;
+        const totalColumns = !gridColumnIndex || captionPosition === 'top' || captionPosition === 'none' ? 1 : 2;
 
         let classes = `controls-PropertyGrid__editor_spacingTop_${owner.getTopPadding()}
                        controls-PropertyGrid__editor_spacingBottom_${owner.getBottomPadding()}`;
