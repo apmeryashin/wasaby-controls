@@ -3,7 +3,7 @@ import {ResizingBase, IDragObject, IResizingBase} from 'Controls/dragnDrop';
 import {TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/dragnDrop';
-import 'css!Controls/popup';
+import 'css!Controls/popupTemplate';
 
 interface IOffsetValue {
     style: string;
