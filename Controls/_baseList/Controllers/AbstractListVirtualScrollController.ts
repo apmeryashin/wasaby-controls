@@ -437,6 +437,11 @@ export abstract class AbstractListVirtualScrollController<
             hasItemsOutRangeChangedCallback: (hasItemsOutRange: IHasItemsOutRange): void => {
                 this._scheduleUpdateHasItemsOutRange(hasItemsOutRange);
                 this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
+                // Это нужно выполнять в этом же цикле синхронизации.
+                // Чтобы ScrollContainer и отступ под паддинг отрисовались в этом же цикле.
+                if (this._updateVirtualNavigationUtil) {
+                    this._updateVirtualNavigationUtil(hasItemsOutRange);
+                }
 
                 // Если у нас есть записи скрытые виртуальным скроллом, то мы точно должны показать триггер.
                 if (hasItemsOutRange.backward) {
@@ -531,9 +536,6 @@ export abstract class AbstractListVirtualScrollController<
         if (hasItemsOutRange) {
             if (this._updateShadowsUtil) {
                 this._updateShadowsUtil(hasItemsOutRange);
-            }
-            if (this._updateVirtualNavigationUtil) {
-                this._updateVirtualNavigationUtil(hasItemsOutRange);
             }
         }
     }

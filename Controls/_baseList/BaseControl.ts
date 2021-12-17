@@ -3961,7 +3961,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             updateVirtualNavigationUtil: (hasItemsOutRange) => {
                 // Список, скрытый на другой вкладке не должен нотифаить о таких изменениях
-                if (this._container?.closest('.ws-hidden')) {
+                if (this._container?.closest('.ws-hidden') || !this._isMounted) {
                     return;
                 }
 
