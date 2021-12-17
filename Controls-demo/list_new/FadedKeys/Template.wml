@@ -1,0 +1,19 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth550">
+    <Controls.toggle:RadioGroup
+            bind:selectedKey="_viewName"
+            source="{{_viewNameSource}}"
+            keyProperty="key"
+            displayProperty="key"
+            direction="horizontal"/>
+    <Controls.Container.Async templateName="{{_viewName}}">
+        <ws:partial
+                template="{{content.resolvedTemplate}}"
+                keyProperty="key"
+                imageProperty="image"
+                displayProperty="title"
+                columns="{{_columns}}"
+                itemActions="{{_itemActions}}"
+                fadedKeys="{{_fadedKeys}}"
+                source="{{_viewSource}}"/>
+    </Controls.Container.Async>
+</div>

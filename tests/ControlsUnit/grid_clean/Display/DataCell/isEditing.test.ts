@@ -5,22 +5,23 @@ import {CssClassesAssert as cAssert} from './../../../CustomAsserts';
 describe('Controls/grid_clean/Display/DataCell/isEditing', () => {
     describe('single editable cell', () => {
         const mockedOwner = {
-                getHoverBackgroundStyle: () => 'default',
-                isDragged: () => false,
-                getStickyLadder: () => false,
-                hasItemActionsSeparatedCell: () => false,
-                getTopPadding: () => 'default',
-                getBottomPadding: () => 'default',
-                getLeftPadding: () => 'default',
-                getRightPadding: () => 'default',
-                getEditingConfig: () => ({
-                    mode: 'cell'
-                }),
-                getColumnIndex: () => 0,
-                getColumnsCount: () => 0,
-                getMultiSelectVisibility: () => 'hidden',
-                hasMultiSelectColumn: () => false,
-                isAnimatedForSelection: () => false
+            getHoverBackgroundStyle: () => 'default',
+            isDragged: () => false,
+            getStickyLadder: () => false,
+            hasItemActionsSeparatedCell: () => false,
+            getTopPadding: () => 'default',
+            getBottomPadding: () => 'default',
+            getLeftPadding: () => 'default',
+            getRightPadding: () => 'default',
+            getEditingConfig: () => ({
+                mode: 'cell'
+            }),
+            getColumnIndex: () => 0,
+            getColumnsCount: () => 0,
+            getMultiSelectVisibility: () => 'hidden',
+            hasMultiSelectColumn: () => false,
+            getFadedClass: () => '',
+            isAnimatedForSelection: () => false
         };
 
         it('.getContentClasses() for editable', () => {
