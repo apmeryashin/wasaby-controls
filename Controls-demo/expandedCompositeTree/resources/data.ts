@@ -316,14 +316,6 @@ export const getData = () => [
         renderData: {}
     },
     {
-        key: 1302,
-        type: true,
-        parent: 13,
-        image: IMAGE_SOUP_F1,
-        caption: 'Мясные',
-        renderData: {}
-    },
-    {
         key: 1303,
         type: true,
         parent: 13,
@@ -332,23 +324,7 @@ export const getData = () => [
         renderData: {}
     },
     {
-        key: 1304,
-        type: true,
-        parent: 13,
-        image: IMAGE_SOUP_F2,
-        caption: 'Овощные',
-        renderData: {}
-    },
-    {
         key: 1305,
-        type: true,
-        parent: 13,
-        image: IMAGE_SOUP_F3,
-        caption: 'Морепродукты',
-        renderData: {}
-    },
-    {
-        key: 1306,
         type: true,
         parent: 13,
         image: IMAGE_SOUP_F3,

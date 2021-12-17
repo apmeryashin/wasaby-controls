@@ -4,10 +4,11 @@ import { MODULE_NAME } from './CompositeCollectionItem';
 import CompositeItem from './strategy/CompositeItem';
 import { Tree, ITreeCollectionOptions } from 'Controls/display';
 import { Model } from 'Types/entity';
+import { ITreeTileCollectionOptions } from 'Controls/_treeTile/display/TreeTileCollection';
 
 const COMPOSITE_LEVEL = 3; // todo add option for replace this const
 
-export interface ICompositeViewConfig {
+export interface ICompositeViewConfig extends ITreeTileCollectionOptions {
     itemTemplate: string;
     // todo release interface
 }

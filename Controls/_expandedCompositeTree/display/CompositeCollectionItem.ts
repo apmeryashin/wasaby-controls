@@ -1,10 +1,10 @@
 import { mixin } from 'Types/util';
 import { TreeItem, Collection } from 'Controls/display';
 import { Model } from 'Types/entity';
-import { TileCollection } from 'Controls/tile';
+import { TreeTileCollection } from 'Controls/treeTile';
 import * as CompositeItemTemplate from 'wml!Controls/_expandedCompositeTree/render/CompositeItemTemplate';
 
-import { TileView } from 'Controls/tile';
+import { TreeTileView } from 'Controls/treeTile';
 import { ITreeItemOptions } from 'Controls/tree';
 import { TemplateFunction } from 'UI/Base';
 import { ObservableList } from 'Types/collection';
@@ -14,6 +14,7 @@ export const MODULE_NAME = 'Controls/expandedCompositeTree:CompositeCollectionIt
 
 interface ICompositeCollectionItemOptions extends ITreeItemOptions<Model> {
     compositeViewConfig: ICompositeViewConfig;
+    list: ObservableList<Model>;
 }
 
 export default class CollectionItem<T extends Model = Model>
@@ -44,10 +45,11 @@ export default class CollectionItem<T extends Model = Model>
         return this._renderCollection.getCollection() as ObservableList<Model>;
     }
 
-    private _initializeCollection(list) {
-        this._renderCollection = new TileCollection({
+    private _initializeCollection(list: ObservableList<Model>): void {
+        this._renderCollection = new TreeTileCollection({
             ...this._$compositeViewConfig,
-            collection: list
+            collection: list,
+            root: this.getParent().key
         });
     }
 
@@ -60,7 +62,7 @@ export default class CollectionItem<T extends Model = Model>
     }
 
     getRenderTemplate(): Function {
-        return TileView;
+        return TreeTileView;
     }
 
     getRenderParams(): {} {

@@ -8,6 +8,8 @@
                 on:itemClick="_onItemClick()">
             <ws:compositeViewConfig
                     keyProperty="key"
+                    parentProperty="parent"
+                    nodeProperty="type"
                     itemPadding="{{ { top: 's', bottom: 's' } }}"
                     roundBorder="{{ { tr: 's', tl: 's', br: 's', bl: 's' } }}"
                     imageProperty="image"
@@ -16,24 +18,33 @@
                     tileScalingMode="none"
                     displayProperty="caption">
                 <ws:itemTemplate>
-                    <ws:partial template="Controls/tile:RichTemplate"
-                                scope="{{ itemTemplate }}"
-                                imagePosition="left"
-                                imageViewMode="rectangle"
-                                imageSize="5xl"
-                                titleLines="2"
-                                contentPadding="s"
-                                description="{{ itemTemplate.item.contents.renderData.weight }}">
-                        <ws:footerTemplate>
-                            <div class="ControlsDemo-expandedCompositeTree__tileTemplate-footer">
-                                <Controls.decorator:Money
-                                        value="{{ itemTemplate.item.contents.renderData.price }}"
-                                        fontSize="3xl"
-                                        fontWeight="bold"
-                                        fontColorStyle="danger"/>
-                            </div>
-                        </ws:footerTemplate>
-                    </ws:partial>
+                    <ws:if data="{{ itemTemplate.item.isNode() }}">
+                        <ws:partial template="Controls/tile:RichTemplate"
+                                    scope="{{ itemTemplate }}"
+                                    titlePosition="onImage"
+                                    imageViewMode="rectangle"
+                        />
+                    </ws:if>
+                    <ws:else>
+                        <ws:partial template="Controls/tile:RichTemplate"
+                                    scope="{{ itemTemplate }}"
+                                    imagePosition="left"
+                                    imageViewMode="rectangle"
+                                    imageSize="5xl"
+                                    titleLines="2"
+                                    contentPadding="s"
+                                    description="{{ itemTemplate.item.contents.renderData.weight }}">
+                            <ws:footerTemplate>
+                                <div class="ControlsDemo-expandedCompositeTree__tileTemplate-footer">
+                                    <Controls.decorator:Money
+                                            value="{{ itemTemplate.item.contents.renderData.price }}"
+                                            fontSize="3xl"
+                                            fontWeight="bold"
+                                            fontColorStyle="danger"/>
+                                </div>
+                            </ws:footerTemplate>
+                        </ws:partial>
+                    </ws:else>
                 </ws:itemTemplate>
             </ws:compositeViewConfig>
             <ws:itemTemplate>
