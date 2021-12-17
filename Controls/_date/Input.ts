@@ -50,6 +50,15 @@ interface IDateInput extends ICalendarButtonVisibleOptions, IControlOptions, IDa
  * @author Красильников А.С.
  */
 
+/**
+ * @name Controls/_date/Input#rightFieldTemplate
+ * @cfg {String|TemplateFunction} Строка или шаблон, содержащие прикладной контент, который будет отображаться справа
+ * от поля ввода.
+ * @remark
+ * В опцию будет передан value - значение в поле ввода
+ * @demo Controls-demo/dateNew/RightFieldTemplate/Index
+ */
+
 class Input extends Control<IDateInput> {
     protected _template: TemplateFunction = template;
     protected _proxyEvent: Function = EventUtils.tmplNotify;
