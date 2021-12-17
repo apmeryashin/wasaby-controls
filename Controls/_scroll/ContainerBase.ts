@@ -891,11 +891,11 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 this._topPlaceholderSize :
                 0);
             if (scrollParam === 'bottom') {
-                this._setScrollTop(scrollHeight - clientHeight);
+                this._setScrollTop(scrollHeight - clientHeight, false, true);
             } else if (scrollParam === 'pageUp') {
                 // Скроллим на минимально возможное значение
                 const newScrollTop = currentScrollTop < clientHeight ? 0 : currentScrollTop - clientHeight;
-                this._setScrollTop(newScrollTop);
+                this._setScrollTop(newScrollTop, false, true);
             } else if (scrollParam === 'pageDown') {
                 let newScrollTop = currentScrollTop + clientHeight;
                 // Скроллим на максимально возможное значение
@@ -903,7 +903,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 if (newScrollTop > scrollHeight - clientHeight) {
                     newScrollTop = scrollHeight - clientHeight;
                 }
-                this._setScrollTop(newScrollTop);
+                this._setScrollTop(newScrollTop, false, true);
             } else if (typeof scrollParam === 'number') {
                 this._setScrollTop(scrollParam, false, isVirtual);
             }
