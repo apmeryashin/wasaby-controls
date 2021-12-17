@@ -14,6 +14,7 @@ interface IWeekdayFormatter extends IControlOptions, IValueOptions {
  * @class Controls/_date/WeekdayFormatter
  * @public
  * @author Красильников А.С.
+ * @implements Controls/interface:IFontColorStyle
  * @demo Controls-demo/dateRange/WeekdayFormatter/Index
  *
  */
@@ -44,4 +45,19 @@ export default class WeekdayFormatter extends Control<IWeekdayFormatter> {
             this._weekday = '';
         }
     }
+
+    static getDefaultOptions(): object {
+        return {
+            fontColorStyle: 'label'
+        };
+    }
 }
+
+Object.defineProperty(WeekdayFormatter, 'defaultProps', {
+    enumerable: true,
+    configurable: true,
+
+    get(): object {
+        return WeekdayFormatter.getDefaultOptions();
+    }
+});
