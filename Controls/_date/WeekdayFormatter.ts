@@ -46,18 +46,7 @@ export default class WeekdayFormatter extends Control<IWeekdayFormatter> {
         }
     }
 
-    static getDefaultOptions(): object {
-        return {
-            fontColorStyle: 'label'
-        };
-    }
+    static defaultProps: object = {
+        fontColorStyle: 'label'
+    };
 }
-
-Object.defineProperty(WeekdayFormatter, 'defaultProps', {
-    enumerable: true,
-    configurable: true,
-
-    get(): object {
-        return WeekdayFormatter.getDefaultOptions();
-    }
-});
