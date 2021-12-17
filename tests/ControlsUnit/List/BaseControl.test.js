@@ -859,7 +859,8 @@ define([
                         className: 'controls-ListView__itemV'
                      }]
                   }
-               })
+               }),
+               closest: () => null
             };
             return instance._beforeMount(cfg);
          }
@@ -1571,7 +1572,8 @@ define([
             await _baseControl._beforeMount(config);
             _baseControl._container = {
                clientHeight: 100,
-               getBoundingClientRect: () => ({ y: 0 })
+               getBoundingClientRect: () => ({ y: 0 }),
+               closest: () => null
             };
             return _baseControl;
          };
@@ -1993,7 +1995,8 @@ define([
                });
 
                ctrl._container = {
-                  clientHeight: 100
+                  clientHeight: 100,
+                  closest: () => null
                };
                ctrl._editInPlaceInputHelper = {
                   shouldActivate: () => {}
@@ -2972,7 +2975,8 @@ define([
                         className: 'controls-ListView__itemV'
                      }]
                   }
-               })
+               }),
+               closest: () => null
             };
             await instance._beforeMount(cfg);
             lists.BaseControl._private.updateItemActions(instance, cfg);
