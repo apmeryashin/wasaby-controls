@@ -259,7 +259,7 @@ export class StickyStrategy {
    private _moveContainer(popupCfg: IStickyPositionConfig, position: IPopupPosition,
                           sizeProperty: TSizeProperty, positionOverflow: number): void {
       const positionProperty = Object.keys(position)[0];
-      let overflow = positionOverflow;
+      let overflow = Math.ceil(positionOverflow);
       // Reset position and overflow, if the original position is outside of the window
       if (position[positionProperty] < 0) {
          position[positionProperty] = overflow = 0;
