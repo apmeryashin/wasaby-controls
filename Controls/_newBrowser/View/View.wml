@@ -19,6 +19,7 @@
                     on:beforeItemsMove="_notifyHandler('masterBeforeItemsMove')"
                     on:actionClick="_notifyHandler('masterActionClick')"
                     on:itemClick="_onExplorerItemClick(true)"
+                    on:expandedItemsChanged="_notifyHandler('masterExpandedItemsChanged')"
                     on:changeDragTarget="_notifyHandler('masterChangeDragTarget')"
             />
         </Controls.list:Container>
