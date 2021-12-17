@@ -1,110 +1,50 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">Статическая вертикальная раскладка</div>
-        <div class="controls__block-layout controls__block-layout-background">
-            <div class="controls__block-layout-item">
-                <div class="controlsDemo-newBlocks__block">1</div>
-            </div>
-            <div class="controls__block-layout-item">
-                <div class="controlsDemo-newBlocks__block">2</div>
-            </div>
-            <div class="controls__block-layout-item">
-                <div class="controlsDemo-newBlocks__block">3</div>
-            </div>
-        </div>
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Classes/Blocks/Layout/VerticalBackground/Index' }}">
+            <a href="{{content.href}}">Статическая вертикальная раскладка</a>
+        </Router.router:Reference>
+        <Controls-demo.Classes.Blocks.Layout.VerticalBackground.Index/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">Статическая вертикальная раскладка. Блоки заполняют предоставленную область не полностью.</div>
-        <div class="controls__block-layout" style="height: 600px;">
-            <div class="controls__block-layout-item">
-                <div class="controlsDemo-newBlocks__block">1</div>
-            </div>
-            <div class="controls__block-layout-item">
-                <div class="controlsDemo-newBlocks__block">2</div>
-            </div>
-        </div>
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Classes/Blocks/Layout/Vertical/Index' }}">
+            <a href="{{content.href}}">Статическая вертикальная раскладка. Блоки заполняют предоставленную область не полностью.</a>
+        </Router.router:Reference>
+        <Controls-demo.Classes.Blocks.Layout.Vertical.Index/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">Статическая горизонтальная раскладка</div>
-        <div class="controls__block-layout controls__block-layout-background">
-            <div class="ws-flexbox">
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">1</div>
-                </div>
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">2</div>
-                </div>
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">3</div>
-                </div>
-            </div>
-        </div>
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Classes/Blocks/Layout/Horizontal/Index' }}">
+            <a href="{{content.href}}">Статическая горизонтальная раскладка</a>
+        </Router.router:Reference>
+        <Controls-demo.Classes.Blocks.Layout.Horizontal.Index/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">Статическая смешанная раскладка</div>
-        <div class="controls__block-layout controls__block-layout-background">
-            <div class="ws-flexbox">
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">1</div>
-                </div>
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">2</div>
-                </div>
-            </div>
-            <div class="ws-flexbox">
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">3</div>
-                </div>
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">4</div>
-                </div>
-            </div>
-            <div class="controls__block-layout-item">
-                <div class="controlsDemo-newBlocks__block">5</div>
-            </div>
-        </div>
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Classes/Blocks/Layout/Mixed/Index' }}">
+            <a href="{{content.href}}">Статическая смешанная раскладка</a>
+        </Router.router:Reference>
+        <Controls-demo.Classes.Blocks.Layout.Mixed.Index/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">Динамическая раскладка</div>
-        <div class="controls__block-layout controls__block-layout-background">
-            <div class="ws-flexbox ws-flex-wrap">
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">1</div>
-                </div>
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">2</div>
-                </div>
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">3</div>
-                </div>
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">4</div>
-                </div>
-                <div class="controls__block-layout-item ws-flex-grow-1">
-                    <div class="controlsDemo-newBlocks__block">5</div>
-                </div>
-            </div>
-        </div>
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Classes/Blocks/Layout/Dinamic/Index' }}">
+            <a href="{{content.href}}">Динамическая раскладка</a>
+        </Router.router:Reference>
+        <Controls-demo.Classes.Blocks.Layout.Dinamic.Index/>
     </div>
-
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">Две колонки. Вторая объединена.</div>
-        <div class="controls__block-layout" style="height: 600px;">
-            <div class="ws-flexbox">
-                <div class="ws-flexbox ws-flex-column ws-flex-grow-1">
-                    <div class="controls__block-layout-item">
-                        <div class="controlsDemo-newBlocks__block">1</div>
-                    </div>
-                    <div class="controls__block-layout-item">
-                        <div class="controlsDemo-newBlocks__block">2</div>
-                    </div>
-                </div>
-                <div class="ws-flex-grow-1 ws-flexbox ws-flex-column">
-                    <div class="controls__block-layout-item ws-flex-grow-1">
-                        <div class="controlsDemo-newBlocks__block">3</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Classes/Blocks/Layout/TwoColumn/Index' }}">
+            <a href="{{content.href}}">Две колонки. Вторая объединена.</a>
+        </Router.router:Reference>
+        <Controls-demo.Classes.Blocks.Layout.TwoColumn.Index/>
     </div>
 </div>
