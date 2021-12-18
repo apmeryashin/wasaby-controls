@@ -22,9 +22,10 @@ export default class ControllerContextConsumer extends Control<IOptions> {
       options: IOptions,
       context: IFilterPanelOptionsConsumerContext
    ): void {
-      this._items = options.items ?? context.filterPanelOptionsField.items;
+      // TODO контекста нет в большинстве случаев использования, его надо удалить
+      this._items = options.items ?? context.filterPanelOptionsField?.items;
       this._historyId =
-         options.historyId ?? context.filterPanelOptionsField.historyId;
+         options.historyId ?? context.filterPanelOptionsField?.historyId;
    }
 
    protected _beforeUpdate(
@@ -33,9 +34,9 @@ export default class ControllerContextConsumer extends Control<IOptions> {
    ): void {
       // всегда присваиваю новое значение, чтобы не костылять со сложными проверками
       this._items =
-         newOptions.items ?? newContext.filterPanelOptionsField.items;
+         newOptions.items ?? newContext.filterPanelOptionsField?.items;
       this._historyId =
-         newOptions.historyId ?? newContext.filterPanelOptionsField.historyId;
+         newOptions.historyId ?? newContext.filterPanelOptionsField?.historyId;
    }
 
    static contextTypes(): object {
