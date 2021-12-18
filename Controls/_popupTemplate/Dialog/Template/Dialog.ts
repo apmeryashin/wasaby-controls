@@ -101,6 +101,13 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         this._children.dragNDrop.startDragNDrop(null, event);
     }
 
+    protected _getWrapperBackgroundColorClass(): string {
+        if (this._options.headerBackgroundStyle === this._options.backgroundStyle) {
+            return `controls-background-${this._options.backgroundStyle}`;
+        }
+        return '';
+    }
+
     static getDefaultOptions(): IDialogTemplateOptions {
         return {
             headingFontColorStyle: 'secondary',
