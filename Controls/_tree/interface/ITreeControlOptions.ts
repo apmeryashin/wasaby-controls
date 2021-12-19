@@ -60,6 +60,35 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  */
 
 /**
+ * @name Controls/_tree/interface/ITreeControl#itemTemplate
+ * @cfg {Function} Пользовательский шаблон отображения элемента.
+ * @default undefined
+ * @markdown
+ * @remark
+ * Позволяет установить пользовательский шаблон отображения элемента. При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tree:ItemTemplate}. Шаблон Controls/tree:ItemTemplate поддерживает {@link Controls/tree:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
+ *
+ * Дополнительно о работе с шаблоном вы можете прочитать в {@link /doc/platform/developmentapl/interface-development/controls/list/tree/item/ руководстве разработчика}.
+ * @example
+ * <pre class="brush: html">
+ * <Controls.tree:View>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/tree:ItemTemplate" highlightOnHover="{{false}}" />
+ *    </ws:itemTemplate>
+ * </Controls.tree:View>
+ * </pre>
+ * @see Controls/_tree/interface/ITreeControl#itemTemplateProperty
+ * @see Controls/tree:ItemTemplate
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#itemTemplateProperty
+ * @cfg {String} Имя поля элемента, которое содержит Путь к {@link Controls/_tree/interface/ITreeControl#itemTemplate шаблону отображения элемента}. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
+ * @remark
+ * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/_tree/interface/ITreeControl#itemTemplate itemTemplate}.
+ * @see Controls/_tree/interface/ITreeControl#itemTemplate
+ */
+
+/**
  * @name Controls/_tree/interface/ITreeControl#expandByItemClick
  * @cfg {Boolean} Развертывание узлов кликом по элементу в {@link Controls/treeGrid:View дереве с колонками}.
  * @default false

@@ -1,3 +1,5 @@
+import { TemplateFunction } from 'UI/Base';
+
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/tile:View плитке}.
  * @class Controls/_tile/interface/ItemTemplate
@@ -66,4 +68,9 @@ export default interface IItemTemplateOptions {
     * </pre>
     */
    border?: boolean;
+
+   /**
+    * @cfg {UI/Base:TemplateFunction} Шаблон отображения содержимого узла (папки)
+    */
+   nodeContentTemplate?: TemplateFunction;
 }
