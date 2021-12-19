@@ -28,7 +28,7 @@
                         <div>
 
                             <Controls.input:Text contrastBackground="{{true}}" value="{{item.contents.get('document')}}" on:valueChanged="onChange1('document', item.contents)" placeholder="б/н"/>
-                            <Controls.date:Input contrastBackground="{{true}}" value="{{item.contents.get('documentDate')}}" on:valueChanged="onChange1('documentDate', item.contents)"/>
+                            <Controls.date:Input contrastBackground="{{true}}"/>
                         </div>
                         <div>
                             <Controls.input:Text contrastBackground="{{true}}" value="{{item.contents.get('serviceContract')}}" on:valueChanged="onChange1('serviceContract', item.contents)"
