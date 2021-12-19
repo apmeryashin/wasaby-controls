@@ -502,12 +502,12 @@ export default class StringValueConverter {
             if (seconds > MAX_SECONDS) {
                 seconds = MAX_SECONDS;
             }
-            if (this._extendedTimeFormat) {
-                if (hours === 24) {
-                    hours = 23;
-                    minutes = 59;
-                    seconds = 59;
-                }
+        }
+        if (this._extendedTimeFormat) {
+            if (hours === 24) {
+                hours = 23;
+                minutes = 59;
+                seconds = 59;
             }
         }
 
