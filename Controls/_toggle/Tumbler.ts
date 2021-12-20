@@ -3,7 +3,7 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroupBase';
 import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
-import {IItemTemplateOptions} from 'Controls/interface';
+import {IItemTemplateOptions, IContrastBackgroundOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
 
 interface IBackgroundPosition {
@@ -19,7 +19,7 @@ interface IBackgroundPositionData {
     top: number;
 }
 
-interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
+interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IContrastBackgroundOptions {}
 
 /**
  * @name Controls/_toggle/Tumbler#direction
@@ -204,6 +204,7 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * неакцентный выбор из одного или нескольких параметров.
  * @class Controls/_toggle/Tumbler
  * @extends Controls/_toggle/ButtonGroupBase
+ * @implements Controls/interface:IContrastBackground
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Tumbler/Index
@@ -213,6 +214,12 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * @name Controls/_toggle/Tumbler#readOnly
  * @cfg
  * @demo Controls-demo/toggle/Tumbler/ReadOnly/Index
+ */
+
+/**
+ * @name Controls/_toggle/Tumbler#contrastBackground
+ * @cfg
+ * @demo Controls-demo/toggle/Tumbler/ContrastBackground/Index
  */
 
 class Tumbler extends ButtonGroupBase<ITumblerOptions> {
@@ -279,7 +286,8 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
         keyProperty: 'id',
         inlineHeight: 'default',
         itemTemplate: ItemTemplate,
-        direction: 'horizontal'
+        direction: 'horizontal',
+        contrastBackground: false
     };
 }
 
