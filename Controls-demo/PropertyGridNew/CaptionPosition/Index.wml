@@ -1,41 +1,28 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow">
-    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controls-Demo__wide-propertyGrid">
-        <div class="controls-text-label">captionPosition = left</div>
-        <Controls.propertyGrid:PropertyGrid
-                bind:editingObject="_editingObject"
-                typeDescription="{{_typeDescription}}"
-                captionPosition="left">
-            <ws:itemTemplate>
-                <ws:partial template="Controls/propertyGrid:ItemTemplate"
-                            class="controls-demo-pg-highlightOnHover-editor-padding"
-                            scope="{{itemTemplate}}"/>
-            </ws:itemTemplate>
-        </Controls.propertyGrid:PropertyGrid>
+    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/PropertyGridNew/CaptionPosition/Left/Index' }}">
+            <a href="{{content.href}}">captionPosition = left</a>
+        </Router.router:Reference>
+        <Controls-demo.PropertyGridNew.CaptionPosition.Left.Index />
     </div>
 
-    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controls-Demo__wide-propertyGrid">
-        <div class="controls-text-label">captionPosition = top</div>
-        <Controls.propertyGrid:PropertyGrid
-                bind:editingObject="_editingObject"
-                typeDescription="{{_typeDescription}}"
-                captionPosition="top">
-            <ws:itemTemplate>
-                <ws:partial template="Controls/propertyGrid:ItemTemplate"
-                            scope="{{itemTemplate}}"/>
-            </ws:itemTemplate>
-        </Controls.propertyGrid:PropertyGrid>
+    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/PropertyGridNew/CaptionPosition/Top/Index' }}">
+            <a href="{{content.href}}">captionPosition = top</a>
+        </Router.router:Reference>
+        <Controls-demo.PropertyGridNew.CaptionPosition.Top.Index />
     </div>
 
-    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controls-Demo__wide-propertyGrid">
-        <div class="controls-text-label">captionPosition = none</div>
-        <Controls.propertyGrid:PropertyGrid
-                bind:editingObject="_editingObject"
-                typeDescription="{{_typeDescription}}"
-                captionPosition="none">
-            <ws:itemTemplate>
-                <ws:partial template="Controls/propertyGrid:ItemTemplate"
-                            scope="{{itemTemplate}}"/>
-            </ws:itemTemplate>
-        </Controls.propertyGrid:PropertyGrid>
+    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/PropertyGridNew/CaptionPosition/None/Index' }}">
+            <a href="{{content.href}}">captionPosition = none</a>
+        </Router.router:Reference>
+        <Controls-demo.PropertyGridNew.CaptionPosition.None.Index />
     </div>
 </div>
