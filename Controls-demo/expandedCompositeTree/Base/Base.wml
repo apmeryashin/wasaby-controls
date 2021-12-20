@@ -20,7 +20,6 @@
                     <Controls.list:Container id="detail">
                         <Controls.expandedCompositeTree:View
                                 bind:activeElement="_activeElement"
-                                virtualScrollConfig="{{ { feature1183225611: true } }}"
                                 itemPadding="{{ { left: 'null', right: 'null', top: 'l', bottom: 'l' } }}"
                                 on:itemClick="_onItemClick()">
                             <ws:compositeViewConfig
