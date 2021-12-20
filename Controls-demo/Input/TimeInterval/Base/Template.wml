@@ -1,9 +1,5 @@
 <div class="controlsDemo__wrapper">
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">mask=MM:SS</div>
-      <Controls.input:TimeInterval bind:value="_defaultValue" mask="MM:SS"/>
-   </div>
-   <div class="controlsDemo__cell">
       <div class="controls-text-label">mask=HH:MM</div>
       <Controls.input:TimeInterval bind:value="_default1Value" mask="HH:MM"/>
    </div>
@@ -18,5 +14,9 @@
    <div class="controlsDemo__cell">
       <div class="controls-text-label">mask=HHH:MM:SS</div>
       <Controls.input:TimeInterval bind:value="_default4Value" mask="HHH:MM:SS"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">mask=MM:SS</div>
+      <Controls.input:TimeInterval bind:value="_default5Value" mask="MM:SS"/>
    </div>
 </div>
