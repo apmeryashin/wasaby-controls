@@ -204,6 +204,12 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
  */
 
 /**
+ * @name Controls/_decorator/IMoney#fontColorStyle
+ * @cfg {TFontColorStyle}
+ * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
+ */
+
+/**
  * Тип данных для форматируемого значения
  * @typedef {String | Number | Null} Controls/_decorator/IMoney/TValue
  */
