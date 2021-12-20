@@ -111,7 +111,8 @@ export default {
                 'YY-MM-DD HH:mm',
                 'YYYY',
                 'MM.YYYY'
-            ])
+            ]),
+            value: descriptor(Date, null)
         };
     }
 };
