@@ -208,7 +208,6 @@ export abstract class AbstractListVirtualScrollController<
     afterMountListControl(): void {
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
-        this._handleScheduledCheckTriggerVisibility();
     }
 
     beforeUpdateListControl(): void {
@@ -465,6 +464,11 @@ export abstract class AbstractListVirtualScrollController<
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
         this._handleChangedIndexes(params.range, params.shiftDirection, () => {
+            // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
+            // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
+            // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
+            this._scheduleCheckTriggersVisibility();
+
             // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
             // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
             // и мы будем знать актуальную scrollPosition.
@@ -484,6 +488,7 @@ export abstract class AbstractListVirtualScrollController<
      * Обрабатывает новые индексы сразу же или после выполнения текущей синхронизации.
      * Для дополнительной обработки можно передать handleAdditionallyCallback
      * @param range Новый диапазон
+     * @param shiftDirection
      * @param handleAdditionallyCallback Коллбэк с дополнительными действиями
      * @private
      */
@@ -494,10 +499,6 @@ export abstract class AbstractListVirtualScrollController<
     ): void {
         const callback = () => {
             this._scheduleUpdateItemsSizes(range);
-            // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
-            // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
-            // вызвать observerCallback. Сам колбэк не вызовется, т.к. видимость триггера не поменялась.
-            this._scheduleCheckTriggersVisibility();
             // Если меняется только endIndex, то это не вызовет изменения скролла и восстанавливать его не нужно.
             // Например, если по триггеру отрисовать записи вниз, то скролл не изменится.
             // НО когда у нас меняется startIndex, то мы отпрыгнем вверх, если не восстановим скролл.
