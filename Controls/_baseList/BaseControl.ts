@@ -3586,11 +3586,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // TODO SCROLL по идее это нужно делать после релоада.
             if (action === IObservable.ACTION_RESET) {
                 // если есть данные и вниз и вверх, то скрываем триггер вверх, т.к. в первую очередь грузим вниз
-                if (
-                    this._hasMoreData('down') &&
-                    this._hasMoreData('up') &&
-                    this._options.attachLoadTopTriggerToNull
-                ) {
+                if (this._hasMoreData('down') && this._hasMoreData('up')) {
                     this._listVirtualScrollController.setBackwardTriggerVisible(false);
                     this._listVirtualScrollController.setForwardTriggerVisible(true);
                 }
