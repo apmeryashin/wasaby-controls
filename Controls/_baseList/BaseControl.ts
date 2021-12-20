@@ -4696,7 +4696,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._sourceControllerLoadingResolver();
         }
         if (this._itemActionsController && this._itemActionsController.isSwiped()) {
-            _private.updateInitializedItemActions(this, this._options);
+            this._itemActionsController.updateSwipeConfigIfNeed(
+                this._container,
+                _private.getViewUniqueClass(this),
+                LIST_MEASURABLE_CONTAINER_SELECTOR
+            );
         }
         if (this._callbackAfterUpdate) {
             this._callbackAfterUpdate.forEach((callback) => {

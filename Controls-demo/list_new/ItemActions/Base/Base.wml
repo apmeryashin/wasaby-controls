@@ -2,6 +2,7 @@
     <Controls.list:View
             keyProperty="key"
             source="{{_viewSource}}"
+            actionAlignment="vertical"
             itemActions="{{_itemActions}}">
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">

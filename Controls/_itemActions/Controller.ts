@@ -466,6 +466,34 @@ export class Controller {
     }
 
     /**
+     * На основании размеров контейнера "свайпнутой" записи опреляет,
+     * Нужно ли обновлять её swipeConfig
+     */
+    updateSwipeConfigIfNeed(baseContainer: HTMLElement,
+                            uniqueSelector: string,
+                            measurableSelector: string): void {
+        // Для outside нет никакого динамического расчёта
+        if (this._itemActionsPosition === 'outside') {
+            return;
+        }
+        const item = this.getSwipeItem();
+        const itemKey = item.getContents().getKey();
+        const itemSelector = `.${uniqueSelector} .controls-ListView__itemV[item-key="${itemKey}"]`;
+        const itemNode = baseContainer.querySelector(itemSelector) as HTMLElement;
+
+        // Если не нашли HTML элемент по ключу записи, то просто выходим
+        if (!itemNode) {
+            return;
+        }
+        const swipeContainerSize = Controller.getSwipeContainerSize(itemNode, measurableSelector);
+        const need = this._actionsWidth !== swipeContainerSize.width ||
+            this._actionsHeight !== swipeContainerSize.height;
+        if (need) {
+            this._updateSwipeConfig(swipeContainerSize.width, swipeContainerSize.height);
+        }
+    }
+
+    /**
      * Возвращает конфиг для шаблона меню опций
      * @param item элемент коллекции, для которого выполняется действие
      * @param isActionMenu
