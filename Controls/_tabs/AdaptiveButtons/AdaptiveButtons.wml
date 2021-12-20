@@ -17,7 +17,6 @@
                                 on:mousedown="_onMouseDownHandler()">
                             <ws:contentTemplate>
                                 <ws:partial template="Controls/dropdown:inputDefaultContentTemplate"
-                                            attr:data-qa="controls-AdaptiveButtons__more"
                                             icon=""
                                             text=""
                                             hasMoreText="{[Еще]}..."/>
