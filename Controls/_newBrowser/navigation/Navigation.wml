@@ -1,0 +1,12 @@
+<div>
+    <Controls.toggle:ButtonGroup items="{{ _rootDirectories }}"
+                                 bind:selectedKey="_activeDirectoryKey"
+                                 displayProperty="{{ _options.displayProperty }}"
+                                 keyProperty="{{ _options.keyProperty }}"/>
+    <Controls.toggle:RadioGroup attr:class="controls-newBrowser__navigation-childItems"
+                                source="{{ _subdirectories }}"
+                                bind:selectedKey="_activeSubdirectoryKey"
+                                keyProperty="{{ _options.keyProperty }}"
+                                displayProperty="{{ _options.displayProperty }}"
+                                direction="horizontal"/>
+</div>

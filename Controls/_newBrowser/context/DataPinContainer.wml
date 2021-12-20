@@ -1,0 +1,8 @@
+<Controls.scroll:IntersectionObserverContainer
+   data="{{_options.data}}"
+   threshold="{{_threshold}}"
+   rootMargin="{{_rootMargin}}"
+   on:intersect="_intersectHandler()"
+>
+   <ws:partial template="{{_options.content}}"/>
+</Controls.scroll:IntersectionObserverContainer>

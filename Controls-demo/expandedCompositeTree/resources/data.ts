@@ -380,7 +380,7 @@ export const getData = () => [
         type: true,
         parent: null,
         image: '',
-        caption: 'Бизнес-ланч 07.12 с 12 до 16',
+        caption: 'Бизнес-ланч 07.12 с 12:00 до 16:00',
         renderData: {}
     },
     {
@@ -399,7 +399,7 @@ export const getData = () => [
         type: true,
         parent: null,
         image: '',
-        caption: 'Завтраки',
+        caption: 'Завтраки с 09:00 до 12:00',
         renderData: {}
     },
     {
