@@ -63,6 +63,7 @@ export default class extends Control {
             },
             {
                 name: 'owner',
+                caption: '',
                 resetValue: [],
                 value: [],
                 expanderVisible: true,
