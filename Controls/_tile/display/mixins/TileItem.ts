@@ -437,8 +437,8 @@ export default abstract class TileItem<T extends Model = Model> {
 
     /**
      * Пересчитывает тип плитки
-     * @param {TTileItem} itemType Тип плитки переданный из темплейта
-     * @param {TemplateFunction} nodeContentTemplate Темплейт контента узла
+     * @param {TTileItem} itemType Тип плитки переданный из шаблона
+     * @param {TemplateFunction} nodeContentTemplate Шаблон содержимого узла
      * @return {TTileItem} Тип плитки
      */
     getItemType(itemType: TTileItem, nodeContentTemplate?: TemplateFunction): TTileItem {
@@ -1363,13 +1363,12 @@ export default abstract class TileItem<T extends Model = Model> {
             if (this.canShowActions()) {
                 classes += ' controls-ListView__item_showActions';
             }
-            if (this.isDragged()) {
-                classes += ' controls-ListView__itemContent_dragging';
-            }
+            classes += this.getFadedClass();
             return classes;
         }
 
         classes += ' controls-TileView__itemContent js-controls-ListView__measurableContainer';
+        classes += this.getFadedClass();
 
         // TODO это значение вроде задается только для Rich темплейта всегда, нет смысла прокидывать его в опции
         if (height === 'auto') {
@@ -1414,9 +1413,6 @@ export default abstract class TileItem<T extends Model = Model> {
         }
         if (this.isAnimated()) {
             classes += ' controls-TileView__item_animated';
-        }
-        if (this.isDragged()) {
-            classes += ' controls-ListView__itemContent_dragging';
         }
         if (this.canShowActions()) {
             classes += ' controls-ListView__item_showActions';
@@ -2124,6 +2120,7 @@ export default abstract class TileItem<T extends Model = Model> {
     abstract getOwner(): Tile;
     protected abstract _notifyItemChangeToOwner(property: string): void;
     protected abstract _nextVersion(): void;
+    abstract getFadedClass(): string;
 }
 
 Object.assign(TileItem.prototype, {

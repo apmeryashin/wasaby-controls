@@ -19,7 +19,6 @@
                   source="{{ _viewSource2 }}"
                   columns="{{ _gridColumns2 }}"
                   dataLoadCallback="{{_dataLoadCallback}}"
-                  rowSeparatorVisibility="{{ true }}"
                   keyProperty="id"
                   resultsPosition="top">
                   <ws:editingConfig>

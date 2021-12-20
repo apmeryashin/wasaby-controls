@@ -30,7 +30,6 @@
       header="{{ _gridHeader2 }}"
       columns="{{ _gridColumns2 }}"
       dataLoadCallback="{{_dataLoadCallback}}"
-      rowSeparatorVisibility="{{ true }}"
       keyProperty="id"
       resultsPosition="top">
       <ws:editingConfig>
@@ -49,7 +48,6 @@
       dataLoadCallback="{{_dataLoadCallback}}"
       parentProperty="Раздел"
       nodeProperty="Раздел@"
-      rowSeparatorVisibility="{{ true }}"
       keyProperty="id">
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}"/>
@@ -61,7 +59,6 @@
       source="{{ _viewSource5 }}"
       columns="{{ _gridColumns5 }}"
       dataLoadCallback="{{_dataLoadCallback}}"
-      rowSeparatorVisibility="{{ true }}"
       keyProperty="id"
       resultsPosition="top">
       <ws:editingConfig>

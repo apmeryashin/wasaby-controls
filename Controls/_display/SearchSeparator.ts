@@ -15,6 +15,7 @@ export default class SearchSeparator<T extends Model = Model> extends Collection
     readonly '[Controls/_itemActions/interface/IItemActionsItem]': boolean = false;
 
     readonly Markable: boolean = false;
+    readonly Fadable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly EnumerableItem: boolean = false;
     readonly EdgeRowSeparatorItem: boolean = false;

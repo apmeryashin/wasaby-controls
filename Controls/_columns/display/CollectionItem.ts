@@ -74,6 +74,9 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
         if (this.isDragged()) {
             result += ' controls-ColumnsView__item_dragging';
         }
+
+        result += this.getFadedClass();
+
         if (this.isDragTargetNode()) {
             result += ' controls-ColumnsView__dragTargetNode';
         }
