@@ -3,6 +3,7 @@ import { Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import {ISelectionCountModeOptions} from 'Controls/interface';
 import {TExpanderIconSize, TExpanderIconStyle} from 'Controls/display';
+import {IOptions as ITreeOptions} from 'Controls/tree';
 
 type TNodeFooterVisibilityCallback = (item: Model) => boolean;
 
@@ -10,7 +11,7 @@ type TNodeLoadCallback = (list: RecordSet, nodeKey: number | string) => void;
 
 export type TExpanderPosition = 'default'|'right'|'custom';
 
-export interface ITreeControlOptions extends IControlOptions, ISelectionCountModeOptions {
+export interface ITreeControlOptions extends IControlOptions, ISelectionCountModeOptions, ITreeOptions {
     expandByItemClick?: boolean;
     expandedItems?: Array<number | string>;
     collapsedItems?: Array<number | string>;
@@ -159,7 +160,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
 
 /**
  * @name Controls/_tree/interface/ITreeControl#nodeFooterTemplate
- * @cfg {TemplateFunction|String|Controls/tree:INodeFooterTemplate} Пользовательский шаблон подвала развернутого узла в {@link Controls/treeGrid:View дереве с колонками}.
+ * @cfg {TemplateFunction|String|Controls/tree:NodeFooterTemplate} Пользовательский шаблон подвала развернутого узла в {@link Controls/treeGrid:View дереве с колонками}.
  * @default undefined
  * @remark
  * В области видимости шаблона доступен объект **item**. Метод **item.getNode()** возвращает узел, внутри которого отображается шаблон.
