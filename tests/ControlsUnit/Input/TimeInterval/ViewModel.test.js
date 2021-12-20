@@ -69,5 +69,35 @@ define([
             assert.equal(model._getStartingPosition(), 0);
          });
       });
+
+      describe('_timeIntervalToValueConverter', () => {
+         [{
+            mask: 'HH:MM',
+            value: new entity.TimeInterval({hours: 20, minutes: 10, seconds: 30}),
+            result: '2010'
+         }, {
+            mask: 'HH:MM:SS',
+            value: new entity.TimeInterval({hours: 20, minutes: 10, seconds: 30}),
+            result: '201030'
+         }, {
+            mask: 'HHH:MM',
+            value: new entity.TimeInterval({hours: 20, minutes: 10, seconds: 30}),
+            result: '02010'
+         }, {
+            mask: 'MM:SS',
+            value: new entity.TimeInterval({hours: 20, minutes: 10, seconds: 30}),
+            result: '1030'
+         }, {
+            mask: 'HHHH:MM:SS',
+            value: new entity.TimeInterval({hours: 20, minutes: 10, seconds: 30}),
+            result: '00201030'
+         }].forEach((test, index) => {
+            it('should correctly convert TimeInterval to string ' + index, () => {
+               const model = new ViewModel({mask: test.mask});
+               const result = model._timeIntervalToValueConverter(test.value);
+               assert.equal(test.result, result);
+            });
+         });
+      });
    });
 });

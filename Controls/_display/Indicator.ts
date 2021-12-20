@@ -25,6 +25,7 @@ export const BOTTOM_DRAWING_INDICATOR_SELECTOR = 'js-controls-BaseControl__drawi
 
 export default class Indicator extends CollectionItem<null> {
     readonly Markable: boolean = false;
+    readonly Fadable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly EnumerableItem: boolean = false;
     readonly DraggableItem: boolean = false;

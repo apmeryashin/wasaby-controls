@@ -9,6 +9,7 @@ import TreeItem from './TreeItem';
 export default class TreeNodeHeaderItem extends TreeItem<null> {
     readonly '[Controls/tree:TreeNodeHeaderItem]': boolean;
     readonly Markable: boolean = false;
+    readonly Fadable: boolean = false;
     readonly DraggableItem: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly EnumerableItem: boolean = false;

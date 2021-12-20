@@ -370,18 +370,9 @@ export interface IGridControl extends IList {
  * @default true
  */
 
-// TODO: Удалить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
 /**
- * @name Controls/_grid/display/interface/IGridControl#rowSeparatorVisibility
- * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена. Используйте опцию {@link Controls/grid:IGridControl#rowSeparatorSize rowSeparatorSize}.
- * @cfg {Boolean} Видимость разделителей строк.
- * @default false
- */
-
-/*
- * @name Controls/_grid/display/interface/IGridControl#rowSeparatorVisibility
- * @cfg {Boolean} Allows to visible or hide row separator.
- * @deprecated
+ * @name Controls/_grid/display/interface/IGridControl#stickyItemActions
+ * @cfg {Boolean} Включает прилипание операций над записью к правому краю прокручиваемой области при горизонтальном скролле.
  * @default false
  */
 
@@ -561,6 +552,35 @@ export interface IGridControl extends IList {
  * Функция возвращает количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение "end".
  * @markdown
  * @see colspanCallback
+ */
+
+/**
+ * @name Controls/_grid/display/interface/IGridControl#emptyTemplate
+ * @cfg {TemplateFunction|String} Пользовательский шаблон отображения контрола без элементов.
+ * @demo Controls-demo/gridNew/EmptyGrid/WithHeader/Index
+ * @default undefined
+ * @example
+ * В следующем примере показана настройка шаблона отображения для пустого плоского списка.
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.grid:View source="{{_viewSource}}" columns="{{_columns}}">
+ *     <ws:emptyTemplate>
+ *         <ws:partial template="Controls/grid:EmptyTemplate" topSpacing="xl" bottomSpacing="m">
+ *             <ws:contentTemplate>No data available!</ws:contentTemplate>
+ *         </ws:partial>
+ *     </ws:emptyTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * @remark
+ * Подробнее о настройка контрола без элементов читайте в соответствующих статьях для:
+ *
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/list/empty/ плоского списка}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty/ таблицы}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/empty/ дерева}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/empty/ дерева c колонками}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tile/empty/ плитки}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/empty/ иерархического проводника}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/extends/help-system/pages/ подсказки на пустых страницах}
  */
 
 /**

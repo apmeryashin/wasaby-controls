@@ -27,6 +27,7 @@ export default class DataRow<T extends Model = Model> extends Row<T> implements
     readonly DisplaySearchValue: boolean = true;
     readonly LadderSupport: boolean = true;
     readonly Markable: boolean = true;
+    readonly Fadable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly EnumerableItem: boolean = true;
     readonly EdgeRowSeparatorItem: boolean = true;

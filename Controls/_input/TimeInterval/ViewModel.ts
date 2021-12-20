@@ -84,10 +84,11 @@ export class ViewModel extends BaseViewModel {
         return result;
     }
 
-    private _timeIntervalToValueConverter(value) {
+    private _timeIntervalToValueConverter(value: TimeInterval): string {
         let hours: number | string = value.getDays() * 24 + value.getHours();
 
-        while (hours.toString().length < this._options.mask.match(/H/g).length) {
+        while (this._options.mask.match(/H/g) !== null &&
+        hours.toString().length < this._options.mask.match(/H/g).length) {
             hours = '0' + hours.toString();
         }
 
@@ -108,7 +109,11 @@ export class ViewModel extends BaseViewModel {
             } else {
                 seconds = seconds.toString();
             }
-            preResult = hours + minutes + seconds;
+            if (this._options.mask.match(/H/g) !== null) {
+                preResult = hours + minutes + seconds;
+            } else {
+                preResult = minutes + seconds;
+            }
         } else {
             preResult = hours + minutes;
         }

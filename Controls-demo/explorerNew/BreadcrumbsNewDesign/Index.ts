@@ -11,7 +11,7 @@ export default class extends Control {
    protected _columns: IColumn[] = Gadgets.getColumns();
    protected _root: string | number | null = 121;
 
-   protected _backButtonFontSize: string = 's';
+   protected _backButtonFontSize: string = '3xl';
    protected _fontSizes: RecordSet = new RecordSet({
       keyProperty: 'id',
       rawData: [

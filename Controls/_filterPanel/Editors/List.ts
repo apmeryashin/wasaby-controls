@@ -426,7 +426,8 @@ class ListEditor extends Control<IListEditorOptions> {
             textOverflow: 'ellipsis',
             fontSize: markerStyle !== 'primary' ? 'm' : 'l',
             width: 'auto',
-            template: TitleColumn
+            template: TitleColumn,
+            tooltipProperty: displayProperty
         }];
         if (imageProperty) {
             this._columns.unshift({
@@ -609,8 +610,10 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     private _setHiddenItemsCount(selectedKeys: string[]): void {
-        const hiddenItems = selectedKeys.filter((itemId) => !this._items.getRecordById(itemId));
-        this._hiddenItemsCount = hiddenItems.length;
+        if (this._options.navigation) {
+            const hiddenItems = selectedKeys.filter((itemId) => !this._items.getRecordById(itemId));
+            this._hiddenItemsCount = hiddenItems.length;
+        }
     }
 
     static getDefaultOptions(): object {

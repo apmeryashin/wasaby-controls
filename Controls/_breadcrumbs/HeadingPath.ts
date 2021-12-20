@@ -106,6 +106,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         this._items = dataConversion(options.items, this._moduleName);
         this._prepareItems(options, receivedState, getTextWidth);
 
+        this._updateBreadcrumbsSize(options.backButtonFontSize, options.fontSize);
+
         // Ветка, где построение идет на css
         if (this._breadCrumbsItems && !options.containerWidth) {
             this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
@@ -117,8 +119,6 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
             this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
             this._prepareData(options, getTextWidth);
         }
-
-        this._updateBreadcrumbsSize(options.backButtonFontSize, options.fontSize);
     }
 
     protected _beforeUpdate(newOptions: IHeadingPath): void {

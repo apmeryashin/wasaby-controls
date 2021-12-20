@@ -401,10 +401,11 @@ export default interface IDraggable {
  * @name Controls/_interface/IDraggable#changeDragTarget
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
- * @param {Types/entity:Record} target Элемент перемещения.
+ * @param {Types/entity:Record|String} target Целевой элемент перемещения.
  * @param {MovePosition} position Позиция перемещения.
  * @returns {Boolean}
  * @remark Событие можно использовать для предотвращения перемещения элемента в определенное положение.
+ * Если была произведена попытка перемещения элемента к группе, в target придёт строка.
  * @example
  * В следующем примере показано, как предотвратить изменение порядка закрепленных элементов.
  * <pre class="brush: html;">

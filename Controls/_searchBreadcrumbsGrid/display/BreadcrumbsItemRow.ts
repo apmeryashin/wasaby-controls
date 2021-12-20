@@ -22,6 +22,7 @@ export interface IOptions<T extends Model> {
 export default class BreadcrumbsItemRow<T extends Model = Model> extends GridDataRow<T> {
     readonly EditableItem: boolean = false;
     readonly Markable: boolean = false;
+    readonly Fadable: boolean = false;
 
     protected _$owner: SearchGridCollection<T>;
 

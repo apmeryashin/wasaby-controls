@@ -24,7 +24,6 @@
                         name="grid"
                         attr:class="demo-Grid__control demo-PopupEditOpener__grid"
                         itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
-                        rowSeparatorVisibility="{{true}}"
                         columns="{{_gridColumns}}"
                         header="{{_gridHeader}}"
                         displayProperty="title">

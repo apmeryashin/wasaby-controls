@@ -16,6 +16,7 @@ describe('Controls/grid_clean/Display/MultiSelectPosition/Cell', () => {
             hasItemActionsSeparatedCell: () => false,
             getEditingConfig: () => null,
             isDragged: () => false,
+            getFadedClass: () => '',
             getStickyLadder: () => false
         };
         const cell = new GridCell({

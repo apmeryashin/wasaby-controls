@@ -128,6 +128,7 @@ import ObserversController, {
 import { selectionToRecord } from './resources/utils/getItemsBySelection';
 import { checkReloadItemArgs } from 'Controls/_baseList/resources/utils/helpers';
 import { DEFAULT_TRIGGER_OFFSET } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
+import {FadeController} from 'Controls/_baseList/Controllers/FadeController';
 
 //#endregion
 
@@ -2567,6 +2568,24 @@ const _private = {
         }
     },
 
+    getFadeController(self: BaseControl, options: IList = null): FadeController {
+        if (!self._fadeController) {
+            options = options ? options : self._options;
+            self._fadeController = new FadeController({
+                model: self._listViewModel,
+                fadedKeys: options.fadedKeys
+            });
+        }
+        return self._fadeController;
+    },
+
+    updateFadeController(self: BaseControl, options: IList): void {
+        _private.getFadeController(self, options).updateOptions({
+            model: self._listViewModel,
+            fadedKeys: options.fadedKeys
+        });
+    },
+
     // region Marker
 
     hasMarkerController(self: BaseControl): boolean {
@@ -3130,10 +3149,19 @@ const _private = {
     },
 
     freezeHoveredItem(self: BaseControl, item: CollectionItem<Model> & {dispItem: CollectionItem<Model>}): void {
-        const startIndex = self._listViewModel.getStartIndex();
-        const itemIndex = self._listViewModel.getIndex(item.dispItem || item);
+        const listContainer = self.getItemsContainer();
+        // TODO HoverFreeze для ItemActions работает с виртуальным скроллом благодаря тому, что там всегда предаётся
+        //  событие mouseEnter. Надо перевести его на item-key, тогда вот это всё уйдёт туда.
+        //   https://online.sbis.ru/opendoc.html?guid=2b8e4422-4185-4ad8-834d-d1283375b385
+        const itemKey = item.getContents().getKey();
+        const itemSelector = `.${_private.getViewUniqueClass(self)} .controls-ListView__itemV[item-key="${itemKey}"]`;
+        const itemNode = self._container.querySelector(itemSelector);
 
-        const htmlNodeIndex = itemIndex - startIndex + 1;
+        if (!itemNode) {
+            return;
+        }
+
+        const htmlNodeIndex = [].indexOf.call(listContainer.children, itemNode) + 1;
         const hoveredContainers = HoverFreeze.getHoveredItemContainers(
             self._container,
             htmlNodeIndex,
@@ -3388,6 +3416,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _keepHorizontalScroll: boolean = false;
 
+    _fadeController: FadeController = null;
+
     //#endregion
 
     constructor(options, context) {
@@ -3541,7 +3571,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     const markedKey = controller.calculateMarkedKeyForVisible();
                     controller.setMarkedKey(markedKey);
                 }
-
+                if (newOptions.fadedKeys) {
+                    const fadeController = _private.getFadeController(this, newOptions);
+                    fadeController.applyStateToModel();
+                }
                 if (
                     newOptions.multiSelectVisibility !== 'hidden' &&
                     newOptions.selectedKeys &&
@@ -4709,6 +4742,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated)) {
             _private.updateItemActionsOnce(this, newOptions);
         }
+
+        _private.updateFadeController(this, newOptions);
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
@@ -7801,6 +7836,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _dragNDropEnded(event: SyntheticEvent): void {
+        // https://online.sbis.ru/opendoc.html?guid=81679655-1bde-4817-a7d6-b177242c00e8
+        if (this._destroyed) {
+            return;
+        }
+
         if (this._dndListController && this._dndListController.isDragging()) {
             const dragObject = this._getDragObject(event.nativeEvent, this._startEvent);
             this._notify('_documentDragEnd', [dragObject], {bubbling: true});

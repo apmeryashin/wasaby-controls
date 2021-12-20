@@ -3,7 +3,9 @@
            headingCaption="{{_headingCaption}}"
            headerContentTemplate="{{_options.headerContentTemplate}}">
       <ws:bodyContentTemplate>
-         <ws:partial template="{{_options.bodyContentTemplate}}" containerWidth="{{_containerWidth}}"/>
+         <ws:partial template="{{_options.bodyContentTemplate}}"
+                     containerWidth="{{_containerWidth}}"
+                     attr:class="controls-MoveDialog__content"/>
       </ws:bodyContentTemplate>
    </Controls.popupTemplate:Dialog>
 </div>

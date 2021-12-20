@@ -493,7 +493,7 @@ export interface IColumn extends IColspanParams {
      * Позволяет определить произвольный фон колонки при наведении.
      * Для отключения цвета при наведении используйте значение "transparent"
      * Для определения собственных цветов при наведении, необходимо указать специальный hoverBackgroundStyle, а
-     * также определить в своем less-файле стиль controls-Grid__item_background-hover_@{yourBackgroundStyle}_theme-@{themeName}.
+     * также определить в своем less-файле стиль controls-Grid__item_background-hover_@{yourBackgroundStyle}.
      * @see backgroundColorStyle
      */
     hoverBackgroundStyle?: string;
