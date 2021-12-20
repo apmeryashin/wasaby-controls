@@ -236,11 +236,11 @@ export abstract class AbstractListVirtualScrollController<
         this._handleScheduledScroll();
         this._handleScheduledCheckTriggerVisibility();
 
-        this._synchronizationInProgress = false;
         if (this._handleChangedIndexesAfterSynchronizationCallback) {
             this._handleChangedIndexesAfterSynchronizationCallback();
             this._handleChangedIndexesAfterSynchronizationCallback = null;
         }
+        this._synchronizationInProgress = false;
     }
 
     saveScrollPosition(): void {
@@ -560,29 +560,26 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     private _scheduleCheckTriggersVisibility() {
-        if (this._checkTriggersVisibilityTimeout) {
-            clearTimeout(this._checkTriggersVisibilityTimeout);
-        }
-
-        // Возможна ситуация, что мы сперва проверим из кода что триггер виден, а после этого отработает observer.
-        // Нужно гарантированно сперва дать отработать observer-у.
-        // requestAnimationFrame, чтобы гарантированно изменения отобразились на странице.
-        // Другой порядок не даст нам таких гарантий и либо IO не отработает, либо попадаем в цикл синхронизации.
-        window?.requestAnimationFrame(() => {
-            this._checkTriggersVisibilityTimeout = setTimeout(() => {
-                if (this._synchronizationInProgress) {
-                    this._scheduledCheckTriggersVisibility = true;
-                } else {
-                    this._scrollController.checkTriggersVisibility();
-                }
-            }, CHECK_TRIGGERS_DELAY);
-        });
+        this._scheduledCheckTriggersVisibility = true;
     }
 
     private _handleScheduledCheckTriggerVisibility(): void {
         if (this._scheduledCheckTriggersVisibility) {
             this._scheduledCheckTriggersVisibility = false;
-            this._scrollController.checkTriggersVisibility();
+
+            if (this._checkTriggersVisibilityTimeout) {
+                clearTimeout(this._checkTriggersVisibilityTimeout);
+            }
+
+            // Возможна ситуация, что мы сперва проверим из кода что триггер виден, а после этого отработает observer.
+            // Нужно гарантированно сперва дать отработать observer-у.
+            // requestAnimationFrame, чтобы гарантированно изменения отобразились на странице.
+            // Другой порядок не даст нам таких гарантий и либо IO не отработает, либо попадаем в цикл синхронизации.
+            window?.requestAnimationFrame(() => {
+                this._checkTriggersVisibilityTimeout = setTimeout(() => {
+                    this._scrollController.checkTriggersVisibility();
+                }, CHECK_TRIGGERS_DELAY);
+            });
         }
     }
 
