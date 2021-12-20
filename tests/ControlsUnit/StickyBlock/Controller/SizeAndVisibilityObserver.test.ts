@@ -1,6 +1,7 @@
 import SizeAndVisibilityObserver from 'Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver';
 import {getNextStickyId} from 'Controls/scroll';
 import * as sinon from 'sinon';
+import {assert} from 'chai';
 
 function getContainer() {
     return {
@@ -87,6 +88,48 @@ describe('SizeAndVisibilityObserver', () => {
             };
             component._getStickyHeaderElements(header);
             assert.deepEqual(component._getStickyHeaderElements(header), ['container1', 'container2']);
+        });
+    });
+
+    describe('_groupInObject', () => {
+        it('should return true if group in object', () => {
+            const group = {
+                id: 0
+            };
+            const object = {
+                1: {
+                    header: {
+                        id: 1
+                    }
+                },
+                0: {
+                    header: {
+                        id: 0
+                    }
+                }
+            };
+            const result = component._groupInObject(group, object);
+            assert.isTrue(result);
+        });
+
+        it('should return false if group in object', () => {
+            const group = {
+                id: 3
+            };
+            const object = {
+                1: {
+                    header: {
+                        id: 1
+                    }
+                },
+                0: {
+                    header: {
+                        id: 0
+                    }
+                }
+            };
+            const result = component._groupInObject(group, object);
+            assert.isFalse(result);
         });
     });
 

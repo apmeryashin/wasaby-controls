@@ -6496,7 +6496,9 @@ define([
                      rawData: data,
                      keyProperty: 'id'
                   }),
+                  getKeyProperty: () => 'id',
                   setDataLoadCallback: () => null,
+                  subscribe: () => null,
                   hasMoreData: () => false
                };
                const newCfg = {
@@ -6506,9 +6508,16 @@ define([
                   loading: true
                };
                baseControl._beforeUpdate(newCfg);
+               baseControl.saveOptions(newCfg);
 
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+
+               sourceController.isLoading = () => false;
+               baseControl._beforeUpdate(newCfg);
+
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
 
             it('set marked key after load items', async () => {
@@ -6839,7 +6848,7 @@ define([
                const item = viewModel.getItemBySourceKey(1);
                viewModel.getCollection().remove(item.getContents());
                lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rm', [], undefined, [item], 0);
-               lists.BaseControl._private.onAfterCollectionChanged(baseControl);
+               baseControl._onAfterCollectionChanged();
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [1]]).called);
             });
          });

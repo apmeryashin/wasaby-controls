@@ -530,6 +530,11 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
    private _updateBreadcrumbsFromSourceController(): void {
       const scState = this._sourceController.getState();
 
+      // Если данные теже самые, то и незачем повторно пулять событие
+      if (this._breadCrumbsItems === scState.breadCrumbsItems) {
+         return;
+      }
+
       this._breadCrumbsItems = scState.breadCrumbsItems;
       this._backButtonCaption = scState.backButtonCaption;
       this._breadCrumbsItemsWithoutBackButton = scState.breadCrumbsItemsWithoutBackButton;

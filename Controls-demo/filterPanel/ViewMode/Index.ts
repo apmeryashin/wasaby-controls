@@ -15,11 +15,10 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._filterButtonData = [
             {
-                group: 'Статус',
+                caption: 'Статус',
                 name: 'status',
                 editorTemplateName: 'Controls/filterPanel:DropdownEditor',
                 resetValue: ['1'],
-                caption: '',
                 value: ['1'],
                 textValue: '',
                 viewMode: 'basic',
@@ -40,11 +39,10 @@ export default class extends Control {
                 }
             },
             {
-                group: 'Должность',
+                caption: 'Должность',
                 name: 'position',
                 editorTemplateName: 'Controls/filterPanel:LookupEditor',
                 resetValue: ['1'],
-                caption: '',
                 value: ['1'],
                 textValue: '',
                 viewMode: 'extended',
@@ -90,10 +88,9 @@ export default class extends Control {
                     extendedCaption: 'Без рабочих групп'
                 }
             }, {
-                group: 'Пол',
+                caption: 'Пол',
                 name: 'gender',
                 resetValue: '1',
-                caption: '',
                 viewMode: 'extended',
                 value: '1',
                 textValue: 'Мужской',

@@ -307,11 +307,11 @@ export default class Button extends BaseDropdown {
                 }
             });
         } else {
-            config = Merge(this._getMenuPopupConfig(), popupOptions || {});
+            config = this._getMenuPopupConfig();
         }
         this._controller.setMenuPopupTarget(this._children.content);
 
-        return this._controller.openMenu(config);
+        return this._controller.openMenu(Merge(config, popupOptions || {}));
     }
 
     openMenu(popupOptions?: IStickyPopupOptions, key?: TKey): Promise<any> {
@@ -328,7 +328,7 @@ export default class Button extends BaseDropdown {
                 templateOptions: {
                     closedSubMenuKey: key
                 }
-            })
+            });
         } else {
             this._controller.closeMenu();
         }
@@ -362,7 +362,7 @@ export default class Button extends BaseDropdown {
     }
 
     protected _deactivated(): void {
-        if (this._options.closeMenuOnOutsideClick) {
+        if (this._controller.getPopupOptions().closeOnOutsideClick ?? this._options.closeMenuOnOutsideClick) {
             this.closeMenu();
         }
     }

@@ -10,7 +10,7 @@ import {List} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {constants} from 'Env/Env';
 import {ITextOptions, IValueOptions, IBaseOptions, IPaddingOptions} from 'Controls/input';
-import {ISelectorDialogOptions, IContrastBackgroundOptions} from 'Controls/interface';
+import {ISelectorDialogOptions, IContrastBackgroundOptions, IBackgroundStyleOptions} from 'Controls/interface';
 import {isEqual} from 'Types/object';
 import {EventUtils} from 'UI/Events';
 import {ICrudPlus} from 'Types/source';
@@ -32,7 +32,8 @@ export interface ILookupInputOptions extends
     IBaseOptions,
     ISelectorDialogOptions,
     IPaddingOptions,
-    IContrastBackgroundOptions  {
+    IContrastBackgroundOptions,
+    IBackgroundStyleOptions {
     suggestSource?: ICrudPlus;
     multiLine?: boolean;
     autoDropDown?: boolean;
@@ -344,6 +345,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
             // if press backspace, the input field is empty and there are selected entries -  remove last item
             this._removeItem(items.at(items.getCount() - 1));
+            this._activateLookup(false);
         }
     }
 
@@ -418,7 +420,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
     private _subscribeOnResizeEvent(options: ILookupInputOptions): void {
         if (!this._subscribedOnResizeEvent && this._isNeedCalculatingSizes(options)) {
-            RegisterUtil(this, 'controlResize', this._resize);
+            RegisterUtil(this, 'controlResize', this._resize, {listenAll: true});
             this._subscribedOnResizeEvent = true;
         }
     }

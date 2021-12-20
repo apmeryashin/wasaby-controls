@@ -30,10 +30,9 @@ export default class extends Control {
         });
         this._filterButtonSource = [
             {
-                group: 'Отдел',
+                caption: 'Отдел',
                 name: 'department',
                 resetValue: [],
-                caption: '',
                 value: [],
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',

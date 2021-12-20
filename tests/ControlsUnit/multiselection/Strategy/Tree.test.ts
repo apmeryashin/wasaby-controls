@@ -218,7 +218,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
          const result = strategyWithDescendantsAndAncestors.unselect({selected: [2], excluded: []}, 1);
          assert.deepEqual(result, {selected: [], excluded: []});
-         assert.deepEqual(entryPath, [{id: 1, parent: null}]);
+         assert.deepEqual(entryPath, []);
       });
 
       it('unselect last node with childs when all is selected', () => {
@@ -282,6 +282,37 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
          const newSelection = strategy.unselect({ selected: [null], excluded: [null] }, 21);
          assert.deepEqual(newSelection, {selected: [null], excluded: [null, 21]});
+      });
+
+      it('unselect child when deep inside selected node', () => {
+         const items = new RecordSet({
+            rawData: [
+               {id: 111, parent: 11, node: null},
+               {id: 112, parent: 11, node: null}
+            ],
+            keyProperty: 'id'
+         });
+         const model = new Tree({
+            collection: items,
+            root: 11,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'node'
+         });
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: 11,
+            model,
+            selectionType: 'all',
+            recursiveSelection: false,
+            entryPath: []
+         });
+
+         let selection = { selected: [1], excluded: [] };
+         selection = strategy.unselect(selection, 111);
+         assert.deepEqual(selection.selected, [1]);
+         assert.deepEqual(selection.excluded, [111]);
       });
 
       it('search model', () => {
@@ -586,7 +617,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          strategy._rootId = 2;
          let selection = { selected: [2, 5], excluded: [2, 3] };
          selection = strategy.unselectAll(selection);
-         assert.deepEqual(selection.selected, [5]);
+         assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
       });
 

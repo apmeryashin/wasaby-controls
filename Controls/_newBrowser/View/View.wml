@@ -19,6 +19,7 @@
                     on:beforeItemsMove="_notifyHandler('masterBeforeItemsMove')"
                     on:actionClick="_notifyHandler('masterActionClick')"
                     on:itemClick="_onExplorerItemClick(true)"
+                    on:expandedItemsChanged="_notifyHandler('masterExpandedItemsChanged')"
                     on:changeDragTarget="_notifyHandler('masterChangeDragTarget')"
             />
         </Controls.list:Container>
@@ -40,9 +41,9 @@
                     tileCfg="{{_tileCfg}}"
                     listCfg="{{_listCfg}}"
                     loading="{{_detailLoading}}"
-                    imageViewMode="{{_getImageViewMode(viewMode)}}"
-                    nodeImageViewMode="{{_getNodeImageViewMode(viewMode)}}"
-                    imagePosition="{{_getImagePosition(viewMode)}}"
+                    imageViewMode="{{_getImageViewMode(_getViewModeForItemTemplate())}}"
+                    nodeImageViewMode="{{_getNodeImageViewMode(_getViewModeForItemTemplate())}}"
+                    imagePosition="{{_getImagePosition(_getViewModeForItemTemplate())}}"
                     attr:class="controls-newBrowser__detail-list"
                     on:itemClick="_onExplorerItemClick(false)"
                     on:viewModeChanged="_onDetailExplorerChangedViewMode()"
@@ -55,9 +56,9 @@
             <Controls.list:Container id="detail">
                 <Controls.list:HotKeysContainer>
                     <Controls.listTemplates:ImageDisplayContainer scope="{{_detailExplorerOptions}}"
-                                                                  imageViewMode="{{_getImageViewMode(viewMode)}}"
-                                                                  nodeImageViewMode="{{_getNodeImageViewMode(viewMode)}}"
-                                                                  imagePosition="{{_getImagePosition(viewMode)}}"
+                                                                  imageViewMode="{{_getImageViewMode(_getViewModeForItemTemplate())}}"
+                                                                  nodeImageViewMode="{{_getNodeImageViewMode(_getViewModeForItemTemplate())}}"
+                                                                  imagePosition="{{_getImagePosition(_getViewModeForItemTemplate())}}"
                                                                   columns="{{_columns}}">
                         <ws:content>
                             <Controls.explorer:View

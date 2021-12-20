@@ -143,7 +143,7 @@ export class StickyController extends BaseController {
         if (scrollContainer) {
             const targetDimensions = getDimensions(target);
             const scrollDimensions = getDimensions(scrollContainer);
-            if (targetDimensions.top < scrollDimensions.top || targetDimensions.top > scrollDimensions.bottom) {
+            if (targetDimensions.bottom < scrollDimensions.top || targetDimensions.top > scrollDimensions.bottom) {
                 return false;
             } else {
                 // Может возникнуть ситуация, когда окно находится в нескольких вложенных scrollContainer.

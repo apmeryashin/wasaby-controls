@@ -2,6 +2,8 @@ import {IBasePopupOptions} from 'Controls/_popup/interface/IBaseOpener';
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import * as randomId from 'Core/helpers/Number/randomId';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
+import PopupPageController from 'Controls/_popup/Page/Controller';
+import {PageController} from 'Controls/dataSource';
 import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
 import {IndicatorOpener} from 'Controls/LoadingIndicator';
 import {Logger} from 'UI/Utils';
@@ -57,11 +59,13 @@ export default class Base {
                     this._closeHandler();
                 }
             };
-            if (config.dataLoaders) {
-                return BaseOpenerUtil.getManagerWithCallback(() => {
-                    config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
-                    this._openPopup(config);
-                });
+            if (config.pageId) {
+                // TODO COMPATIBLE
+                if (!isNewEnvironment()) {
+                    PopupPageController.setPageTemplate('SabyPage/popup:Template');
+                    PageController.setPageConfigLoaderModule('SabyPage/base:ConfigLoader');
+                    PageController.setDataLoaderModule('SabyPage/base:PrefetchLoader');
+                }
             }
             this._openPopup(config);
         });

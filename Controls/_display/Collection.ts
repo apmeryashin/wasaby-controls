@@ -3,6 +3,7 @@ import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
 import GroupItem from './GroupItem';
+import EmptyTemplateItem from './EmptyTemplateItem';
 import {Model, Model as EntityModel} from 'Types/entity';
 import IItemsStrategy from './IItemsStrategy';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
@@ -721,6 +722,8 @@ export default class Collection<
     protected _$bottomPadding: string;
 
     protected _$roundBorder: IRoundBorder;
+
+    protected _emptyTemplateItem: EmptyTemplateItem;
 
     protected _$emptyTemplate: TemplateFunction;
 
@@ -1748,6 +1751,11 @@ export default class Collection<
     }
 
     setGroupProperty(groupProperty: string): boolean {
+        // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
+        // https://online.sbis.ru/opendoc.html?guid=37b14566-12c3-44ed-ac0b-0cd7e0ae5c9d
+        if (this._disableSupportsGrouping) {
+            return;
+        }
         if (this._$groupProperty !== groupProperty) {
             this._$groupProperty = groupProperty;
             const groupCallback = this._createGroupFunctor();
@@ -1806,6 +1814,11 @@ export default class Collection<
      * @see getGroup
      */
     setGroup(group?: GroupFunction<S, T>): void {
+        // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
+        // https://online.sbis.ru/opendoc.html?guid=37b14566-12c3-44ed-ac0b-0cd7e0ae5c9d
+        if (this._disableSupportsGrouping) {
+            return;
+        }
         if (this._$group === group) {
             return;
         }
@@ -2559,9 +2572,21 @@ export default class Collection<
         return this._$rightPadding;
     }
 
+    getEmptyTemplateItem(): EmptyTemplateItem {
+        if (!this._emptyTemplateItem && this._$emptyTemplate) {
+            this._emptyTemplateItem = new EmptyTemplateItem({
+                owner: this,
+                template: this._$emptyTemplate,
+                templateOptions: this._$emptyTemplateOptions
+            });
+        }
+        return this._emptyTemplateItem;
+    }
+
     setEmptyTemplate(emptyTemplate: TemplateFunction): boolean {
         if (this._$emptyTemplate !== emptyTemplate) {
             this._$emptyTemplate = emptyTemplate;
+            this._emptyTemplateItem = null;
             this._nextVersion();
             return true;
         }

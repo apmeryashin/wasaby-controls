@@ -106,7 +106,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._additionalFilter = MenuControl._additionalFilterCheck.bind(this, options);
         this._limitHistoryFilter = this._limitHistoryCheck.bind(this);
 
-        this._dataName = options.dataName + '_level_' + options.subMenuLevel;
+        this._dataName = options.dataName + '_root_' + options.root;
 
         this._stack = new StackOpener();
 
@@ -129,7 +129,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _afterMount(): void {
         if (this._options.menuOpenedCallback) {
-            this._options.menuOpenedCallback();
+            this._options.menuOpenedCallback(this._options.root);
         }
     }
 
@@ -237,15 +237,28 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>,
                               item: CollectionItem<Model>,
-                              sourceEvent: SyntheticEvent<MouseEvent>): void {
+                              sourceEvent: SyntheticEvent<MouseEvent>) {
+        if (this._isNeedStartOpening(item, sourceEvent)) {
+            // mousemove всплывает с внутренних элементов, из-за чего будет неправильно определен target
+            // поэтому сохраняем target на mouseenter
+            this._hoveredTarget = sourceEvent.target;
+        }
+    }
+
+    private _isNeedStartOpening(item: CollectionItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): boolean {
         // menu:Control могут положить в пункт меню, от такого пунта открывать подменю не нужно
         // TODO: https://online.sbis.ru/opendoc.html?guid=6fdbc4ca-d19a-46b3-ad68-24fceefa8ed0
-        if (item.getContents() instanceof Model && !this._isTouch() &&
+        return item.getContents() instanceof Model && !this._isTouch() &&
             !this._options.isDragging &&
-            sourceEvent.target.closest('.controls-menu') === this._container) {
-            this._clearClosingTimout();
-            this._setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
+            sourceEvent.target.closest('.controls-menu') === this._container;
+    }
 
+    protected _itemMouseMove(event: SyntheticEvent<MouseEvent>,
+                             item: CollectionItem<Model>,
+                             sourceEvent: SyntheticEvent<MouseEvent>): void {
+        if (this._isNeedStartOpening(item, sourceEvent) && this._subDropdownItem !== item) {
+            this._clearClosingTimout();
+            this._setItemParamsOnHandle(item, sourceEvent.nativeEvent);
             this._checkOpenedMenu(sourceEvent.nativeEvent, item);
             this._startOpeningTimeout();
         }
@@ -430,6 +443,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         } else {
             this._listModel.addFilter(toggleFilter);
         }
+        if (this._options.trigger === 'hover') {
+            this._notify('expanderClick', [this._expander]);
+        }
         // TODO after deleting additionalProperty option
         // if (value) {
         //     if (this._expandedItems) {
@@ -536,10 +552,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _setItemParamsOnHandle(
         item: CollectionItem<Model>,
-        target: EventTarget,
         nativeEvent: MouseEvent): void {
         this._hoveredItem = item;
-        this._hoveredTarget = target;
         this._enterEvent = nativeEvent;
     }
 
@@ -1052,9 +1066,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return hasAdditional;
     }
 
-    private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: string): void {
-        const dataName = this._dataName + '_item_' + key;
-        const target = this._container.querySelector(`[data-name=${dataName}]`);
+    private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: string) {
+        const dataName = this._options.dataName + '_item_' + key;
+        const target = this._container.querySelector(`[data-target=${dataName}]`);
         const item = this._listModel.getItemBySourceKey(key);
         if (item && this._canOpenSubMenu(item)) {
             this._preventCloseSubMenu = true;

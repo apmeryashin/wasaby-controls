@@ -1,6 +1,7 @@
 <ws:template name="menuPopup" >
    <div class="controls_dropdownPopup_theme-{{_options.theme}} controls-Menu__popup"
         on:mouseEnter="_mouseEvent()"
+        on:mouseMove="_mouseEvent()"
         on:mouseLeave="_mouseEvent()">
       <Controls.popupTemplate:Sticky
               attr:class="controls-Popup__isolatedFocusingContext
@@ -26,12 +27,14 @@
               draggable="{{_options.draggable}}"
               backgroundStyle="transparent"
               borderStyle="{{_options.borderStyle}}"
+              hoverBorderStyle="{{_options.hoverBorderStyle}}"
               borderSize="{{_options.borderSize}}"
               searchPlaceholder="{{_options.searchPlaceholder}}"
               minSearchLength="{{_options.minSearchLength}}"
               searchDelay="{{_options.searchDelay}}"
               headerBackgroundStyle="transparent"
               markerVisibility="{{_options.markerVisibility}}"
+              verticalDirection="{{_verticalDirection}}"
               on:mouseenter="_mouseEnterHandler()"
               on:headerMouseEnter="_headerMouseEnter()"
               on:headerClick="_headerClick()"
@@ -130,6 +133,7 @@
                        openedSubMenuKey="{{_options.openedSubMenuKey}}"
                        openedSubMenuOptions="{{_options.openedSubMenuOptions}}"
                        closedSubMenuKey="{{_options.closedSubMenuKey}}"
+                       footerContentTemplate="{{footerContent}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:rightTemplateClick="_sendResult('rightTemplateClick')"
                        on:moreButtonClick="_sendResult('selectorDialogOpened')"
@@ -138,6 +142,7 @@
                        on:beforeSubMenuOpen="_prepareSubMenuConfig()"
                        on:selectedItemsChanged="_setSelectedItems()"
                        on:subMenuMouseenter="_sendResult('subMenuMouseenter')"
+                       on:expanderClick="_expanderClick()"
                />
             </div>
          </ws:bodyContentTemplate>

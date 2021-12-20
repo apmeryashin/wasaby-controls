@@ -9,12 +9,13 @@
                 </div>
             </div>
         </ws:if>
-        <ws:else>
+        <ws:else data="{{item.contents[column.config.displayProperty] !== undefined}}">
             <div class="controls-EditorList__additional-column">
                 <Controls.Container.Async templateName="Controls/decorator:Number">
                     <ws:partial template="{{ content.resolvedTemplate }}"
                                 value="{{item.contents[column.config.displayProperty]}}"
-                                precision="{{3}}"/>
+                                precision="{{3}}"
+                                fontSize="m"/>
                 </Controls.Container.Async>
             </div>
         </ws:else>

@@ -104,6 +104,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         this._items = dataConversion(options.items, this._moduleName);
         this._prepareItems(options, receivedState, getTextWidth);
 
+        this._updateBreadcrumbsSize(options.backButtonFontSize, options.fontSize);
+
         // Ветка, где построение идет на css
         if (this._breadCrumbsItems && !options.containerWidth) {
             this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
@@ -115,8 +117,6 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
             this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
             this._prepareData(options, getTextWidth);
         }
-
-        this._updateBreadcrumbsSize(options.backButtonFontSize, options.fontSize);
     }
 
     protected _beforeUpdate(newOptions: IHeadingPath): void {
@@ -196,6 +196,38 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
 
         const lastItem = items[items.length - 1];
         return lastItem?.get('counterCaption');
+    }
+
+    /**
+     * На основании размера шрифта кнопки "Назад" возвращает необходимый размер для кнопки меню.
+     */
+    protected _getPathButtonHeight(): string {
+        switch (this._options.backButtonFontSize) {
+            case 's':
+            case 'm':
+                return 's';
+            case 'l':
+            case 'xl':
+            case '2xl':
+            case '3xl':
+            case '4xl':
+                return 'm';
+            case '5xl':
+            case '6xl':
+            case '7xl':
+                return 'l';
+            default:
+                return 'm';
+        }
+    }
+
+    /**
+     * Вернет true, если иконка действия (шеврон) в кнопке "Назад" должна показываться дез наезда на её заголовок.
+     * Шеврон показыватется без наезда только если полсе кнопки нет никакого содерхимого (иконка "домик",
+     * хлебные крошки или кнопка меню).
+     */
+    protected _isActionButtonOutside(): boolean {
+        return !this._breadCrumbsItems && !this._options.rootVisible && !this._options.feature1182709671;
     }
 
     private _getCrumbsWidth(options: IHeadingPath, getTextWidth: Function = this._getTextWidth): {backButtonWidth: number, breadCrumbsWidth: number} {

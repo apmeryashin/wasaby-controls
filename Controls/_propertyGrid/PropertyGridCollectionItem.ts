@@ -6,6 +6,7 @@ import * as getType from 'Core/helpers/getType';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {IGridCollectionOptions} from 'Controls/grid';
+import {ILabelOptions} from 'Controls/input';
 
 /**
  * Элемент коллеции propertyGrid
@@ -57,12 +58,13 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         const classes = [];
         const editorClass = itemContents.get('editorClass');
         const caption = itemContents.get('caption');
+        const captionPosition = this.getOwner().getCaptionPosition();
 
         if (editorClass) {
             classes.push(editorClass);
         }
 
-        if (!caption || this.getOwner().getCaptionPosition() === 'top') {
+        if (!caption || captionPosition === 'top' || captionPosition === 'none') {
             classes.push('controls-PropertyGrid__editor-withoutCaption');
         }
 
@@ -79,7 +81,8 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         if (gridColumnIndex !== 1) {
             classes += ` controls-PropertyGrid__editor_spacingRight_${owner.getRightPadding()}`;
         }
-        if (gridColumnIndex !== 2 || !itemContents.get('caption') || editorOptions?.jumpingLabel) {
+        if (gridColumnIndex !== 2 ||
+            !(itemContents.get('caption') || itemContents.get('isEditable')) || editorOptions?.jumpingLabel) {
             classes += ` controls-PropertyGrid__editor_spacingLeft_${owner.getLeftPadding()}`;
         }
         return classes;

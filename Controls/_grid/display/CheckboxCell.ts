@@ -35,6 +35,18 @@ export default class CheckboxCell<
             ' controls-GridView__checkbox_position-default' +
             ' controls-Grid__row-cell-checkbox';
 
+        if (this.isFirstColumn()) {
+            wrapperClasses += ` controls-Grid__row-cell__first-${this.getStyle()}`;
+        }
+
+        if (this.isLastColumn()) {
+            wrapperClasses += ` controls-Grid__row-cell__last-${this.getStyle()}`;
+        }
+
+        if (this.getOwner().shouldDisplayMarker()) {
+            wrapperClasses += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${this.getStyle()}`;
+        }
+
         if (this.isEditing()) {
             wrapperClasses += ' controls-Grid__row-cell-editing';
         }

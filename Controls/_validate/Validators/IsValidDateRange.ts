@@ -8,11 +8,12 @@ const additionalYears = 1000;
 const MAX_YEAR_VALUE =  new Date().getFullYear() + additionalYears;
 
 /**
- * Функция, позволяющая проверить период на валидность.
+ * Функция проверяет, что начало периода не больше конца периода.
  * @class Controls/_validate/Validators/IsValidDateRange
- * @private
+ * @public
  * @author Красильников А.С.
  * @remark
+ * Валидатор используется по умолчанию в платформенных полях ввода даты и времени, задавать его вручную не нужно.
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  *
  * Аргументы функции:

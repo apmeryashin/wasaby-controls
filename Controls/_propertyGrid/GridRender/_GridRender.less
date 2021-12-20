@@ -21,26 +21,9 @@
 .controls-PropertyGrid__gridLayout_editor {
    position: relative;
    display: flex;
+   flex-direction: row;
    min-width: 0;
    max-width: 100%;
-}
-
-.controls-PropertyGrid__gridLayout_editor_control_wrapper {
-   display: inline-flex;
-   width: 100%;
-   min-width: 0;
-}
-
-.controls-PropertyGrid__gridLayout_editor_direction_column {
-   flex-direction: column;
-}
-
-.controls-PropertyGrid__gridLayout_editor_direction_row {
-   flex-direction: row;
-}
-
-.controls-PropertyGrid__gridLayout_editor_justify_center {
-   justify-content: center;
 }
 
 .controls-PropertyGrid__gridLayout_editor-caption-baseline {
@@ -51,6 +34,7 @@
    min-width: 1px;
 }
 
+.controls-PropertyGrid__cell_editing,
 .controls-PropertyGrid__cell_highlightOnHover {
    background-color: var(--hover_background-color);
 }

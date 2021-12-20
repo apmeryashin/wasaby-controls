@@ -300,4 +300,13 @@ export default interface IProperty {
      * @see validateTemplateName
      */
     validators?: TValidator[];
+
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#isEditable
+     * @cfg {Boolean} Определяет, возможно ли редактирование текста метки редактора.
+     * @demo Controls-demo/PropertyGridNew/Validators/Index
+     * @see caption
+     * @see editorOption
+     */
+    isEditable?: boolean;
 }

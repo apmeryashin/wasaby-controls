@@ -194,7 +194,11 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         this._notifyDragStart(this._touchDragOffset);
     }
 
-    protected _touchEndHandler(): void {
+    protected _touchEndHandler(event: SyntheticEvent<TouchEvent>): void {
+        // Контроллер может быть построен внутри контента, драг в нем обрабатывается через dragNDropContainer
+        if (this._touchOnController(event)) {
+            return;
+        }
         if (this._touchDragOffset) {
             this._notifyDragEnd();
             this._touchDragOffset = null;

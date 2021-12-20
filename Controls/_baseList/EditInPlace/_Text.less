@@ -1,6 +1,7 @@
 .ws-is-hover .controls-BaseControl_hover_disabled .controls-ListView__itemV .controls-EditingTemplateText_enabled,
 .ws-is-hover .controls-BaseControl_hover_enabled .controls-ListView__itemV:hover .controls-EditingTemplateText_enabled,
-.controls-GridView__emptyTemplate .controls-EditingTemplateText_enabled{
+.controls-ListView__empty .controls-EditingTemplateText_enabled,
+.controls-GridView__emptyTemplate .controls-EditingTemplateText_enabled {
    background-color: var(--background-color_inputText);
 
    // Курсор должен меняться только при наведении на текст, аналогично полям ввода. Он не должен меняться при
@@ -94,17 +95,17 @@
    font-size: var(--font-size_default);
 }
 
+.controls-EditingTemplateText_size_s {
+   min-height: var(--inline_height_default);
+   font-size: var(--font-size_xs);
+}
+
 .controls-EditingTemplateText_size_m {
-   min-height: var(--inline_height_m);
+   min-height: var(--inline_height_default);
    font-size: var(--font-size_m);
 }
 
 .controls-EditingTemplateText_size_l {
-   min-height: var(--inline_height_m);
-   font-size: var(--font-size_3xl);
-}
-
-.controls-EditingTemplateText_size_s {
    min-height: var(--inline_height_default);
-   font-size: var(--font-size_xs);
+   font-size: var(--font-size_l);
 }

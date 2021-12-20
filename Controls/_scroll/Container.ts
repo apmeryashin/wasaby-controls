@@ -22,7 +22,7 @@ import {
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import fastUpdate from './StickyBlock/FastUpdate';
 import StickyHeaderController from './StickyBlock/Controller';
-import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS, MODE} from './StickyBlock/Utils';
+import {IFixedEventData, IRegisterEventData, TYPE_FIXED_HEADERS, MODE} from './StickyBlock/Utils';
 import StickyBlock from './StickyBlock';
 import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
@@ -101,7 +101,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _isOptimizeShadowEnabled: boolean;
     protected _optimizeShadowClass: string;
-    protected _isMacOS: boolean = false;
     private _isControllerInitialized: boolean;
     private _wasMouseEnter: boolean = false;
     private _gridAutoShadows: boolean = true;
@@ -131,7 +130,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._containerLoaded = new Promise<void>((res) => {
             this._containerLoadedResolve = res;
         });
-        this._isMacOS = detection.isMac;
         super._beforeMount(...arguments);
     }
 
@@ -178,7 +176,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._containerLoadedResolve();
         this._containerLoaded = true;
 
-        if (this._isMacOS) {
+        if (detection.isMac) {
             // ResizeObserver на Mac не реагирует на изменение padding, если не задана высота через height из-за этого
             // не происходит обновления пейджинга.
             this._paging?.update(this._scrollModel);
@@ -208,15 +206,16 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._updateContentWrapperCssClass();
         }
 
+        if (options.scrollOrientation !== this._options.scrollOrientation) {
+            this._scrollbars.updateScrollbarsModels(options);
+            this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
+        }
         this._updateShadows(this._scrollModel, options);
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
         this._optimizeShadowClass = this._getOptimizeShadowClass();
         // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
         //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
         this._updateScrollContainerPaigingSccClass(options);
-        if (options.scrollOrientation !== this._options.scrollOrientation) {
-            this._scrollbars.updateScrollbarsModels(options);
-        }
         this._scrollbars.updateOptions(options);
         this._shadows.updateOptions(this._getShadowsModelOptions(options));
     }
@@ -328,7 +327,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
-        return this._scrollbars.getScrollContainerClasses();
+        return this._scrollbars.getScrollContainerClasses(options);
     }
 
     protected _getContentWrapperCssClass(): string {
@@ -656,7 +655,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
-    _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
+    _stickyRegisterHandler(event: SyntheticEvent<Event>, data: IRegisterEventData, register: boolean): void {
         // Синхронно Посчитаем и обновим информацию о фиксации заголовков только если известно,
         // что надо отображать тень сверху. Что бы лишний раз не лазить в дом, в других сценариях,
         // состояние заголовков обновится асинхронно по срабатыванию IntersectionObserver.
@@ -833,6 +832,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @variant vertical Скроллирование по вертикали
  * @variant horizontal Скроллирование по горизонтали
  * @variant verticalHorizontal Скроллирование по вертикали и по горизонтали
+ * @variant none Скроллирование отключено
  */
 
 /**

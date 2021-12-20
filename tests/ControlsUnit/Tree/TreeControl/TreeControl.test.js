@@ -315,36 +315,6 @@ define([
          assert.deepEqual(toggleExpandedStack, [1, 2]);
       });
 
-      it('_private.getTargetRow', () => {
-         const event = {
-            target: {
-               getBoundingClientRect() {
-                  return {
-                     top: 50,
-                     height: 35
-                  };
-               },
-               classList: {
-                  contains: () => false
-               },
-               parentNode: {
-                  classList: {
-                     contains: (style) => style === 'controls-ListView__itemV'
-                  }
-               }
-            },
-            nativeEvent: {
-               pageY: 60
-            }
-         };
-
-         const treeControl = {
-            _listViewModel: {}
-         };
-         const target = tree.TreeControl._private.getTargetRow(treeControl, event);
-         assert.equal(event.target, target);
-      });
-
       it('_private.shouldLoadChildren', async function() {
          let treeControl;
          const

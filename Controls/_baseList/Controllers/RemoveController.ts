@@ -3,7 +3,7 @@ import { IHashMap } from 'Types/declarations';
 import { ISelectionObject } from 'Controls/interface';
 import { Confirmation } from 'Controls/popup';
 import { Logger } from 'UI/Utils';
-import * as rk from 'i18n!*';
+import * as rk from 'i18n!Controls';
 import { getItemsBySelection } from '../resources/utils/getItemsBySelection';
 
 // @todo https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
@@ -70,7 +70,9 @@ export class RemoveController {
         return Confirmation.openPopup({
             type: 'yesno',
             style: 'default',
-            message: selectedKeysCount === 1 ? rk('Удалить выбранную запись?') : rk('Удалить выбранные записи?')
+            message: selectedKeysCount === 1 ?
+                rk('Удалить текущую запись?', 'ОперацииНадЗаписями') :
+                rk('Удалить выбранные записи?', 'ОперацииНадЗаписями')
         }).then((result) => result ? this._removeFromSource(selection, filter) : Promise.reject());
     }
 

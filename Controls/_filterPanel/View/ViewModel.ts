@@ -1,7 +1,6 @@
 import {IFilterItem} from 'Controls/filter';
 import {TemplateFunction} from 'UI/Base';
 import IExtendedPropertyValue from '../_interface/IExtendedPropertyValue';
-import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
 import {VersionableMixin} from 'Types/entity';
 import {mixin} from 'Types/util';
@@ -68,7 +67,9 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 sourceController = new NewSourceController({...editorOptions} as ISourceControllerOptions);
             }
 
-            newItem.editorCaption = item.caption || item.group || item.editorCaption;
+            if (!newItem.editorCaption) {
+                newItem.editorCaption = typeof item.caption === 'string' ? item.caption : item.group;
+            }
             newItem.caption = '';
             newItem.editorOptions = {
                 ...editorOptions,
@@ -122,7 +123,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             groupsItems[item.name] = {
                 caption: item.editorCaption,
                 expanderVisible: item.expanderVisible,
-                groupVisible: item.editorCaption || itemIndex,
+                groupVisible: typeof item.editorCaption === 'string' && (item.editorCaption || itemIndex),
                 textValue: item.textValue,
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };
@@ -239,7 +240,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     }
 
     resetFilter(): void {
-        this._source = object.clone(this._source);
+        this._source = coreClone(this._source);
         FilterUtils.resetFilter(this._source);
         this._resetSourceViewMode();
         this._collapsedGroups = [];
@@ -249,7 +250,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     }
 
     resetFilterItem(name: string): void {
-        this._source = object.clone(this._source);
+        this._source = coreClone(this._source);
         const item = this._source.find((filterItem) => filterItem.name === name);
         item.value = item.resetValue;
         item.textValue = '';

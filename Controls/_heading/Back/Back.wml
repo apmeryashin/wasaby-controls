@@ -5,13 +5,18 @@
       xml:space="preserve"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
-      style="enable-background: new 0 0 8 16;"
+      style="enable-background: new 0 0 6 12;"
       x="0px"
       y="0px"
-      viewBox="0 0 8 16"
+      viewBox="0 0 6 12"
       class="controls-Back_arrow controls-Back__icon controls-Back__icon_style-{{_options.iconStyle}}"
    >
-      <polygon transform="{{transform}}" points="0.5,8 6,0 8,0 2.5,8 8,16 6,16 "/>
+      <path
+         transform="{{transform}}"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         d="M4.58552 0L6 1.23896L2.36136 6L6 10.761L4.58552 12L0 6L4.58552 0Z"
+      />
    </svg>
 </ws:template>
 
@@ -19,22 +24,36 @@
 
    <div class="controls-Back__wrapper controls-fontsize-{{_options.fontSize}}">
 
-      <div class="controls-Back__icon-wrapper">
+      <div class="
+         controls-Back__icon-wrapper
+         {{
+            _options.beforeCaptionTemplate || _options.caption
+               ? ('controls-Back__icon-wrapper_offset-' + _offsetSize)
+               : ''
+         }}
+         {{_options.iconViewMode === 'functionalButton' ? 'ws-align-items-center' : 'ws-align-items-baseline'}}
+      ">
          <ws:if data="{{_options.iconViewMode === 'functionalButton'}}">
-            <div class="controls-Back__icon_view-button">
+            <div class="
+               controls-Back__icon_view-button
+               controls-Back__icon_view-button_size-{{_iconSize}}
+            ">
                <ws:partial template="icon" transform=""/>
             </div>
          </ws:if>
          <ws:else>
             <div class="controls-Back__icon_view-default">
-               <ws:partial template="icon" transform="matrix(0.7, 0, 0, 0.7, 2, 5)"/>
+               <ws:partial template="icon" transform="matrix(0.7, 0, 0, 0.7, 1.5, 3.5)"/>
             </div>
          </ws:else>
       </div>
 
       <ws:if data="{{_options.beforeCaptionTemplate}}">
          <div class="controls-Back__middle-wrapper">
-            <div class="controls-Back__middle">
+            <div class="
+               controls-Back__middle
+               controls-Back__middle_size-{{_iconSize}}
+            ">
                <ws:partial
                   template="{{_options.beforeCaptionTemplate}}"
                   scope="{{_options.beforeCaptionTemplateOptions}}"

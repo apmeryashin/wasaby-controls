@@ -179,13 +179,14 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
-        const {propertyValue, sourceController} = options;
+        const {propertyValue, sourceController, filter, additionalTextProperty, displayProperty, source} = options;
         const valueChanged =
             !isEqual(propertyValue, this._options.propertyValue) &&
             !isEqual(propertyValue, this._selectedKeys);
-        const filterChanged = !isEqual(options.filter, this._options.filter);
-        const displayPropertyChanged = options.displayProperty !== this._options.displayProperty;
-        const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
+        const filterChanged = !isEqual(filter, this._options.filter);
+        const displayPropertyChanged = displayProperty !== this._options.displayProperty;
+        const additionalDataChanged = additionalTextProperty !== this._options.additionalTextProperty;
+        const sourceChanged = source !== this._options.source;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = propertyValue;
             this._setColumns(options);
@@ -198,7 +199,7 @@ class ListEditor extends Control<IListEditorOptions> {
             this._setMarkedKey(this._selectedKeys, options);
         }
 
-        if (sourceController && filterChanged) {
+        if (sourceController && (filterChanged || sourceChanged)) {
             sourceController.updateOptions({
                 ...options,
                 filter: this._filter
@@ -413,12 +414,20 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _setColumns(
-        {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions): void {
+        {
+            displayProperty,
+            keyProperty,
+            imageProperty,
+            filterViewMode,
+            additionalTextProperty,
+            markerStyle
+        }: IListEditorOptions
+    ): void {
         this._columns = [{
             displayProperty,
             keyProperty,
             textOverflow: 'ellipsis',
-            fontSize: filterViewMode === 'filterPanelStack' ? 'm' : 'l',
+            fontSize: (filterViewMode === 'filterPanelStack' || markerStyle !== 'primary') ? 'm' : 'l',
             width: 'auto',
             template: TitleColumn
         }];
@@ -524,8 +533,20 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    private _setMarkedKey(selectedKeys: string[]|number[], {emptyKey, selectedAllKey, multiSelect}: IListEditorOptions): void {
-        const resetKey = emptyKey !== undefined ? emptyKey : selectedAllKey;
+    private _setMarkedKey(
+        selectedKeys: string[]|number[],
+        {emptyKey, selectedAllKey, multiSelect}: IListEditorOptions
+    ): void {
+        let resetKey;
+
+        if (emptyKey !== undefined) {
+            resetKey = emptyKey;
+        } else if (selectedAllKey !== undefined) {
+            resetKey = selectedAllKey;
+        } else {
+            resetKey = null;
+        }
+
         if (selectedKeys && !multiSelect) {
             this._markedKey = !selectedKeys.length || selectedKeys[0] === resetKey ? resetKey : selectedKeys[0];
         }

@@ -68,6 +68,7 @@ export {
     TActionMode,
     TGradientType,
     TTitlePosition,
+    TContentPosition,
     TImageViewMode,
     TShadowVisibility,
     TTitleStyle

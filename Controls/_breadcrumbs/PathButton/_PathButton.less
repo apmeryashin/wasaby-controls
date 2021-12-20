@@ -9,10 +9,21 @@
    // view set up
    border-radius: 50%;
    box-sizing: border-box;
-   width: var(--inline_height_m);
-   height: var(--inline_height_m);
    background-color: var(--unaccented_same_background-color);
-   border: 1px solid var(--unaccented_contrast_background-color);
+   border: 1px solid var(--unaccented_hover_same_background-color);
+}
+
+.controls-breadcrumbsPathButton_size-s {
+   width: var(--icon-size_s);
+   height: var(--icon-size_s);
+}
+.controls-breadcrumbsPathButton_size-m {
+   width: var(--icon-size_m);
+   height: var(--icon-size_m);
+}
+.controls-breadcrumbsPathButton_size-l {
+   width: var(--icon-size_l);
+   height: var(--icon-size_l);
 }
 
 .controls-breadcrumbsPathButton__icon {
@@ -69,7 +80,6 @@
 
 .ws-is-hover {
    .controls-breadcrumbsPathButton:hover {
-      border-color: var(--unaccented_hover_contrast_background-color);
       background-color: var(--unaccented_hover_same_background-color);
 
       .controls-breadcrumbsPathButton__icon {
