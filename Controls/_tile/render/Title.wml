@@ -1,5 +1,5 @@
-<div class="{{ item.getTitleWrapperClasses(itemType, titleLines, gradientType, titleStyle, imagePosition, imageViewMode, contentPadding, footerTemplate, description, descriptionLines, titlePosition) }}"
-    style="{{ item.getTitleWrapperStyles(itemType, imageViewMode, imagePosition, gradientColor, gradientStartColor, gradientStopColor, gradientDirection) }}">
+<div class="{{ item.getTitleWrapperClasses(itemType, titleLines, gradientType, titleStyle, imagePosition, imageViewMode, contentPadding, footerTemplate, description, descriptionLines, titlePosition, contentPosition) }}"
+    style="{{ item.getTitleWrapperStyles(itemType, imageViewMode, imagePosition, gradientColor, gradientStartColor, gradientStopColor, gradientDirection, contentPosition) }}">
     <ws:if data="{{ (item || itemData).shouldDisplayGradient(itemType, imageEffect, imageViewMode, imagePosition, 'title') }}">
         <div
             class="{{ (item || itemData).getGradientClasses(itemType, gradientType) }}"
@@ -10,7 +10,7 @@
 
     <ws:if data="{{ item.shouldDisplayTitle(itemType) }}">
         <div
-            class="{{ item.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle, titlePosition, imageViewMode) }}"
+            class="{{ item.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle, titlePosition, imageViewMode, contentPosition) }}"
             title="{{ item.getDisplayValue() }}"
             data-qa="controls-TileView__title"
         >
@@ -19,7 +19,7 @@
                     <ws:partial template="{{beforeTitleTemplate}}"/>
                 </div>
             </ws:if>
-            <div attr:itemprop="name" class="{{ item.getEllipsisClasses(itemType, titleLines, staticHeight, hasTitle) }}" style="{{ item.getTitleStyles(itemType, titleLines, textColor, titlePosition, imageViewMode) }}">
+            <div attr:itemprop="name" class="{{ item.getEllipsisClasses(itemType, titleLines, staticHeight, hasTitle) }}" style="{{ item.getTitleStyles(itemType, titleLines, textColor, titlePosition, imageViewMode, contentPosition) }}">
                 <ws:if data="{{ item.getSearchValue() }}">
                     <Controls.decorator:Highlight highlightedValue="{{ item.getSearchValue() }}" className="{{highlightClassName}}">
                         <ws:value>
@@ -55,7 +55,7 @@
     <ws:else>
         <ws:if data="{{ item.shouldDisplayDescription(itemType, description, descriptionLines, imagePosition) }}">
             <div class="{{ item.getDescriptionClasses(itemType, descriptionLines, titlePosition, imageViewMode) }}"
-                 style="{{ item.getDescriptionStyles(itemType, descriptionLines, textColor) }}"
+                 style="{{ item.getDescriptionStyles(itemType, descriptionLines, textColor, contentPosition) }}"
                  attr:itemprop="description"
                  title="{{description}}">
                 {{description}}
