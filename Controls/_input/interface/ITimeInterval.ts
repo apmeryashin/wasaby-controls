@@ -13,6 +13,7 @@ export interface ITimeIntervalOptions {
     /**
      * @name Controls/_input/interface/ITimeInterval#mask
      * @cfg {String} Формат ввода временного интервала.
+     * @variant 'MM:SS'
      * @variant 'HH:MM'
      * @variant 'HHH:MM'
      * @variant 'HHHH:MM'
@@ -31,7 +32,7 @@ export interface ITimeIntervalOptions {
      * Например, для маски 'HH:mm:ss' - введенное значение '1 : 1: 1' будет преобразовано к значению '01:01:01'.
      */
 
-    mask: 'HH:MM' | 'HHH:MM' | 'HHHH:MM' | 'HH:MM:SS' | 'HHH:MM:SS' | 'HHHH:MM:SS';
+    mask: 'MM:SS' | 'HH:MM' | 'HHH:MM' | 'HHHH:MM' | 'HH:MM:SS' | 'HHH:MM:SS' | 'HHHH:MM:SS';
 
     /**
      * @name Controls/_input/interface/ITimeInterval#value

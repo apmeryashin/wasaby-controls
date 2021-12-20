@@ -92,6 +92,7 @@ class TimeInterval extends Base {
 
         optionTypes.value = descriptor(Object, null);
         optionTypes.mask = descriptor(String).oneOf([
+            'MM:SS',
             'HH:MM',
             'HHH:MM',
             'HHHH:MM',
