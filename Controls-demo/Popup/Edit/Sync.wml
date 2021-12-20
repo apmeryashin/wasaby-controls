@@ -13,7 +13,6 @@
                             itemPadding="{{ _itemPadding }}"
                             displayProperty="title"
                             dataLoadCallback="{{_dataLoadCallback}}"
-                            rowSeparatorVisibility="{{true}}"
                             header="{{gridHeader}}"
                             itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                             itemActions="{{_itemActions}}"

@@ -3,7 +3,7 @@
             name="list"
             keyProperty="key"
             source="{{_viewSource}}">
-        <ws:editingConfig editOnClick="{{true}}" sequentialEditing="{{false}}"/>
+        <ws:editingConfig editOnClick="{{true}}" sequentialEditingMode="none"/>
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">
                 <ws:contentTemplate>

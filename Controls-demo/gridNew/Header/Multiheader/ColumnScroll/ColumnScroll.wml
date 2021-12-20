@@ -4,7 +4,6 @@
            keyProperty="key"
            source="{{_viewSource}}"
            stickyHeader="{{true}}"
-           rowSeparatorVisibility="{{true}}"
            columns="{{_columns}}"
            header="{{_header}}"
            columnScroll="{{true}}"
