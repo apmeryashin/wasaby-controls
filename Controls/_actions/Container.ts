@@ -95,6 +95,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                 actions: this._prepareActionsOrder(options.actions),
                 prefetch: options.prefetchData
             });
+            this._toolbarItems = this._getToolbarItems(this._actionsCollection.getToolbarItems());
         }
         if (this._options.prefetchData !== options.prefetchData) {
             this._unsubscribeFromControllers();
