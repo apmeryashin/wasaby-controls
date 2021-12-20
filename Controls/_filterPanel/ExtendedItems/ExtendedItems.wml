@@ -15,12 +15,14 @@
 
 
 <div class="controls-FilterViewPanel__additional-editors-container">
-    <Controls.heading:Title caption="{{rk('Еще можно отобрать')}}"
-                            fontColorStyle="unaccented"
-                            fontSize="xs"
-                            fontWeight="normal"
-                            readOnly="{{true}}"
-                            attr:class="controls-FilterViewPanel__additional-caption"/>
+    <ws:if data="{{_viewModel.hasBasicItems() || _options.viewMode === 'default'}}">
+        <Controls.heading:Title caption="{{rk('Еще можно отобрать')}}"
+                                fontColorStyle="unaccented"
+                                fontSize="xs"
+                                fontWeight="normal"
+                                readOnly="{{true}}"
+                                attr:class="controls-FilterViewPanel__additional-caption"/>
+    </ws:if>
     <div class="controls-FilterViewPanel__additional-editors">
         <ws:if data="{{_options.viewMode === 'default'}}">
             <ws:partial template="column" column="{{_viewModel.getExtendedFilterItems()}}"/>

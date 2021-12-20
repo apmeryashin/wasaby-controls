@@ -10,6 +10,7 @@
                         fontColorStyle="default"
                         selectedKeys="{{_options.propertyValue}}"
                         style="filterPanel"
+                        fontSize="{{_options.filterViewMode === 'default' ? 'm' : 'l'}}"
                         readOnly="{{true}}"
                         on:selectedKeysChanged="_handleSelectedKeysChanged()"
                         on:textValueChanged="_handleTextValueChanged()"
