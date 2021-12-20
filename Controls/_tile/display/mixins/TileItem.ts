@@ -437,8 +437,8 @@ export default abstract class TileItem<T extends Model = Model> {
 
     /**
      * Пересчитывает тип плитки
-     * @param {TTileItem} itemType Тип плитки переданный из темплейта
-     * @param {TemplateFunction} nodeContentTemplate Темплейт контента узла
+     * @param {TTileItem} itemType Тип плитки переданный из шаблона
+     * @param {TemplateFunction} nodeContentTemplate Шаблон содержимого узла
      * @return {TTileItem} Тип плитки
      */
     getItemType(itemType: TTileItem, nodeContentTemplate?: TemplateFunction): TTileItem {
