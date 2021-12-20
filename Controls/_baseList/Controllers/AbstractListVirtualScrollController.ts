@@ -577,7 +577,11 @@ export abstract class AbstractListVirtualScrollController<
             // Другой порядок не даст нам таких гарантий и либо IO не отработает, либо попадаем в цикл синхронизации.
             window?.requestAnimationFrame(() => {
                 this._checkTriggersVisibilityTimeout = setTimeout(() => {
-                    this._scrollController.checkTriggersVisibility();
+                    if (this._synchronizationInProgress) {
+                        this._scheduleCheckTriggersVisibility();
+                    } else {
+                        this._scrollController.checkTriggersVisibility();
+                    }
                 }, CHECK_TRIGGERS_DELAY);
             });
         }
