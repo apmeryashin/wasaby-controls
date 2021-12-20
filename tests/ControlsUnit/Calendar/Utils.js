@@ -9,7 +9,7 @@ define('ControlsUnit/Calendar/Utils', [
       createComponent: function(Control, cfg) {
          let mv;
          let Component = Control.default || Control;
-         if (Component.getDefaultOptions) {
+         if (Component.getDefaultOptions || Component.defaultProps) {
             cfg = this.prepareOptions(Component, cfg);
          }
          mv = new Component(cfg);
@@ -27,7 +27,11 @@ define('ControlsUnit/Calendar/Utils', [
       },
 
       prepareOptions: function(Component, cfg) {
-         return coreMerge(coreClone(cfg || {}), Component.getDefaultOptions(), { preferSource: true });
+         const defaultOptions = Component.getDefaultOptions ? Component.getDefaultOptions() : Component.defaultProps;
+         return {
+            ...defaultOptions,
+            ...cfg
+         };
       },
 
       assertMonthView: function(weeks, dayAssertFn) {
