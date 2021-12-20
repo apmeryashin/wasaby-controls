@@ -4695,6 +4695,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._sourceControllerLoadingResolver) {
             this._sourceControllerLoadingResolver();
         }
+        // Перестраиваем свайп на afterUpdate, когда точно уже известен новый размер записи
+        // Перестроение должно произойти только в том случае, когда изменился размер записи
         if (this._itemActionsController && this._itemActionsController.isSwiped()) {
             this._itemActionsController.updateSwipeConfigIfNeed(
                 this._container,
