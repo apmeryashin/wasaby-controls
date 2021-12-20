@@ -1,4 +1,0 @@
-<ws:partial template="{{ _options.content }}"
-            scope="{{ _options }}"
-            items="{{ _items }}"
-            historyId="{{ _historyId }}" />

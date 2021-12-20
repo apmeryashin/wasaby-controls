@@ -120,7 +120,7 @@ const _private = {
             horizontal: 'overflow',
             vertical: 'adaptive'
          },
-         template: 'Controls/filterPopup:_FilterPanelWrapper',
+         template: 'Controls/filterPopup:DetailPanel',
          target: self._children.panelTarget
       };
    }

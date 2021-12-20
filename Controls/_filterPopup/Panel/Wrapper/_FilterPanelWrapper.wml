@@ -1,3 +1,0 @@
-<ws:partial template="{{_options.template}}"
-            items="{{_options.items}}"
-            historyId="{{_options.historyId}}"/>

@@ -1,3 +1,0 @@
-<Controls._filterPopup._FilterPanelOptionsConsumer scope="{{ _options }}">
-    <Controls._filterPopup.DetailPanel scope="{{ content }}" />
-</Controls._filterPopup._FilterPanelOptionsConsumer>

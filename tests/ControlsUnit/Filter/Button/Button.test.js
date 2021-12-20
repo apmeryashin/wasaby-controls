@@ -130,7 +130,7 @@ define(
                   horizontal: 'overflow',
                   vertical: 'adaptive'
                },
-               template: 'Controls/filterPopup:_FilterPanelWrapper',
+               template: 'Controls/filterPopup:DetailPanel',
                target: 'panelTarget'
             };
             let self = {
