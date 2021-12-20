@@ -32,6 +32,7 @@ export default class extends Control {
                 value: ['1'],
                 textValue: '',
                 viewMode: 'extended',
+                filterVisibilityCallback: 'Controls-demo/filterPanelPopup/Base/filterVisibilityCallback',
                 editorOptions: {
                     source: new Memory({
                         keyProperty: 'id',
@@ -72,6 +73,5 @@ export default class extends Control {
             }
         ];
     }
-
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Filter_new/Filter'];
 }

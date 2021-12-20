@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_filterPanelPopup/sticky/Sticky';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as rk from 'i18n!Controls';
-import {IFilterItem} from 'Controls/filter';
+import {IFilterItem, getFilterByItems, getFilterItemsAfterCallback} from 'Controls/filter';
 import {View} from 'Controls/filterPanel';
 import {isEqual} from 'Types/object';
 import 'css!Controls/filterPanelPopup';
@@ -56,15 +56,25 @@ export default class Sticky extends Control<IStickyPopup> {
         this._setFilterParams(options.items);
     }
 
+    protected _beforeUpdate(newOptions: IStickyPopup): void {
+        if (!isEqual(this._options.items, newOptions.items)) {
+            this._setFilterParams(newOptions.items);
+        }
+    }
+
     protected _sourceChangedHandler(event: SyntheticEvent, items: IFilterItem[]): void {
         this._setFilterParams(items);
     }
 
     protected _setFilterParams(items: IFilterItem[]): void {
-        this._items = items;
-        this._hasBasicItems = this._getHasBasicItems();
-        this._headingCaption = this._getHeadingCaption(this._hasBasicItems);
-        this._resetButtonVisible = !this._isFilterReseted(items);
+        const currentFilter = getFilterByItems(this._items);
+        const updatedFilter = getFilterByItems(items);
+        getFilterItemsAfterCallback(currentFilter, updatedFilter, items).then((newItems) => {
+            this._items = newItems;
+            this._hasBasicItems = this._getHasBasicItems();
+            this._headingCaption = this._getHeadingCaption(this._hasBasicItems);
+            this._resetButtonVisible = !this._isFilterReseted(newItems);
+        });
     }
 
     protected _getHeadingCaption(hasBasicItems: boolean): string {

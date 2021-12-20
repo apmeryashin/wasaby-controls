@@ -4,6 +4,7 @@ import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
 import Store from 'Controls/Store';
 import Prefetch from 'Controls/_filter/Prefetch';
 import isEqualItems from 'Controls/_filter/Utils/isEqualItems';
+import {getFilterItemsAfterCallback} from 'Controls/_filter/Utils/CallbackUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import {getHistorySource} from 'Controls/_filter/HistoryUtils';
 import {_assignServiceFilters} from '../_search/Utils/FilterUtils';
@@ -199,6 +200,7 @@ export default class FilterControllerClass extends mixin<
     updateFilterItems(items: IFilterItem[]): void {
         const currentFilterButtonItems = this._$filterButtonItems;
         const currentFastFilterItems = this._$fastFilterItems;
+        const currentFilter = this._$filter;
 
         this._updateFilterItems(items);
         this._applyItemsToFilter(this._$filter, items);
@@ -207,7 +209,12 @@ export default class FilterControllerClass extends mixin<
             !isEqual(currentFilterButtonItems, this._$filterButtonItems) ||
             !isEqual(currentFastFilterItems, this._$fastFilterItems)
         ) {
-            this._notify('filterSourceChanged', this._$filterButtonItems);
+            getFilterItemsAfterCallback(currentFilter,
+                                        this._$filter,
+                                        this._$filterButtonItems).then((newFilterButtonItems) => {
+                this._$filterButtonItems = newFilterButtonItems;
+                this._notify('filterSourceChanged', this._$filterButtonItems);
+            });
         }
 
         if (this._options.historyId) {
