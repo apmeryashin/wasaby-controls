@@ -6,11 +6,14 @@
    border-style: solid;
    user-select: none;
    position: relative;
-}
-
-.controls-DoubleSwitch__toggle {
    border-width: var(--border-thickness_switcher);
-   border-radius: var(--border-radius_switcher);
+   // В ie есть проблема с calc.
+   // Если передавать border-radius: calc(val / 2), то это воспринимается как невалидное значение.
+   // Поэтому явно указываем все значения
+   border-top-left-radius: var(--border-radius_switcher);
+   border-top-right-radius: var(--border-radius_switcher);
+   border-bottom-left-radius: var(--border-radius_switcher);
+   border-bottom-right-radius: var(--border-radius_switcher);
 }
 
 .controls-DoubleSwitch__toggle_bg-contrast {
