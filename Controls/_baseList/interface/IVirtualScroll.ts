@@ -1,48 +1,54 @@
 export type IDirection = 'up' | 'down';
+export type TVirtualScrollMode = 'remove' | 'hide';
+
 /**
- * @interface Controls/_baseList/interface/IVirtualScrollConfig
  * Конфигурация виртуального скролла
+ * @interface Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig
  *
  * @public
  * @author Авраменко А.С.
  */
 
 /*
- * @interface Interface for lists that can use virtual scroll.
+ * Virtual scroll config
+ * @interface Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig
  *
  * @public
  * @author Авраменко А.С.
  */
 export interface IVirtualScrollConfig {
     /**
-     * @cfg Количество отображаемых элементов при инициализации списка.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#pageSize
+     * @cfg {Number} Количество отображаемых элементов при инициализации списка.
      */
     pageSize?: number;
     /**
-     * @cfg Количество подгружаемых элементов при скроллировании. По умолчанию равен четверти размера виртуальной страницы, который задан в опции pageSize.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#segmentSize
+     * @cfg {Number} Количество подгружаемых элементов при скроллировании. По умолчанию равен четверти размера виртуальной страницы, который задан в опции pageSize.
      * @default {@link pageSize}/4
      */
     segmentSize?: number;
     /**
-     * @cfg Имя поля, которое содержит высоту элемента.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#itemHeightProperty
+     * @cfg {String} Имя поля, которое содержит высоту элемента.
      * @default undefined
      */
     itemHeightProperty?: string;
     /**
-     * @cfg Высота контейнера со списком.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#viewportHeight
+     * @cfg {Number} Высота контейнера со списком.
      * @default undefined
      */
     viewportHeight?: number;
     /**
-     * @cfg Режим управления элементами виртуального скролла.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#mode
+     * @cfg {String} Режим управления элементами виртуального скролла.
      * @variant remove Скрытые элементы удаляются из DOM.
      * @variant hide Скрытые элементы скрываются из DOM с помощью ws-hidden.
      * @default remove
      */
-    mode?: 'hide'|'remove';
+    mode?: TVirtualScrollMode;
 }
-
-export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
  * Интерфейс списков, поддерживающих {@link /doc/platform/developmentapl/interface-development/controls/list/performance-optimization/virtual-scroll/ виртуальное скроллирование}.

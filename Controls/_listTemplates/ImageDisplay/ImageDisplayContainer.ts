@@ -47,14 +47,13 @@ export interface IImageDisplayContainerOptions extends IControlOptions {
  *        </Controls.listTemplates:ImageDisplayContainer>
  *    </Controls.list:DataContainer>
  * </pre>
- * @class Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer
+ * @class Controls/listTemplates:ImageDisplayContainer
  * @extends UI/Base:Control
  *
  * @author Авраменко А.С.
  * @public
  * @demo Controls-demo/tileNew/DifferentItemTemplates/ToggleImageVisible/ScrollToDown/
  */
-
 export default class ImageDisplayContainer extends Control<IImageDisplayContainerOptions> {
     protected _template: TemplateFunction = Template;
 
@@ -251,6 +250,6 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
 }
 
 /**
- * @name Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer#imageProperty
+ * @name Controls/listTemplates:ImageDisplayContainer#imageProperty
  * @cfg {String} Название поле записи в котором лежит ссылка на картинку.
  */
