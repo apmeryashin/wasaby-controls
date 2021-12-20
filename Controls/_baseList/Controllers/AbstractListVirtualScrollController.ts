@@ -90,6 +90,7 @@ export type IAbstractObserversControllerConstructor =
     new (options: IAbstractObserversControllerOptions) => AbstractObserversController;
 
 export const HIDDEN_ITEM_SELECTOR = '.controls-ListView__hiddenContainer';
+const CHECK_TRIGGERS_DELAY = 150;
 
 export interface IAbstractListVirtualScrollControllerOptions {
     collection: Collection;
@@ -142,6 +143,8 @@ export abstract class AbstractListVirtualScrollController<
     private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
     private _scheduledCheckTriggersVisibility: boolean;
     private _handleChangedIndexesAfterSynchronizationCallback: Function;
+
+    private _checkTriggersVisibilityTimeout: number;
 
     /**
      * Стейт используется, чтобы определить что сейчас идет синхронизация.
@@ -548,7 +551,32 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     private _scheduleCheckTriggersVisibility() {
-        this._scheduledCheckTriggersVisibility = true;
+        if (this._checkTriggersVisibilityTimeout) {
+            clearTimeout(this._checkTriggersVisibilityTimeout);
+        }
+
+         // Нативный IntersectionObserver дергает callback по перерисовке.
+         // В ie нет нативного IntersectionObserver.
+         // Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка.
+         // В fireFox возникает аналогичная проблема, но уже с нативным обсервером.
+         // https://online.sbis.ru/opendoc.html?guid=ee31faa7-467e-48bd-9579-b60bc43b2f87
+        const shouldWaitTimeout = detection.isWin && !detection.isDesktopChrome ||
+            detection.isIE || detection.isMobileIOS;
+
+        // Возможна ситуация, что мы сперва проверим из кода что триггер виден, а после этого отработает observer.
+        // Нужно гарантированно сперва дать отработать observer-у.
+        // requestAnimationFrame, чтобы гарантированно изменения отобразились на странице.
+        // Другой порядок не даст нам таких гарантий и либо IO не отработает, либо попадаем в цикл синхронизации.
+        window?.requestAnimationFrame(() => {
+            if (shouldWaitTimeout) {
+                // setTimeout, чтобы IntersectionObserver успел отработать асинхронно (для IE с задержкой).
+                this._checkTriggersVisibilityTimeout = setTimeout(() => {
+                    this._scheduledCheckTriggersVisibility = true;
+                }, CHECK_TRIGGERS_DELAY);
+            } else {
+                this._scheduledCheckTriggersVisibility = true;
+            }
+        });
     }
 
     private _handleScheduledCheckTriggerVisibility(): void {
