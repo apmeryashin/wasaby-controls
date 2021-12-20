@@ -420,7 +420,7 @@
 
 /**
  * @name Controls/_tile/interface/ITile#imageFit
- * @cfg {ImageFit} Режим отображения изображения в плитке
+ * @cfg {ImageFit} Режим встраивания изображения в плитке
  * @see imageUrlResolver
  * @see imageProperty
  * @see imageHeightProperty
