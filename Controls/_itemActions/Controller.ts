@@ -626,8 +626,8 @@ export class Controller {
     private _calculateTargetPoint(realTarget: HTMLElement): {x: number, y: number, width: number, height: number} {
         const rect = realTarget.getBoundingClientRect();
         return {
-            x: rect.x,
-            y: rect.y,
+            x: rect.left,
+            y: rect.top,
             width: rect.width,
             height: rect.height
         };
