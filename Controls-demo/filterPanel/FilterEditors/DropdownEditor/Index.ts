@@ -30,11 +30,10 @@ export default class extends Control {
         });
         this._filterButtonSource = [
             {
-                group: 'Отдел',
+                caption: 'Отдел',
                 name: 'department',
                 editorTemplateName: 'Controls/filterPanel:DropdownEditor',
                 resetValue: [],
-                caption: '',
                 value: ['Разработка'],
                 textValue: '',
                 viewMode: 'basic',

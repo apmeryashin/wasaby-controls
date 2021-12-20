@@ -27,6 +27,7 @@ export default class Row<TContents extends Model = Model>
     //  Интерфейс должен имплементироваться только у элементов, которые поддерживает отметку маркером.
     //  Сейчас, т.к. нет элемента данных, его имплементирует CollectionItem.
     readonly Markable: boolean = false;
+    readonly Fadable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly EnumerableItem: boolean = false;
     readonly EdgeRowSeparatorItem: boolean = false;

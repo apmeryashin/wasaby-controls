@@ -24,9 +24,8 @@ import 'css!Controls/treeGrid';
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/interface:IHierarchy
- * @implements Controls/interface/ITreeGridItemTemplate
  * @implements Controls/interface:IDraggable
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/list:IList
  * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView

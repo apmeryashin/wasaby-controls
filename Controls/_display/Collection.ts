@@ -40,6 +40,8 @@ import {INavigationOptionValue, INavigationSourceConfig, IRoundBorder} from 'Con
 import {Footer, IOptions as IFooterOptions} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
+import {CrudEntityKey} from 'Types/source';
+import {IDirection} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -233,6 +235,7 @@ type TEditingMode = 'cell' | 'row';
 type TSequentialEditingMode = 'row' | 'none';
 
 /**
+ * Конфигурация редактирования по месту
  * @typedef {Object} IEditingConfig
  * @property {TEditingMode} [mode='row'] Режим редактирования раписей в таблице.
  * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
@@ -774,6 +777,8 @@ export default class Collection<
     protected _$itemActionsPosition: TItemActionsPosition;
 
     protected _$navigation: INavigationOptionValue;
+
+    protected _$fadedKeys: CrudEntityKey[];
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -2374,6 +2379,14 @@ export default class Collection<
 
     // endregion Drag-N-Drop
 
+    getFadedKeys(): CrudEntityKey[] {
+        return this._$fadedKeys || [];
+    }
+
+    setFadedKeys(fadedKeys: CrudEntityKey[]): void {
+        this._$fadedKeys = [...fadedKeys];
+    }
+
     getItemTemplateProperty(): string {
         return this._$itemTemplateProperty;
     }
@@ -2852,9 +2865,9 @@ export default class Collection<
         this._viewIterator = viewIterator;
     }
 
-    setIndexes(start: number, stop: number): void {
+    setIndexes(start: number, stop: number, shiftDirection: IDirection): void {
         this.getViewIterator().setIndices(start, stop);
-        this._notify('indexesChanged');
+        this._notify('indexesChanged', start, stop, shiftDirection);
         // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
         // тоже должны перерисоваться при изменении видимости чекбоксов
         this._updateItemsProperty('setMultiSelectVisibility', this._$multiSelectVisibility, 'setMultiSelectVisibility');
@@ -3499,6 +3512,8 @@ export default class Collection<
             options.isFirstItem = false;
             options.isLastItem = false;
             options.stickyCallback = this._$stickyCallback;
+            const key = options.contents && options.contents.getKey && options.contents.getKey();
+            options.faded = this.getFadedKeys().includes(key);
 
             return create(options.itemModule || this._itemModule, options);
         };
@@ -4343,6 +4358,7 @@ Object.assign(Collection.prototype, {
     _$footerTemplate: null,
     _$stickyFooter: false,
     _$stickyCallback: null,
+    _$fadedKeys: [],
     _$moreButtonVisibility: MoreButtonVisibility.visible,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

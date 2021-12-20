@@ -708,6 +708,65 @@ define(
                item.startPosition = null;
             });
 
+            it('inner resize can\'t set height lower', () => {
+               const popupItem = {...item};
+               popupItem.popupOptions.resizeDirection = {
+                  horizontal: HORIZONTAL_DIRECTION.RIGHT,
+                  vertical: VERTICAL_DIRECTION.BOTTOM
+               };
+               popupItem.popupState = 'created';
+               const originGetPopupSizes = DialogController._getPopupSizes;
+               const window = {
+                  height: 1024,
+                  width: 1280
+               };
+               const newPopupSizes = {
+                  height: 200,
+                  width: 200
+               };
+               DialogController._getPopupSizes = () => newPopupSizes;
+               DialogController.resizeInner(popupItem, {
+                  style: {},
+                  querySelectorAll: () => []
+               });
+               newPopupSizes.height = 250;
+               DialogController.resizeInner(popupItem, {
+                  style: {},
+                  querySelectorAll: () => []
+               });
+               let position = DialogStrategy.getPosition(window, newPopupSizes, popupItem);
+               assert.equal(position.minHeight, newPopupSizes.height);
+               DialogController._getPopupSizes = originGetPopupSizes;
+            });
+
+            it('min height that fixed by inner resize can\'t be more than window height', () => {
+               const popupItem = {...item};
+               popupItem.popupOptions.resizeDirection = {
+                  horizontal: HORIZONTAL_DIRECTION.RIGHT,
+                  vertical: VERTICAL_DIRECTION.BOTTOM
+               };
+               popupItem.popupState = 'created';
+               const originGetPopupSizes = DialogController._getPopupSizes;
+               const originGetWindow = DialogController._getRestrictiveContainerSize;
+               const window = {
+                  height: 400,
+                  width: 1280
+               };
+               const newPopupSizes = {
+                  height: 500,
+                  width: 200
+               };
+               DialogController._getRestrictiveContainerSize = () => window;
+               DialogController._getPopupSizes = () => newPopupSizes;
+               DialogController.resizeInner(popupItem, {
+                  style: {},
+                  querySelectorAll: () => []
+               });
+               let position = DialogStrategy.getPosition(window, newPopupSizes, popupItem);
+               assert.equal(position.minHeight, window.height);
+               DialogController._getPopupSizes = originGetPopupSizes;
+            });
+
             it('dragging overflow', () => {
                item.popupOptions.resizeDirection = {
                   horizontal: HORIZONTAL_DIRECTION.LEFT,

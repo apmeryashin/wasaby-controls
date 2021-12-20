@@ -11,7 +11,7 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
             CssClassesAssert.include(item.getWrapperClasses('small'), 'controls-ListView__item_showActions');
 
             item = new TileCollectionItem({dragged: true});
-            CssClassesAssert.include(item.getWrapperClasses('small'), 'controls-ListView__itemContent_dragging');
+            CssClassesAssert.include(item.getWrapperClasses('small'), 'controls-ListView__itemContent_faded');
         });
 
         it('roundBorder', () => {

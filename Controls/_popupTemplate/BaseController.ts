@@ -296,12 +296,22 @@ abstract class BaseController implements IPopupController {
     private _hasPoisitionByCoords(item: IPopupItem): boolean {
         const {target} = item.popupOptions;
         if (target && typeof target === 'object') {
-            const isNumber = (n: number) => typeof n === 'number';
+            const isNumber = (property) => {
+                const m = `Controls/popup: Ошибка при указании координаты ${property} в опции target. Задано не число`;
+                if (target.hasOwnProperty(property)) {
+                    if (typeof target[property] !== 'number') {
+                        Logger.error(m);
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            };
             // Проверяем на кол-во св-в, т.к. в target может лежать html-элемент со св-вами x, y.
             // Если не тот формат что мы ожидаем - игнорируем.
             const keys = Object.keys(target);
             const maxKeys = 4;
-            return keys.length <= maxKeys && isNumber(target.x) && isNumber(target.y);
+            return keys.length <= maxKeys && isNumber('x') && isNumber('y');
         }
         return false;
     }

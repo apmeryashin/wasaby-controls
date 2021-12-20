@@ -14,6 +14,7 @@ export interface IOptions<T extends Model> extends ITreeGridDataRowOptions<T> {
 export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeGridDataRow<T> implements IGroupNode {
     '[Controls/treeGrid:TreeGridGroupDataRow]': boolean = true;
     readonly Markable: boolean = false;
+    readonly Fadable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly EnumerableItem: boolean = false;
     readonly EdgeRowSeparatorItem: boolean = true;

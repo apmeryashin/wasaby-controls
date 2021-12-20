@@ -141,7 +141,7 @@ export default class Cell<
         if (this._$owner.hasItemActionsSeparatedCell()) {
             return false;
         }
-        return this.isLastColumn() && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
+        return this.isLastColumn() && (this._$owner.shouldDisplayActions());
     }
 
     nextVersion(): void {
@@ -438,9 +438,7 @@ export default class Cell<
             contentClasses += ` controls-Grid__item_background-hover_${hoverBackgroundStyle}`;
         }
 
-        if (this.getOwner().isDragged()) {
-            contentClasses += ' controls-ListView__itemContent_dragging';
-        }
+        contentClasses += this.getOwner().getFadedClass();
 
         return contentClasses;
     }

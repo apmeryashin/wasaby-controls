@@ -1,5 +1,5 @@
 /**
- * @typedef {String} TFontColorStyle
+ * @typedef {String} Controls/_interface/IFontColorStyle/TFontColorStyle
  * @description Допустимые значения для опции {@link Controls/interface:IFontColorStyle#fontColorStyle fontColorStyle}.
  * @variant primary
  * @variant secondary

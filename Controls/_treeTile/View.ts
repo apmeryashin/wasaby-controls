@@ -26,7 +26,7 @@ import TreeTileView from './TreeTileView';
  * @implements Controls/tile:ITile
  * @implements Controls/list:IClickableView
  * @implements Controls/marker:IMarkerList
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @mixes Controls/treeTile:ITreeTile
  *
  * @author Панихин К.А.

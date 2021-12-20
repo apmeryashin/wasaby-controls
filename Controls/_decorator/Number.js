@@ -36,7 +36,7 @@ define('Controls/_decorator/Number', ['UI/Executor', 'Controls/_decorator/resour
             },
             'events': typeof window === 'undefined' ? {} : {},
             'key': key + '0_'
-         }, [markupGenerator.createText('' + (thelpers.wrapUndef(markupGenerator.escape(formattedNumber))) + '', key + '0_0_')], attr, defCollection, viewController)], key, defCollection);
+         }, [markupGenerator.createText('' + (thelpers.wrapUndef(markupGenerator.escape(formattedNumber))) + '', key + '0_0_')], attr, defCollection, viewController, true)], key, defCollection);
          if (defCollection && defCollection.def) {
             out = markupGenerator.chain(out, defCollection, this);
          }

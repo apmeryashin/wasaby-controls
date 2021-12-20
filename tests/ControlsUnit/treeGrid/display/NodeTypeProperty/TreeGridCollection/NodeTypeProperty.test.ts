@@ -16,12 +16,12 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridCollection/NodeType
         });
 
         assert.equal(collection.getNodeTypeProperty(), undefined);
-        assert.strictEqual(collection.getVersion(), 1);
+        assert.strictEqual(collection.getVersion(), 5);
 
         collection.setNodeTypeProperty('nodeType');
 
         assert.equal(collection.getNodeTypeProperty(), 'nodeType');
-        assert.strictEqual(collection.getVersion(), 2);
+        assert.strictEqual(collection.getVersion(), 6);
     });
 
     it('Set nodeTypeProperty via constructor', () => {

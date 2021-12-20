@@ -49,10 +49,9 @@ export default class extends Control {
         });
         this._filterButtonData = [
             {
-                group: 'Ответственный',
+                caption: 'Ответственный',
                 name: 'owner',
                 resetValue: [],
-                caption: '',
                 value: [],
                 textValue: '',
                 emptyText: 'Все сотрудники',

@@ -88,14 +88,16 @@ export default interface IRichTemplateOptions {
 
     /**
      * @typedef {String} TitlePosition
+     * @description Варианты отображения заголовка плитки по отношению к изображению.
      * @variant underImage Заголовок отображается под изображением.
      * @variant onImage Заголовок отображается в верхней части поверх изображения.
+     * @demo Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/TitlePositionOnImage/Index Демо пример показывает вариант отображения заголовка onImage
      */
     /**
      * @cfg {TitlePosition} Положение заголовка.
      * @default underImage
      */
-    titlePosition?: 'top' | 'left' | 'right';
+    titlePosition?: 'underImage' | 'onImage';
 
     /**
      * @typedef {String} ImageViewMode
@@ -199,7 +201,7 @@ export default interface IRichTemplateOptions {
     titleLines?: number;
 
     /**
-     * @cfg {String} Цвет заголовка.
+     * @cfg {Controls/_interface/IFontColorStyle/TFontColorStyle.typedef} Цвет заголовка.
      * @default default
      * @see titleLines
      */

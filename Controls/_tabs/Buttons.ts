@@ -594,7 +594,6 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
         return {
             inlineHeight: 's',
             borderVisible: true,
-            separatorVisible: true,
             displayProperty: 'title',
             horizontalPadding: 'xs',
             animationMode: ANIMATION_MODE.none,

@@ -40,8 +40,8 @@ import * as itemsStrategy from './_display/itemsStrategy';
 export {itemsStrategy};
 import {default as Search} from './_display/Search';
 export {Search};
-import {default as Tree} from './_display/Tree';
-export {Tree};
+import {default as Tree, NODE_TYPE_PROPERTY_GROUP} from './_display/Tree';
+export {Tree, NODE_TYPE_PROPERTY_GROUP};
 import {IOptions as ITreeOptions} from './_display/Tree';
 export {ITreeOptions};
 import {default as TreeItem} from './_display/TreeItem';
@@ -52,7 +52,7 @@ export {ITreeItemOptions};
 import ExpandableMixin, {IOptions as IExpandableMixinOptions} from 'Controls/_display/ExpandableMixin';
 export {ExpandableMixin, IExpandableMixinOptions};
 
-export {default as IMarkable, TMarkerClassName} from './_display/interface/IMarkable';
+export {default as IMarkable} from './_display/interface/IMarkable';
 export {default as ISelectableItem} from './_display/interface/ISelectableItem';
 export {default as IEnumerableItem} from './_display/interface/IEnumerableItem';
 
@@ -67,7 +67,7 @@ export {SearchSeparator};
 export {ANIMATION_STATE, IItemPadding} from './_display/interface/ICollection';
 export {IEditableCollection} from './_display/interface/IEditableCollection';
 export {IEditableCollectionItem} from './_display/interface/IEditableCollectionItem';
-export {ICollectionItem} from './_display/interface/ICollectionItem';
+export {ICollectionItem, TMarkerClassName} from './_display/interface/ICollectionItem';
 export {IBaseCollection, TItemKey} from './_display/interface';
 
 import * as GridLadderUtil from './_display/utils/GridLadderUtil';

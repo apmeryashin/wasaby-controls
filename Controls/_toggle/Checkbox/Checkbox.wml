@@ -19,6 +19,7 @@
                         readOnly="{{_options.value !== null && !_options.value ? _options.readOnly : false}}"
                         icon="{{_options.icon}}"
                         iconSize="{{_options.iconSize}}"
+                        fontColorStyle="{{_options.fontColorStyle}}"
                         iconStyle="{{_options.iconStyle}}"
                         multiline="{{_options.multiline}}"
                         caption="{{_options.caption}}"/>

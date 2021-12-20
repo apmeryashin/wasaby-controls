@@ -1366,14 +1366,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return Promise.resolve(this._validateController);
     }
 
-    private static _rejectEditInPlacePromise(methodName: string): Promise<void> {
-        const msg = `PropertyGrid is in readOnly mode. Can't use ${methodName}()!`;
-        Logger.warn(msg);
-        return Promise.reject(msg);
-    }
-
-    // endregion editInPlace
-
     static defaultProps: Partial<IPropertyGridOptions> = {
         keyProperty: 'name',
         groupProperty: PROPERTY_GROUP_FIELD,
@@ -1385,6 +1377,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             right: 'm'
         }
     };
+
+    private static _rejectEditInPlacePromise(methodName: string): Promise<void> {
+        const msg = `PropertyGrid is in readOnly mode. Can't use ${methodName}()!`;
+        Logger.warn(msg);
+        return Promise.reject(msg);
+    }
+
+    // endregion editInPlace
 
     static getDefaultPropertyGridItem(): IPropertyGridItem {
         return {

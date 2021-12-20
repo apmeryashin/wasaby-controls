@@ -18,7 +18,7 @@ import Tile, {
     TImageUrlResolver, TTileMode, TTileScalingMode, TTileSize
 } from './Tile';
 import { TItemActionsPosition } from 'Controls/itemActions';
-import {ITileRoundBorder} from 'Controls/interface';
+import {ITileRoundBorder, TFontColorStyle} from 'Controls/interface';
 import {TBackgroundColorStyle, TCursor } from 'Controls/list';
 import {toRgb, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 import {TPaddingSize} from 'Controls/interface';
@@ -437,8 +437,8 @@ export default abstract class TileItem<T extends Model = Model> {
 
     /**
      * Пересчитывает тип плитки
-     * @param {TTileItem} itemType Тип плитки переданный из темплейта
-     * @param {TemplateFunction} nodeContentTemplate Темплейт контента узла
+     * @param {TTileItem} itemType Тип плитки переданный из шаблона
+     * @param {TemplateFunction} nodeContentTemplate Шаблон содержимого узла
      * @return {TTileItem} Тип плитки
      */
     getItemType(itemType: TTileItem, nodeContentTemplate?: TemplateFunction): TTileItem {
@@ -564,7 +564,7 @@ export default abstract class TileItem<T extends Model = Model> {
         }
         const itemActionsPosition = itemActionsPositionTemplate
             || this.getOwner().getActionsTemplateConfig()?.itemActionsPosition;
-        return !this.isSwiped() && (this.hasVisibleActions() || this.isEditing()) && itemActionsPosition !== 'custom';
+        return !this.isSwiped() && this.shouldDisplayActions() && itemActionsPosition !== 'custom';
     }
 
     /**
@@ -582,7 +582,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * Должен ли отрисоваться темплейт операций над записью, который показывается при свайпе
      */
     shouldDisplaySwipeTemplate(): boolean {
-        return this.isSwiped() && (this.hasVisibleActions() || this.isEditing());
+        return this.isSwiped() && this.shouldDisplayActions();
     }
 
     /**
@@ -1363,13 +1363,12 @@ export default abstract class TileItem<T extends Model = Model> {
             if (this.canShowActions()) {
                 classes += ' controls-ListView__item_showActions';
             }
-            if (this.isDragged()) {
-                classes += ' controls-ListView__itemContent_dragging';
-            }
+            classes += this.getFadedClass();
             return classes;
         }
 
         classes += ' controls-TileView__itemContent js-controls-ListView__measurableContainer';
+        classes += this.getFadedClass();
 
         // TODO это значение вроде задается только для Rich темплейта всегда, нет смысла прокидывать его в опции
         if (height === 'auto') {
@@ -1414,9 +1413,6 @@ export default abstract class TileItem<T extends Model = Model> {
         }
         if (this.isAnimated()) {
             classes += ' controls-TileView__item_animated';
-        }
-        if (this.isDragged()) {
-            classes += ' controls-ListView__itemContent_dragging';
         }
         if (this.canShowActions()) {
             classes += ' controls-ListView__item_showActions';
@@ -1607,7 +1603,7 @@ export default abstract class TileItem<T extends Model = Model> {
                        imageViewMode: TImageViewMode = 'rectangle'): boolean {
         switch (itemType) {
             case 'default':
-                return !!this.getDisplayValue() || this.hasVisibleActions() || this.isEditing();
+                return !!this.getDisplayValue() || this.shouldDisplayActions();
             case 'small':
             case 'medium':
             case 'rich':
@@ -1743,7 +1739,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTitleStyle} titleStyle Стиль заголовка
      * @param {boolean} hasTitle Признак, означающий что нужно отображать заголовок
      * @param {number} titleLines Кол-во строк в заголовке
-     * @param {string} titleColorStyle Стиль цвета заголовка
+     * @param {Controls/_interface/IFontColorStyle/TFontColorStyle.typedef} titleColorStyle Стиль цвета заголовка
      * @param {TTitlePosition} titlePosition Положение заголовка
      * @param {TImageViewMode} imageViewMode Режим отображения изображения
      */
@@ -1752,7 +1748,7 @@ export default abstract class TileItem<T extends Model = Model> {
         titleStyle?: TTitleStyle,
         hasTitle?: boolean,
         titleLines: number = 1,
-        titleColorStyle: string = 'default',
+        titleColorStyle: TFontColorStyle = 'default',
         titlePosition: TTitlePosition = 'underImage',
         imageViewMode: TImageViewMode = 'rectangle'
     ): string {
@@ -2111,6 +2107,7 @@ export default abstract class TileItem<T extends Model = Model> {
     abstract isEditing(): boolean;
     abstract isDragged(): boolean;
     abstract hasVisibleActions(): boolean;
+    abstract shouldDisplayActions(): boolean;
     abstract shouldDisplayMarker(marker: boolean): boolean;
     abstract getDisplayProperty(): string;
     abstract getDisplayValue(): string;
@@ -2123,6 +2120,7 @@ export default abstract class TileItem<T extends Model = Model> {
     abstract getOwner(): Tile;
     protected abstract _notifyItemChangeToOwner(property: string): void;
     protected abstract _nextVersion(): void;
+    abstract getFadedClass(): string;
 }
 
 Object.assign(TileItem.prototype, {

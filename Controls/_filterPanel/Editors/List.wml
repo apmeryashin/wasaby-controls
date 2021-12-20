@@ -54,10 +54,17 @@
       <ws:partial template="listBase">
          <ws:footerTemplate>
              <ws:partial template="Controls/grid:FooterTemplate">
-                 <div class="controls-EditorList__footer">
-                     <Controls.toggle:BigSeparator contrastBackground="{{false}}"
-                                                   iconSize="l"
-                                                   on:click="_handleFooterClick()"/>
+                 <div class="controls-EditorList__footer" on:click="_handleFooterClick()">
+                     <ws:if data="{{_hiddenItemsCount}}">
+                         <Controls.buttons:MoreButton count="{{_hiddenItemsCount}}"
+                                                      contrastBackground="{{false}}"
+                                                      fontSize="xs"/>
+                     </ws:if>
+                     <ws:else>
+                         <Controls.toggle:BigSeparator contrastBackground="{{false}}"
+                                                       iconSize="l"
+                                                       fontSize="xs"/>
+                     </ws:else>
                  </div>
              </ws:partial>
          </ws:footerTemplate>

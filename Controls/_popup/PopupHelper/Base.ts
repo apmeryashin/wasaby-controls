@@ -59,12 +59,6 @@ export default class Base {
                     this._closeHandler();
                 }
             };
-            if (config.dataLoaders) {
-                return BaseOpenerUtil.getManagerWithCallback(() => {
-                    config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
-                    this._openPopup(config);
-                });
-            }
             if (config.pageId) {
                 // TODO COMPATIBLE
                 if (!isNewEnvironment()) {

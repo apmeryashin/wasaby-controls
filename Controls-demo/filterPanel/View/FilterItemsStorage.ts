@@ -15,11 +15,10 @@ const historyItemsValues = {
 
 const defaultItems = [
     {
-        group: 'Количество сотрудников',
+        caption: 'Количество сотрудников',
         name: 'amount',
         editorTemplateName: 'Controls/filterPanel:NumberRangeEditor',
         resetValue: [],
-        caption: '',
         value: [],
         textValue: '',
         editorOptions: {
@@ -29,10 +28,9 @@ const defaultItems = [
         }
     },
     {
-        group: 'Ответственный',
+        caption: 'Ответственный',
         name: 'owner',
         resetValue: [],
-        caption: '',
         value: [],
         textValue: '',
         editorTemplateName: 'Controls/filterPanel:ListEditor',

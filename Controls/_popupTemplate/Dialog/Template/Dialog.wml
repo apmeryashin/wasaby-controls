@@ -1,5 +1,5 @@
 <Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
-    <div class="controls_popupTemplate_theme-{{_options.theme}} controls-DialogTemplate
+    <div class="controls_popupTemplate_theme-{{_options.theme}} controls-DialogTemplate {{_getWrapperBackgroundColorClass()}}
                 {{!_options.maximize ? ('controls-PopupTemplate__roundBorder controls_border-radius-' + _options.borderRadius)}}
                 {{_options.draggable ? 'ws-window-draggable'}}" ws-tab-cycling="true">
         <ws:if data="{{_options.headingCaption || _options.headerContentTemplate }}">

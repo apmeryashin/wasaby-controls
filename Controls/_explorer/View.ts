@@ -1362,7 +1362,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/interface/IGroupedGrid
  * @implements Controls/grid:IGridControl
  * @implements Controls/list:IClickableView
@@ -1398,7 +1398,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/interface/IGroupedGrid
  * @implements Controls/grid:IGridControl
  * @implements Controls/list:IClickableView

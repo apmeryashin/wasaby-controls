@@ -6,6 +6,7 @@ export default class SearchSeparatorRow extends GridRow<string> {
     readonly '[Controls/_itemActions/interface/IItemActionsItem]': boolean = false;
 
     readonly Markable: boolean = false;
+    readonly Fadable: boolean = false;
 
     protected _$owner: SearchGridCollection;
 

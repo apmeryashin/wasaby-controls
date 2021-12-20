@@ -88,7 +88,7 @@ export default class TreeTileCollectionItem<T extends Model = Model>
     getItemType(itemTypeTpl: TTileItem = 'default', nodeContentTemplate?: TemplateFunction): TTileItem {
         let itemType = super.getItemType(itemTypeTpl, nodeContentTemplate);
 
-        // Если nodeContentTemplate задан значит, что для узла используется определенныйы itemType
+        // Если nodeContentTemplate задан значит, что для узла используется определенный itemType
         if (itemType === 'default' && this.isNode() && !nodeContentTemplate) {
             itemType = 'small';
         }
@@ -247,7 +247,7 @@ export default class TreeTileCollectionItem<T extends Model = Model>
                 if (this.isNode()) {
                     classes = classes.replace(
                         'controls-fontsize-xl',
-                        'controls-fontsize-3xl'
+                        'controls-fontsize-4xl'
                     );
                 }
                 break;

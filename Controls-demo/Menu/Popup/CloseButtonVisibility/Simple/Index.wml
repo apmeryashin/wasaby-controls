@@ -6,6 +6,7 @@
               keyProperty="key"
               displayProperty="title"
               closeButtonVisibility="{{true}}"
+              attr:data-qa="controls-Menu__popup-Simple"
       >
       </Controls.menu:Popup>
    </div>

@@ -50,6 +50,16 @@ class Mask extends Base {
         this._autoWidth = !!newOptions.replacer;
     }
 
+    protected _afterMount(options): void {
+        super._afterMount.apply(this, arguments);
+        const lastChar = 10;
+        if (options.mask.length > lastChar && options.replacer) {
+            const warnMessage = `${this._moduleName}: В контрол передана слишком длинная маска (больше 10 символов), это
+                                                                   может сказаться на проблемах с производительностью.`;
+            Logger.warn(`${warnMessage}`, this);
+        }
+    }
+
     protected _getViewModelOptions(options): object {
         return {
             value: options.value,

@@ -5,6 +5,35 @@ import loadPopupPageConfig from 'Controls/_popup/utils/loadPopupPageConfig';
 import {getModuleByName} from 'Controls/_popup/utils/moduleHelper';
 import CancelablePromise from 'Controls/_popup/utils/CancelablePromise';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
+import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
+import {IPrefetchData, waitPrefetchData} from 'Controls/_popup/utils/Preload';
+
+/**
+ * Запускает лоадеры, если они присутсвуют в конфиге,
+ * после их вызова вызывает колбек в котором должно быть открытие попапа
+ * @param config
+ * @param openCallback
+ */
+function startLoadersIfNecessary(config: IBaseOpenerOptions, openCallback: Function): void {
+    if (config.dataLoaders) {
+        return BaseOpenerUtil.getManagerWithCallback(() => {
+            config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
+
+            // Если initializingWay remote, то нужно вызывать открытие
+            // и обновление попапа только после завершения лоадеров.
+            if (config.initializingWay === 'remote') {
+                waitPrefetchData(config._prefetchPromise).then((prefetchData: IPrefetchData) => {
+                    config._prefetchData = prefetchData;
+                    openCallback();
+                }, openCallback);
+            } else {
+                openCallback();
+            }
+        });
+    } else {
+        openCallback();
+    }
+}
 
 export default function openPopup(config: IBaseOpenerOptions, controller: string,
                                   moduleName: string): CancelablePromise<string> {
@@ -18,12 +47,14 @@ export default function openPopup(config: IBaseOpenerOptions, controller: string
 
         const showDialog = (templateModule: Control, popupConfig: IBaseOpenerOptions, controllerModule: Control) => {
             if (cancelablePromise.isCanceled() === false) {
-                BaseOpener.showDialog(templateModule, popupConfig, controllerModule).then((popupId: string) => {
-                    if (cancelablePromise.isCanceled() === true) {
-                        ManagerController.remove(popupId);
-                        reject();
-                    }
-                    resolve(popupId);
+                startLoadersIfNecessary(popupConfig, () => {
+                    BaseOpener.showDialog(templateModule, popupConfig, controllerModule).then((popupId: string) => {
+                        if (cancelablePromise.isCanceled() === true) {
+                            ManagerController.remove(popupId);
+                            reject();
+                        }
+                        resolve(popupId);
+                    });
                 });
             } else {
                 reject();
