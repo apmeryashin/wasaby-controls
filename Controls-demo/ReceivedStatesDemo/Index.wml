@@ -1,7 +1,0 @@
-<Controls-demo.ReceivedStatesDemo.Wrapper>
-   <ws:wrapperContent>
-      <div>
-         <Controls-demo.ReceivedStatesDemo.TestControlWithRS wrapperRS="{{wrapperContent.gotRS}}"/>
-      </div>
-   </ws:wrapperContent>
-</Controls-demo.ReceivedStatesDemo.Wrapper>
