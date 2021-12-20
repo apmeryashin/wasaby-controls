@@ -1,3 +1,4 @@
+/* tslint:disable:no-magic-numbers */
 import { ColumnsCollection } from 'Controls/columns';
 import { RecordSet } from 'Types/collection';
 import { assert } from 'chai';
@@ -5,7 +6,7 @@ import { Model } from 'Types/entity';
 
 describe('Columns/display/ColumnsIndexes/CollectionItem/GetColumn', () => {
     describe('default', () => {
-        let rs;
+        let rs: RecordSet;
         let collection;
         let result = [];
 
@@ -16,15 +17,12 @@ describe('Columns/display/ColumnsIndexes/CollectionItem/GetColumn', () => {
         beforeEach(() => {
             rs = new RecordSet({
                 keyProperty: 'id',
-                rawData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((id) => {
-                    return {
-                        id
-                    };
-                })
+                rawData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((id) => ({id}))
             });
             result = [];
             collection = new ColumnsCollection({collection: rs, columnsCount: 3});
         });
+
         it('initial state check', () => {
             const expected = [0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2];
             collection.each(getColumnEach);

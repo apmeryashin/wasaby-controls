@@ -63,6 +63,9 @@ interface IItemsFactoryOptions<S> {
     expanderIconStyle?: TExpanderIconStyle;
 }
 
+/**
+ * Опции для создания Tree коллекции
+ */
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
     parentProperty?: string;
     nodeProperty?: string;
