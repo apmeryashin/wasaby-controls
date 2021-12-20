@@ -338,7 +338,7 @@ Object.defineProperty(Search, 'defaultProps', {
 
 /**
  * @name Controls/_search/Input/Search#contrastBackground
- * @cfg
+ * @cfg {Boolean} Определяет контрастность фона контрола по отношению к его окружению.
  * @default false
  * @remark
  * Опция используется для визуального выделения контрола, относительно окружения.
