@@ -9,7 +9,8 @@ import {
     TImageViewMode,
     TTitlePosition,
     TShadowVisibility,
-    TTitleStyle
+    TTitleStyle,
+    TContentPosition
 } from 'Controls/tile';
 import {TPaddingSize} from 'Controls/interface';
 import {ITreeItemOptions, TreeItem} from 'Controls/display';
@@ -265,10 +266,13 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         footerTemplate: TemplateFunction = null,
         description: string = '',
         descriptionLines: number = 0,
-        titlePosition: TTitlePosition = 'underImage'
+        titlePosition: TTitlePosition = 'underImage',
+        contentPosition: TContentPosition = 'underImage'
     ): string {
-        let classes = super.getTitleWrapperClasses(itemType, titleLines, gradientType, titleStyle,
-            imagePosition, imageViewMode, contentPadding, footerTemplate, description, descriptionLines, titlePosition);
+        let classes = super.getTitleWrapperClasses(
+            itemType, titleLines, gradientType, titleStyle, imagePosition, imageViewMode, contentPadding,
+            footerTemplate, description, descriptionLines, titlePosition, contentPosition
+        );
         switch (itemType) {
             case 'default':
             case 'medium':

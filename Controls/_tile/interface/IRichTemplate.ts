@@ -1,5 +1,6 @@
 import {TemplateFunction} from 'UI/Base';
 import {TPaddingSize} from 'Controls/interface';
+import {TContentPosition, TTitlePosition} from 'Controls/_tile/display/mixins/TileItem';
 
 /**
  * @typedef {Object} ICharacteristicsItem
@@ -94,7 +95,19 @@ export default interface IRichTemplateOptions {
      * @cfg {TitlePosition} Положение заголовка.
      * @default underImage
      */
-    titlePosition?: 'top' | 'left' | 'right';
+    titlePosition?: TTitlePosition;
+
+    /**
+     * @typedef {String} ContentPosition
+     * @variant underImage Контент отображается под изображением.
+     * @variant onImageTop Контент отображается в верхней части поверх изображения.
+     * @variant onImageBottom Контент отображается в нижней части поверх изображения.
+     */
+    /**
+     * @cfg {ContentPosition} Положение заголовка.
+     * @default underImage
+     */
+    contentPosition?: TContentPosition;
 
     /**
      * @typedef {String} ImageViewMode
