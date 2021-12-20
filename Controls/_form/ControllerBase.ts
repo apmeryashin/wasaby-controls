@@ -55,8 +55,9 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
                     this._setRecord(options.record);
                 });
             }
+        } else if (!options.record) {
+            this._setRecord(options.record);
         }
-        this._setRecord(options.record);
     }
 
     protected _afterUpdate(): void {
