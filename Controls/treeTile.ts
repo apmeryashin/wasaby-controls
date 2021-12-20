@@ -2,6 +2,7 @@
  * Библиотека контролов, которые реализуют иерархический список, отображающийся в виде плитки.
  * @library
  * @includes ITreeTile Controls/_treeTile/interface/ITreeTile
+ * @includes FolderTemplate Controls/_treeTile/interface/FolderIcon
  * @public
  * @author Панихин К.А.
  */
@@ -30,4 +31,3 @@ register('Controls/treeTile:TreeTileCollection', TreeTileCollection, {instantiat
 register('Controls/treeTile:TreeTileCollectionItem', TreeTileCollectionItem, {instantiate: false});
 register('Controls/treeTile:InvisibleTreeTileItem', InvisibleTreeTileItem, {instantiate: false});
 register('Controls/treeTile:AddTreeTileItem', AddTreeTileItem, {instantiate: false});
-

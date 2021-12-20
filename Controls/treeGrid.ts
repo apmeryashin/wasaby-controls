@@ -4,6 +4,9 @@
  * @includes IColumn Controls/_treeGrid/interface/IColumn
  * @includes IGroupNodeColumn Controls/_treeGrid/interface/IGroupNodeColumn
  * @includes ItemTemplate Controls/_treeGrid/interface/ItemTemplate
+ * @includes NodeFooterTemplate Controls/_treeGrid/interface/NodeFooterTemplate
+ * @includes NodeHeaderTemplate Controls/_treeGrid/interface/NodeHeaderTemplate
+ * @includes TGroupNodeVisibility Controls/_treeGrid/interface/ITreeGrid/TGroupNodeVisibility.typedef
  * @public
  * @author Крайнов Д.О.
  */
