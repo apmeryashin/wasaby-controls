@@ -8,7 +8,8 @@
                         fontColorStyle="default"
                         selectedKeys="{{_options.propertyValue}}"
                         style="filterPanel"
-                        attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor-cloud"
+                        attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor-cloud
+                                    controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}"
                         on:textValueChanged="_handleTextValueChanged()"
                         on:selectedKeysChanged="_handleSelectedKeysChanged()">
             </ws:partial>

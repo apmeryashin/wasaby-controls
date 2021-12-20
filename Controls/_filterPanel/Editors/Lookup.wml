@@ -14,7 +14,8 @@
                         on:selectedKeysChanged="_handleSelectedKeysChanged()"
                         on:textValueChanged="_handleTextValueChanged()"
                         on:itemClick="_handleLookupClick()"
-                        attr:class="controls-FilterViewPanel__basicEditor-cloud controls-LookupEditor">
+                        attr:class="controls-FilterViewPanel__basicEditor-cloud
+                        controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}} controls-LookupEditor">
                 <ws:itemTemplate>
                     <ws:partial template="Controls/lookup:ItemTemplate"
                                 readOnly="{{true}}"/>

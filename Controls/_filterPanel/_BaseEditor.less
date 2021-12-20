@@ -20,18 +20,31 @@
 .controls-FilterViewPanel__basicEditor-cloud {
    overflow: hidden;
    border-radius: var(--border-radius_m);
-   padding: 0 var(--offset_s);
+   padding: 0 var(--offset_st);
    margin-left: calc(-1 * var(--offset_s));
+   font-size: var(--font-size_l);
 }
 
-.ws-is-hover {
-   .controls-FilterViewPanel__basicEditor-cloud:hover {
-      background-color: var(--hover_background-color);
-   }
+.controls-FilterViewPanel__basicEditor-cloud-default {
+   background: var(--background-color);
 }
 
 .controls-FilterViewPanel__baseEditor-cross-icon {
    .icon-size(var(--reset-button_icon-size));
    color: var(--reset-button_icon-color_filterView);
    cursor: pointer;
+}
+
+.ws-is-hover {
+   .controls-FilterViewPanel__basicEditor-cloud:hover {
+      background-color: var(--hover_background-color);
+   }
+
+   .controls-FilterViewPanel__basicEditor-cloud-default:hover {
+      background-color: var(--pale_contrast_background-color);
+   }
+
+   .controls-FilterViewPanel__baseEditor-cross:hover {
+      color: var(--label_hover_icon-color);
+   }
 }
