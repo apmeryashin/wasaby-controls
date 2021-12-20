@@ -43,6 +43,22 @@ const colorTemplate = {
         {name: 'active_contrast_background-color', S: 1.28, L: 1.056}
     ]
 };
+
+const unaccentedColorCallback = (baseColor: IHSLColor, variableName: string): IHSLColor => {
+    let resultColor: IHSLColor;
+    switch (variableName) {
+        case '--unaccented_hover_same_background-color':
+            resultColor = {h: baseColor.s === 0 ? 220 : baseColor.h, s: 13, l: 91};
+            break;
+        case '--unaccented_active_same_background-color':
+            resultColor = {h: baseColor.s === 0 ? 220 : baseColor.h, s: 7, l: 86};
+            break;
+        default:
+            resultColor = {...baseColor};
+    }
+    return resultColor;
+};
+
 // Цвета, зависящие от основной палитры + неакцентные
 const additionalColors = {
     '--primary_color': [
@@ -59,8 +75,8 @@ const additionalColors = {
         {name: '--unaccented_border-color', S: 1.05, L: 1.15},
         {name: '--unaccented_hover_border-color', S: 1.4, L: 0.7},
         {name: '--unaccented_background-color', S: 0, L: 98, isStrict: true},
-        {name: '--unaccented_hover_same_background-color', S: 10, L: 91, isStrict: true},
-        {name: '--unaccented_active_same_background-color', S: 7, L: 86, isStrict: true},
+        {name: '--unaccented_hover_same_background-color', callback: unaccentedColorCallback},
+        {name: '--unaccented_active_same_background-color', callback: unaccentedColorCallback},
         {name: '--unaccented_contrast_background-color', S: 1.5, L: 1.25},
         {name: '--unaccented_hover_contrast_background-color', S: 1.6, L: 1.16},
         {name: '--unaccented_active_contrast_background-color', S: 1.92, L: 1.32},
