@@ -2,7 +2,7 @@
     <Controls.list:View
             keyProperty="key"
             source="{{_viewSource}}"
-            itemActions="{{_itemActions}}"
+            itemActions="{{_itemActions}}"я
             itemActionsVisibility="{{_itemActionsVisibility}}">
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">
