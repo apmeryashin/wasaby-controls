@@ -1070,10 +1070,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
-    removeItems(selection: ISelectionObject, removeConfirmationText?: string): Promise<void | string> {
+    removeItems(selection: ISelectionObject, removeConfirmationText?: string): Promise<void | boolean> {
         const resultSelection = {
             selected: selection.selected || [],
             excluded: selection.excluded || []
+        };
+
+        const callViewCommand = (result) => {
+            return this._getRemoveViewCommand(resultSelection).execute({}).then(() => result);
         };
 
         // Будет поправлено по: https://online.sbis.ru/opendoc.html?guid=3fa1742e-6d85-4689-b7d1-c08d7923a15a
@@ -1082,9 +1086,15 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 type: 'yesno',
                 style: 'default',
                 message: removeConfirmationText
-            }).then((result) => result && this._getRemoveViewCommand(resultSelection).execute({}));
+            }).then((result) => {
+                if (result) {
+                    return callViewCommand(result);
+                } else {
+                    return result;
+                }
+            });
         }
-        return this._getRemoveViewCommand(resultSelection).execute({});
+        return callViewCommand(true);
     }
 
     moveItems(keys: TKey[], target: Model, position: LOCAL_MOVE_POSITION): void {
