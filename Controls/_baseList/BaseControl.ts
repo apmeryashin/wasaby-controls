@@ -7205,6 +7205,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _dragNDropEnded(event: SyntheticEvent): void {
+        // https://online.sbis.ru/opendoc.html?guid=81679655-1bde-4817-a7d6-b177242c00e8
+        if (this._destroyed) {
+            return;
+        }
+
         if (this._dndListController && this._dndListController.isDragging()) {
             const dragObject = this._getDragObject(event.nativeEvent, this._startEvent);
             this._notify('_documentDragEnd', [dragObject], {bubbling: true});
