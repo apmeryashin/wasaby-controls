@@ -18,7 +18,7 @@ export type IItemsSizes = IItemSize[];
 /**
  * Класс предназначен для получения, хранения и актуализации размеров записей.
  */
-export class AbstractItemsSizesController {
+export abstract class AbstractItemsSizesController {
     private _itemsQuerySelector: string;
     private _itemsContainer: HTMLElement;
     private _itemsSizes: IItemsSizes = [];
