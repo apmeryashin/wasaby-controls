@@ -110,8 +110,6 @@ class FormController extends ControllerBase<IFormController> {
     private _crudController: CrudController = null;
     private _dialogOpener: DialogOpener;
     private _updatePromise: Promise<unknown>;
-    private _repeatFunction: Function;
-    private _repeatFunctionArgs: unknown[];
 
     protected _beforeMount(
         options?: IFormController,
@@ -302,8 +300,13 @@ class FormController extends ControllerBase<IFormController> {
     }
 
     private _setFunctionToRepeat(foo: Function, ...args: unknown[]): void {
-        this._repeatFunction = foo;
-        this._repeatFunctionArgs = args;
+        this._errorController.setOnProcess((viewConfig) => {
+            viewConfig.options.repeatConfig = {
+                display: true,
+                function: foo.bind(this, ...args)
+            };
+            return viewConfig;
+        });
     }
 
     private _createRecordBeforeMount(cfg: IFormController): Promise<ICrudResult> {
@@ -329,7 +332,7 @@ class FormController extends ControllerBase<IFormController> {
             };
         },  (e: Error) => {
             this._createdInMounting = {isError: true, result: e};
-            this._setFunctionToRepeat(this._createRecordBeforeMount, cfg);
+            this._setFunctionToRepeat(this.create, cfg.key);
             return this.processError(e).then(this._getState);
         });
     }
@@ -351,7 +354,7 @@ class FormController extends ControllerBase<IFormController> {
             };
         }, (e: Error) => {
             this._readInMounting = {isError: true, result: e};
-            this._setFunctionToRepeat(this._readRecordBeforeMount, cfg);
+            this._setFunctionToRepeat(this.read, cfg.key, cfg.readMetaData);
             return this.processError(e).then(this._getState);
         }) as Promise<{data: Model}>;
     }
@@ -578,14 +581,6 @@ class FormController extends ControllerBase<IFormController> {
      * @return {Promise.<CrudResult>}
      */
     processError(error: Error, mode?: ErrorViewMode): Promise<ICrudResult> {
-        this._errorController.setOnProcess((viewConfig) => {
-            viewConfig.options.repeatConfig = {
-                display: true,
-                function: this._repeatFunction.bind(this, ...this._repeatFunctionArgs)
-            };
-            return viewConfig;
-        });
-
         return this._errorController.process({
             error,
             theme: this._options.theme,
