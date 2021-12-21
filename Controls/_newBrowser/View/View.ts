@@ -61,6 +61,12 @@ export default class View extends Control<IOptions, IReceivedState> {
     }
 
     //region ⽥ fields
+
+    /**
+     * Поля для режима "expandedCompositeTree"
+     */
+    _activeElement: TKey = null;
+
     /**
      * Шаблон отображения компонента
      */
@@ -570,6 +576,22 @@ export default class View extends Control<IOptions, IReceivedState> {
     }
 
     //endregion
+
+    //region expandedCompositeTree
+    protected _isExpandedCompositeTreeMode(listConfiguration: unknown, viewMode: DetailViewMode): boolean {
+        if (listConfiguration && viewMode) {
+            const nodesPosition = listConfiguration[viewMode]?.node?.position;
+            return nodesPosition === NodesPosition.composite;
+        }
+        return false;
+    }
+
+    protected _activeElementChanged(event: unknown, activeElement: TKey): void {
+        this._activeElement = activeElement;
+        this._children.detailList.scrollToItem(activeElement, 'top', true);
+    }
+    //endregion expandedCompositeTree
+
     //region base control overrides
     protected _notify(eventName: string, args?: unknown[], options?: { bubbling?: boolean }): unknown {
         if (!this._isMounted) {

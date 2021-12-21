@@ -4,10 +4,26 @@ import { RecordSet } from 'Types/collection';
 import { Memory } from 'Types/source';
 import { TKey } from 'Controls/interface';
 
+function findFirstNodeIndexByParentKey(items: RecordSet,
+                                       parentKey: TKey,
+                                       parentProperty: string,
+                                       nodeProperty: string): number {
+    for (let i = 0; i < items.getCount(); i += 1) {
+        const item = items.at(i);
+        if (item.get(nodeProperty) === true && item.get(parentProperty) === parentKey) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 interface INavigationControlOptions extends IControlOptions {
     items: RecordSet;
     root: TKey;
+    keyProperty: string;
     parentProperty: string;
+    nodeProperty: string;
+    activeElement: TKey;
 }
 
 export default class Navigation<T = unknown> extends Control<INavigationControlOptions> {
@@ -20,18 +36,73 @@ export default class Navigation<T = unknown> extends Control<INavigationControlO
     protected _activeSubdirectoryKey: TKey;
 
     protected _beforeMount(options?: INavigationControlOptions, contexts?: object, receivedState?: void): void {
-        // todo fix it
-        this._activeDirectoryKey = 1;
-        this._activeSubdirectoryKey = 11;
-
-        this._prepareRootItems(options);
-        this._prepareChildSource(options, this._activeDirectoryKey);
+        this._prepareActiveKeys(options);
+        this._prepareActiveDirectoryItems(options);
+        this._prepareActiveSubdirectoryItems(options, this._activeDirectoryKey);
     }
 
-    protected _prepareRootItems(params: INavigationControlOptions): void {
+    protected _beforeUpdate(options?: INavigationControlOptions, contexts?: unknown): void {
+        super._beforeUpdate(options, contexts);
+        if (this._options.activeElement !== options.activeElement) {
+            if (this._prepareActiveKeys(options)) {
+                this._prepareActiveSubdirectoryItems(options, this._activeDirectoryKey);
+            }
+        }
+    }
+
+    protected _prepareActiveKeys(params: INavigationControlOptions): boolean {
+        const oldActiveDirectoryKey = this._activeDirectoryKey;
+
+        const { items, parentProperty, nodeProperty, root, activeElement } = params;
+
+        if (activeElement !== null && activeElement !== undefined) {
+            // если активный элемент находится в корне
+            const activeItem = items.getRecordById(activeElement);
+            if (activeItem.get(parentProperty) === root) {
+                if (this._activeDirectoryKey !== activeItem.getKey()) {
+                    this._activeDirectoryKey = activeItem.getKey();
+                    const subDirIndex = findFirstNodeIndexByParentKey(
+                        items, activeItem.getKey(), parentProperty, nodeProperty
+                    );
+                    if (subDirIndex !== -1) {
+                        this._activeSubdirectoryKey = items.at(subDirIndex).getKey();
+                    } else {
+                        this._activeSubdirectoryKey = null;
+                    }
+                }
+            } else {
+                if (this._activeSubdirectoryKey !== activeItem.getKey()) {
+                    this._activeSubdirectoryKey = activeItem.getKey();
+                    const subDirParent = items.getRecordById(this._activeSubdirectoryKey);
+                    if (subDirParent) {
+                        this._activeDirectoryKey = subDirParent.get(parentProperty);
+                    } else {
+                        throw Error('Controls.newBrowser:Navigation :: invalid "activeElement" value.');
+                    }
+                }
+            }
+        } else {
+            const dirIndex = findFirstNodeIndexByParentKey(items, root, parentProperty, nodeProperty);
+            if (dirIndex !== -1) {
+                this._activeDirectoryKey = items.at(dirIndex).getKey();
+                const subDirIndex = findFirstNodeIndexByParentKey(
+                    items, this._activeDirectoryKey, parentProperty, nodeProperty
+                );
+                if (subDirIndex !== -1) {
+                    this._activeSubdirectoryKey = items.at(subDirIndex).getKey();
+                } else {
+                    this._activeSubdirectoryKey = null;
+                }
+            }
+        }
+
+        return oldActiveDirectoryKey !== this._activeDirectoryKey;
+    }
+
+    protected _prepareActiveDirectoryItems(params: INavigationControlOptions): void {
         const items = [];
         params.items.forEach((item) => {
-            if (item.get(params.parentProperty) === params.root) {
+            if (item.get(params.parentProperty) === params.root && item.get(params.nodeProperty) === true) {
                 items.push(item.getRawData());
             }
         });
@@ -43,11 +114,10 @@ export default class Navigation<T = unknown> extends Control<INavigationControlO
         });
     }
 
-    protected _prepareChildSource(params: INavigationControlOptions, rootMarkedKey: TKey): void {
+    protected _prepareActiveSubdirectoryItems(params: INavigationControlOptions, rootMarkedKey: TKey): void {
         const items = [];
         params.items.forEach((item) => {
-            // todo parent???
-            if (item.get(params.parentProperty || 'parent') === rootMarkedKey) {
+            if (item.get(params.parentProperty) === rootMarkedKey && item.get(params.nodeProperty) === true) {
                 items.push(item.getRawData());
             }
         });
@@ -56,5 +126,13 @@ export default class Navigation<T = unknown> extends Control<INavigationControlO
             adapter: params.items.getAdapter(),
             data: items
         });
+    }
+
+    protected _directoryKeyChanged(event: unknown, newKey: TKey): void {
+        this._notify('activeElementChanged', [newKey]);
+    }
+
+    protected _subdirectoryKeyChanged(event: unknown, newKey: TKey): void {
+        this._notify('activeElementChanged', [newKey]);
     }
 }

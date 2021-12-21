@@ -31,6 +31,20 @@
 
 <ws:template name="detailTemplate">
     <div class="controls-newBrowser__detail" style="background-color: {{_detailBgColor}};">
+        <ws:if data="{{ _isExpandedCompositeTreeMode(_listConfiguration, _appliedViewMode) }}">
+            <Controls.scroll:StickyBlock mode="stackable">
+                <Controls._newBrowser.navigation.Navigation
+                        activeElement="{{ _activeElement }}"
+                        root="{{ _detailExplorerOptions.root }}"
+                        items="{{ _options.items }}"
+                        keyProperty="{{ _detailExplorerOptions.keyProperty }}"
+                        parentProperty="{{ _detailExplorerOptions.parentProperty }}"
+                        nodeProperty="{{ _detailExplorerOptions.nodeProperty }}"
+                        displayProperty="{{ _detailExplorerOptions.compositeViewConfig.displayProperty }}"
+                        on:activeElementChanged="_activeElementChanged()"/>
+            </Controls.scroll:StickyBlock>
+        </ws:if>
+
         <ws:if data="{{_options.detailHeaderTemplate}}">
             <ws:partial template="{{_options.detailHeaderTemplate}}"/>
         </ws:if>
@@ -50,6 +64,14 @@
                     scope="{{_detailExplorerOptions}}"
             />
         </ws:if>
+        <ws:else data="{{ _isExpandedCompositeTreeMode(_listConfiguration, _appliedViewMode) }}">
+            <Controls.expandedCompositeTree:View
+                    name="detailList"
+                    scope="{{_detailExplorerOptions}}"
+                    bind:activeElement="_activeElement"
+                    on:itemClick="_onExplorerItemClick(false)"
+                    attr:class="controls-newBrowser__detail-list"/>
+        </ws:else>
         <ws:else>
             <!-- beforeBeginEdit юзают для отмены редактирования узлов, нужна доработка списков
                  beforeEndEdit юзают для кастомной логики сохранения записи, т.к не хотят менять БЛ -->

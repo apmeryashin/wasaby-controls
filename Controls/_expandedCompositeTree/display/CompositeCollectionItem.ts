@@ -28,6 +28,7 @@ export default class CollectionItem<T extends Model = Model>
     readonly EnumerableItem: boolean = true;
     readonly EdgeRowSeparatorItem: boolean = false;
     readonly DraggableItem: boolean = false;
+    readonly ActivatableItem: boolean = false;
 
     readonly listInstanceName: string =  'controls-ExpandedCompositeTree';
     readonly listElementName: string = 'composite-item';

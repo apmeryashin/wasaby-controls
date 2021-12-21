@@ -1,0 +1,18 @@
+<ws:partial template="Controls/expandedCompositeTree:ItemTemplate"
+            scope="{{ _options }}"
+            cursor="default"
+            highlightOnHover="{{ false }}">
+    <ws:contentTemplate>
+        <ws:if data="{{ item.contents.parent === null }}">
+            <Controls.heading:Title caption="{{ item.contents.caption }}"
+                                    readOnly="{{ true }}"
+                                    fontSize="5xl"/>
+        </ws:if>
+        <ws:else>
+            <Controls.heading:Title caption="{{ item.contents.caption }}"
+                                    readOnly="{{ true }}"
+                                    fontSize="m"
+                                    fontColorStyle="unaccented"/>
+        </ws:else>
+    </ws:contentTemplate>
+</ws:partial>
