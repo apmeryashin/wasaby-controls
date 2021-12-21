@@ -426,6 +426,7 @@ class ListEditor extends Control<IListEditorOptions> {
             textOverflow: 'ellipsis',
             fontSize: markerStyle !== 'primary' ? 'm' : 'l',
             width: 'auto',
+            compatibleWidth: '70%',
             template: TitleColumn,
             tooltipProperty: displayProperty
         }];
