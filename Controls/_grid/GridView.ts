@@ -345,7 +345,25 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     },
 
     _getGridViewStyles(options: IGridOptions): string {
-        return this._getGridTemplateColumns(options);
+        let styles = '';
+        // В случае отображения пустого представления надо растянуть ячейку
+        // с пустым представлением на всю высоту таблицы.
+        // Это можно сделать при помощи grid-template-rows.
+        if (options.needShowEmptyTemplate) {
+            styles += 'grid-template-rows:';
+            if (this._listModel.getHeader()) {
+                styles += ' auto';
+            }
+            if (this._listModel.getResults() && this._listModel.getResultsPosition() === 'top') {
+                styles += ' auto';
+            }
+            if (options.columnScroll) {
+                styles += ' auto auto';
+            }
+            styles += ' 1fr; ';
+        }
+        styles += this._getGridTemplateColumns(options);
+        return styles;
     },
 
     reset(params: { keepScroll?: boolean } = {}): void {
