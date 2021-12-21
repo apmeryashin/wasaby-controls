@@ -16,7 +16,10 @@
                                 on:selectedKeysChanged="_menuItemClickHandler()"
                                 on:mousedown="_onMouseDownHandler()">
                             <ws:contentTemplate>
-                                <ws:partial template="Controls/dropdown:inputDefaultContentTemplate" text="{[Еще]}..."/>
+                                <ws:partial template="Controls/dropdown:inputDefaultContentTemplate"
+                                            icon=""
+                                            text=""
+                                            hasMoreText="{[Еще]}..."/>
                             </ws:contentTemplate>
                         </ws:partial>
                     </Controls.source:SelectedKey>
@@ -35,8 +38,9 @@
                                 align="{{_options.align}}"
                                 on:selectedKeyChanged="_selectedKeyHandler()">
             <ws:itemTemplate>
-                <ws:partial template="wml!Controls/_tabs/Buttons/ItemTemplate"
+                <ws:partial template="{{_itemTemplate}}"
                             item="{{itemTemplate.item}}"
+                            iconStyle="secondary"
                             attr:class="controls-AdaptiveButtons__item"
                             displayProperty="{{_options.displayProperty}}" />
             </ws:itemTemplate>

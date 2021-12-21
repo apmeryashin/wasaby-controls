@@ -37,17 +37,17 @@ export const data = {
         {
             id: '1',
             title: 'Вкладка',
-            icon: 'EmptyMessage'
+            icon: 'icon-EmptyMessage'
         },
         {
             id: '2',
             title: 'Вкладка',
-            icon: 'EmptyMessage'
+            icon: 'icon-EmptyMessage'
         },
         {
             id: '3',
             title: 'Вкладка',
-            icon: 'EmptyMessage'
+            icon: 'icon-EmptyMessage'
         }
     ]),
     getItems4: () => ([
@@ -55,19 +55,19 @@ export const data = {
             id: '1',
             title: 'Вкладка',
             mainCounter: 12,
-            icon: 'EmptyMessage'
+            icon: 'icon-EmptyMessage'
         },
         {
             id: '2',
             title: 'Вкладка',
             mainCounter: 12,
-            icon: 'EmptyMessage'
+            icon: 'icon-EmptyMessage'
         },
         {
             id: '3',
             title: 'Вкладка',
             mainCounter: 12,
-            icon: 'EmptyMessage'
+            icon: 'icon-EmptyMessage'
         }
     ]),
     getItems5: () => ([
@@ -75,7 +75,7 @@ export const data = {
             id: '1',
             title: 'Вкладка',
             mainCounter: 12,
-            icon: 'EmptyMessage',
+            icon: 'icon-EmptyMessage',
             caption: 'Всего',
             additionalCaption: ' 11.11.2021'
         },
@@ -83,7 +83,7 @@ export const data = {
             id: '2',
             title: 'Вкладка',
             mainCounter: 12,
-            icon: 'EmptyMessage',
+            icon: 'icon-EmptyMessage',
             caption: 'Всего',
             additionalCaption: '11.11.2021'
         },
@@ -91,7 +91,7 @@ export const data = {
             id: '3',
             title: 'Вкладка',
             mainCounter: 12,
-            icon: 'EmptyMessage',
+            icon: 'icon-EmptyMessage',
             caption: 'Всего',
             additionalCaption: '11.11.2021'
         }
@@ -99,48 +99,48 @@ export const data = {
     getItems6: () => ([
         {
             id: '1',
-            icon: 'Lenta'
+            icon: 'icon-Lenta'
         },
         {
             id: '2',
-            icon: 'Lenta'
+            icon: 'icon-Lenta'
         },
         {
             id: '3',
-            icon: 'Lenta'
+            icon: 'icon-Lenta'
         }
     ]),
     getItems7: () => ([
         {
             id: '1',
-            icon: 'EmptyMessage',
+            icon: 'icon-EmptyMessage',
             mainCounter: 12
         },
         {
             id: '2',
-            icon: 'EmptyMessage',
+            icon: 'icon-EmptyMessage',
             mainCounter: 12
         },
         {
             id: '3',
-            icon: 'EmptyMessage',
+            icon: 'icon-EmptyMessage',
             mainCounter: 12
         }
     ]),
     getItems8: () => ([
         {
             id: '1',
-            icon: 'Show',
+            icon: 'icon-Show',
             caption: 'Вкладка'
         },
         {
             id: '2',
-            icon: 'Show',
+            icon: 'icon-Show',
             caption: 'Вкладка'
         },
         {
             id: '3',
-            icon: 'Show',
+            icon: 'icon-Show',
             caption: 'Вкладка'
         }
     ]),
