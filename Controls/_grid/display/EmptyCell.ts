@@ -26,7 +26,7 @@ class EmptyCell extends mixin<
 
         if (this._$isSingleColspanedCell && hasRowTemplate) {
             classes = columnScrollClasses;
-            classes += ' controls-GridView__emptyTemplate__centerContent';
+            classes += ' controls-GridView__emptyTemplate__contentWrapper';
         } else if (this.isMultiSelectColumn()) {
             classes = 'controls-GridView__emptyTemplate__checkBoxCell '
                 + 'controls-Grid__row-cell-editing '
