@@ -129,7 +129,7 @@ export default {
                 hasArrow: true
             });
             // добавляем последнюю папку
-            secondContainerItems.push(PrepareDataUtil.getItemData(crumbsItems.length - 1, crumbsItems, true, false));
+            secondContainerItems.push(PrepareDataUtil.getItemData(crumbsItems.length - 1, crumbsItems, true, true));
 
             return secondContainerItems;
 
