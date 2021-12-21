@@ -173,8 +173,7 @@ abstract class BaseController implements IPopupController {
         return false;
     }
 
-    popupResizingLine(item: IPopupItem, offset: number): boolean {
-        // method can be implemented
+    popupMovingSize(item: IPopupItem, offset: object): boolean {
         return false;
     }
 

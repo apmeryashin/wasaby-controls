@@ -468,7 +468,7 @@ define(
             controller.elementUpdated(item, {});
             assert.isFalse(item.popupOptions.maximized);
 
-            await controller.popupResizingLine(item, 150);
+            await controller.popupMovingSize(item, {x: 150});
             assert.isTrue(item.popupOptions.maximized);
 
             StackStrategy._getParentPosition = baseParentPosition;
@@ -811,17 +811,17 @@ define(
                   width: 0
                }
             };
-            let offset1 = 100, offset2 = -300, offset3 = 190, offset4 = 30;
-            popupTemplate.StackController.popupResizingLine(item, offset1);
+            let offset1 = {x: 100}, offset2 = {x: -300}, offset3 = {x: 190}, offset4 = {x: 30};
+            popupTemplate.StackController.popupMovingSize(item, offset1);
             assert.equal(item.popupOptions.stackWidth, 800);
             assert.equal(item.maxSavedWidth, 800);
-            popupTemplate.StackController.popupResizingLine(item, offset2);
+            popupTemplate.StackController.popupMovingSize(item, offset2);
             assert.equal(item.popupOptions.stackWidth, 500);
             assert.equal(item.minSavedWidth, 500);
 
             // min = 690, max = 720 => min должен сброситься в минимальное положение
-            popupTemplate.StackController.popupResizingLine(item, offset3);
-            popupTemplate.StackController.popupResizingLine(item, offset4);
+            popupTemplate.StackController.popupMovingSize(item, offset3);
+            popupTemplate.StackController.popupMovingSize(item, offset4);
             assert.equal(item.minSavedWidth, 500);
          });
          it('stack resizing', () => {
