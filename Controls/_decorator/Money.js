@@ -206,6 +206,12 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
 /**
  * @name Controls/_decorator/IMoney#fontColorStyle
  * @cfg {TFontColorStyle}
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.decorator:Money value="{{100000.00}}" fontColorStyle="primary"/>
+ * <Controls.decorator:Money value="{{100000.00}}" fontColorStyle="secondary"/>
+ * </pre>
  * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
  */
 
