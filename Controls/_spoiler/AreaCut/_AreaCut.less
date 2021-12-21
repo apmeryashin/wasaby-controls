@@ -109,13 +109,12 @@
       @lines: mod(@_i - 1, @countSupportLines) + 1;
       @lineHeight: extract(@sizes, ceil(@_i / @countSupportLines));
       @lineHeightVariable: "--line-height_@{lineHeight}_inputArea";
-      @heightLines: calc((@lines + 1) * ~"var(@{lineHeightVariable})");
       @cutButtonTop: calc((@lines + 2) * ~"var(@{lineHeightVariable})"  + var(--border-thickness) + var(--padding-vertical_inputArea));
       .controls-AreaCut_lineHeight-@{lineHeight}_lines-@{lines}_maxHeight {
-         max-height: @heightLines;
+         max-height: calc((@lines + 1) * ~"var(@{lineHeightVariable})");
       }
       .controls-AreaCut_lineHeight-@{lineHeight}_lines-@{lines}_height {
-         height: calc(@heightLines + var(--padding-vertical_inputArea) + var(--border-thickness));;
+         height: calc((@lines + 1) * ~"var(@{lineHeightVariable})" + var(--padding-vertical_inputArea) + var(--border-thickness));;
       }
       .controls-AreaCut__ellipsisWrapper_expanded_lineHeight-@{lineHeight}_lines-@{lines} {
          top: @cutButtonTop;
