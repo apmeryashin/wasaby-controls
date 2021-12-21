@@ -50,10 +50,6 @@ define(['Controls/_filterPopup/Panel/Lookup'
             }
          };
 
-         pLookup._options.content = {};
-         pLookup.showSelector();
-         assert.isFalse(isShowSelector);
-
          pLookup._options.lookupTemplateName = 'string';
          pLookup.showSelector();
          assert.isTrue(isShowSelector);
