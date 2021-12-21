@@ -52,23 +52,6 @@ define(
             assert.isTrue(panel._isChanged);
          });
 
-         it('Init::historyItems', function(done) {
-            let isServerSide = Env.constants.isServerSide;
-            Env.constants.isServerSide = false;
-            var config2 = {
-               items: items,
-               historyId: 'TEST_PANEL_HISTORY_ID'
-            };
-            var panel2 = getFilterPanel(config2);
-            panel2._loadHistoryItems('TEST_PANEL_HISTORY_ID', false).addCallback(function(items) {
-               assert.isOk(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'})._history);
-               assert.isFalse(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'}).historySource._$favorite);
-               assert.equal(items.getCount(), 2);
-               Env.constants.isServerSide = isServerSide;
-               done();
-            });
-         });
-
          it('historySaveMode', () => {
             const cfg = Clone(config);
             cfg.orientation = 'vertical';
@@ -489,8 +472,8 @@ define(
                filter.HistoryUtils.getHistorySource({historyId: 'TEST_RELOAD_ITEMS_HISTORY_ID'}).getItems = () => {
                   return historyItems;
                };
-               panel._reloadHistoryItems(self, 'TEST_RELOAD_ITEMS_HISTORY_ID');
-               assert.equal(self._historyItems.getCount(), 1);
+               panel._reloadHistoryItems('TEST_RELOAD_ITEMS_HISTORY_ID');
+               assert.equal(panel._historyItems.getCount(), 1);
             });
          });
 
@@ -598,15 +581,6 @@ define(
                   }
                ];
             assert.deepEqual(panel._prepareItems(changeItems), resetItems);
-         });
-
-         it('_historyItemsChanged', function() {
-            if (Env.constants.isServerSide) { return; }
-            var newConfig = Object.assign({}, config);
-            newConfig.historyId = 'TEST_HISTORY_ID';
-            var panel = getFilterPanel(config);
-            panel._loadHistoryItems = (historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
-            panel._historyItemsChanged();
          });
 
          it('_isPassedValidation', function() {
