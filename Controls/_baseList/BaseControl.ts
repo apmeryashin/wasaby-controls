@@ -425,6 +425,8 @@ const _private = {
                 self._listVirtualScrollController.disableKeepScrollPosition();
             } else {
                 self._keepScrollAfterReload = false;
+                self._needRestoreScroll = self._reloadWithParams;
+                self._reloadWithParams = false;
             }
         }
     },
@@ -1633,7 +1635,7 @@ const _private = {
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
                             break;
                         case IObservable.ACTION_RESET:
-                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload);
+                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload && !self._reloadWithParams);
                             break;
                     }
                     if (result) {
@@ -5459,6 +5461,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     );
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
                 }
+            } else {
+                this._reloadWithParams = true;
             }
         } else {
 
