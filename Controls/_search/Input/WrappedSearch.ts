@@ -166,7 +166,7 @@ export default class WrappedSearch extends Control {
 
 /**
  * @name Controls/_search/Input/WrappedSearch#contrastBackground
- * @cfg
+ * @cfg {Boolean} Определяет контрастность фона контрола по отношению к его окружению.
  * @default false
  * @remark
  * Опция используется для визуального выделения контрола, относительно окружения.
