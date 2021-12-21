@@ -6,7 +6,7 @@
                                        direction="reverse"
                                        minOffset="{{_minOffset}}"
                                        maxOffset="{{_maxOffset}}"
-                                       on:offset="_tmplNotify('popupResizingLine')"/>
+                                       on:offset="_tmplNotify('popupMovingSize')"/>
    </ws:if>
    <ws:partial template="{{_options.template}}"
                scope="{{_options.templateOptions}}"
