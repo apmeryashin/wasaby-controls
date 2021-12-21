@@ -122,7 +122,7 @@ export default class Model extends mixin<VersionableMixin, ObservableMixin>(Vers
       this._textValue = value;
       newValue = this._stringValueConverter.getValueByString(value, this._lastValue);
 
-      const valueChanged = !dateUtils.isDatesEqual(this._value, newValue) && dateUtils.isValidDate(newValue);
+      const valueChanged = !dateUtils.isDatesEqual(this._value, newValue);
 
       if (valueChanged) {
          this._value = newValue;
@@ -131,7 +131,7 @@ export default class Model extends mixin<VersionableMixin, ObservableMixin>(Vers
          this._updateLastValue();
       }
 
-      if (valueChanged || this._inputMode === INPUT_MODE.partial) {
+      if ((valueChanged || this._inputMode === INPUT_MODE.partial) && dateUtils.isValidDate(newValue)) {
          this._notify('valueChanged', [this._value, this.displayValue]);
       }
    }
