@@ -9,7 +9,7 @@ define('ControlsUnit/Calendar/Utils', [
       createComponent: function(Control, cfg) {
          let mv;
          let Component = Control.default || Control;
-         if (Component.getDefaultOptions) {
+         if (Component.getDefaultOptions || Component.defaultProps) {
             cfg = this.prepareOptions(Component, cfg);
          }
          mv = new Component(cfg);
