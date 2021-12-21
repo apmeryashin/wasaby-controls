@@ -228,11 +228,13 @@ export class ScrollController {
      * @param {HTMLElement} newItemsContainer
      */
     setItemsContainer(newItemsContainer: HTMLElement): void {
-        this._itemsSizesController.setItemsContainer(newItemsContainer);
-        this._itemsSizesController.resetItems(this._calculator.getTotalItemsCount());
+        const changed = this._itemsSizesController.setItemsContainer(newItemsContainer);
+        if (changed) {
+            this._itemsSizesController.resetItems(this._calculator.getTotalItemsCount());
 
-        const newItemsSizes = this._itemsSizesController.updateItemsSizes(this._calculator.getRange());
-        this._calculator.updateItemsSizes(newItemsSizes);
+            const newItemsSizes = this._itemsSizesController.updateItemsSizes(this._calculator.getRange());
+            this._calculator.updateItemsSizes(newItemsSizes);
+        }
     }
 
     /**
