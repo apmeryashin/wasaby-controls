@@ -129,6 +129,7 @@ import { selectionToRecord } from './resources/utils/getItemsBySelection';
 import { checkReloadItemArgs } from 'Controls/_baseList/resources/utils/helpers';
 import { DEFAULT_TRIGGER_OFFSET } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import {FadeController} from 'Controls/_baseList/Controllers/FadeController';
+import type { IHasItemsOutRange } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 //#endregion
 
@@ -804,6 +805,7 @@ const _private = {
                     self._listVirtualScrollController.setAdditionalTriggersOffsets(
                         self._getAdditionalTriggersOffsets()
                     );
+                    self._updateVirtualNavigation(self._hasItemsOutRange);
                 }
 
                 return addedItems;
@@ -3979,7 +3981,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             },
 
             hasItemsOutRangeChangedCallback: (hasItemsOutRange) => {
-                // для ромашек
+                // для ромашек и для обновления virtualNavigation после загрузки данных
                 this._hasItemsOutRange = hasItemsOutRange;
             },
 
@@ -4003,29 +4005,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             },
 
             updateVirtualNavigationUtil: (hasItemsOutRange) => {
-                // Список, скрытый на другой вкладке не должен нотифаить о таких изменениях
-                if (this._container?.closest('.ws-hidden') || !this._isMounted) {
-                    return;
-                }
-
-                const topEnabled = hasItemsOutRange.backward || this._hasMoreData('up');
-                const bottomEnabled = hasItemsOutRange.forward || this._hasMoreData('down');
-
-                if (topEnabled) {
-                    this._notify('enableVirtualNavigation', ['top'], { bubbling: true });
-                } else {
-                    this._notify('disableVirtualNavigation', ['top'], { bubbling: true });
-                }
-
-                if (bottomEnabled) {
-                    this._notify('enableVirtualNavigation', ['bottom'], { bubbling: true });
-                    // чтобы скрыть отступ под пэйджинг
-                    this._bottomVisible = false;
-                } else {
-                    this._notify('disableVirtualNavigation', ['bottom'], { bubbling: true });
-                    // чтобы нарисовать отступ под пэйджинг
-                    this._bottomVisible = true;
-                }
+                this._updateVirtualNavigation(hasItemsOutRange);
             },
 
             activeElementChangedCallback: (activeElementIndex) => {
@@ -4049,6 +4029,32 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             backward: this._listViewModel.getTopIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0,
             forward: this._listViewModel.getBottomIndicator().isDisplayed() ? INDICATOR_HEIGHT - 1 : 0
         };
+    }
+
+    private _updateVirtualNavigation(hasItemsOutRange: IHasItemsOutRange): void {
+        // Список, скрытый на другой вкладке не должен нотифаить о таких изменениях
+        if (this._container?.closest('.ws-hidden') || !this._isMounted) {
+            return;
+        }
+
+        const topEnabled = hasItemsOutRange && hasItemsOutRange.backward || this._hasMoreData('up');
+        const bottomEnabled = hasItemsOutRange && hasItemsOutRange.forward || this._hasMoreData('down');
+
+        if (topEnabled) {
+            this._notify('enableVirtualNavigation', ['top'], { bubbling: true });
+        } else {
+            this._notify('disableVirtualNavigation', ['top'], { bubbling: true });
+        }
+
+        if (bottomEnabled) {
+            this._notify('enableVirtualNavigation', ['bottom'], { bubbling: true });
+            // чтобы скрыть отступ под пэйджинг
+            this._bottomVisible = false;
+        } else {
+            this._notify('disableVirtualNavigation', ['bottom'], { bubbling: true });
+            // чтобы нарисовать отступ под пэйджинг
+            this._bottomVisible = true;
+        }
     }
 
     private _setMarkedKeyAfterPaging(key: CrudEntityKey): void {
