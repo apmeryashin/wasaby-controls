@@ -421,6 +421,8 @@ const _private = {
             // и вернуться к началу списка, иначе браузер будет пытаться восстановить
             // scrollTop, догружая новые записи после сброса.
             self._resetScrollAfterReload = !self._keepScrollAfterReload;
+            self._needRestoreScroll = self._reloadWithParams;
+            self._reloadWithParams = false;
             self._keepScrollAfterReload = false;
         }
     },
@@ -1479,7 +1481,7 @@ const _private = {
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
                             break;
                         case IObservable.ACTION_RESET:
-                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload);
+                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload && !self._reloadWithParams);
                             break;
                     }
                     if (result) {
@@ -4888,6 +4890,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     const pageSize = Math.max(Math.ceil(this._items.getCount() / navPageSize) * navPageSize, navPageSize);
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
                 }
+            } else {
+                this._reloadWithParams = true;
             }
         }
 
