@@ -12,7 +12,7 @@
     <Controls.Container.Async templateName="Controls/jumpingLabel:InputContainer">
         <ws:partial template="{{content.resolvedTemplate}}"
                     caption="{{_options.caption}}"
-                    value="{{value}}"
+                    value="{{_value}}"
                     contrastBackground="{{true}}">
             <ws:partial template="editor" />
         </ws:partial>
