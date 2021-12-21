@@ -28,6 +28,7 @@ import 'css!Controls/date';
  * @implements Controls/date:IDatePopupType
  * @mixes Controls/dateRange:IDateSelector
  * @mixes Controls/dateRange:IMonthCaptionTemplate
+ * @implements Controls/interface:IDisplayedRanges
  *
  * @public
  * @author Красильников А.С.
