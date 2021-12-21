@@ -307,8 +307,8 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
 
     _getGridViewWrapperClasses(options: IGridOptions): string {
         let classes = `controls_list_theme-${options.theme} ${this._getColumnScrollWrapperClasses(options)}`;
-        // Если пустой шаблон без колонок
-        if (options.needShowEmptyTemplate) {
+        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту
+        if (options.task1183896841 && options.needShowEmptyTemplate) {
             classes += ' controls-GridView__gridWrapper_empty';
         }
         return classes;
@@ -320,8 +320,8 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             classes += ` controls-Grid_support-ladder ${this._ladderOffsetSelector}`;
         }
 
-        // Если пустой шаблон без колонок
-        if (options.needShowEmptyTemplate) {
+        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту
+        if (options.task1183896841 && options.needShowEmptyTemplate) {
             classes += ' controls-Grid__empty';
         }
 
@@ -349,7 +349,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         // В случае отображения пустого представления надо растянуть ячейку
         // с пустым представлением на всю высоту таблицы.
         // Это можно сделать при помощи grid-template-rows.
-        if (options.needShowEmptyTemplate) {
+        if (options.task1183896841 && options.needShowEmptyTemplate) {
             styles += 'grid-template-rows:';
             if (this._listModel.getHeader()) {
                 styles += ' auto';
