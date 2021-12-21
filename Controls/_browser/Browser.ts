@@ -1014,7 +1014,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             // в противном случае происходит рассинхрон фильтров в контексте и в контроллере
             // Решается тут https://online.saby.ru/opendoc.html?guid=6c15ea37-fdf6-4dc8-a8fa-d54bd7be01bb
             const searchController = this._getSearchControllerSync();
-            searchController.reset(!this._options.sourceController);
+            if (!this._options.sourceController) {
+                searchController.reset().catch((error) => error);
+            } else {
+                searchController.reset(true);
+            }
             const filter = searchController.getFilter();
             if (!isEqual(this._filter, filter)) {
                 this._filterChanged(null, filter);
