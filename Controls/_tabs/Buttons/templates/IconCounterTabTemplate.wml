@@ -1,6 +1,6 @@
 <div class="ws-flexbox ws-align-items-baseline">
     <ws:if data="{{item.icon}}">
-        <div class="icon-{{item.icon}} controls-fontweight-default controls-icon_size-{{item.iconSize || 's'}}
+        <div class="{{item.icon}} controls-fontweight-default controls-icon_size-{{item.iconSize || 's'}}
                 ws-align-self-center controls-icon_style-{{item.iconStyle || 'secondary'}}"></div>
     </ws:if>
     <ws:if data="{{item.mainCounter}}">
@@ -16,6 +16,6 @@
         </div>
     </ws:if>
     <ws:if data="{{item.caption}}">
-        <div class="controls-Tabs_margin-left">{{item.caption}}</div>
+        <div class="controls-Tabs_margin-left controls-Tabs__item_overflow">{{item.caption}}</div>
     </ws:if>
 </div>
