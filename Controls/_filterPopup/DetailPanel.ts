@@ -231,7 +231,7 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
                      originalItem = getOriginalItem(history[i]);
                      hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
 
-                     if (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue'))) {
+                     if (originalItem && (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue')))) {
                         validResult = true;
                         break;
                      }
