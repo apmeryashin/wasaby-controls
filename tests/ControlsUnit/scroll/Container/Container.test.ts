@@ -164,22 +164,22 @@ describe('Controls/scroll:Container', () => {
             canScroll: true,
             isOptimizeShadowEnabled: true,
             isOptimizeShadowEnabledAfterMouseEnter: false,
-            optimizeShadowClass,
+            optimizeShadowClass: '',
             optimizeShadowClassAfterMouseEnter: ''
         }, {
             shadowMode: SHADOW_MODE.MIXED,
             canScroll: false,
             isOptimizeShadowEnabled: true,
             isOptimizeShadowEnabledAfterMouseEnter: true,
-            optimizeShadowClass,
-            optimizeShadowClassAfterMouseEnter: optimizeShadowClass
+            optimizeShadowClass: '',
+            optimizeShadowClassAfterMouseEnter: ''
         }, {
             shadowMode: SHADOW_MODE.CSS,
             canScroll: true,
             isOptimizeShadowEnabled: true,
             isOptimizeShadowEnabledAfterMouseEnter: true,
-            optimizeShadowClass,
-            optimizeShadowClassAfterMouseEnter: optimizeShadowClass
+            optimizeShadowClass: '',
+            optimizeShadowClassAfterMouseEnter: ''
         }].forEach((test) => {
             it(`${test.shadowMode}, canScroll ${test.canScroll}`, () => {
                 const component = createComponent(Container, {shadowMode: test.shadowMode});

@@ -614,7 +614,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _getOptimizeShadowClass(options?: IContainerOptions): string {
         const opts: IContainerOptions = options || this._options;
         let style: string = '';
-        if (this._isOptimizeShadowEnabled) {
+        if (this._isOptimizeShadowEnabled && this._scrollModel?.canVerticalScroll) {
             style += 'controls-Scroll__backgroundShadow ' +
                 `controls-Scroll__background-Shadow_style-${opts.backgroundStyle} ` +
                 `controls-Scroll__background-Shadow_top-${this._shadows.top?.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom?.isVisibleShadowOnCSS}_style-${opts.shadowStyle}`;
