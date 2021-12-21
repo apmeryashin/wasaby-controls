@@ -1,4 +1,4 @@
-<span attr:class="controls-Header__caption
+<span attr:class="controls-Header__caption ws-ellipsis
                   {{_options.textTransform !== 'none' ? ' controls-Header__' + _options.textTransform}}
                   {{_options.fontWeight === 'default' ? ' controls-Header__fontweight-default' : ' controls-fontweight-' + _options.fontWeight}}
                   controls-fontsize-{{_options.fontSize}}
