@@ -47,21 +47,21 @@ define(
             list.add(getItem(2, 'InfoBox', {modal: true, currentZIndex: 20}));
             list.add(getItem(3, 'InfoBox', {modal: false, currentZIndex: 30}));
             Container.setPopupItems(list);
-            assert.equal(Container._overlayId, 0);
+            assert.equal(Container._overlayIndex, 0);
 
             list.removeAt(0);
             Container.setPopupItems(list);
-            assert.equal(Container._overlayId, 2);
+            assert.equal(Container._overlayIndex, 1);
 
             list.removeAt(1);
             Container.setPopupItems(list);
-            assert.equal(Container._overlayId, undefined);
+            assert.equal(Container._overlayIndex, undefined);
             Container.destroy();
          });
 
          it('popup items redraw promise', () => {
             const Container = new popupMod.Container();
-            Container._calcOverlayId = () => {};
+            Container._calcOverlayIndex = () => {};
             let isRedrawPromiseResolve = false;
             const redrawPromise = Container.setPopupItems({}).then(() => {
                isRedrawPromiseResolve = true;

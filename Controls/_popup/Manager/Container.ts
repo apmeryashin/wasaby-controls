@@ -30,7 +30,7 @@ class Container extends Control<IControlOptions> {
      */
 
     protected _template: TemplateFunction = template;
-    protected _overlayId: string;
+    protected _overlayIndex: number;
     protected _popupItems: List<IPopupItem> = new List<IPopupItem>();
     protected _removeItems: IRemovedItem[] = [];
     protected _pendingController: PendingClass;
@@ -82,7 +82,7 @@ class Container extends Control<IControlOptions> {
     setPopupItems(popupItems: List<IPopupItem>): Promise<void> {
         this._popupItems = popupItems;
         this._syncMountedPopups();
-        this._calcOverlayId(popupItems);
+        this._calcOverlayIndex(popupItems);
         if (!this._redrawPromise)  {
             this._redrawPromise = new Promise((resolve) => {
                 this._redrawResolve = resolve;
@@ -103,20 +103,22 @@ class Container extends Control<IControlOptions> {
         }
     }
 
-    getOverlayId(): string {
-        return this._overlayId;
+    getOverlayIndex(): string {
+        return this._overlayIndex;
     }
 
-    private _calcOverlayId(popupItems: List<IPopupItem>): void {
+    private _calcOverlayIndex(popupItems: List<IPopupItem>): void {
         let maxModalPopup;
-        popupItems.each((item: IPopupItem) => {
+        let maxModalPopupIndex;
+        popupItems.each((item: IPopupItem, index: number) => {
             if (item.modal) {
                 if (!maxModalPopup || item.currentZIndex > maxModalPopup.currentZIndex) {
                     maxModalPopup = item;
+                    maxModalPopupIndex = index;
                 }
             }
         });
-        this._overlayId = maxModalPopup?.id;
+        this._overlayIndex = maxModalPopupIndex;
     }
 
     removePopupItem(popupItems: List<IPopupItem>, removedItem: IPopupItem, removeCallback: Function): void {

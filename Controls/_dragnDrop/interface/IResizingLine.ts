@@ -1,4 +1,5 @@
 import {Direction} from 'Controls/_dragnDrop/Type/Direction';
+import {IResizingBase} from 'Controls/_dragnDrop/interface/IResizingBase';
 
 /**
  * Интерфейс для контроллов, позволяющих визуально отображать процесс изменения других контролов при помощи перемещения мыши.
@@ -8,29 +9,11 @@ import {Direction} from 'Controls/_dragnDrop/Type/Direction';
  * @author Красильников А.С.
  */
 
-export interface IResizingLine {
+export interface IResizingLine extends IResizingBase {
     readonly '[Controls/_dragnDrop/interface/IResizingLine]': boolean;
-    maxOffset: number;
-    minOffset: number;
     direction: Direction;
     orientation: string;
 }
-
-/**
- * @name Controls/_dragnDrop/interface/IResizingLine#maxOffset
- * @cfg {Number} Максимальное значение сдвига при изменении значения размера
- * @default 1000
- * @remark
- * Сдвиг больше указанного визуально отображаться не будет. Для возможности сдвига вдоль направления оси maxOffset должен быть > 0
- */
-
-/**
- * @name Controls/_dragnDrop/interface/IResizingLine#minOffset
- * @cfg {Number} Минимальное значение сдвига при изменении значения размера
- * @default 1000
- * @remark
- * Сдвиг меньше указанного визуально отображаться не будет. Для возможности сдвига против направления оси minOffset должен быть < 0
- */
 
 /**
  * @name Controls/_dragnDrop/interface/IResizingLine#direction
