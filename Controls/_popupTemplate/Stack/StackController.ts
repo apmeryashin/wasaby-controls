@@ -213,13 +213,13 @@ export class StackController extends BaseController {
         return !!this._stack.getCount();
     }
 
-    popupResizingLine(item: IStackItem, offset: number): boolean {
+    popupMovingSize(item: IStackItem, offset: object): boolean {
         // По идее position.width есть всегда и достаточно брать его. Для избежания падения в исключительных случаях
         // оставляю еще проверну на popupOptions.stackWidth.
         // popupOptions.width брать нельзя, т.к. в нем может содержаться значение, которое недопустимо в
         // текущих условиях ( например на ipad ширина стекового окна не больше 1024)
         const currentWidth = (item.position.width || item.popupOptions.stackWidth);
-        const newValue = currentWidth + offset;
+        const newValue = currentWidth + offset.x;
         const minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
         const midWidth = (item.popupOptions.maxWidth + minWidth) / 2;
         const isMoreThanMid = newValue >= midWidth;

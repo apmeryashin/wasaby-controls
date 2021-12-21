@@ -92,6 +92,14 @@ class DialogController extends BaseController {
         return (new Deferred()).callback();
     }
 
+    popupMovingSize(item: IDialogItem, offset: object): boolean {
+        const newWidthValue = (item.position.width || item.sizes.width) + offset.x;
+        const newHeightValue = (item.position.height || item.sizes.height) + offset.y;
+        item.position.width = newWidthValue;
+        item.position.height = newHeightValue;
+        return true;
+    }
+
     getDefaultConfig(item: IDialogItem): void|Promise<void> {
         const {
             horizontal: horisontalProperty,

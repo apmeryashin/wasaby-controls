@@ -104,3 +104,12 @@ export type TBreadcrumbsVisibility = 'hidden' | 'visible';
  * @variant hidden Скрыто.
  * @variant visible Отображается.
  */
+
+/**
+ * @name Controls/_explorer/interface/IExplorer#itemPadding
+ * @cfg {Controls/_tile/interface/ITile/TileItemPadding.typedef|Controls/_interface/IItemPadding/ItemPadding.typedef} Отступы элементов.
+ * @description
+ * Поведение реестра при настройке этой опции зависит от {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/view-mode/ режима отображения}.
+ * В режиме плитки эта опция повлияет на отступы между записями и принимает объект {@link Controls/_tile/interface/ITile/TileItemPadding.typedef TileItemPadding}.
+ * В прочих режимах эта опция повлияет на отступы внутри записи и принимает объект {@link Controls/_interface/IItemPadding/ItemPadding.typedef ItemPadding}.
+ */

@@ -19,7 +19,7 @@
             on:close="_close()"
             on:popupDragEnd="_popupDragEnd()"
             on:popupDragStart="_popupDragStart()"
-            on:popupResizingLine="_popupResizingLine()"
+            on:popupMovingSize="_popupMovingSize()"
             on:mouseenter="_popupMouseEnter()"
             on:mouseleave="_popupMouseLeave()"
             on:maximized="_maximized()"

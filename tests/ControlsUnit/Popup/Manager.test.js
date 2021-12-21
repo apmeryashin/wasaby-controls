@@ -299,7 +299,7 @@ define(
             Manager._popupUpdated(id0);
             assert.isTrue(isUpdateNotified);
             isUpdateNotified = null;
-            Manager._popupResizingLine(id0, {});
+            Manager._popupMovingSize(id0, {});
             assert.isTrue(isUpdateNotified);
             stub.restore();
          });
@@ -393,7 +393,7 @@ define(
                   }
                };
                const popupContainer = ManagerController.getContainer();
-               popupContainer.getOverlayId = () => item.id;
+               popupContainer.getOverlayIndex = () => item.id;
                Manager.mouseDownHandler(event);
                assert.equal(popupRemoved, true);
                Manager.destroy();
@@ -485,7 +485,7 @@ define(
             const Manager = getManager();
             let offset = 100;
             let id0 = Manager.show(popupOptions, new BaseController());
-            let element = Manager._popupResizingLine(id0, offset);
+            let element = Manager._popupMovingSize(id0, offset);
             assert.isTrue(element);
          });
          it('managerPopupAnimated', () => {

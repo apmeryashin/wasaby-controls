@@ -115,7 +115,7 @@ export abstract class AbstractItemsSizesController {
                     const lastHiddenItem = this._itemsSizes[position - 1];
                     hiddenItemsOffset = lastHiddenItem.offset + lastHiddenItem.size;
                 }
-                itemsElements.forEach((element: HTMLElement) => {
+                Array.from(itemsElements).forEach((element: HTMLElement) => {
                     this._itemsSizes[position] = this._getItemSize(element);
                     this._itemsSizes[position].offset += hiddenItemsOffset;
                     position++;

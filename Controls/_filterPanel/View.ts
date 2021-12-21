@@ -71,7 +71,7 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _afterMount(options: IViewPanelOptions): void {
         if (options.useStore) {
-            this._resetCallbackId = Store.declareCommand('resetFilter', this._resetFilter.bind(this));
+            this._resetCallbackId = Store.declareCommand('resetFilter', this.resetFilter.bind(this));
         }
     }
 

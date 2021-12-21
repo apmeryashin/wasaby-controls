@@ -71,7 +71,7 @@
  */
 
 /**
- * @typedef {String} TileItemPadding
+ * @typedef {String} Controls/_tile/interface/ITile/TileItemPadding
  * @property {TileItemPaddingEnum} [top=m] Отступ сверху от плитки. Если свойство принимает значение null, то отступ отсутствует.
  * @property {TileItemPaddingEnum} [bottom=m] Отступ снизу от плитки. Если свойство принимает значение null, то отступ отсутствует.
  * @property {TileItemPaddingEnum} [left=m] Отступ слева от плитки. Если свойство принимает значение null, то отступ отсутствует.
@@ -79,7 +79,7 @@
  */
 
 /**
- * @cfg {TileItemPadding}  Конфигурация отступов между элементами плитки.
+ * @cfg {Controls/_tile/interface/ITile/TileItemPadding.typedef}  Конфигурация отступов между элементами плитки.
  * @name Controls/_tile/interface/ITile#itemPadding
  * @demo Controls-demo/tileNew/ItemPadding/Index
  * @example
@@ -420,7 +420,7 @@
 
 /**
  * @name Controls/_tile/interface/ITile#imageFit
- * @cfg {ImageFit} Режим отображения изображения в плитке
+ * @cfg {ImageFit} Режим встраивания изображения в плитке
  * @see imageUrlResolver
  * @see imageProperty
  * @see imageHeightProperty

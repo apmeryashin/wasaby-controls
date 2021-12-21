@@ -714,7 +714,7 @@ export default class ScrollController {
             const itemBorderBottom = Math.round(itemOffsetTop) + Math.round(itemDimensions.height);
 
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
-            if (itemBorderBottom >= edgeBorder || items.indexOf(item) === items.length - 1) {
+            if (itemBorderBottom > edgeBorder || items.indexOf(item) === items.length - 1) {
                 edgeItemParams = getEdgeParams(item);
                 return true;
             }
