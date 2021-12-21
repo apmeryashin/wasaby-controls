@@ -19,6 +19,7 @@
                         itemTemplate="{{_options.additionalTemplate}}"
                         item="{{_options.item.getContents().getRawData()}}"
                         collectionItem="{{_options.item}}"
+                        attr:key="filter-additionalParam-{{_options.item.getContents().getRawData().name}}"
                         on:valueChanged="_propertyChanged(_options.item.getContents(), 'value')"
                         on:visibilityChanged="_propertyChanged(_options.item.getContents(), 'visibility')"
                         on:textValueChanged="_propertyChanged(_options.item.getContents(), 'textValue')"
