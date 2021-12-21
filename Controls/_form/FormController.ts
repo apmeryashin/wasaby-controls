@@ -332,7 +332,7 @@ class FormController extends ControllerBase<IFormController> {
             };
         },  (e: Error) => {
             this._createdInMounting = {isError: true, result: e};
-            this._setFunctionToRepeat(this.create, cfg.key);
+            this._setFunctionToRepeat(this.create, cfg.createMetaData, cfg);
             return this.processError(e).then(this._getState);
         });
     }
@@ -354,7 +354,7 @@ class FormController extends ControllerBase<IFormController> {
             };
         }, (e: Error) => {
             this._readInMounting = {isError: true, result: e};
-            this._setFunctionToRepeat(this.read, cfg.key, cfg.readMetaData);
+            this._setFunctionToRepeat(this.read, cfg.key, cfg.readMetaData, cfg);
             return this.processError(e).then(this._getState);
         }) as Promise<{data: Model}>;
     }
