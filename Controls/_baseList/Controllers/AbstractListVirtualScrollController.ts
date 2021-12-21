@@ -577,7 +577,10 @@ export abstract class AbstractListVirtualScrollController<
             // Другой порядок не даст нам таких гарантий и либо IO не отработает, либо попадаем в цикл синхронизации.
             window?.requestAnimationFrame(() => {
                 this._checkTriggersVisibilityTimeout = setTimeout(() => {
-                    if (this._synchronizationInProgress) {
+                    // Если сейчас идет синхронизация(что-то отрисовывается) или мы запланировали скролл, то
+                    // переносим проверку видимости триггеров на следующий afterRender, когда уже
+                    // точно отрисуются изменения и запланированный скролл будет выполнен(в частности восстановление)
+                    if (this._synchronizationInProgress || this._isScheduledScroll()) {
                         this._scheduleCheckTriggersVisibility();
                     } else {
                         this._scrollController.checkTriggersVisibility();
@@ -585,6 +588,10 @@ export abstract class AbstractListVirtualScrollController<
                 }, CHECK_TRIGGERS_DELAY);
             });
         }
+    }
+
+    protected _isScheduledScroll(): boolean {
+        return !!this._scheduledScrollParams;
     }
 
     protected _scheduleScroll(scrollParams: IScheduledScrollParams): void {
