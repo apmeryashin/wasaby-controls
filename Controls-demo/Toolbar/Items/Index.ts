@@ -51,7 +51,7 @@ export default class extends Control {
             },
             {
                 id: '7',
-                showType: showType.MENU_TOOLBAR,
+                showType: showType.MENU,
                 title: 'Проекту',
                 '@parent': false,
                 parent: '4'
