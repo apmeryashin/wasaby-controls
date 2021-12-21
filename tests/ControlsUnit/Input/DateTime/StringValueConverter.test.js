@@ -295,6 +295,71 @@ define([
             assert.equal(value.getMinutes(), 59);
             assert.equal(value.getSeconds(), 59);
          });
+
+         [{
+            hours: 24,
+            minutes: 0,
+            seconds: 0
+         }, {
+            hours: 24,
+            minutes: 99,
+            seconds: 99
+         }, {
+            hours: 24,
+            minutes: 0,
+            seconds: 0
+         }, {
+            hours: 99,
+            minutes: 99,
+            seconds: 99
+         }, {
+            hours: 99,
+            minutes: 0,
+            seconds: 99
+         }, {
+            hours: 99,
+            minutes: 11,
+            seconds: 0
+         }].forEach((test, index) => {
+            it('should create correct date with autocorrect if extendedTimeFormat=true ' + index, () => {
+               const converter = new dateLib.StringValueConverter({
+                  mask: 'DD.MM.YY',
+                  dateConstructor: Date
+               });
+               const result = new Date(2020, 0, 1, 23, 59, 59);
+               converter._extendedTimeFormat = true;
+               const value = converter._createDate(
+                  2020,
+                  0, 1,
+                  test.hours,
+                  test.minutes,
+                  test.seconds,
+                  true,
+                  Date
+               );
+               const testResult = dateUtils.Base.isDatesEqual(result, value);
+               assert.isTrue(testResult);
+            });
+         });
+         it('should create correct date with 24:00 if extendedTimeFormat=true', () => {
+            const converter = new dateLib.StringValueConverter({
+               mask: 'DD.MM.YY',
+               dateConstructor: Date
+            });
+            const result = new Date(2020, 0, 1, 23, 59, 59);
+            converter._extendedTimeFormat = true;
+            const value = converter._createDate(
+               2020,
+               0, 1,
+               24,
+               0,
+               0,
+               true,
+               Date
+            );
+            const testResult = dateUtils.Base.isDatesEqual(result, value);
+            assert.isTrue(testResult);
+         });
       });
    });
 });
