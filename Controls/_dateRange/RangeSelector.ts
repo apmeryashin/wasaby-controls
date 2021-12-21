@@ -41,6 +41,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @implements Controls/interface:IMonthCaptionTemplate
  * @implements Controls/interface:IDateConstructor
  * @implements Controls/dateRange:IDatePopupType
+ * @implements Controls/interface:IDisplayedRanges
  *
  * @public
  * @author Красильников А.С.
