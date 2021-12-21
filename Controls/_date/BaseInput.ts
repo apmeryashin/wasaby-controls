@@ -241,15 +241,13 @@ class BaseInput extends Control<IDateBaseOptions> {
         this._validationContainer = options.validateByFocusOut ? InputContainer : Container;
     }
 
-    static getDefaultOptions(): object {
-        return {
-            ...IBaseInputMask.getDefaultOptions(),
-            ...getValueValidatorsDefaultOptions(),
-            autocompleteType: 'default',
-            calendarButtonVisible: true,
-            inputMode: INPUT_MODE.default
-        };
-    }
+    static defaultProps: object = {
+        ...IBaseInputMask.getDefaultOptions(),
+        ...getValueValidatorsDefaultOptions(),
+        autocompleteType: 'default',
+        calendarButtonVisible: true,
+        inputMode: INPUT_MODE.default
+    };
 
     static getOptionTypes(): object {
         return {
@@ -258,14 +256,5 @@ class BaseInput extends Control<IDateBaseOptions> {
         };
     }
 }
-
-Object.defineProperty(BaseInput, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
-
-   get(): object {
-      return BaseInput.getDefaultOptions();
-   }
-});
 
 export default BaseInput;
