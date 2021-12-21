@@ -41,27 +41,27 @@
                collectionItem="{{_options.collectionItem}}"/>
 </ws:if>
 <ws:else>
-    <ws:if data="{{!item.editorOptions.jumpingLabel && captionPosition !== 'none' && (collectionItem.isEditing() || item.caption || item.captionTemplate)}}">
-        <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden'}}">
-            <ws:if data="{{captionPosition === 'top'}}">
-                <div style="{{getCheckboxStyles(collectionItem, captionPosition, true)}}"
-                     class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
-                            {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}"></div>
-            </ws:if>
-            <div style="{{getCheckboxStyles(collectionItem, captionPosition)}}"
-                 class="controls-PropertyGrid__cell_checkbox
-                        {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
-                        {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}">
-                <ws:partial template="{{collectionItem.getMultiSelectTemplate()}}"
-                            item="{{collectionItem}}"/>
-            </div>
+    <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden'}}">
+        <ws:if data="{{captionPosition === 'top'}}">
+            <div style="{{getCheckboxStyles(collectionItem, captionPosition, true)}}"
+                 class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                                {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}"></div>
         </ws:if>
+        <div style="{{getCheckboxStyles(collectionItem, captionPosition)}}"
+             class="controls-PropertyGrid__cell_checkbox
+                            {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                            {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}">
+            <ws:partial template="{{collectionItem.getMultiSelectTemplate()}}"
+                        item="{{collectionItem}}"/>
+        </div>
+    </ws:if>
+    <ws:if data="{{!item.editorOptions.jumpingLabel && captionPosition !== 'none' && (collectionItem.isEditing() || item.caption || item.captionTemplate)}}">
         <div class="controls-PropertyGrid__gridLayout_editor-caption
                     {{collectionItem.isDragTargetNode() ? 'controls-PropertyGrid__dragTargetNode'}}
                     {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                     {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
                     {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}
-                    {{collectionItem.getItemPaddingClasses(1)}}
+                    {{collectionItem.getItemPaddingClasses(1, captionPosition)}}
                     js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor-caption"
              style="{{getCaptionStyles(collectionItem, captionPosition, !collectionItem.getEditorTemplateName())}}">
@@ -108,7 +108,7 @@
                    {{collectionItem.isDragged() ? 'controls-PropertyGrid__item_dragging'}}
                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
                    {{collectionItem.isEditing() ? 'controls-PropertyGrid__cell_editing'}}
-                   {{collectionItem.getItemPaddingClasses(2)}}
+                   {{collectionItem.getItemPaddingClasses(2, captionPosition)}}
                    js-controls-ListView__editingTarget"
              data-qa="controls-PropertyGrid__editor"
              style="{{getEditorStyles(collectionItem, captionPosition, !(item.caption || collectionItem.isEditing()))}}">
