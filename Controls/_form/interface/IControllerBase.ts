@@ -51,7 +51,7 @@ export interface IUpdateConfig {
 /**
  * Запускает процесс валидации.
  * @function Controls/form:IControllerBase#validate
- * @return {Core/Deferred} Deferred Результата валидации.
+ * @return {Promise<Controls/validate:IValidateResult|Error>}
  */
 
 /**
