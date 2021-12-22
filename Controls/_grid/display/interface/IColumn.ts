@@ -329,7 +329,7 @@ export interface IColumn extends IColspanParams {
     /**
      * @cfg Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы. Чтобы сделать прилипание по двум полям в одной колонке, нужно передать массив из двух строк.
      * Прилипание работает только для первой колонки таблицы.
-     * @remark Подробнее о настройке колонок с прилипанием читайте в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ladder/sticky/ руководстве разработчика}.
+     * @remark Подробнее о настройке колонок с прилипанием читайте в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ladder/#sticky руководстве разработчика}.
      * @default undefined
      * @demo Controls-demo/gridNew/LadderStickyMultiline/StickyMultilineWithHeader/Index В демо-примере лесенка и прилипание данных работает для колонок "photo" и "time".
      * @demo Controls-demo/gridNew/Ladder/Sticky/Index В демо-примере отображение лесенкой включено для колонок "photo" (первая колонка) и "date" (последняя колонка). Прилипание данных работает для колонки photo.
