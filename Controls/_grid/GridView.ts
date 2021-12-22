@@ -310,13 +310,23 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     },
 
     _getGridViewWrapperClasses(options: IGridOptions): string {
-        return `controls_list_theme-${options.theme} ${this._getColumnScrollWrapperClasses(options)}`;
+        let classes = `controls_list_theme-${options.theme} ${this._getColumnScrollWrapperClasses(options)}`;
+        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту
+        if (options.needShowEmptyTemplate) {
+            classes += ' controls-Grid__empty_gridWrapper';
+        }
+        return classes;
     },
 
     _getGridViewClasses(options: IGridOptions, columnScrollPartName?: 'fixed' | 'scrollable'): string {
         let classes = `controls-Grid controls-Grid_${options.style}`;
         if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
             classes += ` controls-Grid_support-ladder ${this._ladderOffsetSelector}`;
+        }
+
+        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту
+        if (options.needShowEmptyTemplate) {
+            classes += ' controls-Grid__empty';
         }
 
         // Удалено в 22.1000. Быстрый фикс неправильной высоты результатов, чтобы не протягивать
