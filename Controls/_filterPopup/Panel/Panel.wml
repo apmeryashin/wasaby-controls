@@ -41,8 +41,7 @@
 
 <Controls.scroll:ScrollContextProvider pagingVisible="{{ false }}">
    <Controls.form:PrimaryAction on:triggered="_applyFilter()">
-      <Controls.popupTemplate:Dialog headingCaption="{{_options.headingCaption}}"
-                                     headerBackgroundStyle="transparent"
+      <Controls.popupTemplate:Dialog headerBackgroundStyle="transparent"
                                      backgroundStyle="transparent"
                                      headingFontColorStyle="{{_options.headingStyle}}"
                                      headingFontSize="{{_options.headingFontSize}}"
@@ -53,34 +52,44 @@
                                                  controls-DialogTemplate_backgroundStyle-{{_options.orientation}}FilterPanel
                                                  {{_hasHistory || _options.emptyHistoryTemplate ? 'controls-FilterPanel__' + _options.orientation + '_withHistory'}}">
          <ws:headerContentTemplate>
-            <ws:if data="{{_options.topTemplate}}">
-               <div class="controls-FilterPanel__header-topTemplate">
-                  <ws:partial template="{{_options.topTemplate}}"/>
-               </div>
-            </ws:if>
-            <div class="controls-FilterPanel__header__buttons ws-flexbox">
-               <ws:if data="{{_hasResetValue && _isChanged}}">
-                  <Controls.buttons:Button attr:class="controls-FilterPanel__resetButton"
-                                           on:click="_resetFilter()"
-                                           viewMode="link"
-                                           name="resetButton"
-                                           fontColorStyle="filterResetButton"
-                                           attr:tabindex="-1"
-                                           inlineHeight="m"
-                                           caption="{[По умолчанию]}"
-                                           tooltip="{[По умолчанию]}"
-                                           attr:data-qa="FilterPanel__resetButton" />
+            <div class="ws-flexbox ws-flex-grow-1 ws-justify-content-between">
+               <ws:if data="{{_options.topTemplate}}">
+                  <div class="controls-FilterPanel__header-topTemplate">
+                     <ws:partial template="{{_options.topTemplate}}"/>
+                  </div>
                </ws:if>
-               <Controls.buttons:Button viewMode="{{_options.applyButtonCaption ? 'button' : 'functionalButton'}}"
-                                        buttonStyle="{{_options.applyButtonStyle}}"
-                                        caption="{{_options.applyButtonCaption}}"
-                                        icon="{{!_options.applyButtonCaption ? 'icon-Yes'}}"
-                                        iconStyle="contrast"
-                                        on:click="_applyFilter()"
-                                        attr:tabindex="1"
-                                        attr:ws-autofocus="true"
-                                        attr:class="controls-FilterPanel__filterButton"
-                                        attr:data-qa="FilterPanel__filterButton"/>
+               <ws:else>
+                  <div class="ws-flexbox ws-align-items-center">
+                     <div class="controls-icon controls-icon_size-default controls-icon_style-success icon-FilterNew"></div>
+                     <div class="controls-FilterPanel__header controls-fontsize-{{_options.headingFontSize}} controls-text-{{_options.headingStyle}}">
+                        {{_options.headingCaption}}
+                     </div>
+                  </div>
+               </ws:else>
+               <div class="controls-FilterPanel__header__buttons ws-flexbox ws-align-items-center">
+                  <ws:if data="{{_hasResetValue && _isChanged}}">
+                     <Controls.buttons:Button attr:class="controls-FilterPanel__resetButton"
+                                              on:click="_resetFilter()"
+                                              viewMode="link"
+                                              name="resetButton"
+                                              fontColorStyle="filterResetButton"
+                                              attr:tabindex="-1"
+                                              inlineHeight="m"
+                                              caption="{[Сбросить]}"
+                                              tooltip="{[Сбросить]}"
+                                              attr:data-qa="FilterPanel__resetButton"/>
+                  </ws:if>
+                  <Controls.buttons:Button viewMode="{{_options.applyButtonCaption ? 'button' : 'functionalButton'}}"
+                                           buttonStyle="{{_options.applyButtonStyle}}"
+                                           caption="{{_options.applyButtonCaption}}"
+                                           icon="{{!_options.applyButtonCaption ? 'icon-Yes'}}"
+                                           iconStyle="contrast"
+                                           on:click="_applyFilter()"
+                                           attr:tabindex="1"
+                                           attr:ws-autofocus="true"
+                                           attr:class="controls-FilterPanel__filterButton"
+                                           attr:data-qa="FilterPanel__filterButton"/>
+               </div>
             </div>
          </ws:headerContentTemplate>
          <ws:bodyContentTemplate>

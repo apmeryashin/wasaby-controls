@@ -160,6 +160,10 @@
    color: var(--item_text-color_filterPanel);
 }
 
+.controls-text-filterPanelItem:active {
+   color: var(--item_hover_text-color_filterPanel);
+}
+
 .ws-is-hover {
    .controls-text-filterPanelItem:hover {
       color: var(--item_hover_text-color_filterPanel);
@@ -175,14 +179,15 @@
    }
 }
 
-.controls-text-filterPanelItem:active {
-   color: var(--item_hover_text-color_filterPanel);
-}
-
 .controls-text-filterPanelItem_readOnly {
    color: var(--label_text-color);
 }
 
 .controls-FilterPanel__header__buttons {
-   white-space: nowrap
+   white-space: nowrap;
+}
+
+.controls-FilterPanel__header {
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
 }
