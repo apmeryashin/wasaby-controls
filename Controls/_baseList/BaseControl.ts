@@ -2546,7 +2546,13 @@ const _private = {
                     // Если после перезагрузки списка нам нужно скроллить к записи,
                     // то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
+
+                    // FIXME: https://online.sbis.ru/opendoc.html?guid=35665533-5f26-432e-9b22-795ac40e65ff
+                    const lastAction = self._options.fix1184259069 && self._doAfterDrawItems;
                     self._doAfterDrawItems = () => {
+                        if (lastAction) {
+                            lastAction();
+                        }
                         _private.scrollToItem(self, self._options.activeElement, 'top', true);
                     };
                 }
@@ -7468,7 +7474,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         // Скроллить нужно после того как ромашка отрисуется, то есть на _afterRender
         if (onDrawItems) {
-            this._doAfterDrawItems = scrollAndShowTrigger;
+
+            // FIXME: https://online.sbis.ru/opendoc.html?guid=35665533-5f26-432e-9b22-795ac40e65ff
+            const lastAction = this._options.fix1184259069 && this._doAfterDrawItems;
+            this._doAfterDrawItems = () => {
+                if (lastAction) {
+                    lastAction();
+                }
+                scrollAndShowTrigger();
+            };
         } else {
             _private.doAfterRender(this, scrollAndShowTrigger);
         }
