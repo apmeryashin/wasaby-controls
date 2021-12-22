@@ -303,7 +303,7 @@ class FormController extends ControllerBase<IFormController> {
         this._errorController.setOnProcess((viewConfig) => {
             viewConfig.options.repeatConfig = {
                 display: true,
-                function: foo.bind(this, ...args)
+                function: () => foo.call(this, ...args).then(() => this._hideError())
             };
             return viewConfig;
         });
