@@ -567,9 +567,19 @@ const _private = {
             const markedKey = markerController.getMarkedKey();
             if (markedKey !== null && markedKey !== undefined) {
                 const markedItem = self.getItems().getRecordById(markedKey);
-                self._notifyItemClick([event, markedItem, event]);
+
+                const selector = `.${self._getItemsContainerUniqueClass()} > ${self._options.itemsSelector}[item-key="${markedKey}"]`;
+                const target = self._getItemsContainer().querySelector(selector) as HTMLElement;
+                const customEvent = new SyntheticEvent(event, {
+                    type: 'click',
+                    target,
+                    _bubbling: false
+                });
+
+                self._notifyItemClick([customEvent, markedItem, customEvent]);
+
                 if (event && !event.isStopped()) {
-                    self._notify('itemActivate', [markedItem, event], {bubbling: true});
+                    self._notify('itemActivate', [markedItem, customEvent, undefined], {bubbling: true});
                 }
             }
         }
@@ -5727,7 +5737,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             const eventResult = this._notifyItemClick([e, item, originalEvent, columnIndex]);
             if (eventResult !== false) {
-                this._notify('itemActivate', [item, originalEvent], {bubbling: true});
+                const target = originalEvent.target.closest('.controls-ListView__itemV');
+                this._notify('itemActivate', [item, originalEvent, columnIndex], {bubbling: true});
             }
         }
     }
@@ -5795,7 +5806,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         // Запись становится активной по клику, если не началось редактирование.
                         // Аргументы itemClick сохранены в состояние и используются для нотификации об активации
                         // элемента.
-                        this._notify('itemActivate', this._savedItemClickArgs.slice(1), {bubbling: true});
+                        const args = this._savedItemClickArgs.slice(1);
+                        if (args[1].target) {
+                            args.push(args[1].target.closest('.controls-ListView__itemV'));
+                        }
+                        this._notify('itemActivate', args, {bubbling: true});
                     }
                     return result;
                 }

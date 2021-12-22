@@ -808,6 +808,13 @@ define([
          }
 
          // Without marker
+         baseControl._getItemsContainer = function () {
+            return {
+               querySelector: function () {
+                  return {};
+               }
+            };
+         }
          lists.BaseControl._private.enterHandler(baseControl, getEvent());
          assert.isTrue(notified);
 

@@ -13,7 +13,8 @@ export default class extends Control {
     protected _itemActions: IItemAction[];
     protected _hasMultiSelect: boolean = false;
     protected _selectedKeys: number[] = [];
-    protected _currentItem: string;
+    protected _clickedItem: string;
+    protected _activeItem: string;
 
     protected _beforeMount(): void {
         this._itemActions = getItemActions();
@@ -24,7 +25,11 @@ export default class extends Control {
     }
 
     protected _onItemClick(event: SyntheticEvent, item: Model): void {
-        this._currentItem = item ? ('key: ' + item.getKey()) : null;
+        this._clickedItem = item ? ('key: ' + item.getKey()) : null;
+    }
+
+    protected _onItemActivate(e: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
+        this._activeItem = nativeEvent.target ? ('item-key: ' + nativeEvent.target.getAttribute('item-key')) : null;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
