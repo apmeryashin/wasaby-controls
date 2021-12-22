@@ -71,6 +71,15 @@ export default class MonthsSource extends Memory {
             month = monthListUtils.idToDate(month, this._dateConstructor);
 
             month = this._shiftRange(month, offset);
+
+            // Проверяем, что месяц непоследний отображаемый, иначе нужно указать в items, что сверху данных больше нет
+            const monthBefore = new Date(month.getFullYear(), month.getMonth() - 1);
+            if (!this._isDisplayed(monthBefore)) {
+                const hiddenPeriod = this._getHiddenPeriod(monthBefore);
+                if (hiddenPeriod[0] === null) {
+                    before = false;
+                }
+            }
             if (this._order === 'desc') {
                 delta *= -1;
             }
