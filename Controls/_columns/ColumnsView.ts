@@ -172,7 +172,7 @@
  *       bottom="l"
  *       left="l"
  *       right="l"/>
- * </Controls.tile:View>
+ * </Controls.columns:View>
  * </pre>
  */
 /**
@@ -187,6 +187,6 @@
  *       bottom="l"
  *       left="l"
  *       right="l"/>
- * </Controls.tile:View>
+ * </Controls.columns:View>
  * </pre>
  */
