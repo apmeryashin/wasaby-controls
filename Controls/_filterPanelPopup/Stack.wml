@@ -1,11 +1,42 @@
 <Controls.popupTemplate:Stack closeButtonViewMode="link"
+                              headerBackgroundStyle="default"
+                              headerBorderVisible="{{false}}"
                               attr:class="controls_filterPanel_theme-{{_options.theme}} controls-FilterViewPanel__popup-template">
+    <ws:headerContentTemplate>
+        <div class="controls-FilterViewPanel__header">
+            <Controls.icon:Icon icon="icon-FilterNew"
+                                attr:class="controls-FilterViewPanel__filter-icon"/>
+            <Controls.heading:Title caption="{{rk('Отбираются')}}"
+                                    fontSize="3xl"
+                                    readOnly="{{true}}"
+                                    fontColorStyle="secondary"
+                                    attr:class="controls-FilterViewPanel__filter-caption"/>
+            <Controls.buttons:Button viewMode="functionalButton"
+                                     icon="icon-Yes"
+                                     iconSize="s"
+                                     iconStyle="contrast"
+                                     buttonStyle="success"
+                                     caption="{{null}}"
+                                     inlineHeight="m"
+                                     attr:class="controls-FilterViewPanel_header__applyButton"
+                                     on:click="_applyFilter()"/>
+            <ws:if data="{{!_isFilterReseted(_items)}}">
+                <Controls.buttons:Button viewMode="linkButton"
+                                         caption="{{rk('Сбросить')}}"
+                                         fontColorStyle="label"
+                                         fontSize="xs"
+                                         on:click="_resetFilter()"/>
+            </ws:if>
+        </div>
+    </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
-        <Controls.filterPanel:View source="{{_options.items}}"
+        <Controls.filterPanel:View name="filterPanel"
+                                   source="{{_options.items}}"
                                    backgroundStyle="contrast"
                                    viewMode="filterPanelStack"
                                    collapsedGroups="{{_options.collapsedGroups}}"
                                    on:collapsedGroupsChanged="_collapsedGroupsChanged()"
+                                   on:sourceChanged="_sourceChangedHandler()"
                                    on:filterApplied="_filterAppliedHandler()"
                                    attr:class="controls-FilterViewPanel__popup-content"/>
     </ws:bodyContentTemplate>
