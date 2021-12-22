@@ -216,7 +216,7 @@ export class Calculator {
 
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
             const isLastItem = index === range.endIndex - 1 || item && !nextItem;
-            if (itemBorderBottom >= viewportBorderPosition || isLastItem) {
+            if (itemBorderBottom > viewportBorderPosition || isLastItem) {
                 let borderDistance;
                 let border;
                 if (direction === 'forward') {
@@ -227,7 +227,7 @@ export class Calculator {
                     borderDistance = bottomViewportBorder - itemOffset;
                 } else {
                     // запись - выше, чем верхняя граница viewPort
-                    if (scrollPosition >= itemOffset) {
+                    if (scrollPosition > itemOffset) {
                         border = 'forward';
                         borderDistance = itemBorderBottom - scrollPosition;
                     } else {

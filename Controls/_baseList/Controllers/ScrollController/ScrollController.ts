@@ -381,9 +381,7 @@ export class ScrollController {
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
-        const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
-        return edgeItem.direction === 'forward' && scrollPosition ? scrollPosition - beforeContentSize : scrollPosition;
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
     }
 
     /**
