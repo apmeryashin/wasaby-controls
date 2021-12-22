@@ -64,17 +64,22 @@ export function width(container: HTMLElement | unknown): number {
  * @param itemsHtml массив строк HTML, которые необходимо измерить до отрисовки
  * @param itemClass CSS класс элементов которые необходимо измерить
  * @param considerMargins Учитывать ли margin left/right
+ * @param themeClass CSS класс, который содержит все необходимые для изерения CSS переменные
  */
 export function getElementsWidth(
     itemsHtml: string[],
     itemClass: string,
-    considerMargins?: boolean): number[] {
+    considerMargins?: boolean,
+    themeClass?: string): number[] {
     const itemsSizes: number[] = [];
     const measurer: HTMLElement = document.createElement('div');
     measurer.innerHTML = itemsHtml.join('');
     measurer.style.position = 'absolute';
     measurer.style.left = '-10000px';
     measurer.style.top = '-10000px';
+    if (themeClass) {
+        measurer.classList.add(themeClass);
+    }
     document.body.appendChild(measurer);
     [].forEach.call(measurer.getElementsByClassName(itemClass), (item) => {
         const styles = window.getComputedStyle(item);
