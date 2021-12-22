@@ -95,6 +95,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                 actions: this._prepareActionsOrder(options.actions),
                 prefetch: options.prefetchData
             });
+            this._toolbarItems = this._getToolbarItems(this._actionsCollection.getToolbarItems());
         }
         if (this._options.prefetchData !== options.prefetchData) {
             this._unsubscribeFromControllers();
@@ -109,12 +110,19 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     ): void {
         event.stopPropagation();
         const action = this._actionsCollection.getExecuteAction(item);
-        Store.dispatch('executeOperation', {
+        this._operationsController.executeAction({
             action,
-            clickEvent,
-            toolbarItem: item
+            toolbarItem: item,
+            source: this._sourceController?.getSource(),
+            target: clickEvent,
+            selection: this._operationsController?.getSelection(),
+            filter: this._filterController?.getFilter() || {},
+            keyProperty: this._sourceController?.getKeyProperty(),
+            parentProperty: this._sourceController?.getParentProperty(),
+            sourceController: this._sourceController,
+            operationsController: this._operationsController,
+            selectedKeysCount: this._operationsController?.getSelectedKeysCount()
         });
-        this._notify('operationPanelItemClick', [action, clickEvent, item], {bubbling: true});
     }
 
     private _subscribeControllersChanges(options: IContainerOptions): void {
