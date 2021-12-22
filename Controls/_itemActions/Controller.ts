@@ -456,6 +456,15 @@ export class Controller {
         this._dependenciesTimer?.stop();
     }
 
+    destroy(): void {
+        // Коллекцию могут пробросить в список сверху, нужно на ней сбросить состояние что actions инициализированы
+        // Чтобы при переиспользовании этой коллекции, контроллер правильно обновился
+        // TODO https://online.sbis.ru/opendoc.html?guid=f955f40c-b84d-4f71-9bbd-b557e4548ddd
+        if (this._collection) {
+            this._collection.setActionsAssigned(false);
+        }
+    }
+
     /**
      * Возвращает конфиг для шаблона меню опций
      * @param item элемент коллекции, для которого выполняется действие
