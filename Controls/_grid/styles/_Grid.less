@@ -20,6 +20,17 @@
    position: relative;
 }
 
+.controls-Grid__empty,
+.controls-GridView__gridWrapper_empty {
+   height: 100%;
+}
+
+// Костыль удалён в 22.1000, вместе с опцией task1183896841
+.controls-Grid__empty .controls-GridView__emptyTemplate__contentWrapper {
+   display: flex;
+   align-items: center;
+}
+
 .controls-GridView__emptyTemplate {
    display: contents;
 }
