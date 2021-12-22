@@ -3916,7 +3916,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             (this._options.navigation.viewConfig.pagingMode === 'numbers' || !this._isPagingArrowClick)) {
             if (this._useNewScroll) {
                 scrollParams.scrollTop = this._listVirtualScrollController.getVirtualScrollPosition();
-                scrollParams.scrollHeight = this._listVirtualScrollController.getVirtualContentSize();
+                scrollParams.scrollHeight
+                    = this._listVirtualScrollController.getVirtualContentSize() + pagingPadding - stickyElementsHeight;
             } else {
                 scrollParams.scrollTop += (this._scrollController?.getPlaceholders()?.top || 0);
                 scrollParams.scrollHeight += (this._scrollController?.getPlaceholders()?.bottom +
