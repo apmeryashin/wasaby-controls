@@ -67,8 +67,8 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 sourceController = new NewSourceController({...editorOptions} as ISourceControllerOptions);
             }
 
-            if (!newItem.editorCaption) {
-                newItem.editorCaption = typeof item.caption === 'string' ? item.caption : item.group;
+            if (!newItem.hasOwnProperty('editorCaption')) {
+                newItem.editorCaption = typeof item.caption !== undefined ? item.caption : item.group;
             }
             newItem.caption = '';
             newItem.editorOptions = {
@@ -123,7 +123,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             groupsItems[item.name] = {
                 caption: item.editorCaption,
                 expanderVisible: item.expanderVisible,
-                groupVisible: typeof item.editorCaption === 'string' && (item.editorCaption || itemIndex),
+                groupVisible: typeof item.editorCaption === 'string',
                 textValue: item.textValue,
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };
