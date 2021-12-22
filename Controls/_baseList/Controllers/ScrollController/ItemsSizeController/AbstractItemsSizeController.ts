@@ -103,11 +103,15 @@ export abstract class AbstractItemsSizesController {
                 // Нужно учитывать оффсет элементов скрытых виртуальным диапазоном.
                 // Например, был диапазон 0 - 10, стал 5 - 15
                 // У 5-ой записи offset === 0, но перед ней есть еще 5-ть скрытых записей, у которых мы знаем offset.
-                // offset после послденей скрытой записи равен ее offset + size.
+                // offset после последней скрытой записи равен ее offset + size.
                 let hiddenItemsOffset = 0;
                 if (position > 0) {
+                    const firstItemOffset = this._itemsSizes[0].offset;
                     const lastHiddenItem = this._itemsSizes[position - 1];
-                    hiddenItemsOffset = lastHiddenItem.offset + lastHiddenItem.size;
+                    // нужно вычитать оффсет первой записи, чтобы он не учитывался дважды, когда мы будем прибавлять
+                    // hiddenItemsOffset к элементам нового диапазона.
+                    // Иначе будет дважды посчитана высота ромашки или хедера.
+                    hiddenItemsOffset = lastHiddenItem.offset + lastHiddenItem.size - firstItemOffset;
                 }
                 Array.from(itemsElements).forEach((element: HTMLElement) => {
                     this._itemsSizes[position] = this._getItemSize(element);
