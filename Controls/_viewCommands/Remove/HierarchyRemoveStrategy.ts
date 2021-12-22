@@ -16,7 +16,7 @@ export default class HierarchyRemoveStrategy {
         this._removeFromRecordSet(items, options);
     }
 
-    protected _removeFromRecordSet(items: RecordSet, options): void {
+    protected _removeFromRecordSet(items: RecordSet, options: IHierarchyRemoveStrategyOptions): void {
         const hierarchy = new relation.Hierarchy({
             keyProperty: options.keyProperty,
             parentProperty: options.parentProperty,
@@ -35,7 +35,12 @@ export default class HierarchyRemoveStrategy {
         HierarchyRemoveStrategy._setEventRaising(true, items, options.silent);
     }
 
-    protected _hierarchyRemove(items: RecordSet, selection, hierarchy: relation.Hierarchy, children: Model[]): void {
+    protected _hierarchyRemove(
+        items: RecordSet,
+        selection: ISelectionObject,
+        hierarchy: relation.Hierarchy,
+        children: Model[]
+    ): void {
         let key;
         let isNode;
         children.forEach((item) => {
