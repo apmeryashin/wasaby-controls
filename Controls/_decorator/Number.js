@@ -65,6 +65,8 @@ define('Controls/_decorator/Number', ['UI/Executor', 'Controls/_decorator/resour
  * @implements Controls/decorator:IOnlyPositive
  * @implements Controls/interface:INumberFormat
  * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IFontColorStyle
  * @public
  * @demo Controls-demo/Decorator/Number/Index
  *
