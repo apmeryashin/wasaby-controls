@@ -242,12 +242,10 @@ export abstract class AbstractObserversController {
         // Прижимаем триггер к краю, чтобы после перезагрузки не было лишних подгрузок
         this.setBackwardTriggerPosition('null');
         this.setForwardTriggerPosition('null');
-
         this.setAdditionalTriggersOffsets({
             forward: 0,
             backward: 0
         });
-        this.setBackwardTriggerVisible(false);
         return this.getTriggersOffsets();
     }
 

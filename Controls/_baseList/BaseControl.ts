@@ -3912,11 +3912,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
          * Иначе пэджинг может исчезать и сразу появляться.
          * https://online.sbis.ru/opendoc.html?guid=8d830d87-be3f-4522-b453-0df337147d42
          */
-        if (_private.needScrollPaging(this._options.navigation) &&
+        if ((_private.needScrollPaging(this._options.navigation) || this._useNewScroll) &&
             (this._options.navigation.viewConfig.pagingMode === 'numbers' || !this._isPagingArrowClick)) {
-            scrollParams.scrollTop += (this._scrollController?.getPlaceholders()?.top || 0);
-            scrollParams.scrollHeight += (this._scrollController?.getPlaceholders()?.bottom +
-                this._scrollController?.getPlaceholders()?.top || 0);
+            if (this._useNewScroll) {
+                scrollParams.scrollTop = this._listVirtualScrollController.getVirtualScrollPosition();
+                scrollParams.scrollHeight = this._listVirtualScrollController.getVirtualContentSize();
+            } else {
+                scrollParams.scrollTop += (this._scrollController?.getPlaceholders()?.top || 0);
+                scrollParams.scrollHeight += (this._scrollController?.getPlaceholders()?.bottom +
+                    this._scrollController?.getPlaceholders()?.top || 0);
+            }
         }
         this._isPagingArrowClick = false;
         return scrollParams;

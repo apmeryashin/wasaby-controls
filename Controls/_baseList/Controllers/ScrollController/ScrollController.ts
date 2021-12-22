@@ -179,6 +179,14 @@ export class ScrollController {
         return this._calculator.getFirstVisibleItemIndex();
     }
 
+    getVirtualScrollPosition(): number {
+        return this._calculator.getVirtualScrollPosition();
+    }
+
+    getVirtualContentSize(): number {
+        return this._calculator.getVirtualContentSize();
+    }
+
     // region Triggers
 
     setBackwardTriggerVisible(visible: boolean): void {

@@ -160,6 +160,14 @@ export class Calculator {
         });
     }
 
+    getVirtualScrollPosition(): number {
+        return this._scrollPosition + this._placeholders.backward;
+    }
+
+    getVirtualContentSize(): number {
+        return this._contentSize + this._placeholders.backward + this._placeholders.forward;
+    }
+
     // endregion Getters/Setters
 
     // region EdgeVisibleItem
