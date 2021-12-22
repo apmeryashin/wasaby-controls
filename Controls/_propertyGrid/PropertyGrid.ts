@@ -1048,8 +1048,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     _getRemoveViewCommand(selection: ISelectionObject): RemoveViewCommand {
         return new RemoveViewCommand({
             keyProperty: this._listModel.getKeyProperty(),
-            nodeProperty: this._listModel.getNodeProperty(),
-            parentProperty: this._listModel.getParentProperty(),
             items: this._listModel.getCollection(),
             selection
         });
