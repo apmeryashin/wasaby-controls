@@ -200,6 +200,11 @@ export class Calculator {
         const itemsSizes = this._itemsSizes;
         let edgeItem: IEdgeItem = null;
 
+        const itemsIsRendered = this._itemsSizes.some((it) => !!it.size);
+        if (!itemsIsRendered) {
+            return null;
+        }
+
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
             const nextItem = itemsSizes[index + 1];

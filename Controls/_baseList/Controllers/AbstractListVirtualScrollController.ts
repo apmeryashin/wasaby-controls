@@ -250,10 +250,12 @@ export abstract class AbstractListVirtualScrollController<
         // в indexesChangedCallback.
         if (!this._scheduledScrollParams) {
             const edgeItem = this._scrollController.getEdgeVisibleItem({ direction: 'backward' });
-            this._scheduleScroll({
-                type: 'restoreScroll',
-                params: edgeItem
-            });
+            if (edgeItem) {
+                this._scheduleScroll({
+                    type: 'restoreScroll',
+                    params: edgeItem
+                });
+            }
         }
     }
 
