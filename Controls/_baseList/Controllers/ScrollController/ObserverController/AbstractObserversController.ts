@@ -216,6 +216,9 @@ export abstract class AbstractObserversController {
 
     private _setTriggerVisible(direction: IDirection, visible: boolean): void {
         const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
+        if (!trigger) {
+            return;
+        }
 
         if (trigger.style.display !== 'none' && trigger.style.display !== '') {
             Logger.error(`${ERROR_PATH}::_setTriggerVisibility | ` +
