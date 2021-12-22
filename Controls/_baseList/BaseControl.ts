@@ -3404,7 +3404,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      */
     freezeHoveredItem(item: Model): void {
         const collectionItem = this._listViewModel.getItemBySourceItem(item);
-        _private.freezeHoveredItem(this, collectionItem);
+        if (collectionItem) {
+            _private.freezeHoveredItem(this, collectionItem);
+        }
     }
 
     /**
