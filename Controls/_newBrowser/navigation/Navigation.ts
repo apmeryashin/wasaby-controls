@@ -25,7 +25,7 @@ interface INavigationControlOptions extends IControlOptions {
     parentProperty: string;
     nodeProperty: string;
     activeElement: TKey;
-    changeActiveElement: Function;
+    changeActiveElement: (activeElement: TKey) => void;
 }
 
 export default class Navigation<T = unknown> extends Control<INavigationControlOptions> {

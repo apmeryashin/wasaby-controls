@@ -6,16 +6,12 @@ import { Tree, ITreeCollectionOptions } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { ITreeTileCollectionOptions } from 'Controls/_treeTile/display/TreeTileCollection';
 
-const COMPOSITE_LEVEL = 3; // todo add option for replace this const
-
 export interface ICompositeViewConfig extends ITreeTileCollectionOptions {
-    itemTemplate: string;
-    // todo release interface
+    compositeNodesLevel: number;
 }
 
 export interface IOptions<S extends Model, T extends CollectionItem<S>>
    extends ITreeCollectionOptions<S, T> {
-    nodeTypeProperty?: string;
     compositeViewConfig: ICompositeViewConfig;
 }
 
@@ -25,14 +21,17 @@ export default class Collection<
 > extends mixin<Tree<Model>>(Tree) {
     readonly '[Controls/expandedCompositeTree:Collection]': boolean;
     protected _$compositeViewConfig: ICompositeViewConfig;
+    protected _$compositeNodesLevel: number;
 
     constructor(options: IOptions<S, T>) {
         super(options);
 
+        const compositeNodesLevel = this._$compositeNodesLevel;
+
         this.appendStrategy(CompositeItem, {});
         this.addFilter(
             (contents, sourceIndex, item, collectionIndex) =>
-                (item.isNode() && item.getLevel() < COMPOSITE_LEVEL) || item[`[${ MODULE_NAME }]`]
+                (item.isNode() && item.getLevel() < compositeNodesLevel) || item[`[${ MODULE_NAME }]`]
         );
     }
 
@@ -45,5 +44,6 @@ Object.assign(Collection.prototype, {
     '[Controls/expandedCompositeTree:Collection]': true,
     _moduleName: 'Controls/expandedCompositeTree:Collection',
     _itemModule: 'Controls/expandedCompositeTree:CollectionItem',
-    _$compositeViewConfig: null
+    _$compositeViewConfig: null,
+    _$compositeNodesLevel: null
 });

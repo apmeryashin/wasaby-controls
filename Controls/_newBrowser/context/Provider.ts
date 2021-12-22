@@ -1,8 +1,8 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_newBrowser/context/Provider';
-
+import { Control, IControlOptions, TemplateFunction } from 'UI/Base';
 import * as DataContext from 'Core/DataContext';
+
 import { TKey } from 'Controls/interface';
+import * as template from 'wml!Controls/_newBrowser/context/Provider';
 
 export interface IActiveElementContextOptions {
     activeElement: TKey;

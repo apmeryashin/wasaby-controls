@@ -15,4 +15,19 @@ export class View extends BaseView {
     protected _getModelConstructor(): string {
         return 'Controls/expandedCompositeTree:Collection';
     }
+
+    static getDefaultOptions(): object {
+        return {
+            compositeNodesLevel: 3
+        };
+    }
 }
+
+Object.defineProperty(View, 'defaultProps', {
+    enumerable: true,
+    configurable: true,
+
+    get(): object {
+        return View.getDefaultOptions();
+    }
+});

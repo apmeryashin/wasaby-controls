@@ -1,6 +1,6 @@
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
 import { TKey } from 'Controls/interface';
-import {ActiveElementContext, IActiveElementContextOptions, IContextsWithActiveElementContext} from './Provider';
+import { ActiveElementContext, IActiveElementContextOptions, IContextsWithActiveElementContext } from './Provider';
 import * as template from 'wml!Controls/_newBrowser/context/Consumer';
 
 export default class Consumer<T = unknown> extends Control<IControlOptions> {
