@@ -309,7 +309,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         let classes = `controls_list_theme-${options.theme} ${this._getColumnScrollWrapperClasses(options)}`;
         // Опция удалена в 22.1000. Если нужно отобразить пустое представление, растягиваем grid на всю высоту
         if (options.task1183896841 && options.needShowEmptyTemplate) {
-            classes += ' controls-GridView__gridWrapper_empty';
+            classes += ' controls-Grid__empty_gridWrapper';
         }
         return classes;
     },
