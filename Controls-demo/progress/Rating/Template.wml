@@ -4,6 +4,15 @@
          <div class="controlsDemo__cell">
             <Router.router:Reference attr:class="controls-text-label"
                                      state="/Controls-demo/app/:app"
+                                     app="{{ 'Controls-demo/progress/Rating/Base/Index' }}">
+               <a href="{{content.href}}">Базовая настройка компонента рейтинга</a>
+            </Router.router:Reference>
+            <Controls-demo.progress.Rating.Base.Index/>
+         </div>
+
+         <div class="controlsDemo__cell">
+            <Router.router:Reference attr:class="controls-text-label"
+                                     state="/Controls-demo/app/:app"
                                      app="{{ 'Controls-demo/progress/Rating/IconPadding/Index' }}">
                <a href="{{content.href}}">Настройка расстояния между иконками</a>
             </Router.router:Reference>
@@ -12,29 +21,14 @@
          <div class="controlsDemo__cell">
             <Router.router:Reference attr:class="controls-text-label"
                                      state="/Controls-demo/app/:app"
-                                     app="{{ 'Controls-demo/progress/Rating/IconStyle/Index' }}">
+                                     app="{{ 'Controls-demo/progress/Rating/IconColorMode/Index' }}">
                <a href="{{content.href}}">Настройка цвета иконок звезды</a>
             </Router.router:Reference>
-            <Controls-demo.progress.Rating.IconStyle.Index/>
-         </div>
-         <div class="controlsDemo__cell">
-            <Router.router:Reference attr:class="controls-text-label"
-                                     state="/Controls-demo/app/:app"
-                                     app="{{ 'Controls-demo/progress/Rating/EmptyIconStyle/Index' }}">
-               <a href="{{content.href}}">Настройка цвета незаполненных иконок звезды</a>
-            </Router.router:Reference>
-            <Controls-demo.progress.Rating.EmptyIconStyle.Index/>
+            <Controls-demo.progress.Rating.IconColorMode.Index/>
          </div>
       </div>
       <div class="ws-flexbox">
-         <div class="controlsDemo__cell">
-            <Router.router:Reference attr:class="controls-text-label"
-                                     state="/Controls-demo/app/:app"
-                                     app="{{ 'Controls-demo/progress/Rating/Base/Index' }}">
-               <a href="{{content.href}}">Базовая настройка компонента рейтинга</a>
-            </Router.router:Reference>
-            <Controls-demo.progress.Rating.Base.Index/>
-         </div>
+
          <div class="controlsDemo__cell">
             <Router.router:Reference attr:class="controls-text-label"
                                      state="/Controls-demo/app/:app"

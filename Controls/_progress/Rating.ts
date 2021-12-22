@@ -7,24 +7,26 @@ import {descriptor} from 'Types/entity';
 import 'css!Controls/progress';
 
 type IconSize = 'default'|'2xs'|'xs'|'s'|'m'|'l';
-type IconStyle = 'warning'|'info'|'success'|'danger'|'secondary'|'primary'|'default'|'contrast'|'readonly';
-type IconPadding = 'null'|'3xs'|'2xs'|'xs'|'s'|'m'|'l'|'xl';
+type TIconColorMode = 'static'|'dynamic';
 type TPrecision = 0 | 0.5;
 type TIconFill = 'none' | 'full';
 
 const DEFAULT_ICON_SIZE = 's';
-const DEFAULT_ICON_PADDING = '3xs';
-const DEFAULT_ICON_STYLE = 'warning';
-const DEFAULT_EMPTY_ICON_STYLE = 'readonly';
+const ICON_PADDINGS = {
+    default: '2xs',
+    '2xs': '3xs',
+    xs: '3xs',
+    s: '3xs',
+    m: '2xs',
+    l: 'xs'
+};
 
 interface IRatingOptions extends IControlOptions {
     value: number;
     precision?: TPrecision;
     readOnly?: boolean;
     iconSize?: IconSize;
-    iconStyle?: IconStyle;
-    iconPadding?: IconPadding;
-    emptyIconStyle?: IconStyle;
+    iconColorMode?: TIconColorMode;
     emptyIconFill?: TIconFill;
 }
 
@@ -56,17 +58,16 @@ interface IRatingOptions extends IControlOptions {
 class Rating extends Control<IRatingOptions> {
     protected _template: TemplateFunction = template;
     protected _viewModel: RatingViewModel;
-    protected _correctValue: number;                // TODO precision сделан неправильно, надо править прикладников
-    protected _correctPrecision: number;            // TODO precision сделан неправильно, надо править прикладников
+    protected _iconPadding: string;
 
     protected _beforeMount(options: IRatingOptions): void {
         this._viewModel = new RatingViewModel({
             value: options.value,
             precision: options.precision,
-            iconStyle: options.iconStyle,
-            emptyIconStyle: options.emptyIconStyle,
+            iconColorMode: options.iconColorMode,
             emptyIconFill: options.emptyIconFill
         });
+        this._iconPadding = ICON_PADDINGS[options.iconSize];
     }
 
     protected _beforeUpdate(options: IRatingOptions): void {
@@ -74,16 +75,18 @@ class Rating extends Control<IRatingOptions> {
         const precisionChanged = this._options.precision !== options.precision;
 
         if (valueChanged || precisionChanged
-            || options.iconStyle !== this._options.iconStyle
-            || options.emptyIconStyle !== this._options.emptyIconStyle) {
+            || options.iconColorMode !== this._options.iconColorMode) {
 
             this._viewModel.setOptions({
                 value: options.value,
                 precision: options.precision,
-                iconStyle: options.iconStyle,
-                emptyIconStyle: options.emptyIconStyle,
+                iconColorMode: options.iconColorMode,
                 emptyIconFill: options.emptyIconFill
             });
+        }
+
+        if (options.iconSize !== this._options.iconSize) {
+            this._iconPadding = ICON_PADDINGS[options.iconSize];
         }
     }
 
@@ -111,10 +114,8 @@ class Rating extends Control<IRatingOptions> {
         return {
             readOnly: false,
             precision: 0,
-            iconPadding: DEFAULT_ICON_PADDING,
             iconSize: DEFAULT_ICON_SIZE,
-            iconStyle: DEFAULT_ICON_STYLE,
-            emptyIconStyle: DEFAULT_EMPTY_ICON_STYLE,
+            iconColorMode: 'static',
             emptyIconFill: 'none'
         };
     }
@@ -174,7 +175,7 @@ Object.defineProperty(Rating, 'defaultProps', {
 
 /**
  * @name Controls/progress:Rating#iconSize
- * @cfg {String} Размер иконки звезды.
+ * @cfg {String} Размер иконки звезды. При задании размеров иконки, меняется и расстояние между ними.
  * @variant default
  * @variant 2xs
  * @variant xs
@@ -182,121 +183,26 @@ Object.defineProperty(Rating, 'defaultProps', {
  * @variant m
  * @variant l
  * @see iconPadding
- * @see iconStyle
- * @see emptyIconStyle
  * @demo Controls-demo/progress/Rating/IconSize/Index
  */
-/*
- * @name Controls/progress:Rating#iconSize
- * @cfg {String} Star size
- * @remark
- * Possible values:
- * * default
- * * 2xs
- * * xs
- * * s
- * * m
- * * l
- */
+
 /**
- * @name Controls/progress:Rating#iconStyle
- * @cfg {String} Цвет заполненной звезды.
- * @variant warning
- * @variant info
- * @variant success
- * @variant danger
- * @variant secondary
- * @variant primary
- * @variant default
- * @variant contrast
+ * @name Controls/progress:Rating#iconColorMode
+ * @cfg {String} Режим окраски звезд
+ * @variant static звезды закрашиваются одинаково, независимо от количества заполненных
+ * @variant dynamic звезды закрашиваются в зависимости от количества заполненных
  * @see iconSize
  * @see iconPadding
- * @see emptyIconStyle
- * @demo Controls-demo/progress/Rating/IconStyle/Index
+ * @demo Controls-demo/progress/Rating/iconColorMode/Index
  */
-/*
- * @name Controls/progress:Rating#iconStyle
- * @cfg {String} Color of highlighted star
- * @remark
- * Possible values:
- * * warning
- * * info
- * * success
- * * danger
- * * secondary
- * * primary
- * * default
- * * contrast
- */
-/**
- * @name Controls/progress:Rating#iconPadding
- * @cfg {String} Расстояние между звездами.
- * @variant null
- * @variant 2xs
- * @variant xs
- * @variant s
- * @variant m
- * @variant l
- * @variant xl
- * @see iconSize
- * @see iconStyle
- * @see emptyIconStyle
- * @demo Controls-demo/progress/Rating/IconPadding/Index
- */
-/*
- * @name Controls/progress:Rating#iconPadding
- * @cfg {Number} Distance between stars
- * @remark
- * Possible values:
- * * null
- * * 2xs
- * * xs
- * * s
- * * m
- * * l
- * * xl
- */
-/**
- * @name Controls/progress:Rating#emptyIconStyle
- * @cfg {String} Цвет пустой звезды.
- * @variant warning
- * @variant info
- * @variant success
- * @variant danger
- * @variant secondary
- * @variant primary
- * @variant default
- * @variant contrast
- * @variant readonly
- * @see iconPadding
- * @see iconStyle
- * @see iconSize
- * @demo Controls-demo/progress/Rating/EmptyIconStyle/Index
- */
-/*
- * @name Controls/progress:Rating#emptyIconStyle
- * @cfg {String} Color of empty star
- * @remark
- * Possible values:
- * * warning
- * * info
- * * success
- * * danger
- * * secondary
- * * primary
- * * default
- * * contrast
- * * readonly
- */
+
 /**
  * @name Controls/progress:Rating#emptyIconFill
  * @cfg {String} Заливка пустой звезды
  * @variant none Заливки нет, есть только контур
  * @variant full Заливка есть
  * @see iconPadding
- * @see iconStyle
  * @see iconSize
  * @demo Controls-demo/progress/Rating/EmptyIconFill/Index
- * @remark Обратите внимание, если опция установлена в значение full, то значения опций iconStyle и emptyIconStyle должны различаться
  */
 export default Rating;
