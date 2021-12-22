@@ -333,6 +333,9 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
 
         if (options._needBottomPadding) {
             classes += ' controls-GridView__paddingBottom__itemActionsV_outside';
+            if (options.rowSeparatorSize) {
+                classes += `_size-${options.rowSeparatorSize}`;
+            }
         }
 
         // Во время днд отключаем лесенку, а контент отображаем принудительно с помощью visibility: visible
