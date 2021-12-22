@@ -594,7 +594,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/display/interface/IGridControl#emptyTemplateColumns
- * @cfg {Array.<Controls/_grid/display/interface/IGridControl/IEmptyTemplateColumn.typedef>} Конфигурация колонок {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty-grid/#empty-template-columns пустой таблицы}.
+ * @cfg {Array.<Controls/_grid/display/interface/IGridControl/IEmptyTemplateColumn.typedef>} Конфигурация колонок {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty/#empty-template-columns пустой таблицы}.
  * @demo Controls-demo/gridNew/EmptyGrid/Editing/Index
  */
 
