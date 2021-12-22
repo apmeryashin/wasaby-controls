@@ -4860,6 +4860,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._destroyIndicatorsController();
         this._observersController?.destroy();
         this._observersController = null;
+        if (this._itemActionsController) {
+            this._itemActionsController.destroy();
+            this._itemActionsController = null;
+        }
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);

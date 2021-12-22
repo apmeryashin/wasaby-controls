@@ -7,6 +7,7 @@ import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {IGridCollectionOptions} from 'Controls/grid';
 import {ILabelOptions} from 'Controls/input';
+import {TCaptionPosition} from 'Controls/_propertyGrid/IPropertyGrid';
 
 /**
  * Элемент коллеции propertyGrid
@@ -71,11 +72,11 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         return classes.join(' ');
     }
 
-    getItemPaddingClasses(gridColumnIndex?: number): string {
+    getItemPaddingClasses(gridColumnIndex?: number, templateCaptionPosition?: TCaptionPosition): string {
         const owner = this.getOwner();
         const itemContents = this.getContents();
         const editorOptions = itemContents.get('editorOptions');
-        const captionPosition = this.getOwner().getCaptionPosition();
+        const captionPosition = templateCaptionPosition || this.getOwner().getCaptionPosition();
         const totalColumns = !gridColumnIndex || captionPosition === 'top' || captionPosition === 'none' ? 1 : 2;
 
         let classes = `controls-PropertyGrid__editor_spacingTop_${owner.getTopPadding()}

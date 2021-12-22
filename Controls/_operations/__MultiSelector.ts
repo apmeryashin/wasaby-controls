@@ -245,15 +245,15 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
        count: TCount,
        {selectedCountConfig, parentProperty}: IMultiSelectorOptions
    ): Promise<TCount>|TCount {
+      const selectedKeysLength = selection.selected.length;
       let countResult;
       this._cancelCountPromise();
-      if (!selectedCountConfig || this._isCorrectCount(count)) {
-         const countBySelection = selection.selected.length;
+      if (!selectedCountConfig || !selectedKeysLength || this._isCorrectCount(count)) {
          if (count === undefined) {
             // Для иерархических списков нельзя посчитать кол-во отмеченных записей по количеству ключей
             if (!parentProperty) {
                countResult = selection.selected.length;
-            } else if (countBySelection) {
+            } else if (selectedKeysLength) {
                countResult = null;
             }
          } else {

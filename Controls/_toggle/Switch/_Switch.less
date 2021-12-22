@@ -25,7 +25,7 @@
    user-select: none;
    position: relative;
    flex-shrink: 0;
-   border-width: var(--border-thickness_switcher);
+   border-width: var(--border-thickness);
    // В ie есть проблема с calc.
    // Если передавать border-radius: calc(val / 2), то это воспринимается как невалидное значение.
    // Поэтому явно указываем все значения
@@ -138,10 +138,6 @@
    }
 }
 
-.controls-Switch__toggle_leftCaption {
-   transform: rotate(-180deg);
-}
-
 .ws-is-hover {
    .controls-Switch__wrapper:hover {
       .controls-Switch__text-decoration {
@@ -237,11 +233,11 @@
 }
 
 .controls_Switch_SwitchCircle {
-   margin-right: calc(var(--marker_border-offset_switcher) - var(--border-thickness_switcher));
-   margin-left: calc(var(--marker_border-offset_switcher) - var(--border-thickness_switcher));
+   margin-right: calc(var(--marker_border-offset_switcher) - var(--border-thickness));
+   margin-left: calc(var(--marker_border-offset_switcher) - var(--border-thickness));
 }
 
 .controls-Switch__toggle__wrapper_size-s .controls_Switch_SwitchCircle {
-   margin-right: calc(var(--border-thickness_switcher) * -1);
-   margin-left: calc(var(--border-thickness_switcher) * -1);
+   margin-right: calc(var(--border-thickness) * -1);
+   margin-left: calc(var(--border-thickness) * -1);
 }

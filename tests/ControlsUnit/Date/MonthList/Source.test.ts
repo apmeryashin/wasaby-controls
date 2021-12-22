@@ -330,6 +330,44 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
                 });
             });
         });
+
+        it('should return meta data where "before" is false', () => {
+            const options = {
+                displayedRanges: [
+                    [new Date(2018, 0), new Date(2019, 0)]
+                ]
+            };
+            const source = new MonthsSource(options);
+
+            const query = (new Query()).where({'id~': monthListUtils.dateToId(new Date(2018, 0))});
+
+            return source.query(query.limit(LIMIT)).then((resp) => {
+                const before = resp.getMetaData().total.before;
+                assert.isFalse(before);
+            });
+        });
+
+        [{
+            displayedRanges: [
+                [new Date(2015, 0), new Date(2019, 0)]
+            ]
+        }, {
+            displayedRanges: [
+                [new Date(2015, 0), new Date(2017, 0)],
+                [new Date(2018, 0), new Date(2019, 0)]
+            ]
+        }].forEach((test, index) => {
+            it('should return meta data where "before" is true ' + index, () => {
+                const source = new MonthsSource({displayedRanges: test.displayedRanges});
+
+                const query = (new Query()).where({'id~': monthListUtils.dateToId(new Date(2018, 3))});
+
+                return source.query(query.limit(LIMIT)).then((resp) => {
+                    const before = resp.getMetaData().total.before;
+                    assert.isTrue(before);
+                });
+            });
+        });
     });
 
     describe('_getDefaultDisplayedRanges', () => {

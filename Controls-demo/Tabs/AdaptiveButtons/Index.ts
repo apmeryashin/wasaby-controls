@@ -1,16 +1,16 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {RecordSet} from 'Types/collection';
-// @ts-ignore
-import template = require('wml!Controls-demo/Tabs/AdaptiveButtons/Template');
-import {UnregisterUtil, RegisterUtil} from 'Controls/event';
+import * as template from 'wml!Controls-demo/Tabs/AdaptiveButtons/Template';
 
 export default class TabButtonsDemo extends Control {
     protected _template: TemplateFunction = template;
     protected SelectedKey1: string = '6';
     protected SelectedKey2: string = '1';
+    protected SelectedKeyIcon: string = '1';
     protected _items: RecordSet | null = null;
     protected _items2: RecordSet | null = null;
     protected _containerWidth: number = 500;
+    protected _itemsIcon: RecordSet | null = null;
     protected _beforeMount(): void {
         this._items = new RecordSet({
             keyProperty: 'id',
@@ -102,19 +102,47 @@ export default class TabButtonsDemo extends Control {
                 }
             ]
         });
-    }
 
-    protected _afterMount(): void {
-        RegisterUtil(this, 'controlResize', this._onResize.bind(this));
-    }
-    protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'controlResize');
-    }
-
-    private _onResize(): void {
-        if (this._container.clientWidth !== this._containerWidth) {
-            this._containerWidth = this._container.clientWidth;
-        }
+        this._itemsIcon = new RecordSet({
+            keyProperty: 'id',
+            rawData: [
+                {
+                    id: '1',
+                    caption: '5 262 052',
+                    icon: 'icon-AddContact'
+                },
+                {
+                    id: '2',
+                    caption: '132 516',
+                    icon: 'icon-Admin'
+                },
+                {
+                    id: '3',
+                    caption: '897 133',
+                    icon: 'icon-Android'
+                },
+                {
+                    id: '4',
+                    caption: '1 183 647',
+                    icon: 'icon-AreaBlur'
+                },
+                {
+                    id: '5',
+                    caption: '55 489 214',
+                    icon: 'icon-AutoTuning'
+                },
+                {
+                    id: '6',
+                    caption: '2 789 123',
+                    icon: 'icon-Calc'
+                },
+                {
+                    id: '7',
+                    caption: '14 132 269',
+                    icon: 'icon-Check3'
+                }
+            ]
+        });
     }
 
     static _styles: string[] = ['Controls-demo/Tabs/Buttons/Buttons', 'Controls-demo/Controls-demo'];
