@@ -19,35 +19,19 @@
    // Переменные для кнопок с залипанием
    //
    // Обводка кнопок
-
+   --toggled_border-thickness_toggleButton_button: 2px;
    --secondary_toggled_border-color_toggleButton_button: var(--secondary_color);
-
-   --secondary_toggled_border-thickness_toggleButton_button: 2px;
-   --primary_toggled_border-thickness_toggleButton_button: 2px;
    --secondary_toggled_border-color_toggleButton_toolButton: var(--secondary_icon-color);
    --secondary_toggled_border-color_toggleButton_pushButton: var(--secondary_icon-color);
-   --secondary_border-color_toggleButton_pushButton: transparent;
-
-
 
    // Радиус скругления кнопок
    --border-radius_toggleButton_pushButton: 2px;
 
    // цвет фона
 
-   --secondary_background-color_toggleButton_pushButton: transparent;
-   --secondary_hover_background-color_toggleButton_pushButton: transparent;
-   --secondary_active_background-color_toggleButton_pushButton: transparent;
-   --readonly_background-color_toggleButton_pushButton: transparent;
-   --readonly_toggled_background-color_toggleButton_pushButton: transparent;
-   --secondary_contrast_background-color_toggleButton_pushButton: transparent;
    --secondary_toggled_background-color_toggleButton_pushButton: #ebeef0;
    --readonly_contrast_background-color_toggleButton_pushButton: transparent;
    --readonly_contrast_toggled_background-color_toggleButton_pushButton: transparent;
-
-   // тень
-
-   --box-shadow_toggleButton_pushButton: none;
 
    // Переменные для переключателей
    //
@@ -61,14 +45,11 @@
 
    // Обводка
 
-   --border-thickness_switcher: var(--border-thickness);
-   --border-radius_switcher: calc(var(--height_horizontal_switcher) / 2 + var(--border-thickness_switcher));
+   --border-radius_switcher: 100px;  // круглый
    --border-color_switcher: #e4e4e4;
 
    // фон
    --background-color_switcher: var(--background-color);
-
-
 
    // Текст
 
@@ -76,17 +57,14 @@
    --text_offset_switcher: var(--offset_xs);
    --text-color_switcher: var(--text-color);
    --unselected_text-color_switcher: var(--unaccented_text-color);
-
    --readonly_unselected_text-color_switcher: var(--readonly_color);
 
    //Маркер
    --marker-box_size_switcher: 12px;
-   --marker-box_border-color_switcher: var(--border-color);
    --marker-box_background-color_switcher: transparent;
    --readonly_marker-box_background-color_switcher: transparent;
-   --unselected_marker-box_border-color_switcher: var(--marker-box_border-color_switcher);
+   --unselected_marker-box_border-color_switcher: var(--border-color);
    --unselected_marker-box_background-color_switcher: var(--marker-box_background-color_switcher);
-   --marker-size_switcher: var(--offset_xs);
    --marker_color_switcher: var(--primary_contrast_background-color);
    --readonly_marker_color_switcher: #8a94a8;
    --readonly_marker-box_border-color_switcher: #e4e4e4;
