@@ -29,7 +29,8 @@ export default class extends Control {
     }
 
     protected _onItemActivate(e: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
-        this._activeItem = nativeEvent.target ? ('item-key: ' + nativeEvent.target.getAttribute('item-key')) : null;
+        this._activeItem = nativeEvent.target ?
+            ('item-key: ' + nativeEvent.target.closest('[item-key]').getAttribute('item-key')) : null;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

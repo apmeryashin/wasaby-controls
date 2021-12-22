@@ -570,7 +570,7 @@ const _private = {
 
                 const selector = `.${self._getItemsContainerUniqueClass()} > ${self._options.itemsSelector}[item-key="${markedKey}"]`;
                 const target = self._getItemsContainer().querySelector(selector) as HTMLElement;
-                const customEvent = new SyntheticEvent(event, {
+                const customEvent = new SyntheticEvent(null, {
                     type: 'click',
                     target,
                     _bubbling: false
