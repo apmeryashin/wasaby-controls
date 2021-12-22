@@ -207,16 +207,21 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * Отображает индикатор загрузки.
      * @function
      * @name Controls/LoadingIndicator#show
-     * @param {Object} [config] Объект с параметрами. Если не задан, по умолчанию используется значение аналогичного параметра контрола.
-     * @param {Boolean} [config.isGlobal=true] Определяет, показать индикатор над всей страницей или только над собственным контентом.
-     * @param {String} [config.message=''] Текст сообщения индикатора.
-     * @param {Scroll} [config.scroll=''] Добавляет градиент фону индикатора.
-     * @param {Small} [config.small=''] Размер индикатора.
-     * @param {Overlay} [config.overlay=default] Настройки оверлея индикатора.
-     * @param {Number} [config.delay=2000] Задержка перед началом показа индикатора.
+     * @param {Controls/LoadingIndicator/config.typedef} [config]
      * @param {Promise} [waitPromise] Promise, к которому привязывается отображение индикатора. Индикатор скроется после завершения Promise.
      * @returns {String} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
+     * @demo Controls-demo/LoadingIndicator/WaitPromise/Index
      * @see hide
+     */
+    /**
+     * @typedef {Object} Controls/LoadingIndicator/config
+     * @description Объект с параметрами. Если не задан, по умолчанию используется значение аналогичного параметра контрола.
+     * @property {Controls/LoadingIndicator/interface/ILoadingIndicator/isGlobal} isGlobal Определяет, показать индикатор над всей страницей или только над собственным контентом.
+     * @property {Controls/LoadingIndicator/interface/ILoadingIndicator/message} message Текст сообщения индикатора.
+     * @property {Controls/LoadingIndicator/interface/ILoadingIndicator/Scroll} scroll Добавляет градиент фону индикатора.
+     * @property {Controls/LoadingIndicator/interface/ILoadingIndicator/small} small Размер индикатора.
+     * @property {Controls/LoadingIndicator/interface/ILoadingIndicator/overlay} overlay Настройки оверлея индикатора.
+     * @property {Controls/LoadingIndicator/interface/ILoadingIndicator/delay} delay Задержка перед началом показа индикатора.
      */
     show(config?: ILoadingIndicatorOptions, waitPromise?: Promise<any>): string {
         return this._show({...config}, waitPromise);
