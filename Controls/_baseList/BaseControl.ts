@@ -3741,8 +3741,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     scrollMoveSyncHandler(params: IScrollParams): void {
         if (this._useNewScroll) {
-            _private.handleListScrollSync(this, params.scrollTop);
             this._listVirtualScrollController.scrollPositionChange(params.scrollTop);
+            _private.handleListScrollSync(this, params.scrollTop);
         } else {
             _private.handleListScrollSync(this, params.scrollTop);
             const result = this._scrollController?.scrollPositionChange({
