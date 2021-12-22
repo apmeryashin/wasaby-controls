@@ -156,6 +156,7 @@ export default class View extends Control<IOptions, IReceivedState> {
 
     constructor(options: IOptions, context?: object) {
         super(options, context);
+        this._changeActiveElement = this._changeActiveElement.bind(this);
         this._onDetailDataLoadCallback = this._onDetailDataLoadCallback.bind(this);
         this._onMasterDataLoadCallback = this._onMasterDataLoadCallback.bind(this);
     }
@@ -586,9 +587,13 @@ export default class View extends Control<IOptions, IReceivedState> {
         return false;
     }
 
-    protected _activeElementChanged(event: unknown, activeElement: TKey): void {
+    protected _changeActiveElement(activeElement: TKey): void {
         this._activeElement = activeElement;
         this._children.detailList.scrollToItem(activeElement, 'top', true);
+    }
+
+    protected _detailActiveElementChanged(event: unknown, activeElement: TKey): void {
+        this._activeElement = activeElement;
     }
     //endregion expandedCompositeTree
 

@@ -3,6 +3,7 @@ import * as template from 'wml!Controls/_newBrowser/navigation/Navigation';
 import { RecordSet } from 'Types/collection';
 import { Memory } from 'Types/source';
 import { TKey } from 'Controls/interface';
+import { IContextsWithActiveElementContext } from 'Controls/_newBrowser/context/Provider';
 
 function findFirstNodeIndexByParentKey(items: RecordSet,
                                        parentKey: TKey,
@@ -24,6 +25,7 @@ interface INavigationControlOptions extends IControlOptions {
     parentProperty: string;
     nodeProperty: string;
     activeElement: TKey;
+    changeActiveElement: Function;
 }
 
 export default class Navigation<T = unknown> extends Control<INavigationControlOptions> {
@@ -35,7 +37,8 @@ export default class Navigation<T = unknown> extends Control<INavigationControlO
     protected _subdirectories: Memory;
     protected _activeSubdirectoryKey: TKey;
 
-    protected _beforeMount(options?: INavigationControlOptions, contexts?: object, receivedState?: void): void {
+    protected _beforeMount(options?: INavigationControlOptions,
+                           contexts?: IContextsWithActiveElementContext, receivedState?: void): void {
         this._prepareActiveKeys(options);
         this._prepareActiveDirectoryItems(options);
         this._prepareActiveSubdirectoryItems(options, this._activeDirectoryKey);
@@ -129,10 +132,10 @@ export default class Navigation<T = unknown> extends Control<INavigationControlO
     }
 
     protected _directoryKeyChanged(event: unknown, newKey: TKey): void {
-        this._notify('activeElementChanged', [newKey]);
+        this._options.changeActiveElement(newKey);
     }
 
     protected _subdirectoryKeyChanged(event: unknown, newKey: TKey): void {
-        this._notify('activeElementChanged', [newKey]);
+        this._options.changeActiveElement(newKey);
     }
 }
