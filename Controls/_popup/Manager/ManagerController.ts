@@ -170,7 +170,10 @@ export default {
     },
 
     hasRightPanel(): boolean {
-        return !!this._rightBottomTemplate || !!this._rightTemplate || !isNewEnvironment();
+        // На старых страницах настройки на приложении нет, отключаю для темной темы руками, т.к.
+        // в облаке правая панель выключена и на вдомных страницах.
+        const compatible = !isNewEnvironment() && this._theme !== 'default__dark';
+        return !!this._rightBottomTemplate || !!this._rightTemplate || compatible;
     },
 
     setRightTemplate(template: string): void {
