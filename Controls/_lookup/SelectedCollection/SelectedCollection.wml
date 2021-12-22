@@ -1,8 +1,4 @@
-<div class="controls_lookup_theme-{{_options.theme}} controls-SelectedCollection__collection
-            controls-SelectedCollection__collection_{{_options.itemsLayout !== 'oneRow' ? 'multiLine' : 'singleLine'}}
-            controls-SelectedCollection__collection_{{_options.itemsLayout !== 'oneRow' ? 'multiLine' : 'singleLine'}}_fontSize-{{_options.fontSize || 'm'}}
-            controls-SelectedCollection__collection-{{_options.itemsLayout}}"
-     style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
+<ws:template name="counterTemplate">
    <ws:if data="{{_options.items.getCount() > _options.maxVisibleItems && _options.counterVisibility !== 'hidden'}}">
       <span name="infoBoxLink"
             style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout, !(_options.readOnly && !_options.maxVisibleItems))}}"
@@ -12,15 +8,22 @@
                    {{_options.counterClassName}}"
             on:click="_openInfoBox()">
          <ws:partial template="{{_counterTemplate}}"
+                     multiLine="{{_options.multiLine}}"
                      itemsCount="{{_options.items.getCount()}}"
                      fontSize="{{_options.fontSize}}"
                      attr:style="{{_counterWidth ? 'width: ' + _counterWidth + 'px;'}}"/>
       </span>
    </ws:if>
+</ws:template>
+
+<ws:template name="selectedCollection">
+   <div class="controls-SelectedCollection__collection
+               controls-SelectedCollection__collection_{{_options.itemsLayout !== 'oneRow' ? 'multiLine' : 'singleLine'}}
+               controls-SelectedCollection__collection_{{_options.itemsLayout !== 'oneRow' ? 'multiLine' : 'singleLine'}}_fontSize-{{_options.fontSize || 'm'}}
+               controls-SelectedCollection__collection-{{_options.itemsLayout}}">
       <ws:for data="index, item in _visibleItems">
          <ws:partial
-                 attr:style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout)}};
-                             max-width: {{_getItemMaxWidth(index, _options.items.getCount(), _options.maxVisibleItems, _options.itemsLayout, _counterWidth)}}"
+                 attr:style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout)}};"
                  attr:class="js-controls-SelectedCollection__item controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
                  template="{{_options.itemTemplate}}"
                  item="{{item}}"
@@ -37,4 +40,17 @@
                  attr:data-qa="SelectedCollection__item">
          </ws:partial>
       </ws:for>
+   </div>
+</ws:template>
+
+<div class="controls_lookup_theme-{{_options.theme}} controls-SelectedCollection__collection-container aaa{{_options.collectionWidth}}"
+     style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
+      <ws:if data="{{_options.multiLine}}">
+         <ws:partial template="counterTemplate"/>
+         <ws:partial template="selectedCollection"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial template="selectedCollection"/>
+         <ws:partial template="counterTemplate"/>
+      </ws:else>
 </div>
