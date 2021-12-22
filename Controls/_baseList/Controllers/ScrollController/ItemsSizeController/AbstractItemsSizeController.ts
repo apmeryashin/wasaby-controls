@@ -94,7 +94,9 @@ export abstract class AbstractItemsSizesController {
 
             if (itemsRangeLength !== itemsElements.length) {
                 Logger.error('Controls/list:ItemsSizeController.updateItemsSizes | ' +
-                    'The count of elements in the DOM differs from the length of the updating items range.');
+                    'The count of elements in the DOM differs from the length of the updating items range. ' +
+                    `Check that each item has selector: ${this._itemsQuerySelector}.`
+                );
             } else {
                 let position = itemsRange.startIndex;
 

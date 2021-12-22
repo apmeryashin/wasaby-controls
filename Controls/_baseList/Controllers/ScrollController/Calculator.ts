@@ -58,6 +58,7 @@ export interface ICalculatorBaseOptions {
     givenItemsSizes?: IItemsSizes;
 
     virtualScrollConfig: IVirtualScrollConfig;
+    activeElementIndex: number;
 }
 
 /**
@@ -101,7 +102,7 @@ export class Calculator {
         this._viewportSize = options.viewportSize || 0;
         this._contentSize = options.contentSize || 0;
         this._virtualScrollConfig = options.virtualScrollConfig;
-        this.resetItems(this._totalCount, false);
+        this._activeElementIndex = options.activeElementIndex;
     }
 
     // region Getters/Setters
@@ -235,9 +236,9 @@ export class Calculator {
                 if (direction === 'forward') {
                     // от верхней границы элемента до нижней границы viewPort
                     // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
-                    const bottomViewportBorder = scrollPosition + viewportSize;
+                    const bottomViewportBorderPosition = scrollPosition + viewportSize;
                     border = 'backward';
-                    borderDistance = bottomViewportBorder - itemOffset;
+                    borderDistance = bottomViewportBorderPosition - itemOffset;
                 } else {
                     // запись - выше, чем верхняя граница viewPort
                     if (scrollPosition > itemOffset) {
@@ -305,8 +306,10 @@ export class Calculator {
         const oldState = this._getState();
         let direction = null;
 
-        // если элемент уже внутри диапазона, то ничего не делаем.
-        if (!this._isItemInRange(index)) {
+        // Смещать диапазон нужно, если
+        // 1. Элемент находится за пределами текущего диапазона
+        // 2. Мы не можем к нему полноценно проскроллить(проскроллить так, чтобы элемент был в верху вьюпорта)
+        if (!this._isItemInRange(index) || !this._canScrollToItem(index)) {
             direction = index > this._range.endIndex ? 'forward' : 'backward';
             this._range = getRangeByIndex({
                 pageSize: this._virtualScrollConfig.pageSize,
@@ -327,6 +330,24 @@ export class Calculator {
      */
     private _isItemInRange(index: number): boolean {
         return index >= this._range.startIndex && index < this._range.endIndex;
+    }
+
+    /**
+     * Проверяем, что мы можем полноценно проскроллить к элементу и после этого не вызовем сразу же смещение диапазона.
+     * @param index
+     * @private
+     */
+    private _canScrollToItem(index: number): boolean {
+        const passedItemOffset = this._itemsSizes[index].offset;
+        // Позиция нижней границы вьюпорты это позиция скролла + размер вьюпорта
+        // Но т.к. мы првоеряем, что можно ли проскроллить к элементу,
+        // то за позицию скролла берем offset этого элемента.
+        // Если проскроллить к элементу, то он будет в верху вьюпорта => scrollPosition === item.offset
+        const bottomViewportBorderPosition = passedItemOffset + this._viewportSize;
+        const hasItemAfterBottomViewportBorder = this._itemsSizes.some(
+            (it) => it.offset >= bottomViewportBorderPosition
+        );
+        return hasItemAfterBottomViewportBorder;
     }
 
     // endregion ShiftRangeByIndex
@@ -484,11 +505,19 @@ export class Calculator {
      * Пересчитываем виртуальный диапазон, placeholders, сбрасывает старые размеры элементов.
      * @param totalCount Новое кол-во элементов
      * @param keepPosition Нужно ли сохранить текущию позицию
+     * @param startRangeWithActiveItem Нужно ли начинать диапазон с активного элемент
+     * @remark
+     * startRangeWithActiveItem = true, только когда в опции конструктора передали activeItemIndex
      */
-    resetItems(totalCount: number, keepPosition: boolean): void {
+    resetItems(totalCount: number, keepPosition: boolean, startRangeWithActiveItem: boolean = false): void {
         this._totalCount = totalCount;
 
-        const startIndex = keepPosition ? this._range.startIndex : 0;
+        let startIndex = 0;
+        if (keepPosition) {
+            startIndex = this._range.startIndex;
+        } else if (startRangeWithActiveItem) {
+            startIndex = this._activeElementIndex;
+        }
         if (this._givenItemsSizes) {
             this._range = getRangeByItemsSizes({
                 start: startIndex,

@@ -105,6 +105,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
     listControl: Control;
 
     virtualScrollConfig: IVirtualScrollConfig;
+    activeElementKey: CrudEntityKey;
 
     listContainer: HTMLElement;
     itemsContainer: HTMLElement;
@@ -410,7 +411,11 @@ export abstract class AbstractListVirtualScrollController<
     private _createScrollController(options: TOptions): void {
         const scrollControllerOptions = this._getScrollControllerOptions(options);
         this._scrollController = new ScrollController(scrollControllerOptions);
-        this._scrollController.resetItems(scrollControllerOptions.totalCount, false);
+        this._scrollController.resetItems(
+            scrollControllerOptions.totalCount,
+            false,
+            options.activeElementKey !== undefined
+        );
     }
 
     protected _getScrollControllerOptions(options: TOptions): IScrollControllerOptions {
@@ -418,9 +423,11 @@ export abstract class AbstractListVirtualScrollController<
             options.itemsQuerySelector,
             options.virtualScrollConfig.mode
         );
+        const activeElementIndex = this._collection.getIndexByKey(options.activeElementKey);
         return {
             listControl: options.listControl,
             virtualScrollConfig: options.virtualScrollConfig,
+            activeElementIndex,
 
             itemsContainer: options.itemsContainer,
             listContainer: options.listContainer,

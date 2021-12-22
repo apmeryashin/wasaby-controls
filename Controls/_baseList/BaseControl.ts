@@ -3945,6 +3945,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             collection: this._listViewModel,
             listControl: this,
             virtualScrollConfig: options.virtualScrollConfig || {},
+            activeElementKey: options.activeElement,
 
             itemsContainer: null,
             listContainer: null,
