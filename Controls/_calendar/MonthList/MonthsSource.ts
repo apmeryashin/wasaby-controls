@@ -26,7 +26,7 @@ export default class MonthsSource extends Memory {
 
     _$keyProperty: 'id';
 
-    _header: boolean = false;
+    _hasHeader: boolean = false;
     protected _dateConstructor: Function;
     protected _displayedRanges: [];
     protected _viewMode: string;
@@ -35,7 +35,7 @@ export default class MonthsSource extends Memory {
 
     constructor(options) {
         super(options);
-        this._header = options.header;
+        this._hasHeader = options.header;
         this._stubTemplate = options.stubTemplate;
         this._dateConstructor = options.dateConstructor || WSDate;
 
@@ -72,9 +72,10 @@ export default class MonthsSource extends Memory {
 
             month = this._shiftRange(month, offset);
 
-            // Проверяем, что месяц непоследний отображаемый, иначе нужно указать в items, что сверху данных больше нет
+            // Проверяем, что месяц непоследний отображаемый, иначе нужно указать в items, что сверху данных больше нет.
+            // Заголовок - это отдельный элемент, поэтому если он есть - месяц не является последним элементом.
             const monthBefore = new Date(month.getFullYear(), month.getMonth() - 1);
-            if (!this._isDisplayed(monthBefore)) {
+            if (!this._isDisplayed(monthBefore) && !this._hasHeader) {
                 const hiddenPeriod = this._getHiddenPeriod(monthBefore);
                 if (hiddenPeriod[0] === null) {
                     before = false;
@@ -88,12 +89,12 @@ export default class MonthsSource extends Memory {
                 month = this._shiftRange(month, delta);
             }
 
-            if (monthGt && !this._header) {
+            if (monthGt && !this._hasHeader) {
                 month = this._shiftRange(month, delta);
             }
 
             for (let i = 0; i < limit; i++) {
-                if (this._header && delta < 0) {
+                if (this._hasHeader && delta < 0) {
                     monthHeader = this._shiftRange(month, 1);
                     if (this._isDisplayed(monthHeader)) {
                         this._pushHeader(items, monthHeader);
@@ -124,7 +125,7 @@ export default class MonthsSource extends Memory {
                     month =  delta > 0 ? period[1] : period[0];
                 }
 
-                if (this._header && delta > 0 && month) {
+                if (this._hasHeader && delta > 0 && month) {
                     monthHeader = this._shiftRange(month, delta);
                     if (this._isDisplayed(monthHeader)) {
                         this._pushHeader(items, monthHeader);
