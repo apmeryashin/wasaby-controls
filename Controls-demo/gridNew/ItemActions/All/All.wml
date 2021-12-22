@@ -17,6 +17,7 @@
                 source="{{_viewSource}}"
                 columns="{{_columns}}"
                 itemActions="{{_itemActions}}"
+                rowSeparatorSize="s"
                 itemActionsPosition="outside"
                 attr:style="max-width: 930px">
         </Controls.grid:View>
