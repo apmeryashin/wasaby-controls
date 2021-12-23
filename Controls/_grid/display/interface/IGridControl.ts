@@ -320,9 +320,10 @@ export interface IGridControl extends IList {
 /**
  * @typedef {String} Controls/_grid/display/interface/IGridControl/TColumnScrollViewMode
  * @description Допустимые значения для опции {@link columnScrollViewMode}.
- * @variant scrollbar Отображается ползунок горизонтальной проктурки.
- * @variant arrows Отображаются стрелки навигации для горизонтальной проктурки.
- * @variant unaccented Элементы управления прокруткой скрыты, прокручиваемая область не выделяется тенью справа и слева. Прокрутка доступна при помощи drag
+ * @variant scrollbar Отображается ползунок горизонтальной прокрутки.
+ * @variant arrows Отображаются стрелки навигации для горизонтальной прокрутки.
+ * @variant unaccented Элементы управления прокруткой скрыты, прокручиваемая область не выделяется тенью справа и слева.
+ * @see dragScrolling
  */
 
 /**
