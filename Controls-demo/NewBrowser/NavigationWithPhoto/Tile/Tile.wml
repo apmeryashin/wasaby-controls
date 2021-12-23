@@ -1,4 +1,4 @@
-<div>
+<div class="controlsDemo_fixedWidth1000">
     <div class="controlDemo__input-row">
         <Controls.toggle:DoubleSwitch
                 attr:class="controlsDemo_m"
@@ -29,7 +29,7 @@
 
                                source="{{_baseSource}}">
                         <ws:navigation source="page" view="infinity">
-                            <ws:sourceConfig pageSize="{{5}}" page="{{0}}" hasMore="{{false}}"/>
+                            <ws:sourceConfig pageSize="{{30}}" page="{{0}}" hasMore="{{false}}"/>
                             <ws:viewConfig pagingMode="basic"/>
                         </ws:navigation>
                     </ws:Object>
