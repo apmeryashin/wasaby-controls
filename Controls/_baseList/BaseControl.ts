@@ -562,14 +562,21 @@ const _private = {
             return;
         }
 
+        // При обработке Enter текущий target === fakeFocusElement.
+        // Прикладникам нужен реальный элемент, по которому произошло событие.
+        // Пытаемся найти отмеченную маркером запись:
         if (_private.hasMarkerController(self)) {
             const markerController = _private.getMarkerController(self);
             const markedKey = markerController.getMarkedKey();
             if (markedKey !== null && markedKey !== undefined) {
                 const markedItem = self.getItems().getRecordById(markedKey);
 
-                const selector = `.${self._getItemsContainerUniqueClass()} > ${self._options.itemsSelector}[item-key="${markedKey}"]`;
+                // Ищем HTML-контейнер отмеченной записи по селектору
+                const selector = `.${self._getItemsContainerUniqueClass()} > ` +
+                    `${self._options.itemsSelector}[item-key="${markedKey}"]`;
                 const target = self._getItemsContainer().querySelector(selector) as HTMLElement;
+
+                // Создаём событие, в которое будем отдавать указанный target.
                 const customEvent = new SyntheticEvent(null, {
                     type: 'click',
                     target,
