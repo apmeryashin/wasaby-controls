@@ -163,6 +163,13 @@ export abstract class AbstractListVirtualScrollController<
     private _synchronizationInProgress: boolean;
 
     /**
+     * Стейт, который определяет что сейчас выполняется отрисовка новых индексов.
+     * Проставляется при изменении индексов и сбрасывается в afterRender
+     * @private
+     */
+    private _renderNewIndexes: boolean;
+
+    /**
      * Колбэк, который вызывается когда завершился скролл к элементу. Скролл к элементу вызывается асинхронно.
      * По этому колбэку резолвится промис, который возвращается из метода scrollToItem
      * @private
@@ -232,6 +239,8 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterRenderListControl(): void {
+        this._renderNewIndexes = false;
+
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll();
@@ -510,6 +519,8 @@ export abstract class AbstractListVirtualScrollController<
         handleAdditionallyCallback?: Function
     ): void {
         const callback = () => {
+            this._renderNewIndexes = true;
+
             this._scheduleUpdateItemsSizes(range);
             // Возможно ситуация, что после смещения диапазона(подгрузки данных) триггер остался виден
             // Поэтому после отрисовки нужно проверить, не виден ли он. Если он все еще виден, то нужно
@@ -588,7 +599,7 @@ export abstract class AbstractListVirtualScrollController<
                     // Если сейчас идет синхронизация(что-то отрисовывается) или мы запланировали скролл, то
                     // переносим проверку видимости триггеров на следующий afterRender, когда уже
                     // точно отрисуются изменения и запланированный скролл будет выполнен(в частности восстановление)
-                    if (this._synchronizationInProgress || this._isScheduledScroll()) {
+                    if (this._synchronizationInProgress || this._isScheduledScroll() || this._renderNewIndexes) {
                         this._scheduleCheckTriggersVisibility();
                     } else {
                         this._scrollController.checkTriggersVisibility();
