@@ -563,7 +563,8 @@ const _private = {
         }
 
         // При обработке Enter текущий target === fakeFocusElement.
-        // Прикладникам нужен реальный элемент, по которому произошло событие.
+        // Прикладникам нужен реальный target, по которому произошло событие, и который позволяет
+        // определить координаты записи, например, для того, чтобы отобразить в нужном месте popup.
         // Пытаемся найти отмеченную маркером запись:
         if (_private.hasMarkerController(self)) {
             const markerController = _private.getMarkerController(self);
