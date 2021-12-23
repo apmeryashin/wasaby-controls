@@ -169,7 +169,7 @@
                             <button on:click="_toggleScrollBar(undefined)" class="controlsDemo__mr1" style="padding: 3px;">undefined</button>
                             <button on:click="_toggleScrollBar('scrollbar')" class="controlsDemo__mr1" style="padding: 3px;">Scrollbar</button>
                             <button on:click="_toggleScrollBar('arrows')" class="controlsDemo__mr1" style="padding: 3px;">Arrow buttons</button>
-                            <button on:click="_toggleScrollBar('nonaccented')" style="padding: 3px;">Scrollbar and shadows are hidden</button>
+                            <button on:click="_toggleScrollBar('unaccented')" style="padding: 3px;">Scrollbar and shadows are hidden</button>
                         </ws:template>
                     </ws:Object>
 
