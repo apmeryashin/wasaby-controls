@@ -170,6 +170,9 @@ export default class View extends Control<IOptions, IReceivedState> {
             this._contextVersion = this._dataContext.getVersion?.();
             this._initState(options);
             this._processItemsMetadata(this._detailDataSource.getItems(), options);
+            if (options.searchValue && options.viewMode === DetailViewMode.search) {
+                this._viewMode = DetailViewMode.search;
+            }
             this._afterViewModeChanged(options);
         }
     }
