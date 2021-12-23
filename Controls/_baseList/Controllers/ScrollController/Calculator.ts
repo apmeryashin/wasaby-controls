@@ -217,6 +217,7 @@ export class Calculator {
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
             const nextItem = itemsSizes[index + 1];
+            const nextItemIsNotRendered = !nextItem || !nextItem.size;
             const itemOffset = item.offset - placeholders.backward;
             const itemBorderBottom = Math.round(itemOffset) + Math.round(item.size);
 
@@ -229,7 +230,7 @@ export class Calculator {
             }
 
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
-            const isLastItem = index === range.endIndex - 1 || item && !nextItem;
+            const isLastItem = index === range.endIndex - 1 || item && nextItemIsNotRendered;
             if (itemBorderBottom > viewportBorderPosition || isLastItem) {
                 let borderDistance;
                 let border;
@@ -416,7 +417,6 @@ export class Calculator {
     addItems(position: number, count: number): ICalculatorResult {
         const oldState = this._getState();
         this._totalCount += count;
-
         const direction = this._calcAddDirection(position, count);
 
         // Корректируем старый диапазон. Т.к. записи добавились  в начало, то все индексы сместятся на count
@@ -448,10 +448,8 @@ export class Calculator {
             return 'forward';
         }
 
-        // Если записи добавили внутрь диапазона, то мы должны ориентироваться по BackwardEdgeItem, чтобы
-        // и так видимый элемент остался виден. Поэтому direction='forward', только если записи добавили после диапазона
-        const addBeforeEndIndex = position < this._range.endIndex;
-        return addBeforeEndIndex ? 'backward' : 'forward';
+        const addBeforeStartIndex = position <= this._range.startIndex;
+        return addBeforeStartIndex ? 'backward' : 'forward';
     }
 
     /**
