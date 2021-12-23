@@ -5,6 +5,7 @@
                     attr:class=""
                     keyProperty="key"
                     source="{{_viewSource}}"
+                    dataLoadCallback="{{_dataLoadCallback}}"
                     rowSeparatorSize="s"
                     columns="{{_columns}}"
                     groupProperty="fullName">
@@ -14,7 +15,7 @@
                                 separatorVisibility="{{false}}"
                                 textAlign="left">
                         <ws:rightTemplate>
-                            <Controls.decorator:Money value="{{itemData.metaData.groupResults[item.contents]}}" fontColorStyle="group" useGrouping="{{false}}"/>
+                            <Controls.decorator:Money value="{{rightTemplate.item.metaData.groupResults[rightTemplate.item.contents]}}" fontColorStyle="group" useGrouping="{{false}}"/>
                         </ws:rightTemplate>
                     </ws:partial>
                 </ws:groupTemplate>
