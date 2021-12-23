@@ -2535,9 +2535,10 @@ const _private = {
                 };
                 _private.notifyVirtualNavigation(self, self._scrollController, self._sourceController);
             }
-            if (self._items && typeof self._items.getRecordById(result.activeElement || self._options.activeElement) !== 'undefined') {
+            const id = result.hasOwnProperty('activeElement') ? result.activeElement : self._options.activeElement;
+            if (self._items && typeof self._items.getRecordById(id) !== 'undefined') {
                 // activeElement запишется в result только, когда он изменится
-                if (result.activeElement && !self._container.closest('.ws-hidden')) {
+                if (result.hasOwnProperty('activeElement') && !self._container.closest('.ws-hidden')) {
                     self._notify('activeElementChanged', [result.activeElement]);
                 }
 

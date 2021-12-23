@@ -61,6 +61,12 @@ export default class View extends Control<IOptions, IReceivedState> {
     }
 
     //region ⽥ fields
+
+    /**
+     * Поля для режима "expandedCompositeTree"
+     */
+    _activeElement: TKey = null;
+
     /**
      * Шаблон отображения компонента
      */
@@ -150,6 +156,7 @@ export default class View extends Control<IOptions, IReceivedState> {
 
     constructor(options: IOptions, context?: object) {
         super(options, context);
+        this._changeActiveElement = this._changeActiveElement.bind(this);
         this._onDetailDataLoadCallback = this._onDetailDataLoadCallback.bind(this);
         this._onMasterDataLoadCallback = this._onMasterDataLoadCallback.bind(this);
     }
@@ -570,6 +577,26 @@ export default class View extends Control<IOptions, IReceivedState> {
     }
 
     //endregion
+
+    //region expandedCompositeTree
+    protected _isExpandedCompositeTreeMode(listConfiguration: unknown, viewMode: DetailViewMode): boolean {
+        if (listConfiguration && viewMode) {
+            const nodesPosition = listConfiguration[viewMode]?.node?.position;
+            return nodesPosition === NodesPosition.composite;
+        }
+        return false;
+    }
+
+    protected _changeActiveElement(activeElement: TKey): void {
+        this._activeElement = activeElement;
+        this._children.detailList.scrollToItem(activeElement, 'top', true);
+    }
+
+    protected _detailActiveElementChanged(event: unknown, activeElement: TKey): void {
+        this._activeElement = activeElement;
+    }
+    //endregion expandedCompositeTree
+
     //region base control overrides
     protected _notify(eventName: string, args?: unknown[], options?: { bubbling?: boolean }): unknown {
         if (!this._isMounted) {
