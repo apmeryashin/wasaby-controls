@@ -89,11 +89,9 @@
    align-items: baseline;
 }
 
-.controls-Render__baseline {
-   height: 100%;
-   display: flex;
-   user-select: none;
-   align-items: center;
+.controls-Render__baseline::before {
+   content: '\200b';
+   font-size: var(--font-size_2xl);
 }
 
 .controls-Render__fullHeight {
@@ -310,35 +308,28 @@
 
 .controls-inlineheight-xs.controls-Render-inlineheight-xs {
    height: var(--inline_height_xs);
-   line-height: var(--inline_height_xs);
 }
 
 .controls-inlineheight-s.controls-Render-inlineheight-s {
    height: var(--inline_height_s);
-   line-height: var(--inline_height_s);
 }
 
 .controls-inlineheight-m.controls-Render-inlineheight-m {
    height: var(--inline_height_m);
-   line-height: var(--inline_height_m);
 }
 
 .controls-inlineheight-l.controls-Render-inlineheight-l {
    height: var(--inline_height_l);
-   line-height: var(--inline_height_l);
 }
 
 .controls-inlineheight-xl.controls-Render-inlineheight-xl {
    height: var(--inline_height_xl);
-   line-height: var(--inline_height_xl);
 }
 
 .controls-inlineheight-2xl.controls-Render-inlineheight-2xl {
    height: var(--inline_height_2xl);
-   line-height: var(--inline_height_2xl);
 }
 
 .controls-inlineheight-default.controls-Render-inlineheight-default {
    height: var(--inline_height_m);
-   line-height: var(--inline_height_m);
 }

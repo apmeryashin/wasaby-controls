@@ -14,10 +14,7 @@
             controls-Render_state-{{_state}}_{{_options.wasActionByUser ? 'caretFilled' : 'caretEmpty'}}
             {{_options.multiline ? 'controls-Render_multiline' : ' controls-inlineheight-' + _options.inlineHeight +
             ' controls-Render-inlineheight-' + _options.inlineHeight}}">
-   <div class="controls-Render__wrapper {{_options.footerTemplate ? 'controls-Render__wrapper_footer'}}">
-      <ws:if data="{{!_options.multiline}}">
-         <span class="controls-Render__baseline">&#65279;</span>
-      </ws:if>
+   <div class="controls-Render__wrapper {{!_options.multiline ? 'controls-Render__baseline'}} {{_options.footerTemplate ? 'controls-Render__wrapper_footer'}}">
       <ws:if data="{{_options.leftFieldWrapper}}">
          <ws:partial attr:class="controls-Render__beforeField" template="{{_options.leftFieldWrapper}}"/>
       </ws:if>
