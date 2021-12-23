@@ -5,6 +5,7 @@ import { IColumn } from 'Controls/grid';
 // tslint:disable-next-line:max-line-length
 import * as Template from 'wml!Controls-demo/gridNew/Grouped/RightTemplate/WithoutSeparator/TextAlignLeft/TextAlignLeft';
 import {Tasks} from 'Controls-demo/gridNew/DemoHelpers/Data/Tasks';
+import {RecordSet} from 'Types/collection';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -21,6 +22,17 @@ export default class extends Control {
         this._viewSource = new Memory({
             keyProperty: 'key',
             data: Tasks.getData()
+        });
+    }
+
+    protected _dataLoadCallback(items: RecordSet): void {
+        items.setMetaData({
+            groupResults: {
+                'Догадкин Владимир': 2,
+                'Кесарева Дарья': 5.0,
+                'Корбут Антон': 1.0,
+                'Крайнов Дмитрий': 4.0
+            }
         });
     }
 
