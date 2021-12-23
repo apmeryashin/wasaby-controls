@@ -1,0 +1,30 @@
+<div class="controlsDemo__wrapper">
+   <Controls.columns:View
+      source="{{_viewSource}}"
+      groupProperty="brand"
+      itemActions="{{_itemActions}}"
+      name="columnsView"
+   >
+      <ws:groupTemplate>
+         <ws:partial
+            template="Controls/list:GroupTemplate"
+            iconSize="m"
+            fontSize="4xl"
+            textAlign="left"
+
+            expanderVisible="{{true}}"
+            separatorVisibility="{{false}}"
+
+            scope="{{groupTemplate}}"
+         >
+            <ws:rightTemplate>
+               <Controls.buttons:Button
+                  icon="icon-Add"
+                  viewMode="toolButton"
+                  on:click="_add(rightTemplate.item.contents)"
+               />
+            </ws:rightTemplate>
+         </ws:partial>
+      </ws:groupTemplate>
+   </Controls.columns:View>
+</div>

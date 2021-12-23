@@ -1,5 +1,5 @@
 import {TreeItem as BaseCollectionItem, ICollectionItemOptions as IBaseOptions} from 'Controls/display';
-import Collection from './Collection';
+import ColumnsCollection from './Collection';
 import {Model} from 'Types/entity';
 
 export interface IOptions<T extends Model = Model> extends IBaseOptions<T> {
@@ -10,7 +10,7 @@ export interface IOptions<T extends Model = Model> extends IBaseOptions<T> {
 export default class CollectionItem<T extends Model = Model> extends BaseCollectionItem<T> {
     protected _$columnProperty: string;
     protected _$column: number = 0;
-    protected _$owner: Collection<T>;
+    protected _$owner: ColumnsCollection<T>;
 
     readonly listInstanceName: string =  'controls-Columns';
 

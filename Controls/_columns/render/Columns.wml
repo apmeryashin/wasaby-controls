@@ -1,6 +1,83 @@
-<div attr:class="controls_columns_theme-{{_options.theme}}
-                 {{_getItemsPaddingContainerClasses()}}
-                 controls-ListViewV controls-ColumnsView">
+<!--
+   Внутренний шаблон отображения итема списка в том числе и итема группы
+   @param {CollectionItem} item - модель итема коллекци который нужно отрендерить
+-->
+<ws:template name="localItemTemplate">
+   <ws:partial
+      item="{{ item }}"
+      itemData="{{ item }}"
+      template="{{ item.getTemplate(_options.itemTemplateProperty, _options.itemTemplate, _options.groupTemplate) }}"
+
+      isAdd="{{ _options.isAdd }}"
+      style="{{_options.style}}"
+      searchValue="{{ _options.listModel.getSearchValue() }}"
+      multiSelectVisibility="{{ _options.listModel.getMultiSelectVisibility() }}"
+
+      attr:item-key="{{ item.key }}"
+      attr:key="{{ _templateKeyPrefix }}-{{ item.getUid() }}"
+      attr:data-qa="{{ item.listElementName }}"
+      attr:style="_getMinMaxWidthStyle(_options.columnMinWidth, _options.columnMaxWidth)"
+      attr:class="{{ _options.listModel.getViewIterator().isItemAtIndexHidden(index) ? 'controls-ListView__hiddenContainer' }}"
+
+      on:click="_onItemClick(item)"
+      on:contextmenu="_onItemContextMenu(item)"
+      on:swipe="_onItemSwipe(item)"
+      on:longtap="_onItemLongTap(item)"
+      on:mouseenter="_onItemMouseEnter(item)"
+      on:mousedown="_onItemMouseDown(item)"
+      on:mouseup="_onItemMouseUp(item)"
+      on:mousemove="_onItemMouseMove(item)"
+      on:mouseleave="_onItemMouseLeave(item)"
+      on:wheel="_onItemWheel(item)"
+   >
+      <ws:itemActionsTemplate>
+         <!-- We have to support setting of "itemActionsClass" option in BaseControl and while using Controls/list:ItemTemplate -->
+         <ws:partial
+            itemData="{{ item }}"
+            scope="{{ _options.listModel.getActionsTemplateConfig() }}"
+            template="{{ _options.itemActionsTemplate || 'Controls/itemActions:ItemActionsTemplate' }}"
+            itemActionsClass="{{ _options.itemActionsClass || _options.listModel.getActionsTemplateConfig().itemActionsClass }}"
+         />
+      </ws:itemActionsTemplate>
+      <ws:swipeTemplate>
+         <ws:partial
+            itemData="{{ item }}"
+            swipeConfig="{{ _options.listModel.getSwipeConfig() }}"
+            scope="{{ _options.listModel.getActionsTemplateConfig() }}"
+            template="{{ _options.swipeTemplate || 'Controls/itemActions:SwipeActionsTemplate' }}"
+         />
+      </ws:swipeTemplate>
+   </ws:partial>
+</ws:template>
+
+<!--
+   Внутренний шаблон, отвечающий за вывод колонок с итемами
+   @param {GroupItem} [groupItem] - данные группы для которой идет рендер содержимого
+-->
+<ws:template name="localColumnsTemplate">
+   <ws:for data="columnIndex in _options.listModel.getColumnsCount()">
+      <div
+         style="{{_getColumnStyle(columnIndex)}}"
+         class="controls-ColumnsView_column {{_getColumnPaddingClasses()}}"
+      >
+         <div class="controls-ColumnsView_column-placeholder" style="{{_getPlaceholderStyle()}}"></div>
+
+         <ws:for data="index, item in _options.listModel.getViewIterator(groupItem)">
+            <ws:if data="{{item.getColumn() === columnIndex}}">
+               <ws:partial template="localItemTemplate"/>
+            </ws:if>
+         </ws:for>
+      </div>
+   </ws:for>
+</ws:template>
+
+
+<div class="
+   controls-ListViewV
+   controls-ColumnsView
+   controls_columns_theme-{{_options.theme}}
+   {{_getItemsPaddingContainerClasses()}}
+">
    <ws:if data="{{ _options.listModel }}">
       <!--Top loading indicator-->
       <ws:partial if="{{ _listModel.getTopIndicator() }}"
@@ -13,27 +90,29 @@
            data-qa="loading-trigger-top">
       </div>
 
-      <div attr:class="controls-ColumnsView__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container"
-           style="{{_getItemsContainerStyle()}}" name="itemsContainer">
-         <ws:for data="i in _options.listModel.getColumnsCount()">
-            <div class="controls-ColumnsView_column {{_getColumnPaddingClasses()}}" style="{{_getColumnStyle(i)}}">
-               <div class="controls-ColumnsView_column-placeholder" style="{{_getPlaceholderStyle()}}"></div>
-               <ws:partial
-                       template="wml!Controls/_columns/render/resources/For"
-                       collection="{{ _options.listModel }}"
-                       keyPrefix="{{ _templateKeyPrefix }}"
-                       columnMinWidth="{{ _options.columnMinWidth }}"
-                       columnMaxWidth="{{ _options.columnMaxWidth }}"
-                       column="{{i}}"
-                       columnsCount="{{ _options.listModel.getColumnsCount() }}"
-                       itemActionsClass="{{ _options.itemActionsClass }}"
-                       itemActionsPosition="{{ _options.itemActionsPosition }}"
-                       itemActionsTemplate="{{ _options.itemActionsTemplate }}"
-                       swipeTemplate="{{ _options.swipeTemplate }}"
-                       isAdd="{{ _options.isAdd }}"
-                       itemTemplate="{{ _options.itemTemplate }}"/>
-            </div>
-         </ws:for>
+      <!-- Items (CSS Grid) -->
+      <div
+         name="itemsContainer"
+         data-qa="items-container"
+         style="{{_getItemsContainerStyle()}}"
+         class="controls-ColumnsView__itemsContainer {{_options.itemsContainerClass}}"
+      >
+         <!-- Если задана группировка, то начинаем с рендера групп внутри которого рендерим колонки -->
+         <ws:if data="{{_listModel.getGroup()}}">
+            <ws:for data="groupIndex, groupItem in _options.listModel.getGroupsIterator()">
+               <!-- Заголовок группы -->
+               <div class="controls-ColumnsView_group">
+                  <ws:partial template="localItemTemplate" item="{{groupItem}}"/>
+               </div>
+
+               <!-- Рендер колонок группы -->
+               <ws:partial template="localColumnsTemplate" groupItem="{{groupItem}}"/>
+            </ws:for>
+         </ws:if>
+         <!-- Без группировки просто рендерим колонки -->
+         <ws:else>
+            <ws:partial template="localColumnsTemplate"/>
+         </ws:else>
       </div>
 
       <!--Bottom loading trigger-->
