@@ -587,7 +587,7 @@ const _private = {
                 self._notifyItemClick([customEvent, markedItem, customEvent]);
 
                 if (event && !event.isStopped()) {
-                    self._notify('itemActivate', [markedItem, customEvent, undefined], {bubbling: true});
+                    self._notify('itemActivate', [markedItem, customEvent], {bubbling: true});
                 }
             }
         }
@@ -5745,7 +5745,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             const eventResult = this._notifyItemClick([e, item, originalEvent, columnIndex]);
             if (eventResult !== false) {
-                const target = originalEvent.target.closest('.controls-ListView__itemV');
                 this._notify('itemActivate', [item, originalEvent, columnIndex], {bubbling: true});
             }
         }
@@ -5814,11 +5813,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         // Запись становится активной по клику, если не началось редактирование.
                         // Аргументы itemClick сохранены в состояние и используются для нотификации об активации
                         // элемента.
-                        const args = this._savedItemClickArgs.slice(1);
-                        if (args[1].target) {
-                            args.push(args[1].target.closest('.controls-ListView__itemV'));
-                        }
-                        this._notify('itemActivate', args, {bubbling: true});
+                        this._notify('itemActivate', this._savedItemClickArgs.slice(1), {bubbling: true});
                     }
                     return result;
                 }
