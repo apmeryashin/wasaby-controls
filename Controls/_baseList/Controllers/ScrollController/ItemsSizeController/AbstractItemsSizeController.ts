@@ -110,8 +110,13 @@ export abstract class AbstractItemsSizesController {
                     hiddenItemsOffset = lastHiddenItem.offset + lastHiddenItem.size - firstItemOffset;
                 }
                 Array.from(itemsElements).forEach((element: HTMLElement) => {
-                    this._itemsSizes[position] = this._getItemSize(element);
-                    this._itemsSizes[position].offset += hiddenItemsOffset;
+                    const prevItemSize = this._itemsSizes[position - 1];
+                    // оффсет не учитывает margin-ы, нужно будет решить эту проблему. offsetTop ее не решает.
+                    const offset = prevItemSize ? prevItemSize.offset + prevItemSize.size : 0;
+                    this._itemsSizes[position] = {
+                        size: this._getItemSize(element),
+                        offset: offset + hiddenItemsOffset
+                    };
                     position++;
                 });
 
@@ -133,7 +138,7 @@ export abstract class AbstractItemsSizesController {
         }
     }
 
-    protected abstract _getItemSize(element: HTMLElement): IItemSize;
+    protected abstract _getItemSize(element: HTMLElement): number;
 
     private static _getEmptyItemSize(): IItemSize {
         return {
