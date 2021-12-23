@@ -1,0 +1,45 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth350">
+
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">value = 0</div>
+      <Controls.progress:Rating value="0"
+                                readOnly="{{true}}"
+                                iconColorMode="dynamic"
+      />
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">value = 1</div>
+      <Controls.progress:Rating value="1"
+                                readOnly="{{true}}"
+                                iconColorMode="dynamic"
+      />
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">value = 2</div>
+      <Controls.progress:Rating value="2"
+                                readOnly="{{true}}"
+                                iconColorMode="dynamic"
+      />
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">value = 3</div>
+      <Controls.progress:Rating value="3"
+                                readOnly="{{true}}"
+                                iconColorMode="dynamic"
+      />
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">value = 4</div>
+      <Controls.progress:Rating value="4"
+                                readOnly="{{true}}"
+                                iconColorMode="dynamic"
+      />
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">value = 5</div>
+      <Controls.progress:Rating value="5"
+                                readOnly="{{true}}"
+                                iconColorMode="dynamic"
+      />
+   </div>
+</div>

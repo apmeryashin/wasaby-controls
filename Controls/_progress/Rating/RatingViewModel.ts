@@ -1,4 +1,7 @@
 const STARS_COUNT = 5;
+const DEFAULT_EMPTY_ICON_STYLE = 'readonly';
+const DEFAULT_ICON_STYLE = 'rate';
+const ICON_COLORS = ['danger', 'danger', 'danger', DEFAULT_ICON_STYLE, DEFAULT_ICON_STYLE, 'success'];
 
 interface IRatingItem {
     index: number;
@@ -10,8 +13,7 @@ interface IRatingItem {
 interface IRatingViewModelOptions {
     value: number;
     precision: number;
-    iconStyle: string;
-    emptyIconStyle: string;
+    iconColorMode: string;
     emptyIconFill: string;
 }
 
@@ -19,15 +21,13 @@ class RatingViewModel {
     private _version: number = 1;
     private _value: number;
     private _items: IRatingItem[] | null = null;
-    private _iconStyle: string;
-    private _emptyIconStyle: string;
+    private _iconColorMode: string;
     private _emptyIconFill: string;
     private _precision: number;
 
     constructor(options: IRatingViewModelOptions) {
         this._value = RatingViewModel._calcValue(options.value, options.precision);
-        this._iconStyle = options.iconStyle;
-        this._emptyIconStyle = options.emptyIconStyle;
+        this._iconColorMode = options.iconColorMode;
         this._emptyIconFill = options.emptyIconFill;
         this._precision = options.precision;
     }
@@ -44,15 +44,14 @@ class RatingViewModel {
         if (!this._items) {
             this._items = RatingViewModel._generateItems(
                 this._value,
-                this._iconStyle,
-                this._emptyIconStyle,
+                this._iconColorMode,
                 this._emptyIconFill
             );
         }
         return this._items;
     }
 
-    setOptions({value, precision, emptyIconStyle, iconStyle, emptyIconFill}: IRatingViewModelOptions): void {
+    setOptions({value, precision, iconColorMode, emptyIconFill}: IRatingViewModelOptions): void {
         if (precision !== this._precision) {
             this._precision = precision;
             this._items = null;
@@ -63,18 +62,13 @@ class RatingViewModel {
             this._items = null;
         }
 
-        if (emptyIconStyle !== this._emptyIconStyle) {
-            this._emptyIconStyle = emptyIconStyle;
-            this._items = null;
-        }
-
         if (emptyIconFill !== this._emptyIconFill) {
             this._emptyIconFill = emptyIconFill;
             this._items = null;
         }
 
-        if (iconStyle !== this._iconStyle) {
-            this._iconStyle = iconStyle;
+        if (iconColorMode !== this._iconColorMode) {
+            this._iconColorMode = iconColorMode;
             this._items = null;
         }
         this._nextVersion();
@@ -101,20 +95,15 @@ class RatingViewModel {
         return calcValue;
     }
 
-    private static _generateItems(value: number, iconStyle: string,
-                                  emptyIconStyle: string, emptyIconFill: string): IRatingItem[] {
+    private static _generateItems(value: number, iconColorMode: string,
+                                  emptyIconFill: string): IRatingItem[] {
         const items: IRatingItem[] = [];
 
-        const floor = Math.floor(value);
-
-        const lastFull = floor;
-        let needHalf = false;
-
-        if (value > floor) {
-            needHalf = true;
-        }
+        const lastFull: number = Math.floor(value);
+        const needHalf: boolean = value > lastFull;
 
         for (let i = 1; i <= STARS_COUNT; i++) {
+            const iconStyle = iconColorMode === 'static' ? DEFAULT_ICON_STYLE : ICON_COLORS[lastFull];
             if (i <= lastFull) {
                 items.push({
                     index: i,
@@ -134,7 +123,7 @@ class RatingViewModel {
                     index: i,
                     type: 'empty',
                     icon: emptyIconFill === 'full' ? 'icon-Favorite' : 'icon-Unfavorite',
-                    iconStyle: emptyIconStyle
+                    iconStyle: DEFAULT_EMPTY_ICON_STYLE
                 });
             }
         }
