@@ -253,7 +253,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
     }
 
     /**
-     * Создает соответствие индексов в стратегии оригинальным оригинальный индексам
+     * Создает соответствие индексов в стратегии оригинальным индексам
      * @protected
      */
     protected _createItemsOrder(): number[] {
