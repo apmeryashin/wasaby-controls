@@ -5,11 +5,12 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 const LAST_IE_VERSION = 11;
 
 export = {
-    getCounterWidth(itemsCount: number, theme: string, fontSize: string): number {
+    getCounterWidth(itemsCount: number, theme: string, fontSize: string, multiLine: boolean): number {
         return itemsCount && getWidth(CounterTemplate({
             itemsCount,
             theme,
-            fontSize
+            fontSize,
+            multiLine
         }));
     },
 
@@ -24,8 +25,7 @@ export = {
 
         if (
             indexItem === 0 &&
-            itemsLength > maxVisibleItems &&
-            (maxVisibleItems === 1 || itemsLayout === 'default')
+            itemsLength > maxVisibleItems && itemsLayout === 'default'
         ) {
             itemMaxWidth = 'calc(100% - ' + counterWidth + 'px);';
         }
