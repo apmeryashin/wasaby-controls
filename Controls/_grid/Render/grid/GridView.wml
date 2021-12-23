@@ -35,13 +35,14 @@
         </div>
 
         <!-- Скроллбар горизонтального скролла. -->
-        <ws:if data="{{ _options.columnScroll && _options.columnScrollViewMode !== 'unaccented' }}">
+        <ws:if data="{{ _options.columnScroll }}">
             <Controls.columnScroll:ScrollBar
                     name="horizontalScrollBar{{columnScrollPartName === 'scrollable' ? '_fake'}}"
                     attr:style="{{ _getColumnScrollThumbStyles(_options) }}"
                     mode="{{ _options.columnScrollViewMode || 'scrollbar' }}"
                     stickyHeader="{{ _options.stickyHeader !== false }}"
-                    readOnly="{{ _options.columnScrollViewMode === 'arrows' && (_$pendingMouseEnterForActivate || !_$columnScrollController) }}"
+                    readOnly="{{ (_options.columnScrollViewMode === 'arrows' || _options.columnScrollViewMode !== 'unaccented') &&
+                                 (_$pendingMouseEnterForActivate || !_$columnScrollController) }}"
                     backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
                     on:positionChanged="_onColumnScrollThumbPositionChanged()"
                     on:dragEnd="_onColumnScrollThumbDragEnd()"/>
