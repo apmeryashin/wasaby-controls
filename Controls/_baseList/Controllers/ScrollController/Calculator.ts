@@ -363,6 +363,10 @@ export class Calculator {
         const oldState = this._getState();
         const direction = scrollPosition > this._scrollPosition ? 'forward' : 'backward';
 
+        // Если после события virtualScrollMove позиция скролла не поменяется, то и события scrollMove не будет
+        // Поэтому запоминаем новую позицию скролла
+        this._scrollPosition = scrollPosition;
+
         this._range = getRangeByScrollPosition({
             itemsSizes: this._itemsSizes,
             pageSize: this._virtualScrollConfig.pageSize,
@@ -373,7 +377,10 @@ export class Calculator {
 
         this._updatePlaceholders();
 
-        return this._getRangeChangeResult(oldState, direction);
+        // При скролле к виртуальной позиции нельзя сказать куда сместился диапазон, т.к. по сути это поведение схожее
+        // с resetItems. Мы просто создаем новый диапазон, а не смещаем старый. Поэтому shiftDirection = null;
+        // Это нужно чтобы мы не востанавливали скролл.
+        return this._getRangeChangeResult(oldState, null);
     }
 
     // endregion ShiftRangeByScrollPosition

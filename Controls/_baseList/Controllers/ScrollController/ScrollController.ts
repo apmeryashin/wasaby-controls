@@ -406,6 +406,7 @@ export class ScrollController {
      */
     scrollToVirtualPosition(position: number): void {
         const result = this._calculator.shiftRangeToVirtualScrollPosition(position);
+        this._observersController.setScrollPosition(position);
         this._processCalculatorResult(result);
     }
 
