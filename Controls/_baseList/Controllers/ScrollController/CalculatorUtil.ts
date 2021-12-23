@@ -95,11 +95,11 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
             startIndex = Math.max(0, totalCount - pageSize);
         }
 
-        endIndex = Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount));
-        // При удалении segmentSizeToHide будет равен 0, поэтому првоерим чтобы endIndex не выходит за totalCount
-        if (endIndex > totalCount) {
-            endIndex = totalCount;
-        }
+        endIndex = Math.max(
+            endIndex - segmentSizeToHide,
+            Math.min(startIndex + pageSize, totalCount),
+            totalCount
+        );
     } else {
         // сперва считаем именно endIndex, т.к. startIndex зависит от нового значения endIndex
         endIndex = Math.min(endIndex + correctedSegmentSize, totalCount);

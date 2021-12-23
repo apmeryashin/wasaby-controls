@@ -105,7 +105,6 @@ export class ScrollController {
 
     private _viewportSize: number = 0;
     private _contentSize: number = 0;
-    private _scrollPosition: number = 0;
 
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
@@ -180,14 +179,6 @@ export class ScrollController {
         return this._calculator.getFirstVisibleItemIndex();
     }
 
-    getVirtualScrollPosition(): number {
-        return this._calculator.getVirtualScrollPosition();
-    }
-
-    getVirtualContentSize(): number {
-        return this._calculator.getVirtualContentSize();
-    }
-
     // region Triggers
 
     setBackwardTriggerVisible(visible: boolean): void {
@@ -230,13 +221,10 @@ export class ScrollController {
      * @param {HTMLElement} newItemsContainer
      */
     setItemsContainer(newItemsContainer: HTMLElement): void {
-        const changed = this._itemsSizesController.setItemsContainer(newItemsContainer);
-        if (changed) {
-            this._itemsSizesController.resetItems(this._calculator.getTotalItemsCount());
-
-            const newItemsSizes = this._itemsSizesController.updateItemsSizes(this._calculator.getRange());
-            this._calculator.updateItemsSizes(newItemsSizes);
-        }
+        this._itemsSizesController.setItemsContainer(newItemsContainer);
+        this._itemsSizesController.resetItems(this._calculator.getTotalItemsCount());
+        const newItemsSizes = this._itemsSizesController.updateItemsSizes(this._calculator.getRange());
+        this._calculator.updateItemsSizes(newItemsSizes);
     }
 
     /**
@@ -368,7 +356,7 @@ export class ScrollController {
             this.setForwardTriggerPosition('offset');
         }
 
-        this._processInitialize();
+        this._handleInitializingResult();
     }
 
     // endregion Collection changes
@@ -416,16 +404,9 @@ export class ScrollController {
      * @param position
      */
     scrollPositionChange(position: number): void {
-        if (this._scrollPosition !== position) {
-            this._scrollPosition = position;
-            const result = this._calculator.scrollPositionChange(position);
-            this._processActiveElementIndexChanged(result);
-            this._observersController.setScrollPosition(position);
-        }
-    }
-
-    getScrollPosition(): number {
-        return this._scrollPosition;
+        const result = this._calculator.scrollPositionChange(position);
+        this._processActiveElementIndexChanged(result);
+        this._observersController.setScrollPosition(position);
     }
 
     // endregion Scroll
@@ -526,7 +507,7 @@ export class ScrollController {
         }
     }
 
-    private _processInitialize(): void {
+    private _handleInitializingResult(): void {
         this._indexesInitializedCallback(this._calculator.getRange());
         this._hasItemsOutRangeChangedCallback({
             backward: this._calculator.hasItemsOutRange('backward'),

@@ -45,12 +45,8 @@ export abstract class AbstractItemsSizesController {
 
     // region on DOM references update
 
-    setItemsContainer(newItemsContainer: HTMLElement): boolean {
-        const changed = this._itemsContainer !== newItemsContainer;
-        if (changed) {
-            this._itemsContainer = newItemsContainer;
-        }
-        return changed;
+    setItemsContainer(newItemsContainer: HTMLElement): void {
+        this._itemsContainer = newItemsContainer;
     }
 
     setItemsQuerySelector(newItemsQuerySelector: string): void {

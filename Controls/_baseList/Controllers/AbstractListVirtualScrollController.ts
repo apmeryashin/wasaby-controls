@@ -483,7 +483,7 @@ export abstract class AbstractListVirtualScrollController<
                 this._scheduleUpdateHasItemsOutRange(hasItemsOutRange);
                 this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
                 // Это нужно выполнять в этом же цикле синхронизации.
-                // Чтобы ScrollContainer и отступ под паддинг отрисовались в этом же цикле.
+                // Чтобы ScrollContainer и отступ под пэйджинг отрисовались в этом же цикле.
                 if (this._updateVirtualNavigationUtil) {
                     this._updateVirtualNavigationUtil(hasItemsOutRange);
                 }
@@ -673,6 +673,8 @@ export abstract class AbstractListVirtualScrollController<
                     this._scheduledScrollParams = null;
                     break;
                 case 'applyScrollPosition':
+                    // containerBase в событии virtualScrollMove прокидывает callback, который нужно позвать
+                    // после отрисовки нового диапазона для встановки scrollPosition
                     const applyScrollParams = this._scheduledScrollParams.params as IScheduledApplyScrollPositionParams;
                     applyScrollParams.callback();
                     this._scheduledScrollParams = null;

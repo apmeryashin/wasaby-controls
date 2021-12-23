@@ -161,14 +161,6 @@ export class Calculator {
         });
     }
 
-    getVirtualScrollPosition(): number {
-        return this._scrollPosition + this._placeholders.backward;
-    }
-
-    getVirtualContentSize(): number {
-        return this._contentSize + this._placeholders.backward + this._placeholders.forward;
-    }
-
     // endregion Getters/Setters
 
     // region EdgeVisibleItem
@@ -389,17 +381,20 @@ export class Calculator {
      */
     scrollPositionChange(scrollPosition: number): IActiveElementIndexChanged {
         const oldActiveElementIndex = this._activeElementIndex;
-        this._scrollPosition = scrollPosition;
 
-        this._activeElementIndex = getActiveElementIndexByScrollPosition({
-            contentSize: this._contentSize,
-            viewportSize: this._viewportSize,
-            itemsSizes: this._itemsSizes,
-            currentRange: this._range,
-            placeholders: this._placeholders,
-            scrollPosition,
-            totalCount: this._totalCount
-        });
+        if (this._scrollPosition !== scrollPosition) {
+            this._scrollPosition = scrollPosition;
+
+            this._activeElementIndex = getActiveElementIndexByScrollPosition({
+                contentSize: this._contentSize,
+                viewportSize: this._viewportSize,
+                itemsSizes: this._itemsSizes,
+                currentRange: this._range,
+                placeholders: this._placeholders,
+                scrollPosition,
+                totalCount: this._totalCount
+            });
+        }
 
         return {
             activeElementIndex: this._activeElementIndex,

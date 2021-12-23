@@ -20,19 +20,6 @@ export class ListVirtualScrollController extends AbstractListVirtualScrollContro
         this._scrollController.updateTriggers();
     }
 
-    /**
-     * Возвращается виртуальную позицию скролла.
-     * Виртуальная позиция скролла - реальная позиция + размер скрытых элементов сверху
-     * TODO SCROLL нужно только для пэйджинга
-     */
-    getVirtualScrollPosition(): number {
-        return this._scrollController.getVirtualScrollPosition();
-    }
-
-    getVirtualContentSize(): number {
-        return this._scrollController.getVirtualContentSize();
-    }
-
     protected _getObserversControllerConstructor(): IObserversControllerConstructor {
         return ObserversController;
     }

@@ -3918,9 +3918,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if ((_private.needScrollPaging(this._options.navigation) || this._useNewScroll) &&
             (this._options.navigation.viewConfig.pagingMode === 'numbers' || !this._isPagingArrowClick)) {
             if (this._useNewScroll) {
-                scrollParams.scrollTop = this._listVirtualScrollController.getVirtualScrollPosition();
-                scrollParams.scrollHeight
-                    = this._listVirtualScrollController.getVirtualContentSize() + pagingPadding - stickyElementsHeight;
+                scrollParams.scrollTop += this._placeholders?.backward || 0;
+                scrollParams.scrollHeight += this._placeholders?.backward + this._placeholders?.forward || 0;
             } else {
                 scrollParams.scrollTop += (this._scrollController?.getPlaceholders()?.top || 0);
                 scrollParams.scrollHeight += (this._scrollController?.getPlaceholders()?.bottom +
@@ -3991,6 +3990,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 if (!this._isMounted) {
                     return;
                 }
+                // TODO нужно будет сетать в пэйджинг и он на своем уровне это обработает
+                // Пэйджингу нужны плэйсхолдеры, чтобы правильно работать с отображением страниц
+                this._placeholders = placeholders;
 
                 const convertedPlaceholders = {
                     top: placeholders.backward,
