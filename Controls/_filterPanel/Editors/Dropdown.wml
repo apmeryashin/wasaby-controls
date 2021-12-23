@@ -1,17 +1,30 @@
+<ws:template name="dropdown">
+    <Controls.Container.Async templateName="{{dropdownTemplateName}}">
+        <ws:partial template="{{content.resolvedTemplate}}"
+                    scope="{{_options}}"
+                    fontColorStyle="default"
+                    style="filterPanel"
+                    caption="{{_options.extendedCaption}}"
+                    headerTemplate="{{null}}"
+                    bind:selectedKeys="_selectedKeys"
+                    attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor-cloud"
+                    on:textValueChanged="_handleTextValueChanged()"
+                    on:selectedKeysChanged="_handleSelectedKeysChanged()"
+                    on:menuItemActivate="_handleMenuItemActivate()">
+        </ws:partial>
+    </Controls.Container.Async>
+</ws:template>
+
 <Controls._filterPanel.BaseEditor scope="{{_options}}"
-                                  on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
     <ws:editorTemplate>
-        <Controls.Container.Async templateName="Controls/dropdown:Selector">
-            <ws:partial template="{{content.resolvedTemplate}}"
-                        scope="{{_options}}"
-                        fontColorStyle="default"
-                        selectedKeys="{{_options.propertyValue}}"
-                        style="filterPanel"
-                        attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor-cloud"
-                        on:textValueChanged="_handleTextValueChanged()"
-                        on:selectedKeysChanged="_handleSelectedKeysChanged()">
-            </ws:partial>
-        </Controls.Container.Async>
+        <ws:partial template="dropdown"
+                    dropdownTemplateName="Controls/dropdown:Selector"/>
     </ws:editorTemplate>
+
+    <ws:extendedTemplate>
+        <ws:partial template="dropdown"
+                    dropdownTemplateName="Controls/dropdown:Button"
+                    />
+    </ws:extendedTemplate>
 </Controls._filterPanel.BaseEditor>
