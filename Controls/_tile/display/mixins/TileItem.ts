@@ -390,7 +390,7 @@ export default abstract class TileItem<T extends Model = Model> {
     /**
      * Возвращает стиль для блока, который автоматически растягивает плитку
      * @param {TTileItem} itemType Тип элемента
-     * @param {number} width Ширина плитки, заданная на темплейте
+     * @param {number | string} width Ширина плитки, заданная на темплейте
      * @param {TImagePosition} imagePosition Позиция изображения
      * @param {TImageViewMode} imageViewMode Режим отображения плитки
      * @param {number} imageProportion Пропорции изображения
@@ -398,11 +398,14 @@ export default abstract class TileItem<T extends Model = Model> {
      */
     getAutoResizerStyles(
         itemType: TTileItem = 'default',
-        width?: number,
+        width?: number | string,
         imageProportion?: number,
         imagePosition: TImagePosition = 'top',
         imageViewMode: TImageViewMode = 'rectangle'
     ): string {
+        if (typeof width === 'string') {
+            return '';
+        }
         let paddingTop;
 
         if (itemType === 'rich') {
