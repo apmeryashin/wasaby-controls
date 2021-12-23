@@ -40,6 +40,11 @@ interface IColumnsOptions<
     initialWidth?: number;
     columnMinWidth?: number;
     columnsCount?: number;
+    /**
+     * Если выставлено в true, то при добавлении/удалении итемов
+     * коллекции мы полностью пересчитываем распределение итемов по колонкам
+     */
+    autoColumnsRecalculating?: boolean;
 }
 
 /**
@@ -62,12 +67,11 @@ export default class ColumnsCollection<
     protected _columnsCount: number;
     protected _dragColumn: number = null;
     protected _$spacing: number = SPACING;
-    protected _$viewMode: string;
+    // true если при изменении коллекции нужно пересчитать расположение итемов по колонкам
+    protected _$autoColumnsRecalculating: boolean;
 
     // Итератор, перебирающий только записи групп
     private readonly _groupsIterator: IViewIterator;
-    // true если при изменении коллекции нужно пересчитать расположение итемов по колонкам
-    private readonly _autoRecalculateColumns: boolean = false;
 
     // Снимок состояния колонок для списка без группировки
     private _columnsSnapshot: IGroupColumnsSnapshot;
@@ -77,9 +81,6 @@ export default class ColumnsCollection<
     constructor(options: IColumnsOptions<S, T>) {
         super(options);
 
-        // Костыльно условие, нужно придумать адекватное название для опции,
-        // а не затачиваться на viewMode explorer'а.
-        this._autoRecalculateColumns = this._$viewMode === 'list';
         this._columnsStrategy = this._$columnsMode === 'fixed' ? new Fixed() : new Auto();
 
         if (this._$columnsMode === 'auto' && options.initialWidth) {
@@ -172,7 +173,7 @@ export default class ColumnsCollection<
         if (action === 'a') {
             // Если все колонки пересчитывать не требуется,
             // то добавляем новые итемы по месту в соответтсвии с их индексами.
-            if (!this._autoRecalculateColumns) {
+            if (!this._$autoColumnsRecalculating) {
                 newItems.forEach((item, index) => {
                     if (item['[Controls/_display/GroupItem]']) {
                         return;
@@ -194,7 +195,7 @@ export default class ColumnsCollection<
         }
 
         if (action === 'rm') {
-            if (!this._autoRecalculateColumns) {
+            if (!this._$autoColumnsRecalculating) {
                 this.processRemoving(oldItemsIndex, oldItems);
             } else if (this._dragColumn === null) {
                 this.updateColumnsSnapshots();
@@ -623,5 +624,5 @@ Object.assign(ColumnsCollection.prototype, {
     _$columnsCount: 2,
     _$spacing: 12,
     _$columnsMode: 'auto',
-    _$viewMode: ''
+    _$autoColumnsRecalculating: false
 });

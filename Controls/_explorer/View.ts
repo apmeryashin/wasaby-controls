@@ -1013,7 +1013,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
     }
 
-    private _resolveViewMode(viewMode: TExplorerViewMode, useColumns: boolean) {
+    private _resolveViewMode(viewMode: TExplorerViewMode, useColumns: boolean): TExplorerViewMode | 'columns' {
         return viewMode === 'list' && useColumns ? 'columns' : viewMode;
     }
 

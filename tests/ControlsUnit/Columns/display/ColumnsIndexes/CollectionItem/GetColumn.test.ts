@@ -74,7 +74,7 @@ describe('Columns/display/ColumnsIndexes/CollectionItem/GetColumn', () => {
             assert.deepEqual(result, expected, 'wrong ColumnIndexes after adding one item');
         });
     });
-    describe('viewMode = list', () => {
+    describe('autoColumnsRecalculating', () => {
         let rs;
         let collection;
         let result = [];
@@ -93,7 +93,7 @@ describe('Columns/display/ColumnsIndexes/CollectionItem/GetColumn', () => {
                 })
             });
             result = [];
-            collection = new ColumnsCollection({viewMode: 'list', collection: rs, columnsCount: 3});
+            collection = new ColumnsCollection({autoColumnsRecalculating: true, collection: rs, columnsCount: 3});
         });
         it('add item', () => {
             const expected = [0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0];
