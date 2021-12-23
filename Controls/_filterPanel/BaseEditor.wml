@@ -13,8 +13,15 @@
     </div>
 </ws:if>
 <ws:else>
-    <div class="controls-FilterViewPanel__additional-editor"
-         on:click="_extendedCaptionClick()">
-        {{_options.extendedCaption}}
-    </div>
+    <ws:if data="{{_options.extendedTemplate}}">
+        <ws:partial template="{{_options.extendedTemplate}}"
+                    scope="{{_options}}"
+                    attr:class="controls-FilterViewPanel__additional-editor"/>
+    </ws:if>
+    <ws:else>
+        <div class="controls-FilterViewPanel__additional-editor"
+             on:click="_extendedCaptionClick()">
+            {{_options.extendedCaption}}
+        </div>
+    </ws:else>
 </ws:else>
