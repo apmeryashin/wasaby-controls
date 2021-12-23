@@ -84,7 +84,8 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
             // Из-за флага listenAll на listener'e, подписка доходит до application'a всегда.
             // На ios при показе клавиатуры стреляет событие скролла, что приводит к вызову текущего обработчика
             // и закрытию окна. Для ios отключаю реакцию на скролл, событие скролла стрельнуло на body.
-            if (detection.isMobileIOS && (scrollEvent.target === document.body || scrollEvent.target === document)) {
+            const trueEvent = scrollEvent || event;
+            if (detection.isMobileIOS && (trueEvent.target === document.body || trueEvent.target === document)) {
                 return;
             } else if (actionOnScroll === 'close') {
                 BaseOpener.closeDialog(popupId);
