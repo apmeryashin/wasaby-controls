@@ -421,8 +421,8 @@ const _private = {
             // и вернуться к началу списка, иначе браузер будет пытаться восстановить
             // scrollTop, догружая новые записи после сброса.
             self._resetScrollAfterReload = !self._keepScrollAfterReload;
-            self._needRestoreScroll = self._reloadWithParams;
-            self._reloadWithParams = false;
+            self._needRestoreScroll = self._reloadByPosition;
+            self._reloadByPosition = false;
             self._keepScrollAfterReload = false;
         }
     },
@@ -1481,7 +1481,7 @@ const _private = {
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
                             break;
                         case IObservable.ACTION_RESET:
-                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload && !self._reloadWithParams);
+                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload && !self._reloadByPosition);
                             break;
                     }
                     if (result) {
@@ -3091,6 +3091,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _needBottomPadding = false;
     _noDataBeforeReload = false;
 
+    _reloadByPosition = false;
     _keepScrollAfterReload = false;
     _resetScrollAfterReload = false;
     _scrollPageLocked = false;
@@ -4891,7 +4892,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
                 }
             } else {
-                this._reloadWithParams = true;
+
+                // Запоминаем, что перезагружают на конкретной позиции, это значит, что нужно будет восстановить скролл.
+                this._reloadByPosition = this._options.navigation.source === 'position' &&
+                    this._options.navigation.sourceConfig.position !== sourceConfig.position;
             }
         }
 
