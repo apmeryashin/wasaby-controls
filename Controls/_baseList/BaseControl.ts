@@ -1068,9 +1068,10 @@ const _private = {
                 if (!self._sourceController?.getLoadError()) {
                     if (direction === 'up') {
                         if (self._useNewScroll) {
+                            // Чтобы отрисовалась кнопка RESET в пэйджинге
+                            self._scrolledToEdge = true;
                             // нужно дождаться когда отрисуются новые элементы
                             _private.doAfterRender(self, () => {
-                                self._scrolledToEdge = true;
                                 self._listVirtualScrollController.scrollToEdge('backward').then((key) => {
                                     self._setMarkedKeyAfterPaging(key);
                                     if (_private.isPagingNavigation(self._options.navigation)) {
@@ -1093,11 +1094,11 @@ const _private = {
                         }
                     } else {
                         if (self._useNewScroll) {
+                            // TODO SCROLL тоже нужно рисовать кнопку, но надо будет тест поправить.
+                            // Чтобы отрисовалась кнопка RESET в пэйджинге
+                            // self._scrolledToEdge = true;
                             // нужно дождаться когда отрисуются новые элементы
                             _private.doAfterRender(self, () => {
-                                // TODO SCROLL нужно расскоментировать, чтобы кнопка RESET показывалась и при скролле
-                                //  в конец вниз. Нужно будет поправить тест.
-                                // self._scrolledToEdge = true;
                                 self._listVirtualScrollController.scrollToEdge('forward').then((key) => {
                                     self._setMarkedKeyAfterPaging(key);
                                     if (_private.isPagingNavigation(self._options.navigation)) {
@@ -1123,8 +1124,10 @@ const _private = {
             }).catch((error) => error);
         } else if (direction === 'up') {
             if (self._useNewScroll) {
-                self._scrolledToEdge = true;
                 self._listVirtualScrollController.scrollToEdge('backward').then((key) => {
+                    self._scrolled = true;
+                    _private.updateScrollPagingButtons(self, {...self._getScrollParams(), initial: !self._scrolled});
+
                     self._setMarkedKeyAfterPaging(key);
                     if (self._scrollPagingCtr) {
                         self._currentPage = 1;
@@ -2272,9 +2275,6 @@ const _private = {
         }
 
         if (self._useNewScroll) {
-            // TODO SCROLL нужно расскоментировать, чтобы кнопка RESET показывалась и при скролле
-            //  в конец вниз. Нужно будет поправить тест.
-            // self._scrolledToEdge = true;
             return self._listVirtualScrollController.scrollToEdge('forward').then((key) => {
                 self._setMarkedKeyAfterPaging(key);
                 _private.updateScrollPagingButtons(self, self._getScrollParams());
