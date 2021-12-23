@@ -33,6 +33,7 @@
                  contentTemplate="{{_contentTemplate}}"
                  crossTemplate="{{_crossTemplate}}"
                  theme="{{_options.theme}}"
+                 style="{{_options.fontColorStyle}}"
                  on:click="_itemClick(item)"
                  attr:data-qa="SelectedCollection__item">
          </ws:partial>
