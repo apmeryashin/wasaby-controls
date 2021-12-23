@@ -1,0 +1,8 @@
+<ws:partial
+        template="{{ _options.renderTemplate }}"
+        scope="{{ _options.renderScope }}"
+        on:itemMouseEnter="_onItemMouseEnter()"
+        on:itemClick="_onItemClick()"
+        on:itemContextMenu="_onItemContextMenu()"
+        on:itemMouseDown="_onItemMouseDown()"
+        on:itemMouseUp="_onItemMouseUp()"/>
