@@ -404,10 +404,10 @@ export class ScrollController {
      * Используется при нажатии в скролбар в позицию, где записи уже скрыты виртуальным скроллом.
      * @param position Позиция скролла.
      */
-    scrollToVirtualPosition(position: number): void {
+    scrollToVirtualPosition(position: number): boolean {
         const result = this._calculator.shiftRangeToVirtualScrollPosition(position);
-        this._observersController.setScrollPosition(position);
         this._processCalculatorResult(result);
+        return result.indexesChanged;
     }
 
     /**

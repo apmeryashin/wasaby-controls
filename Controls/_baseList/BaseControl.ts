@@ -1419,7 +1419,10 @@ const _private = {
     // throttle нужен, чтобы при потоке одинаковых событий не пересчитывать состояние на каждое из них
     throttledVirtualScrollPositionChanged: throttle((self, params) => {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.virtualScrollPositionChange(params.scrollTop);
+            self._listVirtualScrollController.virtualScrollPositionChange(
+                params.scrollTop,
+                params.applyScrollTopCallback
+            );
         } else {
             const result = self._scrollController.scrollPositionChange(params, true);
             _private.handleScrollControllerResult(self, result);

@@ -363,10 +363,6 @@ export class Calculator {
         const oldState = this._getState();
         const direction = scrollPosition > this._scrollPosition ? 'forward' : 'backward';
 
-        // Если после события virtualScrollMove позиция скролла не поменяется, то и события scrollMove не будет
-        // Поэтому запоминаем новую позицию скролла
-        this._scrollPosition = scrollPosition;
-
         this._range = getRangeByScrollPosition({
             itemsSizes: this._itemsSizes,
             pageSize: this._virtualScrollConfig.pageSize,

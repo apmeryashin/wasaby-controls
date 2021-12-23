@@ -46,7 +46,8 @@ import { TVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll'
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
-export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement' | 'doScroll';
+export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement' | 'doScroll'
+    | 'applyScrollPosition';
 
 export interface IScheduledScrollToElementParams {
     key: CrudEntityKey;
@@ -73,9 +74,14 @@ export interface IDoScrollParams {
     scrollParam: IScrollParam;
 }
 
+export interface IScheduledApplyScrollPositionParams {
+    callback: () => void;
+}
+
 export interface IScheduledScrollParams {
     type: IScheduledScrollType;
-    params: IEdgeItem | IScheduledScrollToElementParams | IEdgeItemCalculatingParams | IDoScrollParams;
+    params: IEdgeItem | IScheduledScrollToElementParams | IEdgeItemCalculatingParams | IDoScrollParams
+        | IScheduledApplyScrollPositionParams;
 }
 
 type IScrollToElementUtil = (container: HTMLElement, position: string, force: boolean) => Promise<void>|void;
@@ -181,7 +187,7 @@ export abstract class AbstractListVirtualScrollController<
      * Используется, чтобы вернуть правильный ключ в методе scrollToPage
      * @private
      */
-    protected _doScrollCompletedCallback: () => void;
+    private _doScrollCompletedCallback: () => void;
 
     constructor(options: TOptions) {
         this._onCollectionChange = this._onCollectionChange.bind(this);
@@ -269,8 +275,19 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
-    virtualScrollPositionChange(position: number): void {
-        this._scrollController.scrollToVirtualPosition(position);
+    virtualScrollPositionChange(position: number, applyScrollPositionCallback: () => void): void {
+        // Когда мы смещаем диапазон к виртуальной позиции, то scrollPosition нужно применить после отрисовки
+        // нового диапазона. Для этого ScrollContainer прокидывает коллбэк.
+        this._scheduleScroll({
+            type: 'applyScrollPosition',
+            params: {
+                callback: applyScrollPositionCallback
+            }
+        });
+        const indexesChanged = this._scrollController.scrollToVirtualPosition(position);
+        if (!indexesChanged) {
+            this._handleScheduledScroll();
+        }
     }
 
     scrollPositionChange(position: number): void {
@@ -653,6 +670,11 @@ export abstract class AbstractListVirtualScrollController<
                     const doScrollParams = this._scheduledScrollParams.params as IDoScrollParams;
                     this._doScrollUtil(doScrollParams.scrollParam);
                     this._doScrollCompletedCallback();
+                    this._scheduledScrollParams = null;
+                    break;
+                case 'applyScrollPosition':
+                    const applyScrollParams = this._scheduledScrollParams.params as IScheduledApplyScrollPositionParams;
+                    applyScrollParams.callback();
                     this._scheduledScrollParams = null;
                     break;
                 default:
