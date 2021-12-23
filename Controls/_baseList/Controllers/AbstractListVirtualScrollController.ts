@@ -437,11 +437,10 @@ export abstract class AbstractListVirtualScrollController<
     private _createScrollController(options: TOptions): void {
         const scrollControllerOptions = this._getScrollControllerOptions(options);
         this._scrollController = new ScrollController(scrollControllerOptions);
-        this._scrollController.resetItems(
-            scrollControllerOptions.totalCount,
-            false,
-            options.activeElementKey !== undefined
-        );
+
+        const activeElementIndex = this._collection.getIndexByKey(options.activeElementKey);
+        const startIndex = activeElementIndex !== -1 ? activeElementIndex : 0;
+        this._scrollController.resetItems(scrollControllerOptions.totalCount, startIndex);
     }
 
     protected _getScrollControllerOptions(options: TOptions): IScrollControllerOptions {
@@ -449,11 +448,9 @@ export abstract class AbstractListVirtualScrollController<
             options.itemsQuerySelector,
             options.virtualScrollConfig.mode
         );
-        const activeElementIndex = this._collection.getIndexByKey(options.activeElementKey);
         return {
             listControl: options.listControl,
             virtualScrollConfig: options.virtualScrollConfig,
-            activeElementIndex,
 
             itemsContainer: options.itemsContainer,
             listContainer: options.listContainer,
@@ -740,7 +737,7 @@ export abstract class AbstractListVirtualScrollController<
             return null;
         }
 
-        const itemsSizes: IItemsSizes = this._collection.getItems()
+        return this._collection.getItems()
             .map((it) => {
                 const itemSize = {
                     size: it.getContents().get(this._itemSizeProperty),
@@ -749,13 +746,11 @@ export abstract class AbstractListVirtualScrollController<
 
                 if (!itemSize.size) {
                     Logger.error('Controls/baseList:BaseControl | Задана опция itemHeightProperty, ' +
-                                `но для записи с ключом "${it.getContents().getKey()}" высота не определена!`);
+                        `но для записи с ключом "${it.getContents().getKey()}" высота не определена!`);
                 }
 
                 return itemSize;
             });
-
-        return itemsSizes;
     }
 
     private _initCollection(collection: Collection): void {
@@ -773,7 +768,8 @@ export abstract class AbstractListVirtualScrollController<
         this._collection.subscribe('onCollectionChange', this._onCollectionChange);
 
         if (this._scrollController && this._collection) {
-            this._scrollController.resetItems(this._collection.getCount(), this._keepScrollPosition);
+            const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
+            this._scrollController.resetItems(this._collection.getCount(), startIndex);
         }
     }
 
@@ -810,7 +806,8 @@ export abstract class AbstractListVirtualScrollController<
             }
             case IObservable.ACTION_RESET: {
                 this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
-                this._scrollController.resetItems(totalCount, this._keepScrollPosition);
+                const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
+                this._scrollController.resetItems(totalCount, startIndex);
                 break;
             }
         }

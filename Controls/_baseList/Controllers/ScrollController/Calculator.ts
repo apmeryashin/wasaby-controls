@@ -58,7 +58,6 @@ export interface ICalculatorBaseOptions {
     givenItemsSizes?: IItemsSizes;
 
     virtualScrollConfig: IVirtualScrollConfig;
-    activeElementIndex: number;
 }
 
 /**
@@ -102,7 +101,6 @@ export class Calculator {
         this._viewportSize = options.viewportSize || 0;
         this._contentSize = options.contentSize || 0;
         this._virtualScrollConfig = options.virtualScrollConfig;
-        this._activeElementIndex = options.activeElementIndex;
     }
 
     // region Getters/Setters
@@ -500,20 +498,11 @@ export class Calculator {
      * Обрабатывает пересоздание всех элементов коллекции.
      * Пересчитываем виртуальный диапазон, placeholders, сбрасывает старые размеры элементов.
      * @param totalCount Новое кол-во элементов
-     * @param keepPosition Нужно ли сохранить текущию позицию
-     * @param startRangeWithActiveItem Нужно ли начинать диапазон с активного элемент
-     * @remark
-     * startRangeWithActiveItem = true, только когда в опции конструктора передали activeItemIndex
+     * @param startIndex Начальный индекс диапазона отображаемых записей
      */
-    resetItems(totalCount: number, keepPosition: boolean, startRangeWithActiveItem: boolean = false): void {
+    resetItems(totalCount: number, startIndex: number): void {
         this._totalCount = totalCount;
 
-        let startIndex = 0;
-        if (keepPosition) {
-            startIndex = this._range.startIndex;
-        } else if (startRangeWithActiveItem) {
-            startIndex = this._activeElementIndex;
-        }
         if (this._givenItemsSizes) {
             this._range = getRangeByItemsSizes({
                 start: startIndex,

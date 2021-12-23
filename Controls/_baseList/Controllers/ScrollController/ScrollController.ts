@@ -141,7 +141,6 @@ export class ScrollController {
             scrollPosition: options.scrollPosition,
             totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
-            activeElementIndex: options.activeElementIndex,
             viewportSize: options.viewportSize,
             contentSize: options.contentSize,
             givenItemsSizes: options.givenItemsSizes
@@ -325,10 +324,9 @@ export class ScrollController {
     /**
      * Обрабатывает пересоздание всех элементов коллекции.
      * @param totalCount Общее кол-во элементов в коллекции
-     * @param keepPosition Нужно ли сохранить текущию позицию
-     * @param startRangeWithActiveItem Нужно ли начинать диапазон с активного элемент
+     * @param startIndex Начальный индекс диапазона отображаемых записей
      */
-    resetItems(totalCount: number, keepPosition: boolean, startRangeWithActiveItem: boolean = false): void {
+    resetItems(totalCount: number, startIndex: number): void {
         // Сбрасываем состояние контроллера.
         this.scrollPositionChange(0);
         this.contentResized(0);
@@ -339,7 +337,7 @@ export class ScrollController {
         const itemsSizes = this._itemsSizesController.resetItems(totalCount);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        this._calculator.resetItems(totalCount, keepPosition, startRangeWithActiveItem);
+        this._calculator.resetItems(totalCount, startIndex);
 
         const hasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),
