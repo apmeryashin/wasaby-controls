@@ -132,7 +132,7 @@ export default class Lookup extends BaseLookupInput {
          this._initializeConstants();
          // in mode read only and single line, counter does not affect the collection
          if (isShowCounter && (!options.readOnly || options.multiLine)) {
-            counterWidth = this._getCounterWidth(itemsCount, options.theme, options.fontSize);
+            counterWidth = this._getCounterWidth(itemsCount, options.theme, options.fontSize, options.multiLine);
          }
 
          fieldWrapperWidth = this._getFieldWrapperWidth();
@@ -233,8 +233,8 @@ export default class Lookup extends BaseLookupInput {
       return multiLine && itemsCount > maxVisibleItems || !multiLine && itemsCount > 1;
    }
 
-   private _getCounterWidth(itemsCount: number, theme: string, fontSize: string): number {
-      return selectedCollectionUtils.getCounterWidth(itemsCount, theme, fontSize);
+   private _getCounterWidth(itemsCount: number, theme: string, fontSize: string, multiLine: boolean): number {
+      return selectedCollectionUtils.getCounterWidth(itemsCount, theme, fontSize, multiLine);
    }
 
    private _getLastSelectedItems(items: SelectedItems, maxVisibleItems: number): Model[] {
