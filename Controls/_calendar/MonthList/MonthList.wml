@@ -36,20 +36,40 @@
             </ws:navigation>
 
             <ws:itemTemplate>
-               <Controls._calendar.MonthList.MonthListItem
-                       itemHeaderTemplate="{{ _itemHeaderTemplate }}"
-                       stubTemplate="{{ _options.stubTemplate }}"
-                       startValue="{{ _options.startValue }}"
-                       endValue="{{ _options.endValue }}"
-                       itemTemplate="{{ _itemTemplate }}"
-                       itemData="{{ itemTemplate.itemData }}"
-                       extData="{{ _extData }}"
-                       monthTemplate="{{ _options.monthTemplate }}"
-                       dayTemplate="{{ _options.dayTemplate }}"
-                       dayHeaderTemplate="{{ _options.dayHeaderTemplate }}"
-                       newMode="{{ _options.newMode }}"
-                       viewMode="{{ _options.viewMode }}"
-               />
+               <ws:if data="{{ _hasStartOrEndValue }}">
+                  <Controls._calendar.MonthList.MonthListItem
+                          itemHeaderTemplate="{{ _itemHeaderTemplate }}"
+                          stubTemplate="{{ _options.stubTemplate }}"
+                          startValue="{{ _options.startValue }}"
+                          endValue="{{ _options.endValue }}"
+                          itemTemplate="{{ _itemTemplate }}"
+                          itemData="{{ itemTemplate.itemData }}"
+                          extData="{{ _extData }}"
+                          monthTemplate="{{ _options.monthTemplate }}"
+                          dayTemplate="{{ _options.dayTemplate }}"
+                          dayHeaderTemplate="{{ _options.dayHeaderTemplate }}"
+                          newMode="{{ _options.newMode }}"
+                          viewMode="{{ _options.viewMode }}"
+                  />
+               </ws:if>
+               <ws:else>
+                  <ws:partial template="wml!Controls/_calendar/MonthList/MonthListItemTemplate"
+                              itemData="{{ itemTemplate.itemData }}"
+                              itemTemplate="{{_getTemplate(itemTemplate.itemData.item)}}"
+                              extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
+                              startValue="{{_options.startValue}}"
+                              endValue="{{_options.endValue}}"
+                              monthTemplate="{{_options.monthTemplate}}"
+                              dayTemplate="{{_options.dayTemplate}}"
+                              dayHeaderTemplate="{{ _options.dayHeaderTemplate }}"
+                              theme="{{ _options.theme }}"
+                              newMode="{{ _options.newMode }}"
+                              _formatMonth="{{_formatMonth}}"
+                              _options="{{ _options.viewMode !== 'month' ? _options}}"
+                              _getMonth="{{_getMonth}}"
+                              _dateToDataString="{{ _dateToDataString }}"
+                  />
+               </ws:else>
             </ws:itemTemplate>
          </Controls.list:View>
       </Controls.scroll:Container>

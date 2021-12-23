@@ -21,6 +21,7 @@ import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
 import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
+import {date as formatDate} from 'Types/formatter';
 
 interface IModuleComponentOptions extends
     IControlOptions,
@@ -103,8 +104,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     protected _threshold: number[] = [0, 0.01, ITEM_DATA_LOAD_RATIO, 0.99, 1];
     private _errorController: ErrorController = new ErrorController({});
 
+    protected _hasStartOrEndValue: boolean;
+
     protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
                            Promise<TItems> | void {
+
+        // Если в календаре нет работы с startValue или endValue, будем использовать обычный шаблон, вместо контрола
+        this._hasStartOrEndValue = options.hasOwnProperty('startValue') || options.hasOwnProperty('endValue');
 
         const now = new WSDate();
         let position = options.position;
@@ -504,6 +510,29 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         scrollTop = this._scrollTop + (itemDimensions.top - containerDimensions.top);
         return this._children.scroll.canScrollTo(scrollTop);
 
+    }
+
+    protected _getTemplate(data): TemplateFunction {
+        switch (data.get('type')) {
+            case ITEM_TYPES.header:
+                return this._itemHeaderTemplate;
+            case ITEM_TYPES.stub:
+                return this._options.stubTemplate;
+            default:
+                return this._itemTemplate;
+        }
+    }
+
+    protected  _formatMonth(date: Date): string {
+        return date ? formatDate(date, formatDate.FULL_MONTH) : '';
+    }
+
+    protected _getMonth(year: number, month: number): Date {
+        return new WSDate(year, month, 1);
+    }
+
+    protected _dateToDataString(date: Date): string {
+        return monthListUtils.dateToId(date);
     }
 
     protected _scrollHandler(event: SyntheticEvent, scrollTop: number) {
