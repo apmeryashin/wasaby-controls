@@ -15,6 +15,7 @@ export default class extends Control {
                 {department: 'Федеральная клиентская служка', title: 'Федеральная клиентская служка'}
             ],
             keyProperty: 'department',
+            //Необходимо для работы фильтрации в Memory источнике по фильтру со сложными типами (не примитивами)
             filter: (item, queryFilter) => {
                 let addToData = true;
                 for (const filterField in queryFilter) {
@@ -44,7 +45,7 @@ export default class extends Control {
                     }),
                     displayProperty: 'title',
                     keyProperty: 'department',
-                    extendedCaption: 'Непрочитанные'
+                    extendedCaption: 'Отдел'
                 },
                 viewMode: 'extended'
             }
