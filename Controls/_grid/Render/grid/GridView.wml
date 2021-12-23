@@ -35,7 +35,7 @@
         </div>
 
         <!-- Скроллбар горизонтального скролла. -->
-        <ws:if data="{{ _options.columnScroll }}">
+        <ws:if data="{{ _options.columnScroll && _options.columnScrollViewMode !== 'nonaccented' }}">
             <Controls.columnScroll:ScrollBar
                     name="horizontalScrollBar{{columnScrollPartName === 'scrollable' ? '_fake'}}"
                     attr:style="{{ _getColumnScrollThumbStyles(_options) }}"
@@ -151,7 +151,8 @@
 
     <ws:if data="{{ _options.columnScroll }}">
         <Controls.columnScroll:StyleContainers name="columnScrollStyleContainers"/>
-        <Controls.columnScroll:Shadows backgroundStyle="{{ _options.backgroundStyle }}"
+        <Controls.columnScroll:Shadows if="{{_options.columnScrollViewMode !== 'nonaccented'}}"
+                                       backgroundStyle="{{ _options.backgroundStyle }}"
                                        needBottomPadding="{{ _options.needBottomPadding }}"/>
         <Controls.columnScroll:DragScrollOverlay if="{{ _isDragScrollEnabledByOptions(_options) }}"
                                                  on:mousemove="_onColumnScrollDragScrolling('mouse')"

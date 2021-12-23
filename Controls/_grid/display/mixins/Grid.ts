@@ -47,7 +47,7 @@ export type TColspanCallback
 
 export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => TColspanCallbackResult;
 
-export type TColumnScrollViewMode = IScrollBarOptions['mode'];
+export type TColumnScrollViewMode = IScrollBarOptions['mode'] | 'unaccented';
 
 export {
     IGridAbstractColumn as IEmptyTemplateColumn
