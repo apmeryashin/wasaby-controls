@@ -13,7 +13,7 @@ import {
 } from './ObserverController/AbstractObserversController';
 import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalculatorResult} from './Calculator';
 import {CrudEntityKey} from 'Types/source';
-import type { IEdgeItemCalculatingParams } from '../AbstractListVirtualScrollController';
+import type {IEdgeItemCalculatingParams} from '../AbstractListVirtualScrollController';
 
 export interface IItemsRange {
     startIndex: number;
@@ -46,6 +46,7 @@ export interface IEdgeItem {
     direction: IDirection;
     border: IDirection;
     borderDistance: number;
+    contentSizeBeforeItems: number;
 }
 
 export interface IPlaceholders {
@@ -135,17 +136,10 @@ export class ScrollController {
             observersCallback: this._observersCallback.bind(this)
         });
 
-        // корректируем скролл на размер контента до списка
-        const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
-        // если скролл меньше размера контента до списка, то это значит что сам список еще не проскроллен
-        const givenScrollPosition = options.scrollPosition || 0;
-        const scrollPosition = givenScrollPosition < beforeContentSize
-            ? 0
-            : givenScrollPosition - beforeContentSize;
         this._calculator = new Calculator({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
-            scrollPosition,
+            scrollPosition: options.scrollPosition,
             totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
@@ -373,11 +367,19 @@ export class ScrollController {
      * @param params
      */
     getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
-        return this._calculator.getEdgeVisibleItem(params);
+        const edgeItem = this._calculator.getEdgeVisibleItem(params);
+        edgeItem.contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        return edgeItem;
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
+        const currentContentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
+        // У нас может перерисоваться контент, находящийся до элементов. Он влияет на скролл.
+        // Поэтому, чтобы правильно восстановить скролл, запоминаем размер контента до отрисовки
+        // и после отрисовки. Высчитываем изменение и корректируем scroll на это изменение.
+        const contentBeforeItemsOffset = currentContentSizeBeforeItems - edgeItem.contentSizeBeforeItems;
+        return scrollPosition + contentBeforeItemsOffset;
     }
 
     /**

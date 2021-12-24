@@ -46,13 +46,13 @@ export abstract class AbstractItemsSizesController {
     /**
      * Возвращает размер контента, расположенного в этом же ScrollContainer-е до списка.
      */
-    getBeforeContentSize(): number {
+    getContentSizeBeforeItems(): number {
         if (!this._itemsContainer) {
             return null;
         }
 
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
-        return this._getBeforeContentSize(this._itemsContainer, scrollContent);
+        return this._getContentSizeBeforeItems(this._itemsContainer, scrollContent);
     }
 
     // region on DOM references update
@@ -124,7 +124,7 @@ export abstract class AbstractItemsSizesController {
         }
     }
 
-    protected abstract _getBeforeContentSize(itemsContainer: HTMLElement, scrollContent: Element): number;
+    protected abstract _getContentSizeBeforeItems(itemsContainer: HTMLElement, scrollContent: Element): number;
 
     protected abstract _getItemSize(element: HTMLElement): number;
 
