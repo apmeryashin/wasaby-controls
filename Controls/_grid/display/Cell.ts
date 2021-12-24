@@ -642,6 +642,10 @@ export default class Cell<
         return this._$owner.getColumnIndex(this, takeIntoAccountColspans, takeIntoHiddenColumns);
     }
 
+    get columnIndex(): number {
+        return this.getColumnIndex();
+    }
+
     isLadderCell(): boolean {
         return false;
     }
