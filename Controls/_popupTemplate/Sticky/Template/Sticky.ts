@@ -7,7 +7,6 @@ import {IBackgroundStyle, IBackgroundStyleOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDragObject} from 'Controls/dragnDrop';
 import 'css!Controls/popupTemplate';
-import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {getRoundClass} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
 import {Logger} from 'UI/Utils';
 
@@ -58,10 +57,13 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             Logger.error('Controls/popupTemplate:Sticky : Используется устаревшая опция closeButtonVisibility,' +
                                                                                      ' используйте closeButtonVisible');
         }
+
+        if (options.closeButtonViewMode === 'external') {
+            this._closeBtnPosition = POSITION.RIGHT;
+        }
     }
 
     protected _beforeUpdate(options: IPopupTemplateOptions): void {
-        this._updateCloseBtnPosition(options);
         if (options.stickyPosition && options.stickyPosition.direction &&
             this._options.stickyPosition.direction !== options.stickyPosition.direction) {
             this._verticalDirection = options.stickyPosition.direction.vertical;
@@ -81,27 +83,6 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             return this._children.closeButton._container?.offsetWidth;
         }
         return 0;
-    }
-
-    protected _updateCloseBtnPosition(options: IStickyTemplateOptions): void {
-        if (options.stickyPosition && options.closeButtonViewMode === 'external') {
-            // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
-            if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
-                this._closeBtnPosition =  POSITION.RIGHT;
-            } else {
-                const isRightPosition = options.stickyPosition.direction?.horizontal === 'left';
-                let popupRight;
-                if (isRightPosition) {
-                    popupRight = options.stickyPosition.position.right;
-                } else {
-                    const windowWidth = DimensionsMeasurer.getWindowDimensions(this._container).innerWidth;
-                    popupRight =
-                        windowWidth - (options.stickyPosition.position.left + options.stickyPosition.sizes.width);
-                }
-                const isFits = popupRight > this._getCloseButtonWidth();
-                this._closeBtnPosition = isFits ? POSITION.RIGHT : POSITION.LEFT;
-            }
-        }
     }
 
     protected _onDragEnd(): void {
@@ -160,10 +141,8 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
 
     static getDefaultOptions(): IStickyTemplateOptions {
         return {
-            headingFontSize: 'xs',
-            headingFontColorStyle: 'label',
-            headingTextTransform: 'uppercase',
-            headingFontWeight: 'normal',
+            headingFontSize: 'l',
+            headingFontColorStyle: 'secondary',
             closeButtonVisible: true,
             shadowVisible: false,
             backgroundStyle: 'default',

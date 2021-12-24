@@ -26,17 +26,14 @@
         </ws:if>
         <ws:else>
             <ws:if data="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}">
-                <div class="{{_options.applyButtonVisible ? 'controls-StickyTemplate__close_button_with_applyButton'}}
-                controls-StickyTemplate__close_button_wrapper
+                <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
                 {{_options.roundBorder !== false && _closeBtnPosition === 'default' ? 'controls-StickyTemplate_roundBorder__close_button_position-' :
                 'controls-StickyTemplate__close_button_position-'}}{{_closeBtnPosition}}
-                controls-StickyTemplate__close_button-{{_options.closeButtonViewMode !== 'link' ? 'external' : 'default'}}-without-header_top-spacing-{{ _options.closeButtonTopSpacing === 'none' ? 'none' : 'default' }} ">
-                <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button"
+                controls-StickyTemplate__close_button-{{_options.closeButtonViewMode}}
+                controls-StickyTemplate__close_button-{{_options.closeButtonViewMode !== 'link' ? 'external' : 'default'}}-without-header_top-spacing-{{ _options.closeButtonTopSpacing === 'none' ? 'none' : 'default' }} "
                                                      viewMode="{{_options.closeButtonViewMode}}"
-
                                                      name="closeButton"
                                                      on:click="close()"/>
-                </div>
             </ws:if>
         </ws:else>
         <ws:if data="{{_options.bodyContentTemplate}}">
