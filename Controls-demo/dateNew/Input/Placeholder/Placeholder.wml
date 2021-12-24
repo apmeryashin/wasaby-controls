@@ -1,0 +1,9 @@
+<div class="controlsDemo__wrapper controlsDemo__ml3">
+    <div class="controlsDemo__cell">
+        <Controls.date:Input
+                calendarButtonVisible="{{ false }}"
+                placeholder="Когда?"
+                bind:value="_value">
+        </Controls.date:Input>
+    </div>
+</div>
