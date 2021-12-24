@@ -95,9 +95,8 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
             startIndex = Math.max(0, totalCount - pageSize);
         }
 
-        endIndex = Math.max(
-            endIndex - segmentSizeToHide,
-            Math.min(startIndex + pageSize, totalCount),
+        endIndex = Math.min(
+            Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount)),
             totalCount
         );
     } else {

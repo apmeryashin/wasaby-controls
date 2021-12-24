@@ -355,17 +355,19 @@ export class Calculator {
      */
     shiftRangeToVirtualScrollPosition(scrollPosition: number): ICalculatorResult {
         const oldState = this._getState();
-        const direction = scrollPosition > this._scrollPosition ? 'forward' : 'backward';
 
-        this._range = getRangeByScrollPosition({
-            itemsSizes: this._itemsSizes,
-            pageSize: this._virtualScrollConfig.pageSize,
-            scrollPosition,
-            totalCount: this._totalCount,
-            triggerOffset: this._triggersOffsets[direction]
-        });
+        if (this._scrollPosition !== scrollPosition) {
+            const direction = scrollPosition > this._scrollPosition ? 'forward' : 'backward';
+            this._range = getRangeByScrollPosition({
+                itemsSizes: this._itemsSizes,
+                pageSize: this._virtualScrollConfig.pageSize,
+                scrollPosition,
+                totalCount: this._totalCount,
+                triggerOffset: this._triggersOffsets[direction]
+            });
 
-        this._updatePlaceholders();
+            this._updatePlaceholders();
+        }
 
         // При скролле к виртуальной позиции нельзя сказать куда сместился диапазон, т.к. по сути это поведение схожее
         // с resetItems. Мы просто создаем новый диапазон, а не смещаем старый. Поэтому shiftDirection = null;

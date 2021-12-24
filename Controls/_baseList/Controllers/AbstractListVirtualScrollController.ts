@@ -285,7 +285,7 @@ export abstract class AbstractListVirtualScrollController<
             }
         });
         const indexesChanged = this._scrollController.scrollToVirtualPosition(position);
-        if (!indexesChanged) {
+        if (!indexesChanged && !this._synchronizationInProgress) {
             this._handleScheduledScroll();
         }
     }

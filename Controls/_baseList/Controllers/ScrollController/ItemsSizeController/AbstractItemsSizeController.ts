@@ -120,6 +120,7 @@ export abstract class AbstractItemsSizesController {
                 // то можно будет корректировать только scrollPosition на уровне ScrollController.
                 // Это вроде должно выглядеть понятнее.
                 const contentSizeBeforeItems = this.getContentSizeBeforeItems();
+                const firstItemOffset = this._itemsSizes[0].offset;
                 let position = itemsRange.startIndex;
                 Array.from(itemsElements).forEach((element: HTMLElement) => {
                     const prevItemSize = this._itemsSizes[position - 1];
@@ -128,11 +129,8 @@ export abstract class AbstractItemsSizesController {
                     let offset = prevItemSize ? prevItemSize.offset + prevItemSize.size : 0;
                     if (position === itemsRange.startIndex) {
                         offset += contentSizeBeforeItems;
-                    }
-                    if (itemsRange.startIndex !== 0) {
                         // нужно вычитать оффсет первой записи, чтобы он не учитывался дважды, когда мы будем прибавлять
                         // contentSizeBeforeItems к элементам нового диапазона.
-                        const firstItemOffset = this._itemsSizes[0].offset;
                         offset -= firstItemOffset;
                     }
                     this._itemsSizes[position] = {
