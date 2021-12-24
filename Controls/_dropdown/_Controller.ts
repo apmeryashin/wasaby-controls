@@ -758,7 +758,6 @@ export default class Controller implements IDropdownController {
       const templateOptions = {
          selectedKeys: this._selectedKeys,
          dataLoadCallback: null,
-         closeButtonVisibility: false,
          emptyText: this._options.emptyText,
          selectedAllText: this._options.selectedAllText,
          allowPin: this._options.allowPin && this._hasHistory(this._options),

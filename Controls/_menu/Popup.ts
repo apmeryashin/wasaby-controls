@@ -322,7 +322,9 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     static defaultProps: Partial<IMenuPopupOptions> = {
         selectedKeys: [],
         backgroundStyle: 'default',
-        hoverBackgroundStyle: 'default'
+        hoverBackgroundStyle: 'default',
+        closeButtonVisibility: true,
+        closeButtonViewMode: 'external'
     };
 }
 
@@ -338,7 +340,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
  *       keyProperty="key"
  *       displayProperty="title"
  *       source="{{_source}}"
- *       closeButtonVisibility="{{true}}">
+ *       closeButtonVisibility="{{false}}">
  * </Controls.menu:Popup>
  * </pre>
  * <pre class="brush: js">

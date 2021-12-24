@@ -1,11 +1,11 @@
 <div class="controlsDemo__flexRow">
    <div class="controlsDemo__wrapper controlsDemo__flexColumn">
-      <div class="controls-text-label">С closeButtonVisibility = true</div>
+      <div class="controls-text-label">С closeButtonVisibility = false</div>
       <Controls.menu:Popup
               source="{{_source}}"
               keyProperty="key"
               displayProperty="title"
-              closeButtonVisibility="{{true}}"
+              closeButtonVisibility="{{false}}"
               attr:data-qa="controls-Menu__popup-Simple"
       >
       </Controls.menu:Popup>

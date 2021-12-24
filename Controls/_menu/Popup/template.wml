@@ -34,6 +34,7 @@
               headerBackgroundStyle="{{_options.backgroundStyle}}"
               markerVisibility="{{_options.markerVisibility}}"
               verticalDirection="{{_verticalDirection}}"
+              applyButtonVisible="{{_applyButtonVisible}}"
               on:mouseenter="_mouseEnterHandler()"
               on:headerMouseEnter="_headerMouseEnter()"
               on:headerClick="_headerClick()"
