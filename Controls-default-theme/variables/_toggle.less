@@ -57,16 +57,8 @@
    --readonly_unselected_text-color_switcher: var(--readonly_color);
 
    //Маркер
-   --marker-box_size_switcher: 12px;
-   --marker-box_background-color_switcher: transparent;
-   --readonly_marker-box_background-color_switcher: transparent;
-   --unselected_marker-box_border-color_switcher: var(--border-color);
-   --unselected_marker-box_background-color_switcher: var(--marker-box_background-color_switcher);
-   --marker_color_switcher: var(--primary_contrast_background-color);
+
    --marker_contrast-color_switcher: var(--background-color);
-   --readonly_marker-box_border-color_switcher: var(--readonly_border-color);
-   --readonly_unselected_marker-box_border-color_switcher: var(--readonly_marker-box_border-color_switcher);
-   --readonly_unselected_marker-box_background-color_switcher: var(--readonly_marker-box_background-color_switcher);
    --marker_size_switcher: 12px;
    --selected_marker_color_switcher: var(--primary_contrast_background-color);
    --selected_marker-hover_color_switcher: var(--primary_hover_contrast_background-color);
@@ -74,6 +66,12 @@
    --unselected_marker-hover_color_switcher: var(--unaccented_hover_icon-color);
    --readonly_unselected_marker_color_switcher: #d2d6da;
    --marker_border-offset_switcher: 2px;
+
+   //Маркер для радикнопок
+   --marker-box_size_radio: var(--marker_size_switcher);
+   --unselected_marker-box_border-color_radio: var(--border-color);
+   --marker_color_radio: var(--selected_marker_color_switcher);
+   --readonly_marker-box_border-color_radio: var(--readonly_border-color);
 
    // Переменные для большого разделителя
    //
@@ -140,7 +138,6 @@
    // маркер
    --true_marker_horizontal-padding_checkbox: 4px;
    --true_marker_padding-top_checkbox: 0px;
-   --tristate_marker_size_checkbox: 6px;
 
    // Переменные для группы радиокнопок
    //

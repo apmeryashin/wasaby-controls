@@ -1,5 +1,5 @@
 .controls-RadioCircle__innerCircle_selected_enabled {
-   fill: var(--marker_color_switcher);
+   fill: var(--marker_color_radio);
 }
 
 .controls-RadioCircle__innerCircle_selected_disabled {
@@ -15,29 +15,29 @@
 }
 
 .controls-RadioCircle__borderCircle_selected {
-   stroke: var(--marker_color_switcher);
-   fill: var(--marker-box_background-color_switcher);
+   stroke: var(--marker_color_radio);
+   fill: transparent;
    stroke-width: var(--border-thickness);
 }
 
 .controls-RadioCircle__borderCircle_unselected {
-   stroke: var(--unselected_marker-box_border-color_switcher);
-   fill: var(--unselected_marker-box_background-color_switcher);
+   stroke: var(--unselected_marker-box_border-color_radio);
+   fill: transparent;
 }
 
 .controls-RadioCircle__borderCircle_selected_disabled {
-   stroke: var(--readonly_marker-box_border-color_switcher);
-   fill: var(--readonly_marker-box_background-color_switcher);
+   stroke: var(--readonly_marker-box_border-color_radio);
+   fill: transparent;
 }
 
 .controls-RadioCircle__borderCircle_unselected_disabled {
-   stroke: var(--readonly_unselected_marker-box_border-color_switcher);
-   fill: var(--readonly_unselected_marker-box_background-color_switcher);
+   stroke: var(--readonly_marker-box_border-color_radio);
+   fill: transparent;
 }
 
 .controls-RadioCircle__svg {
-   width: var(--marker-box_size_switcher);
-   height: var(--marker-box_size_switcher);
+   width: var(--marker-box_size_radio);
+   height: var(--marker-box_size_radio);
    z-index: 2;
    display: inline-block;
    flex-shrink: 0;
@@ -49,7 +49,7 @@
 .ws-is-hover {
    .controls-RadioCircle__svg:hover {
       .controls-RadioCircle__borderCircle_enabled {
-         stroke: var(--selected_marker_color_switcher);
+         stroke: var(--marker_color_radio);
       }
    }
 }
