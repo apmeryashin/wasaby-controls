@@ -5,6 +5,9 @@ import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroup
 import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
 import {IItemTemplateOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
+import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {constants} from 'Env/Env';
 
 interface IBackgroundPosition {
     [key: number]: IBackgroundPositionData;
@@ -19,7 +22,8 @@ interface IBackgroundPositionData {
     top: number;
 }
 
-interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
+interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {
+}
 
 /**
  * @name Controls/_toggle/Tumbler#direction
@@ -218,11 +222,55 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
 class Tumbler extends ButtonGroupBase<ITumblerOptions> {
     protected _template: TemplateFunction = Template;
     protected _backgroundPosition: IBackgroundPosition = {isEmpty: true};
+    protected _focusedStatus: string;
 
     protected _beforeUpdate(newOptions: ITumblerOptions): void {
         if (this._options.items !== newOptions.items) {
             this._backgroundPosition = {isEmpty: true};
         }
+        if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
+            this._focusedStatus = 'default';
+        }
+    }
+
+    protected _focusInHandler(): void {
+        this._focusedStatus = getFocusedStatus(this);
+    }
+
+    protected _focusOutHandler(): void {
+        this._focusedStatus = 'default';
+    }
+
+    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+        if (e.nativeEvent.keyCode === constants.key.space && !this._options.readOnly) {
+            e.preventDefault();
+            const newActiveItem = this._getNextActiveItem();
+            if (newActiveItem) {
+                this._onItemClick(e, newActiveItem);
+            }
+        }
+    }
+
+    protected _getNextActiveItem(): Model {
+        let firstItem = null;
+        let isNextActiveItem: boolean = false;
+        let nextActiveItem: Model = null;
+        const thisActiveItem = this._options.items.getRecordById(this._options.selectedKey);
+        this._options.items.forEach((item) => {
+            if (!firstItem) {
+                firstItem = item;
+            }
+            if (item === thisActiveItem) {
+                isNextActiveItem = true;
+            } else if (isNextActiveItem) {
+                nextActiveItem = item;
+                isNextActiveItem = false;
+            }
+        });
+        if (!nextActiveItem) {
+            nextActiveItem = firstItem;
+        }
+        return nextActiveItem;
     }
 
     protected _mouseEnterHandler(): void {
@@ -281,6 +329,10 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
         itemTemplate: ItemTemplate,
         direction: 'horizontal'
     };
+
+    static contextTypes(): object {
+        return getContextTypes();
+    }
 }
 
 export default Tumbler;

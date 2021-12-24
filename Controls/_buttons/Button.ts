@@ -21,6 +21,7 @@ import {getTextWidth} from 'Controls/sizeUtils';
 import 'wml!Controls/_buttons/ButtonBase';
 import 'css!Controls/buttons';
 import 'css!Controls/CommonClasses';
+import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
 
 export function defaultHeight(viewMode: string): string {
     if (viewMode === 'button') {
@@ -170,6 +171,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     protected _isSVGIcon: boolean = false;
     protected _textAlign: string;
     protected _tooltip: string;
+    protected _focusedStatus: string;
 
     protected _beforeMount(options: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, options);
@@ -181,10 +183,26 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
         if (this._options.tooltip !== newOptions.tooltip) {
             this._tooltip = newOptions.tooltip;
         }
+        if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
+            this._focusedStatus = 'default';
+        }
+    }
+
+    protected _focusInHandler(): void {
+        this._focusedStatus = getFocusedStatus(this);
+    }
+
+    protected _focusOutHandler(): void {
+        this._focusedStatus = 'default';
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
-        if (e.nativeEvent.keyCode === constants.key.enter && !this._options.readOnly) {
+        let key = constants.key.enter;
+        if (this._focusedStatus === 'active') {
+            e.preventDefault();
+            key = constants.key.space;
+        }
+        if (e.nativeEvent.keyCode === key && !this._options.readOnly) {
             this._notify('click');
         }
     }
@@ -215,6 +233,10 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
         return {
             contrastBackground: descriptor(Boolean)
         };
+    }
+
+    static contextTypes(): object {
+        return getContextTypes();
     }
 }
 

@@ -1,4 +1,6 @@
-<div class="controls_toggle_theme-{{_options.theme}} controls-Checkbox">
+<div class="controls_toggle_theme-{{_options.theme}} controls-Checkbox"
+on:focusin="_focusInHandler()"
+on:focusout="_focusOutHandler()">
     <div class="controls-invalid-container">
         <div on:click="_clickHandler()"
              class="controls-Checkbox__wrapper
@@ -23,6 +25,7 @@
                         multiline="{{_options.multiline}}"
                         caption="{{_options.caption}}"/>
         </div>
-        <div class="{{_options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}"></div>
+        <div class="{{_options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}
+controls-focused-background controls-focused_status-{{_focusedStatus}}"></div>
     </div>
 </div>

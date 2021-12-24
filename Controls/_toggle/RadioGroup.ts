@@ -16,6 +16,8 @@ import {
 import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
+import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
+import {constants} from 'Env/Env';
 
 export interface IRadioGroupOptions extends IControlOptions,
     ISingleSelectableOptions,
@@ -73,6 +75,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
    protected _items: RecordSet;
    protected _crudWrapper: CrudWrapper;
    protected _groups: object = {};
+   protected _focusedStatus: string;
 
    protected _beforeMount(options: IRadioGroupOptions,
                           context: object,
@@ -99,6 +102,49 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
             this._forceUpdate();
          });
       }
+      if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
+         this._focusedStatus = 'default';
+      }
+   }
+
+   protected _focusInHandler(): void {
+      this._focusedStatus = getFocusedStatus(this);
+   }
+
+   protected _focusOutHandler(): void {
+      this._focusedStatus = 'default';
+   }
+
+   protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+      if (e.nativeEvent.keyCode === constants.key.space && !this._options.readOnly) {
+         e.preventDefault();
+         const newActiveItem = this._getNextActiveItem();
+         if (newActiveItem) {
+             this._selectKeyChanged(e, newActiveItem, this._options.keyProperty);
+         }
+      }
+   }
+
+   protected _getNextActiveItem(): Model {
+      let firstItem = null;
+      let nextActiveItem: Model = null;
+      let isNextActiveItem: boolean = false;
+      const thisActiveItem = this._items.getRecordById(this._options.selectedKey);
+      this._items.forEach((item) => {
+         if (!firstItem && !item.get('readOnly')) {
+            firstItem = item;
+         }
+         if (item === thisActiveItem) {
+            isNextActiveItem = true;
+         } else if (isNextActiveItem && !item.get('readOnly')) {
+            isNextActiveItem = false;
+            nextActiveItem = item;
+         }
+      });
+      if (!nextActiveItem) {
+         nextActiveItem = firstItem;
+      }
+      return nextActiveItem;
    }
 
    private _sortGroup(options: IRadioGroupOptions, items: RecordSet): void {
@@ -174,6 +220,10 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
             'right'
          ])
       };
+   }
+
+   static contextTypes(): object {
+      return getContextTypes();
    }
 }
 

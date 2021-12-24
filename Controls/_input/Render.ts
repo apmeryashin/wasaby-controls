@@ -17,6 +17,7 @@ import {IBorderVisibilityArea} from './interface/IBorderVisibilityArea';
 
 // @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
+import {getContextTypes} from '../Utils/Context/WorkByKeyboardUtil';
 
 type State =
     'valid'
@@ -139,6 +140,34 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     readonly '[Controls/interface/IBorderStyle]': boolean = true;
     readonly '[Controls/interface/IBorderVisibility]': boolean = true;
     readonly '[Controls/_interface/IContrastBackground]': boolean = true;
+    protected _focusedStatus: string;
+    protected _focusedTimeout: number;
+
+    protected _clearTimeout(): void {
+        if (this._focusedTimeout) {
+            clearTimeout(this._focusedTimeout);
+            this._focusedTimeout = null;
+        }
+    }
+
+    protected _focusInHandler(): void {
+        if (this.context.get('workByKeyboard')?.status) {
+            this._focusedStatus = 'active';
+            this._options.viewModel.selection = 0;
+            this._clearTimeout();
+            this._focusedTimeout = setTimeout(() => {
+                this._focusedStatus = 'default';
+                this._options.viewModel.selection = {
+                    start: 0,
+                    end: this._options.viewModel.displayValue.length
+                };
+            }, 700);
+        }
+    }
+    protected _focusOutHandler(): void {
+        this._focusedStatus = 'default';
+        this._clearTimeout();
+    }
 
     private _setState(options: IRenderOptions): void {
         if (options.state === '') {
@@ -184,6 +213,10 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._updateFieldZIndex(options);
     }
 
+    protected _beforeUnMount(): void {
+        this._clearTimeout();
+    }
+
     protected _beforeUpdate(options: IRenderOptions): void {
         if (options.borderVisibility !== this._options.borderVisibility ||
             options.minLines !== this._options.minLines ||
@@ -199,6 +232,9 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._setState(options);
         this._updateHorizontalPadding(options);
         this._updateFieldZIndex(options);
+        if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
+            this._focusedStatus = 'default';
+        }
     }
 
     protected _updateFieldZIndex(options: IRenderOptions): void {
@@ -291,6 +327,10 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
             state: '',
             validationStatus: 'valid'
         };
+    }
+
+    static contextTypes(): object {
+        return getContextTypes();
     }
 }
 

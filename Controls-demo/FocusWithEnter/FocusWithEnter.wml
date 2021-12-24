@@ -1,139 +1,185 @@
 <div attr:class="form" ws-tab-cycling="true">
-    <Controls.form:FocusWithEnter>
-        <div class="controlsDemo__wrapper">
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Text</div>
-                <Controls.input:Text
-                        attr:tabindex="1"
-                        name="textInput1"
-                        bind:value="_textValue"
-                />
+    <Controls.form:ContextProvider>
+        <Controls.form:FocusWithEnter>
+            <div class="controlsDemo__wrapper">
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Text</div>
+                    <Controls.input:Text
+                            attr:tabindex="1"
+                            name="textInput1"
+                            bind:value="_textValue"
+                    />
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">ReadOnly Field</div>
+                    <Controls.input:Text
+                            attr:tabindex="2"
+                            name="readonlyInput1"
+                            readOnly="{{ true }}"
+                            bind:value="_textValue"
+                    />
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Date</div>
+                    <Controls.date:Input
+                            attr:tabindex="3"
+                            name="dateInput1"
+                            mask="DD.MM.YY"
+                            bind:value="_dateValue"
+                    />
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">contrast Text</div>
+                    <Controls.input:Text
+                            attr:tabindex="4"
+                            name="textInput1"
+                            contrastBackground="{{true}}"
+                            bind:value="_textValue"
+                    />
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Switch</div>
+                    <Controls.toggle:Switch
+                            attr:tabindex="5"
+                            name="checkbox1"
+                            bind:value="_flagValue"
+                            caption="selected"
+                    />
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Spoilet</div>
+                    <Controls.spoiler:Cut attr:style="width: 200px;" lines="{{2}}" attr:tabindex="6">
+                        <ws:content>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aperiam cupiditate delectus,
+                            eaque laboriosam
+                            maiores mollitia praesentium quo ratione vel. At cum cumque earum ipsam non quis soluta
+                            ullam veritatis.
+                        </ws:content>
+                    </Controls.spoiler:Cut>
+                </div>
+
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">RadioGroup</div>
+                    <Controls.toggle:RadioGroup
+                            attr:tabindex="7"
+                            bind:selectedKey="_radioGroupSelectedKey"
+                            keyProperty="id"
+                            source="{{_radioGroupSource}}"
+                    />
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Tumbler</div>
+                    <Controls.toggle:Tumbler attr:tabindex="8" items="{{_items1}}" bind:selectedKey="_selectedKey1"
+                                             attr:class="ControlsDemo-Tumbler__twoButtons"/>
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Checkbox</div>
+                    <Controls.toggle:Checkbox
+                            attr:tabindex="9"
+                            name="checkbox1"
+                            bind:value="_flagValue"
+                    />
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Button</div>
+                    <Controls.buttons:Button
+                            attr:tabindex="10"
+                            name="button1"
+                            caption="Click me"
+                            buttonStyle="primary"/>
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Combobox</div>
+                    <Controls.dropdown:Combobox
+                            attr:tabindex="11"
+                            attr:class="controlsDemo__maxWidth200"
+                            name="combobox1"
+                            fontColorStyle="secondary"
+                            keyProperty="{{ _keyProperty }}"
+                            displayProperty="{{ _displayProperty }}"
+                            source="{{ _comboboxSource }}"
+                            bind:selectedKey="_selectedKey"
+                    />
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Button as link</div>
+                    <Controls.buttons:Button
+                            attr:tabindex="12"
+                            name="linkButton1"
+                            caption="Click me"
+                            viewMode="linkButton"
+                            fontColorStyle="link"/>
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Number</div>
+                    <Controls.input:Number
+                            attr:tabindex="13"
+                            name="numberInput1"
+                            bind:value="_numberValue1"
+                    />
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Handbook with selection</div>
+                    <Controls.lookup:Input
+                            attr:tabindex="14"
+                            name="handbook1"
+                            searchParam="{{ _displayProperty }}"
+                            source="{{ _handbookSource }}"
+                            keyProperty="{{ _keyProperty }}"
+                            multiSelect="{{ false }}"
+                            bind:selectedKeys="_handbookSelectedKeys">
+                        <ws:itemTemplate>
+                            <ws:partial template="Controls/lookup:ItemTemplate"
+                                        displayProperty="{{ _displayProperty }}"/>
+                        </ws:itemTemplate>
+                    </Controls.lookup:Input>
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Handbook without selection</div>
+                    <Controls.lookup:Input
+                            attr:tabindex="15"
+                            name="handbook2"
+                            searchParam="{{ _displayProperty }}"
+                            source="{{ _handbookSource }}"
+                            keyProperty="{{ _keyProperty }}"
+                            multiSelect="{{ false }}">
+                        <ws:itemTemplate>
+                            <ws:partial template="Controls/lookup:ItemTemplate"
+                                        displayProperty="{{ _displayProperty }}"/>
+                        </ws:itemTemplate>
+                    </Controls.lookup:Input>
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Phone</div>
+                    <Controls.input:Mask
+                            attr:tabindex="16"
+                            name="phone1"
+                            mask="+7 (ddd) ddd-dd-dd"
+                            bind:value="_phoneValue"/>
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Table with edit at place</div>
+                    <Controls.grid:View
+                            attr:tabindex="17"
+                            attr:class="controlsDemo__inline-flex controlsDemo__maxWidth800"
+                            source="{{ _gridSource }}"
+                            columns="{{ _gridColumns }}"
+                            rowSeparatorVisibility="{{ true }}"
+                            keyProperty="key">
+                        <ws:editingConfig>
+                            <ws:Object editOnClick="{{ true }}" sequentialEditingMode="cell"/>
+                        </ws:editingConfig>
+                    </Controls.grid:View>
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Number</div>
+                    <Controls.input:Number
+                            attr:tabindex="18"
+                            name="numberInput2"
+                            bind:value="_numberValue2"
+                    />
+                </div>
             </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">ReadOnly Field</div>
-                <Controls.input:Text
-                        attr:tabindex="2"
-                        name="readonlyInput1"
-                        readOnly="{{ true }}"
-                        bind:value="_textValue"
-                />
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Date</div>
-                <Controls.date:Input
-                        attr:tabindex="3"
-                        name="dateInput1"
-                        mask="DD.MM.YY"
-                        bind:value="_dateValue"
-                />
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Checkbox</div>
-                <Controls.toggle:Checkbox
-                        attr:tabindex="4"
-                        name="checkbox1"
-                        bind:value="_flagValue"
-                />
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Button</div>
-                <Controls.buttons:Button
-                        attr:tabindex="5"
-                        name="button1"
-                        caption="Click me"
-                        buttonStyle="primary" />
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Combobox</div>
-                <Controls.dropdown:Combobox
-                        attr:tabindex="6"
-                        attr:class="controlsDemo__maxWidth200"
-                        name="combobox1"
-                        fontColorStyle="secondary"
-                        keyProperty="{{ _keyProperty }}"
-                        displayProperty="{{ _displayProperty }}"
-                        source="{{ _comboboxSource }}"
-                        bind:selectedKey="_selectedKey"
-                />
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Button as link</div>
-                <Controls.buttons:Button
-                        attr:tabindex="7"
-                        name="linkButton1"
-                        caption="Click me"
-                        viewMode="linkButton"
-                        fontColorStyle="link"/>
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Number</div>
-                <Controls.input:Number
-                        attr:tabindex="8"
-                        name="numberInput1"
-                        bind:value="_numberValue1"
-                />
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Handbook with selection</div>
-                <Controls.lookup:Input
-                        attr:tabindex="9"
-                        name="handbook1"
-                        searchParam="{{ _displayProperty }}"
-                        source="{{ _handbookSource }}"
-                        keyProperty="{{ _keyProperty }}"
-                        multiSelect="{{ false }}"
-                        bind:selectedKeys="_handbookSelectedKeys">
-                    <ws:itemTemplate>
-                        <ws:partial template="Controls/lookup:ItemTemplate"
-                                    displayProperty="{{ _displayProperty }}"/>
-                    </ws:itemTemplate>
-                </Controls.lookup:Input>
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Handbook without selection</div>
-                <Controls.lookup:Input
-                        attr:tabindex="10"
-                        name="handbook2"
-                        searchParam="{{ _displayProperty }}"
-                        source="{{ _handbookSource }}"
-                        keyProperty="{{ _keyProperty }}"
-                        multiSelect="{{ false }}">
-                    <ws:itemTemplate>
-                        <ws:partial template="Controls/lookup:ItemTemplate"
-                                    displayProperty="{{ _displayProperty }}"/>
-                    </ws:itemTemplate>
-                </Controls.lookup:Input>
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Phone</div>
-                <Controls.input:Mask
-                        attr:tabindex="11"
-                        name="phone1"
-                        mask="+7 (ddd) ddd-dd-dd"
-                        bind:value="_phoneValue"/>
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Table with edit at place</div>
-                <Controls.grid:View
-                        attr:tabindex="12"
-                        attr:class="controlsDemo__inline-flex controlsDemo__maxWidth800"
-                        source="{{ _gridSource }}"
-                        columns="{{ _gridColumns }}"
-                        rowSeparatorVisibility="{{ true }}"
-                        keyProperty="key">
-                    <ws:editingConfig>
-                        <ws:Object editOnClick="{{ true }}" sequentialEditingMode="cell"/>
-                    </ws:editingConfig>
-                </Controls.grid:View>
-            </div>
-            <div class="controlsDemo__cell">
-                <div class="controls-text-label controlsDemo__maxWidth200">Number</div>
-                <Controls.input:Number
-                        attr:tabindex="13"
-                        name="numberInput2"
-                        bind:value="_numberValue2"
-                />
-            </div>
-        </div>
-    </Controls.form:FocusWithEnter>
+        </Controls.form:FocusWithEnter>
+    </Controls.form:ContextProvider>
 </div>

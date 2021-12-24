@@ -21,6 +21,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
+import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
 
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions,
     IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
@@ -88,6 +89,21 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = checkBoxTemplate;
+   protected _focusedStatus: string;
+
+   protected _beforeUpdate(): void {
+      if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
+         this._focusedStatus = 'default';
+      }
+   }
+
+   protected _focusInHandler(): void {
+      this._focusedStatus = getFocusedStatus(this);
+   }
+
+   protected _focusOutHandler(): void {
+      this._focusedStatus = 'default';
+   }
 
    private _notifyChangeValue(value: boolean | null): void {
       this._notify('valueChanged', [value]);
@@ -102,6 +118,7 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
 
    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
       if (e.nativeEvent.keyCode === constants.key.space && !this._options.readOnly) {
+         e.preventDefault();
          this._clickHandler();
       }
    }
@@ -125,6 +142,10 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
          triState: EntityDescriptor(Boolean),
          tooltip: EntityDescriptor(String)
       };
+   }
+
+   static contextTypes(): object {
+      return getContextTypes();
    }
 }
 

@@ -391,6 +391,25 @@
    background-color: transparent;
 }
 
+.controls-focused-background {
+   position: absolute;
+   pointer-events: none;
+   z-index: -1;
+   left: calc(-1 * var(--offset_2xs));
+   bottom: calc(-1 * var(--offset_2xs));
+   padding: var(--offset_2xs);
+   background: var(--focused_background-color);
+   border-radius: var(--border-radius_xs);
+   width: 100%;
+   height: 100%;
+   transform: scale(0);
+}
+
+.controls-focused_status-active {
+   transform: scale(1);
+   transition: transform 0.5s;
+}
+
 //validate
 .controls-invalid-border {
    position: absolute;

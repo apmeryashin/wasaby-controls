@@ -4,6 +4,9 @@ import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSepa
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {IIconSize, IIconSizeOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
+import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {constants} from 'Env/Env';
 
 /**
  * @typedef TViewMode
@@ -21,7 +24,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
      * @default ellipsis
      * @demo Controls-demo/toggle/BigSeparator/ViewMode/Index
      */
-   viewMode?: TViewMode;
+    viewMode?: TViewMode;
     /**
      * @name Controls/_toggle/BigSeparator#contrastBackground
      * @cfg {Boolean} Определяет контрастность фона кнопки по отношению к ее окружению.
@@ -60,39 +63,65 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  */
 
 class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, IIconSize {
-   readonly '[Controls/_toggle/interface/ICheckable]': boolean = true;
-   readonly '[Controls/_interface/IIconSize]': boolean = true;
+    readonly '[Controls/_toggle/interface/ICheckable]': boolean = true;
+    readonly '[Controls/_interface/IIconSize]': boolean = true;
 
-   protected _template: TemplateFunction = BigSeparatorTemplate;
+    protected _template: TemplateFunction = BigSeparatorTemplate;
+    protected _focusedStatus: string;
 
-   protected _clickHandler(): void {
-      if (!this._options.readOnly) {
-         this._notify('valueChanged', [!this._options.value]);
-      }
-   }
+    protected _beforeUpdate(): void {
+        if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
+            this._focusedStatus = 'default';
+        }
+    }
 
-   static getDefaultOptions(): IBigSeparatorOptions {
-      return {
-         value: false,
-         iconSize: 'm',
-         contrastBackground: true
-      };
-   }
+    protected _focusInHandler(): void {
+        this._focusedStatus = getFocusedStatus(this);
+    }
 
-   static getOptionTypes(): object {
-      return {
-         value: EntityDescriptor(Boolean)
-      };
-   }
+    protected _focusOutHandler(): void {
+        this._focusedStatus = 'default';
+    }
+
+    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+        if (e.nativeEvent.keyCode === constants.key.space && !this._options.readOnly) {
+            e.preventDefault();
+            this._clickHandler();
+        }
+    }
+
+    protected _clickHandler(): void {
+        if (!this._options.readOnly) {
+            this._notify('valueChanged', [!this._options.value]);
+        }
+    }
+
+    static getDefaultOptions(): IBigSeparatorOptions {
+        return {
+            value: false,
+            iconSize: 'm',
+            contrastBackground: true
+        };
+    }
+
+    static getOptionTypes(): object {
+        return {
+            value: EntityDescriptor(Boolean)
+        };
+    }
+
+    static contextTypes(): object {
+        return getContextTypes();
+    }
 }
 
 Object.defineProperty(BigSeparator, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
+    enumerable: true,
+    configurable: true,
 
-   get(): object {
-      return BigSeparator.getDefaultOptions();
-   }
+    get(): object {
+        return BigSeparator.getDefaultOptions();
+    }
 });
 
 /**
