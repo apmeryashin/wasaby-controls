@@ -61,15 +61,15 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _children: ISelectedCollectionChildren;
    protected _infoBoxStickyId: string = null;
 
-   protected _beforeMount(options: IControlOptions): void {
+   protected _beforeMount(options: ISelectedCollectionOptions): void {
       this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
-      this._visibleItems = this._getVisibleItems(options.items, options.maxVisibleItems);
+      this._visibleItems = this._getVisibleItems(options);
       this._counterWidth = options._counterWidth || 0;
    }
 
    protected _beforeUpdate(newOptions): void {
       const itemsCount: number = newOptions.items.getCount();
-      this._visibleItems = this._getVisibleItems(newOptions.items, newOptions.maxVisibleItems);
+      this._visibleItems = this._getVisibleItems(newOptions);
 
       if (this._isShowCounter(itemsCount, newOptions.maxVisibleItems)) {
          this._counterWidth = newOptions._counterWidth ||
@@ -153,7 +153,10 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       });
    }
 
-   private _getVisibleItems(items: RecordSet, maxVisibleItems: number): Model[]  {
+   private _getVisibleItems({items, maxVisibleItems, multiLine}: ISelectedCollectionOptions): Model[]  {
+      if (!multiLine) {
+         return items;
+      }
       const startIndex = Math.max(maxVisibleItems ? items.getCount() - maxVisibleItems : 0, 0);
       const resultItems = [];
 

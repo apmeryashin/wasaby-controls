@@ -3,12 +3,12 @@
       <span name="infoBoxLink"
             style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout, !(_options.readOnly && !_options.maxVisibleItems))}}"
             class="controls-SelectedCollection__InfoBox
-                   {{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ?
-                        (' controls-SelectedCollection__InfoBox_fixed controls-SelectedCollection__InfoBox_backgroundStyle-' + _options.backgroundStyle + ' controls-background-' + _options.backgroundStyle)}}
+                   {{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}
                    {{_options.counterClassName}}"
             on:click="_openInfoBox()">
          <ws:partial template="{{_counterTemplate}}"
                      multiLine="{{_options.multiLine}}"
+                     backgroundStyle="{{_options.backgroundStyle}}"
                      itemsCount="{{_options.items.getCount()}}"
                      fontSize="{{_options.fontSize}}"
                      attr:style="{{_counterWidth ? 'width: ' + _counterWidth + 'px;'}}"/>
@@ -16,7 +16,7 @@
    </ws:if>
 </ws:template>
 
-<div class="controls_lookup_theme-{{_options.theme}} controls-SelectedCollection__collection
+<div class="controls_lookup_theme-{{_options.theme}} controls-SelectedCollection__collection-container
             controls-SelectedCollection__collection_{{_options.itemsLayout !== 'oneRow' ? 'multiLine' : 'singleLine'}}"
      style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
     <div class="controls-SelectedCollection__collection
@@ -49,6 +49,6 @@
       </ws:for>
     </div>
     <ws:if data="{{!_options.multiLine}}">
-        <ws:partial template="counterTemplate"/>
+        <ws:partial template="counterTemplate" attr:class="controls-SelectedCollection__counter-singleLine"/>
     </ws:if>
 </div>
