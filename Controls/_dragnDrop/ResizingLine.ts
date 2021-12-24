@@ -41,6 +41,7 @@ class ResizingLine extends ResizingBase<IResizingLine> {
         const offset = this._options.orientation === ORIENTATION.HORIZONTAL ? dragObject.offset.x : dragObject.offset.y;
         this.drag(offset);
         dragObject.entity.offset = this._offset(offset);
+        this._notify('dragMove', [dragObject]);
     }
 
     protected _clearStyleArea(): void {
