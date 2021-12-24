@@ -197,7 +197,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         };
     }
 
-    private _popupHandler(eventName: string, args: any[]): void {
+    protected _popupHandler(eventName: string, args: any[]): void {
         // В ядре появилась новая фича, при дестрое контрола через несколько секунд очищаются все св-ва и методы
         // с инстанса. Если закроют окно после того, как открыватор был задестроен, то метода _notify уже не будет.
         if (!this._openerUnmounted) {

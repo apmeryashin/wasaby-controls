@@ -39,19 +39,18 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
     readonly '[Controls/_popup/interface/IStickyOpener]': boolean;
     private _actionOnScroll: string = 'none';
 
-    protected _afterMount(): void {
+    open(popupOptions: IStickyPopupOptions): Promise<string | undefined> {
         toggleActionOnScroll(this, true, (scrollEvent: Event) => {
             this._scrollHandler(scrollEvent);
         });
-    }
-
-    protected _beforeUnmount(): void {
-        toggleActionOnScroll(this, false);
-        super._beforeUnmount();
-    }
-
-    open(popupOptions: IStickyPopupOptions): Promise<string | undefined> {
         return super.open(getStickyConfig(popupOptions), POPUP_CONTROLLER);
+    }
+
+    protected _popupHandler(eventName: string, args: any[]): void {
+        if (eventName === 'onClose') {
+            toggleActionOnScroll(this, false);
+        }
+        super._popupHandler(eventName, args);
     }
 
     protected _getConfig(popupOptions: IStickyOpenerOptions = {}): IStickyOpenerOptions {
