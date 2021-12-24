@@ -129,12 +129,16 @@ class BaseInput extends Control<IDateBaseOptions> {
 
     protected _registerModelEvents(): void {
         this._model.subscribe('valueChanged', (event, value) => {
-            const dateValue = value[0];
-            if (dateUtils.isValidDate(dateValue)) {
-                this._notify('valueChanged', [...value]);
-            }
-            this._updateValidators();
+            this._valueChanged(value);
         });
+    }
+
+    private _valueChanged(value: [Date, string]): void {
+        const dateValue = value[0];
+        if (dateUtils.isValidDate(dateValue)) {
+            this._notify('valueChanged', [...value]);
+        }
+        this._updateValidators();
     }
 
     protected _inputCompletedHandler(e: SyntheticEvent<KeyboardEvent>, value: Date | WSDate, textValue: string): void {

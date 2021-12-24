@@ -119,28 +119,6 @@ define([
             sinon.assert.notCalled(model._notify);
             sandbox.restore();
          });
-
-         it('should not notify Invalid Date', function() {
-            const model = new DateTimeModel.default(options);
-            const newTextValue = '02.  .    ';
-            sinon.stub(model, '_notify');
-
-            model.textValue = newTextValue;
-
-            sinon.assert.notCalled(model._notify);
-            sinon.restore();
-         });
-
-         it('should notify valid date', function() {
-            let model = new DateTimeModel.default(options);
-            const newTextValue = '02.11.2020';
-            sinon.stub(model, '_notify');
-
-            model.textValue = newTextValue;
-
-            sinon.assert.calledOnce(model._notify);
-            sinon.restore();
-         });
       });
 
       describe('.autocomplete', function() {
