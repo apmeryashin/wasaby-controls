@@ -26,7 +26,7 @@ on:focusout="_focusOutHandler()">
                         multiline="{{_options.multiline}}"
                         caption="{{_options.caption}}"/>
         </div>
-        <div class="{{_options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}
-controls-focused-background controls-focused_status-{{_focusedStatus}}"></div>
+        <div class="{{_options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}"></div>
+        <div class="controls-focused-background controls-focused_status-{{_focusedStatus}}"></div>
     </div>
 </div>

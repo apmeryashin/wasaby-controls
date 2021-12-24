@@ -26,6 +26,6 @@
             </ws:if>
         </ws:for>
     </div>
-    <div class="{{options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + options.validationStatus + '-border'}}
-controls-focused-background controls-focused_status-{{focusedStatus}}"></div>
+    <div class="{{options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + options.validationStatus + '-border'}}"></div>
+    <div class="controls-focused-background controls-focused_status-{{focusedStatus}}"></div>
 </div>
