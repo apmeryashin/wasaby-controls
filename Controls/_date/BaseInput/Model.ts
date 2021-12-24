@@ -131,7 +131,7 @@ export default class Model extends mixin<VersionableMixin, ObservableMixin>(Vers
          this._updateLastValue();
       }
 
-      if ((valueChanged || this._inputMode === INPUT_MODE.partial) && dateUtils.isValidDate(newValue)) {
+      if (valueChanged || this._inputMode === INPUT_MODE.partial) {
          this._notify('valueChanged', [this._value, this.displayValue]);
       }
    }
