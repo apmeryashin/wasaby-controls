@@ -73,4 +73,9 @@ export default interface IItemTemplateOptions {
     * @cfg {UI/Base:TemplateFunction} Шаблон отображения содержимого узла (папки)
     */
    nodeContentTemplate?: TemplateFunction;
+
+   /**
+    * @cfg {number | string} Ширина элемента плитки. Можно задать как число (в пикселях) или строку (например, в процентах)
+    */
+   width?: number | string;
 }
