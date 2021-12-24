@@ -16,7 +16,7 @@
 
 export {default as Buttons, ITabsTemplate, ITabsTemplateOptions} from 'Controls/_tabs/Buttons';
 export {default as AdaptiveButtons, ITabsAdaptiveButtonsOptions} from 'Controls/_tabs/AdaptiveButtons';
-export {ITabsButtons, ITabsButtonsOptions} from 'Controls/_tabs/interface/ITabsButtons';
+export {ITabsButtons, ITabsButtonsOptions, ITabButtonItem} from 'Controls/_tabs/interface/ITabsButtons';
 export {IIconCounterTabTemplate} from 'Controls/_tabs/interface/IIconCounterTabTemplate';
 export {ITextCounterTabTemplate} from 'Controls/_tabs/interface/ITextCounterTabTemplate';
 
