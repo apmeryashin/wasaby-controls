@@ -16,6 +16,7 @@ import 'css!Controls/lookup';
 
 const JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption';
 const JS_CLASS_CROSS_ITEM = '.js-controls-SelectedCollection__item__cross';
+const MAX_VISIBLE_ITEMS_SINGLE_LINE = 15;
 
 export interface ISelectedCollectionOptions extends IControlOptions, ILookupOptions {
    displayProperty: string;
@@ -154,14 +155,11 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    }
 
    private _getVisibleItems({items, maxVisibleItems, multiLine}: ISelectedCollectionOptions): Model[]  {
-      if (!multiLine) {
-         return items;
-      }
-      const startIndex = Math.max(maxVisibleItems ? items.getCount() - maxVisibleItems : 0, 0);
+      const startIndex = Math.max(maxVisibleItems && multiLine ? items.getCount() - maxVisibleItems : 0, 0);
       const resultItems = [];
 
       items.each((item, index) => {
-         if (index >= startIndex) {
+         if (index >= startIndex && (index < MAX_VISIBLE_ITEMS_SINGLE_LINE || multiLine)) {
             resultItems.push(item);
          }
       });
