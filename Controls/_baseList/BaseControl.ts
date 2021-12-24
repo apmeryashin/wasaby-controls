@@ -3673,12 +3673,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // Если у нас долго отрисовываются записи(дольше 2с), то мы показываем индикаторы отрисовки.
             // Эта ситуация в частности актуальна для ScrollViewer.
 
-            // Если индикатор и так уже есть, то скрываем его. Показываться может только один индикатор отрисовки.
-            if (this._drawingIndicatorDirection) {
-                this._indicatorsController.hideDrawingIndicator(this._drawingIndicatorDirection);
+            // Если больше нет записей скрытых виртуальным скроллом, мы должны показать индикатор.
+            // Проверяем это и если нужно показываем индикатор.
+            if (shiftDirection === 'forward' && this._indicatorsController.shouldDisplayBottomIndicator()) {
+                this._indicatorsController.displayBottomIndicator();
+            } else if (shiftDirection === 'backward' && this._indicatorsController.shouldDisplayTopIndicator()) {
+                this._indicatorsController.displayTopIndicator(false);
+            } else {
+                // Если индикатор и так уже есть, то скрываем его. Показываться может только один индикатор отрисовки.
+                if (this._drawingIndicatorDirection) {
+                    this._indicatorsController.hideDrawingIndicator(this._drawingIndicatorDirection);
+                }
+                this._drawingIndicatorDirection = shiftDirection === 'forward' ? 'bottom' : 'top';
+                this._indicatorsController.displayDrawingIndicator(this._drawingIndicatorDirection);
             }
-            this._drawingIndicatorDirection = shiftDirection === 'forward' ? 'bottom' : 'top';
-            this._indicatorsController.displayDrawingIndicator(this._drawingIndicatorDirection);
         }
     }
 
