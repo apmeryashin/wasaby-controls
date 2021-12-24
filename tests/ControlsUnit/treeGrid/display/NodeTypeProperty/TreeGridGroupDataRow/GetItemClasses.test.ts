@@ -39,6 +39,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetIte
             'controls-ListView__itemV_cursor-pointer',
             'controls-ListView__item_showActions',
             'controls-Grid__row_highlightOnHover_default',
-            'controls-ListView__group'].join(' '));
+            'controls-ListView__group',
+            'controls-TreeGrid__groupNode'].join(' '));
     });
 });
