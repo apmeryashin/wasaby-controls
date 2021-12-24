@@ -135,10 +135,17 @@ export class ScrollController {
             observersCallback: this._observersCallback.bind(this)
         });
 
+        // корректируем скролл на размер контента до списка
+        const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
+        // если скролл меньше размера контента до списка, то это значит что сам список еще не проскроллен
+        const givenScrollPosition = options.scrollPosition || 0;
+        const scrollPosition = givenScrollPosition < beforeContentSize
+            ? 0
+            : givenScrollPosition - beforeContentSize;
         this._calculator = new Calculator({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
-            scrollPosition: options.scrollPosition,
+            scrollPosition,
             totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
