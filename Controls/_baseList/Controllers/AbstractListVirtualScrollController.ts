@@ -507,7 +507,7 @@ export abstract class AbstractListVirtualScrollController<
             // Планируем восстановление скролла. Скролл можно восстановить запомнив крайний видимый элемент (IEdgeItem).
             // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
             // и мы будем знать актуальную scrollPosition.
-            // Поэтому в params запоминает необходимые параметры для подсчета EdgeItem.
+            // Поэтому в params запоминаем необходимые параметры для подсчета EdgeItem.
             if (params.shiftDirection) {
                 this._scheduleScroll({
                     type: 'calculateRestoreScrollParams',

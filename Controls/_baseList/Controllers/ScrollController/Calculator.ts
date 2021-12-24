@@ -227,17 +227,21 @@ export class Calculator {
                 if (direction === 'forward') {
                     // от верхней границы элемента до нижней границы viewPort
                     // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
-                    const bottomViewportBorderPosition = scrollPosition + viewportSize;
                     border = 'backward';
-                    borderDistance = bottomViewportBorderPosition - itemOffset;
+                    borderDistance = viewportBorderPosition - itemOffset;
                 } else {
                     // запись - выше, чем верхняя граница viewPort
-                    if (scrollPosition > itemOffset) {
+                    if (viewportBorderPosition > itemOffset) {
+                        // TODO SCROLL зачем в виде крайнего видимого элемента брать тот, который не полностью виден?
+                        //  по идее условие этого ифа должно быть выше. И нам тогда вообще не нужно считать
+                        //  itemBorderBottom и всегда брать верхнюю границу записи.
                         border = 'forward';
-                        borderDistance = itemBorderBottom - scrollPosition;
+                        borderDistance = itemBorderBottom - viewportBorderPosition;
                     } else {
                         border = 'backward';
-                        borderDistance = scrollPosition - itemOffset;
+                        // TODO SCROLL очень странно что тут всегда отрицательное значение,
+                        //  хотя по факту оно должно быть положительным
+                        borderDistance = viewportBorderPosition - itemOffset;
                     }
                 }
                 edgeItem = {

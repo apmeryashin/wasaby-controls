@@ -46,7 +46,6 @@ export interface IEdgeItem {
     direction: IDirection;
     border: IDirection;
     borderDistance: number;
-    contentSizeBeforeItems: number;
 }
 
 export interface IPlaceholders {
@@ -328,8 +327,11 @@ export class ScrollController {
      * @param startIndex Начальный индекс диапазона отображаемых записей
      */
     resetItems(totalCount: number, startIndex: number): void {
-        // Сбрасываем состояние контроллера.
-        this.scrollPositionChange(0);
+        // Если начальный индекс не 0, то это значит что мы должны сохранить текущую позицию.
+        if (startIndex === 0) {
+            // Сбрасываем состояние контроллера.
+            this.scrollPositionChange(0);
+        }
         this.contentResized(0);
 
         const triggerOffsets = this._observersController.resetItems(totalCount);
@@ -367,21 +369,11 @@ export class ScrollController {
      * @param params
      */
     getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
-        const edgeItem = this._calculator.getEdgeVisibleItem(params);
-        if (edgeItem) {
-            edgeItem.contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
-        }
-        return edgeItem;
+        return this._calculator.getEdgeVisibleItem(params);
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        const currentContentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
-        const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
-        // У нас может перерисоваться контент, находящийся до элементов. Он влияет на скролл.
-        // Поэтому, чтобы правильно восстановить скролл, запоминаем размер контента до отрисовки
-        // и после отрисовки. Высчитываем изменение и корректируем scroll на это изменение.
-        const contentBeforeItemsOffset = currentContentSizeBeforeItems - edgeItem.contentSizeBeforeItems;
-        return scrollPosition + contentBeforeItemsOffset;
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
     }
 
     /**

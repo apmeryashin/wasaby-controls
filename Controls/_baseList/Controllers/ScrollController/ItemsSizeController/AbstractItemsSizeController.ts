@@ -106,14 +106,33 @@ export abstract class AbstractItemsSizesController {
                     `Check that each item has selector: ${this._itemsQuerySelector}.`
                 );
             } else {
+                // item.offset который мы посчитали является расстоянием от края itemsContainer до элемента
+                // НО scrollPosition - это расстояние от scrollContainer до границы вьюпорта.
+                // Поэтому она учитывает еще и все что находится до itemsContainer.
+                // То есть нам нужно поставить item.offset и scrollPosition в одинаковые условия.
+                // Для этого корректируем item.offset на contentSizeBeforeItems.
+                // Корректировать scrollPosition на contentSizeBeforeItems нельзя, т.к. в кальклуторе есть другие
+                // параметры на которые тоже может повлиять contentSizeBeforeItems.
+                // Например, triggerOffset - он может содержать высоту ромашки,
+                // а ромашка является частью contentSizeBeforeItems.
+                // По идее после того как triggerOffset будет позиционироваться от ромашки
+                // и высота ромашки на него не будет влиять,
+                // то можно будет корректировать только scrollPosition на уровне ScrollController.
+                // Это вроде должно выглядеть понятнее.
+                const contentSizeBeforeItems = this.getContentSizeBeforeItems();
                 let position = itemsRange.startIndex;
                 Array.from(itemsElements).forEach((element: HTMLElement) => {
                     const prevItemSize = this._itemsSizes[position - 1];
                     // оффсет не учитывает margin-ы, нужно будет решить эту проблему. offsetTop ее не решает.
                     // Если брать offsetTop у записи, то возникает еще проблема с застикаными записями.
-                    const offset = prevItemSize ? prevItemSize.offset + prevItemSize.size : 0;
-                    const size = this._getItemSize(element);
-                    this._itemsSizes[position] = { size, offset };
+                    let offset = prevItemSize ? prevItemSize.offset + prevItemSize.size : 0;
+                    if (position === itemsRange.startIndex) {
+                        offset += contentSizeBeforeItems;
+                    }
+                    this._itemsSizes[position] = {
+                        size: this._getItemSize(element),
+                        offset
+                    };
                     position++;
                 });
             }
