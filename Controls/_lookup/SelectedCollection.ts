@@ -67,7 +67,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       this._counterWidth = options._counterWidth || 0;
    }
 
-   protected _beforeUpdate(newOptions): void {
+   protected _beforeUpdate(newOptions: ISelectedCollectionOptions): void {
       const itemsCount: number = newOptions.items.getCount();
       this._visibleItems = this._getVisibleItems(newOptions);
 
