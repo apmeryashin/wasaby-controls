@@ -41,3 +41,10 @@ export interface IResizingLine extends IResizingBase {
  * @remark Зависит от направления оси
  * @see direction
  */
+
+/**
+ * @event Происходит при перемещении линии.
+ * @name Controls/_dragnDrop/interface/IResizingLine#dragMove
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
+ */
