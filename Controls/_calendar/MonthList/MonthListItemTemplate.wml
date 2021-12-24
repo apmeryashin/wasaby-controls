@@ -1,7 +1,8 @@
 <ws:partial template="Controls/list:ItemTemplate"
             itemData="{{ itemData }}"
             highlightOnHover="{{ false }}"
-            attr:class="controls-MonthList__item">
+            attr:class="controls-MonthList__item"
+            attr:data-qa="controls-MonthList__item">
     <ws:contentTemplate>
         <Controls.scroll:IntersectionObserverContainer
                 observerName="monthList"
