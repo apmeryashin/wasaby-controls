@@ -253,5 +253,42 @@ define([
             assert.isOk(actualConfig.eventHandlers);
          });
       });
-   });
+
+        describe('removeItems', () => {
+            it('hierarchy typeDescription', async() => {
+                const editingObject = {
+                    field1: 'fieldValue',
+                    field2: 'fieldValue'
+                };
+                const typeDescription = new collection.RecordSet({
+                    rawData: [
+                        {
+                            name: 'field1',
+                            parent: null
+                        },
+                        {
+                            name: 'field2',
+                            parent: 'field1'
+                        }
+                    ],
+                    keyProperty: 'name'
+                });
+                const options = {
+                    parentProperty: 'parent',
+                    editingObject,
+                    typeDescription,
+                    keyProperty: 'name'
+                };
+                const propertyGrid = new propertyGridLib.PropertyGrid();
+                propertyGrid._beforeMount(options);
+                propertyGrid.saveOptions(options);
+
+                await propertyGrid.removeItems({
+                    selected: ['field1'],
+                    excluded: []
+                });
+                assert.ok(typeDescription.getCount() === 1);
+            });
+        });
+    });
 });

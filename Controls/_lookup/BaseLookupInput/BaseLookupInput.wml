@@ -82,6 +82,7 @@
                             maxVisibleItems="{{!_options.readOnly || _options.multiLine || _maxVisibleItems === _items.getCount() ? _maxVisibleItems : 0}}"
                             readOnly="{{_options.readOnly}}"
                             fontSize="{{_options.fontSize}}"
+                            fontColorStyle="{{_options.fontColorStyle}}"
                             backgroundStyle="{{_options.backgroundStyle}}"
                             on:itemClick="_itemClick()"
                             on:crossClick="_crossClick()"

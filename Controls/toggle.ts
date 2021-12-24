@@ -11,6 +11,7 @@
  * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
  * @includes Separator Controls/_toggle/Separator
  * @includes BigSeparator Controls/_toggle/BigSeparator
+ * @includes isRequired Controls/_toggle/validators/isRequired
  * @includes CheckboxItemTemplate Controls/_toggle/CheckboxGroup/resources/ItemTemplate
  * @includes ICheckable Controls/_toggle/interface/ICheckable
  * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
@@ -53,6 +54,8 @@ export {default as ButtonGroup} from './_toggle/ButtonGroup';
 export {default as ButtonGroupBase} from './_toggle/ButtonGroupBase';
 export {default as Tumbler} from './_toggle/Tumbler';
 export {default as Chips} from './_toggle/Chips';
+
+export {default as isRequired} from './_toggle/validators/isRequired';
 
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 import CheckboxItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');

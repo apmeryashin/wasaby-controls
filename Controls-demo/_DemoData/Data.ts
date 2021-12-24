@@ -378,7 +378,7 @@ export const FlatHierarchy = {
         const cols = [
             {
                 displayProperty: 'title',
-                width: ''
+                width: '300px'
             },
             {
                 displayProperty: 'rating',

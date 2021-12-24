@@ -4,9 +4,10 @@ import template = require('wml!Controls/_columns/render/Columns');
 import defaultItemTemplate = require('wml!Controls/_columns/render/resources/ItemTemplate');
 
 import {ListView, IList} from 'Controls/baseList';
-import Collection from 'Controls/_columns/display/Collection';
+import ColumnsCollection from 'Controls/_columns/display/Collection';
 import {DEFAULT_COLUMNS_COUNT} from '../Constants';
 import { IItemPadding } from 'Controls/display';
+import 'Controls/listRender';
 
 export interface IColumnsRenderOptions extends IList {
     columnMinWidth: number;
@@ -14,7 +15,7 @@ export interface IColumnsRenderOptions extends IList {
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
     spacing: number;
-    listModel: Collection;
+    listModel: ColumnsCollection;
     availableWidth?: number;
     itemsContainerPadding?: IItemPadding;
     itemPadding?: IItemPadding;

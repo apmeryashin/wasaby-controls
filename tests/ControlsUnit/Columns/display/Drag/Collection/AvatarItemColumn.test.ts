@@ -1,12 +1,11 @@
 import { assert } from 'chai';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
-import {ColumnsCollection as Collection, ColumnsCollectionItem as CollectionItem} from 'Controls/columns';
+import {ColumnsCollection, ColumnsCollectionItem as CollectionItem} from 'Controls/columns';
 import ColumnsDrag from 'Controls/_columns/display/itemsStrategy/ColumnsDrag';
-import TreeDrag from 'Controls/_display/itemsStrategy/TreeDrag';
 
 describe('Controls/columns/display/Drag/Collection/AvatarItemColumn', () => {
-    let model;
+    let model: ColumnsCollection;
     let items;
     let list;
 
@@ -46,8 +45,7 @@ describe('Controls/columns/display/Drag/Collection/AvatarItemColumn', () => {
             rawData: items,
             keyProperty: 'id'
         });
-        model = new Collection<Model, CollectionItem<Model>>({
-            // @ts-ignore
+        model = new ColumnsCollection<Model, CollectionItem<Model>>({
             collection: list,
             columnsCount: 2
         });
@@ -57,6 +55,7 @@ describe('Controls/columns/display/Drag/Collection/AvatarItemColumn', () => {
     it('should set column for dragged item avatar', () => {
         const item = model.at(2);
         item.setColumn(1);
+
         model.setDraggedItems(model.getItemBySourceKey(3), [3]);
         const strategy = model.getStrategyInstance(ColumnsDrag);
         assert.equal(strategy.avatarItem.getColumn(), 1);
