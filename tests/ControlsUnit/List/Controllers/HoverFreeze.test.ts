@@ -38,6 +38,7 @@ function mockViewContainer(itemActionsHeight: number, hoverContainerRect: object
         } as undefined as HTMLElement),
         querySelectorAll: (selector: string) => ([
             {
+                querySelector: () => null,
                 closest: () => ({
                     querySelector: () => ({
                         offsetHeight: itemActionsHeight
