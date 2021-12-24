@@ -1,8 +1,8 @@
 import {Control} from 'UI/Base';
 import {default as WorkByKeyboardContext} from './WorkByKeyboardContext';
 
-export function getFocusedStatus(self: Control): string {
-    if (self.context?.get('workByKeyboard')?.status) {
+export function getFocusedStatus(context: object): string {
+    if (context?.get('workByKeyboard')?.status) {
         return 'active';
     }
     return 'default';

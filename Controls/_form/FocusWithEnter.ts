@@ -3,7 +3,7 @@ import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {focusNextElement, findNextElement} from 'UI/Focus';
 import template = require('wml!Controls/_form/FocusWithEnter/FocusWithEnter');
-import {getContextTypes} from '../Utils/Context/WorkByKeyboardUtil';
+import {getContextTypes} from '../Context/WorkByKeyboardUtil';
 
 /**
  * Контроллер, который обрабатывает нажатие клавиши enter и переводит фокус на след. поле ввода.
@@ -14,6 +14,14 @@ import {getContextTypes} from '../Utils/Context/WorkByKeyboardUtil';
 
 export default class FocusWithEnter extends Control<IControlOptions> {
     _template: TemplateFunction = template;
+
+    protected _afterMount(): void {
+        this._notify('register', ['mousedown', this, this._onMousedownHandler], {bubbling: true});
+    }
+
+    protected _beforeUnmount(): void {
+        this._notify('unregister', ['mousedown', this], {bubbling: true});
+    }
 
     protected keyDownHandler(e: SyntheticEvent<KeyboardEvent>): void {
         const enterPressed = e.nativeEvent.keyCode === constants.key.enter;
@@ -47,20 +55,20 @@ export default class FocusWithEnter extends Control<IControlOptions> {
         }
     }
 
-    protected _onClickHandler(): void {
-      this.context.get('workByKeyboard')?.setStatus(false);
-   }
+    protected _onMousedownHandler(): void {
+        this.context.get('workByKeyboard')?.setStatus(false);
+    }
 
-   /**
-    * Проверяет, может ли элемент быть сфокусирован по ENTER
-    * @param {HTMLElement} target Проверяемый html-элемент
-    */
-   _isFocusable(target: HTMLElement): boolean {
-      // TODO: Пропускаю кнопки при обходе по ENTER:
-      // tslint:disable-next-line
-      // https://online.sbis.ru/open_dialog.html?guid=5e1a9e18-3941-4725-8963-9a8fff7eec9f&user=321880e7-f6f6-463a-849b-8649be2b6dfc
-      return target && (this.context.get('workByKeyboard') || !target.closest('.controls-BaseButton'));
-   }
+    /**
+     * Проверяет, может ли элемент быть сфокусирован по ENTER
+     * @param {HTMLElement} target Проверяемый html-элемент
+     */
+    _isFocusable(target: HTMLElement): boolean {
+        // TODO: Пропускаю кнопки при обходе по ENTER:
+        // tslint:disable-next-line
+        // https://online.sbis.ru/open_dialog.html?guid=5e1a9e18-3941-4725-8963-9a8fff7eec9f&user=321880e7-f6f6-463a-849b-8649be2b6dfc
+        return target && (this.context.get('workByKeyboard') || !target.closest('.controls-BaseButton'));
+    }
 
     static contextTypes(): object {
         return getContextTypes();

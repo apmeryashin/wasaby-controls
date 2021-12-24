@@ -21,7 +21,7 @@ import {getTextWidth} from 'Controls/sizeUtils';
 import 'wml!Controls/_buttons/ButtonBase';
 import 'css!Controls/buttons';
 import 'css!Controls/CommonClasses';
-import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
+import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
 
 export function defaultHeight(viewMode: string): string {
     if (viewMode === 'button') {
@@ -189,7 +189,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     }
 
     protected _focusInHandler(): void {
-        this._focusedStatus = getFocusedStatus(this);
+        this._focusedStatus = getFocusedStatus(this.context);
     }
 
     protected _focusOutHandler(): void {

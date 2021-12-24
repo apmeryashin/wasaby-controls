@@ -4,7 +4,7 @@ import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSepa
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {IIconSize, IIconSizeOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
-import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
+import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
 
@@ -67,7 +67,7 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, 
     readonly '[Controls/_interface/IIconSize]': boolean = true;
 
     protected _template: TemplateFunction = BigSeparatorTemplate;
-    protected _focusedStatus: string;
+    private _focusedStatus: string;
 
     protected _beforeUpdate(): void {
         if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
@@ -76,7 +76,7 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, 
     }
 
     protected _focusInHandler(): void {
-        this._focusedStatus = getFocusedStatus(this);
+        this._focusedStatus = getFocusedStatus(this.context);
     }
 
     protected _focusOutHandler(): void {

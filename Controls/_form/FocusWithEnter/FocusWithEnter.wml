@@ -1,1 +1,1 @@
-<ws:partial template="{{ _options.content }}" on:keydown="keyDownHandler()" on:click="_onClickHandler()"/>
+<ws:partial template="{{ _options.content }}" on:keydown="keyDownHandler()" on:mousedown="_onMousedownHandler()"/>

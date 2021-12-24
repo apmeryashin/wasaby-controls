@@ -17,7 +17,7 @@ import {IBorderVisibilityArea} from './interface/IBorderVisibilityArea';
 
 // @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
-import {getContextTypes} from '../Utils/Context/WorkByKeyboardUtil';
+import {getContextTypes} from '../Context/WorkByKeyboardUtil';
 
 type State =
     'valid'
@@ -90,6 +90,8 @@ export interface IRenderOptions extends IControlOptions, IHeightOptions, IBorder
     contrastBackground: boolean;
 }
 
+const FOCUSED_TIMEOUT = 700;
+
 /**
  * Контрол для рендеринга текстового поля.
  *
@@ -140,10 +142,10 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     readonly '[Controls/interface/IBorderStyle]': boolean = true;
     readonly '[Controls/interface/IBorderVisibility]': boolean = true;
     readonly '[Controls/_interface/IContrastBackground]': boolean = true;
-    protected _focusedStatus: string;
-    protected _focusedTimeout: number;
+    private _focusedStatus: string;
+    private _focusedTimeout: number;
 
-    protected _clearTimeout(): void {
+    private _clearTimeout(): void {
         if (this._focusedTimeout) {
             clearTimeout(this._focusedTimeout);
             this._focusedTimeout = null;
@@ -161,7 +163,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
                     start: 0,
                     end: this._options.viewModel.displayValue.length
                 };
-            }, 700);
+            }, FOCUSED_TIMEOUT);
         }
     }
     protected _focusOutHandler(): void {
@@ -213,7 +215,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._updateFieldZIndex(options);
     }
 
-    protected _beforeUnMount(): void {
+    protected _beforeUnmount(): void {
         this._clearTimeout();
     }
 

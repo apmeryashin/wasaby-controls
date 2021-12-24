@@ -16,7 +16,7 @@ import {
 import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
-import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
+import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
 import {constants} from 'Env/Env';
 
 export interface IRadioGroupOptions extends IControlOptions,
@@ -75,7 +75,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
    protected _items: RecordSet;
    protected _crudWrapper: CrudWrapper;
    protected _groups: object = {};
-   protected _focusedStatus: string;
+   private _focusedStatus: string;
 
    protected _beforeMount(options: IRadioGroupOptions,
                           context: object,
@@ -108,7 +108,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
    }
 
    protected _focusInHandler(): void {
-      this._focusedStatus = getFocusedStatus(this);
+      this._focusedStatus = getFocusedStatus(this.context);
    }
 
    protected _focusOutHandler(): void {
@@ -125,7 +125,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
       }
    }
 
-   protected _getNextActiveItem(): Model {
+   private _getNextActiveItem(): Model {
       let firstItem = null;
       let nextActiveItem: Model = null;
       let isNextActiveItem: boolean = false;

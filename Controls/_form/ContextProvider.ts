@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_form/ContextProvider/ContextProvider');
-import {default as WorkByKeyboardContext} from '../Utils/Context/WorkByKeyboardContext';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 /**
  * Контрол-обертка для связи управления с клавиатуры и подсветки контролов, на который приходит фокус.

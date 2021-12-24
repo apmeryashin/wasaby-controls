@@ -5,7 +5,7 @@ import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroup
 import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
 import {IItemTemplateOptions, IContrastBackgroundOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
-import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
+import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
 
@@ -228,7 +228,7 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, ICo
 class Tumbler extends ButtonGroupBase<ITumblerOptions> {
     protected _template: TemplateFunction = Template;
     protected _backgroundPosition: IBackgroundPosition = {isEmpty: true};
-    protected _focusedStatus: string;
+    private _focusedStatus: string;
 
     protected _beforeUpdate(newOptions: ITumblerOptions): void {
         if (this._options.items !== newOptions.items) {
@@ -240,7 +240,7 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
     }
 
     protected _focusInHandler(): void {
-        this._focusedStatus = getFocusedStatus(this);
+        this._focusedStatus = getFocusedStatus(this.context);
     }
 
     protected _focusOutHandler(): void {
@@ -257,7 +257,7 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
         }
     }
 
-    protected _getNextActiveItem(): Model {
+    private _getNextActiveItem(): Model {
         let firstItem = null;
         let isNextActiveItem: boolean = false;
         let nextActiveItem: Model = null;

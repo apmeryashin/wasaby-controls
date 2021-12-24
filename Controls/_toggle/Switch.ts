@@ -13,7 +13,7 @@ import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 import * as CaptionTemplate from 'wml!Controls/_toggle/Switch/resources/CaptionTemplate';
-import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
+import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
 
@@ -65,7 +65,7 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
     '[Controls/_toggle/interface/ICheckable]': true;
     '[Controls/_interface/IValidationStatus]': true;
     protected _template: TemplateFunction = SwitchTemplate;
-    protected _focusedStatus: string;
+    private _focusedStatus: string;
 
     protected _beforeUpdate(): void {
         if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
@@ -74,7 +74,7 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
     }
 
     protected _focusInHandler(): void {
-        this._focusedStatus = getFocusedStatus(this);
+        this._focusedStatus = getFocusedStatus(this.context);
     }
     protected _focusOutHandler(): void {
         this._focusedStatus = 'default';
