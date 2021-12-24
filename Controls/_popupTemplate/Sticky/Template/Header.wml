@@ -1,5 +1,5 @@
 <div class="controls-StickyTemplate__top-area
-            {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder_top'}}
+            {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder_top controls_border-radius-s'}}
             {{_options.headerBackgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
                                                              'controls-background-' + _options.headerBackgroundStyle}}
             controls-StickyTemplate__top-area-{{(_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible) ? 'withClose' : 'withoutClose'}}">
@@ -13,7 +13,8 @@
       </ws:if>
       <ws:if data="{{_options.headingCaption}}">
          <div class="controls-StickyTemplate__caption">
-            <Controls.heading:Title caption="{{_options.headingCaption}}"
+            <Controls.heading:Title attr:class="ws-ellipsis"
+                                    caption="{{_options.headingCaption}}"
                                     fontColorStyle="{{_options.headingFontColorStyle}}"
                                     fontSize="{{_options.headingFontSize}}"
                                     readOnly="{{true}}"

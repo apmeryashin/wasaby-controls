@@ -63,6 +63,9 @@ interface IItemsFactoryOptions<S> {
     expanderIconStyle?: TExpanderIconStyle;
 }
 
+/**
+ * Опции для создания Tree коллекции
+ */
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
     parentProperty?: string;
     nodeProperty?: string;
@@ -77,6 +80,11 @@ export interface IOptions<S, T> extends ICollectionOptions<S, T> {
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
     expanderSize?: string;
 }
+
+/**
+ * Константа для типа узла: группа
+ */
+export const NODE_TYPE_PROPERTY_GROUP = 'group';
 
 /**
  * Обрабатывает событие об изменении коллекции
@@ -364,6 +372,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      */
     private _nodeHeaderModule: string;
 
+    /**
+     * @cfg {String} Название свойства, содержащего тип узла.
+     * @name Controls/_display/Tree#nodeTypeProperty
+     * @see nodeProperty
+     */
+    protected _$nodeTypeProperty: string;
+
     getCurrent: () => T;
 
     // endregion Expanded/Collapsed
@@ -548,6 +563,19 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     // endregion Drag-n-drop
+
+    // region nodeTypeProperty
+
+    setNodeTypeProperty(nodeTypeProperty: string): void {
+        this._$nodeTypeProperty = nodeTypeProperty;
+        this._nextVersion();
+    }
+
+    getNodeTypeProperty(): string {
+        return this._$nodeTypeProperty;
+    }
+
+    // endregion
 
     // region NodeFooter
 
@@ -1341,9 +1369,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         for (let i = 0; i < collection.getCount(); i++) {
             const item = collection.at(i);
             const isNode = item.get(this.getNodeProperty()) !== null;
-            // TODO убрать кривую проверку, после переноса nodeTypeProperty в Tree
-            //  https://online.sbis.ru/opendoc.html?guid=ccebc1db-8f2c-48bd-a8f3-b5910668b598
-            const isGroupNode = item.get(this.getNodeTypeProperty && this.getNodeTypeProperty());
+            const isGroupNode = item.get(this.getNodeTypeProperty()) === NODE_TYPE_PROPERTY_GROUP;
             const hasChildren = this.getHasChildrenProperty()
                 ? item.get(this.getHasChildrenProperty())
                 : !!this.getChildrenByRecordSet(item).length;
@@ -1494,6 +1520,7 @@ Object.assign(Tree.prototype, {
     _$nodeProperty: '',
     _$childrenProperty: '',
     _$hasChildrenProperty: '',
+    _$nodeTypeProperty: null,
     _$expanderTemplate: null,
     _$expanderPosition: 'default',
     _$expanderVisibility: 'visible',

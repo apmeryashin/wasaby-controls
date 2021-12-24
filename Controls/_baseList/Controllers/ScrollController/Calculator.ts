@@ -477,10 +477,7 @@ export class Calculator {
      * @param totalCount Новое кол-во элементов
      * @param keepPosition Нужно ли сохранить текущию позицию
      */
-    resetItems(totalCount: number, keepPosition: boolean): ICalculatorResult {
-        const oldRange = this._range;
-        const oldPlaceholders = this._placeholders;
-
+    resetItems(totalCount: number, keepPosition: boolean): void {
         this._totalCount = totalCount;
 
         const startIndex = keepPosition ? this._range.startIndex : 0;
@@ -498,10 +495,8 @@ export class Calculator {
                 totalCount: this._totalCount
             });
         }
-
-        const placeholdersChanged = this._updatePlaceholders();
-
-        return this._getRangeChangeResult(oldRange, 'forward', oldPlaceholders, placeholdersChanged);
+        // Пересчитываем плэйсхолдеры. При пересчете они сбросятся в 0(размеры элементов уже были сброшены)
+        this._updatePlaceholders();
     }
 
     // endregion HandleCollectionChanges
@@ -520,7 +515,7 @@ export class Calculator {
     }
 
     private _getRangeChangeResult(oldRange: IItemsRange,
-                                  shiftDirection: IDirection,
+                                  shiftDirection: IDirection|null,
                                   oldPlaceholders: IPlaceholders,
                                   placeholdersChanged: boolean): ICalculatorResult {
         const indexesChanged = oldRange.startIndex !== this._range.startIndex ||
@@ -575,6 +570,6 @@ export class Calculator {
     private static _hasItemsOutRangeToDirection(direction: IDirection,
                                                 range: IItemsRange,
                                                 totalCount: number): boolean {
-        return direction === 'backward' ? range.startIndex > 0 : range.endIndex < (totalCount - 1);
+        return direction === 'backward' ? range.startIndex > 0 : range.endIndex < totalCount;
     }
 }

@@ -67,7 +67,9 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 sourceController = new NewSourceController({...editorOptions} as ISourceControllerOptions);
             }
 
-            newItem.editorCaption = item.caption || item.group || item.editorCaption;
+            if (!newItem.hasOwnProperty('editorCaption')) {
+                newItem.editorCaption = typeof item.caption !== undefined ? item.caption : item.group;
+            }
             newItem.caption = '';
             newItem.editorOptions = {
                 ...editorOptions,
@@ -122,7 +124,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 caption: item.editorCaption,
                 expanderVisible: item.expanderVisible,
                 resetButtonVisible: !isEqual(item.value, item.resetValue),
-                groupVisible: item.editorCaption || itemIndex,
+                groupVisible: typeof item.editorCaption === 'string',
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };
         });

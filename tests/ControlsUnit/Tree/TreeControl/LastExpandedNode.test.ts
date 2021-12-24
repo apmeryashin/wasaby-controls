@@ -4,42 +4,79 @@ import { RecordSet } from 'Types/collection';
 import { TreeGridCollection } from 'Controls/treeGrid';
 import { register } from 'Types/di';
 import { assert } from 'chai';
-import { stub, spy, assert as sinonAssert } from 'sinon';
+import { createSandbox, spy, assert as sinonAssert } from 'sinon';
+import { NewSourceController } from 'Controls/dataSource';
 import {SearchGridCollection} from 'Controls/searchBreadcrumbsGrid';
 
 register('Controls/treeGrid:TreeGridCollection', TreeGridCollection, {instantiate: false});
 register('Controls/searchBreadcrumbsGrid:SearchGridCollection', SearchGridCollection, {instantiate: false});
 
+const initialData = [
+    {
+        id: '1',
+        parent: null,
+        type: true
+    },
+    {
+        id: '11',
+        parent: 1,
+        type: null
+    },
+    {
+        id: '2',
+        parent: null,
+        type: true
+    },
+    {
+        id: '21',
+        parent: '2',
+        type: null
+    },
+    {
+        id: '22',
+        parent: '2',
+        type: null
+    }
+];
+
 describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
     let source: HierarchicalMemory;
-    let data = [];
 
-    const fakeSourceController = {
-        hasMoreData: (direction: string, root: string) => root != null && root !== '3',
-        setDataLoadCallback: () => {/* FIXME: sinon mock */},
-        subscribe: () => {/* FIXME: sinon mock */},
-        getState: () => ({}),
-        getItems: () => new RecordSet({
-            keyProperty: 'id',
-            rawData: data
-        }),
-        getCollapsedGroups: () => {/* FIXME: sinon mock */},
-        getLoadError: () => false,
-        updateOptions: () => {/* FIXME: sinon mock */},
-        hasLoaded: (key: string) => true,
-        load: (direction: string, root: string) => {
-            const query = new Query().where({root});
-            return source.query(query);
-        },
-        setExpandedItems: () => {/* FIXME: sinon mock */},
-        getExpandedItems: () => ([]),
-        isDeepReload: () => false,
-        setNodeDataMoreLoadCallback: () => false,
-        getRoot: () => undefined,
-        isLoading: () => false
-    };
+    let sandbox: any;
+    let hasLoaded: boolean;
+    let hasMoreData: boolean;
+    let data: object[];
+
+    function initSourceController(source: HierarchicalMemory): NewSourceController {
+        const sourceController = new NewSourceController({
+            nodeProperty: 'type',
+            parentProperty: 'parent',
+            source
+        });
+        sandbox.stub(sourceController, 'getItems')
+            .callsFake(() => new RecordSet({
+                keyProperty: 'id',
+                rawData: data
+            }));
+        sandbox.stub(sourceController, 'load')
+            .callsFake((direction: string, root: string) => {
+                const query = new Query().where({root});
+                return source.query(query);
+            });
+        sandbox.stub(sourceController, 'hasLoaded')
+            .callsFake(() => hasLoaded);
+        sandbox.stub(sourceController, 'hasMoreData')
+            .callsFake(function(direction: string, root?: string): boolean {
+                if (!root) {
+                    root = this._root;
+                }
+                return root !== null ? hasMoreData : false;
+            });
+        return sourceController;
+    }
 
     function initTreeControl(cfg: Partial<ITreeControlOptions> = {}): TreeControl {
+        const sourceController = initSourceController(source);
         const config: ITreeControlOptions = {
             viewName: 'Controls/List/TreeGridView',
             root: null,
@@ -48,7 +85,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
             nodeProperty: 'type',
             source,
             viewModelConstructor: 'Controls/treeGrid:TreeGridCollection',
-            sourceController: fakeSourceController,
+            sourceController,
             virtualScrollConfig: {
                 pageSize: 1
             },
@@ -64,33 +101,14 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
     }
 
     beforeEach(() => {
-        data = [
-            {
-                id: '1',
-                parent: null,
-                type: true
-            },
-            {
-                id: '11',
-                parent: 1,
-                type: null
-            },
-            {
-                id: '2',
-                parent: null,
-                type: true
-            },
-            {
-                id: '21',
-                parent: '2',
-                type: null
-            },
-            {
-                id: '22',
-                parent: '2',
-                type: null
-            }
-        ];
+        data = [...initialData];
+        hasLoaded = false;
+        hasMoreData = true;
+        sandbox = createSandbox();
+    });
+
+    afterEach(() => {
+        sandbox.restore();
     });
 
     it ('should load from root when items are collapsed', async () => {
@@ -98,11 +116,11 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
             keyProperty: 'id',
             data
         });
-        const spyQuery = spy(source, 'query');
+        const spyQuery = sandbox.spy(source, 'query');
         const treeControl = initTreeControl();
+
         await treeControl.handleTriggerVisible('down');
         sinonAssert.notCalled(spyQuery);
-        spyQuery.restore();
     });
 
     it ('should load from root when expanded item is not last', async () => {
@@ -119,17 +137,15 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
             data
         });
 
-        const spyQuery = spy(source, 'query');
+        const spyQuery = sandbox.spy(source, 'query');
         const treeControl = initTreeControl();
-        treeControl.toggleExpanded('2');
+        await treeControl.toggleExpanded('2');
 
         await treeControl.handleTriggerVisible('down');
-        sinonAssert.notCalled(spyQuery);
-        spyQuery.restore();
+        sinonAssert.calledOnce(spyQuery);
     });
 
     it ('should load from root when expanded item is empty', async () => {
-        // hasMoreData for '3' will return false (see fakeSourceController)
         data = [
             ...data,
             {
@@ -143,33 +159,32 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
             data
         });
 
-        const spyQuery = spy(source, 'query');
+        const spyQuery = sandbox.spy(source, 'query');
         const treeControl = initTreeControl();
-        treeControl.toggleExpanded('3');
+        await treeControl.toggleExpanded('3');
+        sinonAssert.calledOnce(spyQuery);
 
+        hasMoreData = false;
         await treeControl.handleTriggerVisible('down');
-        sinonAssert.notCalled(spyQuery);
-        spyQuery.restore();
+        sinonAssert.calledOnce(spyQuery);
     });
 
-    // TODO SCROLL
-/*    it ('should load from last expanded node', async () => {
+    it ('should load from last expanded node', async () => {
         source = new HierarchicalMemory({
             keyProperty: 'id',
             data
         });
-
-        const stubQuery = stub(source, 'query').callsFake((query: Query) => {
+        const stubQuery = sandbox.stub(source, 'query').callsFake((query: Query) => {
             assert.equal(query.getWhere().root, 2);
             return Promise.resolve();
         });
         const treeControl = initTreeControl();
-        treeControl.toggleExpanded('2');
+        await treeControl.toggleExpanded('2');
+        sinonAssert.calledOnce(stubQuery);
 
         await treeControl.handleTriggerVisible('down');
 
-        sinonAssert.called(stubQuery);
-        stubQuery.restore();
+        sinonAssert.calledTwice(stubQuery);
     });
 
     it ('should not load from last expanded node when nodeFooterTemplate is set', async () => {
@@ -178,15 +193,14 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
             data
         });
 
-        const spyQuery = spy(source, 'query');
+        const spyQuery = sandbox.spy(source, 'query');
         const treeControl = initTreeControl({
-            nodeFooterTemplate: () => {/!* FIXME: sinon mock *!/}
+            nodeFooterTemplate: () => ''
         });
-        treeControl.toggleExpanded('1');
+        await treeControl.toggleExpanded('1');
 
         await treeControl.handleTriggerVisible('down');
-        sinonAssert.notCalled(spyQuery);
-        spyQuery.restore();
+        sinonAssert.calledOnce(spyQuery);
     });
 
     it ('should load from last expanded node when nodeFooterTemplate overrided by moreTemplate', async () => {
@@ -195,16 +209,15 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
             data
         });
 
-        const spyQuery = spy(source, 'query');
+        const spyQuery = sandbox.spy(source, 'query');
         const treeControl = initTreeControl({
-            nodeFooterTemplate: () => {/!* FIXME: sinon mock *!/}
+            nodeFooterTemplate: () => ''
         });
-        treeControl.toggleExpanded('2');
+        await treeControl.toggleExpanded('2');
 
         await treeControl.handleTriggerVisible('down');
-        sinonAssert.called(spyQuery);
-        spyQuery.restore();
-    });*/
+        sinonAssert.calledTwice(spyQuery);
+    });
 
     it ('should not try loading for BreadcrumbsItem', async () => {
         source = new HierarchicalMemory({
@@ -212,7 +225,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
             data
         });
 
-        const spyQuery = spy(source, 'query');
+        const spyQuery = sandbox.spy(source, 'query');
         // Инициализируем TreeControl с поисковой моделью (чтобы получть Breadcrumbs)
         const treeControl = initTreeControl({
             viewModelConstructor: 'Controls/searchBreadcrumbsGrid:SearchGridCollection'
@@ -220,6 +233,5 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
 
         await treeControl.handleTriggerVisible('down');
         sinonAssert.notCalled(spyQuery);
-        spyQuery.restore();
     });
 });

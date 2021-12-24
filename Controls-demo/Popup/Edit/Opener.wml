@@ -17,7 +17,6 @@
                   itemPadding="{{ _itemPadding }}"
                   name="grid"
                   displayProperty="title"
-                  rowSeparatorVisibility="{{true}}"
                   header="{{gridHeader}}"
                   itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                   itemActions="{{_itemActions}}"

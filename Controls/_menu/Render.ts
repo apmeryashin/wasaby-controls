@@ -104,6 +104,13 @@ class MenuRender extends Control<IMenuRenderOptions> {
         this._notify('itemMouseEnter', [item, sourceEvent]);
     }
 
+    protected _itemMouseMove(e: SyntheticEvent<MouseEvent>,
+                             item: TreeItem<Model>,
+                             sourceEvent: SyntheticEvent<MouseEvent>): void {
+        e.stopPropagation();
+        this._notify('itemMouseMove', [item, sourceEvent]);
+    }
+
     protected _itemSwipe(e: SyntheticEvent<MouseEvent>,
                          item: TreeItem<Model>,
                          swipeEvent: SyntheticEvent<TouchEvent>,

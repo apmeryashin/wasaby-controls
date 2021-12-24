@@ -8,11 +8,12 @@ import {Model} from 'Types/entity';
 import {CrudWrapper} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
-import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
-import rk = require('i18n!Controls');
+import {ITabsButtonsOptions} from './interface/ITabsButtons';
+import * as rk from 'i18n!Controls';
 
 const MARGIN = 13;
 const MIN_WIDTH = 26;
+const ICON_WIDTH = 16;
 const PADDING_OF_MORE_BUTTON = 6;
 const MIN_VISIBLE_LETTERS = 3;
 const COUNT_OF_MARGIN = 2;
@@ -71,6 +72,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     protected _crudWrapper: CrudWrapper;
     protected _menuSource: Memory;
     protected _filter: object;
+    protected _itemTemplate: string;
     protected _position: number;
 
     protected _beforeMount(options?: ITabsAdaptiveButtonsOptions,
@@ -85,7 +87,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
                     'вкладки могут прыгать при построении', this);
 
             }
-            this._items = receivedState.items;
+            this._setItems(receivedState.items);
             this._moreButtonWidth = this._getTextWidth(MORE_BUTTON_TEXT, 'm');
             this._calcVisibleItems(this._items, options);
             if (this._lastIndex < 0) {
@@ -107,7 +109,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
                     };
 
                     if (options.items) {
-                        this._items = options.items;
+                        this._setItems(options.items);
                         getReceivedData(options);
                     } else if (options.source) {
                         this._loadItems(options.source).then(() => {
@@ -130,7 +132,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
 
         if (isItemsChanged) {
-            this._items = newOptions.items;
+            this._setItems(newOptions.items);
         }
 
         if (isItemsChanged || isContainerWidthChanged) {
@@ -142,12 +144,23 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         this._notify('selectedKeyChanged', [key]);
     }
 
+    private _setItems(items: RecordSet): void {
+        this._items = items;
+        let itemTemplate = 'Controls/tabs:buttonsItemTemplate';
+        this._items.each((item) => {
+            if (item.get('icon')) {
+                itemTemplate = 'Controls/tabs:TextCounterTabTemplate';
+            }
+        });
+        this._itemTemplate = itemTemplate;
+    }
+
     private _loadItems(source: SbisService): Promise<void> {
         this._crudWrapper = new CrudWrapper({
             source
         });
-        return this._crudWrapper.query({}).then((items: RecordSet) => {
-            this._items = items;
+        return this._crudWrapper.query({}).then((items: RecordSet<object>) => {
+            this._setItems(items);
         });
     }
 
@@ -304,11 +317,16 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     private _getItemsWidth(items: RecordSet<object>, displayProperty: string): number[] {
         const widthArray = [];
         for (let i = 0; i < items.getCount(); i++) {
-            let itemTextWidth = this._getTextWidth(items.at(i).get(displayProperty), 'l');
+            const item = items.at(i);
+            let itemTextWidth = this._getTextWidth(item.get(displayProperty), 'l');
+            let iconWidth = 0;
+            if (item.get('icon')) {
+                iconWidth += ICON_WIDTH + PADDING_OF_MORE_BUTTON;
+            }
             if (itemTextWidth < MIN_WIDTH) {
                 itemTextWidth = MIN_WIDTH;
             }
-            widthArray.push(itemTextWidth + COUNT_OF_MARGIN * MARGIN);
+            widthArray.push(itemTextWidth + COUNT_OF_MARGIN * MARGIN + iconWidth);
         }
         return widthArray;
     }

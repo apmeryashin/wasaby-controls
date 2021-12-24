@@ -7,6 +7,7 @@ import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {IGridCollectionOptions} from 'Controls/grid';
 import {ILabelOptions} from 'Controls/input';
+import {TCaptionPosition} from 'Controls/_propertyGrid/IPropertyGrid';
 
 /**
  * Элемент коллеции propertyGrid
@@ -71,18 +72,21 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         return classes.join(' ');
     }
 
-    getItemPaddingClasses(gridColumnIndex?: number): string {
+    getItemPaddingClasses(gridColumnIndex?: number, templateCaptionPosition?: TCaptionPosition): string {
         const owner = this.getOwner();
         const itemContents = this.getContents();
         const editorOptions = itemContents.get('editorOptions');
+        const captionPosition = templateCaptionPosition || this.getOwner().getCaptionPosition();
+        const totalColumns = !gridColumnIndex || captionPosition === 'top' || captionPosition === 'none' ? 1 : 2;
 
         let classes = `controls-PropertyGrid__editor_spacingTop_${owner.getTopPadding()}
                        controls-PropertyGrid__editor_spacingBottom_${owner.getBottomPadding()}`;
-        if (gridColumnIndex !== 1) {
+        if (gridColumnIndex !== 1 || totalColumns === 1) {
             classes += ` controls-PropertyGrid__editor_spacingRight_${owner.getRightPadding()}`;
         }
-        if (gridColumnIndex !== 2 ||
-            !(itemContents.get('caption') || itemContents.get('isEditable')) || editorOptions?.jumpingLabel) {
+        if (gridColumnIndex !== 2 || totalColumns === 1 ||
+            !(itemContents.get('caption') || itemContents.get('isEditable')) ||
+            editorOptions?.jumpingLabel) {
             classes += ` controls-PropertyGrid__editor_spacingLeft_${owner.getLeftPadding()}`;
         }
         return classes;

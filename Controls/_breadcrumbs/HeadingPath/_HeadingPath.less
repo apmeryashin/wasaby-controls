@@ -3,6 +3,7 @@
    min-width: 0;
    flex-grow: 1;
    box-sizing: border-box;
+   overflow: hidden;
 }
 
 .controls-BreadCrumbsPath__twoRows {
@@ -27,6 +28,7 @@
 .controls-BreadCrumbsPath__crumbsWrapper {
    white-space: nowrap;
    display: flex;
+   align-items: baseline;
    max-width: 100%;
    // добавляем минимальную ширину, чтобы обводка не обрезалась.
    // min-width = ширина домика + левый отступ + обводка справа.
@@ -101,6 +103,7 @@
    display: none;
    cursor: pointer;
    height: 1em;
+   width: 1em;
    fill: var(--back_editButton_icon-color_breadcrumbsHeadingPath);
 }
 
@@ -211,24 +214,18 @@
 }
 
 .controls-BreadCrumbsPath__pathButton-wrapper {
-   position: relative;
-   width: var(--icon-size_m);
-   min-width: var(--icon-size_m);
-   height: var(--icon-size_m);
+   flex-shrink: 0;
+   box-sizing: border-box;
+
+   // inner align
+   display: flex;
+   align-items: center;
 
    .baseline-fix();
-
-   &::before {
-      font-size: var(--line-height_breadcrumbsView);
-   }
 }
 
 .controls-BreadCrumbsPath__pathButton-wrapper_offset-left {
    margin-left: var(--offset_m);
-}
-
-.controls-BreadCrumbsPath__pathButton {
-   position: absolute;
 }
 
 .controls-BreadCrumbsPath__widthRestriction {

@@ -28,7 +28,10 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
 
     describe('shouldDisplayTitle', () => {
         const owner = {
-            getDisplayProperty: () => 'display'
+            getDisplayProperty: () => 'display',
+            getEditingConfig: () => ({
+                toolbarVisibility: true
+            })
         };
 
         describe('default', () => {

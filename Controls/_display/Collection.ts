@@ -40,6 +40,8 @@ import {INavigationOptionValue, INavigationSourceConfig, IRoundBorder} from 'Con
 import {Footer, IOptions as IFooterOptions} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
+import {CrudEntityKey} from 'Types/source';
+import {IDirection} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -112,7 +114,7 @@ export type StrategyConstructor<
    F extends IItemsStrategy<S, T>,
    S extends EntityModel = EntityModel,
    T extends CollectionItem<S> = CollectionItem<S>
-   > = new() => F;
+   > = new(options?: unknown) => F;
 
 export interface ISessionItems<T> extends Array<T> {
     properties?: object;
@@ -233,6 +235,7 @@ type TEditingMode = 'cell' | 'row';
 type TSequentialEditingMode = 'row' | 'none';
 
 /**
+ * Конфигурация редактирования по месту
  * @typedef {Object} IEditingConfig
  * @property {TEditingMode} [mode='row'] Режим редактирования раписей в таблице.
  * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
@@ -775,6 +778,8 @@ export default class Collection<
 
     protected _$navigation: INavigationOptionValue;
 
+    protected _$fadedKeys: CrudEntityKey[];
+
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
      * игнорироваться). Работает только если задано {@link keyProperty}.
@@ -932,19 +937,17 @@ export default class Collection<
              this._$keyProperty = (options as any).idProperty;
         }
 
-        // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
-        // https://online.sbis.ru/opendoc.html?guid=37b14566-12c3-44ed-ac0b-0cd7e0ae5c9d
-        if (!this._disableSupportsGrouping) {
-            if (options.groupProperty) {
-                this._$groupProperty = options.groupProperty;
-                this._$group = this._createGroupFunctor();
-            }
-
-            // Support of 'groupingKeyCallback' option
-            if (!this._$group && (options as any).groupingKeyCallback) {
-                this._$group = (options as any).groupingKeyCallback;
-            }
+        //region grouping
+        if (options.groupProperty) {
+            this._$groupProperty = options.groupProperty;
+            this._$group = this._createGroupFunctor();
         }
+
+        // Support of 'groupingKeyCallback' option
+        if (!this._$group && (options as any).groupingKeyCallback) {
+            this._$group = (options as any).groupingKeyCallback;
+        }
+        //endregion
 
         if (options.itemTemplateProperty) {
             this._$itemTemplateProperty = options.itemTemplateProperty;
@@ -2374,6 +2377,14 @@ export default class Collection<
 
     // endregion Drag-N-Drop
 
+    getFadedKeys(): CrudEntityKey[] {
+        return this._$fadedKeys || [];
+    }
+
+    setFadedKeys(fadedKeys: CrudEntityKey[]): void {
+        this._$fadedKeys = [...fadedKeys];
+    }
+
     getItemTemplateProperty(): string {
         return this._$itemTemplateProperty;
     }
@@ -2852,9 +2863,9 @@ export default class Collection<
         this._viewIterator = viewIterator;
     }
 
-    setIndexes(start: number, stop: number): void {
+    setIndexes(start: number, stop: number, shiftDirection: IDirection): void {
         this.getViewIterator().setIndices(start, stop);
-        this._notify('indexesChanged');
+        this._notify('indexesChanged', start, stop, shiftDirection);
         // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
         // тоже должны перерисоваться при изменении видимости чекбоксов
         this._updateItemsProperty('setMultiSelectVisibility', this._$multiSelectVisibility, 'setMultiSelectVisibility');
@@ -3499,6 +3510,8 @@ export default class Collection<
             options.isFirstItem = false;
             options.isLastItem = false;
             options.stickyCallback = this._$stickyCallback;
+            const key = options.contents && options.contents.getKey && options.contents.getKey();
+            options.faded = this.getFadedKeys().includes(key);
 
             return create(options.itemModule || this._itemModule, options);
         };
@@ -3531,19 +3544,22 @@ export default class Collection<
     protected _createComposer(): ItemsStrategyComposer<S, T> {
         const composer = new ItemsStrategyComposer<S, T>();
 
-        composer.append(DirectItemsStrategy, {
-            display: this,
-            localize: this._localize,
-            keyProperty: this._$keyProperty,
-            unique: this._$unique
-        }).append(UserItemsStrategy, {
-            handlers: this._$sort
-        }).append(GroupItemsStrategy, {
-            handler: this._$group,
-            collapsedGroups: this._$collapsedGroups,
-            hiddenGroupPosition: this._$hiddenGroupPosition,
-            groupConstructor: this._getGroupItemConstructor()
-        });
+        composer
+            .append(DirectItemsStrategy, {
+                display: this,
+                localize: this._localize,
+                keyProperty: this._$keyProperty,
+                unique: this._$unique
+            })
+            .append(UserItemsStrategy, {
+                handlers: this._$sort
+            })
+            .append(GroupItemsStrategy, {
+                handler: this._$group,
+                collapsedGroups: this._$collapsedGroups,
+                hiddenGroupPosition: this._$hiddenGroupPosition,
+                groupConstructor: this._getGroupItemConstructor()
+            });
 
         this._userStrategies.forEach((us) => composer.append(us.strategy, us.options));
 
@@ -4343,6 +4359,7 @@ Object.assign(Collection.prototype, {
     _$footerTemplate: null,
     _$stickyFooter: false,
     _$stickyCallback: null,
+    _$fadedKeys: [],
     _$moreButtonVisibility: MoreButtonVisibility.visible,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

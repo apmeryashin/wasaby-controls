@@ -18,7 +18,7 @@ import Tile, {
     TImageUrlResolver, TTileMode, TTileScalingMode, TTileSize
 } from './Tile';
 import { TItemActionsPosition } from 'Controls/itemActions';
-import {ITileRoundBorder} from 'Controls/interface';
+import {ITileRoundBorder, TFontColorStyle} from 'Controls/interface';
 import {TBackgroundColorStyle, TCursor } from 'Controls/list';
 import {toRgb, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 import {TPaddingSize} from 'Controls/interface';
@@ -30,6 +30,7 @@ const DEFAULT_RICH_ITEM_IMAGE_FIT = 'cover';
 
 export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small'|'adding';
 export type TTitlePosition = 'underImage'|'onImage';
+export type TContentPosition = 'underImage'|'onImageTop'|'onImageBottom';
 export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
 
 export type TShadowVisibility = 'visible'|'hidden'|'onhover';
@@ -437,8 +438,8 @@ export default abstract class TileItem<T extends Model = Model> {
 
     /**
      * Пересчитывает тип плитки
-     * @param {TTileItem} itemType Тип плитки переданный из темплейта
-     * @param {TemplateFunction} nodeContentTemplate Темплейт контента узла
+     * @param {TTileItem} itemType Тип плитки переданный из шаблона
+     * @param {TemplateFunction} nodeContentTemplate Шаблон содержимого узла
      * @return {TTileItem} Тип плитки
      */
     getItemType(itemType: TTileItem, nodeContentTemplate?: TemplateFunction): TTileItem {
@@ -564,7 +565,7 @@ export default abstract class TileItem<T extends Model = Model> {
         }
         const itemActionsPosition = itemActionsPositionTemplate
             || this.getOwner().getActionsTemplateConfig()?.itemActionsPosition;
-        return !this.isSwiped() && (this.hasVisibleActions() || this.isEditing()) && itemActionsPosition !== 'custom';
+        return !this.isSwiped() && this.shouldDisplayActions() && itemActionsPosition !== 'custom';
     }
 
     /**
@@ -582,7 +583,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * Должен ли отрисоваться темплейт операций над записью, который показывается при свайпе
      */
     shouldDisplaySwipeTemplate(): boolean {
-        return this.isSwiped() && (this.hasVisibleActions() || this.isEditing());
+        return this.isSwiped() && this.shouldDisplayActions();
     }
 
     /**
@@ -1363,13 +1364,12 @@ export default abstract class TileItem<T extends Model = Model> {
             if (this.canShowActions()) {
                 classes += ' controls-ListView__item_showActions';
             }
-            if (this.isDragged()) {
-                classes += ' controls-ListView__itemContent_dragging';
-            }
+            classes += this.getFadedClass();
             return classes;
         }
 
         classes += ' controls-TileView__itemContent js-controls-ListView__measurableContainer';
+        classes += this.getFadedClass();
 
         // TODO это значение вроде задается только для Rich темплейта всегда, нет смысла прокидывать его в опции
         if (height === 'auto') {
@@ -1414,9 +1414,6 @@ export default abstract class TileItem<T extends Model = Model> {
         }
         if (this.isAnimated()) {
             classes += ' controls-TileView__item_animated';
-        }
-        if (this.isDragged()) {
-            classes += ' controls-ListView__itemContent_dragging';
         }
         if (this.canShowActions()) {
             classes += ' controls-ListView__item_showActions';
@@ -1607,7 +1604,7 @@ export default abstract class TileItem<T extends Model = Model> {
                        imageViewMode: TImageViewMode = 'rectangle'): boolean {
         switch (itemType) {
             case 'default':
-                return !!this.getDisplayValue() || this.hasVisibleActions() || this.isEditing();
+                return !!this.getDisplayValue() || this.shouldDisplayActions();
             case 'small':
             case 'medium':
             case 'rich':
@@ -1629,7 +1626,8 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TemplateFunction} footerTemplate:  Темплейт футера
      * @param {string} description: Описание
      * @param {number} descriptionLines: Отступ от края плитки до контента внутри неё
-     * @param {TTitlePosition} titlePosition: Отступ от края плитки до контента внутри неё
+     * @param {TTitlePosition} titlePosition: Положение заголовка относительно изображения
+     * @param {TContentPosition} contentPosition: Положение контента относительно изображения
      */
     getTitleWrapperClasses(
         itemType: TTileItem = 'default',
@@ -1642,7 +1640,8 @@ export default abstract class TileItem<T extends Model = Model> {
         footerTemplate: TemplateFunction = null,
         description: string = '',
         descriptionLines: number = 0,
-        titlePosition: TTitlePosition = 'underImage'
+        titlePosition: TTitlePosition = 'underImage',
+        contentPosition: TContentPosition = 'underImage'
     ): string {
         let classes = '';
 
@@ -1655,13 +1654,17 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'rich':
                 classes += 'controls-TileView__richTemplate_itemContent ws-ellipsis';
-
-                if (!(titlePosition === 'onImage' &&
+                if (contentPosition !== 'underImage') {
+                    classes += ` controls-TileView__richTemplate_itemContent-${contentPosition}`;
+                    classes += this._getContentSpacingClasses(imagePosition, contentPadding);
+                    break;
+                } else if (!(titlePosition === 'onImage' &&
                       imageViewMode === 'rectangle' &&
                       !footerTemplate &&
                       (!description || !descriptionLines))) {
                     classes += this._getContentSpacingClasses(imagePosition, contentPadding);
                 }
+                classes += ' controls-TileView__richTemplate_itemContent_fullHeight';
                 break;
             case 'preview':
                 classes += 'controls-TileView__previewTemplate_title';
@@ -1701,6 +1704,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {string} gradientStartColor Начальный цвет высокого градиента
      * @param {string} gradientStopColor Конечный цвет высокого градиента
      * @param {TGradientDirection} gradientDirection Направление высокого градиента
+     * @param {TContentPosition} contentPosition: Положение контента относительно изображения
      */
     getTitleWrapperStyles(
         itemType: TTileItem = 'default',
@@ -1709,7 +1713,8 @@ export default abstract class TileItem<T extends Model = Model> {
         gradientColor: string = '#FFF',
         gradientStartColor: string = '#FFF',
         gradientStopColor: string = '#FFF',
-        gradientDirection: TGradientDirection = 'toBottom'
+        gradientDirection: TGradientDirection = 'toBottom',
+        contentPosition: TContentPosition = 'underImage'
     ): string {
         let styles = '';
 
@@ -1722,6 +1727,9 @@ export default abstract class TileItem<T extends Model = Model> {
                 styles += ' width: 100%;';
                 break;
             case 'rich':
+                if (contentPosition !== 'underImage') {
+                    break;
+                }
                 if (
                     (!imageViewMode || imageViewMode === 'rectangle') &&
                     imagePosition !== 'left' &&
@@ -1743,18 +1751,20 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTitleStyle} titleStyle Стиль заголовка
      * @param {boolean} hasTitle Признак, означающий что нужно отображать заголовок
      * @param {number} titleLines Кол-во строк в заголовке
-     * @param {string} titleColorStyle Стиль цвета заголовка
-     * @param {TTitlePosition} titlePosition Положение заголовка
+     * @param {Controls/_interface/IFontColorStyle/TFontColorStyle.typedef} titleColorStyle Стиль цвета заголовка
+     * @param {TTitlePosition} titlePosition Положение заголовка относительно изображения
      * @param {TImageViewMode} imageViewMode Режим отображения изображения
+     * @param {TContentPosition} contentPosition Положение контента относительно изображения
      */
     getTitleClasses(
         itemType: TTileItem = 'default',
         titleStyle?: TTitleStyle,
         hasTitle?: boolean,
         titleLines: number = 1,
-        titleColorStyle: string = 'default',
+        titleColorStyle: TFontColorStyle = 'default',
         titlePosition: TTitlePosition = 'underImage',
-        imageViewMode: TImageViewMode = 'rectangle'
+        imageViewMode: TImageViewMode = 'rectangle',
+        contentPosition: TContentPosition = 'underImage'
     ): string {
         let classes = '';
         switch (itemType) {
@@ -1805,14 +1815,16 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTileItem} itemType Тип элемента
      * @param {number} titleLines Кол-во строк в заголовке
      * @param {string} textColor Цвет текста заголовка
-     * @param {TTitlePosition} titlePosition Положение заголовка
+     * @param {TTitlePosition} titlePosition Положение заголовка относительно изображения
      * @param {TImageViewMode} imageViewMode Режим отображения изображения
+     * @param {TContentPosition} contentPosition Положение контента относительно изображения
      */
     getTitleStyles(itemType: TTileItem = 'default',
                    titleLines: number = 1,
                    textColor: string = 'inherit',
                    titlePosition: TTitlePosition = 'underImage',
-                   imageViewMode: TImageViewMode = 'rectangle'): string {
+                   imageViewMode: TImageViewMode = 'rectangle',
+                   contentPosition: TContentPosition = 'underImage'): string {
         let styles = '';
         switch (itemType) {
             case 'default':
@@ -1822,7 +1834,9 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'medium':
                 break;
             case 'rich':
-                const color = imageViewMode !== 'none' && titlePosition === 'onImage' ? '#fff' : textColor;
+                const color = imageViewMode !== 'none' && (
+                    titlePosition === 'onImage' || contentPosition !== 'underImage'
+                ) ? '#fff' : textColor;
                 styles = `-webkit-line-clamp: ${titleLines};`;
                 styles += `color: ${color};`;
                 break;
@@ -1971,9 +1985,13 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTileItem} itemType Тип элемента
      * @param {number} descriptionLines Кол-во строк в описании
      * @param {string} textColor Цвет текста
+     * @param {TContentPosition} contentPosition Положение контента относительно изображения
      */
     getDescriptionStyles(
-        itemType: TTileItem = 'default', descriptionLines: number = 1, textColor: string = 'inherit'
+        itemType: TTileItem = 'default',
+        descriptionLines: number = 1,
+        textColor: string = 'inherit',
+        contentPosition: TContentPosition = 'underImage'
     ): string {
         let styles = '';
         switch (itemType) {
@@ -1984,7 +2002,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'rich':
                 styles = `-webkit-line-clamp: ${descriptionLines};`;
-                styles += `color: ${textColor};`;
+                const color = contentPosition !== 'underImage' ? '#fff' : textColor;
+                styles += `color: ${color};`;
                 break;
         }
 
@@ -2111,6 +2130,7 @@ export default abstract class TileItem<T extends Model = Model> {
     abstract isEditing(): boolean;
     abstract isDragged(): boolean;
     abstract hasVisibleActions(): boolean;
+    abstract shouldDisplayActions(): boolean;
     abstract shouldDisplayMarker(marker: boolean): boolean;
     abstract getDisplayProperty(): string;
     abstract getDisplayValue(): string;
@@ -2123,6 +2143,7 @@ export default abstract class TileItem<T extends Model = Model> {
     abstract getOwner(): Tile;
     protected abstract _notifyItemChangeToOwner(property: string): void;
     protected abstract _nextVersion(): void;
+    abstract getFadedClass(): string;
 }
 
 Object.assign(TileItem.prototype, {

@@ -34,6 +34,7 @@ export {default as IDateMask, IDateMaskOptions} from './_interface/IDateMask';
 export {default as IDateRangeValidators, IDateRangeValidatorsOptions, TDateRangeValidators} from './_interface/IDateRangeValidators';
 export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropStorage';
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';
+export {default as IBorderRadius, IBorderRadiusOptions} from './_interface/IBorderRadius';
 export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from './_interface/IValidationStatus';
 export {default as IDateConstructor, IDateConstructorOptions} from './_interface/IDateConstructor';
 export {default as IUnderline, IUnderlineOptions} from './_interface/IUnderline';
@@ -98,5 +99,6 @@ export {default as ISelectField, ISelectFieldsOptions} from './_interface/ISelec
 export {IRoundBorder} from 'Controls/_interface/IRoundBorder';
 export {TPaddingSize} from 'Controls/_interface/TPaddingSize';
 export {IItemPaddingOptions, default as IItemPadding} from 'Controls/_interface/IItemPadding';
+export {default as IItemImage, TImagePosition, TImageEffect, TImageSize, TImageViewMode, TImageFit} from 'Controls/_interface/IItemImage';
 export {default as IResetValue, IResetValueOptions} from 'Controls/_interface/IResetValue';
 export {default as IItemsContainerPadding, IItemsContainerPaddingOption} from 'Controls/_interface/IItemsContainerPadding';

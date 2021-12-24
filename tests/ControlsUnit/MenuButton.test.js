@@ -422,6 +422,29 @@ define(
             assert.equal(actualTarget, 'testTarget');
          });
 
+         it('open menu by key, check popupOptions', () => {
+            let actualConfig;
+            menu._controller = {
+               openMenu: (config) => {
+                  actualConfig = config;
+                  return Promise.resolve();
+               },
+               loadDependencies: () => Promise.resolve(),
+               setMenuPopupTarget: () => {}
+            };
+            menu._children = {
+               content: 'testTarget'
+            };
+            menu.openMenu({
+               closeOnOutsideClick: false,
+               templateOptions: {
+                  option1: 'test'
+               }
+            }, '4');
+            assert.isFalse(actualConfig.closeOnOutsideClick);
+            assert.equal(actualConfig.templateOptions.option1, 'test');
+         });
+
          it('_deactivated', function() {
             let opened = true;
             menu._controller.getPopupOptions = () => { return {}; };

@@ -734,9 +734,9 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     //region proxy methods to TreeControl
-    scrollToItem(key: string | number, position?: string): void {
+    scrollToItem(key: string | number, position?: string, force?: boolean): void {
         if (this._children.treeControl) {
-            this._children.treeControl.scrollToItem(key, position);
+            this._children.treeControl.scrollToItem(key, position, force);
         }
     }
 
@@ -1013,7 +1013,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
     }
 
-    private _resolveViewMode(viewMode: TExplorerViewMode, useColumns: boolean) {
+    private _resolveViewMode(viewMode: TExplorerViewMode, useColumns: boolean): TExplorerViewMode | 'columns' {
         return viewMode === 'list' && useColumns ? 'columns' : viewMode;
     }
 
@@ -1362,7 +1362,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/interface/IGroupedGrid
  * @implements Controls/grid:IGridControl
  * @implements Controls/list:IClickableView
@@ -1398,7 +1398,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
- * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScroll
  * @implements Controls/interface/IGroupedGrid
  * @implements Controls/grid:IGridControl
  * @implements Controls/list:IClickableView

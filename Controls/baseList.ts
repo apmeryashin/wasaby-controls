@@ -12,7 +12,7 @@
 export {IList, IReloadItemOptions} from './_baseList/interface/IList';
 export * from './_baseList/interface/IEditableList';
 export * from 'Controls/_baseList/interface/IMovableList';
-export {IVirtualScrollConfig, IDirection} from './_baseList/interface/IVirtualScroll';
+export {default as IVirtualScroll, IVirtualScrollConfig, IDirection} from './_baseList/interface/IVirtualScroll';
 export {default as IEmptyTemplateOptions} from './_baseList/interface/EmptyTemplate';
 export {IRemovableList} from 'Controls/_baseList/interface/IRemovableList';
 export {default as IListNavigation} from './_baseList/interface/IListNavigation';

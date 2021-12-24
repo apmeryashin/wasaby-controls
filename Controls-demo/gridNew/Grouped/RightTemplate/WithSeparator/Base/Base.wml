@@ -7,13 +7,14 @@
                     source="{{_viewSource}}"
                     rowSeparatorSize="s"
                     columns="{{_columns}}"
+                    dataLoadCallback="{{_dataLoadCallback}}"
                     groupProperty="fullName">
                 <ws:groupTemplate>
                     <ws:partial template="Controls/grid:GroupTemplate"
                                 scope="{{ _options }}"
                                 separatorVisibility="{{true}}">
                         <ws:rightTemplate>
-                            <Controls.decorator:Money value="{{itemData.metaData.groupResults[item.contents]}}" fontColorStyle="group" useGrouping="{{false}}"/>
+                            <Controls.decorator:Money value="{{rightTemplate.item.metaData.groupResults[rightTemplate.item.contents]}}" fontColorStyle="group" useGrouping="{{false}}"/>
                         </ws:rightTemplate>
                     </ws:partial>
                 </ws:groupTemplate>

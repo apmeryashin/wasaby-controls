@@ -55,7 +55,7 @@ const ROOT_KEY = 3141592653589793;
  *
  * @remark
  * Полезные ссылки:
- * * {@link /materials/Controls-demo/app/Controls-demo%2FtreeGridNew%2FMover%2FExtended%2FExtendedMoverDialog демо-пример}
+ * * {@link /materials/Controls-demo/app/Controls-demo%2FtreeGridNew%2FMover%2FExtended%2FIndex демо-пример с расширенным окном перемещения}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/actions/mover/ руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_moveDialog.less переменные тем оформления}
  *

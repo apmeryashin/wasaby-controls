@@ -41,40 +41,32 @@ export default interface ISource {
  * </pre>
  *
  * <pre class="brush: js">
- * import {HierarchicalMemory} from "Types/source";
+ * import {Memory} from "Types/source";
  *
  * _source: null,
  * _beforeMount: function() {
- *     this._source = new HierarchicalMemory({
+ *     this._source = new Memory({
  *         keyProperty: 'key',
- *         parentProperty: 'parent',
  *         data: [
  *             {
  *                 key: '1',
  *                 title: 'Ярославль',
- *                 icon: 'icon-small icon-Yar icon-done',
- *                 parent: null,
- *                 '@parent': true
+ *                 icon: 'icon-small icon-Yar icon-done'
  *             },
  *             {
  *                 key: '2',
  *                 title: 'Рыбинск',
- *                 icon: 'icon-small icon-Ryb icon-done',
- *                 parent: 1,
- *                 '@parent': false
+ *                 icon: 'icon-small icon-Ryb icon-done'
  *             },
  *             {
  *                 key: '3',
  *                 title: 'St-Petersburg',
- *                 icon: 'icon-small icon-SPB icon-done',
- *                 parent: null,
- *                 '@parent': true
+ *                 icon: 'icon-small icon-SPB icon-done'
  *             }
  *         ]
  *     })
  * }
  * </pre>
- * @see
  * @see Types/source:ICrud
  */
 /*

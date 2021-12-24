@@ -40,7 +40,7 @@ export interface IHeadingOptions
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IFontWeight
- * @implements Controls/interface:TTextTransform
+ * @implements Controls/interface:ITextTransform
  * @public
  * @author Красильников А.С.
  *
@@ -84,7 +84,7 @@ Object.defineProperty(Header, 'defaultProps', {
 
 /**
  * @name Controls/_heading/Heading#textTransform
- * @cfg {String}
+ * @cfg {Controls/interface:ITextTransform/TTextTransform.typedef}
  * @default none
  * @demo Controls-demo/Heading/Title/TextTransform/Index
  * @remark
@@ -104,7 +104,7 @@ Object.defineProperty(Header, 'defaultProps', {
 
 /**
  * @name Controls/_heading/Heading#fontColorStyle
- * @cfg {TFontColorStyle}
+ * @cfg {Controls/interface:IFontColorStyle/TFontColorStyle.typedef}
  * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
  * @default default
  * @example

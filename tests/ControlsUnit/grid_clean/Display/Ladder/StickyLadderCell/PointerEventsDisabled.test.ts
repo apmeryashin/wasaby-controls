@@ -85,6 +85,7 @@ describe('Controls/grid/Display/Ladder/StickyLadderCell/PointerEventsDisabled', 
                     hasItemActionsSeparatedCell: () => false,
                     getEditingConfig: () => undefined,
                     isDragged: () => false,
+                    getFadedClass: () => '',
                     getMultiSelectVisibility: () => 'hidden',
                     isAnimatedForSelection: () => false
                 } as any,

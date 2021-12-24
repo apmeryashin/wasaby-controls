@@ -26,6 +26,7 @@ interface IWeekdayFormatter extends IControlOptions, IValueOptions {
 export default class WeekdayFormatter extends Control<IWeekdayFormatter> {
     protected _template: TemplateFunction = template;
     protected _weekday: string;
+    protected _isWorkday: boolean;
 
     protected _beforeMount(options: IWeekdayFormatter): void {
         this._setWeekday(options.value);
@@ -40,6 +41,11 @@ export default class WeekdayFormatter extends Control<IWeekdayFormatter> {
     private _setWeekday(value: Date): void {
         if (value instanceof Date && !isNaN(value.getTime())) {
             this._weekday = formatDate(value, 'ddl');
+            const weekday = value.getDay();
+            // В Американской системе воскресенье считается первым днем недели
+            const sunday = 0;
+            const saturday = 6;
+            this._isWorkday = weekday !== saturday && weekday !== sunday;
         } else {
             this._weekday = '';
         }

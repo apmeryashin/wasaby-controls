@@ -1,14 +1,12 @@
 <div class="controlsDemo__wrapper controlsDemo__ml4">
     <div class="controlsDemo__cell" data-qa="controlsDemo-datePopupType__datePicker">
         <div class="controls-text-label">datePopupType=datePicker</div>
-        <Controls.dateRange:RangeSelector bind:startValue="_startValue"
-                                          bind:endValue="_endValue"
+        <Controls.date:Selector bind:value="_value"
                                           datePopupType="datePicker"/>
     </div>
     <div class="controlsDemo__cell" data-qa="controlsDemo-datePopupType__compactDatePicker">
         <div class="controls-text-label">datePopupType=compactDatePicker</div>
-        <Controls.dateRange:RangeSelector bind:startValue="_startValue"
-                                          bind:endValue="_endValue"
+        <Controls.date:Selector bind:value="_value"
                                           datePopupType="compactDatePicker"/>
     </div>
 </div>

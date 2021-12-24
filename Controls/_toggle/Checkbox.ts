@@ -6,6 +6,8 @@ import {
    ITooltipOptions,
    ICaption,
    ICaptionOptions,
+   IFontColorStyle,
+   IFontColorStyleOptions,
    IIcon,
    IIconOptions,
    IIconSize,
@@ -24,7 +26,8 @@ import 'css!Controls/CommonClasses';
 import {getContextTypes, getFocusedStatus} from '../Utils/Context/WorkByKeyboardUtil';
 
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions,
-    IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
+      IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions,
+      IFontColorStyleOptions  {
    triState?: boolean;
    value?: boolean | null;
    multiline?: boolean;
@@ -51,6 +54,7 @@ const mapBoolState = {true: false, false: true, null: true};
  * @implements Controls/interface:IIcon
  * @implements Controls/interface:IIconSize
  * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IValidationStatus
  * @implements Controls/interface:IResetValue
@@ -78,8 +82,9 @@ const mapBoolState = {true: false, false: true, null: true};
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
-class Checkbox extends Control<ICheckboxOptions> implements ICaption,
+class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColorStyle,
                                                             IIcon, ITooltip, IIconSize, IIconStyle, IValidationStatus {
+   '[Controls/_interface/IFontColorStyle]': boolean = true;
    '[Controls/_interface/ITooltip]': boolean = true;
    '[Controls/_interface/ICaption]': boolean = true;
    '[Controls/_interface/IIcon]': boolean = true;
@@ -387,5 +392,24 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @default primary
  * @demo Controls-demo/toggle/Checkbox/CheckboxStyle/Index
  * @see contrastBackground
+ */
+/**
+ * @typedef {String} TFontColorStyle
+ * @description Допустимые значения для опции {@link Controls/_toggle/Checkbox#fontColorStyle fontColorStyle}.
+ * @variant primary
+ * @variant secondary
+ * @variant success
+ * @variant warning
+ * @variant danger
+ * @variant unaccented
+ * @variant link
+ * @variant label
+ * @variant info
+ * @variant default
+ */
+/**
+ * @name Controls/_toggle/Checkbox#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста контрола.
+ * @demo Controls-demo/toggle/Checkbox/FontColorStyle/Index
  */
 export default Checkbox;

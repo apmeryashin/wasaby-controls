@@ -48,6 +48,6 @@ export default class Link extends Control<IControlOptions> {
 
    static defaultProps: object = {
       fontSize: 'lookupLink',
-      underline: true
+      underline: 'fixed'
    };
 }

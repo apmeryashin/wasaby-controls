@@ -20,7 +20,7 @@
         <div class="controls-text-label">MultilinePath in miniCard</div>
         <Controls.popup:PreviewerTarget trigger="click" >
             <ws:content>
-                <div class="controls-text-label">Click me</div>
+                <span class="controls-text-label">Click me</span>
             </ws:content>
             <ws:template>
                 <Controls.popupTemplate:Dialog>

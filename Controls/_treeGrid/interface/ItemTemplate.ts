@@ -44,7 +44,7 @@ export default interface IItemTemplateOptions extends ITreeItemTemplateOptions {
      */
     expanderIcon?: string;
     /**
-     * @cfg {Controls/_tree/interface/ITreeControl/ExpanderSize.typedef} Размер области, который отведён под иконку узла или скрытого узла.
+     * @cfg {Controls/_tree/interface/ITreeControl/TOffset.typedef} Размер области, который отведён под иконку узла или скрытого узла.
      * @default s
      * @see expanderIcon
      * @remark
@@ -53,7 +53,7 @@ export default interface IItemTemplateOptions extends ITreeItemTemplateOptions {
      */
     expanderSize?: string;
     /**
-     * @cfg {Controls/_tree/interface/ITreeControl/ExpanderSize.typedef} Размер структурного отступа для элементов иерархии.
+     * @cfg {Controls/_tree/interface/ITreeControl/TOffset.typedef} Размер структурного отступа для элементов иерархии.
      * @default s
      * @see withoutLevelPadding
      * @remark
@@ -65,7 +65,7 @@ export default interface IItemTemplateOptions extends ITreeItemTemplateOptions {
 
 /**
  * @name Controls/_treeGrid/interface/ItemTemplate#fontColorStyle
- * @cfg {TFontColorStyle} Стиль цвета текста записи.
+ * @cfg {Controls/_interface/IFontColorStyle/TFontColorStyle.typedef} Стиль цвета текста записи.
  * @remark
  * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
  * {@link Controls/_treeGrid/interface/IColumn#fontColorStyle Стиль цвета текста ячейки} имеет больший приоритет, чем стиль цвета текста записи.

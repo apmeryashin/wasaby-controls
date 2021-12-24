@@ -3,7 +3,6 @@ import * as Template from 'wml!Controls-demo/list_new/Grouped/groupHistoryId/gro
 import {Memory} from 'Types/source';
 import {getGroupedCatalog as getData} from '../../DemoHelpers/Data/Groups';
 
-
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;

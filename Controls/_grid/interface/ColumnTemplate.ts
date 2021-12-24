@@ -76,11 +76,11 @@ export default interface IColumnTemplateOptions {
     * Переменная **column** позволяет получить доступ к следующими свойствам:
     *
     * * **config** (тип {@link Controls/grid:IColumn IColumn}) — объект с конфигурацией колонки.
-    * * **index** — порядковый номер колонки. Отсчет от 0.
+    * * **columnIndex** — порядковый номер колонки. Отсчет от 0.
     *
     * Переменная **editArrowTemplate** позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в прикладном шаблоне для первой колонки. Переменную достаточно встроить в нужное место contentTemplate с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 4.
     *
-    * Переменная **expanderTemplate** доступна только, если шаблон используется в контроле {@link Controls/treeGrid:View}. С помощью переменной можно отобразить кнопку-экспандер в произвольном месте элемента. При этом опцию {@link Controls/treeGrid:View#expanderPosition expanderPosition} необходимо установить в значение custom. Переменную expanderTemplate достаточно встроить в нужное место contentTemplate с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 5.
+    * Переменная **expanderTemplate** доступна только, если шаблон используется в контроле {@link Controls/treeGrid:View}. С помощью переменной можно отобразить кнопку-экспандер в произвольном месте элемента. При этом опцию {@link Controls/_tree/interface/ITreeControl#expanderPosition expanderPosition} необходимо установить в значение custom. Переменную expanderTemplate достаточно встроить в нужное место contentTemplate с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 5.
     *
     * Переменная **itemActionsTemplate** — панель с [опциями записи](/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/).
     * @example
@@ -241,7 +241,7 @@ export default interface IColumnTemplateOptions {
     tagStyle?: 'info' | 'danger' | 'primary' | 'success' | 'secondary';
 
     /**
-     * @cfg {Controls/display/TMarkerClassName.typedef} Размер маркера.
+     * @cfg {Controls/_display/interface/ICollectionItem/TMarkerClassName.typedef} Размер маркера.
      * @default default
      */
     markerClassName?: TMarkerClassName;

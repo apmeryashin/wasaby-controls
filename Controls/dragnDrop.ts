@@ -30,12 +30,14 @@ export {default as Container, IDragObject} from 'Controls/_dragnDrop/Container';
 export {default as DraggingTemplate} from 'Controls/_dragnDrop/DraggingTemplate';
 export {default as Controller} from 'Controls/_dragnDrop/Controller';
 export {default as ResizingLine} from 'Controls/_dragnDrop/ResizingLine';
+export {default as ResizingBase} from 'Controls/_dragnDrop/ResizingBase';
 export {default as Compound} from 'Controls/_dragnDrop/Controller/Compound';
 export {default as ListItems} from 'Controls/_dragnDrop/Entity/List/Items';
 export {default as Entity} from 'Controls/_dragnDrop/Entity';
 export {default as ItemsEntity} from 'Controls/_dragnDrop/Entity/Items';
 export {default as ItemEntity} from 'Controls/_dragnDrop/Entity/Item';
 export {IResizingLine} from 'Controls/_dragnDrop/interface/IResizingLine';
+export {IResizingBase} from 'Controls/_dragnDrop/interface/IResizingBase';
 
 import DraggingTemplateWrapper = require('wml!Controls/_dragnDrop/DraggingTemplateWrapper');
 export {

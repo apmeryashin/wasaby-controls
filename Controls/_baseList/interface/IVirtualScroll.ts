@@ -1,50 +1,66 @@
 export type IDirection = 'up' | 'down';
+export type TVirtualScrollMode = 'remove' | 'hide';
+
 /**
- * Интерфейс для поддержки {@link /doc/platform/developmentapl/interface-development/controls/list/performance-optimization/virtual-scroll/ виртуального скроллирования} в списках.
+ * Конфигурация виртуального скролла
+ * @interface Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig
  *
  * @public
  * @author Авраменко А.С.
  */
 
 /*
- * Interface for lists that can use virtual scroll.
+ * Virtual scroll config
+ * @interface Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig
  *
  * @public
  * @author Авраменко А.С.
  */
 export interface IVirtualScrollConfig {
     /**
-     * @cfg Количество отображаемых элементов при инициализации списка.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#pageSize
+     * @cfg {Number} Количество отображаемых элементов при инициализации списка.
      */
     pageSize?: number;
     /**
-     * @cfg Количество подгружаемых элементов при скроллировании. По умолчанию равен четверти размера виртуальной страницы, который задан в опции pageSize.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#segmentSize
+     * @cfg {Number} Количество подгружаемых элементов при скроллировании. По умолчанию равен четверти размера виртуальной страницы, который задан в опции pageSize.
      * @default {@link pageSize}/4
      */
     segmentSize?: number;
     /**
-     * @cfg Имя поля, которое содержит высоту элемента.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#itemHeightProperty
+     * @cfg {String} Имя поля, которое содержит высоту элемента.
      * @default undefined
      */
     itemHeightProperty?: string;
     /**
-     * @cfg Высота контейнера со списком.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#viewportHeight
+     * @cfg {Number} Высота контейнера со списком.
      * @default undefined
      */
     viewportHeight?: number;
     /**
-     * @cfg Режим управления элементами виртуального скроллинга.
+     * @name Controls/_baseList/interface/IVirtualScroll/IVirtualScrollConfig#mode
+     * @cfg {String} Режим управления элементами виртуального скролла.
      * @variant remove Скрытые элементы удаляются из DOM.
      * @variant hide Скрытые элементы скрываются из DOM с помощью ws-hidden.
      * @default remove
      */
-    mode?: 'hide'|'remove';
+    mode?: TVirtualScrollMode;
 }
 
-export type IVirtualScrollMode = 'remove' | 'hide';
+/**
+ * Интерфейс списков, поддерживающих {@link /doc/platform/developmentapl/interface-development/controls/list/performance-optimization/virtual-scroll/ виртуальное скроллирование}.
+ * @interface Controls/_baseList/interface/IVirtualScroll
+ * @public
+ */
+export default interface IVirtualScroll {
+    '[Controls/_list/interface/IVirtualScroll]': true;
+}
 
 /**
- * @name Controls/_baseList/interface/IVirtualScrollConfig#virtualScrollConfig
+ * @name Controls/_baseList/interface/IVirtualScroll#virtualScrollConfig
  * @cfg {Controls/_baseList/interface/IVirtualScrollConfig} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/performance-optimization/virtual-scroll/ виртуального скролла}.
  * @remark
  * Виртуальный скролл работает только при включенной {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/ навигации} в виде {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/ бесконечной прокрутки}.
@@ -68,7 +84,7 @@ export type IVirtualScrollMode = 'remove' | 'hide';
 /**
  * @event Происходит при использовании виртуального скролла, когда список находится в такой позиции, что сверху и снизу списка есть скрытые (или доступные для загрузки) элементы.
  * @remark По этому событию скрывается контент {@link Controls/scroll:VirtualScrollContainer} с опцией position, соответствующей параметру в событии.
- * @name Controls/_baseList/interface/IVirtualScrollConfig#enableVirtualNavigation
+ * @name Controls/_baseList/interface/IVirtualScroll#enableVirtualNavigation
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {'top' | 'bottom'} position Положение, в котором будет скрыт контент Controls/scroll:VirtualScrollContainer.
  * @see disableVirtualNavigation
@@ -77,7 +93,7 @@ export type IVirtualScrollMode = 'remove' | 'hide';
 /**
  * @event Происходит при использовании виртуального скролла, когда список находится в такой позиции, что сверху или снизу списка нет скрытых (или доступных для загрузки) элементов.
  * @remark По этому событию показывается контент {@link Controls/scroll:VirtualScrollContainer} с опцией position соответствующей параметру в событии.
- * @name Controls/_baseList/interface/IVirtualScrollConfig#disableVirtualNavigation
+ * @name Controls/_baseList/interface/IVirtualScroll#disableVirtualNavigation
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {'top' | 'bottom'} position Положение, в котором будет скрыт контент Controls/scroll:VirtualScrollContainer.
  * @see enableVirtualNavigation

@@ -54,11 +54,11 @@ describe('Controls/grid_clean/Display/Multiselection/Row', () => {
 
         it('is dragged', () => {
             let classes = row.getMultiSelectClasses();
-            CssClassesAssert.notInclude(classes, 'controls-ListView__itemContent_dragging');
+            CssClassesAssert.notInclude(classes, 'controls-ListView__itemContent_faded');
 
             row.setDragged(true);
             classes = row.getMultiSelectClasses();
-            CssClassesAssert.include(classes, 'controls-ListView__itemContent_dragging');
+            CssClassesAssert.include(classes, 'controls-ListView__itemContent_faded');
         });
     });
 });

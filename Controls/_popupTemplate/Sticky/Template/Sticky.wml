@@ -1,7 +1,7 @@
 <Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
     <div class="controls_popupTemplate_theme-{{_options.theme}}
                 controls-StickyTemplate
-                {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder'}}
+                {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder controls_border-radius-s'}}
                 controls-StickyTemplate-borderStyle-{{_options.borderStyle}}
                 controls-StickyTemplate-hoverBorderStyle-{{_options.hoverBorderStyle}}
                 controls-StickyTemplate-borderSize-{{_options.borderSize}}
@@ -40,6 +40,8 @@
                                                                    'controls-background-' + _options.backgroundStyle}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
                             attr:class="{{_getRoundedClass(_options, 'body')}}"
+                            headerContentTemplate="{{null}}"
+                            footerContentTemplate="{{null}}"
                             borderStyle="{{undefined}}"
                             isDragging="{{_dragging}}"
                             scope="{{_options}}"></ws:partial>
@@ -47,9 +49,11 @@
         </ws:if>
         <ws:if data="{{_options.footerContentTemplate}}">
             <ws:partial template="{{_options.footerContentTemplate}}"
+                        headerContentTemplate="{{null}}"
+                        footerContentTemplate="{{null}}"
                         scope="{{_options}}"
                         attr:class="controls-StickyTemplate__footer
-                                    controls-PopupTemplate__roundBorder_bottom
+                                    controls-PopupTemplate__roundBorder_bottom controls_border-radius-s
                                     {{_options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
                                                                    'controls-background-' + _options.backgroundStyle}}"
                         on:click="_proxyEvent('footerClick')"></ws:partial>

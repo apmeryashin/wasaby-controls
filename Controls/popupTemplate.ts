@@ -41,6 +41,7 @@ export {default as CloseButton} from 'Controls/_popupTemplate/CloseButton';
 import * as CloseButtonTemplate from 'wml!Controls/_popupTemplate/CloseButton/CloseButton';
 export {CloseButtonTemplate}; // для CompoundArea
 export {default as BaseController} from 'Controls/_popupTemplate/BaseController';
+export {default as ResizingArrow} from 'Controls/_popupTemplate/ResizingArrow';
 
 // Удалить
 export {default as StackStrategy} from 'Controls/_popupTemplate/Stack/StackStrategy'; // для CompoundArea

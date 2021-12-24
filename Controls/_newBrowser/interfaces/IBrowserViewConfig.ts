@@ -15,7 +15,12 @@ export enum NodesPosition {
     /**
      * master колонка показывается
      */
-    left = 'left'
+    left = 'left',
+
+    /**
+     * master колонка скрыта, данные отображаются в виде развернутого составного дерева
+     */
+    composite = 'composite'
 }
 
 /**

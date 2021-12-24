@@ -202,7 +202,7 @@ export interface IGridEditingConfig {
 type TAsyncOperationResult = Promise<void | IOperationCanceledResult>;
 
 /**
- * @typedef {Enum} TSequentialEditingMode
+ * @typedef {Enum} Controls/_grid/interface/IEditableGrid/TSequentialEditingMode
  * @description Допустимые значения для свойства {@link Controls/grid:IGridEditingConfig#sequentialEditingMode sequentialEditingMode}.
  * @variant row Запускать редактирование в следующей строке, при завершении текущего редактирования.
  * @variant cell Запускать редактирование в следующей ячейке, при завершении текущего редактирования.

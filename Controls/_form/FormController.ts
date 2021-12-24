@@ -299,6 +299,16 @@ class FormController extends ControllerBase<IFormController> {
         this._dialogOpener = null;
     }
 
+    private _setFunctionToRepeat(foo: Function, ...args: unknown[]): void {
+        this._errorController.setOnProcess((viewConfig) => {
+            viewConfig.options.repeatConfig = {
+                display: true,
+                function: () => foo.call(this, ...args).then(() => this._hideError())
+            };
+            return viewConfig;
+        });
+    }
+
     private _createRecordBeforeMount(cfg: IFormController): Promise<ICrudResult> {
         // если ни рекорда, ни ключа, создаем новый рекорд и используем его.
         // до монитрования в DOM не можем сделать notify событий (которые генерируются в CrudController,
@@ -322,6 +332,7 @@ class FormController extends ControllerBase<IFormController> {
             };
         },  (e: Error) => {
             this._createdInMounting = {isError: true, result: e};
+            this._setFunctionToRepeat(this.create, cfg.createMetaData, cfg);
             return this.processError(e).then(this._getState);
         });
     }
@@ -343,6 +354,7 @@ class FormController extends ControllerBase<IFormController> {
             };
         }, (e: Error) => {
             this._readInMounting = {isError: true, result: e};
+            this._setFunctionToRepeat(this.read, cfg.key, cfg.readMetaData, cfg);
             return this.processError(e).then(this._getState);
         }) as Promise<{data: Model}>;
     }
@@ -402,6 +414,7 @@ class FormController extends ControllerBase<IFormController> {
 
     create(createMetaData: unknown, config?: ICrudConfig): Promise<undefined | Model> {
         createMetaData = createMetaData || this._options.createMetaData;
+        this._setFunctionToRepeat(this.create, createMetaData, config);
         return this._crudController.create(createMetaData, config).then(
             this._createHandler.bind(this),
             this._crudErrback.bind(this)
@@ -418,6 +431,7 @@ class FormController extends ControllerBase<IFormController> {
 
     read(key: string, readMetaData: unknown, config?: ICrudConfig): Promise<Model> {
         readMetaData = readMetaData || this._options.readMetaData;
+        this._setFunctionToRepeat(this.read, key, readMetaData, config);
         return this._crudController.read(key, readMetaData, config).then(
             this._readHandler.bind(this),
             this._crudErrback.bind(this)
@@ -507,6 +521,7 @@ class FormController extends ControllerBase<IFormController> {
                     return arg;
                 }).catch((error: Error) => {
                     updateDef.errback(error);
+                    this._setFunctionToRepeat(this._update, config);
                     return this.processError(error, ErrorViewMode.dialog);
                 });
             } else {
@@ -535,6 +550,7 @@ class FormController extends ControllerBase<IFormController> {
             this._forceUpdate();
             return record;
         }, (error) => {
+            this._setFunctionToRepeat(this.delete, destroyMetaData, config);
             return this._crudErrback(error, ErrorViewMode.dialog);
         });
     }

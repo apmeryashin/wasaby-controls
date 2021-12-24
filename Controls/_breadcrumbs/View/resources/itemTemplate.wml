@@ -8,6 +8,7 @@
          : ' controls-BreadCrumbsView__crumb_withOverflow  controls-BreadCrumbsView__crumb_withOverflow_withoutArrow')
       : ' controls-BreadCrumbsView__crumb_withoutOverflow'}}
 ">
+<div class="controls-BreadCrumbsView__crumb-text-ellipsis">
    <ws:if data="{{ itemData.hasArrow }}">
       <ws:partial
          template="wml!Controls/_breadcrumbs/View/resources/icon"
@@ -19,4 +20,5 @@
       <span class="controls-BreadCrumbsView__title {{!_options.readOnly ? ' controls-BreadCrumbsView__title_enabled'}}">
          <ws:if data="{{contentTemplate}}"><ws:partial template="{{contentTemplate}}" displayProperty="{{displayProperty}}" itemData="{{itemData}}"/></ws:if><ws:else>{{ itemData.item.get(displayProperty) }}</ws:else></span>
    </span>
+</div>
 </div>

@@ -18,6 +18,7 @@ export interface IDialogItem extends IPopupItem {
     targetCoords: object;
     contextIsTouch: boolean;
     previousHeight: number;
+    resizeMinHeight: number;
 }
 
 const IPAD_MIN_WIDTH = 1024;
@@ -89,6 +90,14 @@ class DialogController extends BaseController {
     elementDestroyed(item: IDialogItem): Promise<null> {
         this._dialogList.remove(item);
         return (new Deferred()).callback();
+    }
+
+    popupMovingSize(item: IDialogItem, offset: object): boolean {
+        const newWidthValue = (item.position.width || item.sizes.width) + offset.x;
+        const newHeightValue = (item.position.height || item.sizes.height) + offset.y;
+        item.position.width = newWidthValue;
+        item.position.height = newHeightValue;
+        return true;
     }
 
     getDefaultConfig(item: IDialogItem): void|Promise<void> {
@@ -220,9 +229,9 @@ class DialogController extends BaseController {
 
     private _updateSizes(item: IDialogItem, container: HTMLElement): void {
         item.sizes = this._getPopupSizes(item, container);
-        const minHeight = item.popupOptions.minHeight;
+        const minHeight = item.resizeMinHeight;
         if (!minHeight || minHeight < item.sizes.height) {
-            item.popupOptions.minHeight = item.sizes.height;
+            item.resizeMinHeight = item.sizes.height;
         }
     }
 

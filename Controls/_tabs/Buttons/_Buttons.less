@@ -177,23 +177,6 @@
    min-width: 0;
 }
 
-.controls-Tabs__itemSeparator {
-   pointer-events: none;
-   position: absolute;
-   top: calc(50% ~'-' var(--separator_length_tabs) / 2);
-   height: var(--separator_length_tabs);
-   width: var(--separator_thickness_tabs);
-   background: var(--separator_color_tabs);
-}
-
-.controls-Tabs__itemSeparator_align_left {
-   right: calc(-1 * (var(--padding-horizontal_tabs) + var(--border-thickness)));
-}
-
-.controls-Tabs__itemSeparator_align_right {
-   left: calc(-1 * (var(--padding-horizontal_tabs) + var(--border-thickness)));
-}
-
 .controls-Tabs__item_state_default {
    .user-select();
 }
@@ -214,11 +197,11 @@
 }
 
 .controls-Tabs__item_align_left {
-   margin-left: calc(var(--border-thickness) + var(--item_offset_tabs) - var(--border-thickness));
+   margin-left: var(--item_offset_tabs);
 }
 
 .controls-Tabs__item_align_right {
-   margin-right: calc(var(--item_offset_tabs) - var(--border-thickness));
+   margin-right: var(--item_offset_tabs);
 }
 
 .controls-Tabs__item_extreme {
@@ -227,31 +210,31 @@
 }
 
 .controls-Tabs__item_extreme_first {
-   margin-right: calc(var(--padding-horizontal_tabs) + var(--border-thickness));
+   margin-right: var(--padding-horizontal_tabs);
    margin-left: var(--padding-horizontal_tabs);
 }
 
 .controls-Tabs__item_extreme_first_padding {
-   padding-right: calc(var(--padding-horizontal_tabs) + var(--border-thickness));
+   padding-right: var(--padding-horizontal_tabs);
    padding-left: var(--padding-horizontal_tabs);
 }
 
 .controls-Tabs__item_extreme_last {
    margin-right: var(--padding-horizontal_tabs);
-   margin-left: calc(var(--padding-horizontal_tabs) + var(--border-thickness));
+   margin-left: var(--padding-horizontal_tabs);
 }
 
 .controls-Tabs__item_extreme_last_padding {
    padding-right: var(--padding-horizontal_tabs);
-   padding-left: calc(var(--padding-horizontal_tabs) + var(--border-thickness));
+   padding-left: var(--padding-horizontal_tabs);
 }
 
 .controls-Tabs__item_default {
-   margin: 0 calc(var(--padding-horizontal_tabs) + var(--border-thickness)) 0 var(--padding-horizontal_tabs);
+   margin: 0 var(--padding-horizontal_tabs);
 }
 
 .controls-Tabs__item_default_padding {
-   padding: 0 calc(var(--padding-horizontal_tabs) + var(--border-thickness)) 0 var(--padding-horizontal_tabs);
+   padding: 0 var(--padding-horizontal_tabs);
 }
 
 .controls-Tabs_style_primary__item_state_selected {

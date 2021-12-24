@@ -10,6 +10,7 @@ describe('Controls/_grid/display/ItemActionsCell', () => {
         DisplayItemActions: true,
         shouldDisplayMarker: () => false,
         hasVisibleActions: () => hasVisibleActions,
+        shouldDisplayActions: () => hasVisibleActions || isEditing,
         hasMultiSelectColumn: () => false,
         hasItemActionsSeparatedCell: () => false,
         getColumnsCount: () => 1,

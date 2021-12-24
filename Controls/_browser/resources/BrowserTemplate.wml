@@ -33,7 +33,6 @@
         on:listSelectedKeysChanged="_selectedKeysChanged()"
         on:listExcludedKeysChanged="_excludedKeysChanged()"
         on:listSelectedKeysCountChanged="_selectedKeysCountChanged()"
-        on:operationPanelItemClick="_operationPanelItemClick()"
         on:listSelectionTypeForAllSelectedChanged="_listSelectionTypeForAllSelectedChanged()"
         on:markedKeyChanged="_markedKeyChangedHandler()"
         on:selectedTypeChanged="_selectedTypeChangedHandler()"

@@ -3,6 +3,7 @@ import { Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import {ISelectionCountModeOptions} from 'Controls/interface';
 import {TExpanderIconSize, TExpanderIconStyle} from 'Controls/display';
+import {IOptions as ITreeOptions} from 'Controls/tree';
 
 type TNodeFooterVisibilityCallback = (item: Model) => boolean;
 
@@ -10,7 +11,7 @@ type TNodeLoadCallback = (list: RecordSet, nodeKey: number | string) => void;
 
 export type TExpanderPosition = 'default'|'right'|'custom';
 
-export interface ITreeControlOptions extends IControlOptions, ISelectionCountModeOptions {
+export interface ITreeControlOptions extends IControlOptions, ISelectionCountModeOptions, ITreeOptions {
     expandByItemClick?: boolean;
     expandedItems?: Array<number | string>;
     collapsedItems?: Array<number | string>;
@@ -57,6 +58,35 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @typedef {String} Controls/_tree/interface/ITreeControl/HierarchyViewModeEnum
  * @variant tree Tree-like view.
  * @variant breadcrumbs Just leaves, folders as paths.
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#itemTemplate
+ * @cfg {Function} Пользовательский шаблон отображения элемента.
+ * @default undefined
+ * @markdown
+ * @remark
+ * Позволяет установить пользовательский шаблон отображения элемента. При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tree:ItemTemplate}. Шаблон Controls/tree:ItemTemplate поддерживает {@link Controls/tree:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
+ *
+ * Дополнительно о работе с шаблоном вы можете прочитать в {@link /doc/platform/developmentapl/interface-development/controls/list/tree/item/ руководстве разработчика}.
+ * @example
+ * <pre class="brush: html">
+ * <Controls.tree:View>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/tree:ItemTemplate" highlightOnHover="{{false}}" />
+ *    </ws:itemTemplate>
+ * </Controls.tree:View>
+ * </pre>
+ * @see Controls/_tree/interface/ITreeControl#itemTemplateProperty
+ * @see Controls/tree:ItemTemplate
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#itemTemplateProperty
+ * @cfg {String} Имя поля элемента, которое содержит Путь к {@link Controls/_tree/interface/ITreeControl#itemTemplate шаблону отображения элемента}. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
+ * @remark
+ * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/_tree/interface/ITreeControl#itemTemplate itemTemplate}.
+ * @see Controls/_tree/interface/ITreeControl#itemTemplate
  */
 
 /**
@@ -130,23 +160,13 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
 
 /**
  * @name Controls/_tree/interface/ITreeControl#nodeFooterTemplate
- * @cfg {TemplateFunction|String|Controls/tree:INodeFooterTemplate} Пользовательский шаблон подвала развернутого узла в {@link Controls/treeGrid:View дереве с колонками}.
+ * @cfg {TemplateFunction|String|Controls/tree:NodeFooterTemplate} Пользовательский шаблон подвала развернутого узла в {@link Controls/treeGrid:View дереве с колонками}.
  * @default undefined
  * @remark
- * В области видимости шаблона доступна переменная **item**, из которой можно получить доступ к:
- *
- * * свойству **contents** — это объект, который содержит данные элемента, под которым отрисовывается шаблон.
- * * методу **getNode()** — возвращает узел, внутри которого отображается шаблон.
+ * В области видимости шаблона доступен объект **item**. Метод **item.getNode()** возвращает узел, внутри которого отображается шаблон.
  *
  * @demo Controls-demo/treeGridNew/NodeFooter/NodeFooterTemplate/Index
  * @see nodeFooterVisibilityCallback
- * @see nodeLoadCallback
- */
-
-/**
- * @name Controls/_tree/interface/ITreeControl#nodeMoreCaption
- * @cfg {String} Пользовательский текст кнопки, расположенной в узле дерева и предназначенной для загрузки очередной пачки данных узла.
- * @default undefined
  * @see nodeLoadCallback
  */
 
@@ -154,6 +174,13 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @name Controls/_tree/interface/ITreeControl#nodeFooterTemplate
  * @cfg {Function} Sets footer template that will be shown for every node.
  * @demo Controls-demo/treeGridNew/NodeFooter/NodeFooterTemplate/Index
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#nodeMoreCaption
+ * @cfg {String} Пользовательский текст кнопки, расположенной в узле дерева и предназначенной для загрузки очередной пачки данных узла.
+ * @default undefined
+ * @see nodeLoadCallback
  */
 
 /**
@@ -262,7 +289,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  */
 
 /**
- * @name Controls/_tree/View#expanderPosition
+ * @name Controls/_tree/interface/ITreeControl#expanderPosition
  * @cfg {TExpanderPosition} Расположение иконки для узла и скрытого узла.
  * @default default
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.
@@ -362,7 +389,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  */
 
 /**
- * @typedef {String} Controls/_tree/interface/ITreeControl/ExpanderSize
+ * @typedef {String} Controls/_tree/interface/ITreeControl/TOffset
  * @description Допустимые значения для опций, которые задают размер отступа.
  * @variant s
  * @variant m
@@ -372,7 +399,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
 
 /**
  * @name Controls/_tree/interface/ITreeControl#expanderSize
- * @cfg {Controls/_tree/interface/ITreeControl/ExpanderSize.typedef} Размер области, который отведён под иконку узла или скрытого узла.
+ * @cfg {Controls/_tree/interface/ITreeControl/TOffset.typedef} Размер области, который отведён под иконку узла или скрытого узла.
  * @default s
  * @remark
  * Опции expanderSize на контроле и {@link Controls/treeGrid:ItemTemplate#expanderSize expanderSize на шаблоне элемента} не являются взаимоисключающими.
@@ -509,6 +536,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Разворачиваемый узел.
  * @remark
+ * Если во время разворота необходимо выполнить какое-то асинхронное действие, можно вернуть из обработчика события Promise<void>.
  * Что такое "узел" читайте в {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  * @see afterItemExpand
  */
@@ -565,6 +593,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Сворачиваемый узел.
  * @remark
+ * Если во время сворачивания необходимо выполнить какое-то асинхронное действие, можно вернуть из обработчика события Promise<void>.
  * Что такое "узел" читайте в {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  * @see itemCollapsed
  */

@@ -7,7 +7,8 @@
    align-items: center;
    justify-content: center;
    cursor: pointer;
-   &:before {
+
+   &::before {
       content: "\200b";
    }
 }
@@ -19,9 +20,6 @@
    height: var(--icon-size_closeButton_toolButton);
    width: var(--icon-size_closeButton_toolButton);
    display: inline-block;
-   &:active {
-      fill: var(--icon-color_hovered_closeButton_toolButton);
-   }
 }
 
 .controls-Button__close__icon_external {
@@ -33,9 +31,6 @@
    fill: var(--icon-color_closeButton_link);
    height: var(--icon-size_closeButton_link);
    width: var(--icon-size_closeButton_link);
-   &:active {
-      fill: var(--icon-color_hovered_closeButton_link);
-   }
 }
 
 .controls-Button__close_toolButton {
@@ -47,11 +42,6 @@
    border-width: var(--border-thickness_closeButton_toolButton);
    border-radius: var(--border-radius_closeButton_toolButton);
    box-shadow: var(--box-shadow_closeButton_toolButton);
-   &:active {
-      border-color: var(--background-color_active_closeButton_toolButton);
-      background-color: var(--background-color_active_closeButton_toolButton);
-      box-shadow: var(--box-shadow_closeButton_toolButton); //none
-   }
 }
 
 .controls-Button__close_functionalButton {
@@ -62,24 +52,15 @@
    border-radius: var(--border-radius_button_functionalButton);
    box-shadow: var(--box-shadow_closeButton_functionalButton);
    background-color: var(--pale_contrast_background-color);
-   &:active {
-      box-shadow: var(--box-shadow_closeButton_toolButton); //none
-      background-color: var(--pale_active_contrast_background-color);
-   }
 }
 
 .controls-Button__close_external {
    width: var(--width_closeButton_functionalButton);
    height: var(--inline_height_l);
-   margin-right: var(--margin-right_closeButton_functionalButton);
    border-width: var(--border-thickness_closeButton_functionalButton);
    border-radius: var(--border-radius_button_functionalButton);
    background-color: var(--translucent_background-color_button);
    backdrop-filter: blur(var(--translucent_backdrop-filter-blur_button));
-
-   &:active {
-      background-color: var(--translucent_active_background-color_button);
-   }
 }
 
 .controls-Button__close_toolButton,
@@ -102,16 +83,27 @@
       fill: var(--icon-color_hovered_closeButton_link);
    }
 
+   .controls-Button__close_link:hover,
+   .controls-Button__close_linkButton:hover {
+      .controls-Button__close__icon_link,
+      .controls-Button__close__icon_linkButton {
+         fill: var(--icon-color_hovered_closeButton_link);
+      }
+   }
+
    //button and icon must be hovered at the same time
    .controls-Button__close_toolButton:hover {
       border-color: var(--background-color_hover_closeButton_toolButton);
       background-color: var(--background-color_hover_closeButton_toolButton);
+
       .controls-Button__close__icon_toolButton {
          fill: var(--icon-color_hovered_closeButton_toolButton);
       }
    }
+
    .controls-Button__close_functionalButton:hover {
       background-color: var(--pale_hover_contrast_background-color);
+
       .controls-Button__close__icon_functionalButton {
          fill: var(--icon-color_hovered_closeButton_toolButton);
       }
@@ -123,5 +115,34 @@
 
    .controls-Button__close_toolButton_transparent:hover {
       background-color: var(--background-color_contrast_hover_button_toolButton);
+   }
+}
+
+.ws-is-no-touch,
+.ws-is-touch {
+   .controls-Button__close_external:active {
+      background-color: var(--translucent_active_background-color_button);
+      fill: var(--contrast_icon-color);
+   }
+
+   .controls-Button__close_functionalButton:active {
+      box-shadow: var(--box-shadow_closeButton_toolButton); //none
+      background-color: var(--pale_active_contrast_background-color);
+   }
+
+   .controls-Button__close__icon_toolButton:active,
+   .controls-Button__close__icon_functionalButton:active {
+      fill: var(--icon-color_hovered_closeButton_toolButton);
+   }
+
+   .controls-Button__close__icon_link:active,
+   .controls-Button__close__icon_linkButton:active {
+      fill: var(--icon-color_hovered_closeButton_link);
+   }
+
+   .controls-Button__close_toolButton:active {
+      border-color: var(--background-color_active_closeButton_toolButton);
+      background-color: var(--background-color_active_closeButton_toolButton);
+      box-shadow: var(--box-shadow_closeButton_toolButton); //none
    }
 }

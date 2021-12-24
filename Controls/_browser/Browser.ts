@@ -36,9 +36,8 @@ import {IControllerState} from 'Controls/_dataSource/Controller';
 import {isEqual} from 'Types/object';
 import {DataLoader, IDataLoaderOptions, ILoadDataResult, saveControllerState} from 'Controls/dataSource';
 import {Logger} from 'UI/Utils';
-import {descriptor} from 'Types/entity';
+import {descriptor, Model} from 'Types/entity';
 import {loadAsync, isLoaded} from 'WasabyLoader/ModulesLoader';
-import {IBaseAction} from 'Controls/_actions/BaseAction';
 
 type Key = string|number|null;
 
@@ -139,7 +138,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                            receivedState?: TReceivedState): void | Promise<TReceivedState | Error | void> {
         this._initStates(options, receivedState);
         this._dataLoader = new DataLoader(this._getDataLoaderOptions(options, receivedState));
-        this._selectionViewModeChanged = this._selectionViewModeChanged.bind(this);
 
         return this._loadDependencies<TReceivedState | Error | void>(options, () => {
             return this._beforeMountInternal(options, undefined, receivedState);
@@ -218,7 +216,12 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
         this._searchStartCallback = this._searchStartCallback.bind(this);
         this._itemsChanged = this._itemsChanged.bind(this);
-        this._operationsController = options.operationsController;
+        this._selectionViewModeChanged = this._selectionViewModeChanged.bind(this);
+        this._operationsPanelExpandedChanged = this._operationsPanelExpandedChanged.bind(this);
+        this._actionClick = this._actionClick.bind(this);
+        if (options.operationsController) {
+            this._operationsController = this._createOperationsController(options);
+        }
 
         if (options.root !== undefined) {
             this._root = options.root;
@@ -266,36 +269,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
     }
 
-    private _executeOperation(action: IBaseAction, toolbarItem, clickEvent: SyntheticEvent): void {
-        this._getOperationsController().executeAction({
-            action,
-            toolbarItem,
-            source: this._source,
-            target: clickEvent,
-            selection: {
-                selected: this._options.selectedKeys,
-                excluded: this._options.excludedKeys
-            },
-            filter: this._filter,
-            keyProperty: this._getSourceController().getKeyProperty(),
-            parentProperty: this._getSourceController().getParentProperty(),
-            nodeProperty: this._options.nodeProperty,
-            sourceController: this._getSourceController(),
-            operationsController: this._operationsController,
-            selectedKeysCount: this._getOperationsController().getSelectedKeysCount() || this._selectedKeysCount
-        });
-    }
-
-    protected _operationPanelItemClick(
-        event: SyntheticEvent,
-        action: IBaseAction,
-        toolbarItem,
-        clickEvent: SyntheticEvent
-    ): void {
-        event.stopImmediatePropagation();
-        this._executeOperation(action, toolbarItem, clickEvent);
-    }
-
     protected _createNewStoreObservers(): string[] {
         const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource: IFilterItem[]) => {
                 this._filterItemsChanged(null, filterSource);
@@ -313,15 +286,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                     this._searchResetHandler();
                 }
            });
-        const executeOperation = Store.onPropertyChanged('executeOperation', ({action, clickEvent, toolbarItem}) => {
-            this._executeOperation(action, toolbarItem, clickEvent);
-        });
         return [
             sourceCallbackId,
             filterSourceCallbackId,
             searchValueCallbackId,
-            selectedTypeChangedCallbackId,
-            executeOperation
+            selectedTypeChangedCallbackId
         ];
     }
 
@@ -519,10 +488,21 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._groupHistoryId = options.groupHistoryId;
     }
 
+    protected _operationsPanelExpandedChanged(event: SyntheticEvent, state: boolean): void {
+        this._notify('operationsPanelExpandedChanged', [state]);
+    }
+
+    protected _actionClick(event: SyntheticEvent, item: Model, nativeEvent: MouseEvent): void {
+        this._notify('operationsPanelItemClick', [item, nativeEvent, this._operationsController.getSelection()]);
+    }
+
     protected _beforeUnmount(): void {
         if (this._operationsController) {
             this._operationsController.destroy();
             this._operationsController.unsubscribe('selectionViewModeChanged', this._selectionViewModeChanged);
+            this._operationsController.unsubscribe('operationsPanelVisibleChanged',
+                this._operationsPanelExpandedChanged);
+            this._operationsController.unsubscribe('actionClick', this._actionClick);
             this._operationsController = null;
         }
 
@@ -872,6 +852,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _createOperationsController(options: IBrowserOptions): OperationsController {
         const controller = options.operationsController || new OperationsController({...options});
         controller.subscribe('selectionViewModeChanged', this._selectionViewModeChanged);
+        controller.subscribe('operationsPanelVisibleChanged',
+            this._operationsPanelExpandedChanged);
+        controller.subscribe('actionClick', this._actionClick);
         return controller;
     }
 
@@ -1010,7 +993,12 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 }
             });
         } else {
-            const filter = this._getSearchControllerSync().reset(true);
+            // Если Browser строится по sourceController'у со страницы, то и фильтр должен обновляться на странице
+            // в противном случае происходит рассинхрон фильтров в контексте и в контроллере
+            // Решается тут https://online.saby.ru/opendoc.html?guid=6c15ea37-fdf6-4dc8-a8fa-d54bd7be01bb
+            const searchController = this._getSearchControllerSync();
+            searchController.reset(!this._options.sourceController);
+            const filter = searchController.getFilter();
             if (!isEqual(this._filter, filter)) {
                 this._filterChanged(null, filter);
             }

@@ -103,6 +103,19 @@ export interface IInfoBoxOptions extends IControlOptions {
     /**
      * @name Controls/_popup/interface/IInfoBox#template
      * @cfg {function|String} Шаблон всплывающей подсказки
+     * @example
+     * При передаче в опцию шаблона необходимо обеспечить его минимальной версткой и как минимум
+     * обернуть в корневой div.
+     * <pre>
+     *     <Controls.popup:InfoboxTarget trigger="hover">
+     *                <ws:content>
+     *                    ...
+     *                </ws:content>
+     *                <ws:template>
+     *                   <div>Это всплывающая подсказка по ховеру.</div>
+     *                </ws:template>
+     *             </Controls.popup:InfoboxTarget>
+     * </pre>
      */
 
     /*

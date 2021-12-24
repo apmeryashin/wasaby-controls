@@ -18,6 +18,7 @@ describe('Controls/grid_clean/Display/Swipe/Animation/DataCell.test.ts', () => {
         getColumnIndex: () => 0,
         getColumnsCount: () => 0,
         getMultiSelectVisibility: () => 'hidden',
+        getFadedClass: () => '',
         isAnimatedForSelection: () => isAnimatedForSelection
     };
 
