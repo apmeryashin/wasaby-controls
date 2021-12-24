@@ -126,8 +126,11 @@ export abstract class AbstractItemsSizesController {
                     // оффсет не учитывает margin-ы, нужно будет решить эту проблему. offsetTop ее не решает.
                     // Если брать offsetTop у записи, то возникает еще проблема с застикаными записями.
                     let offset = prevItemSize ? prevItemSize.offset + prevItemSize.size : 0;
+                    // нужно вычитать оффсет первой записи, чтобы он не учитывался дважды, когда мы будем прибавлять
+                    // contentSizeBeforeItems к элементам нового диапазона.
+                    const firstItemOffset = this._itemsSizes[0].offset;
                     if (position === itemsRange.startIndex) {
-                        offset += contentSizeBeforeItems;
+                        offset += contentSizeBeforeItems - firstItemOffset;
                     }
                     this._itemsSizes[position] = {
                         size: this._getItemSize(element),

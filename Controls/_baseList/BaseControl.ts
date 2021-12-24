@@ -3885,7 +3885,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (this._scrollController?.getParamsToRestoreScrollPosition()) {
                         return;
                     }
-                    _private.updateScrollPagingButtons(this, this._getScrollParams());
+                    _private.updateScrollPagingButtons(this, {...this._getScrollParams(), initial: !this._scrolled});
                 });
             }
         }
