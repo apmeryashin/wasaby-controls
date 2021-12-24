@@ -118,6 +118,7 @@ class StateBar extends Control<IStateBarOptions> {
     protected _sectors: IStateBarSector[];
 
     protected _beforeMount(opts: IStateBarOptions): void {
+
         this._applyNewState(opts);
     }
 
