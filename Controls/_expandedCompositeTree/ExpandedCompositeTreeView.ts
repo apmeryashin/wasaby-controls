@@ -1,4 +1,4 @@
-import TreeView from 'Controls/_tree/TreeView';
+import { TreeView } from 'Controls/tree';
 import { MODULE_NAME as CompositeCollectionItemModuleName } from './display/CompositeCollectionItem';
 
 const IS_COMPOSITE_ITEM = `[${ CompositeCollectionItemModuleName }]`;
