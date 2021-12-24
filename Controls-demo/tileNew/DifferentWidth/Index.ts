@@ -10,7 +10,11 @@ export default class extends Control {
    protected _beforeMount() {
 
       const data = Gadgets.getData();
-      data.push({...data[2], id: 4, width: '30%'});
+      data.push({
+         ...data[2],
+         title: 'Конфеты копия 2',
+         id: 4,
+         width: '30%'});
       this._viewSource = new HierarchicalMemory({
          keyProperty: 'id',
          parentProperty: 'parent',
