@@ -131,7 +131,9 @@ export abstract class AbstractItemsSizesController {
                         offset += contentSizeBeforeItems;
                         // нужно вычитать оффсет первой записи, чтобы он не учитывался дважды, когда мы будем прибавлять
                         // contentSizeBeforeItems к элементам нового диапазона.
-                        offset -= firstItemOffset;
+                        if (position !== 0) {
+                            offset -= firstItemOffset;
+                        }
                     }
                     this._itemsSizes[position] = {
                         size: this._getItemSize(element),
