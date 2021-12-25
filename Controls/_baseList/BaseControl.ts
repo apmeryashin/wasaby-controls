@@ -4072,10 +4072,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // Эта ситуация в частности актуальна для ScrollViewer.
                 // Если индикатор и так уже есть, то скрываем его. Показываться может только один индикатор отрисовки.
                 if (this._drawingIndicatorDirection) {
-                    this._indicatorsController.hideDrawingIndicator(this._drawingIndicatorDirection);
+                    this._indicatorsController.hideDrawingIndicator(
+                        this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                        this._drawingIndicatorDirection
+                    );
                 }
                 this._drawingIndicatorDirection = shiftDirection === 'forward' ? 'bottom' : 'top';
-                this._indicatorsController.displayDrawingIndicator(this._drawingIndicatorDirection);
+                this._indicatorsController.displayDrawingIndicator(
+                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                    this._drawingIndicatorDirection
+                );
             }
         });
     }
@@ -7496,6 +7502,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _destroyIndicatorsController(): void {
         this._indicatorsController.destroy();
         this._indicatorsController = null;
+    }
+
+    private _getIndicatorDomElement(direction: 'top'|'bottom'): HTMLElement {
+        return direction === 'top'
+            ? this._children.listView?.getTopIndicator()
+            : this._children.listView?.getBottomIndicator();
     }
 
     private _countGlobalIndicatorPosition(): number {

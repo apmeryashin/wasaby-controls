@@ -1,7 +1,8 @@
 <tr>
     <td colspan="{{ colspan }}">
         <div style="{{ item.getStyles() }}" class="{{ item.getClasses() }}">
-            <div data-qa="{{ item.listElementName }}_state_{{ item.getState() }}_position_{{ item.getPosition() }}">
+            <div name="{{item.isTopIndicator() ? 'topIndicator' : item.isBottomIndicator() ? 'bottomIndicator' }}"
+                 data-qa="{{ item.listElementName }}_state_{{ item.getState() }}_position_{{ item.getPosition() }}">
                 <ws:partial if="{{ item.getContentTemplate() }}" template="{{ item.getContentTemplate() }}"/>
             </div>
         </div>
