@@ -4129,7 +4129,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._listVirtualScrollController.scrollToItem(this._options.activeElement, 'top', true);
             }
         }
-        this._indicatorsController.setIndicatorsContainer(this._container);
 
         if (constants.isBrowserPlatform) {
             window.addEventListener('resize', this._onWindowResize);
@@ -5159,7 +5158,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._drawingIndicatorDirection) {
-            this._indicatorsController.hideDrawingIndicator(this._drawingIndicatorDirection);
+            this._indicatorsController.hideDrawingIndicator(
+                this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                this._drawingIndicatorDirection
+            );
             this._drawingIndicatorDirection = null;
         }
         this._indicatorsController.afterRenderCallback();
@@ -5301,7 +5303,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
                 this._handleLoadToDirection = false;
                 this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
-                this._indicatorsController.displayDrawingIndicator(this._drawingIndicatorDirection);
+                this._indicatorsController.displayDrawingIndicator(
+                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                    this._drawingIndicatorDirection
+                );
                 resolver();
             } else {
                 if (this._shouldLoadOnScroll(direction)) {

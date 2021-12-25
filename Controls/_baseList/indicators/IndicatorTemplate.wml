@@ -1,7 +1,6 @@
-<div class="{{ item.getClasses() }}"
+<div name="{{item.isTopIndicator() ? 'topIndicator' : item.isBottomIndicator() ? 'bottomIndicator' }}"
+     class="{{ item.getClasses() }}"
      style="{{ item.getStyles() }}"
-     data-qa="{{ item.listElementName }}_state_{{ item.getState() }}_position_{{ item.getPosition() }}"
-     vdom-ignore="{{ item.isDrawingIndicator() ? true : false }}"
->
+     data-qa="{{ item.listElementName }}_state_{{ item.getState() }}_position_{{ item.getPosition() }}">
     <ws:partial if="{{ item.getContentTemplate() }}" template="{{ item.getContentTemplate() }}"/>
 </div>

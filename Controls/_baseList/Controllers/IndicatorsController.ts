@@ -1,11 +1,4 @@
-import {
-    Collection,
-    EIndicatorState,
-    TIndicatorPosition,
-    TIndicatorState,
-    TOP_DRAWING_INDICATOR_SELECTOR,
-    BOTTOM_DRAWING_INDICATOR_SELECTOR
-} from 'Controls/display';
+import { Collection, EIndicatorState, TIndicatorPosition, TIndicatorState } from 'Controls/display';
 import { RecordSet } from 'Types/collection';
 
 export interface IIndicatorsControllerOptions {
@@ -61,10 +54,6 @@ export default class IndicatorsController {
     private _searchState: SEARCH_STATES = 0;
 
     private _hasNotRenderedChanges: boolean = false;
-
-    private _indicatorsContainer: HTMLElement;
-    private _topDrawingIndicator: HTMLElement;
-    private _bottomDrawingIndicator: HTMLElement;
 
     constructor(options: IIndicatorsControllerOptions) {
         this._options = options;
@@ -278,6 +267,44 @@ export default class IndicatorsController {
         this._model.hideIndicator('global');
         this._clearDisplayIndicatorTimer();
     }
+
+    /**
+     * Отображает индикатор долгой отрисовки элементов
+     * @param indicatorElement DOM элемент индикатора
+     * @param position Позиция индикатора
+     * @void
+     */
+    displayDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
+        if (!this._shouldHandleDrawingIndicator(position) || !indicatorElement) {
+            return;
+        }
+
+        this._startDisplayIndicatorTimer(() => {
+            // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
+            // т.к. браузер занят отрисовкой записей. И если мы вызовем синхронизацию для отрисовки ромашек, то
+            // скорее всего эта сихнронизация выполнится уже после того, как отрисовались записи.
+            indicatorElement.style.display = '';
+            indicatorElement.style.position = 'sticky';
+            indicatorElement.style[position] = '0';
+        });
+    }
+
+    /**
+     * Скрывает индикатор долгой отрисовки элементов
+     * @param indicatorElement DOM элемент индикатора
+     * @param position Позиция индикатора
+     */
+    hideDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
+        if (!this._shouldHandleDrawingIndicator(position) || !indicatorElement) {
+            return;
+        }
+
+        this._clearDisplayIndicatorTimer();
+        indicatorElement.style.display = 'none';
+        indicatorElement.style.position = '';
+        indicatorElement.style[position] = '';
+    }
+
     /**
      * Пересчитывает индикаторы в заданном направлении
      * @param direction Направление, для которого будут пересчитаны индикаторы. all - пересчет всех индикаторов.
@@ -407,79 +434,19 @@ export default class IndicatorsController {
         return state;
     }
 
-    // endregion LoadingIndicator
-
-    // region DrawingIndicator
-
-    setIndicatorsContainer(container: HTMLElement): void {
-        if (this._indicatorsContainer !== container) {
-            this._indicatorsContainer = container;
-            this._updateDrawingIndicators();
-        }
-    }
-
-    /**
-     * Отображает индикатор долгой отрисовки элементов
-     * @param indicatorElement DOM элемент индикатора
-     * @param position Позиция индикатора
-     * @void
-     */
-    displayDrawingIndicator(position: 'top'|'bottom'): void {
-        if (!this._shouldHandleDrawingIndicator(position)) {
-            return;
-        }
-
-        this._startDisplayIndicatorTimer(() => {
-            // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
-            // т.к. браузер занят отрисовкой записей. И если мы вызовем синхронизацию для отрисовки ромашек, то
-            // скорее всего эта сихнронизация выполнится уже после того, как отрисовались записи.
-            const indicatorElement = position === 'top' ? this._topDrawingIndicator : this._bottomDrawingIndicator;
-            if (indicatorElement && indicatorElement.style.display === 'none') {
-                indicatorElement.style.display = '';
-                indicatorElement.style.position = 'sticky';
-                indicatorElement.style[position] = '0';
-            }
-        });
-    }
-
-    /**
-     * Скрывает индикатор долгой отрисовки элементов
-     * @param indicatorElement DOM элемент индикатора
-     * @param position Позиция индикатора
-     */
-    hideDrawingIndicator(position: 'top'|'bottom'): void {
-        if (!this._shouldHandleDrawingIndicator(position)) {
-            return;
-        }
-
-        this._clearDisplayIndicatorTimer();
-        const indicatorElement = position === 'top' ? this._topDrawingIndicator : this._bottomDrawingIndicator;
-        if (indicatorElement && indicatorElement.style.display === '') {
-            indicatorElement.style.display = 'none';
-            indicatorElement.style.position = '';
-            indicatorElement.style[position] = '';
-        }
-    }
-
-    private _updateDrawingIndicators(): void {
-        if (this._indicatorsContainer) {
-            this._topDrawingIndicator
-                = this._indicatorsContainer.querySelector(`.${TOP_DRAWING_INDICATOR_SELECTOR}`);
-            this._bottomDrawingIndicator
-                = this._indicatorsContainer.querySelector(`.${BOTTOM_DRAWING_INDICATOR_SELECTOR}`);
-        }
-    }
-
     private _shouldHandleDrawingIndicator(position: 'top'|'bottom'): boolean {
         // Этими опциями в календаре полностью отключены ромашки, т.к. там не может быть долгой подгрузки.
         // И в IE из-за его медленной работы индикаторы вызывают прыжки
         const allowByOptions = this._options.attachLoadTopTriggerToNull && position === 'top' ||
             this._options.attachLoadDownTriggerToNull && position === 'bottom';
-        // при порционном поиске индикатор всегда отрисован и поэтому индикатор отрисовки не нужен
-        return !this._isPortionedSearch() && allowByOptions;
+        // индикатор отрисовки мы должны показывать, только если не показан обычный индикатор в этом направлении
+        const allowByIndicators = position === 'top' && !this._model.getTopIndicator().isDisplayed() ||
+            position === 'bottom' && !this._model.getBottomIndicator().isDisplayed();
+        // при порционном поиске индикатор всегда отрисовать и поэтому индикатор отрисовки не нужен
+        return !this._isPortionedSearch() && allowByOptions && allowByIndicators;
     }
 
-    // endregion DrawingIndicator
+    // endregion LoadingIndicator
 
     // region PortionedSearch
 

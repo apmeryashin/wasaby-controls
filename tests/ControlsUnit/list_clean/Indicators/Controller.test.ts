@@ -544,8 +544,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
         });
     });
 
-    // TODO SCROLL
-/*    describe('displayDrawingIndicator', () => {
+    describe('displayDrawingIndicator', () => {
         it('should display', () => {
             const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true});
             const mockedIndicatorElement = getMockedIndicatorElement();
@@ -606,7 +605,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.equal(mockedIndicatorElement.style.position, '');
             assert.equal(mockedIndicatorElement.style.top, '');
         });
-    });*/
+    });
 
     describe('shouldDisplayBottomIndicator', () => {
         it('not display if collection is empty', () => {
