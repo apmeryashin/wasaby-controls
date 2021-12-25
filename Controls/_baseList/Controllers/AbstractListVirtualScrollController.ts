@@ -25,7 +25,8 @@ import {
     IItemsRange,
     IPlaceholders,
     ScrollController,
-    IScrollControllerOptions
+    IScrollControllerOptions,
+    IRangeShiftedCallback
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {
     AbstractItemsSizesController,
@@ -134,6 +135,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
     itemsEndedCallback: IItemsEndedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
     hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
+    rangeShiftedCallback: IRangeShiftedCallback;
 }
 
 export abstract class AbstractListVirtualScrollController<
@@ -494,7 +496,8 @@ export abstract class AbstractListVirtualScrollController<
                 }
             },
             activeElementChangedCallback: options.activeElementChangedCallback,
-            itemsEndedCallback: options.itemsEndedCallback
+            itemsEndedCallback: options.itemsEndedCallback,
+            rangeShiftedCallback: options.rangeShiftedCallback
         };
     }
 
