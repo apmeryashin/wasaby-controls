@@ -29,6 +29,7 @@ interface IFilterPanelLookupOptions extends IControlOptions, ILookupOptions {
  * @class Controls/_filterPopup/Panel/Lookup
  * @extends UI/Base:Control
  * @implements Controls/interface:ILookup
+ * @implements Controls/interface:ICaption
  * @implements Controls/interface/ISelectedCollection
  * @implements Controls/interface/ISuggest
  * @implements Controls/interface:ISearch
@@ -165,11 +166,6 @@ Object.defineProperty(Lookup, 'defaultProps', {
       return Lookup.getDefaultOptions();
    }
 });
-
-/**
- * @name Controls/_filterPopup/Panel/Lookup#caption
- * @cfg {String} Caption
- */
 
 /**
  * @name Controls/_filterPopup/Panel/Lookup#emptyText

@@ -563,14 +563,32 @@ const _private = {
             return;
         }
 
+        // При обработке Enter текущий target === fakeFocusElement.
+        // Прикладникам нужен реальный target, по которому произошло событие, и который позволяет
+        // определить координаты записи, например, для того, чтобы отобразить в нужном месте popup.
+        // Пытаемся найти отмеченную маркером запись:
         if (_private.hasMarkerController(self)) {
             const markerController = _private.getMarkerController(self);
             const markedKey = markerController.getMarkedKey();
             if (markedKey !== null && markedKey !== undefined) {
                 const markedItem = self.getItems().getRecordById(markedKey);
-                self._notifyItemClick([event, markedItem, event]);
+
+                // Ищем HTML-контейнер отмеченной записи по селектору
+                const selector = `.${self._getItemsContainerUniqueClass()} > ` +
+                    `${self._options.itemsSelector}[item-key="${markedKey}"]`;
+                const target = self._getItemsContainer().querySelector(selector) as HTMLElement;
+
+                // Создаём событие, в которое будем отдавать указанный target.
+                const customEvent = new SyntheticEvent(null, {
+                    type: 'click',
+                    target,
+                    _bubbling: false
+                });
+
+                self._notifyItemClick([customEvent, markedItem, customEvent]);
+
                 if (event && !event.isStopped()) {
-                    self._notify('itemActivate', [markedItem, event], {bubbling: true});
+                    self._notify('itemActivate', [markedItem, customEvent], {bubbling: true});
                 }
             }
         }
@@ -5786,7 +5804,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             const eventResult = this._notifyItemClick([e, item, originalEvent, columnIndex]);
             if (eventResult !== false) {
-                this._notify('itemActivate', [item, originalEvent], {bubbling: true});
+                this._notify('itemActivate', [item, originalEvent, columnIndex], {bubbling: true});
             }
         }
     }

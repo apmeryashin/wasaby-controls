@@ -690,9 +690,12 @@ export default class ScrollController {
                 return false;
             }
 
-            // Группа может менять свое расположение отностильно других элементов списка
+            // Группа может менять свое расположение относительно других элементов списка
             // https://online.sbis.ru/opendoc.html?guid=b7b43adb-a680-4d48-9314-75fb3c3cc998
-            if (item.className.includes('controls-ListView__group')) {
+            // Но, если элемент это узел в виде группы, то его для восстановления использовать можно.
+            // https://online.sbis.ru/opendoc.html?guid=6e7c1145-90c4-4e2d-99de-7da3397aedf7
+            if (item.className.includes('controls-ListView__group') &&
+                !item.className.includes('controls-TreeGrid__groupNode')) {
                 return false;
             }
 
