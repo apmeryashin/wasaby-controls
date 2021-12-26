@@ -274,8 +274,14 @@ export default class ScrollController {
     }
 
     private _getTopOffsetForItemsContainer(listViewContainer: HTMLElement, baseControlContainer: HTMLElement): number {
-        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide'
+        // Считаем первый видимый элемент списка. В режиме hide, пропускаем скрытые элементы.
+        let firstElementIndex = this._options.virtualScrollConfig.mode === 'hide'
             ? this._virtualScroll.getRange().start : 0;
+
+        // Еще нужно пропустить скрытую группу. Так как она тоже display: none.
+        if (listViewContainer.children[firstElementIndex].className.includes('controls-ListView__groupHidden')) {
+            firstElementIndex += 1;
+        }
         let offsetTop = getDimensions(listViewContainer.children[firstElementIndex], true).top;
         const container = baseControlContainer[0] || baseControlContainer;
         offsetTop += container.offsetTop - getDimensions(container).top;
