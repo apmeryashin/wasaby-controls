@@ -122,11 +122,19 @@ export abstract class AbstractItemsSizesController {
                 const contentSizeBeforeItems = this.getContentSizeBeforeItems();
                 const firstItemOffset = this._itemsSizes[0]?.offset || 0;
                 let position = itemsRange.startIndex;
+                // Возможна ситуация, что диапазон сместился с [0, 5] на [10, 15].В этом случае предыдущий отрисованный
+                // элемент это не startIndex - 1, а элемент у которого нет следующего отрисованного элемента.
+                const renderedItemSizeBeforeRange = this._itemsSizes.find((it, index) => {
+                    const nextItemSize = this._itemsSizes[index + 1];
+                    return index < position && (!nextItemSize || !nextItemSize.size);
+                });
                 Array.from(itemsElements).forEach((element: HTMLElement) => {
-                    const prevItemSize = this._itemsSizes[position - 1];
+                    const prevRenderedItemSize = position === itemsRange.startIndex
+                        ? renderedItemSizeBeforeRange
+                        : this._itemsSizes[position - 1];
                     // оффсет не учитывает margin-ы, нужно будет решить эту проблему. offsetTop ее не решает.
                     // Если брать offsetTop у записи, то возникает еще проблема с застикаными записями.
-                    let offset = prevItemSize ? prevItemSize.offset + prevItemSize.size : 0;
+                    let offset = prevRenderedItemSize ? prevRenderedItemSize.offset + prevRenderedItemSize.size : 0;
                     if (position === itemsRange.startIndex) {
                         offset += contentSizeBeforeItems;
                         // нужно вычитать оффсет первой записи, чтобы он не учитывался дважды, когда мы будем прибавлять
