@@ -911,7 +911,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         // TODO: Убрать js-controls-ListView__editingTarget' по задаче
         //  https://online.sbis.ru/opendoc.html?guid=deef0d24-dd6a-4e24-8782-5092e949a3d9
-        wrapperClasses += `controls-ListView__itemV js-controls-ListView__editingTarget ${this._getCursorClasses(cursor)}`;
+        wrapperClasses += `js-controls-ListView__editingTarget ${this._getCursorClasses(cursor)}`;
         wrapperClasses += ` controls-ListView__item_${this.getStyle()}`;
         if (showItemActionsOnHover !== false) {
             wrapperClasses += ' controls-ListView__item_showActions';
