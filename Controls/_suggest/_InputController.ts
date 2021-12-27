@@ -398,6 +398,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const preparedFilter = clone(filter) || {};
       if (tabId) {
          preparedFilter.currentTab = tabId;
+      } else {
+         delete preparedFilter.currentTab;
       }
       if (searchValue.length < minSearchLength && historyKeys && historyKeys.length) {
          preparedFilter[HISTORY_KEYS_FIELD] = historyKeys;
