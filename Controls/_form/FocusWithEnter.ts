@@ -15,6 +15,12 @@ import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext
 export default class FocusWithEnter extends Control<IControlOptions> {
     _template: TemplateFunction = template;
 
+    protected _beforeMount(options: IControlOptions, context: object): void {
+        if (context.workByKeyboard) {
+            context.workByKeyboard.setStatus(true);
+        }
+    }
+
     protected keyDownHandler(e: SyntheticEvent<KeyboardEvent>): void {
         const enterPressed = e.nativeEvent.keyCode === constants.key.enter;
         const altOrShiftPressed = e.nativeEvent.altKey || e.nativeEvent.shiftKey;

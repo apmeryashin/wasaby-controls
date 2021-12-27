@@ -104,7 +104,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
     }
 
     protected _isWorkByKeyboard(): boolean {
-        return !!this.context.get('workByKeyboard') && !this._options.readOnly;
+        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {

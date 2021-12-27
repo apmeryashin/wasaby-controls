@@ -67,7 +67,7 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
     protected _template: TemplateFunction = SwitchTemplate;
 
     protected _isWorkByKeyboard(): boolean {
-        return !!this.context.get('workByKeyboard') && !this._options.readOnly;
+        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {

@@ -69,7 +69,7 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, 
     protected _template: TemplateFunction = BigSeparatorTemplate;
 
     protected _isWorkByKeyboard(): boolean {
-        return !!this.context.get('workByKeyboard') && !this._options.readOnly;
+        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {

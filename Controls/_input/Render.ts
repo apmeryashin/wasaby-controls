@@ -153,7 +153,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     }
 
     protected _focusInHandler(): void {
-        if (!!this.context.get('workByKeyboard') && !this._options.readOnly) {
+        if (!!this.context.get('workByKeyboard')?.status && !this._options.readOnly) {
             this._focusedStatus = 'active';
             this._options.viewModel.selection = 0;
             this._clearTimeout();

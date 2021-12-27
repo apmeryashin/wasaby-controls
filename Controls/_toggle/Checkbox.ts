@@ -96,7 +96,7 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColor
    protected _template: TemplateFunction = checkBoxTemplate;
 
    protected _isWorkByKeyboard(): boolean {
-      return !!this.context.get('workByKeyboard') && !this._options.readOnly;
+      return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
    }
 
    private _notifyChangeValue(value: boolean | null): void {
