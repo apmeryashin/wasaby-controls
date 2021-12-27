@@ -205,10 +205,10 @@ describe('Controls/filter:ControllerClass', () => {
             assert.deepEqual(filterController.getFilterButtonItems(), newFilterItems);
             assert.ok(eventFired);
         });
+
         eventFired = false;
-        filterController.updateFilterItems(newFilterItems).then(() => {
-            assert.ok(!eventFired);
-        });
+        filterController.updateFilterItems(newFilterItems);
+        assert.ok(!eventFired);
     });
 
     describe('setFilterItems', () => {
