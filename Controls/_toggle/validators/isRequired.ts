@@ -1,8 +1,7 @@
 import * as rk from 'i18n!Controls';
 /**
- *
  * Функция проверяет наличие булевого значения в контейнере.
- * @class Controls/_toggle/validators/IsRequired
+ * @class Controls/_toggle/isRequired
  * @public
  * @author Красильников А.С.
  * @remark
@@ -32,8 +31,8 @@ import * as rk from 'i18n!Controls';
  *    </ws:content>
  * </Controls.validate:Container>
  * </pre>
- *
  */
+
 interface IRequired {
     value: boolean;
     triState?: boolean;
