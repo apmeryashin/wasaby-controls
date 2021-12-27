@@ -77,6 +77,14 @@ export type TItemActionsPosition = 'inside' | 'outside' | 'custom';
 export type TItemActionsSize = 's' | 'm';
 
 /**
+ * @typedef {String} TSwipeItemActionsSize
+ * Размер иконок опций записи
+ * @variant m Средняя.
+ * @variant l Большая.
+ */
+export type TSwipeItemActionsSize = 'l' | 'm';
+
+/**
  * @typedef {String} TMenuButtonVisibility
  * Видимость кнопки "Ещё" в свайпе
  * @variant visible - кнопка видима в любом случае
