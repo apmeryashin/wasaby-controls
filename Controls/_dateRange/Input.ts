@@ -155,7 +155,8 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
                 closeButtonEnabled: true,
                 range: this._options.range,
                 state: this._state,
-                stateChangedCallback: this._stateChangedCallback
+                stateChangedCallback: this._stateChangedCallback,
+                calendarButtonVisible: this._options.calendarButtonVisible
             }
         };
         this._children.opener.open(cfg);
