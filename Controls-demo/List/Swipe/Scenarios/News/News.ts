@@ -90,7 +90,7 @@ export default class News extends Control {
          },
          {
             id: 3,
-            icon: 'icon-EmptyMessage',
+            icon: 'icon-Favorite',
             title: 'В избранные',
             showType: 2
          },
@@ -108,6 +108,9 @@ export default class News extends Control {
    }
 
    protected _visibilityCallback(action: IItemAction, item: Model): boolean {
+      if (item.getKey() === 2) {
+         return action.id === 3;
+      }
       if (action.title === 'Прочитано') {
          return item.get('isNew');
       }
