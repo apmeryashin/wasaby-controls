@@ -126,7 +126,10 @@ export abstract class AbstractItemsSizesController {
                 // элемент это не startIndex - 1, а элемент у которого нет следующего отрисованного элемента.
                 const renderedItemSizeBeforeRange = this._itemsSizes.find((it, index) => {
                     const nextItemSize = this._itemsSizes[index + 1];
-                    return index < position && (!nextItemSize || !nextItemSize.size);
+                    const isLastItemBeforeRange = index === itemsRange.startIndex - 1;
+                    return index < itemsRange.startIndex && (
+                        !nextItemSize || !nextItemSize.size || isLastItemBeforeRange
+                    );
                 });
                 Array.from(itemsElements).forEach((element: HTMLElement) => {
                     const prevRenderedItemSize = position === itemsRange.startIndex
