@@ -1,15 +1,11 @@
 import { Control } from 'UI/Base';
 import { detection } from 'Env/Env';
-import { SyntheticEvent } from 'UI/Vdom';
-import { Model } from 'Types/entity';
 import { CrudEntityKey } from 'Types/source';
-import { IObservable } from 'Types/collection';
 
 import InertialScrolling from 'Controls/_baseList/resources/utils/InertialScrolling';
 
 import {
     Collection,
-    CollectionItem,
     TItemKey,
     VirtualScrollController,
     VirtualScrollHideController
@@ -26,7 +22,8 @@ import {
     IPlaceholders,
     ScrollController,
     IScrollControllerOptions,
-    IRangeShiftedCallback
+    IRangeShiftedCallback,
+    IShiftRangeMode
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {
     AbstractItemsSizesController,
@@ -192,7 +189,6 @@ export abstract class AbstractListVirtualScrollController<
     private _doScrollCompletedCallback: () => void;
 
     constructor(options: TOptions) {
-        this._onCollectionChange = this._onCollectionChange.bind(this);
         this._initCollection(options.collection);
 
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
@@ -325,6 +321,34 @@ export abstract class AbstractListVirtualScrollController<
             this._scrollController.updateItemsSizes();
         }
     }
+
+    // region CollectionChanges
+
+    addItems(position: number, count: number, mode: IShiftRangeMode): void {
+        this._scrollController.addItems(position, count, mode);
+    }
+
+    moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): void {
+        this._scrollController.moveItems(
+            addPosition,
+            addCount,
+            removePosition,
+            removeCount
+        );
+    }
+
+    removeItems(position: number, count: number): void {
+        this._scrollController.removeItems(position, count);
+    }
+
+    resetItems(): void {
+        const totalCount = this._collection.getCount();
+        this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
+        const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
+        this._scrollController.resetItems(totalCount, startIndex);
+    }
+
+    // endregion CollectionChanges
 
     // region ScrollTo
 
@@ -511,7 +535,7 @@ export abstract class AbstractListVirtualScrollController<
             // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
             // и мы будем знать актуальную scrollPosition.
             // Поэтому в params запоминаем необходимые параметры для подсчета EdgeItem.
-            if (params.shiftDirection) {
+            if (params.shiftDirection && params.mode === 'save') {
                 this._scheduleScroll({
                     type: 'calculateRestoreScrollParams',
                     params: {
@@ -761,58 +785,11 @@ export abstract class AbstractListVirtualScrollController<
             return;
         }
 
-        // Не нужно отписываться от коллекции, если она уже задестроена
-        if (this._collection && !this._collection.destroyed) {
-            this._collection.unsubscribe('onCollectionChange', this._onCollectionChange);
-        }
-
         this._collection = collection;
-
-        this._collection.subscribe('onCollectionChange', this._onCollectionChange);
 
         if (this._scrollController && this._collection) {
             const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
             this._scrollController.resetItems(this._collection.getCount(), startIndex);
-        }
-    }
-
-    protected _onCollectionChange(
-        event: SyntheticEvent,
-        action: string,
-        newItems: Array<CollectionItem<Model>>,
-        newItemsIndex: number,
-        removedItems: Array<CollectionItem<Model>>,
-        removedItemsIndex: number
-    ): void {
-        if (!this._scrollController) {
-            return;
-        }
-
-        const totalCount = this._collection.getCount();
-
-        switch (action) {
-            case IObservable.ACTION_ADD: {
-                this._scrollController.addItems(newItemsIndex, newItems.length);
-                break;
-            }
-            case IObservable.ACTION_MOVE: {
-                this._scrollController.moveItems(
-                    newItemsIndex,
-                    newItems.length,
-                    removedItemsIndex,
-                    removedItems.length);
-                break;
-            }
-            case IObservable.ACTION_REMOVE: {
-                this._scrollController.removeItems(removedItemsIndex, removedItems.length);
-                break;
-            }
-            case IObservable.ACTION_RESET: {
-                this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
-                const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
-                this._scrollController.resetItems(totalCount, startIndex);
-                break;
-            }
         }
     }
 

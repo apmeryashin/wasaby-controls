@@ -410,6 +410,8 @@ const _private = {
                 self._afterItemsSet(options);
             }
 
+            _private.initListViewModelHandler(self, self._listViewModel);
+
             _private.prepareFooter(self, options, self._sourceController);
 
             self._shouldNotifyOnDrawItems = true;
@@ -752,10 +754,14 @@ const _private = {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
 
+            self._addItemsByLoadToDirection = true;
+
             return self._loadItemsToDirection(direction).addCallback((addedItems) => {
                 if (self._destroyed) {
                     return;
                 }
+
+                self._addItemsByLoadToDirection = false;
 
                 if (self._indicatorsController.shouldResetDisplayPortionedSearchTimer(addedItems)) {
                     self._indicatorsController.resetDisplayPortionedSearchTimer();
@@ -1630,6 +1636,37 @@ const _private = {
                 } else {
                     self._shouldDrawNavigationButton = _private.isCutNavigation(self._navigation) ?
                         self._cutExpanded : false;
+                }
+            }
+
+            if (self._useNewScroll) {
+                switch (action) {
+                    case IObservable.ACTION_RESET:
+                        self._listVirtualScrollController.resetItems();
+                        break;
+                    case IObservable.ACTION_ADD:
+                        const isTop = self._scrollTop === 0;
+                        const isBottom = self._viewportSize + self._scrollTop === self._viewSize;
+                        const addToStart = newItemsIndex <= self._listViewModel.getStartIndex();
+                        const addToEnd = newItemsIndex >= self._listViewModel.getStopIndex();
+                        // Если записи были просто добавлены в рекордсет и список отскроллен в край,
+                        // то новые записи должны вытеснить старые, чтобы их было сразу видно.
+                        const addItemsMode = !self._addItemsByLoadToDirection && (
+                            isTop && addToStart || isBottom && addToEnd
+                        ) ? 'crowd' : 'save';
+                        self._listVirtualScrollController.addItems(newItemsIndex, newItems.length, addItemsMode);
+                        break;
+                    case IObservable.ACTION_REMOVE:
+                        self._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
+                        break;
+                    case IObservable.ACTION_MOVE:
+                        self._listVirtualScrollController.moveItems(
+                            newItemsIndex,
+                            newItems.length,
+                            removedItemsIndex,
+                            removedItems.length
+                        );
+                        break;
                 }
             }
 
@@ -3738,10 +3775,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.createScrollController(self, newOptions);
         self._createListVirtualScrollController(newOptions);
         self._createIndicatorsController(newOptions);
-
-        // Подписываться на коллекцию нужно после listVirtualScrollController,
-        // чтобы в первую очередь обновились start, stop индексы, а потом уже выполнялись другие действия.
-        _private.initListViewModelHandler(self, self._listViewModel);
     }
 
     _initKeyProperty(options: TOptions): void {
@@ -4454,9 +4487,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (this._useNewScroll) {
                 this._listVirtualScrollController.setCollection(this._listViewModel);
             }
-            // Подписываться на коллекцию нужно после listVirtualScrollController,
-            // чтобы в первую очередь обновились start, stop индексы, а потом уже выполнялись другие действия.
-            _private.initListViewModelHandler(this, this._listViewModel);
 
             // observersController нужно обновить до скроллКонтроллера,
             // т.к. scrollController получает опции из _observersController
@@ -4537,9 +4567,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (this._useNewScroll) {
                         this._listVirtualScrollController.setCollection(this._listViewModel);
                     }
-                    // Подписываться на коллекцию нужно после listVirtualScrollController,
-                    // чтобы в первую очередь обновились start, stop индексы, а потом уже выполнялись другие действия.
-                    _private.initListViewModelHandler(this, this._listViewModel);
                     this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
                     this._updateScrollController(newOptions);
                     this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);

@@ -8,8 +8,7 @@ import {
     IAbstractObserversControllerBaseOptions,
     IAbstractObserversControllerOptions,
     IAdditionalTriggersOffsets,
-    ITriggerPosition,
-    TIntersectionEvent
+    ITriggerPosition
 } from './ObserverController/AbstractObserversController';
 import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalculatorResult} from './Calculator';
 import {CrudEntityKey} from 'Types/source';
@@ -35,7 +34,15 @@ export interface IIndexesChangedParams {
     range: IItemsRange;
     oldRange: IItemsRange;
     oldPlaceholders: IPlaceholders;
+    mode: IShiftRangeMode;
 }
+
+/**
+ * Режим добавления элементов
+ * @param crowd Новые записи вытесняют собой старые
+ * @param save Старые записи сохраняют свою позицию
+ */
+export type IShiftRangeMode = 'crowd'|'save';
 
 export interface IActiveElementIndex {
     activeElementIndex: number;
@@ -280,8 +287,9 @@ export class ScrollController {
      * Обрабатывает добавление элементов в коллекцию.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
+     * @param mode Режим добавления записей
      */
-    addItems(position: number, count: number): void {
+    addItems(position: number, count: number, mode: IShiftRangeMode): void {
         const itemsSizes = this._itemsSizesController.addItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
@@ -294,7 +302,7 @@ export class ScrollController {
             : this._observersController.setForwardTriggerPosition('offset');
         this._calculator.setTriggerOffsets(triggersOffsets);
 
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, mode);
     }
 
     /**
@@ -309,7 +317,7 @@ export class ScrollController {
         this._calculator.updateItemsSizes(itemsSizes);
 
         const result = this._calculator.moveItems(addPosition, addCount, removePosition, removeCount);
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'save');
     }
 
     /**
@@ -323,7 +331,7 @@ export class ScrollController {
         const itemsSizes = this._itemsSizesController.removeItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'save');
     }
 
     /**
@@ -389,7 +397,7 @@ export class ScrollController {
      */
     scrollToItem(itemIndex: number): boolean {
         const result = this._calculator.shiftRangeToIndex(itemIndex);
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'save');
         return result.indexesChanged;
     }
 
@@ -400,7 +408,7 @@ export class ScrollController {
      */
     scrollToVirtualPosition(position: number): boolean {
         const result = this._calculator.shiftRangeToVirtualScrollPosition(position);
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'save');
         return result.indexesChanged;
     }
 
@@ -432,7 +440,7 @@ export class ScrollController {
         // Актуальное значение прийдет только после триггера в событии scrollMoveSync.
         // Выходит след-ая цепочка вызовов: scrollMoveSync -> observerCallback -> scrollMoveSync.
         const result = this._calculator.shiftRangeToDirection(direction);
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'save');
 
         // после первого срабатывания триггера сбрасываем флаг resetTriggerOffset.
         // Чтобы дальше триггер срабатывал заранее за счет оффсета.
@@ -476,9 +484,10 @@ export class ScrollController {
      * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback.
      * Также, по необходимости, обеспечивает вызов activeElementChangedCallback.
      * @param {ICalculatorResult} result
+     * @param mode
      * @private
      */
-    private _processCalculatorResult(result: ICalculatorResult): void {
+    private _processCalculatorResult(result: ICalculatorResult, mode: IShiftRangeMode): void {
         if (result.placeholdersChanged) {
             this._placeholdersChangedCallback({
                 backward: result.backwardPlaceholderSize,
@@ -502,7 +511,8 @@ export class ScrollController {
                 range: result.range,
                 oldRange: result.oldRange,
                 oldPlaceholders: result.oldPlaceholders,
-                shiftDirection: result.shiftDirection
+                shiftDirection: result.shiftDirection,
+                mode
             });
         }
     }
