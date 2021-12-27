@@ -172,14 +172,6 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    protected _afterMount(): void {
-        // В 5000 поправится при переходе на новый стандарт по задаче:
-        // https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
-        if (this._selectedKeys.length && !isEqual(this._options.resetValue, this._selectedKeys)) {
-            this._notify('propertyValueChanged', [{value: this._getValue(this._selectedKeys)}], {bubbling: true});
-        }
-    }
-
     protected _beforeUpdate(options: IListEditorOptions): void {
         const {propertyValue, sourceController, filter, additionalTextProperty, displayProperty, source} = options;
         const valueChanged =
