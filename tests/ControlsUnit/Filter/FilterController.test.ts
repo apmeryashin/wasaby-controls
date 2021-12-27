@@ -197,17 +197,18 @@ describe('Controls/filter:ControllerClass', () => {
                 textValue: 'text2'
             }
         ];
-        filterController.updateFilterItems(newFilterItems);
-        assert.deepEqual(filterController.getFilter(), {
-            testId1: 'value1',
-            testId2: 'value2'
+        filterController.updateFilterItems(newFilterItems).then(() => {
+            assert.deepEqual(filterController.getFilter(), {
+                testId1: 'value1',
+                testId2: 'value2'
+            });
+            assert.deepEqual(filterController.getFilterButtonItems(), newFilterItems);
+            assert.ok(eventFired);
         });
-        assert.deepEqual(filterController.getFilterButtonItems(), newFilterItems);
-        assert.ok(eventFired);
-
         eventFired = false;
-        filterController.updateFilterItems(newFilterItems);
-        assert.ok(!eventFired);
+        filterController.updateFilterItems(newFilterItems).then(() => {
+            assert.ok(!eventFired);
+        });
     });
 
     describe('setFilterItems', () => {
