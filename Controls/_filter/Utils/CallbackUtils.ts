@@ -2,6 +2,7 @@ import {IFilterItem} from 'Controls/_filter/View/interface/IFilterItem';
 import {object} from 'Types/util';
 import {TFilter} from 'Controls/_interface/IFilter';
 import {isEqual} from 'Types/object';
+import {loadAsync} from 'WasabyLoader/ModulesLoader';
 
 const getPropValue = object.getPropertyValue;
 
@@ -17,43 +18,23 @@ function getChangedFilters(currentFilter: TFilter, updatedFilter: TFilter): obje
 
 function getItemOnFilterChangedCallback(item: IFilterItem,
                                         updatedFilter: TFilter,
-                                        changedFilters: object): IFilterItem {
+                                        changedFilters: object,
+                                        filterChangedCallback: Function): IFilterItem {
     let newItem = {...item};
-    if (item.filterChangedCallback) {
-        newItem = item.filterChangedCallback(item, updatedFilter, changedFilters);
+    if (filterChangedCallback) {
+        newItem = filterChangedCallback(item, updatedFilter, changedFilters);
     }
     return newItem;
 }
 
-function getItemVisivbility(item: IFilterItem, updatedFilter: TFilter, changedFilters: object): boolean {
-    if (item.filterVisibilityCallback) {
-        return item.filterVisibilityCallback(item, updatedFilter, changedFilters);
+function getItemVisivbility(item: IFilterItem,
+                            updatedFilter: TFilter,
+                            changedFilters: object,
+                            filterVisibilityCallback: Function): boolean {
+    if (filterVisibilityCallback) {
+        return filterVisibilityCallback(item, updatedFilter, changedFilters);
     }
     return true;
-}
-
-function getLoadedCallback(item: IFilterItem, callbackName: string): Promise<IFilterItem> {
-    return new Promise((resolve) => {
-        if (item[callbackName] && typeof item[callbackName] === 'string') {
-            require([item[callbackName]], (callback) => {
-                item[callbackName] = callback.default;
-                resolve(item);
-            });
-        } else {
-            resolve(item);
-        }
-    });
-}
-
-function setItemsCallbacks(updatedFilterConfig: IFilterItem[]): Promise[] {
-    const itemsPromises = [];
-    updatedFilterConfig.forEach((item) => {
-        itemsPromises.push(getLoadedCallback(item,
-                                'filterVisibilityCallback').then((resultItem) => {
-            return getLoadedCallback(resultItem, 'filterChangedCallback');
-        }));
-    });
-    return itemsPromises;
 }
 
 export function getFilterByItems(filterItems: IFilterItem[]): object {
@@ -71,13 +52,32 @@ export function getFilterItemsAfterCallback(currentFilter: TFilter,
                                             updatedFilterConfig: IFilterItem[]): Promise<IFilterItem[]> {
     const changedFilters = getChangedFilters(currentFilter, updatedFilter);
     if (Object.keys(changedFilters).length) {
-        const itemPromises = setItemsCallbacks(updatedFilterConfig);
-        return Promise.all(itemPromises).then((items) => {
-            return items.map((item) => {
-                item.visibility = getItemVisivbility(item, updatedFilter, changedFilters);
-                return getItemOnFilterChangedCallback(item, updatedFilter, changedFilters);
-            });
-        });
+        return getNewItems(changedFilters, updatedFilter, updatedFilterConfig);
     }
     return Promise.resolve(updatedFilterConfig);
+}
+
+function getNewItems(changedFilters: object, updatedFilter: TFilter, items: IFilterItem[]): Promise<IFilterItem[]> {
+    return Promise.all(
+        items.map((item) => {
+            return Promise.all(getCallbackPromises(item)).then((callbacks) => {
+                item.visibility = getItemVisivbility(item, updatedFilter, changedFilters, callbacks[0]);
+                return getItemOnFilterChangedCallback(item, updatedFilter, changedFilters, callbacks[1]);
+            });
+        })
+    );
+}
+
+function getCallbackPromises(item: IFilterItem): Promise[] {
+    const callBackPromises = [];
+    callBackPromises.push(getCallBackByName(item, 'filterVisibilityCallback'));
+    callBackPromises.push(getCallBackByName(item, 'filterChangedCallback'));
+    return callBackPromises;
+}
+
+function getCallBackByName(item: IFilterItem, callbackName: string): Promise<Function|void> {
+    if (item.hasOwnProperty(callbackName)) {
+        return loadAsync(item[callbackName]);
+    }
+    return Promise.resolve();
 }
