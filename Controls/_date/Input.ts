@@ -44,6 +44,7 @@ interface IDateInput extends ICalendarButtonVisibleOptions, IControlOptions, IDa
  * @mixes Controls/date:IValueValidators
  * @implements Controls/interface:IOpenPopup
  * @implements Controls/date:IDatePopupType
+ * @implements Controls/date:IPlaceholder
  *
  * @public
  * @demo Controls-demo/Input/Date/Picker
@@ -98,7 +99,8 @@ class Input extends Control<IDateInput> {
                 closeButtonEnabled: true,
                 startValueValidators: this._options.valueValidators,
                 state: this._state,
-                stateChangedCallback: this._stateChangedCallback
+                stateChangedCallback: this._stateChangedCallback,
+                calendarButtonVisible: this._options.calendarButtonVisible
             }
         };
         this._stickyOpener.open(cfg);

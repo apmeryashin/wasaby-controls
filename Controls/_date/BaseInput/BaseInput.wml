@@ -3,6 +3,7 @@
         <Controls._date.BaseInput.Mask
                 contrastBackground="{{ _options.contrastBackground }}"
                 horizontalPadding="{{ _options.horizontalPadding }}"
+                readOnly="{{ !_options.calendarButtonVisible || options.readOnly }}"
                 rightFieldTemplate="{{ _options.rightFieldTemplate }}"
                 textAlign="{{_options.textAlign}}"
                 attr:tabindex="{{ !_options.calendarButtonVisible ? -1 : 0 }}"
@@ -14,7 +15,7 @@
                 fontStyle="{{_options.fontStyle}}"
                 fontSize="{{_options.fontSize}}"
                 fontWeight="{{_options.fontWeight}}"
-                fontColorStyle="{{_options.fontColorStyle}}"
+                fontColorStyle="{{_options.fontColorStyle || (!_model.value && _options.placeholder) ? 'label' }}"
                 borderStyle="{{_options.borderStyle}}"
                 borderVisibility="{{_options.borderVisibility}}"
                 inlineHeight="{{_options.inlineHeight}}"
