@@ -305,19 +305,13 @@ class FormController extends ControllerBase<IFormController> {
     }
 
     private _updateErrorRepeatConfig(): void {
-        const onProcess = this._errorController.getOnProcess();
-
-        this._errorController.setOnProcess((viewConfig) => {
+        this._errorController.updateOnProcess((viewConfig) => {
             const display = viewConfig.mode !== ErrorViewMode.dialog;
 
             viewConfig.options.repeatConfig = {
                 display,
                 function: () => this._repeatFunction().then(() => this._hideError())
             };
-
-            if (typeof onProcess === 'function') {
-                return onProcess(viewConfig);
-            }
 
             return viewConfig;
         });
