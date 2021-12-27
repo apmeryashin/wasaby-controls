@@ -824,27 +824,30 @@ export class Controller {
                 continue;
             }
             const isMenuAction = this._isMenuAction(itemActions[i]);
-            // На этом этапе нам важно понимать только, что надо показывать кнопку меню,
+            // На этом этапе нам важно понимать только, что надо показывать кнопку меню с тремя точками,
             // Поэтому двух операций из меню тут будет достаточно.
-            // Для других видимость определяется при открытии меню по трём точкам.
+            // Для других видимость определяется при открытии этого меню.
             if (isMenuAction && actionsToShowInMenu.length > 1) {
                 continue;
             }
             const isVisible = this._itemActionVisibilityCallback(itemActions[i], contents, isEditing);
+            if (!isVisible) {
+                continue;
+            }
             // Если операция должна быть видима по колбеку и находится в меню,
             // записываем её в массив записей меню.
-            if (isMenuAction && isVisible) {
+            if (isMenuAction) {
                 actionsToShowInMenu.push(itemActions[i]);
-
+            }
             // Любые другие операции записываем в список для отображения по ховеру
-            } else if (isVisible) {
+            if (!isMenuAction || itemActions[i].showType === TItemActionShowType.MENU_TOOLBAR) {
                 actionsToShowOnHover.push(itemActions[i]);
             }
         }
 
         if (actionsToShowOnHover.length > 0) {
             // Если есть хоть одна видимая операция для показа в меню или в конфигурации
-            // меню указано, что надо показать подвал или шапку меню, то показываем кнопку меню.
+            // меню указано, что надо показать подвал или шапку меню, то показываем кнопку с тремя точками.
             if (actionsToShowInMenu.length > 0 || this._hasMenuHeaderOrFooter()) {
                 actionsToShowOnHover.push(this._getMenuItemAction());
             }
@@ -852,12 +855,13 @@ export class Controller {
                 actionsToShowOnHover.reverse();
             }
         } else if (actionsToShowInMenu.length > 1) {
+            // Если записей в меню больше одной то точно показываем кнопку с тремя точками
             actionsToShowOnHover.push(this._getMenuItemAction());
         } else {
             // Тут кейс, когда actionsToShowOnHover пуст, а в actionsToShowInMenu.length <= 1
             actionsToShowOnHover = actionsToShowInMenu;
             // По умолчанию, если actionsToShowInMenu.length <= 1, нужно показывать
-            // все кнопки на тулбаре, и не добавлять кнопку "меню".
+            // все кнопки на тулбаре, и не добавлять кнопку с тремя точками.
             // Но, если в конфигурации contextMenuConfig указано, что надо показать подвал или шапку меню,
             // нужно показывать кнопку даже тогда, когда вообще ни одной операции не было показано.
             // Некоторым это, наоборот, не нужно. Под опцией task1183329228 принудительный показ кнопки отключен.
