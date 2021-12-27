@@ -109,13 +109,16 @@ class FormController extends ControllerBase<IFormController> {
     private _crudController: CrudController = null;
     private _dialogOpener: DialogOpener;
     private _updatePromise: Promise<unknown>;
+    private _repeatFunction: () => Promise<unknown> = () => Promise.resolve();
 
     protected _beforeMount(
         options?: IFormController,
         context?: object,
         receivedState: IReceivedState = {}
     ): Promise<ICrudResult> | void {
-        this._errorController = options.errorController || new ErrorController({});
+        this._errorController = options.errorController || new ErrorController();
+        this._updateErrorRepeatConfig();
+
         this._crudController = new CrudController(options.source, this._notifyHandler.bind(this),
             this.registerPendingNotifier.bind(this), this._notify.bind(this));
         const receivedError = receivedState.errorConfig;
@@ -288,11 +291,18 @@ class FormController extends ControllerBase<IFormController> {
     }
 
     private _setFunctionToRepeat(foo: Function, ...args: unknown[]): void {
-        this._errorController.setOnProcess((viewConfig) => {
+        this._repeatFunction = foo.bind(this, ...args);
+    }
+
+    private _updateErrorRepeatConfig(): void {
+        this._errorController.updateOnProcess((viewConfig) => {
+            const display = viewConfig.mode !== ErrorViewMode.dialog;
+
             viewConfig.options.repeatConfig = {
-                display: true,
-                function: () => foo.call(this, ...args).then(() => this._hideError())
+                display,
+                function: () => this._repeatFunction().then(() => this._hideError())
             };
+
             return viewConfig;
         });
     }
