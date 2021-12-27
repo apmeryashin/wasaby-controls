@@ -1639,7 +1639,8 @@ const _private = {
                 }
             }
 
-            if (self._useNewScroll) {
+            // TODO SCROLL self._listVirtualScrollController нужно юниты чинить, чтобы убрать
+            if (self._useNewScroll && self._listVirtualScrollController) {
                 switch (action) {
                     case IObservable.ACTION_RESET:
                         self._listVirtualScrollController.resetItems();

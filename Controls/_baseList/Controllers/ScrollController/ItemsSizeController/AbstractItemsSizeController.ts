@@ -123,14 +123,9 @@ export abstract class AbstractItemsSizesController {
                 const firstItemOffset = this._itemsSizes[0]?.offset || 0;
                 let position = itemsRange.startIndex;
                 // Возможна ситуация, что диапазон сместился с [0, 5] на [10, 15].В этом случае предыдущий отрисованный
-                // элемент это не startIndex - 1, а элемент у которого нет следующего отрисованного элемента.
-                const renderedItemSizeBeforeRange = this._itemsSizes.find((it, index) => {
-                    const nextItemSize = this._itemsSizes[index + 1];
-                    const isLastItemBeforeRange = index === itemsRange.startIndex - 1;
-                    return index < itemsRange.startIndex && (
-                        !nextItemSize || !nextItemSize.size || isLastItemBeforeRange
-                    );
-                });
+                // элемент это не startIndex - 1, а это первый от startIndex к началу отрендеренный элемент;
+                const beforeRangeItems = this._itemsSizes.slice(0, itemsRange.startIndex);
+                const renderedItemSizeBeforeRange = beforeRangeItems.reverse().find((it) => !!it.size);
                 Array.from(itemsElements).forEach((element: HTMLElement) => {
                     const prevRenderedItemSize = position === itemsRange.startIndex
                         ? renderedItemSizeBeforeRange
