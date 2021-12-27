@@ -1,12 +1,12 @@
 <div class="controls-Grid__editArrow-wrapper js-controls-ListView__visible-on-hoverFreeze">
       <div if="{{textOverflow}}" class="controls-Grid__editArrow-withTextOverflow"></div>
       <div class="controls-Grid__editArrow-blur
-                  {{ (item.getEditingConfig().mode && this.config.editable !== false && editable !== false) ?
+                  {{ (item.getEditingConfig().mode === 'cell' && ((gridColumn || itemData).config.editable === false || editable === false)) ?
                      'controls-Grid__editArrow-blur_single-cell_not-editable_background' :
                      'controls-Grid__editArrow-blur_style-' + item.getStyle() + '_background' }}"></div>
       <div on:click="_onEditArrowClick(item)"
            class="controls-Grid__editArrow
-                 {{ (item.getEditingConfig().mode && this.config.editable !== false && editable !== false) ?
+                 {{ (item.getEditingConfig().mode === 'cell' && ((gridColumn || itemData).config.editable === false || editable === false)) ?
                      'controls-Grid__editArrow_single-cell_not-editable_background' :
                      'controls-Grid__editArrow_style-' + item.getStyle() + '_background' }}"
            attr:data-qa="edit-arrow">
