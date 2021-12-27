@@ -1,7 +1,8 @@
 import tmpl = require('wml!Controls/_form/FormController/FormController');
-import { TemplateFunction } from 'UI/Base';
+import { TemplateFunction, Control } from 'UI/Base';
 import { readWithAdditionalFields } from './crudProgression';
 import * as Deferred from 'Core/Deferred';
+import {error as dataSourceError} from 'Controls/dataSource';
 import {DialogOpener, ErrorController, ErrorViewConfig, ErrorViewMode} from 'Controls/error';
 import {Model} from 'Types/entity';
 import {CRUD_EVENTS, default as CrudController, ICrudConfig} from 'Controls/_form/CrudController';
@@ -94,6 +95,7 @@ const DELAYED_INITIALIZING_WAYS = [
 
 class FormController extends ControllerBase<IFormController> {
     protected _template: TemplateFunction = tmpl;
+    protected _errorContainer: typeof Control = dataSourceError.Container;
     private _isNewRecord: boolean = false;
     private _createMetaDataOnUpdate: unknown = null;
     private _shouldSetFocusAfterUpdate: boolean = false;
