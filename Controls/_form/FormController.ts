@@ -98,7 +98,6 @@ class FormController extends ControllerBase<IFormController> {
     protected _errorContainer: typeof Control = dataSourceError.Container;
     private _isNewRecord: boolean = false;
     private _createMetaDataOnUpdate: unknown = null;
-    private _shouldSetFocusAfterUpdate: boolean = false;
     private _errorController: ErrorController;
     private _createdInMounting: IConfigInMounting;
     private _isMount: boolean;
@@ -232,17 +231,6 @@ class FormController extends ControllerBase<IFormController> {
         }
     }
 
-    private _isEqualId(oldRecord: Model, newRecord: Model): boolean {
-        // Пока не внедрили шаблон документа, нужно вручную на beforeUpdate понимать, что пытаются установить тот же
-        // рекорд (расширенный). Иначе при смене рекорда будем показывать вопрос о сохранении.
-        if (!this._checkRecordType(oldRecord) || !this._checkRecordType(newRecord)) {
-            return false;
-        }
-        const oldId: string = this._getRecordId(oldRecord) as string;
-        const newId: string = this._getRecordId(newRecord) as string;
-        return oldId === newId || parseInt(oldId, 10) === parseInt(newId, 10);
-    }
-
     private _throwInitializingWayException(initializingWay: INITIALIZING_WAY, requiredOptionName: string): void {
         throw new Error(`${this._moduleName}: Опция initializingWay установлена в значение ${initializingWay}.
         Для корректной работы требуется передать опцию ${requiredOptionName}, либо изменить значение initializingWay`);
@@ -371,7 +359,7 @@ class FormController extends ControllerBase<IFormController> {
         this._readInMounting = null;
     }
 
-    private  _createRecordBeforeMountNotify(): void {
+    private _createRecordBeforeMountNotify(): void {
         if (!this._createdInMounting.isError) {
             this._notifyHandler(CRUD_EVENTS.CREATE_SUCCESSED, [this._createdInMounting.result]);
 
