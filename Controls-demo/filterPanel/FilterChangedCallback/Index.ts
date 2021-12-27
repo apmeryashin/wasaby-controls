@@ -1,27 +1,15 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/filterPanel/FilterChangedCallback/Index';
-import * as stackTemplate from 'wml!Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate';
 import {isEqual} from 'Types/object';
 import {Memory} from 'Types/source';
-import {departments, filterItems} from 'Controls-demo/filterPanel/resources/DataStorage';
+import {departments} from 'Controls-demo/filterPanel/resources/DataStorage';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    protected _stackTemplate: TemplateFunction = stackTemplate;
-    protected _filterButtonData: unknown[] = [];
+    protected _filterButtonSource: unknown[] = [];
     protected _source: Memory = null;
-    protected _navigation: object = null;
 
     protected _beforeMount(): void {
-        this._navigation = {
-            source: 'page',
-            view: 'page',
-            sourceConfig: {
-                pageSize: 20,
-                page: 0,
-                hasMore: false
-            }
-        };
         this._source = new Memory({
             data: departments,
             keyProperty: 'id',
@@ -47,19 +35,14 @@ export default class extends Control {
                 return addToData;
             }
         });
-        this._filterButtonData = [
+        this._filterButtonSource = [
             {
                 caption: 'Количество сотрудников',
                 name: 'amount',
                 editorTemplateName: 'Controls/filterPanel:NumberRangeEditor',
                 resetValue: [],
                 value: [],
-                textValue: '',
-                editorOptions: {
-                    afterEditorTemplate: 'wml!Controls-demo/filterPanel/resources/AfterEditorTemplate',
-                    minValueInputPlaceholder: '0',
-                    maxValueInputPlaceholder: '1 000 000'
-                }
+                textValue: ''
             },
             {
                 name: 'owner',
@@ -71,30 +54,17 @@ export default class extends Control {
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
                 filterChangedCallback: 'Controls-demo/filterPanel/FilterChangedCallback/filterChangedCallback',
                 editorOptions: {
-                    imageProperty: 'sourceImage',
-                    multiSelect: true,
-                    navigation: {
-                        source: 'page',
-                        view: 'page',
-                        sourceConfig: {
-                            pageSize: 3,
-                            page: 0,
-                            hasMore: false
-                        }
-                    },
-                    keyProperty: 'owner',
-                    additionalTextProperty: 'id',
+                    keyProperty: 'id',
+                    filter: {},
                     displayProperty: 'title',
-                    selectorTemplate: {
-                        templateName: 'Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate',
-                        templateOptions: {items: filterItems},
-                        popupOptions: {
-                            width: 500
-                        }
-                    },
                     source: new Memory({
-                        data: filterItems,
-                        keyProperty: 'owner'
+                        data: [
+                            { id: 'Новиков Д.В.', title: 'Новиков Д.В.', showOnAmountChanged: true},
+                            { id: 'Кошелев А.Е.', title: 'Кошелев А.Е.', showOnAmountChanged: true},
+                            { id: 'Субботин А.В.', title: 'Субботин А.В.'},
+                            { id: 'Чеперегин А.С.', title: 'Чеперегин А.С.'}
+                        ],
+                        keyProperty: 'id'
                     })
                 }
             }

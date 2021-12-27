@@ -1,9 +1,21 @@
 import {IFilterItem} from 'Controls/filter';
 
-export default(filterDescriptionItem: IFilterItem, filter: object, changedFilters: object): IFilterItem => {
+interface IChangedFilters {
+    amount?: number[];
+}
+
+export default(filterDescriptionItem: IFilterItem, filter: object, changedFilters: IChangedFilters): IFilterItem => {
     const filterItem = {...filterDescriptionItem};
     if (changedFilters.hasOwnProperty('amount')) {
-        filterItem.value = filterDescriptionItem.resetValue;
+        let newFilter;
+        if (changedFilters.amount?.length) {
+            newFilter = {
+                showOnAmountChanged: true
+            };
+        } else {
+            newFilter = {};
+        }
+        filterItem.editorOptions.filter = newFilter;
     }
     return filterItem;
 };
