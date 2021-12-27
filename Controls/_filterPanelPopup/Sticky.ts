@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_filterPanelPopup/sticky/Sticky';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as rk from 'i18n!Controls';
-import {IFilterItem, getFilterByItems, getFilterItemsAfterCallback} from 'Controls/filter';
+import {IFilterItem, getFilterItemsAfterCallback, getFilterByFilterDescription} from 'Controls/filter';
 import {View} from 'Controls/filterPanel';
 import {isEqual} from 'Types/object';
 import 'css!Controls/filterPanelPopup';
@@ -67,8 +67,8 @@ export default class Sticky extends Control<IStickyPopup> {
     }
 
     protected _setFilterParams(items: IFilterItem[]): void {
-        const currentFilter = getFilterByItems(this._items);
-        const updatedFilter = getFilterByItems(items);
+        const currentFilter = getFilterByFilterDescription({}, this._items);
+        const updatedFilter = getFilterByFilterDescription({}, items);
         getFilterItemsAfterCallback(currentFilter, updatedFilter, items).then((newItems) => {
             this._items = newItems;
             this._hasBasicItems = this._getHasBasicItems();

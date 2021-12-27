@@ -1,12 +1,9 @@
 import {IFilterItem} from 'Controls/_filter/View/interface/IFilterItem';
-import {object} from 'Types/util';
 import {TFilter} from 'Controls/_interface/IFilter';
 import {isEqual} from 'Types/object';
 import {loadAsync} from 'WasabyLoader/ModulesLoader';
 
-const getPropValue = object.getPropertyValue;
-
-function getChangedFilters(currentFilter: TFilter, updatedFilter: TFilter): object {
+export function getChangedFilters(currentFilter: TFilter, updatedFilter: TFilter): object {
     const changedFilters = {};
     for (const filterName in currentFilter) {
         if (!isEqual(currentFilter[filterName], updatedFilter[filterName])) {
@@ -16,10 +13,10 @@ function getChangedFilters(currentFilter: TFilter, updatedFilter: TFilter): obje
     return changedFilters;
 }
 
-function getItemOnFilterChangedCallback(item: IFilterItem,
-                                        updatedFilter: TFilter,
-                                        changedFilters: object,
-                                        filterChangedCallback: Function): IFilterItem {
+export function getItemOnFilterChangedCallback(item: IFilterItem,
+                                               updatedFilter: TFilter,
+                                               changedFilters: object,
+                                               filterChangedCallback: Function): IFilterItem {
     let newItem = {...item};
     if (filterChangedCallback) {
         newItem = filterChangedCallback(item, updatedFilter, changedFilters);
@@ -27,24 +24,14 @@ function getItemOnFilterChangedCallback(item: IFilterItem,
     return newItem;
 }
 
-function getItemVisivbility(item: IFilterItem,
-                            updatedFilter: TFilter,
-                            changedFilters: object,
-                            filterVisibilityCallback: Function): boolean {
+export function getItemVisivbility(item: IFilterItem,
+                                   updatedFilter: TFilter,
+                                   changedFilters: object,
+                                   filterVisibilityCallback: Function): boolean {
     if (filterVisibilityCallback) {
         return filterVisibilityCallback(item, updatedFilter, changedFilters);
     }
     return true;
-}
-
-export function getFilterByItems(filterItems: IFilterItem[]): object {
-    const filter = {};
-    filterItems?.forEach((item) => {
-        const prop: string = getPropValue(item, 'id') ? getPropValue(item, 'id')
-                                                               : getPropValue(item, 'name');
-        filter[prop] = getPropValue(item, 'value');
-    });
-    return filter;
 }
 
 export function getFilterItemsAfterCallback(currentFilter: TFilter,
