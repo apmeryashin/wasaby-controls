@@ -1,8 +1,7 @@
 import tmpl = require('wml!Controls/_form/FormController/FormController');
-import { TemplateFunction, Control } from 'UI/Base';
+import { TemplateFunction } from 'UI/Base';
 import { readWithAdditionalFields } from './crudProgression';
 import * as Deferred from 'Core/Deferred';
-import {error as dataSourceError} from 'Controls/dataSource';
 import {DialogOpener, ErrorController, ErrorViewConfig, ErrorViewMode} from 'Controls/error';
 import {Model} from 'Types/entity';
 import {CRUD_EVENTS, default as CrudController, ICrudConfig} from 'Controls/_form/CrudController';
@@ -95,7 +94,6 @@ const DELAYED_INITIALIZING_WAYS = [
 
 class FormController extends ControllerBase<IFormController> {
     protected _template: TemplateFunction = tmpl;
-    protected _errorContainer: typeof Control = dataSourceError.Container;
     private _isNewRecord: boolean = false;
     private _createMetaDataOnUpdate: unknown = null;
     private _shouldSetFocusAfterUpdate: boolean = false;
@@ -110,13 +108,16 @@ class FormController extends ControllerBase<IFormController> {
     private _crudController: CrudController = null;
     private _dialogOpener: DialogOpener;
     private _updatePromise: Promise<unknown>;
+    private _repeatFunction: () => Promise<unknown> = () => Promise.resolve();
 
     protected _beforeMount(
         options?: IFormController,
         context?: object,
         receivedState: IReceivedState = {}
     ): Promise<ICrudResult> | void {
-        this._errorController = options.errorController || new ErrorController({});
+        this._errorController = options.errorController || new ErrorController();
+        this._updateErrorRepeatConfig();
+
         this._crudController = new CrudController(options.source, this._notifyHandler.bind(this),
             this.registerPendingNotifier.bind(this), this._notify.bind(this));
         const receivedError = receivedState.errorConfig;
@@ -300,11 +301,24 @@ class FormController extends ControllerBase<IFormController> {
     }
 
     private _setFunctionToRepeat(foo: Function, ...args: unknown[]): void {
+        this._repeatFunction = foo.bind(this, ...args);
+    }
+
+    private _updateErrorRepeatConfig(): void {
+        const onProcess = this._errorController.getOnProcess();
+
         this._errorController.setOnProcess((viewConfig) => {
+            const display = viewConfig.mode !== ErrorViewMode.dialog;
+
             viewConfig.options.repeatConfig = {
-                display: true,
-                function: () => foo.call(this, ...args).then(() => this._hideError())
+                display,
+                function: () => this._repeatFunction().then(() => this._hideError())
             };
+
+            if (typeof onProcess === 'function') {
+                return onProcess(viewConfig);
+            }
+
             return viewConfig;
         });
     }

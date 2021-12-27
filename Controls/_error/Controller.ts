@@ -144,8 +144,20 @@ export default class ErrorController {
         }
     }
 
+    /**
+     * Установить функцию onProcess
+     * @param {Controls/error:IControllerOptions#onProcess} onProcess
+     */
     setOnProcess(onProcess?: OnProcessCallback): void {
         this.onProcess = onProcess;
+    }
+
+    /**
+     * Получить функцию onProcess
+     * @see {Controls/error:IControllerOptions#onProcess}
+     */
+    getOnProcess(): OnProcessCallback {
+        return this.onProcess;
     }
 
     /**
