@@ -423,27 +423,14 @@ export class ScrollController {
      * Callback, вызываемый при достижении триггера.
      * Вызывает сдвиг itemsRange в направлении триггера.
      * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback или itemsEndedCallback.
-     * @param {TIntersectionEvent} eventName
+     * @param direction
      * @private
      */
-    private _observersCallback(eventName: TIntersectionEvent): void {
-        if (eventName === 'bottomOut' || eventName === 'topOut') {
-            return;
-        }
-
+    private _observersCallback(direction: IDirection): void {
         // НЕЛЬЗЯ делать рассчеты связанные со scrollPosition.
         // Т.к. в момент срабатывания триггера scrollPosition может быть не актуален.
         // Актуальное значение прийдет только после триггера в событии scrollMoveSync.
         // Выходит след-ая цепочка вызовов: scrollMoveSync -> observerCallback -> scrollMoveSync.
-
-        let direction: IDirection;
-        if (eventName === 'bottomIn') {
-            direction = 'forward';
-        }
-        if (eventName === 'topIn') {
-            direction = 'backward';
-        }
-
         const result = this._calculator.shiftRangeToDirection(direction);
         this._processCalculatorResult(result);
 
@@ -500,11 +487,13 @@ export class ScrollController {
         }
 
         if (result.hasItemsOutRangeChanged) {
+            const hasItemsOutRange: IHasItemsOutRange = {
+                backward: result.hasItemsOutRangeBackward,
+                forward: result.hasItemsOutRangeForward
+            };
+            this._observersController.setHasItemsOutRange(hasItemsOutRange);
             if (this._hasItemsOutRangeChangedCallback) {
-                this._hasItemsOutRangeChangedCallback({
-                    backward: result.hasItemsOutRangeBackward,
-                    forward: result.hasItemsOutRangeForward
-                });
+                this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
             }
         }
 
@@ -520,10 +509,14 @@ export class ScrollController {
 
     private _handleInitializingResult(): void {
         this._indexesInitializedCallback(this._calculator.getRange());
-        this._hasItemsOutRangeChangedCallback({
+
+        const hasItemsOutRange: IHasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),
             forward: this._calculator.hasItemsOutRange('forward')
-        });
+        };
+        this._observersController.setHasItemsOutRange(hasItemsOutRange);
+        this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
+
         this._placeholdersChangedCallback({
             backward: 0,
             forward: 0
