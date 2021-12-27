@@ -7,6 +7,8 @@
  * @includes IDatePopupType Controls/_date/interface/IDatePopupType
  * @includes ICaption Controls/_date/interface/ICaption
  * @includes IExtendedTimeFormat Controls/_date/interface/IExtendedTimeFormat
+ * @includes ICalendarButtonVisible Controls/_date/interfaces/ICalendarButtonVisible
+ * @includes IPlaceholder Controls/_date/interface/IPlaceholder
  */
 
 export {default as Input} from 'Controls/_date/Input';

@@ -22,17 +22,27 @@ import 'css!Controls/filterPanel';
  */
 
 /**
- * @typedef {Object} FilterPanelSource
- * @property {String} name Имя фильтра.
- * @property {String} group Имя группы.
- * @property {*} value Текущее значение фильтра.
- * @property {*} resetValue Значение фильтра по умолчанию.
- * @property {Controls/filter:EditorOptions.typedef} editorOptions Опции для редактора.
- * @property {String} editorTemplateName Имя редактора.
- * @property {boolean} expanderVisible Видимость экспандера редактора.
- * В настоящей версии фреймворка поддерживается только 2 значения для editorTemplateName — NumberRangeEditor и ListEditor.
- * При использовании NumberRangeEditor будет построен контрол {@link Controls/input:Number}.
- * При использовании ListEditor будет построен контрол {@link Controls/grid:View}.
+ * @typedef {String} TEditorTemplateName
+ * @variant Controls/filterPanel:ListEditor редактор выбора из справочника в виде {@link Controls/filterPanel:ListEditor списка}
+ * @variant Controls/filterPanel:LookupEditor редактор выбора из справочника в виде {@link Controls/filterPanel:LookupEditor кнопки выбора}
+ * @variant Controls/filterPanel:NumberRangeEditor редактор {@link Controls/filterPanel:NumberRangeEditor диапазона чисел}
+ * @variant Controls/filterPanel:DropdownEditor редактор перечисляемого типа в виде {@link Controls/filterPanel:DropdownEditor меню}
+ * @variant Controls/filterPanel:TumblerEditor редактор перечисляемого типа в виде {@link Controls/filterPanel:TumblerEditor переключателя}
+ * @variant Controls/filterPanel:TextEditor редактор {@link Controls/filterPanel:TextEditor логического типа}
+ */
+
+/**
+ * @typedef {object} FilterPanelSource
+ * @property {string} name Имя фильтра.
+ * @property {?} value Текущее значение фильтра.
+ * @property {?} resetValue Значение фильтра по умолчанию.
+ * @property {string} caption Текст метки редактора.
+ * При передаче текста метки, так же будет отображён разделитель.
+ * Если caption передать в виде пустой строки (''), то разделитель будет отображён без текстовой метки.
+ * Если caption передать как null или не передавать, то у редактора не будет отображаться метка и разделитель.
+ * @property {TEditorTemplateName} editorTemplateName Имя редактора.
+ * @property {object} editorOptions Опции для редактора. Тип опций зависит от {@link editorTemplateName редактора}.
+ * @property {boolean} expanderVisible Определяет видимость экспандера редактора.
  */
 
 /**
