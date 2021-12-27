@@ -826,9 +826,6 @@ const _private = {
                 }
 
                 if (self._useNewScroll) {
-                    self._listVirtualScrollController.setAdditionalTriggersOffsets(
-                        self._getAdditionalTriggersOffsets()
-                    );
                     self._updateVirtualNavigation(self._hasItemsOutRange);
                 }
 
@@ -848,12 +845,6 @@ const _private = {
                 if (hideIndicatorOnCancelQuery) {
                     // при пересчете скроем все ненужые индикаторы
                     self._indicatorsController.recountIndicators(direction);
-
-                    if (self._useNewScroll) {
-                        self._listVirtualScrollController.setAdditionalTriggersOffsets(
-                            self._getAdditionalTriggersOffsets()
-                        );
-                    }
                 }
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
                 if (!error.canceled && !error.isCanceled) {
@@ -4848,10 +4839,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shouldRestoreScrollPosition = true;
         }
 
-        if (this._useNewScroll) {
-            this._listVirtualScrollController.setAdditionalTriggersOffsets(this._getAdditionalTriggersOffsets());
-        }
-
         this._spaceBlocked = false;
 
         this._updateBaseControlModel(newOptions);
@@ -5089,6 +5076,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._useNewScroll) {
             this._listVirtualScrollController.afterRenderListControl();
             this._hasItemWithImageChanged = false;
+
+            // Обновлять additionalTriggersOffsets нужно только после отрисовки, чтобы триггер случайно не сработал
+            this._listVirtualScrollController.setAdditionalTriggersOffsets(this._getAdditionalTriggersOffsets());
         }
 
         if (this._recalcPagingVisible) {
@@ -5326,12 +5316,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._indicatorsController.displayBottomIndicator();
                 } else if (direction === 'up' && this._indicatorsController.shouldDisplayTopIndicator()) {
                     this._indicatorsController.displayTopIndicator(false);
-                }
-
-                if (this._useNewScroll) {
-                    this._listVirtualScrollController.setAdditionalTriggersOffsets(
-                        this._getAdditionalTriggersOffsets()
-                    );
                 }
 
                 this._handleLoadToDirection = false;
@@ -6989,10 +6973,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (this._indicatorsController.shouldDisplayBottomIndicator()) {
                 this._indicatorsController.displayBottomIndicator();
             }
-
-            if (this._useNewScroll) {
-                this._listVirtualScrollController.setAdditionalTriggersOffsets(this._getAdditionalTriggersOffsets());
-            }
         }
 
         if (!this._pagingVisible) {
@@ -7449,12 +7429,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             if (this._indicatorsController.shouldDisplayTopIndicator()) {
                 this._indicatorsController.displayTopIndicator(true);
-
-                if (this._useNewScroll) {
-                    this._listVirtualScrollController.setAdditionalTriggersOffsets(
-                        this._getAdditionalTriggersOffsets()
-                    );
-                }
             }
 
             if (this._isScrollShown) {
