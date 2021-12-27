@@ -906,7 +906,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
 
         let wrapperClasses = '';
-        if (this.isSticked(null, this)) {
+        if (!this.isSticked(null, this)) {
             wrapperClasses = 'controls-ListView__itemV ';
         }
         // TODO: Убрать js-controls-ListView__editingTarget' по задаче
