@@ -1,7 +1,8 @@
 import {
     AbstractListVirtualScrollController,
     IAbstractListVirtualScrollControllerOptions,
-    IScrollControllerOptions
+    IScrollControllerOptions,
+    TVirtualScrollMode
 } from 'Controls/baseList';
 import {ObserversController, IObserversControllerOptions} from './ObserversController';
 import {ItemsSizeController, IItemsSizesControllerOptions} from './ItemsSizeController';
