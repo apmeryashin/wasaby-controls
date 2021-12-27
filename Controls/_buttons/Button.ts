@@ -21,7 +21,7 @@ import {getTextWidth} from 'Controls/sizeUtils';
 import 'wml!Controls/_buttons/ButtonBase';
 import 'css!Controls/buttons';
 import 'css!Controls/CommonClasses';
-import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 export function defaultHeight(viewMode: string): string {
     if (viewMode === 'button') {
@@ -183,13 +183,12 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
         if (this._options.tooltip !== newOptions.tooltip) {
             this._tooltip = newOptions.tooltip;
         }
-        if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
-            this._focusedStatus = 'default';
-        }
     }
 
     protected _focusInHandler(): void {
-        this._focusedStatus = getFocusedStatus(this.context);
+        if (!!this.context.get('workByKeyboard') && !this._options.readOnly) {
+            this._focusedStatus = 'active';
+        }
     }
 
     protected _focusOutHandler(): void {
@@ -236,7 +235,9 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     }
 
     static contextTypes(): object {
-        return getContextTypes();
+        return {
+            workByKeyboard: WorkByKeyboardContext
+        };
     }
 }
 

@@ -2,9 +2,8 @@
     <div class="controls-Tumbler__wrapper
     controls-Tumbler__wrapper_{{_options.contrastBackground ?  'contrast' : 'same'}}
     controls-Tumbler__wrapper_{{_options.direction}}
+     {{_isWorkByKeyboard() ? 'controls-focused-item'}}
      {{_options.direction === 'horizontal' ? 'controls-inlineheight-'+_options.inlineHeight}}" on:mouseenter="_mouseEnterHandler()" on:touchstart="_touchStartHandler()"
-         on:focusin="_focusInHandler()"
-         on:focusout="_focusOutHandler()"
          on:keypress="_keyUpHandler()"
          tabindex="0">
         <ws:for data="index, itemData in _options.items">
@@ -31,6 +30,5 @@
         </ws:for>
         <div class="controls-Tumbler__button-background controls-Tumbler__button-background{{_options.contrastBackground ? '_contrast' : '_same'}} controls-Tumbler__button-{{_options.inlineHeight}}"
              style="{{_getButtonBackgroundStyle()}}"></div>
-        <div class="controls-focused-background controls-focused_status-{{_focusedStatus}}"></div>
     </div>
 </div>

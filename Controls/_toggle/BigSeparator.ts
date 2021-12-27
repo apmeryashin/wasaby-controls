@@ -4,9 +4,9 @@ import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSepa
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {IIconSize, IIconSizeOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
-import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 /**
  * @typedef TViewMode
@@ -67,20 +67,9 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, 
     readonly '[Controls/_interface/IIconSize]': boolean = true;
 
     protected _template: TemplateFunction = BigSeparatorTemplate;
-    private _focusedStatus: string;
 
-    protected _beforeUpdate(): void {
-        if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
-            this._focusedStatus = 'default';
-        }
-    }
-
-    protected _focusInHandler(): void {
-        this._focusedStatus = getFocusedStatus(this.context);
-    }
-
-    protected _focusOutHandler(): void {
-        this._focusedStatus = 'default';
+    protected _isWorkByKeyboard(): boolean {
+        return !!this.context.get('workByKeyboard') && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
@@ -111,7 +100,9 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, 
     }
 
     static contextTypes(): object {
-        return getContextTypes();
+        return {
+            workByKeyboard: WorkByKeyboardContext
+        };
     }
 }
 

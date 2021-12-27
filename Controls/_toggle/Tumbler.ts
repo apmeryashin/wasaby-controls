@@ -5,9 +5,9 @@ import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroup
 import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
 import {IItemTemplateOptions, IContrastBackgroundOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
-import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 interface IBackgroundPosition {
     [key: number]: IBackgroundPositionData;
@@ -228,23 +228,15 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, ICo
 class Tumbler extends ButtonGroupBase<ITumblerOptions> {
     protected _template: TemplateFunction = Template;
     protected _backgroundPosition: IBackgroundPosition = {isEmpty: true};
-    private _focusedStatus: string;
 
     protected _beforeUpdate(newOptions: ITumblerOptions): void {
         if (this._options.items !== newOptions.items) {
             this._backgroundPosition = {isEmpty: true};
         }
-        if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
-            this._focusedStatus = 'default';
-        }
     }
 
-    protected _focusInHandler(): void {
-        this._focusedStatus = getFocusedStatus(this.context);
-    }
-
-    protected _focusOutHandler(): void {
-        this._focusedStatus = 'default';
+    protected _isWorkByKeyboard(): boolean {
+        return !!this.context.get('workByKeyboard') && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
@@ -338,7 +330,9 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
     };
 
     static contextTypes(): object {
-        return getContextTypes();
+        return {
+            workByKeyboard: WorkByKeyboardContext
+        };
     }
 }
 

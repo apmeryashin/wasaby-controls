@@ -22,9 +22,8 @@
 <div on:click="_clickHandler()"
      class="controls_toggle_theme-{{_options.theme}} controls-BigSeparator
             controls-BigSeparator-size-{{_options.iconSize}}
-            controls-BigSeparator__{{_options.value ? 'expanded' : 'collapsed'}}"
-     on:focusin="_focusInHandler()"
-     on:focusout="_focusOutHandler()"
+            controls-BigSeparator__{{_options.value ? 'expanded' : 'collapsed'}}
+            {{_isWorkByKeyboard() ? 'controls-focused-item'}}"
      on:keypress="_keyUpHandler()"
      tabindex="0">
     <div class="controls-BigSeparator-{{_options.readOnly ? 'readonly' : 'iconContainer'}}
@@ -42,5 +41,4 @@
             </ws:else>
         </ws:else>
     </div>
-    <div class="controls-focused-background controls-focused_status-{{_focusedStatus}}"></div>
 </div>

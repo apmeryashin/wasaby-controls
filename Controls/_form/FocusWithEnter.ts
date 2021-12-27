@@ -3,7 +3,7 @@ import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {focusNextElement, findNextElement} from 'UI/Focus';
 import template = require('wml!Controls/_form/FocusWithEnter/FocusWithEnter');
-import {getContextTypes} from '../Context/WorkByKeyboardUtil';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 /**
  * Контроллер, который обрабатывает нажатие клавиши enter и переводит фокус на след. поле ввода.
@@ -14,14 +14,6 @@ import {getContextTypes} from '../Context/WorkByKeyboardUtil';
 
 export default class FocusWithEnter extends Control<IControlOptions> {
     _template: TemplateFunction = template;
-
-    protected _afterMount(): void {
-        this._notify('register', ['mousedown', this, this._onMousedownHandler], {bubbling: true});
-    }
-
-    protected _beforeUnmount(): void {
-        this._notify('unregister', ['mousedown', this], {bubbling: true});
-    }
 
     protected keyDownHandler(e: SyntheticEvent<KeyboardEvent>): void {
         const enterPressed = e.nativeEvent.keyCode === constants.key.enter;
@@ -46,17 +38,11 @@ export default class FocusWithEnter extends Control<IControlOptions> {
                 index++;
             }
 
-            this.context.get('workByKeyboard')?.setStatus(true);
-
             // Не переводим фокус, если не нашли элемент за приемлемое количество попыток
             if (target && index !== maxFindAttemptNumber) {
                 focusNextElement(false, current);
             }
         }
-    }
-
-    protected _onMousedownHandler(): void {
-        this.context.get('workByKeyboard')?.setStatus(false);
     }
 
     /**
@@ -71,6 +57,8 @@ export default class FocusWithEnter extends Control<IControlOptions> {
     }
 
     static contextTypes(): object {
-        return getContextTypes();
+        return {
+            workByKeyboard: WorkByKeyboardContext
+        };
     }
 }

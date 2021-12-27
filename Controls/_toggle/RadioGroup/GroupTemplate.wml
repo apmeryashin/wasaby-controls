@@ -20,12 +20,10 @@
                             isSelected="{{isSelected}}"
                             groups="{{groups}}"
                             isChildGroup="{{true}}"
-                            focusedStatus="{{focusedStatus}}"
                             parent="{{item[options.keyProperty]}}"
                             options="{{options}}"/>
             </ws:if>
         </ws:for>
     </div>
     <div class="{{options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + options.validationStatus + '-border'}}"></div>
-    <div class="controls-focused-background controls-focused_status-{{focusedStatus}}"></div>
 </div>

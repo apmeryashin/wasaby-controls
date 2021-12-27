@@ -23,7 +23,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
-import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions,
       IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions,
@@ -94,20 +94,9 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColor
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = checkBoxTemplate;
-   private _focusedStatus: string;
 
-   protected _beforeUpdate(): void {
-      if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
-         this._focusedStatus = 'default';
-      }
-   }
-
-   protected _focusInHandler(): void {
-      this._focusedStatus = getFocusedStatus(this.context);
-   }
-
-   protected _focusOutHandler(): void {
-      this._focusedStatus = 'default';
+   protected _isWorkByKeyboard(): boolean {
+      return !!this.context.get('workByKeyboard') && !this._options.readOnly;
    }
 
    private _notifyChangeValue(value: boolean | null): void {
@@ -150,7 +139,9 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColor
    }
 
    static contextTypes(): object {
-      return getContextTypes();
+      return {
+         workByKeyboard: WorkByKeyboardContext
+      };
    }
 }
 

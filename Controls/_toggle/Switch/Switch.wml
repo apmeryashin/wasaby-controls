@@ -20,10 +20,8 @@
     <ws:partial template="{{_options.captionTemplate}}" scope="{{_options}}" tabindex="0"/>
 </ws:template>
 
-<span class="controls_toggle_theme-{{_options.theme}} controls-Switch"
+<span class="controls_toggle_theme-{{_options.theme}} controls-Switch  {{_isWorkByKeyboard() ? 'controls-focused-item'}}"
       on:click="_clickHandler()"
-      on:focusin="_focusInHandler()"
-      on:focusout="_focusOutHandler()"
       on:keypress="_keyUpHandler()"
       title="{{_options.tooltip}}">
    <div class="controls-invalid-container controls-Switch__wrapper" tabindex="0">
@@ -36,6 +34,5 @@
          <ws:partial template="caption"/>
       </ws:else>
       <div class="{{ _options.validationStatus!== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}"></div>
-      <div class="controls-focused-background controls-focused_status-{{_focusedStatus}}"></div>
    </div>
 </span>

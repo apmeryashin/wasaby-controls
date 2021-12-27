@@ -7,24 +7,24 @@ import template = require('wml!Controls/_toggle/RadioGroup/RadioGroup');
 import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 import * as groupTemplate from 'wml!Controls/_toggle/RadioGroup/GroupTemplate';
 import {
-   ISource,
-   ISourceOptions,
-   ISingleSelectable,
-   ISingleSelectableOptions,
-   IHierarchyOptions
+    ISource,
+    ISourceOptions,
+    ISingleSelectable,
+    ISingleSelectableOptions,
+    IHierarchyOptions
 } from 'Controls/interface';
 import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
-import {getContextTypes, getFocusedStatus} from '../Context/WorkByKeyboardUtil';
 import {constants} from 'Env/Env';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 export interface IRadioGroupOptions extends IControlOptions,
     ISingleSelectableOptions,
     IHierarchyOptions,
     ISourceOptions,
     IToggleGroupOptions {
-   captionPosition: string;
+    captionPosition: string;
 }
 
 /**
@@ -65,175 +65,169 @@ export interface IRadioGroupOptions extends IControlOptions,
  */
 
 class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, ISingleSelectable, IToggleGroup {
-   '[Controls/_interface/ISource]': boolean = true;
-   '[Controls/_interface/ISingleSelectable]': boolean = true;
-   '[Controls/_toggle/interface/IToggleGroup]': boolean = true;
+    '[Controls/_interface/ISource]': boolean = true;
+    '[Controls/_interface/ISingleSelectable]': boolean = true;
+    '[Controls/_toggle/interface/IToggleGroup]': boolean = true;
 
-   protected _template: TemplateFunction = template;
-   protected _defaultItemTemplate: TemplateFunction = defaultItemTemplate;
-   protected _groupTemplate: TemplateFunction = groupTemplate;
-   protected _items: RecordSet;
-   protected _crudWrapper: CrudWrapper;
-   protected _groups: object = {};
-   private _focusedStatus: string;
+    protected _template: TemplateFunction = template;
+    protected _defaultItemTemplate: TemplateFunction = defaultItemTemplate;
+    protected _groupTemplate: TemplateFunction = groupTemplate;
+    protected _items: RecordSet;
+    protected _crudWrapper: CrudWrapper;
+    protected _groups: object = {};
 
-   protected _beforeMount(options: IRadioGroupOptions,
-                          context: object,
-                          receivedState: RecordSet): void|Promise<RecordSet> {
-      this._selectKeyChanged = this._selectKeyChanged.bind(this);
-      this._isSelected = this._isSelected.bind(this);
-      if (receivedState) {
-         this._items = receivedState;
-         this._sortGroup(options, receivedState);
-      } else {
-         return this._initItems(options).then((items: RecordSet) => {
-            this._items = items;
-            this._sortGroup(options, items);
-            return items;
-         });
-      }
-   }
+    protected _beforeMount(options: IRadioGroupOptions,
+                           context: object,
+                           receivedState: RecordSet): void | Promise<RecordSet> {
+        this._selectKeyChanged = this._selectKeyChanged.bind(this);
+        this._isSelected = this._isSelected.bind(this);
+        if (receivedState) {
+            this._items = receivedState;
+            this._sortGroup(options, receivedState);
+        } else {
+            return this._initItems(options).then((items: RecordSet) => {
+                this._items = items;
+                this._sortGroup(options, items);
+                return items;
+            });
+        }
+    }
 
-   protected _beforeUpdate(newOptions: IRadioGroupOptions): Promise<void> {
-      if (newOptions.source && newOptions.source !== this._options.source) {
-         return this._initItems(newOptions).then((items: RecordSet) => {
-            this._items = items;
-            this._sortGroup(newOptions, items);
-            this._forceUpdate();
-         });
-      }
-      if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
-         this._focusedStatus = 'default';
-      }
-   }
+    protected _beforeUpdate(newOptions: IRadioGroupOptions): Promise<void> {
+        if (newOptions.source && newOptions.source !== this._options.source) {
+            return this._initItems(newOptions).then((items: RecordSet) => {
+                this._items = items;
+                this._sortGroup(newOptions, items);
+                this._forceUpdate();
+            });
+        }
+    }
 
-   protected _focusInHandler(): void {
-      this._focusedStatus = getFocusedStatus(this.context);
-   }
+    protected _isWorkByKeyboard(): boolean {
+        return !!this.context.get('workByKeyboard') && !this._options.readOnly;
+    }
 
-   protected _focusOutHandler(): void {
-      this._focusedStatus = 'default';
-   }
-
-   protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
-      if (e.nativeEvent.keyCode === constants.key.space && !this._options.readOnly) {
-         e.preventDefault();
-         const newActiveItem = this._getNextActiveItem();
-         if (newActiveItem) {
-             this._selectKeyChanged(e, newActiveItem, this._options.keyProperty);
-         }
-      }
-   }
-
-   private _getNextActiveItem(): Model {
-      let firstItem = null;
-      let nextActiveItem: Model = null;
-      let isNextActiveItem: boolean = false;
-      const thisActiveItem = this._items.getRecordById(this._options.selectedKey);
-      this._items.forEach((item) => {
-         if (!firstItem && !item.get('readOnly')) {
-            firstItem = item;
-         }
-         if (item === thisActiveItem) {
-            isNextActiveItem = true;
-         } else if (isNextActiveItem && !item.get('readOnly')) {
-            isNextActiveItem = false;
-            nextActiveItem = item;
-         }
-      });
-      if (!nextActiveItem) {
-         nextActiveItem = firstItem;
-      }
-      return nextActiveItem;
-   }
-
-   private _sortGroup(options: IRadioGroupOptions, items: RecordSet): void {
-      this._groups = {};
-      items.each((item) => {
-         let parent = options.parentProperty ? item.get(options.parentProperty) : null;
-         if (typeof parent === 'undefined') {
-            parent = null;
-         }
-         if (!this._groups[parent]) {
-            this._groups[parent] = [];
-            this._groups[parent] = {
-               selectedKey: null,
-               items: []
-            };
-         }
-         this._groups[parent].items.push(item);
-      });
-   }
-
-   protected _isSelected(item: Record): boolean {
-      if (item.get(this._options.keyProperty) === this._options.selectedKey) {
-         return true;
-      }
-      const parent = this._options.parentProperty ?
-          this._items.getRecordById(this._options.selectedKey).get(this._options.parentProperty) : null;
-      if (parent) {
-         const parentKey = this._items.getRecordById(parent).get(this._options.keyProperty);
-         return parentKey === item.get(this._options.keyProperty);
-      }
-      return false;
-   }
-
-   protected _selectKeyChanged(e: SyntheticEvent<MouseEvent | TouchEvent>, item: Model, keyProperty: string): void {
-      if (!this._options.readOnly && item.get('readOnly') !== true) {
-         let selectedKey = item.get(keyProperty);
-         if (this._groups[selectedKey]) {
-            if (this._groups[selectedKey].selectedKey !== null) {
-               selectedKey = this._groups[selectedKey].selectedKey;
-            } else {
-               selectedKey = this._groups[selectedKey].items[0].get(keyProperty) || selectedKey;
+    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+        if (e.nativeEvent.keyCode === constants.key.space && !this._options.readOnly) {
+            e.preventDefault();
+            const newActiveItem = this._getNextActiveItem();
+            if (newActiveItem) {
+                this._selectKeyChanged(e, newActiveItem, this._options.keyProperty);
             }
-         }
-         this._notify('selectedKeyChanged', [selectedKey]);
-         const parent = this._options.parentProperty ? item.get(this._options.parentProperty) : null;
-         if (parent) {
-            this._groups[parent].selectedKey = selectedKey;
-         }
-      }
-   }
+        }
+    }
 
-   private _initItems(options: IRadioGroupOptions): Promise<RecordSet> {
-      this._crudWrapper = new CrudWrapper({
-         source: options.source
-      });
-      return this._crudWrapper.query({}).then((items) => {
-         return items;
-      });
-   }
+    private _getNextActiveItem(): Model {
+        let firstItem = null;
+        let nextActiveItem: Model = null;
+        let isNextActiveItem: boolean = false;
+        const thisActiveItem = this._items.getRecordById(this._options.selectedKey);
+        this._items.forEach((item) => {
+            if (!firstItem && !item.get('readOnly')) {
+                firstItem = item;
+            }
+            if (item === thisActiveItem) {
+                isNextActiveItem = true;
+            } else if (isNextActiveItem && !item.get('readOnly')) {
+                isNextActiveItem = false;
+                nextActiveItem = item;
+            }
+        });
+        if (!nextActiveItem) {
+            nextActiveItem = firstItem;
+        }
+        return nextActiveItem;
+    }
 
-   static getDefaultOptions(): object {
-      return {
-         direction: 'vertical',
-         validationStatus: 'valid',
-         captionPosition: 'right'
-      };
-   }
+    private _sortGroup(options: IRadioGroupOptions, items: RecordSet): void {
+        this._groups = {};
+        items.each((item) => {
+            let parent = options.parentProperty ? item.get(options.parentProperty) : null;
+            if (typeof parent === 'undefined') {
+                parent = null;
+            }
+            if (!this._groups[parent]) {
+                this._groups[parent] = [];
+                this._groups[parent] = {
+                    selectedKey: null,
+                    items: []
+                };
+            }
+            this._groups[parent].items.push(item);
+        });
+    }
 
-   static getOptionTypes(): object {
-      return {
-         captionPosition: EntityDescriptor(String).oneOf([
-            'left',
-            'right'
-         ])
-      };
-   }
+    protected _isSelected(item: Record): boolean {
+        if (item.get(this._options.keyProperty) === this._options.selectedKey) {
+            return true;
+        }
+        const parent = this._options.parentProperty ?
+            this._items.getRecordById(this._options.selectedKey).get(this._options.parentProperty) : null;
+        if (parent) {
+            const parentKey = this._items.getRecordById(parent).get(this._options.keyProperty);
+            return parentKey === item.get(this._options.keyProperty);
+        }
+        return false;
+    }
 
-   static contextTypes(): object {
-      return getContextTypes();
-   }
+    protected _selectKeyChanged(e: SyntheticEvent<MouseEvent | TouchEvent>, item: Model, keyProperty: string): void {
+        if (!this._options.readOnly && item.get('readOnly') !== true) {
+            let selectedKey = item.get(keyProperty);
+            if (this._groups[selectedKey]) {
+                if (this._groups[selectedKey].selectedKey !== null) {
+                    selectedKey = this._groups[selectedKey].selectedKey;
+                } else {
+                    selectedKey = this._groups[selectedKey].items[0].get(keyProperty) || selectedKey;
+                }
+            }
+            this._notify('selectedKeyChanged', [selectedKey]);
+            const parent = this._options.parentProperty ? item.get(this._options.parentProperty) : null;
+            if (parent) {
+                this._groups[parent].selectedKey = selectedKey;
+            }
+        }
+    }
+
+    private _initItems(options: IRadioGroupOptions): Promise<RecordSet> {
+        this._crudWrapper = new CrudWrapper({
+            source: options.source
+        });
+        return this._crudWrapper.query({}).then((items) => {
+            return items;
+        });
+    }
+
+    static getDefaultOptions(): object {
+        return {
+            direction: 'vertical',
+            validationStatus: 'valid',
+            captionPosition: 'right'
+        };
+    }
+
+    static getOptionTypes(): object {
+        return {
+            captionPosition: EntityDescriptor(String).oneOf([
+                'left',
+                'right'
+            ])
+        };
+    }
+
+    static contextTypes(): object {
+        return {
+            workByKeyboard: WorkByKeyboardContext
+        };
+    }
 }
 
 Object.defineProperty(Radio, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
+    enumerable: true,
+    configurable: true,
 
-   get(): object {
-      return Radio.getDefaultOptions();
-   }
+    get(): object {
+        return Radio.getDefaultOptions();
+    }
 });
 
 export default Radio;

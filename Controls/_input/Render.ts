@@ -17,7 +17,7 @@ import {IBorderVisibilityArea} from './interface/IBorderVisibilityArea';
 
 // @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
-import {getContextTypes} from '../Context/WorkByKeyboardUtil';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 type State =
     'valid'
@@ -153,7 +153,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     }
 
     protected _focusInHandler(): void {
-        if (this.context.get('workByKeyboard')?.status) {
+        if (!!this.context.get('workByKeyboard') && !this._options.readOnly) {
             this._focusedStatus = 'active';
             this._options.viewModel.selection = 0;
             this._clearTimeout();
@@ -234,9 +234,6 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._setState(options);
         this._updateHorizontalPadding(options);
         this._updateFieldZIndex(options);
-        if (!this.context.get('workByKeyboard')?.status && this._focusedStatus === 'active') {
-            this._focusedStatus = 'default';
-        }
     }
 
     protected _updateFieldZIndex(options: IRenderOptions): void {
@@ -332,7 +329,9 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     }
 
     static contextTypes(): object {
-        return getContextTypes();
+        return {
+            workByKeyboard: WorkByKeyboardContext
+        }
     }
 }
 

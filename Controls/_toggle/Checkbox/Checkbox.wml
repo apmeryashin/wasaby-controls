@@ -1,6 +1,4 @@
-<div class="controls_toggle_theme-{{_options.theme}} controls-Checkbox"
-on:focusin="_focusInHandler()"
-on:focusout="_focusOutHandler()">
+<div class="controls_toggle_theme-{{_options.theme}} controls-Checkbox {{_isWorkByKeyboard() ? 'controls-focused-item'}}">
     <div class="controls-invalid-container">
         <div on:click="_clickHandler()"
              class="controls-Checkbox__wrapper
@@ -27,6 +25,5 @@ on:focusout="_focusOutHandler()">
                         caption="{{_options.caption}}"/>
         </div>
         <div class="{{_options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}"></div>
-        <div class="controls-focused-background controls-focused_status-{{_focusedStatus}}"></div>
     </div>
 </div>
