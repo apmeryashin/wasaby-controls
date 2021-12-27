@@ -45,7 +45,7 @@
     <ws:bodyContentTemplate>
         <div class="controls-FilterPanelPopup-normal">
             <Controls.filterPanel:View name="filterPanel"
-                                       source="{{_options.items}}"
+                                       source="{{_items || _options.items}}"
                                        viewMode="cloud"
                                        backgroundStyle="{{_options.orientation === 'horizontal' ? 'default' : 'contrast'}}"
                                        orientation="{{_options.orientation}}"
