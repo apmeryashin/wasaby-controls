@@ -1,0 +1,9 @@
+<ws:partial template="Controls/grid:ColumnTemplate"
+            scope="{{ _options }}">
+    <ws:contentTemplate>
+        <Controls.progress:Rating value="3.6"
+                                  readOnly="{{true}}"
+                                  precision="{{0.5}}"
+        />
+    </ws:contentTemplate>
+</ws:partial>
