@@ -1,4 +1,6 @@
 import { Logger } from 'UI/Utils';
+import {TIconStyle} from 'Controls/interface';
+import {TButtonStyle} from 'Controls/buttons';
 
 const deprecatedStyles = {
     error: 'danger',
@@ -14,12 +16,13 @@ export class Utils {
      * @param style
      * @param controlName
      */
-    static getStyle(style: 'secondary'|'warning'|'danger'|'success', controlName: string): 'secondary'|'warning'|'danger'|'success' {
+    static getStyle(style: TIconStyle|TButtonStyle, controlName: string): TIconStyle|TButtonStyle {
         if (!style) {
             return 'secondary';
         }
         if (style in deprecatedStyles) {
-            Logger.warn(controlName + ': Используются устаревшие стили. Используйте ' + deprecatedStyles[style] + ' вместо ' + style, this);
+            Logger.warn(controlName + ': Используются устаревшие стили.' +
+                'Используйте ' + deprecatedStyles[style] + ' вместо ' + style, this);
             return deprecatedStyles[style];
         }
         return style;
@@ -32,10 +35,14 @@ export class Utils {
      * @param icon
      * @param controlName
      */
-    static getStyleFromIcon(style: 'secondary'|'warning'|'danger'|'success', icon: string, controlName: string): 'secondary'|'warning'|'danger'|'success' {
-        const styleFromIcon = icon && Object.keys(deprecatedStyles).find((key) => icon.indexOf(`icon-${key}`) !== -1);
+    static getStyleFromIcon(style: TIconStyle|TButtonStyle,
+                            icon: string,
+                            controlName: string): TIconStyle|TButtonStyle {
+        const styleFromIcon = icon && Object.keys(deprecatedStyles)
+            .find((key) => icon.indexOf(`icon-${key}`) !== -1);
         if (styleFromIcon) {
-            Logger.warn(controlName + ': Используются устаревшие стили. Используйте опцию iconStyle вместо устаревшего CSS класса icon-' + styleFromIcon, this);
+            Logger.warn(controlName + ': Используются устаревшие стили. ' +
+                'Используйте опцию iconStyle вместо устаревшего CSS класса icon-' + styleFromIcon, this);
             return deprecatedStyles[styleFromIcon];
         }
         return style;
