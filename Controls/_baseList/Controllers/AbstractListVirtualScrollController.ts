@@ -161,11 +161,11 @@ export abstract class AbstractListVirtualScrollController<
     private _checkTriggersVisibilityTimeout: number;
 
     /**
-     * Стейт используется, чтобы определить что сейчас идет синхронизация.
-     * Нужно для того, чтобы не менять индексы уже во время синхронизации.
+     * Стейт используется, чтобы определить что сейчас идет отрисовка.
+     * Нужно для того, чтобы не менять индексы уже во время отрисовки.
      * @private
      */
-    private _synchronizationInProgress: boolean;
+    private _renderInProgress: boolean;
 
     /**
      * Стейт, который определяет что сейчас выполняется отрисовка новых индексов.
@@ -230,11 +230,9 @@ export abstract class AbstractListVirtualScrollController<
         this._handleScheduledUpdateHasItemsOutRange();
     }
 
-    beforeUpdateListControl(): void {
-        this._synchronizationInProgress = true;
-    }
-
     beforeRenderListControl(): void {
+        this._renderInProgress = true;
+
         // На beforeRender нам нужно только считать параметры для восстановления скролла.
         // Все остальные типы скролла выполняются на afterRender, когда записи уже отрисовались.
         if (this._scheduledScrollParams && this._scheduledScrollParams.type === 'calculateRestoreScrollParams') {
@@ -254,7 +252,7 @@ export abstract class AbstractListVirtualScrollController<
             this._handleChangedIndexesAfterSynchronizationCallback();
             this._handleChangedIndexesAfterSynchronizationCallback = null;
         }
-        this._synchronizationInProgress = false;
+        this._renderInProgress = false;
     }
 
     saveScrollPosition(): void {
@@ -283,7 +281,7 @@ export abstract class AbstractListVirtualScrollController<
             }
         });
         const indexesChanged = this._scrollController.scrollToVirtualPosition(position);
-        if (!indexesChanged && !this._synchronizationInProgress) {
+        if (!indexesChanged && !this._renderInProgress) {
             this._handleScheduledScroll();
         }
     }
@@ -581,9 +579,9 @@ export abstract class AbstractListVirtualScrollController<
             }
         };
 
-        // Нельзя изменять индексы во время синхронизации, т.к. возможно что afterRender будет вызван другими измениями.
+        // Нельзя изменять индексы во время отрисовки, т.к. возможно что afterRender будет вызван другими измениями.
         // Из-за этого на afterRender не будет еще отрисован новый диапазон, он отрисуется на следующую синхронизацию.
-        if (this._synchronizationInProgress) {
+        if (this._renderInProgress) {
             this._handleChangedIndexesAfterSynchronizationCallback = callback;
         } else {
             callback();
@@ -642,7 +640,7 @@ export abstract class AbstractListVirtualScrollController<
                     // Если сейчас идет синхронизация(что-то отрисовывается) или мы запланировали скролл, то
                     // переносим проверку видимости триггеров на следующий afterRender, когда уже
                     // точно отрисуются изменения и запланированный скролл будет выполнен(в частности восстановление)
-                    if (this._synchronizationInProgress || this._isScheduledScroll() || this._renderNewIndexes) {
+                    if (this._renderInProgress || this._isScheduledScroll() || this._renderNewIndexes) {
                         this._scheduleCheckTriggersVisibility();
                     } else {
                         this._scrollController.checkTriggersVisibility();

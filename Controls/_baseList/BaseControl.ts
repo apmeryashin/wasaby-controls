@@ -4850,7 +4850,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (this._useNewScroll) {
             this._listVirtualScrollController.setAdditionalTriggersOffsets(this._getAdditionalTriggersOffsets());
-            this._listVirtualScrollController.beforeUpdateListControl();
         }
 
         this._spaceBlocked = false;
