@@ -34,7 +34,8 @@ describe('Controls/display/collection/BackgroundStyle', () => {
         const recordSet = new RecordSet({ rawData: [{id: 0}, {id: 1}, {id: 2}] });
         const collection = new GridCollection({
             keyProperty: 'id',
-            collection: recordSet
+            collection: recordSet,
+            columns: [{}, {}]
         });
 
         const sandbox = sinon.createSandbox();

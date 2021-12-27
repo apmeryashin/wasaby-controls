@@ -6,6 +6,7 @@ import {
 } from 'Controls/baseList';
 import {ObserversController, IObserversControllerOptions} from './ObserversController';
 import {ItemsSizeController, IItemsSizesControllerOptions} from './ItemsSizeController';
+import {ColumnsEnumerator} from './displayUtils/ColumnsEnumerator';
 import type {TColumns, GridCollection, THeader} from 'Controls/grid';
 import type {Collection} from 'Controls/display';
 
@@ -45,6 +46,10 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
         return ItemsSizeController;
     }
 
+    protected _setCollectionIterator(mode: TVirtualScrollMode): void {
+        this._collection.setColumnsEnumerator(new ColumnsEnumerator(this._collection));
+    }
+
     protected _getScrollControllerOptions(options: IControllerOptions): IScrollControllerOptions {
         return {
             ...super._getScrollControllerOptions(options),
@@ -53,10 +58,20 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
     }
 
     protected _applyIndexes(startIndex: number, endIndex: number): void {
-        this._collection.setColumns(this._columns.slice(startIndex, endIndex));
+        this._collection.getColumnsEnumerator().setIndexes(startIndex, endIndex);
 
-        if (this._header) {
-            this._collection.setHeader(this._header.slice(startIndex, endIndex));
+        if (this._scrollController) {
+            const backwardAdditionalOffset = startIndex > this._collection.getStickyColumnsCount() ?
+                this._scrollController._itemsSizesController
+                    .getItemsSizes()
+                    .slice(0, this._collection.getStickyColumnsCount())
+                    .reduce((sum, itemSize) => sum + itemSize.size, 0)
+                : 0;
+
+            this._scrollController.setAdditionalTriggersOffsets({
+                backward: 0,
+                forward: 0
+            });
         }
     }
 
