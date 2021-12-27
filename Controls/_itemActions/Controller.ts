@@ -5,31 +5,32 @@ import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem} from 'Controls/display';
-import {IStickyPopupOptions} from 'Controls/popup';
+import {ANIMATION_STATE, CollectionItem, ISwipeConfig, TItemKey} from 'Controls/display';
+import {DependencyTimer, IStickyPopupOptions} from 'Controls/popup';
 import {IMenuPopupOptions} from 'Controls/menu';
 import {
-    TItemActionVisibilityCallback,
-    TItemActionShowType,
-    TItemActionsSize,
     IItemAction,
-    TItemActionsPosition,
     TActionCaptionPosition,
-    TEditArrowVisibilityCallback,
     TActionDisplayMode,
+    TEditArrowVisibilityCallback,
+    TItemActionShowType,
+    TItemActionsPosition,
+    TItemActionsSize,
+    TItemActionVisibilityCallback,
     TMenuButtonVisibility
 } from './interface/IItemAction';
 import {IItemActionsItem} from './interface/IItemActionsItem';
 import {IItemActionsCollection} from './interface/IItemActionsCollection';
-import {IShownItemAction, IItemActionsObject} from './interface/IItemActionsObject';
+import {IItemActionsObject, IShownItemAction} from './interface/IItemActionsObject';
 import {verticalMeasurer} from './measurers/VerticalMeasurer';
 import {horizontalMeasurer} from './measurers/HorizontalMeasurer';
 import {Utils} from './Utils';
 import {IContextMenuConfig} from './interface/IContextMenuConfig';
-import {DependencyTimer} from 'Controls/popup';
 import * as mStubs from 'Core/moduleStubs';
 import {getActions} from './measurers/ItemActionMeasurer';
 import {TItemActionsVisibility} from './interface/IItemActionsOptions';
+import {TButtonStyle} from 'Controls/_buttons/interface/IButton';
+import {TIconStyle} from 'Controls/_interface/IIconStyle';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -200,6 +201,8 @@ export class Controller {
     // https://online.sbis.ru/opendoc.html?guid=dca1ba93-ffe6-4f68-9f05-9d266a0bc28f
     private _task1183329228: boolean;
 
+    private _debugger = {updatedActionsOnItem: 0, updateCalled: 0, swipeConfig: 0};
+
     /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
@@ -208,6 +211,7 @@ export class Controller {
      * @param options
      */
     update(options: IControllerOptions): Array<number | string> {
+        this._debugger.updateCalled++;
         let result: Array<number | string> = [];
         this._theme = options.theme;
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
@@ -292,6 +296,13 @@ export class Controller {
         this._collection.nextVersion();
     }
 
+    /**
+     * Берёт ранее набранные itemActions для указанной записи, и,
+     * в зависимости от ширины контейнера определяет видимые.
+     * Затем обновляет itemActions записи.
+     * @param itemKey
+     * @param containerWidth
+     */
     updateItemActions(itemKey: TItemKey, containerWidth: number): void {
         const item = this._collection.getItemBySourceKey(itemKey);
         const actions = item.getActions();
@@ -537,6 +548,7 @@ export class Controller {
         if (this._collection.isEventRaising()) {
             this._collection.setEventRaising(false, true);
         }
+        const startStamp = Date.now();
         this._collection.each((item) => {
             const itemChanged = this._updateActionsOnParticularItem(item);
             hasChanges = hasChanges || itemChanged;
@@ -555,6 +567,7 @@ export class Controller {
                 this._updateSwipeConfig(this._actionsWidth, this._actionsHeight);
             }
             this._collection.nextVersion();
+            // console.log('it\'s took ' + (Date.now() - startStamp) +  'ms');
         }
 
         return changedItemsIds;
@@ -565,7 +578,11 @@ export class Controller {
             return false;
         }
         const actionsObject = this._fixActionsDisplayOptions(this._getActionsObject(item));
-        return Controller._setItemActions(item, actionsObject, this._actionMode);
+        return Controller._setItemActions(item, actionsObject, this._actionMode, this._debugger);
+    }
+
+    resetDebug(): void {
+        this._debugger = {updatedActionsOnItem: 0, updateCalled: 0, swipeConfig: 0};
     }
 
     /**
@@ -745,17 +762,13 @@ export class Controller {
 
     /**
      * Определяет есть операции, которые надо показывать в меню по ховеру.
-     * @param actions
+     * @param action
      * @private
      */
-    private _hasMenuActions(actions: IItemAction[]): boolean {
-        return actions.some(
-            (action) =>
-                !action.parent && (
-                    !action.showType ||
-                    action.showType === TItemActionShowType.MENU ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR)
-        );
+    private _isMenuAction(action: IItemAction): boolean {
+        return !action.showType ||
+               action.showType === TItemActionShowType.MENU ||
+               action.showType === TItemActionShowType.MENU_TOOLBAR;
     }
 
     /**
@@ -780,7 +793,6 @@ export class Controller {
      * @private
      */
     private _getActionsObject(item: IItemActionsItem): IItemActionsObject {
-        let showed;
         const contents = Controller._getItemContents(item);
         let all: IItemAction[];
         if (this._itemActionsProperty) {
@@ -793,46 +805,82 @@ export class Controller {
         } else {
             all = this._commonItemActions;
         }
-
-        const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
-        if (visibleActions.length > 1) {
-            showed = this._filterToolbarActions(visibleActions);
-            if (this._hasMenuActions(visibleActions) || this._hasMenuHeaderOrFooter()) {
-                showed.push(this._getMenuItemAction());
-            }
-            if (this._feature1183020440) {
-                showed.reverse();
-            }
-        } else {
-            showed = visibleActions;
-            if (!this._task1183329228) {
-                if (this._hasMenuHeaderOrFooter()) {
-                    showed.push(this._getMenuItemAction());
-                }
-            }
-        }
+        const showed = this._filterActionsToShowOnHover(all, item.getContents(), item.isEditing());
         return { all, showed };
     }
 
-    private _filterVisibleActions(itemActions: IItemAction[], contents: Model, isEditing: boolean): IItemAction[] {
-        return itemActions.filter((action) =>
-            this._itemActionVisibilityCallback(action, contents, isEditing)
-        );
+    /**
+     * Отфильтровывает те операции над записью, которые надо показать по ховеру
+     * @private
+     */
+    private _filterActionsToShowOnHover(itemActions: IItemAction[],
+                                        contents: Model,
+                                        isEditing: boolean): IItemAction[] {
+        let actionsToShowOnHover: IItemAction[] = [];
+        const actionsToShowInMenu: IItemAction[] = [];
+        for (let i = 0; i < itemActions.length; i++) {
+            // В любом случае не учитываем те операции над записью, в которых есть parent.
+            // Для них видимость определяется при открытии соответствующего их parent меню.
+            if (itemActions[i].parent) {
+                continue;
+            }
+            const isMenuAction = this._isMenuAction(itemActions[i]);
+            // На этом этапе нам важно понимать только, что надо показывать кнопку меню,
+            // Поэтому двух операций из меню тут будет достаточно.
+            // Для других видимость определяется при открытии меню по трём точкам.
+            if (isMenuAction && actionsToShowInMenu.length > 1) {
+                continue;
+            }
+            const isVisible = this._itemActionVisibilityCallback(itemActions[i], contents, isEditing);
+            // Если операция должна быть видима по колбеку и находится в меню,
+            // записываем её в массив записей меню.
+            if (isMenuAction && isVisible) {
+                actionsToShowInMenu.push(itemActions[i]);
+
+            // Любые другие операции записываем в список для отображения по ховеру
+            } else if (isVisible) {
+                actionsToShowOnHover.push(itemActions[i]);
+            }
+        }
+
+        if (actionsToShowOnHover.length > 0) {
+            // Если есть хоть одна видимая операция для показа в меню или в конфигурации
+            // меню указано, что надо показать подвал или шапку меню, то показываем кнопку меню.
+            if (actionsToShowInMenu.length > 0 || this._hasMenuHeaderOrFooter()) {
+                actionsToShowOnHover.push(this._getMenuItemAction());
+            }
+            if (this._feature1183020440) {
+                actionsToShowOnHover.reverse();
+            }
+        } else if (actionsToShowInMenu.length > 1) {
+            actionsToShowOnHover.push(this._getMenuItemAction());
+        } else {
+            // Тут кейс, когда actionsToShowOnHover пуст, а в actionsToShowInMenu.length <= 1
+            actionsToShowOnHover = actionsToShowInMenu;
+            // По умолчанию, если actionsToShowInMenu.length <= 1, нужно показывать
+            // все кнопки на тулбаре, и не добавлять кнопку "меню".
+            // Но, если в конфигурации contextMenuConfig указано, что надо показать подвал или шапку меню,
+            // нужно показывать кнопку даже тогда, когда вообще ни одной операции не было показано.
+            // Некоторым это, наоборот, не нужно. Под опцией task1183329228 принудительный показ кнопки отключен.
+            if (!this._task1183329228) {
+                if (this._hasMenuHeaderOrFooter()) {
+                    actionsToShowOnHover.push(this._getMenuItemAction());
+                }
+            }
+        }
+        return actionsToShowOnHover;
     }
 
     /**
-     * Отфильтровывает ItemActions по признаку нет родителя и по showType.
-     * @param itemActions
+     * Отфильтровывает видимые операции над записью
+     * @param itemActions Список операций, которые надо отфильтровать
+     * @param contents текущий Record для передачи в callback
+     * @param isEditing является ли запись редактируемой
      * @private
      */
-    private _filterToolbarActions(itemActions: IItemAction[]): IItemAction[] {
+    private _filterVisibleActions(itemActions: IItemAction[], contents: Model, isEditing: boolean): IItemAction[] {
         return itemActions.filter((action) =>
-            !action.parent &&
-            (
-                action.showType === TItemActionShowType.TOOLBAR ||
-                action.showType === TItemActionShowType.MENU_TOOLBAR ||
-                action.showType === TItemActionShowType.FIXED
-            )
+            this._itemActionVisibilityCallback(action, contents, isEditing)
         );
     }
 
@@ -888,12 +936,16 @@ export class Controller {
      */
     private _fixActionsDisplayOptions(actionsObject: IItemActionsObject): IItemActionsObject {
         if (actionsObject.all && actionsObject.all.length) {
-            actionsObject.all = actionsObject.all.map((action) => {
-                action.style = Utils.getStyle(action.style, 'itemActions/Controller');
+            actionsObject.all = actionsObject.all.map((originalAction) => {
+                // Нельзя модифицировать оригинальные операции над записью, т.к. это приведёт
+                // к лишнему пересчёту и дополнительной синхронизации при update в контроле.
+                const action: IShownItemAction = {...originalAction};
+                action.style = Utils.getStyle(action.style, 'itemActions/Controller') as TButtonStyle;
 
                 // Это нужно чтобы не поддерживать старые стили типа icon-error и ховер по таким кнопкам.
-                action.iconStyle = Utils.getStyleFromIcon(action.iconStyle, action.icon, 'itemActions/Controller');
-                action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
+                action.iconStyle = Utils.getStyleFromIcon(action.iconStyle, action.icon,
+                    'itemActions/Controller') as TIconStyle;
+                action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller') as TIconStyle;
 
                 action.tooltip = Controller._getTooltip(action);
                 return action;
@@ -961,12 +1013,14 @@ export class Controller {
     private static _setItemActions(
         item: IItemActionsItem,
         actionsObject: IItemActionsObject,
-        actionMode: string
+        actionMode: string,
+        _debugger?
     ): boolean {
         const oldActionsObject = item.getActions();
         if (!oldActionsObject ||
             (actionsObject && !this._isMatchingActions(oldActionsObject, actionsObject, actionMode, item.isSwiped()))
         ) {
+            _debugger.updatedActionsOnItem++;
             item.setActions(actionsObject, true);
             return true;
         }

@@ -5,6 +5,8 @@ import {RecordSet } from 'Types/collection';
 import {Container} from 'Controls/scroll';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 import {Model} from 'Types/entity';
+import {getActionsForContacts as getItemActions} from 'Controls-demo/list_new/DemoHelpers/ItemActionsCatalog';
+import {IItemAction} from 'Controls/_itemActions/interface/IItemAction';
 
 interface IItem {
     title: string;
@@ -26,6 +28,7 @@ export default class extends Control {
     protected _initialScrollPosition = {
         vertical: 'end'
     };
+    protected _itemActions: IItemAction[];
 
     private dataArray: IItem[] = generateData({
         keyProperty: 'key',
@@ -50,7 +53,13 @@ export default class extends Control {
             keyProperty: 'key',
             data: this.dataArray
         });
+        this._itemActions = getItemActions();
         this._itemsReady = this._saveItems.bind(this);
+        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
+    }
+
+    protected _itemActionVisibilityCallback(): boolean {
+        return true;
     }
 
     private _saveItems(items: RecordSet): void {

@@ -10,6 +10,8 @@
                                     keyProperty="key"
                                     on:drawItems="_onDrawItems()"
                                     itemsReadyCallback="{{_itemsReady}}"
+                                    itemActions="{{_itemActions}}"
+                                    itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                                     navigation="{{_options.navigation}}">
                     <ws:virtualScrollConfig pageSize="{{100}}"/>
                 </Controls.list:View>
