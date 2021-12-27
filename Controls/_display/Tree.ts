@@ -379,6 +379,14 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      */
     protected _$nodeTypeProperty: string;
 
+    /**
+     * Флаг определяет по какой стратегии будет определяться ближайший итем.
+     * Если выставлен в false, то используется стратегия дерева, которая ищет ближайший только в рамках одного парента.
+     * Если выставлен в true, то используется стратегия плоской коллекции, которая ищет просто ближайший подходящий
+     * итем.
+     */
+    protected _useFlatNearbyItemStrategy: boolean = false;
+
     getCurrent: () => T;
 
     // endregion Expanded/Collapsed
@@ -1320,6 +1328,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         isNext: boolean,
         conditionProperty?: string
     ): T {
+        if (this._useFlatNearbyItemStrategy) {
+            return super._getNearbyItem(enumerator, item, isNext, conditionProperty);
+        }
+
         const method = isNext ? 'moveNext' : 'movePrevious';
         const parent = item && item.getParent && item.getParent() || this.getRoot();
         let hasItem = true;

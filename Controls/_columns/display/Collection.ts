@@ -150,12 +150,14 @@ export default class ColumnsCollection<
      * Вызывает переданный callback только для записей групп
      */
     eachGroups(callback: EnumeratorCallback<GroupItem<unknown>>, context?: object): void {
-        this.each((item, index) => {
+        let index = 0;
+        this.each((item) => {
             if (!item['[Controls/_display/GroupItem]']) {
                 return;
             }
 
             callback.call(context, item, index);
+            index += 1;
         });
     }
     //endregion
@@ -482,22 +484,16 @@ export default class ColumnsCollection<
         const curIndex = this.getIndex(item);
         let newIndex: number = curIndex;
 
-        if (this._$columnsMode === 'auto') {
-            if (curIndex > 0) {
-                newIndex = curIndex - 1;
-            }
-        } else {
-            const curColumn = item.getColumn();
-            const snapshot = this.getColumnsSnapshotByItem(item);
-            const curColumnIndex = snapshot.columns[curColumn].indexOf(curIndex);
+        const curColumn = item.getColumn();
+        const snapshot = this.getColumnsSnapshotByItem(item);
+        const curColumnIndex = snapshot.columns[curColumn].indexOf(curIndex);
 
-            if (curColumn > 0) {
-                const prevColumn = snapshot.columns.slice().reverse().find(
-                    (col: number[], index: number) => index > this._$columnsCount - curColumn - 1 && col.length > 0
-                );
-                if (prevColumn instanceof Array) {
-                    newIndex = prevColumn[Math.min(prevColumn.length - 1, curColumnIndex)];
-                }
+        if (curColumn > 0) {
+            const prevColumn = snapshot.columns.slice().reverse().find(
+                (col: number[], index: number) => index > this._$columnsCount - curColumn - 1 && col.length > 0
+            );
+            if (prevColumn instanceof Array) {
+                newIndex = prevColumn[Math.min(prevColumn.length - 1, curColumnIndex)];
             }
         }
 
@@ -508,24 +504,17 @@ export default class ColumnsCollection<
         const curIndex = this.getIndex(item);
         let newIndex: number = curIndex;
 
-        if (this._$columnsMode === 'auto') {
-            if (curIndex < this.getCount() - 1) {
-                newIndex = curIndex + 1;
-            } else if (curIndex > this._$columnsCount) {
-                newIndex = curIndex + 1 - this._$columnsCount;
-            }
-        } else {
-            const curColumn = item.getColumn();
-            const snapshot = this.getColumnsSnapshotByItem(item);
-            const curColumnIndex = snapshot.columns[curColumn].indexOf(curIndex);
+        const curColumn = item.getColumn();
+        const snapshot = this.getColumnsSnapshotByItem(item);
+        const curColumnIndex = snapshot.columns[curColumn].indexOf(curIndex);
 
-            if (curColumn < this._$columnsCount - 1) {
-                const nextColumn = snapshot.columns.find(
-                    (col: number[], index: number) => index > curColumn && col.length > 0);
+        if (curColumn < this._$columnsCount - 1) {
+            const nextColumn = snapshot.columns.find(
+                (col: number[], index: number) => index > curColumn && col.length > 0
+            );
 
-                if (nextColumn instanceof Array) {
-                    newIndex = nextColumn[Math.min(nextColumn.length - 1, curColumnIndex)];
-                }
+            if (nextColumn instanceof Array) {
+                newIndex = nextColumn[Math.min(nextColumn.length - 1, curColumnIndex)];
             }
         }
 
@@ -536,19 +525,19 @@ export default class ColumnsCollection<
         const curIndex = this.getIndex(item);
         let newIndex: number = curIndex;
 
-        if (this._$columnsMode === 'auto') {
-            if (Math.round(curIndex / this._$columnsCount) > 0) {
-                newIndex = curIndex - this._$columnsCount;
-            }
-        } else {
-            const curColumn = item.getColumn();
-            const snapshot = this.getColumnsSnapshotByItem(item);
-            const curColumnIndex = snapshot.columns[curColumn].indexOf(curIndex);
+        const curColumn = item.getColumn();
+        const snapshot = this.getColumnsSnapshotByItem(item);
+        const curColumnIndex = snapshot.columns[curColumn].indexOf(curIndex);
 
-            if (curColumnIndex > 0) {
-                newIndex = snapshot.columns[curColumn][curColumnIndex - 1];
-            } else {
-                newIndex = curIndex;
+        if (curColumnIndex > 0) {
+            newIndex = snapshot.columns[curColumn][curColumnIndex - 1];
+        } else {
+            newIndex = curIndex;
+
+            // Если задана группировка и текущая группа итема не является первой,
+            // то следующим сверху будет последний итем предыдущей группы
+            if (this.getGroup() && snapshot.range[0] > 0) {
+                newIndex = snapshot.range[0] - 1;
             }
         }
 
@@ -559,19 +548,22 @@ export default class ColumnsCollection<
         const curIndex = this.getIndex(item);
         let newIndex: number = curIndex;
 
-        if (this._$columnsMode === 'auto') {
-            if (curIndex + this._$columnsCount < this.getCount()) {
-                newIndex = curIndex + this._$columnsCount;
-            }
-        } else {
-            const curColumn = item.getColumn();
-            const snapshot = this.getColumnsSnapshotByItem(item);
-            const curColumnIndex = snapshot.columns[curColumn].indexOf(curIndex);
+        const curColumn = item.getColumn();
+        const snapshot = this.getColumnsSnapshotByItem(item);
+        const curColumnIndex = snapshot.columns[curColumn].indexOf(curIndex);
 
-            if (curColumnIndex < snapshot.columns[curColumn].length - 1) {
-                newIndex = snapshot.columns[curColumn][curColumnIndex + 1];
-            } else {
-                newIndex = curIndex;
+        if (curColumnIndex < snapshot.columns[curColumn].length - 1) {
+            newIndex = snapshot.columns[curColumn][curColumnIndex + 1];
+        } else {
+            newIndex = curIndex;
+
+            // Если задана группировка и текущая группа итема не является последней,
+            // то следующим снизу будет первый итем следующей группы
+            if (this.getGroup() && snapshot.range[1] < this.getCount()) {
+                // snapshot.range[1] это индекс последней записи текущей группы
+                // +1 - это запись следующей группы
+                // +1 - это первая запись следующей группы
+                newIndex = snapshot.range[1] + 2;
             }
         }
 

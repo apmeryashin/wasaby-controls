@@ -52,6 +52,7 @@ export default
 
    constructor(options: IOptions<S, T>) {
       super(options);
+      this._useFlatNearbyItemStrategy = true;
    }
 
    protected _setupProjectionFilters(): void {

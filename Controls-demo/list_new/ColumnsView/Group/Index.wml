@@ -1,9 +1,9 @@
 <div class="controlsDemo__wrapper">
    <Controls.columns:View
+      name="columnsView"
       source="{{_viewSource}}"
       groupProperty="brand"
       itemActions="{{_itemActions}}"
-      name="columnsView"
    >
       <ws:groupTemplate>
          <ws:partial
@@ -26,5 +26,12 @@
             </ws:rightTemplate>
          </ws:partial>
       </ws:groupTemplate>
+      <ws:itemTemplate>
+         <ws:partial template="Controls/columns:ItemTemplate">
+            <ws:contentTemplate>
+               <div style="padding: 5px">{{itemTemplate.item.getContents().get('title')}}</div>
+            </ws:contentTemplate>
+         </ws:partial>
+      </ws:itemTemplate>
    </Controls.columns:View>
 </div>
