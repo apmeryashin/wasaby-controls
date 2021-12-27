@@ -262,7 +262,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
     /**
      * Возвращает ширину плитки
-     * @param {number} widthTpl Ширина плитка, заданная на темплейте
+     * @param {number | string} widthTpl Ширина плитка, заданная на темплейте
      * @param {TImagePosition} imagePosition Позиция изображения
      * @param {TImageViewMode} imageViewMode Режим отображения изображения
      * @return {number} Ширина плитки
@@ -390,7 +390,7 @@ export default abstract class TileItem<T extends Model = Model> {
     /**
      * Возвращает стиль для блока, который автоматически растягивает плитку
      * @param {TTileItem} itemType Тип элемента
-     * @param {number} width Ширина плитки, заданная на темплейте
+     * @param {number | string} width Ширина плитки, заданная на темплейте
      * @param {TImagePosition} imagePosition Позиция изображения
      * @param {TImageViewMode} imageViewMode Режим отображения плитки
      * @param {number} imageProportion Пропорции изображения
@@ -398,11 +398,14 @@ export default abstract class TileItem<T extends Model = Model> {
      */
     getAutoResizerStyles(
         itemType: TTileItem = 'default',
-        width?: number,
+        width?: number | string,
         imageProportion?: number,
         imagePosition: TImagePosition = 'top',
         imageViewMode: TImageViewMode = 'rectangle'
     ): string {
+        if (typeof width === 'string') {
+            return '';
+        }
         let paddingTop;
 
         if (itemType === 'rich') {
@@ -1301,18 +1304,27 @@ export default abstract class TileItem<T extends Model = Model> {
      */
     getItemStyles(
         itemType: TTileItem = 'default',
-        templateWidth?: number,
+        templateWidth?: number | string,
         staticHeight?: boolean,
         imagePosition: TImagePosition = 'top',
         imageViewMode: TImageViewMode = 'rectangle'
     ): string {
-        const width = this.getTileWidth(templateWidth, imagePosition, imageViewMode);
+        let width;
+        let flexBasis;
+        if (typeof templateWidth === 'string') {
+            width = templateWidth;
+            flexBasis = templateWidth;
+        } else {
+            width = this.getTileWidth(templateWidth, imagePosition, imageViewMode);
+            flexBasis = width * this.getCompressionCoefficient() + 'px';
+            width += 'px';
+        }
         if (this.getTileMode() === 'dynamic') {
-            const flexBasis = width * this.getCompressionCoefficient();
             if (itemType === 'invisible') {
                 return `
-                    -ms-flex-preferred-size: ${flexBasis}px;
-                    flex-basis: ${flexBasis}px;
+                    -ms-flex-preferred-size: ${flexBasis};
+                    flex-basis: ${flexBasis};
+                    min-width: ${flexBasis};
                 `;
             } else {
 
@@ -1320,14 +1332,17 @@ export default abstract class TileItem<T extends Model = Model> {
                 const customHeightData = this.getContents().get(this.getFeature1183277279Property());
                 const height = customHeightData ? customHeightData : this.getTileHeight();
                 return `
-                    -ms-flex-preferred-size: ${flexBasis}px;
-                    flex-basis: ${flexBasis}px;
+                    -ms-flex-preferred-size: ${flexBasis};
+                    flex-basis: ${flexBasis};
+                    min-width: ${flexBasis};
                     height: ${height}px;
-                    max-width: ${width}px;
+                    max-width: ${width};
                 `;
             }
         } else {
-            let styles = `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
+            let styles = `-ms-flex-preferred-size: ${width};
+                          flex-basis: ${width};
+                          min-width: ${width};`;
             if (staticHeight && itemType !== 'invisible') {
                 styles += ` height: ${this.getTileHeight()}px;`;
             }

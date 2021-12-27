@@ -7,6 +7,7 @@ import TreeNodeFooterItem from 'Controls/_tree/display/TreeNodeFooterItem';
 import TreeNodeHeaderItem from 'Controls/_tree/display/TreeNodeHeaderItem';
 import TreeItem, { IOptions as ITreeItemOptions } from 'Controls/_tree/display/TreeItem';
 import { default as View } from 'Controls/_tree/Tree';
+import { default as TreeView } from 'Controls/_tree/TreeView';
 import { default as IItemTemplateOptions } from 'Controls/_tree/interface/ItemTemplate';
 import { TreeSiblingStrategy } from 'Controls/_tree/Strategies/TreeSiblingStrategy';
 import { register } from 'Types/di';
@@ -34,6 +35,7 @@ export {
     TreeItem,
     ITreeItemOptions,
     View,
+    TreeView,
     TreeNodeFooterItem,
     TreeNodeHeaderItem,
     NodeFooterTemplate,
