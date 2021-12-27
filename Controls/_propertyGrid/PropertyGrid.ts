@@ -1161,7 +1161,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _itemClick(e: SyntheticEvent, item: Model, originalEvent: SyntheticEvent): void {
-        const canEditByClick = !this._options.readOnly && item.get('isEditable');
+        const canEditByClick = !this._options.readOnly &&
+                               item.get('isEditable') &&
+                               this._listModel.getItemBySourceItem(item).getEditorTemplateName();
         if (canEditByClick) {
             e.stopPropagation();
 
