@@ -61,7 +61,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             // Пока не перешли на предзагрузку фильтров (22.1100)
             let sourceController = this._source?.[index]?.name === newItem.name ?
                 this._source?.[index]?.editorOptions?.sourceController :
-                null;
+                editorOptions?.sourceController;
 
             if (!sourceController && editorOptions?.items && editorOptions?.items instanceof RecordSet) {
                 sourceController = new NewSourceController({...editorOptions} as ISourceControllerOptions);
@@ -83,6 +83,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 selectedAllText: item.selectedAllText,
                 selectedAllKey: item.selectedAllKey,
                 sourceController,
+                items: editorOptions?.items || sourceController?.getItems(),
                 dataLoadCallback: (items, direction) => {
                     if (!direction) {
                         this._updateEditorOptionsByLoadedItems(index, items);
