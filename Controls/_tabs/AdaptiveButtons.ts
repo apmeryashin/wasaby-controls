@@ -72,7 +72,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     protected _crudWrapper: CrudWrapper;
     protected _menuSource: Memory;
     protected _filter: object;
-    protected _itemTemplate: string;
+    protected _itemTemplate: string = 'Controls/tabs:buttonsItemTemplate';
     protected _position: number;
 
     protected _beforeMount(options?: ITabsAdaptiveButtonsOptions,
@@ -146,13 +146,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
 
     private _setItems(items: RecordSet): void {
         this._items = items;
-        let itemTemplate = 'Controls/tabs:buttonsItemTemplate';
-        this._items.each((item) => {
-            if (item.get('icon')) {
-                itemTemplate = 'Controls/tabs:TextCounterTabTemplate';
-            }
-        });
-        this._itemTemplate = itemTemplate;
     }
 
     private _loadItems(source: SbisService): Promise<void> {
