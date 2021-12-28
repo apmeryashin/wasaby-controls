@@ -495,25 +495,25 @@ describe('_getMenuActions cases', () => {
     it('should collect non-"showed" or non-toolbar item actions when item is swiped', () => {
         const localItemActions: IItemAction[] = [
             {
-                id: 'phone',
+                id: 1,
                 icon: 'icon-PhoneNull',
                 title: 'phone',
                 showType: TItemActionShowType.TOOLBAR
             },
             {
-                id: 'documentation',
+                id: 5,
                 title: 'Documentation',
                 showType: TItemActionShowType.MENU_TOOLBAR,
                 parent: 4
             },
             {
-                id: 'development',
+                id: 6,
                 title: 'Development',
                 showType: TItemActionShowType.TOOLBAR,
                 parent: 4
             },
             {
-                id: 'sources',
+                id: 7,
                 title: 'Sources',
                 showType: TItemActionShowType.TOOLBAR,
                 parent: 4
@@ -548,10 +548,10 @@ describe('_getMenuActions cases', () => {
         // @ts-ignore
         assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
         // @ts-ignore
-        assert.equal(config.templateOptions.source.data[0].id, localItemActions[1].id,
+        assert.deepEqual(config.templateOptions.source.data[0], localItemActions[1],
             'Non-toolbar options should be shown in menu');
         // @ts-ignore
-        assert.equal(config.templateOptions.source.data[1].id, localItemActions[3].id,
+        assert.deepEqual(config.templateOptions.source.data[1], localItemActions[3],
             'Non-showed options should be shown in menu');
     });
 });
