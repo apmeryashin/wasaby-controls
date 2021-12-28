@@ -5,7 +5,7 @@ import { IMeasurer } from '../interface/IMeasurer';
 import {
    IItemAction,
    TItemActionShowType,
-   TItemActionsSize,
+   TSwipeItemActionsSize,
    TActionCaptionPosition
 } from '../interface/IItemAction';
 import { IShownItemAction } from '../interface/IItemActionsObject';
@@ -122,18 +122,23 @@ class HorizontalMeasurer implements IMeasurer {
     * Вычисляет горизонтальный размер одной опции свайпа.
     * @param itemAction видимая по свайпу опция записи
     * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
+    * @param theme Тема оформления
     */
-   private static _calculateActionSize(itemAction: IItemAction, templateConfig: ISwipeActionTemplateConfig): number {
-      return this._calculateActionsSizes([itemAction], templateConfig)[0];
+   private static _calculateActionSize(itemAction: IItemAction,
+                                       templateConfig: ISwipeActionTemplateConfig,
+                                       theme: string): number {
+      return this._calculateActionsSizes([itemAction], templateConfig, theme)[0];
    }
 
    /**
     * Вычисляет горизонтальные размеры опций свайпа с учётом размеров блока, в который они завёрнуты.
     * @param itemActions видимые по свайпу опции записи
     * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
+    * @param theme Тема оформления
     */
    private static _calculateActionsSizes(itemActions: IItemAction[],
-                                         templateConfig: ISwipeActionTemplateConfig): number[] {
+                                         templateConfig: ISwipeActionTemplateConfig,
+                                         theme: string): number[] {
 
       // Если в доступных для показа опциях есть те, у которых есть иконки, ставим соответствующий параметр в конфиг
       if (itemActions.some((action: IItemAction) => !!action.icon)) {
@@ -143,7 +148,7 @@ class HorizontalMeasurer implements IMeasurer {
          ...templateConfig,
          action
       }));
-      return DOMUtil.getElementsWidth(itemsHtml, 'controls-Swipe__action', true);
+      return DOMUtil.getElementsWidth(itemsHtml, 'controls-Swipe__action', true, `controls_list_theme-${theme}`);
    }
 
    /**
@@ -165,7 +170,7 @@ class HorizontalMeasurer implements IMeasurer {
       // Кроме всего прочего, это позволит не производить слишком много вычислений с DOM
       const itemActions = MeasurerUtils.sliceAndFixActions(actions, MAX_ACTIONS_COUNT);
       const itemActionsContainerWidth = DOMUtil.getWidthForCssClass('controls-Swipe_horizontal');
-      const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig);
+      const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig, theme);
       let availableWidth = rowWidth - itemActionsContainerWidth;
       let menuItemAction: IItemAction;
       let menuActionSize = 0;
@@ -182,7 +187,7 @@ class HorizontalMeasurer implements IMeasurer {
       // Если кнопка "ещё" всё-таки нужна, то считаем, учитывая её ширину
       if (menuButtonVisibility === 'visible' || visibleActions.length < itemActions.length) {
          menuItemAction = HorizontalMeasurer._getMenuItemAction();
-         menuActionSize = this._calculateActionSize(menuItemAction, templateConfig);
+         menuActionSize = this._calculateActionSize(menuItemAction, templateConfig, theme);
          availableWidth -= menuActionSize;
          visibleActions = this._fillVisibleActions(itemActions, itemActionsSizes, availableWidth);
          visibleActions.push(menuItemAction);
@@ -218,7 +223,7 @@ class HorizontalMeasurer implements IMeasurer {
    private static _getItemActionsSize(
        rowHeight: number,
        actionCaptionPosition: ActionCaptionPosition
-   ): TItemActionsSize {
+   ): TSwipeItemActionsSize {
       if (actionCaptionPosition !== 'none') {
          return rowHeight < HEIGHT_LOWER_BOUND_WITH_TITLE ? 'm' : 'l';
       } else {
