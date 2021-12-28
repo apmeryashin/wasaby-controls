@@ -201,8 +201,6 @@ export class Controller {
     // https://online.sbis.ru/opendoc.html?guid=dca1ba93-ffe6-4f68-9f05-9d266a0bc28f
     private _task1183329228: boolean;
 
-    private _debugger = {updatedActionsOnItem: 0, updateCalled: 0, swipeConfig: 0};
-
     /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
@@ -211,7 +209,6 @@ export class Controller {
      * @param options
      */
     update(options: IControllerOptions): Array<number | string> {
-        this._debugger.updateCalled++;
         let result: Array<number | string> = [];
         this._theme = options.theme;
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
@@ -564,7 +561,6 @@ export class Controller {
                 this._updateSwipeConfig(this._actionsWidth, this._actionsHeight);
             }
             this._collection.nextVersion();
-            // console.log('it\'s took ' + (Date.now() - startStamp) +  'ms');
         }
 
         return changedItemsIds;
@@ -575,11 +571,7 @@ export class Controller {
             return false;
         }
         const actionsObject = this._fixActionsDisplayOptions(this._getActionsObject(item));
-        return Controller._setItemActions(item, actionsObject, this._actionMode, this._debugger);
-    }
-
-    resetDebug(): void {
-        this._debugger = {updatedActionsOnItem: 0, updateCalled: 0, swipeConfig: 0};
+        return Controller._setItemActions(item, actionsObject, this._actionMode);
     }
 
     /**
@@ -939,10 +931,7 @@ export class Controller {
      */
     private _fixActionsDisplayOptions(actionsObject: IItemActionsObject): IItemActionsObject {
         if (actionsObject.all && actionsObject.all.length) {
-            actionsObject.all = actionsObject.all.map((originalAction) => {
-                // Нельзя модифицировать оригинальные операции над записью, т.к. это приведёт
-                // к лишнему пересчёту и дополнительной синхронизации при update в контроле.
-                const action: IShownItemAction = {...originalAction};
+            actionsObject.all = actionsObject.all.map((action) => {
                 action.style = Utils.getStyle(action.style, 'itemActions/Controller') as TButtonStyle;
 
                 // Это нужно чтобы не поддерживать старые стили типа icon-error и ховер по таким кнопкам.
@@ -1016,12 +1005,10 @@ export class Controller {
     private static _setItemActions(
         item: IItemActionsItem,
         actionsObject: IItemActionsObject,
-        actionMode: string,
-        _debugger?
+        actionMode: string
     ): boolean {
         const oldActionsObject = item.getActions();
         if (!oldActionsObject || (actionsObject && !this._isMatchingActions(oldActionsObject, actionsObject, actionMode, item.isSwiped()))) {
-            _debugger.updatedActionsOnItem++;
             item.setActions(actionsObject, true);
             return true;
         }
