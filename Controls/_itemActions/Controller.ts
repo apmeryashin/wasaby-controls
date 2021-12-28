@@ -1000,7 +1000,6 @@ export class Controller {
         if (!oldActionsObject ||
             (actionsObject && !this._isMatchingActions(oldActionsObject, actionsObject, actionMode, item.isSwiped()))
         ) {
-            _debugger.updatedActionsOnItem++;
             item.setActions(actionsObject, true);
             return true;
         }
