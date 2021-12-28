@@ -33,7 +33,7 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
         this._header = options.header;
         super({
             ...options,
-            itemsQuerySelector: '.js-controls-Grid__columnScroll__relativeCell',
+            itemsQuerySelector: '.js-controls-Grid__virtualColumnScroll__fake-scrollable-cell-to-recalc-width',
             triggersQuerySelector: HORIZONTAL_LOADING_TRIGGER_SELECTOR
         });
     }
@@ -59,20 +59,6 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
 
     protected _applyIndexes(startIndex: number, endIndex: number): void {
         this._collection.getColumnsEnumerator().setIndexes(startIndex, endIndex);
-
-        if (this._scrollController) {
-            const backwardAdditionalOffset = startIndex > this._collection.getStickyColumnsCount() ?
-                this._scrollController._itemsSizesController
-                    .getItemsSizes()
-                    .slice(0, this._collection.getStickyColumnsCount())
-                    .reduce((sum, itemSize) => sum + itemSize.size, 0)
-                : 0;
-
-            this._scrollController.setAdditionalTriggersOffsets({
-                backward: 0,
-                forward: 0
-            });
-        }
     }
 
     keyDownLeft(): Promise<void> {
