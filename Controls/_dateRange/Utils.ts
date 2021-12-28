@@ -2,7 +2,7 @@
 import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
 // @ts-ignore
 import locales = require('Core/helpers/i18n/locales');
-import {Date as WSDate, DateTime} from 'Types/entity';
+import {Date as WSDate, DateTime, compare} from 'Types/entity';
 import {Base as DateUtil} from 'Controls/dateUtils';
 
 let localeCode = locales.current.code;
@@ -23,6 +23,46 @@ const getDayRange = (startDate, endDate, quantum) => {
       return [date, startDate];
    }
 };
+
+const AMOUNT_OF_MONTHS_IN_QUARTER = 3;
+const AMOUNT_OF_MONTHS_IN_HALFYEAR = 6;
+
+const QUARTERS = [
+   {
+      startMonth: 0,
+      endMonth: 2
+   }, {
+      startMonth: 3,
+      endMonth: 5
+   }, {
+      startMonth: 6,
+      endMonth: 8
+   }, {
+      startMonth: 9,
+      endMonth: 11
+   }
+];
+
+const HALFYEARS = [
+   {
+      startMonth: 0,
+      endMonth: 5
+   }, {
+      startMonth: 6,
+      endMonth: 11
+   }
+];
+
+const enum QUANTS {
+   MONTH = 'month',
+   YEAR = 'year',
+   DATE = 'date',
+   HALFYEAR = 'halfyear',
+   QUARTER = 'quarter',
+   DATE_RANGE = 'dateRange',
+   MONTHS_RANGE = 'monthsRange',
+   YEARS_RANGE = 'yearsRange'
+}
 
 /**
  * @class Controls/_dateRange/Utils
@@ -247,6 +287,104 @@ const Utils = {
       const endValue = new WSDate(startValue.getFullYear(),
           startValue.getMonth(), startValue.getDate() + (fridayIndex - mondayIndex));
       return [startValue, endValue];
+   },
+
+   /**
+    * @typedef {String} TQuant
+    * @description Тип кванта
+    * @variant date - единичная дата
+    * @variant dateRange - период дат
+    * @variant month - еденичный месяц
+    * @variant monthsRange - период месяцев
+    * @variant year - единичный год
+    * @variant yearsRange - период лет
+    * @variant quarter - квартал
+    * @variant halfyear - полугодие
+    */
+
+   /**
+    * Получить квант выбранного периода
+    * @remark
+    * Используется для определения нужной ширины контрола выбора периода вместе с кнопками-стрелками переключающими
+    * период в зависимости от выбранного кванта. Для решения данной задачи существует набор классов,
+    * которые нужно навесить на родительский элемент контрола выбора периода и кнопок-стрелок:
+    * * controls-DateRangeSelector__month-width
+    * * controls-DateRangeSelector__year-width
+    * * controls-DateRangeSelector__date-width
+    * * controls-DateRangeSelector__halfyear-width
+    * * controls-DateRangeSelector__quarter-width
+    * * controls-DateRangeSelector__dateRange-width
+    * * controls-DateRangeSelector__monthsRange-width
+    * * controls-DateRangeSelector__yearsRange-width
+    * @example
+    * <pre>
+    *    <Controls.date:ContextProvider attr:class="controls-DateRangeSelector__{{ _quant }}-width controlsDemo__flex">
+    *       <div>
+    *          <Controls.dateRange:SelectorConsumer
+    *             attr:class="ws-flex-grow-1"
+    *             bind:startValue="_startValue"
+    *             bind:endValue="_endValue"
+    *             on:rangeChanged="_rangeChangedHandler()"
+    *          />
+    *          <Controls.date:ArrowButtonConsumer direction="left"/>
+    *          <Controls.date:ArrowButtonConsumer direction="right" attr:class="controls-margin_left-m"/>
+    *       </div>
+    *    </Controls.date:ContextProvider>
+    * </pre>
+    * <pre>
+    *     import {Utils} from 'Controls/dateRange';
+    *     ...
+    *     protected _beforeMount(): void {
+    *       this._quant = Utils.getQuantByRange(this._startValue, this._endValue);
+    *     }
+    *
+    *     protected _rangeChangedHandler(event: Event, startValue: Date, endValue: Date): void {
+    *       this._quant = Utils.getQuantByRange(startValue, endValue);
+    *     }
+    * </pre>
+    * @param {Date} startValue
+    * @param {Date} endValue
+    * @returns {TQuant}
+    * @demo Controls-demo/dateRange/DateRangeContextProvider/Index
+    */
+   getQuantByRange(startValue: Date, endValue: Date): string {
+      if (DateUtil.isDatesEqual(startValue, endValue)) {
+         return QUANTS.DATE;
+      }
+      if (compare.isFullInterval(startValue, endValue, compare.DateUnits.Year)) {
+         if (startValue.getFullYear() === endValue.getFullYear()) {
+            return QUANTS.YEAR;
+         } else {
+            return QUANTS.YEARS_RANGE;
+         }
+      }
+      if (compare.isFullInterval(startValue, endValue, compare.DateUnits.Month)) {
+         if (startValue.getMonth() === endValue.getMonth() && startValue.getFullYear() === endValue.getFullYear()) {
+            return QUANTS.MONTH;
+         }
+         const startMonth = startValue.getMonth();
+         const endMonth = endValue.getMonth();
+         const hitsRange = (quants) => {
+            for (const period of quants) {
+               if (period.startMonth === startMonth && period.endMonth === endMonth ) {
+                  return true;
+               }
+            }
+         };
+         if (endMonth - startMonth === AMOUNT_OF_MONTHS_IN_QUARTER - 1) {
+            if (hitsRange(QUARTERS)) {
+               return QUANTS.QUARTER;
+            }
+         }
+         if (endMonth - startMonth === AMOUNT_OF_MONTHS_IN_HALFYEAR - 1) {
+            if (hitsRange(HALFYEARS)) {
+               return QUANTS.HALFYEAR;
+            }
+         }
+         return QUANTS.MONTHS_RANGE;
+      }
+
+      return QUANTS.DATE_RANGE;
    }
 };
 
