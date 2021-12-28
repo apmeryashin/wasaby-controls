@@ -35,6 +35,7 @@ export {default as IDateRangeValidators, IDateRangeValidatorsOptions, TDateRange
 export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropStorage';
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';
 export {default as IBorderRadius, IBorderRadiusOptions} from './_interface/IBorderRadius';
+export {default as IExpandedItems, IExpandedItemsOptions} from './_interface/IExpandedItems';
 export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from './_interface/IValidationStatus';
 export {default as IDateConstructor, IDateConstructorOptions} from './_interface/IDateConstructor';
 export {default as IUnderline, IUnderlineOptions} from './_interface/IUnderline';
