@@ -139,12 +139,12 @@ export interface IControllerOptions {
      * @description
      * https://online.sbis.ru/opendoc.html?guid=76408b97-fc91-46dc-81b0-0f375d07ab99
      */
-    feature1183020440: boolean;
+    feature1183020440?: boolean;
 
     // Временная опция, чтобы не выводить меню опций записи, если нет выводимых опций, но задан футер
     // Для устранения опции требуется переход на настоящие actions и footer по задаче:
     // https://online.sbis.ru/opendoc.html?guid=dca1ba93-ffe6-4f68-9f05-9d266a0bc28f
-    task1183329228: boolean;
+    task1183329228?: boolean;
 }
 
 /**
@@ -201,8 +201,6 @@ export class Controller {
     // https://online.sbis.ru/opendoc.html?guid=dca1ba93-ffe6-4f68-9f05-9d266a0bc28f
     private _task1183329228: boolean;
 
-    private _debugger = {updatedActionsOnItem: 0, updateCalled: 0, swipeConfig: 0};
-
     /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
@@ -211,7 +209,6 @@ export class Controller {
      * @param options
      */
     update(options: IControllerOptions): Array<number | string> {
-        this._debugger.updateCalled++;
         let result: Array<number | string> = [];
         this._theme = options.theme;
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
@@ -548,7 +545,6 @@ export class Controller {
         if (this._collection.isEventRaising()) {
             this._collection.setEventRaising(false, true);
         }
-        const startStamp = Date.now();
         this._collection.each((item) => {
             const itemChanged = this._updateActionsOnParticularItem(item);
             hasChanges = hasChanges || itemChanged;
@@ -567,7 +563,6 @@ export class Controller {
                 this._updateSwipeConfig(this._actionsWidth, this._actionsHeight);
             }
             this._collection.nextVersion();
-            // console.log('it\'s took ' + (Date.now() - startStamp) +  'ms');
         }
 
         return changedItemsIds;
@@ -578,11 +573,7 @@ export class Controller {
             return false;
         }
         const actionsObject = this._fixActionsDisplayOptions(this._getActionsObject(item));
-        return Controller._setItemActions(item, actionsObject, this._actionMode, this._debugger);
-    }
-
-    resetDebug(): void {
-        this._debugger = {updatedActionsOnItem: 0, updateCalled: 0, swipeConfig: 0};
+        return Controller._setItemActions(item, actionsObject, this._actionMode);
     }
 
     /**
@@ -761,17 +752,6 @@ export class Controller {
     }
 
     /**
-     * Определяет есть операции, которые надо показывать в меню по ховеру.
-     * @param action
-     * @private
-     */
-    private _isMenuAction(action: IItemAction): boolean {
-        return !action.showType ||
-               action.showType === TItemActionShowType.MENU ||
-               action.showType === TItemActionShowType.MENU_TOOLBAR;
-    }
-
-    /**
      * Возвращает конфиг кнопки операции открытия меню.
      * @private
      */
@@ -824,28 +804,31 @@ export class Controller {
             if (itemActions[i].parent) {
                 continue;
             }
-            const isMenuAction = this._isMenuAction(itemActions[i]);
-            // На этом этапе нам важно понимать только, что надо показывать кнопку меню,
-            // Поэтому двух операций из меню тут будет достаточно.
-            // Для других видимость определяется при открытии меню по трём точкам.
+            const isMenuAction = !itemActions[i].showType || itemActions[i].showType === TItemActionShowType.MENU;
+            // На этом этапе нам важно понимать только, что надо показывать кнопку меню с тремя точками,
+            // Поэтому двух операций из меню тут будет достаточно, а остальные из тех, что показываются только в меню,
+            // пропускаем. Их видимость определяется при открытии меню.
             if (isMenuAction && actionsToShowInMenu.length > 1) {
                 continue;
             }
             const isVisible = this._itemActionVisibilityCallback(itemActions[i], contents, isEditing);
-            // Если операция должна быть видима по колбеку и находится в меню,
-            // записываем её в массив записей меню.
-            if (isMenuAction && isVisible) {
+            if (!isVisible) {
+                continue;
+            }
+            // Если операция должна быть видима по колбеку и показывается в меню
+            // или в меню и по ховеру, записываем её в массив записей меню.
+            if (isMenuAction || itemActions[i].showType === TItemActionShowType.MENU_TOOLBAR) {
                 actionsToShowInMenu.push(itemActions[i]);
-
+            }
             // Любые другие операции записываем в список для отображения по ховеру
-            } else if (isVisible) {
+            if (!isMenuAction || itemActions[i].showType === TItemActionShowType.MENU_TOOLBAR) {
                 actionsToShowOnHover.push(itemActions[i]);
             }
         }
 
         if (actionsToShowOnHover.length > 0) {
             // Если есть хоть одна видимая операция для показа в меню или в конфигурации
-            // меню указано, что надо показать подвал или шапку меню, то показываем кнопку меню.
+            // меню указано, что надо показать подвал или шапку меню, то показываем кнопку с тремя точками.
             if (actionsToShowInMenu.length > 0 || this._hasMenuHeaderOrFooter()) {
                 actionsToShowOnHover.push(this._getMenuItemAction());
             }
@@ -853,12 +836,13 @@ export class Controller {
                 actionsToShowOnHover.reverse();
             }
         } else if (actionsToShowInMenu.length > 1) {
+            // Если записей в меню больше одной то точно показываем кнопку с тремя точками
             actionsToShowOnHover.push(this._getMenuItemAction());
         } else {
             // Тут кейс, когда actionsToShowOnHover пуст, а в actionsToShowInMenu.length <= 1
             actionsToShowOnHover = actionsToShowInMenu;
             // По умолчанию, если actionsToShowInMenu.length <= 1, нужно показывать
-            // все кнопки на тулбаре, и не добавлять кнопку "меню".
+            // все кнопки на тулбаре, и не добавлять кнопку с тремя точками.
             // Но, если в конфигурации contextMenuConfig указано, что надо показать подвал или шапку меню,
             // нужно показывать кнопку даже тогда, когда вообще ни одной операции не было показано.
             // Некоторым это, наоборот, не нужно. Под опцией task1183329228 принудительный показ кнопки отключен.
@@ -936,10 +920,7 @@ export class Controller {
      */
     private _fixActionsDisplayOptions(actionsObject: IItemActionsObject): IItemActionsObject {
         if (actionsObject.all && actionsObject.all.length) {
-            actionsObject.all = actionsObject.all.map((originalAction) => {
-                // Нельзя модифицировать оригинальные операции над записью, т.к. это приведёт
-                // к лишнему пересчёту и дополнительной синхронизации при update в контроле.
-                const action: IShownItemAction = {...originalAction};
+            actionsObject.all = actionsObject.all.map((action) => {
                 action.style = Utils.getStyle(action.style, 'itemActions/Controller') as TButtonStyle;
 
                 // Это нужно чтобы не поддерживать старые стили типа icon-error и ховер по таким кнопкам.
@@ -1013,14 +994,12 @@ export class Controller {
     private static _setItemActions(
         item: IItemActionsItem,
         actionsObject: IItemActionsObject,
-        actionMode: string,
-        _debugger?
+        actionMode: string
     ): boolean {
         const oldActionsObject = item.getActions();
         if (!oldActionsObject ||
             (actionsObject && !this._isMatchingActions(oldActionsObject, actionsObject, actionMode, item.isSwiped()))
         ) {
-            _debugger.updatedActionsOnItem++;
             _debugger.updatedActionsOnItem++;
             item.setActions(actionsObject, true);
             return true;
