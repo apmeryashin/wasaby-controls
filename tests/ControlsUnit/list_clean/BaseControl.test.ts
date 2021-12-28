@@ -1014,58 +1014,6 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isFalse(notify.called);
         });
     });
-    describe('shiftToDirection by moving marker', () => {
-        const baseControlCfg = getCorrectBaseControlConfig({
-            viewName: 'Controls/List/ListView',
-            keyProperty: 'key',
-            viewModelConstructor: 'Controls/display:Collection',
-            multiSelectVisibility: 'visible',
-            markerVisibility: 'visible',
-            selectedKeys: [],
-            excludedKeys: [],
-            markedKey: 0,
-            source: new Memory({
-                keyProperty: 'key',
-                data: getData(2)
-            })
-        });
-        let baseControl;
-        let shiftToDirectionStub;
-        beforeEach(() => {
-            baseControl = new BaseControl(baseControlCfg);
-            baseControl._beforeMount(baseControlCfg);
-            baseControl.saveOptions(baseControlCfg);
-
-            shiftToDirectionStub = sinon.stub(baseControl, '_shiftToDirection').callsFake(() => Promise.resolve());
-        });
-        afterEach(() => {
-            shiftToDirectionStub.restore();
-            baseControl.destroy();
-            baseControl = undefined;
-        });
-        it('space', () => {
-            BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null });
-            assert.isFalse(shiftToDirectionStub.called);
-            baseControl._beforeUpdate({...baseControlCfg, markedKey: 1});
-            BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null });
-            assert.isTrue(shiftToDirectionStub.calledOnce);
-            assert.isTrue(shiftToDirectionStub.calledWith('down'));
-        });
-        it('moveMarkerToNext', () => {
-            BaseControl._private.moveMarkerToDirection(baseControl, { preventDefault: () => null }, 'Forward');
-            assert.isFalse(shiftToDirectionStub.called);
-            baseControl._beforeUpdate({...baseControlCfg, markedKey: 1});
-            BaseControl._private.moveMarkerToDirection(baseControl, { preventDefault: () => null }, 'Forward');
-            assert.isTrue(shiftToDirectionStub.calledOnce);
-            assert.isTrue(shiftToDirectionStub.calledWith('down'));
-        });
-        it('moveMarkerToPrevious', () => {
-            BaseControl._private.moveMarkerToDirection(baseControl, { preventDefault: () => null }, 'Backward');
-            assert.isTrue(shiftToDirectionStub.calledOnce);
-            assert.isTrue(shiftToDirectionStub.calledWith('up'));
-        });
-    });
-
     describe('Edit in place', () => {
         type TEditingConfig = IEditableList['_options']['editingConfig'];
 

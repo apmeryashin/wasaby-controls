@@ -284,7 +284,6 @@ const _private = {
 
         self._displayGlobalIndicator();
         return sourceController.load(direction, nodeKey).then((list) => {
-                self.stopBatchAdding();
                 self._needRestoreScroll = true;
                 return list;
             })
@@ -748,9 +747,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             sourceController.updateOptions({...newOptions, keyProperty: this._keyProperty});
         }
 
-        if (this._useNewScroll) {
-            this._listVirtualScrollController.endBeforeUpdateListControl();
-        }
+        this._listVirtualScrollController.endBeforeUpdateListControl();
     }
 
     protected _afterRender() {
@@ -1246,12 +1243,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     resolve();
                 }
             };
-
-            if (model.getLast('Markable') === model.getItemBySourceKey(key)) {
-                this._shiftToDirection('down').then(goToNextItem);
-            } else {
-                goToNextItem();
-            }
+            goToNextItem();
         });
     }
 
