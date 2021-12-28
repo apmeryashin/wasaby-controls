@@ -1129,22 +1129,10 @@ define([
             }
          };
 
-         baseControl._loadTriggerVisibility = {
-            up: true,
-            down: true
-         };
-
          var res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
          assert.isFalse(res, 'Wrong paging state');
 
          baseControl._sourceController.nav = true;
-         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
-         assert.isFalse(res, 'Wrong paging state');
-
-         baseControl._loadTriggerVisibility = {
-            up: false,
-            down: false
-         };
          res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
          assert.isTrue(res, 'Wrong paging state');
 
@@ -1163,45 +1151,6 @@ define([
          const scrollPagingInst = baseControl._scrollPagingCtr;
          res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 2000, 800);
          assert.strictEqual(baseControl._scrollPagingCtr, scrollPagingInst, 'ScrollPaging recreated');
-      });
-
-      it('needShowPagingByScrollSize with virtual scrollHeight', function() {
-         var cfg = {
-            navigation: {
-               view: 'infinity',
-               source: 'page',
-               viewConfig: {
-                  pagingMode: 'direct'
-               },
-               sourceConfig: {
-                  pageSize: 3,
-                  page: 0,
-                  hasMore: false
-               }
-            }
-         };
-         var baseControl = correctCreateBaseControl(cfg);
-         baseControl._sourceController = {
-            nav: false,
-            hasMoreData: function() {
-               return this.nav;
-            }
-         };
-
-         baseControl._loadTriggerVisibility = {
-            up: true,
-            down: true
-         };
-
-         var res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
-         assert.isFalse(res, 'Wrong paging state');
-
-         baseControl._scrollController = {
-            calculateVirtualScrollHeight: () => 3000
-         }
-
-         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
-         assert.isTrue(res, 'Wrong paging state');
       });
 
       it('scrollToEdge without data', () => {
@@ -2875,11 +2824,6 @@ define([
                isEditing: () => false
             };
             instance.saveOptions(cfg);
-            instance._scrollController = {
-               scrollToItem: () => {},
-               setIndicesAfterCollectionChange: () => undefined,
-               handleResetItems: () => {}
-            };
             instance._container = {
                querySelector: (selector) => ({
                   parentNode: {
