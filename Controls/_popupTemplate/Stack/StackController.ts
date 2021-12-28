@@ -129,7 +129,7 @@ export class StackController extends BaseController {
             promiseArray.push(this._getPopupWidth(item));
         }
         if (promiseArray.length !== 0) {
-            return  Promise.all([promiseArray]).then((res) => {
+            return  Promise.all(promiseArray).then((res) => {
                 return this._getDefaultConfig(item);
             });
         }
