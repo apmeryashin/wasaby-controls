@@ -3670,6 +3670,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _afterMount(): void {
         this._isMounted = true;
 
+        this._listVirtualScrollController.setListContainer(this._container);
         this._listVirtualScrollController.afterMountListControl();
         if (this._options.activeElement) {
             this._listVirtualScrollController.scrollToItem(this._options.activeElement, 'top', true);
@@ -6468,7 +6469,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
-        this._listVirtualScrollController.setListContainer(this._container);
+        // Нельзя до маунта сетать listContainer, т.к. это спровоцирует вызов триггера до маунта.
+        // Нужно обновлять listContainer, т.к. вместе с items могут перерисоваться и триггеры.
+        // TODO SCROLL если доработать обсерверы, чтобы они работали по циклам синхронизаци. То можно оставить
+        //  одну точку входа для setListContainer и убрать здесь проверку
+        if (this._isMounted) {
+            this._listVirtualScrollController.setListContainer(this._container);
+        }
         this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
         this._viewReady = true;
         if (this._needScrollCalculation) {
