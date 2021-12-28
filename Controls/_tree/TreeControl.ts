@@ -747,6 +747,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (sourceController && updateSourceController) {
             sourceController.updateOptions({...newOptions, keyProperty: this._keyProperty});
         }
+
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.endBeforeUpdateListControl();
+        }
     }
 
     protected _afterRender() {

@@ -4842,6 +4842,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._spaceBlocked = false;
 
         this._updateBaseControlModel(newOptions);
+
+        if (this._useNewScroll) {
+            // TODO SCROLL
+            if (!newOptions.parentProperty) {
+                this._listVirtualScrollController.endBeforeUpdateListControl();
+            }
+        }
     }
 
     reloadItem(key: TKey, options: IReloadItemOptions = {}): Promise<Model | RecordSet> {

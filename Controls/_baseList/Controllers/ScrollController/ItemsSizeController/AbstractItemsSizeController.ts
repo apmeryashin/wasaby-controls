@@ -99,12 +99,6 @@ export abstract class AbstractItemsSizesController {
 
         if (this._itemsContainer) {
             const itemsElements = this._itemsContainer.querySelectorAll(this._itemsQuerySelector);
-            // Возможны кейсы что элементы просто не успели отрендириться. Например, если нам прокинуть 2 опции,
-            // одна из которых будет source. То индексы могут примениться где-то между beforeUpdate и beforeRender.
-            if (itemsElements.length === 0) {
-                return;
-            }
-
             if (itemsRangeLength !== itemsElements.length) {
                 Logger.error('Controls/list:ItemsSizeController.updateItemsSizes | ' +
                     'The count of elements in the DOM differs from the length of the updating items range. ' +

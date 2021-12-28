@@ -230,9 +230,16 @@ export abstract class AbstractListVirtualScrollController<
         this._handleScheduledUpdateHasItemsOutRange();
     }
 
-    beforeRenderListControl(): void {
+    endBeforeUpdateListControl(): void {
+        // Нужно проставлять именно тут этот флаг. Например, если нам прокинутт 2 опции, одна из которых будет source.
+        // То индексы могут посчитаться где-то между beforeUpdate и beforeRender.
+        // Нужно чтобы эти индексы применились уже после отрисовки.
+        // Также не нужно забывать, что индексы могут синхронно пересчитаться внутри _beforeUpdate
+        // и вот их нужно применить сразу же.
         this._renderInProgress = true;
+    }
 
+    beforeRenderListControl(): void {
         // На beforeRender нам нужно только считать параметры для восстановления скролла.
         // Все остальные типы скролла выполняются на afterRender, когда записи уже отрисовались.
         if (this._scheduledScrollParams && this._scheduledScrollParams.type === 'calculateRestoreScrollParams') {
