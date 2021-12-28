@@ -123,10 +123,6 @@ export abstract class AbstractObserversController {
         this._updateTriggers();
     }
 
-    updateTriggers(): void {
-        this._updateTriggers();
-    }
-
     setTriggersQuerySelector(newTriggersQuerySelector: string): void {
         this._triggersQuerySelector = newTriggersQuerySelector;
         if (this._observer) {
