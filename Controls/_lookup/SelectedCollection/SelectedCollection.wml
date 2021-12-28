@@ -1,5 +1,5 @@
 <ws:template name="counterTemplate">
-   <ws:if data="{{_options.counterVisibility !== 'hidden'}}">
+   <ws:if data="{{(itemsLayout === 'oneRow' || _options.items.getCount() > _options.maxVisibleItems) && _options.counterVisibility !== 'hidden'}}">
       <span name="infoBoxLink"
             style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout, !(_options.readOnly && !_options.maxVisibleItems))}}"
             class="controls-SelectedCollection__InfoBox
