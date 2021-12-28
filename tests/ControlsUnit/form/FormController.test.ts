@@ -735,6 +735,13 @@ describe('FormController', () => {
       assert.isTrue(notifyHandler.withArgs('createsuccessed').called);
       assert.isTrue(createHandler.withArgs(record).called);
       assert.equal(this._createdInMounting, undefined);
+
+      FC._createdInMounting = {
+         isError: true
+      };
+      FC._afterMount();
+      assert.isTrue(notifyHandler.withArgs('createfailed').called);
+      assert.equal(this._createdInMounting, undefined);
       FC.destroy();
    });
 
@@ -753,6 +760,13 @@ describe('FormController', () => {
       assert.isTrue(FC._isMount);
       assert.isTrue(notifyHandler.withArgs('readsuccessed').called);
       assert.isTrue(readHandler.withArgs(record).called);
+      assert.equal(this._readInMounting, undefined);
+
+      FC._readInMounting = {
+         isError: true
+      };
+      FC._afterMount();
+      assert.isTrue(notifyHandler.withArgs('readfailed').called);
       assert.equal(this._readInMounting, undefined);
       FC.destroy();
    });
@@ -819,6 +833,19 @@ describe('FormController', () => {
       });
    });
 
+   it('create', () => {
+       const FC = new Controller({});
+       FC._beforeMount({
+           initializingWay: INITIALIZING_WAY.PRELOAD
+       });
+       sinon.stub(FC._crudController, 'create').callsFake(() => Promise.resolve({}));
+       const createHandler = sinon.stub(FC, '_createHandler');
+       return FC.create().then(() => {
+           assert.isTrue(createHandler.called);
+           FC.destroy();
+       });
+   });
+
    it('readRecordBeforeMount success', () => {
       const FC = new Controller({});
       const record = createModel(1);
@@ -855,6 +882,51 @@ describe('FormController', () => {
          sinon.assert.called(processError);
          FC.destroy();
       });
+   });
+
+   it('updating failed with validation success', () => {
+      const FC = new Controller({});
+      FC._beforeMount({
+         initializingWay: INITIALIZING_WAY.PRELOAD
+      });
+      const result = {hasErrors: false};
+      sinon.stub(FC, 'validate').callsFake(() => Promise.resolve(result));
+      sinon.stub(FC._crudController, 'update').callsFake(() => Promise.reject({}));
+      const processError = sinon.stub(FC, 'processError').callsFake(() => Promise.resolve({}));
+      return FC._update().catch(() => {
+         sinon.assert.called(processError);
+         FC.destroy();
+      });
+   });
+
+   it('updating failed with validation failed', () => {
+      const FC = new Controller({});
+      FC._beforeMount({
+         initializingWay: INITIALIZING_WAY.PRELOAD
+      });
+      const result = {hasErrors: true};
+      sinon.stub(FC, 'validate').callsFake(() => Promise.resolve(result));
+      sinon.stub(FC, '_createError').callsFake(() => 'error');
+      const notify = sinon.stub(FC, '_notify');
+      return FC._update().catch(() => {
+          assert.isTrue(notify.calledWith('validationFailed'));
+      });
+   });
+
+   it('delete success', () => {
+       const FC = new Controller({});
+       FC._record = createModel(1);
+       FC._beforeMount({
+           initializingWay: INITIALIZING_WAY.PRELOAD
+       });
+       const updateIsNewRecord = sinon.stub(FC, '_updateIsNewRecord');
+       sinon.stub(FC._crudController, 'delete').callsFake(() => Promise.resolve({}));
+       return FC.delete().then(() => {
+           assert.equal(FC._record, null);
+           assert.isTrue(FC._wasDestroyed);
+           sinon.assert.called(updateIsNewRecord);
+           FC.destroy();
+       });
    });
 
    it('delete reject', () => {
