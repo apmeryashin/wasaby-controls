@@ -1,11 +1,11 @@
 import {Control} from 'UI/Base';
 import {Logger} from 'UI/Utils';
-import {Memory} from 'Types/source';
+import {Memory, CrudEntityKey} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
-import {ANIMATION_STATE, CollectionItem, ISwipeConfig, TItemKey} from 'Controls/display';
+import {ANIMATION_STATE, CollectionItem, ISwipeConfig} from 'Controls/display';
 import {DependencyTimer, IStickyPopupOptions} from 'Controls/popup';
 import {IMenuPopupOptions} from 'Controls/menu';
 import {
@@ -276,7 +276,7 @@ export class Controller {
      * @param actionsContainerWidth ширина контейнера для расчёта видимых опций записи
      * @param actionsContainerHeight высота контейнера для расчёта видимых опций записи
      */
-    activateSwipe(itemKey: TItemKey, actionsContainerWidth: number, actionsContainerHeight: number): void {
+    activateSwipe(itemKey: CrudEntityKey, actionsContainerWidth: number, actionsContainerHeight: number): void {
         const item = this._collection.getItemBySourceKey(itemKey);
         item.setSwipeAnimation(ANIMATION_STATE.OPEN);
         if (this._itemActionsVisibility === 'visible') {
@@ -300,7 +300,7 @@ export class Controller {
      * @param itemKey
      * @param containerWidth
      */
-    updateItemActions(itemKey: TItemKey, containerWidth: number): void {
+    updateItemActions(itemKey: CrudEntityKey, containerWidth: number): void {
         const item = this._collection.getItemBySourceKey(itemKey);
         const actions = item.getActions();
         const visibleActions = getActions(actions, this._iconSize, null, containerWidth);
@@ -622,7 +622,7 @@ export class Controller {
      * @param key Ключ элемента коллекции, на котором был выполнен swipe
      * @param silent Если true, коллекция не отправит onCollectionChange
      */
-    private _setSwipeItem(key: TItemKey, silent?: boolean): void {
+    private _setSwipeItem(key: CrudEntityKey, silent?: boolean): void {
         const oldSwipeItem = this.getSwipeItem();
         const newSwipeItem = this._collection.getItemBySourceKey(key);
 
