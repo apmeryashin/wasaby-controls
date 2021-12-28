@@ -237,6 +237,7 @@ class Search extends Base {
        defaultOptions.validationStatus = 'valid';
        defaultOptions.spellcheck = false;
        defaultOptions.searchButtonAlign = 'right';
+       defaultOptions.inlineWidth = 'm';
 
        return defaultOptions;
     }

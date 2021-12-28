@@ -6,6 +6,7 @@
             controls-Render_background-{{ _options.contrastBackground ? 'contrast' : 'same' }}
             controls-Render_textAlign-{{_options.textAlign}}
             controls-Render{{_statePrefix}}_borderRadius
+            controls-Render{{_statePrefix}}_inlineWidth-{{_options.inlineWidth}}
             controls-Render_state-{{_state}} controls-fontsize-{{_options.fontSize}} controls-fontweight-{{_fontWeight}}
             controls-fontsize-{{_options.fontSize}}
             controls-fontweight-{{_fontWeight}}

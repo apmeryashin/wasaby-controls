@@ -18,6 +18,7 @@
                         contrastBackground="{{ _options.contrastBackground }}"
                         horizontalPadding="{{_options.horizontalPadding}}"
                         transliterate="{{_options.transliterate}}"
+                        inlineWidth="{{_options.inlineWidth}}"
                         on:mouseenter="_mouseEnterHandler()"
                         on:tagClick="_notifyHandler('tagClick')"
                         on:tagHover="_notifyHandler('tagHover')">
