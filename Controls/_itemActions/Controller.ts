@@ -139,12 +139,12 @@ export interface IControllerOptions {
      * @description
      * https://online.sbis.ru/opendoc.html?guid=76408b97-fc91-46dc-81b0-0f375d07ab99
      */
-    feature1183020440: boolean;
+    feature1183020440?: boolean;
 
     // Временная опция, чтобы не выводить меню опций записи, если нет выводимых опций, но задан футер
     // Для устранения опции требуется переход на настоящие actions и footer по задаче:
     // https://online.sbis.ru/opendoc.html?guid=dca1ba93-ffe6-4f68-9f05-9d266a0bc28f
-    task1183329228: boolean;
+    task1183329228?: boolean;
 }
 
 /**
@@ -542,7 +542,6 @@ export class Controller {
         if (this._collection.isEventRaising()) {
             this._collection.setEventRaising(false, true);
         }
-        const startStamp = Date.now();
         this._collection.each((item) => {
             const itemChanged = this._updateActionsOnParticularItem(item);
             hasChanges = hasChanges || itemChanged
@@ -752,17 +751,6 @@ export class Controller {
     }
 
     /**
-     * Определяет есть операции, которые надо показывать в меню по ховеру.
-     * @param action
-     * @private
-     */
-    private _isMenuAction(action: IItemAction): boolean {
-        return !action.showType ||
-               action.showType === TItemActionShowType.MENU ||
-               action.showType === TItemActionShowType.MENU_TOOLBAR;
-    }
-
-    /**
      * Возвращает конфиг кнопки операции открытия меню.
      * @private
      */
@@ -815,10 +803,10 @@ export class Controller {
             if (itemActions[i].parent) {
                 continue;
             }
-            const isMenuAction = this._isMenuAction(itemActions[i]);
+            const isMenuAction = !itemActions[i].showType || itemActions[i].showType === TItemActionShowType.MENU;
             // На этом этапе нам важно понимать только, что надо показывать кнопку меню с тремя точками,
-            // Поэтому двух операций из меню тут будет достаточно.
-            // Для других видимость определяется при открытии этого меню.
+            // Поэтому двух операций из меню тут будет достаточно, а остальные из тех, что показываются только в меню,
+            // пропускаем. Их видимость определяется при открытии меню.
             if (isMenuAction && actionsToShowInMenu.length > 1) {
                 continue;
             }
@@ -826,9 +814,9 @@ export class Controller {
             if (!isVisible) {
                 continue;
             }
-            // Если операция должна быть видима по колбеку и находится в меню,
-            // записываем её в массив записей меню.
-            if (isMenuAction) {
+            // Если операция должна быть видима по колбеку и показывается в меню
+            // или в меню и по ховеру, записываем её в массив записей меню.
+            if (isMenuAction || itemActions[i].showType === TItemActionShowType.MENU_TOOLBAR) {
                 actionsToShowInMenu.push(itemActions[i]);
             }
             // Любые другие операции записываем в список для отображения по ховеру

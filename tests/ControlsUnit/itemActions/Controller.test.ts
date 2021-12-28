@@ -253,30 +253,6 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isNotNull(config, 'getActionsTemplateConfig hasn\'t been set to collection');
         });
 
-        // T1.3. При установке набора операций вызывается VisibilityCallback.
-        it('should call visibilityCallback for every item action', () => {
-            // @ts-ignore
-            itemActionsController.update(initializeControllerOptions({
-                collection,
-                itemActions,
-                theme: 'default',
-                visibilityCallback: (action: IItemAction, item: Record) => {
-                    if (item.getKey() === 4 && action.id === 'message') {
-                        return false;
-                    }
-                    return true;
-                }
-            }));
-            const actionsOf4 = collection.getItemBySourceKey(4).getActions();
-            const actionsOf5 = collection.getItemBySourceKey(5).getActions();
-            assert.isNotNull(actionsOf4, 'actions were not set to item 4');
-            assert.isNotNull(actionsOf5, 'actions were not set to item 5');
-            assert.notExists(actionsOf4.showed.find((action) => action.id === 'message'),
-                'item 4 should not display \'message\' action');
-            assert.exists(actionsOf5.showed.find((action) => action.id === 'message'),
-                'item 5 should display \'message\' action');
-        });
-
         // T1.4. При установке набора операций учитывается itemActionsProperty
         it('should consider itemActionsProperty', () => {
             // @ts-ignore
