@@ -262,10 +262,6 @@ describe('Controls/suggest', () => {
          filter = inputContainer._prepareFilter({filterTest: 'filterTest'}, 'searchParam',
             'test', 20, 1, [1, 2]);
          assert.deepEqual(filter, newFilter);
-
-         filter = inputContainer._prepareFilter(filter, 'searchParam',
-             'test', 20, null, [1, 2]);
-         assert.ok(!filter.currentTab);
       });
 
       it('Suggest::_setFilter', () => {
