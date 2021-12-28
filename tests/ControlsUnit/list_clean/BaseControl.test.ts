@@ -932,88 +932,6 @@ describe('Controls/list_clean/BaseControl', () => {
         });
     });
 
-    describe('setMarkerAfterScroll', () => {
-        const baseControlCfg = getCorrectBaseControlConfig({
-            viewName: 'Controls/List/ListView',
-            keyProperty: 'key',
-            viewModelConstructor: 'Controls/display:Collection',
-            multiSelectVisibility: 'visible',
-            markerVisibility: 'visible',
-            selectedKeys: [],
-            excludedKeys: [],
-            markedKey: 0,
-            source: new Memory({
-                keyProperty: 'key',
-                data: getData(0)
-            })
-        });
-        let baseControl;
-        let changeMarkedKeyStub;
-        beforeEach(() => {
-            baseControl = new BaseControl(baseControlCfg);
-            baseControl._beforeMount(baseControlCfg);
-            baseControl.saveOptions(baseControlCfg);
-            baseControl._children = {
-                listView: {
-                    getItemsContainer: () => {/* FIXME: sinon mock */}
-                }
-            };
-
-            changeMarkedKeyStub = sinon.stub(baseControl, '_changeMarkedKey').callsFake(() => Promise.resolve());
-        });
-        afterEach(() => {
-            changeMarkedKeyStub.restore();
-            baseControl.destroy();
-            baseControl = undefined;
-        });
-        it('without items', () => {
-            BaseControl._private.setMarkerAfterScrolling(baseControl, 0);
-            assert.isFalse(changeMarkedKeyStub.called);
-        });
-    });
-
-    describe('handleScrollControllerResult', () => {
-        const baseControlCfg = getCorrectBaseControlConfig({
-            viewName: 'Controls/List/ListView',
-            keyProperty: 'key',
-            viewModelConstructor: 'Controls/display:Collection',
-            items: new RecordSet({
-                keyProperty: 'key',
-                rawData: []
-            })
-        });
-        let baseControl;
-        let isHidden = false;
-        let notify;
-        const handleScrollControllerResult = BaseControl._private.handleScrollControllerResult;
-
-        beforeEach(() => {
-            baseControl = new BaseControl(baseControlCfg);
-            baseControl._beforeMount(baseControlCfg);
-            baseControl.saveOptions(baseControlCfg);
-            baseControl._afterMount();
-            baseControl._container = {
-                closest: () => isHidden
-            };
-            notify = sinon.stub(baseControl, '_notify').callsFake(() => Promise.resolve());
-        });
-        afterEach(() => {
-            baseControl.destroy();
-            baseControl = undefined;
-            notify.restore();
-        });
-
-        it('virtualNavigation event should be fired', () => {
-            handleScrollControllerResult(baseControl, {placeholders: {top: 0, bottom: 0}});
-            assert.isTrue(notify.called);
-        });
-
-        it('virtualNavigation event should not be fired in hidden list', () => {
-            isHidden = true;
-            handleScrollControllerResult(baseControl, {placeholders: {top: 0, bottom: 0}});
-            assert.isFalse(notify.called);
-        });
-    });
     describe('Edit in place', () => {
         type TEditingConfig = IEditableList['_options']['editingConfig'];
 
@@ -1268,21 +1186,6 @@ describe('Controls/list_clean/BaseControl', () => {
                 baseControlOptions.filter = 'testFilter';
                 baseControl._beforeUpdate(baseControlOptions);
                 assert.isFalse(loadStarted);
-            });
-
-            it('_beforeUpdate with new source should reset scroll', async () => {
-                const baseControlOptions = getBaseControlOptionsWithEmptyItems();
-                baseControlOptions.sourceController = new NewSourceController(baseControlOptions);
-
-                const baseControl = new BaseControl(baseControlOptions);
-                await baseControl._beforeMount(baseControlOptions);
-                baseControl.saveOptions(baseControlOptions);
-
-                const newSourceControllerOptions = {...baseControlOptions};
-                newSourceControllerOptions.source = new Memory();
-
-                baseControl._beforeUpdate(newSourceControllerOptions);
-                assert.isFalse(baseControl._resetScrollAfterReload);
             });
 
             // tslint:disable-next-line:max-line-length

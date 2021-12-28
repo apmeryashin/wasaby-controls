@@ -1,70 +1,74 @@
 //#region Imports
 import rk = require('i18n!Controls');
+import cClone = require('Core/core-clone');
+import cInstance = require('Core/core-instance');
+
+import BaseControlTpl = require('wml!Controls/_baseList/BaseControl/BaseControl');
 import 'css!Controls/baseList';
 import 'css!Controls/itemActions';
 import 'css!Controls/CommonClasses';
 
 // Core imports
 import {Control, IControlOptions} from 'UI/Base';
-import cClone = require('Core/core-clone');
-import cInstance = require('Core/core-instance');
 
 import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
-import {DataSet, Memory, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
-import {debounce, throttle} from 'Types/function';
+import {CrudEntityKey, DataSet, LOCAL_MOVE_POSITION, Memory} from 'Types/source';
+import {throttle} from 'Types/function';
 import {create as diCreate} from 'Types/di';
 import {Guid, Model} from 'Types/entity';
 import {IHashMap} from 'Types/declarations';
 
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {ControllerClass, Container as ValidateContainer} from 'Controls/validate';
+import {Container as ValidateContainer, ControllerClass} from 'Controls/validate';
 import {Logger} from 'UI/Utils';
 import {Object as EventObject} from 'Env/Event';
 
-import { TouchDetect } from 'Env/Touch';
+import {TouchDetect} from 'Env/Touch';
 import {
-    NewSourceController as SourceController,
+    groupUtil,
     isEqualItems,
-    ISourceControllerOptions
+    ISourceControllerOptions,
+    NewSourceController as SourceController
 } from 'Controls/dataSource';
 import {
+    Direction,
+    IBaseSourceConfig,
     INavigationOptionValue,
     INavigationSourceConfig,
-    IBaseSourceConfig,
-    Direction,
     ISelectionObject,
-    TNavigationButtonView,
-    ISourceOptions, TKey
+    ISourceOptions,
+    TKey,
+    TNavigationButtonView
 } from 'Controls/interface';
-import { Sticky } from 'Controls/popup';
-import { process } from 'Controls/error';
+import {isLeftMouseButton, Sticky} from 'Controls/popup';
+import {process} from 'Controls/error';
 
 // Utils imports
 import {EventUtils} from 'UI/Events';
 import {DimensionsMeasurer, getDimensions as uDimension} from 'Controls/sizeUtils';
-import {getItemsHeightsData} from 'Controls/_baseList/ScrollContainer/GetHeights';
 import {
     Collection,
-    CollectionItem, IDragPosition,
+    CollectionItem,
+    groupConstants,
+    IDragPosition,
     IEditableCollectionItem,
-    TItemKey,
-    TreeItem,
     MoreButtonVisibility,
-    groupConstants
+    TItemKey,
+    TreeItem
 } from 'Controls/display';
 
 import {default as ItemContainerGetter} from 'Controls/_baseList/itemsStrategy/getItemContainerByIndex';
 import {
     Controller as ItemActionsController,
     IItemAction,
+    IItemActionsOptions,
     IShownItemAction,
-    TItemActionShowType,
     ItemActionsTemplate,
     SwipeActionsTemplate,
-    IItemActionsOptions
+    TItemActionShowType
 } from 'Controls/itemActions';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
@@ -73,45 +77,36 @@ import * as GroupingController from 'Controls/_baseList/Controllers/Grouping';
 import HoverFreeze from 'Controls/_baseList/Controllers/HoverFreeze';
 
 import {
-    Controller as EditInPlaceController,
-    InputHelper as EditInPlaceInputHelper,
     CONSTANTS as EDIT_IN_PLACE_CONSTANTS,
-    JS_SELECTORS,
+    Controller as EditInPlaceController,
     IBeforeBeginEditCallbackParams,
-    IBeforeEndEditCallbackParams, TAsyncOperationResult
+    IBeforeEndEditCallbackParams,
+    InputHelper as EditInPlaceInputHelper,
+    JS_SELECTORS,
+    TAsyncOperationResult
 } from '../editInPlace';
 import {IEditingConfig as IEditableListOption} from './interface/IEditableList';
 
-import { ListVirtualScrollController } from './Controllers/ListVirtualScrollController';
-
-import {groupUtil} from 'Controls/dataSource';
+import {ListVirtualScrollController} from './Controllers/ListVirtualScrollController';
 import {IDirection} from './interface/IVirtualScroll';
 import {
     FlatSelectionStrategy,
-    TreeSelectionStrategy,
+    IFlatSelectionStrategyOptions,
     ISelectionStrategy,
     ITreeSelectionStrategyOptions,
-    IFlatSelectionStrategyOptions,
-    SelectionController
+    SelectionController,
+    TreeSelectionStrategy
 } from 'Controls/multiselection';
-import { MarkerController, SingleColumnStrategy } from 'Controls/marker';
-import {
-    DndController,
-    FlatStrategy, IDragStrategyParams,
-    TreeStrategy
-} from 'Controls/listDragNDrop';
-
-import BaseControlTpl = require('wml!Controls/_baseList/BaseControl/BaseControl');
+import {MarkerController, SingleColumnStrategy} from 'Controls/marker';
+import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Controls/listDragNDrop';
 import 'wml!Controls/_baseList/BaseControl/NavigationButton';
 
 import {IList, IReloadItemOptions} from './interface/IList';
-import { IScrollControllerResult } from './ScrollContainer/interfaces';
-import { getStickyHeadersHeight } from 'Controls/scroll';
+import {getStickyHeadersHeight} from 'Controls/scroll';
 import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
 import {ISiblingStrategy} from './interface/ISiblingStrategy';
 import {FlatSiblingStrategy} from './Strategies/FlatSiblingStrategy';
-import {Remove as RemoveAction, Move as MoveAction, IMoveActionOptions} from 'Controls/listCommands';
-import {isLeftMouseButton} from 'Controls/popup';
+import {IMoveActionOptions, Move as MoveAction, Remove as RemoveAction} from 'Controls/listCommands';
 import {IMovableList} from './interface/IMovableList';
 import {saveConfig} from 'Controls/Application/SettingsController';
 import IndicatorsController, {
@@ -119,14 +114,14 @@ import IndicatorsController, {
     IIndicatorsControllerOptions,
     INDICATOR_HEIGHT
 } from './Controllers/IndicatorsController';
-import { selectionToRecord } from './resources/utils/getItemsBySelection';
-import { checkReloadItemArgs } from 'Controls/_baseList/resources/utils/helpers';
+import {selectionToRecord} from './resources/utils/getItemsBySelection';
+import {checkReloadItemArgs} from 'Controls/_baseList/resources/utils/helpers';
 import {
     DEFAULT_TRIGGER_OFFSET,
     IAdditionalTriggersOffsets
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import {FadeController} from 'Controls/_baseList/Controllers/FadeController';
-import type { IHasItemsOutRange } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import type {IHasItemsOutRange} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 //#endregion
 
@@ -415,15 +410,7 @@ const _private = {
 
     resetScrollAfterLoad(self): void {
         if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
-            // При полной перезагрузке данных нужно сбросить состояние скролла
-            // и вернуться к началу списка, иначе браузер будет пытаться восстановить
-            // scrollTop, догружая новые записи после сброса.
-            self._resetScrollAfterReload = !self._keepScrollAfterReload;
-            if (self._useNewScroll) {
-                self._listVirtualScrollController.disableKeepScrollPosition();
-            } else {
-                self._keepScrollAfterReload = false;
-            }
+            self._listVirtualScrollController.disableKeepScrollPosition();
         }
     },
 
@@ -914,11 +901,11 @@ const _private = {
     loadToDirectionIfNeed(self, direction, filter?: {}) {
         const sourceController = self._sourceController;
         const hasMoreData = self._hasMoreData(direction);
-        const allowLoadByLoadedItems = self._useNewScroll ||
-            (_private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig)
-            && !self._options.disableVirtualScroll ?
-                !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
-                true);
+        const allowLoadByLoadedItems =
+            _private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig) &&
+            !self._options.disableVirtualScroll
+                ? !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems)
+                : true;
         const allowLoadBySource =
             sourceController &&
             hasMoreData &&
@@ -1470,9 +1457,9 @@ const _private = {
                         if (action === IObservable.ACTION_RESET) {
                             // если есть данные и вниз и вверх, то скрываем триггер вверх,
                             // т.к. в первую очередь грузим вниз
-                            if (this._hasMoreData('down') && this._hasMoreData('up')) {
-                                this._listVirtualScrollController.setBackwardTriggerVisible(false);
-                                this._listVirtualScrollController.setForwardTriggerVisible(true);
+                            if (self._hasMoreData('down') && self._hasMoreData('up')) {
+                                self._listVirtualScrollController.setBackwardTriggerVisible(false);
+                                self._listVirtualScrollController.setForwardTriggerVisible(true);
                             }
                         }
                         break;
@@ -2005,7 +1992,6 @@ const _private = {
     },
 
     initializeNavigation(self, cfg) {
-        self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation, cfg.virtualScrollConfig);
         self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
         // Кнопка Еще в футере рисуется по навигации, ее пересчет происходит и в onCollectionChanged,
         // который может вызваться до Control::saveOptions и пересчет будет с устаревшей навигацией
@@ -2014,7 +2000,7 @@ const _private = {
         if (!_private.isDemandNavigation(cfg.navigation) && !_private.isCutNavigation(cfg.navigation)) {
             self._shouldDrawNavigationButton = false;
         }
-        if (!self._needScrollCalculation) {
+        if (!_private.needScrollCalculation(cfg.navigation, cfg.virtualScrollConfig)) {
             if (self._scrollPagingCtr) {
                 self._scrollPagingCtr.destroy();
                 self._scrollPagingCtr = null;
@@ -2258,61 +2244,6 @@ const _private = {
     },
 
     // endregion
-
-    handleScrollControllerResult(self, result: IScrollControllerResult) {
-        if (!result) {
-            return;
-        }
-        if (self._isMounted) {
-            _private.doAfterUpdate(self, () => {
-                if (self._applySelectedPage) {
-                    self._applySelectedPage();
-                }
-            });
-
-            if (result.newCollectionRenderedKeys?.length && self._options.notifyKeyOnRender) {
-               self._notify('preloadItemsByKeys', [result.newCollectionRenderedKeys], {bubbling: true});
-            }
-
-            if (result.placeholders) {
-                self._notifyPlaceholdersChanged = () => {
-                    self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
-                };
-            }
-            const id = result.hasOwnProperty('activeElement') ? result.activeElement : self._options.activeElement;
-            if (self._items && typeof self._items.getRecordById(id) !== 'undefined') {
-                // activeElement запишется в result только, когда он изменится
-                if (result.hasOwnProperty('activeElement') && !self._container.closest('.ws-hidden')) {
-                    self._notify('activeElementChanged', [result.activeElement]);
-                }
-
-                // Скроллить к активному элементу нужно только, когда в опции передали activeElement
-                if (result.scrollToActiveElement) {
-                    // Если после перезагрузки списка нам нужно скроллить к записи,
-                    // то нам не нужно сбрасывать скролл к нулю.
-                    self._keepScrollAfterReload = true;
-
-                    // FIXME: https://online.sbis.ru/opendoc.html?guid=35665533-5f26-432e-9b22-795ac40e65ff
-                    const lastAction = self._options.fix1184259069 && self._doAfterDrawItems;
-                    self._doAfterDrawItems = () => {
-                        if (lastAction) {
-                            lastAction();
-                        }
-                        _private.scrollToItem(self, self._options.activeElement, 'top', true);
-                    };
-                }
-            }
-        } else {
-            if (result.newCollectionRenderedKeys?.length) {
-                self._doAfterDrawItems = () => {
-                    self._notify('preloadItemsByKeys', [result.newCollectionRenderedKeys], {bubbling: true});
-                };
-            }
-        }
-        if (result.shadowVisibility) {
-            self._updateShadowModeHandler(result.shadowVisibility);
-        }
-    },
 
     getFadeController(self: BaseControl, options: IList = null): FadeController {
         if (!self._fadeController) {
@@ -2953,11 +2884,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _updateShadowModeBeforePaint = null;
     _updateShadowModeAfterMount = null;
 
-    // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
-    // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
-    // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
-    _markedKeyForRestoredScroll = null;
-
     _updateInProgress = false;
 
     _hasItemWithImageChanged = false;
@@ -3004,14 +2930,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _itemTemplate = null;
 
     _isScrollShown = false;
-    _needScrollCalculation = false;
     _notifyPlaceholdersChanged = null;
     _viewSize = null;
     _viewportSize = null;
     _scrollTop = 0;
     _popupOptions = null;
     private _listVirtualScrollController: ListVirtualScrollController;
-    private _useNewScroll: boolean = true;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -3030,8 +2954,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _needBottomPadding = false;
     _noDataBeforeReload = false;
 
-    _keepScrollAfterReload = false;
-    _resetScrollAfterReload = false;
     _scrollPageLocked = false;
     _bottomVisible: boolean = true;
 
@@ -3168,9 +3090,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!direction) {
             this._loadedBySourceController = true;
             if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
-                this._children.listView.reset({
-                    keepScroll: this._keepScrollAfterReload
-                });
+                this._children.listView.reset({});
             }
             this._keepHorizontalScroll = false;
             _private.setReloadingState(this, false);
@@ -3777,10 +3697,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         this._listViewModel.setEmptyTemplateOptions({items: this._items, filter: newOptions.filter});
 
-        if (this._listViewModel.setSupportVirtualScroll) {
-            this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
-        }
-
         if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
         }
@@ -4258,10 +4174,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shouldNotifyOnDrawItems = true;
         }
 
-        if (this._loadedItems) {
-            this._shouldRestoreScrollPosition = true;
-        }
-
         this._spaceBlocked = false;
 
         this._updateBaseControlModel(newOptions);
@@ -4370,9 +4282,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             container.removeEventListener('dragstart', this._nativeDragStart);
             this._notify('_removeDraggingTemplate', [], {bubbling: true});
         }
-        if (this._finishScrollToEdgeOnDrawItems) {
-            this._finishScrollToEdgeOnDrawItems = null;
-        }
         // Если sourceController есть в опциях, значит его создали наверху
         // например list:DataContainer, и разрушать его тоже должен создатель.
         if (this._sourceController) {
@@ -4445,21 +4354,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _beforeRender(): void {
-        // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
-        // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
-        // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
-        // устанавливаем скролл в "0".
-        // Как итог - контент мелькает. Поэтому сбрасываем скролл в 0 именно ДО отрисовки.
-        // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=c3812a26-2301-4998-8283-bcea2751f741
-        // Демка нативного поведения: https://jsfiddle.net/alex111089/rjuc7ey6/1/
-        if (this._shouldNotifyOnDrawItems) {
-            if (this._resetScrollAfterReload) {
-                this._notify('doScroll', ['top'], {bubbling: true});
-                this._scrolled = false;
-                this._scrollTop = 0;
-            }
-        }
-
         this._listVirtualScrollController.beforeRenderListControl();
         const hasNotRenderedChanges = this._hasItemWithImageChanged ||
             this._indicatorsController.hasNotRenderedChanges();
@@ -4493,25 +4387,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._notify('controlResize', [], { bubbling: true });
             this._pagingVisibilityChanged = false;
         }
-        // todo KINGO.
-        // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
-        // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
-        // Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
-        // Чтобы предотвратить эту ошибку - восстанавливаем скролл на ту позицию, которая была до вставки новых записей.
-        // todo 2 Фантастически, но свежеиспеченный afterRender НЕ ПОДХОДИТ! Падают тесты. ХФ на носу, разбираться
-        // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
-        if (this._shouldRestoreScrollPosition && !this._sourceController?.getLoadError()) {
 
-            // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
-            // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
-            // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
-            if (this._options.task1178907511 && this._markedKeyForRestoredScroll !== null && this._isScrollShown) {
-                _private.scrollToItem(this, this._markedKeyForRestoredScroll);
-                this._markedKeyForRestoredScroll = null;
-            }
-
+        if (this._loadedItems) {
             this._loadedItems = null;
-            this._shouldRestoreScrollPosition = false;
         }
 
         if (this._updateShadowModeBeforePaint) {
@@ -4543,13 +4421,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         this._updateInProgress = false;
-        if (this._finishScrollToEdgeOnDrawItems && this._shouldNotifyOnDrawItems) {
-            this._finishScrollToEdgeOnDrawItems();
-            this._finishScrollToEdgeOnDrawItems = null;
-        }
-        if (this._shouldNotifyOnDrawItems) {
-            this._resetScrollAfterReload = false;
-        }
         this._notifyOnDrawItems();
         this._loadedBySourceController = false;
 
@@ -4769,10 +4640,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     reload(keepNavigation: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
 
         if (keepNavigation) {
-            if (this._useNewScroll) {
-                this._listVirtualScrollController.enableKeepScrollPosition();
-            }
-            this._keepScrollAfterReload = true;
+            this._listVirtualScrollController.enableKeepScrollPosition();
             if (!sourceConfig) {
                 if (this._options.navigation?.source === 'position') {
                     const maxLimit = Math.max(this._options.navigation.sourceConfig.limit, this._items.getCount());
@@ -6246,9 +6114,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const updateData = () => {
             this._sourceController.setNavigation(newNavigation);
             this._updatePagingOnResetItems = false;
-            const result = this._reload(this._options);
-            this._shouldRestoreScrollPosition = true;
-            return result;
+            return this._reload(this._options);
         };
 
         if (_private.isEditing(this)) {
@@ -6478,7 +6344,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
         this._viewReady = true;
-        if (this._needScrollCalculation) {
+        if (_private.needScrollCalculation(this._options.navigation, this._options.virtualScrollConfig)) {
             this._viewSize = _private.getViewSize(this, true);
         }
     }
@@ -6508,7 +6374,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _observeScrollHandler(_: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
-        if (this._needScrollCalculation) {
+        if (_private.needScrollCalculation(this._options.navigation, this._options.virtualScrollConfig)) {
             switch (eventName) {
                 case 'virtualScrollMove':
                     _private.throttledVirtualScrollPositionChanged(this, params);
@@ -6684,17 +6550,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _scrollToFirstItem(): Promise<void> {
-        if (!this._finishScrollToEdgeOnDrawItems) {
-            let firstItem = this._listViewModel.getFirst();
-            // к скрытой группе нельзя скроллить, т.к. ее высота равна 0 и это не добавит отступ для триггера =>
-            // вызовется подгрузка вверх
-            if (firstItem['[Controls/_display/GroupItem]'] && firstItem.key === groupConstants.hiddenGroup) {
-                firstItem = this._listViewModel.getNext(firstItem);
-            }
-            const firstItemKey = firstItem && firstItem.key !== undefined ? firstItem.key : null;
-            if (firstItemKey !== null) {
-                return _private.scrollToItem(this, firstItemKey, 'top', true);
-            }
+        let firstItem = this._listViewModel.getFirst();
+        // к скрытой группе нельзя скроллить, т.к. ее высота равна 0 и это не добавит отступ для триггера =>
+        // вызовется подгрузка вверх
+        if (firstItem['[Controls/_display/GroupItem]'] && firstItem.key === groupConstants.hiddenGroup) {
+            firstItem = this._listViewModel.getNext(firstItem);
+        }
+        const firstItemKey = firstItem && firstItem.key !== undefined ? firstItem.key : null;
+        if (firstItemKey !== null) {
+            return _private.scrollToItem(this, firstItemKey, 'top', true);
         }
         return Promise.resolve();
     }

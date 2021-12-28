@@ -457,71 +457,6 @@ define([
          assert.isTrue(isItemsReadyCallbackSetted);
       });
 
-      it('_needScrollCalculation', function(done) {
-         var source = new sourceLib.Memory({
-            keyProperty: 'id',
-            data: data
-         });
-
-         var dataLoadFired = false;
-
-         var cfg = {
-            viewName: 'Controls/List/ListView',
-            dataLoadCallback: function() {
-               dataLoadFired = true;
-            },
-            source: source,
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               collection: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: 'Controls/display:Collection'
-         };
-
-         var ctrl = correctCreateBaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
-         assert.isOk(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
-
-         cfg = {
-            viewName: 'Controls/List/ListView',
-            dataLoadCallback: function() {
-               dataLoadFired = true;
-            },
-            source: source,
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               collection: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: 'Controls/display:Collection',
-            navigation: {
-               view: 'infinity',
-               source: 'page',
-               sourceConfig: {
-                  pageSize: 2,
-                  page: 0,
-                  hasMore: false
-               }
-            }
-         };
-         setTimeout(function() {
-            ctrl._beforeUpdate(cfg);
-            assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after updating');
-            done();
-         }, 1);
-
-         ctrl = correctCreateBaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
-         assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
-      });
-
       it('isPortionedLoad',  () => {
          const baseControl = {
             _options: {}
@@ -1148,7 +1083,6 @@ define([
          };
          baseControl._children = triggers;
          baseControl.saveOptions(cfg);
-         baseControl._needScrollCalculation = true;
          baseControl._isScrollShown = true;
          baseControl._listVirtualScrollController = {
             contentResized(contentSize) {
@@ -1414,7 +1348,6 @@ define([
 
          await baseControl._reload(baseControlOptions);
          await baseControl._beforeUpdate(baseControlOptions);
-         assert.ok(baseControl._shouldRestoreScrollPosition);
       });
 
       it('reload and restore model state', async function() {
@@ -1655,34 +1588,6 @@ define([
             });
             lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
             assert.isTrue(isActionsUpdated);
-         });
-      });
-
-      describe('move marker after scroll', async function() {
-         var lnSource = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: data
-            }),
-            lnCfg = {
-               viewName: 'Controls/List/ListView',
-               source: lnSource,
-               keyProperty: 'id',
-               viewModelConstructor: 'Controls/display:Collection'
-            },
-            lnBaseControl = new lists.BaseControl(lnCfg);
-         lnBaseControl.saveOptions(lnCfg);
-         await lnBaseControl._beforeMount(lnCfg);
-         it('moveMarkerOnScrollPaging option', function() {
-            let strategy = new marker.SingleColumnStrategy({});
-            let inst = {_options: {}, _setMarkerAfterScroll: false, _shouldMoveMarkerOnScrollPaging: () => strategy.shouldMoveMarkerOnScrollPaging() };
-            lists.BaseControl._private.setMarkerAfterScroll(inst);
-            assert.isTrue(inst._setMarkerAfterScroll);
-            inst._setMarkerAfterScroll = false;
-            inst._markerController.updateOptions({
-               markerStrategy: marker.MultiColumnStrategy
-            });
-            lists.BaseControl._private.setMarkerAfterScroll(inst);
-            assert.isFalse(inst._setMarkerAfterScroll);
          });
       });
 
@@ -4533,7 +4438,6 @@ define([
 
             it('infinity navigation', function() {
                lists.BaseControl._private.initializeNavigation(baseControl, cfg);
-               assert.isTrue(baseControl._needScrollCalculation);
                assert.isFalse(baseControl._pagingNavigation);
             });
             it('page navigation', function() {
@@ -4556,7 +4460,6 @@ define([
                lists.BaseControl._private.initializeNavigation(baseControl, cfg);
                assert.isTrue(scrollPagingDestroyed);
                assert.isNull(baseControl._scrollPagingCtr);
-               assert.isFalse(baseControl._needScrollCalculation);
                assert.isTrue(baseControl._pagingNavigation);
             });
          });
@@ -4623,33 +4526,6 @@ define([
             lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:1, pageSize: 5}});
             assert.deepEqual(instance, {_currentPage: 2, _knownPagesCount: 1, _currentPageSize: 5});
 
-         });
-      });
-
-      describe('_beforeMount()', () => {
-         let stubCreate;
-         beforeEach(() => {
-            stubCreate = sinon.stub(lists.BaseControl._private, 'createScrollController');
-         });
-         afterEach(() => {
-            stubCreate.restore();
-         });
-         it('should create scrollController without source', async (done) => {
-            const cfg = {
-               viewName: 'Controls/List/ListView',
-               keyProperty: 'id',
-               viewModelConstructor: 'Controls/display:Collection',
-               items: new collection.RecordSet({
-                  keyProperty: 'id',
-                  rawData: data
-               })
-            };
-            const baseControl = correctCreateBaseControl(cfg);
-            baseControl.saveOptions(cfg);
-            stubCreate.callsFake(() => {
-               done();
-            });
-            baseControl._beforeMount(cfg);
          });
       });
 
