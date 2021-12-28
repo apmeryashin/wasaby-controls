@@ -59,7 +59,7 @@
    height: var(--inline_height_l);
    border-width: var(--border-thickness_closeButton_functionalButton);
    border-radius: var(--border-radius_button_functionalButton);
-   background-color: var(--translucent_background-color_button);
+   background-color: var(--unaccented_contrast_background-color);
    backdrop-filter: blur(var(--translucent_backdrop-filter-blur_button));
 }
 
@@ -110,7 +110,7 @@
    }
 
    .controls-Button__close_external:hover {
-      background-color: var(--translucent_hover_background-color_button);
+      background-color: var(--unaccented_hover_contrast_background-color);
    }
 
    .controls-Button__close_toolButton_transparent:hover {
@@ -121,7 +121,7 @@
 .ws-is-no-touch,
 .ws-is-touch {
    .controls-Button__close_external:active {
-      background-color: var(--translucent_active_background-color_button);
+      background-color: var(--unaccented_active_contrast_background-color);
       fill: var(--contrast_icon-color);
    }
 
@@ -144,5 +144,24 @@
       border-color: var(--background-color_active_closeButton_toolButton);
       background-color: var(--background-color_active_closeButton_toolButton);
       box-shadow: var(--box-shadow_closeButton_toolButton); //none
+   }
+}
+
+@supports (backdrop-filter: blur()) {
+   .controls-Button__close_external {
+      background-color: var(--translucent_background-color_button);
+   }
+
+   .ws-is-hover {
+      .controls-Button__close_external:hover {
+         background-color: var(--translucent_hover_background-color_button);
+      }
+   }
+
+   .ws-is-no-touch,
+   .ws-is-touch {
+      .controls-Button__close_external:active {
+         background-color: var(--translucent_active_background-color_button);
+      }
    }
 }

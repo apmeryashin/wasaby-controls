@@ -35,7 +35,7 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
 
     getItemClasses(params: IItemTemplateParams): string {
         let classes = super.getItemClasses(params);
-        classes += ` controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''}`;
+        classes += ` controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''} controls-TreeGrid__groupNode`;
         return classes;
     }
 

@@ -41,7 +41,7 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
         this._setRecord(options.record);
     }
 
-    protected _afterMount(): void {
+    protected _afterMount(options?: T): void {
         this._createChangeRecordPending();
     }
 
@@ -133,7 +133,7 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
         if (this._options.confirmationShowingCallback) {
             return this._options.confirmationShowingCallback();
         } else {
-            return this._record && this._record.isChanged();
+            return !!(this._record && this._record.isChanged());
         }
     }
 

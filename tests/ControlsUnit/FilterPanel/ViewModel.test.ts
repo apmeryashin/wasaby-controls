@@ -111,6 +111,22 @@ describe('Controls/filterPanel:ViewModel', () => {
             assert.ok(viewModel.getSource()[0].editorOptions.sourceController instanceof NewSourceController);
         });
 
+        it('items (Types/collection:RecordSet) in editorOptions', () => {
+            const source = getSource();
+            const memorySource = new Memory();
+            const sourceController = new NewSourceController({
+                source: memorySource
+            });
+            sourceController.setItems(new RecordSet());
+            source[0].editorOptions = {
+                source: memorySource,
+                sourceController
+            };
+            const viewModel = getViewModel({source});
+            assert.ok(viewModel.getSource()[0].editorOptions.sourceController instanceof NewSourceController);
+            assert.ok(viewModel.getSource()[0].editorOptions.items instanceof RecordSet);
+        });
+
         it('value removed from collapsed groups', () => {
             const source = getSource();
             source[0].editorOptions = {

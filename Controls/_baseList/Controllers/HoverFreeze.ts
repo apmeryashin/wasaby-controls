@@ -1,6 +1,8 @@
 import {CrudEntityKey} from 'Types/source';
 import {SyntheticEvent} from 'UI/Vdom';
 
+const TEXT_EDITOR_SELECTOR = '.controls-EditingTemplateText_enabled';
+
 // Таймаут "заморозки"
 const HOVER_FREEZE_TIMEOUT: number = 200;
 
@@ -303,7 +305,8 @@ export default class HoverFreeze {
             this._stylesContainer.innerHTML += HoverFreeze.getItemHoverFreezeStyles(
                 this._uniqueClass,
                 htmlNodeIndex,
-                hoverBackgroundColor
+                hoverBackgroundColor,
+                this._getTextEditorBackgroundColor(hoveredContainers)
             );
 
             if (this._freezeHoverCallback) {
@@ -314,6 +317,18 @@ export default class HoverFreeze {
             // Сбросили отложенный ховер
             this._delayedItemData = null;
         }
+    }
+
+    protected _getTextEditorBackgroundColor(containers: NodeListOf<HTMLElement>): string {
+        let result = '#fff';
+        for (let i = 0; i < containers.length; i += 1) {
+            const textEditor = containers[i].querySelector(TEXT_EDITOR_SELECTOR);
+            if (textEditor) {
+                result = getComputedStyle(textEditor).backgroundColor;
+                break;
+            }
+        }
+        return result;
     }
 
     /**
@@ -392,11 +407,13 @@ export default class HoverFreeze {
      * @param uniqueClass
      * @param index
      * @param hoverBackgroundColor
+     * @param textEditorBackgroundStyle
      * @private
      */
     static getItemHoverFreezeStyles(uniqueClass: string,
                                     index: number,
-                                    hoverBackgroundColor: string): string {
+                                    hoverBackgroundColor: string,
+                                    textEditorBackgroundStyle: string): string {
         return `
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}),
               .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell__content,
@@ -404,7 +421,7 @@ export default class HoverFreeze {
                 background-color: ${hoverBackgroundColor};
               }
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .controls-EditingTemplateText_enabled {
-                  background-color: var(--background-color_inputText);
+                  background-color: ${textEditorBackgroundStyle};
               }
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .js-controls-ListView__visible-on-hoverFreeze {
                  opacity: 1;
