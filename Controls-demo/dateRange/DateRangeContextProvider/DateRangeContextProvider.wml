@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper .controlsDemo_fixedWidth350">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
     <div class="controlsDemo__cell">
         <Controls.date:ContextProvider attr:class="controlsDemo__flex controlsDemo-DateRangeContextProvider_default">
             <div>
@@ -38,7 +38,7 @@
     </div>
     <div class="controlsDemo__cell">
         <span class="controls-text-label">Смена ширины периода с помощь утилиты getQuantByRange</span>
-        <Controls.date:ContextProvider attr:class="controls-DateRangeSelector__{{ _quant }}-width controlsDemo__flex controlsDemo-DateRangeContextProvider_default">
+        <Controls.date:ContextProvider attr:class="controls-DateRangeSelector__quant-{{ _quant }} controlsDemo__flex controlsDemo-DateRangeContextProvider_default">
             <div>
                 <Controls.dateRange:SelectorConsumer
                         attr:class="ws-flex-grow-1"

@@ -308,14 +308,14 @@ const Utils = {
     * Используется для определения нужной ширины контрола выбора периода вместе с кнопками-стрелками переключающими
     * период в зависимости от выбранного кванта. Для решения данной задачи существует набор классов,
     * которые нужно навесить на родительский элемент контрола выбора периода и кнопок-стрелок:
-    * * controls-DateRangeSelector__month-width
-    * * controls-DateRangeSelector__year-width
-    * * controls-DateRangeSelector__date-width
-    * * controls-DateRangeSelector__halfyear-width
-    * * controls-DateRangeSelector__quarter-width
-    * * controls-DateRangeSelector__dateRange-width
-    * * controls-DateRangeSelector__monthsRange-width
-    * * controls-DateRangeSelector__yearsRange-width
+    * * controls-DateRangeSelector__quant-month
+    * * controls-DateRangeSelector__quant-year
+    * * controls-DateRangeSelector__quant-date
+    * * controls-DateRangeSelector__quant-halfyear
+    * * controls-DateRangeSelector__quant-quarter
+    * * controls-DateRangeSelector__quant-dateRange
+    * * controls-DateRangeSelector__quant-monthsRange
+    * * controls-DateRangeSelector__quant-yearsRange
     * @example
     * <pre>
     *    <Controls.date:ContextProvider attr:class="controls-DateRangeSelector__{{ _quant }}-width controlsDemo__flex">
