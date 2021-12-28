@@ -526,7 +526,7 @@ class FormController extends ControllerBase<IFormController> {
                 // если были ошибки валидации, уведомим о них
                 const validationErrors = this._validateController.getValidationResult();
                 this._notify('validationFailed', [validationErrors]);
-                const error = new Error(rk('Некорректно заполнены обязательные поля'));
+                const error = this._createError(rk('Некорректно заполнены обязательные поля'));
                 updateDef.errback(error);
             }
         }, (e) => {
@@ -534,6 +534,10 @@ class FormController extends ControllerBase<IFormController> {
             return e;
         });
         return updateDef;
+    }
+
+    private _createError(message: string): Error {
+        return new Error(message);
     }
 
     delete(destroyMetaData: unknown, config?: ICrudConfig): Promise<Model | undefined> {

@@ -116,6 +116,7 @@ export function getPeriodLengthInDays(start: Date, end: Date): number {
 }
 
 // кривое название метода используется в прикладных репозиториях
+// TODO: Удалить https://online.sbis.ru/opendoc.html?guid=30b6a891-f04a-494c-b19b-24cac52e3342
 export function gePeriodLengthInDays(start: Date, end: Date): number {
     return getPeriodLengthInDays(start, end);
 }
