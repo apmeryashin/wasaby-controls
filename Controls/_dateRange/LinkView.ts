@@ -29,7 +29,7 @@ export default class LinkView extends LinkViewBase<ILinkView> {
         super._beforeUpdate(options);
     }
 
-    protected _beforeUnmount() {
+    protected _beforeUnmount(): void {
         this._rangeModel.destroy();
     }
 
