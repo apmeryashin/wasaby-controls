@@ -3961,7 +3961,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _afterMount(): void {
         this._isMounted = true;
 
-        this._listVirtualScrollController.setListContainer(this._container);
         this._listVirtualScrollController.afterMountListControl();
         if (this._options.activeElement) {
             this._listVirtualScrollController.scrollToItem(this._options.activeElement, 'top', true);
@@ -7059,6 +7058,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         if (this._useNewScroll) {
+            this._listVirtualScrollController.setListContainer(this._container);
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
         }
         this._viewReady = true;

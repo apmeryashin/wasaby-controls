@@ -14,12 +14,6 @@ export type IItemsSizesControllerConstructor = new (options: IItemsSizesControll
 export type IObserversControllerConstructor = new (options: IObserversControllerOptions) => ObserversController;
 
 export class ListVirtualScrollController extends AbstractListVirtualScrollController {
-    setItemsContainer(itemsContainer: HTMLElement) {
-        super.setItemsContainer(itemsContainer);
-        // В списке триггеры лежат внутри itemsContainer, поэтому когда он изменился, нужно обновить триггеры.
-        this._scrollController.updateTriggers();
-    }
-
     protected _getObserversControllerConstructor(): IObserversControllerConstructor {
         return ObserversController;
     }
