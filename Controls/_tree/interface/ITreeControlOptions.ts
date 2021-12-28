@@ -36,6 +36,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * Интерфейс для древовидных списков, например для контрола {@link Controls/treeGrid:View Дерево}.
  *
  * @interface Controls/_tree/interface/ITreeControl
+ * @implements Controls/interface:IExpandedItems
  * @public
  * @author Авраменко А.С.
  */
@@ -105,34 +106,6 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @variant true Toggle node by click on it's whole area.
  * @variant false Toggle node by click on only it's expander.
  * @default false
- */
-
-/**
- * @name Controls/_tree/interface/ITreeControl#expandedItems
- * @cfg {Array.<String>|undefined} Идентификаторы развернутых узлов в {@link Controls/treeGrid:View дереве с колонками}.
- * @default undefined
- * @remark
- * Чтобы развернуть все элементы списка, параметр expandedItems должен быть задан как массив, содержащий один элемент — "null". В этом случае предполагается, что все данные будут загружены сразу.
- * Настройка не работает, если источник данных задан через {@link Types/source:Memory}.
- * @see expandByItemClick
- * @see expanderVisibility
- * @see collapsedItems
- */
-
-/*
- * @name Controls/_tree/interface/ITreeControl#expandedItems
- * @cfg {{Array.<String>}|undefined} Array of identifiers of expanded items.
- * <b>Note:</b>
- * To expand all items, this option must be set as array containing one element “null”.
- * In this case, it is assumed that all data will be loaded initially.
- * @notice Without binding this option will be static. Use binding to allow expanding/collapsing nodes.
- * @example
- * <pre>
- *      <Controls.treeGrid:View
- *           bind:expandedItems="_expandedItems">
- *      </Controls.treeGrid:View>
- *  </pre>
- *  @see collapsedItems
  */
 
 /**
@@ -613,14 +586,6 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @name Controls/_tree/interface/ITreeControl#itemCollapsed
  * @param {UICommon/Events:SyntheticEvent} eventObject The event descriptor.
  * @param {Types/entity:Model} node Collapsed node.
- */
-
-/**
- * @event Происходит при изменении набора развернутых узлов.
- * @name Controls/_tree/interface/ITreeControl#expandedItemsChanged
- * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {Array.<Number|String>} expandedItems Идентификаторы развернутых узлов.
- * @see collapsedItemsChanged
  */
 
 /**
