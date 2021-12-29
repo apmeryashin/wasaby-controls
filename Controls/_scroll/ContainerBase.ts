@@ -893,17 +893,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             if (scrollParam === 'bottom') {
                 this._setScrollTop(scrollHeight - clientHeight);
             } else if (scrollParam === 'pageUp') {
-                // Скроллим на минимально возможное значение
-                const newScrollTop = currentScrollTop < clientHeight ? 0 : currentScrollTop - clientHeight;
-                this._setScrollTop(newScrollTop);
+                this._setScrollTop(currentScrollTop - clientHeight);
             } else if (scrollParam === 'pageDown') {
-                let newScrollTop = currentScrollTop + clientHeight;
-                // Скроллим на максимально возможное значение
-                // Правлю для того, чтобы в ScrollModel и в событие отдали сразу актуальное значение
-                if (newScrollTop > scrollHeight - clientHeight) {
-                    newScrollTop = scrollHeight - clientHeight;
-                }
-                this._setScrollTop(newScrollTop);
+                this._setScrollTop(currentScrollTop + clientHeight);
             } else if (typeof scrollParam === 'number') {
                 this._setScrollTop(scrollParam, false, isVirtual);
             }
@@ -1044,7 +1036,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _scrollTo(scrollPosition: number,
                       direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL,
-                      smooth: boolean): void {
+                      smooth: boolean): number {
         const scrollContainer: HTMLElement = this._children.content;
         let scrollOrientation;
 
@@ -1054,9 +1046,11 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 [scrollOrientation]: scrollPosition,
                 behavior: 'smooth'
             });
+            return scrollPosition;
         } else {
             scrollOrientation = direction === SCROLL_DIRECTION.VERTICAL ? 'scrollTop' : 'scrollLeft';
             scrollContainer[scrollOrientation] = scrollPosition;
+            return scrollContainer[scrollOrientation];
         }
     }
 
@@ -1097,9 +1091,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                     });
             }
         } else {
-            this._scrollTo(scrollTop, SCROLL_DIRECTION.VERTICAL, smooth);
+            const newScrollTop = this._scrollTo(scrollTop, SCROLL_DIRECTION.VERTICAL, smooth);
             this._updateStateAndGenerateEvents({
-                scrollTop
+                scrollTop: newScrollTop
             });
         }
     }
