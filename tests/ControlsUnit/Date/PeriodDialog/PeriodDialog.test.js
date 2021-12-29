@@ -352,7 +352,7 @@ define([
          it('should update start value.', function() {
             const component = calendarTestUtils.createComponent(PeriodDialog.default, {}),
                date = new Date();
-            component._startValuePickerChanged(null, date);
+            component._startValuePickerChanged(date);
             assert.strictEqual(component._rangeModel.startValue, date);
             assert.strictEqual(component._headerRangeModel.startValue, date);
          });
@@ -378,7 +378,7 @@ define([
          }].forEach(function(test) {
             it(`should update end value to ${formatDate(test.endValue)} if ${formatDate(test.date)} is passed and options is equal ${JSON.stringify(test.options)}.`, function() {
                const component = calendarTestUtils.createComponent(PeriodDialog.default, test.options);
-               component._endValuePickerChanged(null, test.date);
+               component._endValuePickerChanged(test.date);
                assert(dateUtils.Base.isDatesEqual(component._rangeModel.endValue, test.endValue));
                assert(dateUtils.Base.isDatesEqual(component._headerRangeModel.endValue, test.endValue));
             });

@@ -115,6 +115,13 @@ export default class Row<TContents extends Model = Model>
     }
 
     // endregion
+
+    getStickyHeaderPosition(): {vertical: string} {
+        throw new Error(
+            'Controls/_grid/display/Row:getStickyHeaderPosition() method should not be used!\n' +
+            'Use the same method on cell!'
+        );
+    }
 }
 
 Object.assign(Row.prototype, {

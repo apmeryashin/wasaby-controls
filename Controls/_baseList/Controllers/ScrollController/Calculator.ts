@@ -185,9 +185,12 @@ export class Calculator {
             const viewportSize = this._viewportSize;
             scrollPosition = itemOffset + edgeItem.borderDistance - viewportSize;
         }
-        scrollPosition = Math.max(scrollPosition, 0);
+
         const maxScrollPosition = Math.max(this._contentSize - this._viewportSize, 0);
-        return scrollPosition > maxScrollPosition ? maxScrollPosition : scrollPosition;
+        return Math.min(
+            Math.max(scrollPosition, 0),
+            maxScrollPosition
+        );
     }
 
     private _getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
@@ -199,15 +202,8 @@ export class Calculator {
         const itemsSizes = this._itemsSizes;
         let edgeItem: IEdgeItem = null;
 
-        const itemsIsRendered = this._itemsSizes.some((it) => !!it.size);
-        if (!itemsIsRendered) {
-            return null;
-        }
-
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
-            const nextItem = itemsSizes[index + 1];
-            const nextItemIsNotRendered = !nextItem || !nextItem.size;
             const itemOffset = item.offset - placeholders.backward;
             const itemBorderBottom = Math.round(itemOffset) + Math.round(item.size);
 
@@ -220,7 +216,7 @@ export class Calculator {
             }
 
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
-            const isLastItem = index === range.endIndex - 1 || item && nextItemIsNotRendered;
+            const isLastItem = index === range.endIndex - 1;
             if (itemBorderBottom > viewportBorderPosition || isLastItem) {
                 let borderDistance;
                 let border;
@@ -283,7 +279,11 @@ export class Calculator {
                 placeholders: this._placeholders
             });
 
-            this._updatePlaceholders();
+            this._placeholders = getPlaceholdersByRange({
+                range: this._range,
+                totalCount: this._totalCount,
+                itemsSizes: this._itemsSizes
+            });
         }
 
         return this._getRangeChangeResult(oldState, direction);
@@ -304,7 +304,7 @@ export class Calculator {
         // Смещать диапазон нужно, если
         // 1. Элемент находится за пределами текущего диапазона
         // 2. Мы не можем к нему полноценно проскроллить(проскроллить так, чтобы элемент был в верху вьюпорта)
-        if (!this._isItemInRange(index) || !this._canScrollToItem(index)) {
+        if (!this._isItemInRange(index) || !this._contentAfterItemMoreThanViewport(index)) {
             direction = index > this._range.endIndex ? 'forward' : 'backward';
             this._range = getRangeByIndex({
                 pageSize: this._virtualScrollConfig.pageSize,
@@ -312,7 +312,11 @@ export class Calculator {
                 totalCount: this._totalCount
             });
 
-            this._updatePlaceholders();
+            this._placeholders = getPlaceholdersByRange({
+                range: this._range,
+                totalCount: this._totalCount,
+                itemsSizes: this._itemsSizes
+            });
         }
 
         return this._getRangeChangeResult(oldState, direction);
@@ -328,21 +332,16 @@ export class Calculator {
     }
 
     /**
-     * Проверяем, что мы можем полноценно проскроллить к элементу и после этого не вызовем сразу же смещение диапазона.
-     * @param index
+     * Проверяем, что после элемента записей достаточно, чтобы запонлить весь вьюпорт.
+     * @param itemIndex
      * @private
      */
-    private _canScrollToItem(index: number): boolean {
-        const passedItemOffset = this._itemsSizes[index].offset;
-        // Позиция нижней границы вьюпорты это позиция скролла + размер вьюпорта
-        // Но т.к. мы првоеряем, что можно ли проскроллить к элементу,
-        // то за позицию скролла берем offset этого элемента.
-        // Если проскроллить к элементу, то он будет в верху вьюпорта => scrollPosition === item.offset
-        const bottomViewportBorderPosition = passedItemOffset + this._viewportSize;
-        const hasItemAfterBottomViewportBorder = this._itemsSizes.some(
-            (it) => it.offset >= bottomViewportBorderPosition
-        );
-        return hasItemAfterBottomViewportBorder;
+    private _contentAfterItemMoreThanViewport(itemIndex: number): boolean {
+        let itemsSizesSum = 0;
+        for (let i = itemIndex; i < this._range.endIndex; i++) {
+            itemsSizesSum += this._itemsSizes[i].size;
+        }
+        return itemsSizesSum >= this._viewportSize;
     }
 
     // endregion ShiftRangeByIndex
@@ -366,7 +365,11 @@ export class Calculator {
                 triggerOffset: this._triggersOffsets[direction]
             });
 
-            this._updatePlaceholders();
+            this._placeholders = getPlaceholdersByRange({
+                range: this._range,
+                totalCount: this._totalCount,
+                itemsSizes: this._itemsSizes
+            });
         }
 
         // При скролле к виртуальной позиции нельзя сказать куда сместился диапазон, т.к. по сути это поведение схожее
@@ -440,7 +443,12 @@ export class Calculator {
             placeholders: this._placeholders
         });
 
-        this._updatePlaceholders();
+        this._placeholders = getPlaceholdersByRange({
+            range: this._range,
+            totalCount: this._totalCount,
+            itemsSizes: this._itemsSizes
+        });
+
         return this._getRangeChangeResult(oldState, direction);
     }
 
@@ -495,7 +503,11 @@ export class Calculator {
             placeholders: this._placeholders
         });
 
-        this._updatePlaceholders();
+        this._placeholders = getPlaceholdersByRange({
+            range: this._range,
+            totalCount: this._totalCount,
+            itemsSizes: this._itemsSizes
+        });
 
         return this._getRangeChangeResult(oldState, direction);
     }
@@ -524,18 +536,14 @@ export class Calculator {
             });
         }
         // Пересчитываем плэйсхолдеры. При пересчете они сбросятся в 0(размеры элементов уже были сброшены)
-        this._updatePlaceholders();
-    }
-
-    // endregion HandleCollectionChanges
-
-    private _updatePlaceholders(): void {
         this._placeholders = getPlaceholdersByRange({
             range: this._range,
             totalCount: this._totalCount,
             itemsSizes: this._itemsSizes
         });
     }
+
+    // endregion HandleCollectionChanges
 
     private _getRangeChangeResult(oldState: ICalculatorState, shiftDirection: IDirection|null): ICalculatorResult {
         const indexesChanged = oldState.range.startIndex !== this._range.startIndex ||
@@ -557,6 +565,7 @@ export class Calculator {
             oldPlaceholders: oldState.placeholders,
             indexesChanged,
             shiftDirection,
+            mode: null,
 
             hasItemsOutRangeBackward,
             hasItemsOutRangeForward,

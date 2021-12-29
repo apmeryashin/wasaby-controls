@@ -42,6 +42,7 @@ import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
 import {CrudEntityKey} from 'Types/source';
 import {IDirection} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import {getFlatNearbyItem} from 'Controls/_display/utils/NearbyItemUtils';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -3629,21 +3630,7 @@ export default class Collection<
         isNext: boolean,
         conditionProperty?: string
     ): T {
-        const method = isNext ? 'moveNext' : 'movePrevious';
-        let nearbyItem;
-
-        enumerator.setCurrent(item);
-        while (enumerator[method]()) {
-            nearbyItem = enumerator.getCurrent();
-            if (conditionProperty && !nearbyItem[conditionProperty]) {
-                nearbyItem = undefined;
-                continue;
-            }
-            break;
-        }
-        enumerator.reset();
-
-        return nearbyItem;
+        return getFlatNearbyItem(enumerator, item, isNext, conditionProperty);
     }
 
     /**

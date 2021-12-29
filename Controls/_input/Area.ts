@@ -30,6 +30,7 @@ import 'css!Controls/input';
  *
  * @class Controls/_input/Area
  * @extends Controls/input:BaseText
+ * @implements Controls/input:IBase
  * @implements Controls/input:INewLineKey
  * @implements Controls/input:IArea
  * @implements Controls/interface:IFontSize
@@ -43,11 +44,6 @@ import 'css!Controls/input';
  * @demo Controls-demo/Input/Area/MinMaxLines/Index
  *
  * @author Красильников А.С.
- */
-
-/**
- * @name Controls/_input/Area#textAlign
- * @demo Controls-demo/Input/Area/TextAlign/Index
  */
 
 /**

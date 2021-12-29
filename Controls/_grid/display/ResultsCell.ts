@@ -1,10 +1,11 @@
 import {TemplateFunction} from 'UI/Base';
 import {Model as EntityModel} from 'Types/entity';
-import ResultsRow from './ResultsRow';
+import ResultsRow, {TResultsPosition} from './ResultsRow';
 import Cell, {IOptions as IBaseCellOptions} from './Cell';
 
 interface IResultsCellOptions extends IBaseCellOptions<null> {
     metaResults?: EntityModel;
+    resultsPosition?: TResultsPosition;
 }
 
 const FIXED_RESULTS_Z_INDEX = 4;
@@ -17,6 +18,7 @@ export const GRID_RESULTS_CELL_DEFAULT_TEMPLATE: string = 'Controls/grid:ResultC
 class ResultsCell extends Cell<null, ResultsRow> {
     protected readonly _defaultCellTemplate: string = GRID_RESULTS_CELL_DEFAULT_TEMPLATE;
     protected _$metaResults: EntityModel;
+    private _$resultsPosition: string;
     protected _data: string | number;
     protected _format: string;
 
@@ -152,13 +154,22 @@ class ResultsCell extends Cell<null, ResultsRow> {
     }
 
     //endregion
+
+    getVerticalStickyHeaderPosition(): string {
+        return this._$resultsPosition;
+    }
+
+    getStickyHeaderMode(): string {
+        return 'stackable';
+    }
 }
 
 Object.assign(ResultsCell.prototype, {
     '[Controls/_display/grid/ResultsCell]': true,
     _moduleName: 'Controls/grid:GridResultsCell',
     _instancePrefix: 'grid-results-cell-',
-    _$metaResults: null
+    _$metaResults: null,
+    _$resultsPosition: 'top'
 });
 
 export default ResultsCell;
