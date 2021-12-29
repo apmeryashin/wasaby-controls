@@ -522,20 +522,27 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         const messageDiv = this._messageDiv;
         const isMessageDivVisible = this._messageDiv?.parentElement;
         if (this.isGlobal && isMessageDivVisible && ManagerController) {
-            const rootContainer = document.querySelector('.controls-Popup__dialog-target-container');
+            const rootContainer: HTMLElement = document.querySelector('.controls-Popup__dialog-target-container');
             const contentData = ManagerController.getContentData();
             const rootWidth = contentData?.width || rootContainer?.clientWidth;
             const rootHeight = contentData?.height || rootContainer?.clientHeight || document.body.clientHeight;
             if (rootWidth && rootHeight) {
-                const left = (rootWidth - messageDiv.clientWidth) / 2 +
-                                                                       (contentData?.left || rootContainer?.offsetLeft);
-                const top = (rootHeight - messageDiv.clientHeight) / 2 +
-                                                                       (contentData?.top || rootContainer?.offsetTop);
+                const offsetLeft = this._getOffset(contentData?.left, rootContainer?.offsetLeft);
+                const offsetTop = this._getOffset(contentData?.top, rootContainer?.offsetTop);
+                const left = (rootWidth - messageDiv.clientWidth) / 2 + offsetLeft;
+                const top = (rootHeight - messageDiv.clientHeight) / 2 + offsetTop;
                 messageDiv.style.left = `${left}px`;
                 messageDiv.style.top = `${top}px`;
                 messageDiv.style.position = 'absolute';
             }
         }
+    }
+
+    private _getOffset(contentParam: number, rootParam: number): number {
+        if (contentParam !== null && contentParam !== undefined) {
+            return contentParam;
+        }
+        return rootParam;
     }
 
     private _calculateOverlayClassName(): string {
