@@ -187,7 +187,7 @@ export abstract class AbstractListVirtualScrollController<
      * @private
      */
     private _doScrollCompletedCallback: () => void;
-    private _wasResetItems: boolean;
+    private _shouldResetScrollPosition: boolean;
 
     constructor(options: TOptions) {
         this._initCollection(options.collection);
@@ -254,11 +254,9 @@ export abstract class AbstractListVirtualScrollController<
         // Как итог - контент мелькает. Поэтому сбрасываем скролл в 0 именно ДО отрисовки.
         // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=c3812a26-2301-4998-8283-bcea2751f741
         // Демка нативного поведения: https://jsfiddle.net/alex111089/rjuc7ey6/1/
-        if (this._wasResetItems) {
-            this._wasResetItems = false;
-            if (!this._keepScrollPosition) {
-                this._doScrollUtil('top');
-            }
+        if (this._shouldResetScrollPosition) {
+            this._shouldResetScrollPosition = false;
+            this._doScrollUtil('top');
         }
     }
 
@@ -362,7 +360,8 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     resetItems(): void {
-        this._wasResetItems = true;
+        // смотри комментарий в beforeRenderListControl
+        this._shouldResetScrollPosition = !this._keepScrollPosition;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
         const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
