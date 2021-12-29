@@ -59,7 +59,8 @@
    z-index: 4;
 }
 
-.controls-VScrollbar.controls-ColumnScroll__thumb {
+.controls-VScrollbar.controls-ColumnScroll__thumb,
+.controls-ColumnScroll__scrollToButtons {
    display: none;
 }
 
@@ -68,7 +69,6 @@
 }
 
 .controls-ColumnScroll__scrollToButtons {
-   display: flex;
    justify-content: flex-end;
    position: absolute;
    width: 100%;
@@ -79,10 +79,6 @@
 
 .controls-ColumnScroll__scrollToButton_left {
    margin-right: var(--offset_xs);
-}
-
-.controls-Grid__header-cell_withColumnScrollArrows {
-   margin-bottom: var(--offset_xl);
 }
 
 // Загрузка с проскролом вконец в новых таблицах
