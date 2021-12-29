@@ -61,7 +61,7 @@ const SIZES = {
  *
  * @demo Controls-demo/BreadCrumbs/ScenarioFirst/Index
  */
-class BreadCrumbsPath extends Control<IHeadingPath> {
+class BreadCrumbsPath extends Control<IHeadingPath, IReceivedState> {
     protected _template: TemplateFunction = template;
     protected _backButtonCaption: string = '';
     protected _backButtonBeforeCaptionOptions: object = null;
@@ -338,6 +338,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
             root: null,
             backButtonIconStyle: 'primary',
             backButtonFontColorStyle: 'secondary',
+            backButtonTextTransform: 'none',
             showActionButton: true,
             displayMode: 'default',
             fontSize: 'xs'
