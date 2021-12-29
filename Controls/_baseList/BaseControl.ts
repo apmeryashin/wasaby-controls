@@ -3557,28 +3557,30 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _updateVirtualNavigation(hasItemsOutRange: IHasItemsOutRange): void {
         // Список, скрытый на другой вкладке не должен нотифаить о таких изменениях
-        if (this._container?.closest('.ws-hidden') || !this._isMounted) {
+        if (this._container?.closest('.ws-hidden')) {
             return;
         }
 
         const topEnabled = hasItemsOutRange && hasItemsOutRange.backward || this._hasMoreData('up');
         const bottomEnabled = hasItemsOutRange && hasItemsOutRange.forward || this._hasMoreData('down');
 
-        if (topEnabled) {
-            this._notify('enableVirtualNavigation', ['top'], { bubbling: true });
-        } else {
-            this._notify('disableVirtualNavigation', ['top'], { bubbling: true });
+        if (this._isMounted) {
+            if (topEnabled) {
+                this._notify('enableVirtualNavigation', ['top'], { bubbling: true });
+            } else {
+                this._notify('disableVirtualNavigation', ['top'], { bubbling: true });
+            }
+
+            if (bottomEnabled) {
+                this._notify('enableVirtualNavigation', ['bottom'], { bubbling: true });
+                // чтобы скрыть отступ под пэйджинг
+            } else {
+                this._notify('disableVirtualNavigation', ['bottom'], { bubbling: true });
+                // чтобы нарисовать отступ под пэйджинг
+            }
         }
 
-        if (bottomEnabled) {
-            this._notify('enableVirtualNavigation', ['bottom'], { bubbling: true });
-            // чтобы скрыть отступ под пэйджинг
-            this._bottomVisible = false;
-        } else {
-            this._notify('disableVirtualNavigation', ['bottom'], { bubbling: true });
-            // чтобы нарисовать отступ под пэйджинг
-            this._bottomVisible = true;
-        }
+        this._bottomVisible = !bottomEnabled;
     }
 
     private _setMarkedKeyAfterPaging(key: CrudEntityKey): void {
