@@ -180,7 +180,7 @@ export default class IndicatorsController {
     displayTopIndicator(scrollToFirstItem: boolean, onDrawItems: boolean, isTopIndicatorDisplayed: boolean): void {
         const wasDisplayedIndicator = this._model.getTopIndicator().isDisplayed();
 
-        if (!isTopIndicatorDisplayed) {
+        if (!isTopIndicatorDisplayed && !wasDisplayedIndicator) {
             this._hasNotRenderedChanges = true;
         }
 
