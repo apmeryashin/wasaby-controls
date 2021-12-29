@@ -5791,11 +5791,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _reCountCut(newExpanded: boolean): Promise<void> {
         if (newExpanded) {
             this._sourceController.setNavigation(undefined);
+            this._listVirtualScrollController.enableKeepScrollPosition();
             return this._reload(this._options).then(() => {
                 _private.prepareFooter(this, this._options, this._sourceController);
             });
         } else {
             this._sourceController.setNavigation(this._options.navigation);
+            this._listVirtualScrollController.enableKeepScrollPosition();
             return this._reload(this._options).then(() => {
                 _private.prepareFooter(this, this._options, this._sourceController);
             });
