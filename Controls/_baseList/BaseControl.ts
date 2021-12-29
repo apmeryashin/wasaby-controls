@@ -4456,7 +4456,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      * На основании настроек навигации определяет нужна ли подгрузка данных при скроле
      */
     protected _shouldLoadOnScroll(direction: string): boolean {
-        return _private.isInfinityNavigation(this._options.navigation);
+        return !this._destroyed && _private.isInfinityNavigation(this._options.navigation);
     }
 
     _notifyOnDrawItems(): void {
