@@ -3,37 +3,41 @@
       templateName="Controls/popupTemplate:Sticky">
       <ws:partial
         template="{{content.resolvedTemplate}}"
+        attr:class="controls-TileView__itemActions_menu_template"
+        closeButtonViewMode="external"
+        stickyPosition="{{_options.stickyPosition}}"
         roundBorder="{{_options.roundBorder}}"
         shadowVisible="{{true}}">
-         <ws:headerContentTemplate>
-            <div
-                class="controls-TileView__itemActions__menu_header"
-                data-qa="controls-TileView__itemActions__menu_header"
-            >
-                <div
-                    class="controls-TileView__itemActions__menu_header_title"
-                    title="{{_options.title}}"
-                >
-                    {{_options.title}}
-                </div>
-                <div
-                    class="controls-TileView__itemActions__menu_header_additionalTitle"
-                    title="{{_options.additionalTitle}}"
-                >
-                    {{_options.additionalText}}
-                </div>
-            </div>
-         </ws:headerContentTemplate>
          <ws:bodyContentTemplate>
             <div
                 class="controls-TileView__itemActions__menu_content"
                 data-qa="controls-TileView__itemActions__menu_content"
             >
-                <div class="controls-TileView__itemActions__menu_imageWrapper"
-                     style="min-width: {{_options.previewWidth}}px; min-height: {{_options.previewHeight}}px;"
-                     on:click="_itemClick()">
-                    <img class="controls-TileView__itemActions_menu_image {{_options.imageClasses}}"
-                       src="{{_options.image}}"/>
+               <div class="controls-TileView__itemActions__menu_leftContent">
+                  <div class="controls-TileView__itemActions__menu_imageWrapper"
+                       style="min-width: {{_options.previewWidth}}px; min-height: {{_options.previewHeight}}px;"
+                       on:click="_itemClick()">
+                     <img class="controls-TileView__itemActions_menu_image {{_options.imageClasses}}"
+                          src="{{_options.image}}"/>
+
+                     </div>
+                     <div
+                        class="controls-TileView__itemActions__menu_header"
+                        data-qa="controls-TileView__itemActions__menu_header"
+                     >
+                        <div
+                            class="controls-TileView__itemActions__menu_header_title"
+                            title="{{_options.title}}"
+                        >
+                            {{_options.title}}
+                        </div>
+                        <div
+                            class="controls-TileView__itemActions__menu_header_additionalTitle"
+                            title="{{_options.additionalTitle}}"
+                        >
+                        {{_options.additionalText}}
+                     </div>
+                  </div>
                </div>
                <Controls.Container.Async templateName="Controls/menu:Control">
                   <ws:partial

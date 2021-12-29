@@ -248,6 +248,8 @@ export default class TileView extends ListView {
                 ? this._targetItemRect.width
                 : targetItemSize.width;
             menuOptions.roundBorder = !!this._options.roundBorder;
+            menuOptions.borderWidth = 'null';
+            menuOptions.borderStyle = 'transparent';
 
             return {
                 templateOptions: menuOptions,
@@ -258,8 +260,11 @@ export default class TileView extends ListView {
                             controls_popupTemplate_theme-${this._options.theme}
                             controls_list_theme-${this._options.theme}`,
                 targetPoint: {
-                    vertical: 'top',
+                    vertical: 'center',
                     horizontal: 'left'
+                },
+                direction: {
+                    vertical: 'center'
                 },
                 fittingMode: {
                     vertical: 'overflow',
