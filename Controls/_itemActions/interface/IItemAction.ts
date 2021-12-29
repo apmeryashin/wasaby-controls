@@ -120,7 +120,7 @@ export type TItemActionHandler = (item: Model) => void;
  * @public
  * @author Аверкиев П.А.
  */
-export interface IItemAction {
+export interface IBaseItemAction {
     /**
      * @name Controls/_itemActions/itemActions/interface/IItemAction#id
      * @cfg {String|Number} Идентификатор {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
@@ -202,17 +202,6 @@ export interface IItemAction {
     iconStyle?: TIconStyle;
 
     /**
-     * @name Controls/_itemActions/interface/IItemAction#iconSize
-     * @cfg {TItemActionsSize} Размер иконки.
-     * @variant s малый
-     * @variant m средний
-     * @default m
-     * @remark
-     * Размер l намеренно не поддерживается. Контейнер ItemActions не может вместить по высоте иконки размера l.
-     */
-    iconSize?: TItemActionsSize;
-
-    /**
      * @name Controls/_itemActions/interface/IItemAction#viewMode
      * @cfg {TItemActionViewMode} Режим отображения кнопки операции над записью.
      * @variant link В виде гиперссылки с возможностью отображения иконки.
@@ -278,6 +267,19 @@ export interface IItemAction {
      * @cfg {String|Number} Key of the action's parent.
      */
     parent?: string | number;
+}
+
+export interface IItemAction extends IBaseItemAction {
+    /**
+     * @name Controls/_itemActions/interface/IItemAction#iconSize
+     * @cfg {TItemActionsSize} Размер иконки.
+     * @variant s малый
+     * @variant m средний
+     * @default m
+     * @remark
+     * Размер l намеренно не поддерживается. Контейнер ItemActions не может вместить по высоте иконки размера l.
+     */
+    iconSize?: TItemActionsSize;
 }
 
 /**

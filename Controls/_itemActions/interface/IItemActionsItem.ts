@@ -1,5 +1,4 @@
 import {IItemActionsObject} from './IItemActionsObject';
-import {Model} from 'Types/entity';
 import {ANIMATION_STATE, ICollectionItem} from 'Controls/display';
 
 /**
@@ -16,7 +15,7 @@ import {ANIMATION_STATE, ICollectionItem} from 'Controls/display';
  * @author Аверкиев П.А.
  */
 export interface IItemActionsItem extends ICollectionItem {
-    // '[Controls/_itemActions/interface/IItemActionsItem]': true;
+    ItemActionsItem: boolean;
 
     /**
      * Получить опции записи
