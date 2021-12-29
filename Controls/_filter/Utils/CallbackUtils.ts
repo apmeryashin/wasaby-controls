@@ -45,7 +45,7 @@ export function getFilterItemsAfterCallback(currentFilter: TFilter,
 
 function getNewItems(changedFilters: object, updatedFilter: TFilter, items: IFilterItem[]): Promise<IFilterItem[]> {
     return Promise.all(
-        items.map((item) => {
+        items?.map((item) => {
             return Promise.all(getCallbackPromises(item)).then((callbacks) => {
                 item.visibility = getItemVisivbility(item, updatedFilter, changedFilters, callbacks[0]);
                 return getItemOnFilterChangedCallback(item, updatedFilter, changedFilters, callbacks[1]);
