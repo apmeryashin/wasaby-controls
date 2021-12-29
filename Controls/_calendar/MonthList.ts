@@ -128,7 +128,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._updateSource(options);
         this._updateVirtualPageSize(options);
         this._startPositionId = monthListUtils.dateToId(normalizedPosition);
-        this._positionToScroll = position;
         this._displayedPosition = position;
         this._lastNotifiedPositionChangedDate = normalizedPosition;
 
@@ -156,7 +155,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             const bottomShadowVisibility = options.bottomShadowVisibility || 'auto';
             this._updateShadowVisibility(topShadowVisibility, bottomShadowVisibility);
         }
-        this._updateScrollAfterViewModification(true);
     }
 
     protected _beforeUpdate(options: IModuleComponentOptions): void {
@@ -198,11 +196,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    // Хуки на момент вызова группируются, нужно использовать _beforePaint вместо _afterRender (так же как в списке).
-    protected _afterRender(): void {
-        this._updateScrollAfterViewModification();
-    }
-
     private _updateShadowVisibility(topShadowVisibility: string, bottomShadowVisibility: string): void {
         if (this._topShadowVisibility !== topShadowVisibility) {
             this._topShadowVisibility = topShadowVisibility;
@@ -217,7 +210,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         // Иначе перерисовываем список по самой последней позиции установленной через опции.
         // https://online.sbis.ru/opendoc.html?guid=4c2ee6ae-c41d-4bc2-97e7-052963074621
         if (+this._displayedPosition === +this._lastPositionFromOptions) {
-            this._updateScrollAfterViewModification();
             this._lastPositionFromOptions = null;
         } else if (this._lastPositionFromOptions) {
             this._displayedPosition = this._lastPositionFromOptions;
@@ -298,21 +290,21 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
 
         const normalizedPosition: Date = this._normalizeDate(position);
+        const normalizedPositionId = monthListUtils.dateToId(normalizedPosition);
 
-        this._positionToScroll = position;
         this._lastNotifiedPositionChangedDate = normalizedPosition;
 
-        if (this._container && this._canScroll(position)) {
+        if (this._container && this._canScroll(normalizedPosition)) {
             // Update scroll position without waiting view modification
-            this._updateScrollAfterViewModification();
+            this._children.months.scrollToItem(normalizedPositionId, 'top');
+            this._lastPositionFromOptions = null;
         } else {
             this._displayedDates = [];
             const oldPositionId = this._startPositionId;
-            this._startPositionId = monthListUtils.dateToId(normalizedPosition);
+            this._startPositionId = normalizedPositionId;
             // After changing the navigation options, we must call the "reload" to redraw the control,
             // because the last time we could start rendering from the same position.
             // Position option is the initial position from which control is initially drawn.
-            // TODO: Удалить по https://online.sbis.ru/opendoc.html?guid=775879fd-5eb6-4449-ac95-c27a4107c52d
             if (this._options._shouldUseScrollToItem) {
                 this._children.months.scrollToItem(this._startPositionId, 'top');
             } else {
@@ -449,38 +441,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         if (this._extData) {
             this._extData.enrichItems(this._displayedDates).catch((error: Error) => this._errorHandler(error));
         }
-    }
-
-    private _updateScrollAfterViewModification(notResetPositionToScroll: boolean = false): void {
-        if (this._positionToScroll && this._canScroll(this._positionToScroll)) {
-            if (this._scrollToDate(this._positionToScroll)) {
-                // Список после mount заказывает перерисовку, после которой он добавляет отступ 1px и устанавливает
-                // scrollTop = 1px. Поэтому после MonthList::mount не нужно сбрасывать positionToScroll, ведь в
-                // beforePaint нужен повторный подскролл к отображаемой дате.
-                if (notResetPositionToScroll) {
-                    this._forceUpdate();
-                } else {
-                    if (+this._lastPositionFromOptions === +this._positionToScroll) {
-                        this._lastPositionFromOptions = null;
-                    }
-                    this._positionToScroll = null;
-                }
-            }
-        }
-    }
-
-    private _scrollToDate(date: Date): boolean {
-        const containerToScroll: HTMLElement = this._findElementByDate(date);
-
-        if (containerToScroll) {
-            scrollToElement(containerToScroll, 'top', true);
-            return true;
-        }
-        return false;
-    }
-
-    protected _scrollStateChangedHandler(): void {
-        this._updateScrollAfterViewModification();
     }
 
     private _canScroll(date: Date): boolean {

@@ -17,9 +17,6 @@
    </ws:yearHeaderTemplate>
    <ws:yearTemplate>
       <ws:partial template="Controls/calendar:MonthListYearTemplate">
-         <ws:headerTemplate>
-            <invisible-node />
-         </ws:headerTemplate>
          <ws:bodyTemplate>
             <Controls._datePopup.MonthsRangeItem
                _date="{{ _options._date }}"
