@@ -3,7 +3,7 @@ import {CrudEntityKey} from 'Types/source';
 
 export default class MultiColumnMarkerStrategy extends AbstractStrategy {
     getMarkedKeyByDirection(index: number, direction: string): CrudEntityKey | void {
-        const curMarkedItem = this._model.getItemBySourceIndex(index);
+        const curMarkedItem = this._model.at(index);
         const itemFromDirection = this._model[`getItemTo${direction}`](curMarkedItem);
         return itemFromDirection ? itemFromDirection.getContents().getKey() : null;
     }
