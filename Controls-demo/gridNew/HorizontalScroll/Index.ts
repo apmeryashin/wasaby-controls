@@ -10,9 +10,9 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _header: IHeaderCell[] =
-        this._multiplyColumns(Countries.getHeader(), 10, 'pseudo', headerTemplate);
+        this._multiplyColumns(Countries.getHeader(), 20, 'pseudo', headerTemplate);
     protected _columns: IColumn[] =
-        this._multiplyColumns(Countries.getColumnsWithWidths(), 10, 'pseudo', columnTemplate);
+        this._multiplyColumns(Countries.getColumnsWithWidths(), 20, 'pseudo', columnTemplate);
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({

@@ -107,8 +107,9 @@ export abstract class AbstractObserversController {
 
         this._triggersOffsetCoefficients = options.triggersOffsetCoefficients;
         this._triggersPositions = options.triggersPositions;
-        this._additionalTriggersOffsets = options.additionalTriggersOffsets;
-
+        if (options.additionalTriggersOffsets) {
+            this._additionalTriggersOffsets = options.additionalTriggersOffsets;
+        }
         if (this._listContainer) {
             this._updateTriggers();
         }
