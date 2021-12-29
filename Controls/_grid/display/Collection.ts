@@ -133,7 +133,7 @@ export default class Collection<S extends Model = Model, T extends Row<S> = Row<
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
         return function CollectionItemsFactory(options?: IRowOptions<S>): T {
-            options.columnsConfig = this._$columns;
+            options.columnsConfig = this.getColumnsEnumerator().getColumns();
             options.gridColumnsConfig = this._$columns;
             options.colspanCallback = this._$colspanCallback;
             options.columnSeparatorSize = this._$columnSeparatorSize;

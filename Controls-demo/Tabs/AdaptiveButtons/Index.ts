@@ -109,37 +109,44 @@ export default class TabButtonsDemo extends Control {
                 {
                     id: '1',
                     caption: '5 262 052',
-                    icon: 'icon-AddContact'
+                    icon: 'icon-AddContact',
+                    iconStyle: 'success'
                 },
                 {
                     id: '2',
                     caption: '132 516',
-                    icon: 'icon-Admin'
+                    icon: 'icon-Admin',
+                    iconStyle: 'danger'
                 },
                 {
                     id: '3',
                     caption: '897 133',
-                    icon: 'icon-Android'
+                    icon: 'icon-Android',
+                    iconStyle: 'danger'
                 },
                 {
                     id: '4',
                     caption: '1 183 647',
-                    icon: 'icon-AreaBlur'
+                    icon: 'icon-AreaBlur',
+                    iconStyle: 'warning'
                 },
                 {
                     id: '5',
                     caption: '55 489 214',
-                    icon: 'icon-AutoTuning'
+                    icon: 'icon-AutoTuning',
+                    iconStyle: 'success'
                 },
                 {
                     id: '6',
                     caption: '2 789 123',
-                    icon: 'icon-Calc'
+                    icon: 'icon-Calc',
+                    iconStyle: 'success'
                 },
                 {
                     id: '7',
                     caption: '14 132 269',
-                    icon: 'icon-Check3'
+                    icon: 'icon-Check3',
+                    iconStyle: 'success'
                 }
             ]
         });

@@ -150,7 +150,7 @@ export abstract class AbstractListVirtualScrollController<
     private readonly _updateShadowsUtil?: IUpdateShadowsUtil;
     private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     private readonly _updateVirtualNavigationUtil?: IUpdateVirtualNavigationUtil;
-    private readonly _hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
+    private readonly _hasItemsOutRangeChangedCallback?: IHasItemsOutRangeChangedCallback;
 
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
@@ -509,7 +509,9 @@ export abstract class AbstractListVirtualScrollController<
             },
             hasItemsOutRangeChangedCallback: (hasItemsOutRange: IHasItemsOutRange): void => {
                 this._scheduleUpdateHasItemsOutRange(hasItemsOutRange);
-                this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
+                if (this._hasItemsOutRangeChangedCallback) {
+                    this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
+                }
                 // Это нужно выполнять в этом же цикле синхронизации.
                 // Чтобы ScrollContainer и отступ под пэйджинг отрисовались в этом же цикле.
                 if (this._updateVirtualNavigationUtil) {
@@ -734,7 +736,7 @@ export abstract class AbstractListVirtualScrollController<
         });
     }
 
-    private _setCollectionIterator(mode: TVirtualScrollMode): void {
+    protected _setCollectionIterator(mode: TVirtualScrollMode): void {
         switch (mode) {
             case 'hide':
                 VirtualScrollHideController.setup(

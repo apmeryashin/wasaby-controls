@@ -16,57 +16,50 @@
     line-height: var(--counter_height_lookupSelectedCollection);
 }
 
-.controls-SelectedCollection__InfoBox_backgroundStyle-default:after {
-    background-image: linear-gradient(to right, var(--counter_background-color_lookupSelectedCollection), rgba(255, 255, 255, 0));
+.controls-SelectedCollection__counterItems_singleLine_backgroundStyle-default:before {
+    background-image: linear-gradient(to left, var(--background-color), rgba(255, 255, 255, 0));
 }
 
-.controls-SelectedCollection__InfoBox_backgroundStyle-default:after {
-    background-image: linear-gradient(to right, var(--background-color), rgba(255, 255, 255, 0));
+.controls-SelectedCollection__counterItems_singleLine_backgroundStyle-primary:before {
+    background-image: linear-gradient(to left, var(--primary_background-color), rgba(255, 255, 255, 0));
 }
 
-.controls-SelectedCollection__InfoBox_backgroundStyle-primary:after {
-    background-image: linear-gradient(to right, var(--primary_background-color), rgba(255, 255, 255, 0));
+.controls-SelectedCollection__counterItems_singleLine_backgroundStyle-secondary:before {
+    background-image: linear-gradient(to left, var(--secondary_background-color), rgba(255, 255, 255, 0));
 }
 
-.controls-SelectedCollection__InfoBox_backgroundStyle-secondary:after {
-    background-image: linear-gradient(to right, var(--secondary_background-color), rgba(255, 255, 255, 0));
+.controls-SelectedCollection__counterItems_singleLine_backgroundStyle-danger:before {
+    background-image: linear-gradient(to left, var(--danger_background-color), rgba(255, 255, 255, 0));
 }
 
-.controls-SelectedCollection__InfoBox_backgroundStyle-danger:after {
-    background-image: linear-gradient(to right, var(--danger_background-color), rgba(255, 255, 255, 0));
+.controls-SelectedCollection__counterItems_singleLine_backgroundStyle-success:before {
+    background-image: linear-gradient(to left, var(--success_background-color), rgba(255, 255, 255, 0));
 }
 
-.controls-SelectedCollection__InfoBox_backgroundStyle-success:after {
-    background-image: linear-gradient(to right, var(--success_background-color), rgba(255, 255, 255, 0));
+.controls-SelectedCollection__counterItems_singleLine_backgroundStyle-warning:before {
+    background-image: linear-gradient(to left, var(--warning_background-color), rgba(255, 255, 255, 0));
 }
 
-.controls-SelectedCollection__InfoBox_backgroundStyle-warning:after {
-    background-image: linear-gradient(to right, var(--warning_background-color), rgba(255, 255, 255, 0));
+.controls-SelectedCollection__counterItems_singleLine_backgroundStyle-info:before {
+    background-image: linear-gradient(to left, var(--info_background-color), rgba(255, 255, 255, 0));
 }
 
-.controls-SelectedCollection__InfoBox_backgroundStyle-info:after {
-    background-image: linear-gradient(to right, var(--info_background-color), rgba(255, 255, 255, 0));
-}
-
-.controls-SelectedCollection__InfoBox_backgroundStyle-unaccented:after {
-    background-image: linear-gradient(to right, var(--unaccented_background-color), rgba(255, 255, 255, 0));
+.controls-SelectedCollection__counterItems_singleLine_backgroundStyle-unaccented:before {
+    background-image: linear-gradient(to left, var(--unaccented_background-color), rgba(255, 255, 255, 0));
 }
 
 .controls-SelectedCollection__InfoBox_fixed {
     .inline-flexbox();
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: relative;
     align-items: center;
 }
 
-.controls-SelectedCollection__InfoBox_fixed:after {
+.controls-SelectedCollection__counterItems_singleLine:before {
     content: '';
     position: absolute;
-    right: calc(-1 * var(--counter_shadow-blur_lookupSelectedCollection));
     width: var(--counter_shadow-blur_lookupSelectedCollection);
-    top: 0;
-    bottom: 0;
+    height: var(--counter_height_lookupSelectedCollection);
+    left: calc(-1 * var(--counter_shadow-blur_lookupSelectedCollection));
     //.horizontal-gradient(var(--counter_background-color_lookupSelectedCollection), rgba(255, 255, 255, 0));
     background-color: transparent;
 }
@@ -76,6 +69,13 @@
     padding-right: var(--offset_2xs);
     box-sizing: border-box;
     cursor: pointer;
+}
+
+.controls-SelectedCollection__counterItems_singleLine {
+    position: absolute;
+    right: 0;
+    top: calc(-1 * var(--counter_height_lookupSelectedCollection));
+    background-color: var(--background-color);
 }
 
 .controls-SelectedCollection__counterItems-size-xs {
@@ -203,8 +203,17 @@
 }
 
 .controls-SelectedCollection__collection {
+    overflow: hidden;
+    max-width: 100%;
+    position: relative;
+}
+
+.controls-SelectedCollection__collection_multiLine {
     .inline-flexbox();
     .align-items(baseline);
+}
+
+.controls-SelectedCollection__collection-container {
     overflow: hidden;
     max-width: 100%;
     position: relative;
@@ -223,11 +232,11 @@
 }
 
 .controls-SelectedCollection__collection_singleLine {
-    .justify-content(flex-end);
-    height: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline;
 }
 
-.controls-SelectedCollection__collection_singleLine::before,
 .controls-SelectedCollection__item_layout_twoColumns::before {
     content: '\200b';
     height: 100%;
@@ -235,36 +244,13 @@
     align-items: center;
 }
 
-.controls-SelectedCollection__collection_singleLine_fontSize-s::before {
-    font-size: var(--font-size_s_input);
-}
-
-.controls-SelectedCollection__collection_singleLine_fontSize-m::before {
-    font-size: var(--font-size_m_input);
-}
-
-.controls-SelectedCollection__collection_singleLine_fontSize-l::before {
-    font-size: var(--font-size_l);
-}
-
-.controls-SelectedCollection__collection_singleLine_fontSize-xl::before {
-    font-size: var(--font-size_xl);
-}
-
-.controls-SelectedCollection__collection_singleLine_fontSize-2xl::before {
-    font-size: var(--font-size_2xl);
-}
-
-.controls-SelectedCollection__collection_singleLine_fontSize-3xl::before {
-    font-size: var(--font-size_3xl);
-}
-
 .controls-SelectedCollection__collectionItem_layout_oneRow {
     height: 100%;
     line-height: var(--inline_height_s);
 }
 
-.controls-SelectedCollection__collection_multiLine {
+.controls-SelectedCollection__collection_multiLine,
+.controls-SelectedCollection__collection-container_multiLine {
     display: inline;
 }
 
@@ -275,4 +261,9 @@
 .controls-SelectedCollection__item_layout_twoColumns_theme-@{themeName}::before,
 .controls-SelectedCollection__item__caption-twoColumns_theme-@{themeName} {
     font-size: var(--font-size_m);
+}
+
+.controls-SelectedCollection__counter-singleLine {
+    float: right;
+    position: relative;
 }
