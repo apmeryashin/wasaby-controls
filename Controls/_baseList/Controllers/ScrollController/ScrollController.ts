@@ -39,10 +39,11 @@ export interface IIndexesChangedParams {
 
 /**
  * Режим добавления элементов
- * @param crowd Новые записи вытесняют собой старые
- * @param save Старые записи сохраняют свою позицию
+ * @param fixed Стартовая запись зафиксирована, после смещения диапазона она сохраняет свою позицию.
+ * @param unfixed Стартовая запись свободна, после смещения диапазона она будет смещена из-за добавленных записей
+ * в сторону противоположную направлению смещения.
  */
-export type IShiftRangeMode = 'crowd'|'save';
+export type IShiftRangeMode = 'unfixed'|'fixed';
 
 export interface IActiveElementIndex {
     activeElementIndex: number;
@@ -79,8 +80,6 @@ export type IHasItemsOutRangeChangedCallback = (hasItems: IHasItemsOutRange) => 
 
 export type IPlaceholdersChangedCallback = (placeholders: IPlaceholders) => void;
 
-export type IRangeShiftedCallback = (shiftDirection: IDirection) => void;
-
 export interface IScrollControllerOptions extends
     IAbstractItemsSizesControllerOptions,
     IAbstractObserversControllerBaseOptions,
@@ -93,7 +92,6 @@ export interface IScrollControllerOptions extends
     hasItemsOutRangeChangedCallback?: IHasItemsOutRangeChangedCallback;
     placeholdersChangedCallback: IPlaceholdersChangedCallback;
     itemsEndedCallback?: IItemsEndedCallback;
-    rangeShiftedCallback?: IRangeShiftedCallback;
 }
 
 /**
@@ -112,7 +110,6 @@ export class ScrollController {
     private readonly _placeholdersChangedCallback: IPlaceholdersChangedCallback;
     private readonly _itemsEndedCallback: IItemsEndedCallback;
     private readonly _indexesInitializedCallback: IIndexesInitializedCallback;
-    private readonly _rangeShiftedCallback: IRangeShiftedCallback;
 
     private _viewportSize: number = 0;
     private _contentSize: number = 0;
@@ -123,7 +120,6 @@ export class ScrollController {
         this._placeholdersChangedCallback = options.placeholdersChangedCallback;
         this._activeElementChangedCallback = options.activeElementChangedCallback;
         this._itemsEndedCallback = options.itemsEndedCallback;
-        this._rangeShiftedCallback = options.rangeShiftedCallback;
         this._indexesInitializedCallback = options.indexesInitializedCallback;
 
         this._viewportSize = options.viewportSize;
@@ -313,7 +309,7 @@ export class ScrollController {
         this._calculator.updateItemsSizes(itemsSizes);
 
         const result = this._calculator.moveItems(addPosition, addCount, removePosition, removeCount);
-        this._processCalculatorResult(result, 'save');
+        this._processCalculatorResult(result, 'fixed');
     }
 
     /**
@@ -327,7 +323,7 @@ export class ScrollController {
         const itemsSizes = this._itemsSizesController.removeItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        this._processCalculatorResult(result, 'save');
+        this._processCalculatorResult(result, 'fixed');
     }
 
     /**
@@ -393,7 +389,7 @@ export class ScrollController {
      */
     scrollToItem(itemIndex: number): boolean {
         const result = this._calculator.shiftRangeToIndex(itemIndex);
-        this._processCalculatorResult(result, 'save');
+        this._processCalculatorResult(result, 'fixed');
         return result.indexesChanged;
     }
 
@@ -404,7 +400,7 @@ export class ScrollController {
      */
     scrollToVirtualPosition(position: number): boolean {
         const result = this._calculator.shiftRangeToVirtualScrollPosition(position);
-        this._processCalculatorResult(result, 'save');
+        this._processCalculatorResult(result, 'fixed');
         return result.indexesChanged;
     }
 
@@ -436,7 +432,7 @@ export class ScrollController {
         // Актуальное значение прийдет только после триггера в событии scrollMoveSync.
         // Выходит след-ая цепочка вызовов: scrollMoveSync -> observerCallback -> scrollMoveSync.
         const result = this._calculator.shiftRangeToDirection(direction);
-        this._processCalculatorResult(result, 'save');
+        this._processCalculatorResult(result, 'fixed');
 
         // после первого срабатывания триггера сбрасываем флаг resetTriggerOffset.
         // Чтобы дальше триггер срабатывал заранее за счет оффсета.
@@ -450,12 +446,7 @@ export class ScrollController {
         // TODO триггер может сразу стать виден, но это вызовет точно 2 перерисовки.
         //  нужно подумать, можно ли исправить. По идее мы не знаем размеры элементов.
 
-        if (result.indexesChanged) {
-            // BaseControl нужно знать когда именно сместили диапазон, чтобы отобразить индикатор отрисовки
-            if (this._rangeShiftedCallback) {
-                this._rangeShiftedCallback(result.shiftDirection);
-            }
-        } else {
+        if (!result.indexesChanged) {
             // itemsEndedCallback должен вызываться ТОЛЬКО ТУТ, загрузка осуществляется ТОЛЬКО по достижению триггера
             if (this._itemsEndedCallback) {
                 this._itemsEndedCallback(direction);

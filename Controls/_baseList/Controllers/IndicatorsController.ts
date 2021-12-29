@@ -54,6 +54,7 @@ export default class IndicatorsController {
     private _searchState: SEARCH_STATES = 0;
 
     private _hasNotRenderedChanges: boolean = false;
+    private _displayDrawingIndicator: boolean = false;
 
     constructor(options: IIndicatorsControllerOptions) {
         this._options = options;
@@ -237,7 +238,8 @@ export default class IndicatorsController {
     }
 
     shouldDisplayGlobalIndicator(): boolean {
-        return !this._displayIndicatorTimer && !this._isPortionedSearch();
+        // Если таймер занят показом индикатора отрисовки, то мы должны показать в первую очередь глобальный индикатор.
+        return (!this._displayIndicatorTimer || this._displayDrawingIndicator) && !this._isPortionedSearch();
     }
 
     /**
@@ -279,6 +281,7 @@ export default class IndicatorsController {
             return;
         }
 
+        this._displayDrawingIndicator = true;
         this._startDisplayIndicatorTimer(() => {
             // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
             // т.к. браузер занят отрисовкой записей. И если мы вызовем синхронизацию для отрисовки ромашек, то
@@ -299,6 +302,7 @@ export default class IndicatorsController {
             return;
         }
 
+        this._displayDrawingIndicator = false;
         this._clearDisplayIndicatorTimer();
         indicatorElement.style.display = 'none';
         indicatorElement.style.position = '';

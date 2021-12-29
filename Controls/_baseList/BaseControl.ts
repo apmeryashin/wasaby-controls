@@ -1645,7 +1645,7 @@ const _private = {
                         // то новые записи должны вытеснить старые, чтобы их было сразу видно.
                         const addItemsMode = !self._addItemsByLoadToDirection && (
                             isTop && addToStart || isBottom && addToEnd
-                        ) ? 'crowd' : 'save';
+                        ) ? 'unfixed' : 'save';
                         self._listVirtualScrollController.addItems(newItemsIndex, newItems.length, addItemsMode);
                         break;
                     case IObservable.ACTION_REMOVE:
@@ -3397,7 +3397,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _popupOptions = null;
     private _scrollController: ScrollController;
     private _listVirtualScrollController: ListVirtualScrollController;
-    private _useNewScroll: boolean = false;
+    private _useNewScroll: boolean = true;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -3724,6 +3724,23 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             } else if (shiftDirection === 'backward' && this._indicatorsController.shouldDisplayTopIndicator()) {
                 this._indicatorsController.displayTopIndicator(false);
             }
+
+            // Индикаторы отрисовки нужно отображать только, когда у нас сместился диапазон.
+            // При подгрузке или перезагрузке мы отображает индикаторы загрузки.
+            // Если у нас долго отрисовываются записи(дольше 2с), то мы показываем индикатор отрисовки.
+            // Эта ситуация в частности актуальна для ScrollViewer.
+            // Если индикатор и так уже есть, то скрываем его. Показываться может только один индикатор отрисовки.
+            if (this._drawingIndicatorDirection) {
+                this._indicatorsController.hideDrawingIndicator(
+                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                    this._drawingIndicatorDirection
+                );
+            }
+            this._drawingIndicatorDirection = shiftDirection === 'forward' ? 'bottom' : 'top';
+            this._indicatorsController.displayDrawingIndicator(
+                this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                this._drawingIndicatorDirection
+            );
         }
     }
 
@@ -4089,24 +4106,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 if (this._shouldLoadOnScroll(compatibleDirection)) {
                     this._loadMore(compatibleDirection);
                 }
-            },
-            rangeShiftedCallback: (shiftDirection): void => {
-                // Индикаторы отрисовки нужно отображать только, когда у нас сместился диапазон.
-                // При подгрузке или перезагрузке мы отображает индикаторы загрузки.
-                // Если у нас долго отрисовываются записи(дольше 2с), то мы показываем индикатор отрисовки.
-                // Эта ситуация в частности актуальна для ScrollViewer.
-                // Если индикатор и так уже есть, то скрываем его. Показываться может только один индикатор отрисовки.
-                if (this._drawingIndicatorDirection) {
-                    this._indicatorsController.hideDrawingIndicator(
-                        this._getIndicatorDomElement(this._drawingIndicatorDirection),
-                        this._drawingIndicatorDirection
-                    );
-                }
-                this._drawingIndicatorDirection = shiftDirection === 'forward' ? 'bottom' : 'top';
-                this._indicatorsController.displayDrawingIndicator(
-                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
-                    this._drawingIndicatorDirection
-                );
             }
         });
     }
@@ -4401,6 +4400,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _beforeUpdate(newOptions: TOptions) {
+        this._startBeforeUpdate(newOptions);
         if (newOptions.propStorageId && !isEqual(newOptions.sorting, this._options.sorting)) {
             saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
         }
@@ -4843,12 +4843,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._updateBaseControlModel(newOptions);
 
+        this._endBeforeUpdate(newOptions);
         if (this._useNewScroll) {
-            // TODO SCROLL
-            if (!newOptions.parentProperty) {
-                this._listVirtualScrollController.endBeforeUpdateListControl();
-            }
+            this._listVirtualScrollController.endBeforeUpdateListControl();
         }
+    }
+
+    protected _startBeforeUpdate(newOptions: TOptions): void {
+        // for override
+    }
+
+    protected _endBeforeUpdate(newOptions: TOptions): void {
+        // for override
     }
 
     reloadItem(key: TKey, options: IReloadItemOptions = {}): Promise<Model | RecordSet> {
