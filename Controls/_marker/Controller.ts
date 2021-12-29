@@ -271,7 +271,8 @@ export class Controller {
          return null;
       }
 
-      return this._markerStrategy.getNextMarkedKey(0);
+      const markableItem = this._model.getFirst('Markable');
+      return markableItem?.getContents().getKey();
    }
 
    private _getMarkedKeyAfterRemove(removedIndex: number): CrudEntityKey {

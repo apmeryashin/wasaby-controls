@@ -121,16 +121,6 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
         return itemClasses;
     }
 
-    getStickyHeaderMode(): string {
-        return 'replaceable';
-    }
-
-    getStickyHeaderPosition(): {} {
-        return {
-            vertical: 'top'
-        };
-    }
-
     getStickyHeaderZIndex(): number {
         return (this.hasHeader() || this.getResultsPosition())
             ? GROUP_Z_INDEX_DEFAULT

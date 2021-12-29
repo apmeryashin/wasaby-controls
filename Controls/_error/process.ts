@@ -2,10 +2,23 @@ import { Control } from 'UI/Base';
 import { logger } from 'Application/Env';
 import { constants } from 'Env/Env';
 import { IBasePopupOptions } from 'Controls/popup';
+import { IConfirmationFooterOptions } from 'Controls/popupConfirmation';
 import { ErrorHandler, ErrorViewConfig } from './interface';
 import ErrorController from './Controller';
 import Popup, { IPopupHelper, PopupId } from './Popup';
 
+/**
+ * @interface Controls/_error/process/IDialogOptions
+ * @public
+ */
+export interface IDialogOptions extends IBasePopupOptions {
+    templateOptions?: Record<string, unknown> & IConfirmationFooterOptions;
+}
+
+/**
+ * @interface Controls/_error/process/IProcessOptions
+ * @public
+ */
 export interface IProcessOptions {
     /**
      * @name Controls/_error/IProcess#error
@@ -23,9 +36,9 @@ export interface IProcessOptions {
 
     /**
      * @name Controls/_error/IProcess#dialogOptions
-     * @cfg {IBasePopupOptions} Параметры открываемого диалогового окна.
+     * @cfg {IDialogOptions} Параметры открываемого диалогового окна.
      */
-    dialogOptions?: IBasePopupOptions;
+    dialogOptions?: IDialogOptions;
 
     /**
      * @name Controls/_error/IProcess#postHandlers

@@ -23,7 +23,7 @@
               calendarButtonVisible="{{ _options.calendarButtonVisible }}"
               on:mousedown="_inputMouseDownHandler()"
               on:inputControl="_startFieldInputControlHandler()"
-              on:inputCompleted="_inputCompletedHandler()"
+              on:inputCompleted="_inputCompletedStartValueHandler()"
               on:tagClick="_proxyEvent('startTagClick')"
               on:tagHover="_proxyEvent('startTagHover')">
       </Controls.date:BaseInput>
@@ -62,7 +62,7 @@
               calendarButtonVisible="{{ _options.calendarButtonVisible }}"
               on:mousedown="_inputMouseDownHandler()"
               on:inputControl="_endFieldInputControlHandler()"
-              on:inputCompleted="_inputCompletedHandler()"
+              on:inputCompleted="_inputCompletedEndValueHandler()"
               on:tagClick="_proxyEvent('endTagClick')"
               on:tagHover="_proxyEvent('endTagHover')">
       </Controls.date:BaseInput>

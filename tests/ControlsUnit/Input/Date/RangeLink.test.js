@@ -214,7 +214,7 @@ define([
 
             sandbox.stub(component, '_notify');
 
-            component._rangeChangedHandler(startValue, endValue);
+            component._rangeChangedHandler(null, startValue, endValue);
 
             sinon.assert.calledWith(component._notify, 'startValueChanged');
             sinon.assert.calledWith(component._notify, 'endValueChanged');
