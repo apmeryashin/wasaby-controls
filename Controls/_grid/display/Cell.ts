@@ -473,6 +473,54 @@ export default class Cell<
         return '';
     }
 
+    isStickied(tmplIsStickied: boolean): boolean {
+        return tmplIsStickied !== false && (this.isVerticalStickied() || this.isHorizontalStickied());
+    }
+
+    isVerticalStickied(): boolean {
+        return this.getOwner().isSticked();
+    }
+
+    isHorizontalStickied(): boolean {
+        return this.getOwner().hasNewColumnScroll() && this._$isFixed;
+    }
+
+    getStickyHeaderPosition(stickyCallback?: Function): {
+        vertical?: string;
+        horizontal?: string;
+    } {
+        const result: {
+            vertical?: string;
+            horizontal?: string;
+        } = {};
+
+        if (this.isVerticalStickied()) {
+            result.vertical = this.getVerticalStickyHeaderPosition(stickyCallback);
+        }
+
+        if (this.isHorizontalStickied()) {
+            result.horizontal = this.getHorizontalStickyHeaderPosition();
+        }
+
+        return result;
+    }
+
+    getVerticalStickyHeaderPosition(stickyCallback?: Function): string {
+        return this.getOwner().getVerticalStickyHeaderPosition(stickyCallback);
+    }
+
+    getHorizontalStickyHeaderPosition(): string {
+        return 'left';
+    }
+
+    getStickyHeaderMode(stickyCallback: Function): string {
+        if (this.isHorizontalStickied()) {
+            return 'stackable';
+        } else {
+            return this.getOwner().isSticked() || stickyCallback ? 'replaceable' : 'notsticky';
+        }
+    }
+
     getZIndex(): number {
         return 2;
     }
