@@ -365,6 +365,14 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
 
         return result;
     }
+
+    getVerticalStickyHeaderPosition(): string {
+        return 'top';
+    }
+
+    getStickyHeaderMode(): string {
+        return 'stackable';
+    }
 }
 
 Object.assign(HeaderCell.prototype, {
