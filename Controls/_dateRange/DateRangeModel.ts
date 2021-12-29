@@ -78,9 +78,7 @@ const ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin]
 
    set startValue(value) {
       if (_private.setStartValue(this, value)) {
-         if (Base.isValidDate(value)) {
-            this._notify('startValueChanged', [value]);
-         }
+         this._notifyValueChanged('startValue', value);
          _private.notifyRangeChanged(this, value, this._endValue);
       }
    },
@@ -91,9 +89,7 @@ const ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin]
 
    set endValue(value) {
       if (_private.setEndValue(this, value)) {
-         if (Base.isValidDate(value)) {
-            this._notify('endValueChanged', [value]);
-         }
+         this._notifyValueChanged('endValue', value);
          _private.notifyRangeChanged(this, this._startValue, value);
       }
    },
@@ -101,19 +97,21 @@ const ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin]
    setRange(startValue, endValue) {
       let changed = false;
       if (_private.setStartValue(this, startValue)) {
-         if (Base.isValidDate(startValue)) {
-            this._notify('startValueChanged', [startValue]);
-         }
+         this._notifyValueChanged('startValue', startValue);
          changed = true;
       }
       if (_private.setEndValue(this, endValue)) {
-         if (Base.isValidDate(endValue)) {
-            this._notify('endValueChanged', [endValue]);
-         }
+         this._notifyValueChanged('endValue', endValue);
          changed = true;
       }
       if (changed) {
          _private.notifyRangeChanged(this, startValue, endValue);
+      }
+   },
+
+   _notifyValueChanged(valueName: string, value: Date | null): void {
+      if (Base.isValidDate(value) || value === null) {
+         this._notify(`${valueName}Changed`, [value]);
       }
    },
 
