@@ -144,8 +144,32 @@ export default class ErrorController {
         }
     }
 
+    /**
+     * Установить функцию onProcess
+     * @param {Controls/error:IControllerOptions#onProcess} onProcess
+     */
     setOnProcess(onProcess?: OnProcessCallback): void {
         this.onProcess = onProcess;
+    }
+
+    /**
+     * Если в контроллере уже есть некая функция onProcess, то она не будет заменена.
+     * Сначала будет вызвана переданная в аргумент функция, а затем существующая.
+     * Результаты вызовов объединяются, но существующая функция будет в приоритете.
+     * @see {Controls/error:IControllerOptions#onProcess}
+     */
+    updateOnProcess(newOnProcess: OnProcessCallback): void {
+        if (typeof this.onProcess !== 'function') {
+            this.setOnProcess(newOnProcess);
+            return;
+        }
+
+        const onProcess = this.onProcess;
+
+        this.setOnProcess((viewConfig) => {
+            const result = newOnProcess(viewConfig);
+            return onProcess(result);
+        });
     }
 
     /**

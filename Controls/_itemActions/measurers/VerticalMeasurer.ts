@@ -1,7 +1,12 @@
 import rk = require('i18n!Controls');
 
 import { IMeasurer } from '../interface/IMeasurer';
-import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemAction';
+import {
+   IItemAction,
+   TItemActionShowType,
+   TActionCaptionPosition,
+   TSwipeItemActionsSize
+} from '../interface/IItemAction';
 import { MeasurerUtils } from './MeasurerUtils';
 import {ISwipeActionTemplateConfig} from '../interface/ISwipeActionTemplateConfig';
 
@@ -26,18 +31,24 @@ const breakpoints: Record<
    }
 };
 
+const singleRowBreakpoints: Record<TActionCaptionPosition, number> = {
+   none: 38,
+   bottom: 58,
+   right: 58
+};
+
 function getItemActionsSize(
    countOfActions: number,
    rowHeight: number,
    actionCaptionPosition: TActionCaptionPosition
 ): {
-   itemActionsSize: TItemActionsSize;
+   itemActionsSize: TSwipeItemActionsSize;
    countOfActionsInColumn: number;
 } {
    if (countOfActions === 1) {
       return {
          countOfActionsInColumn: countOfActions,
-         itemActionsSize: 'm'
+         itemActionsSize: rowHeight < singleRowBreakpoints[actionCaptionPosition] ? 'm' : 'l'
       };
    }
 
@@ -64,7 +75,7 @@ function getItemActionsSize(
 
 function getPaddingSize(
    actionCaptionPosition: TActionCaptionPosition,
-   itemActionsSize: TItemActionsSize
+   itemActionsSize: TSwipeItemActionsSize
 ): 's' | 'm' | 'l' {
    switch (actionCaptionPosition) {
       case 'none':
@@ -92,7 +103,7 @@ export const verticalMeasurer: IMeasurer = {
          itemActionsSize,
          countOfActionsInColumn
       }: {
-         itemActionsSize: TItemActionsSize;
+         itemActionsSize: TSwipeItemActionsSize;
          countOfActionsInColumn: number;
       } = getItemActionsSize(actions.length, rowHeight, actionCaptionPosition);
 

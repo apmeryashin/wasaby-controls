@@ -23,6 +23,7 @@
                                 on:keyup="_keyUpMonthHandler(month.date)"
                                 on:click="_onMonthClick(month.date)"
                                 attr:class="controls-PeriodLiteDialog-item__month-caption"
+                                attr:data-qa="controls-PeriodLiteDialog-item__month-caption"
                                 template="{{monthTemplate}}"
                                 month="{{month}}"
                                 formatDate="{{_formatDate}}"
@@ -34,6 +35,7 @@
                   <div class="controls-PeriodLiteDialog-item__quarter-caption
                            controls-PeriodLiteDialog-item__quarter-background{{ _options._yearHovered === _options.currentYear || (_quarterHovered === quarter.number) ||
                            (_halfYearHovered === halfYear.number) ? '-transparent'}}"
+                       data-qa="controls-PeriodLiteDialog-item__quarter-caption"
                        on:click="_onQuarterClick(quarter.number, _options.currentYear)"
                        on:mouseenter="_onQuarterMouseEnter(quarter.number, _options.currentYear)"
                        on:touchstart="_onQuarterMouseEnter(quarter.number, _options.currentYear)"
@@ -51,6 +53,7 @@
             <div class="controls-PeriodLiteDialog-item__halfYear-caption
                      controls-PeriodLiteDialog-item__halfYear-background{{ _options._yearHovered === _options.currentYear ||
                      (_halfYearHovered === halfYear.number) ? '-transparent'}}"
+                 data-qa="controls-PeriodLiteDialog-item__halfYear-caption"
                  on:click="_onHalfYearClick(halfYear.number, _options.currentYear)"
                  on:mouseenter="_onHalfYearMouseEnter(halfYear.number)"
                  on:touchstart="_onHalfYearMouseEnter(halfYear.number)"

@@ -46,7 +46,8 @@ define([
                draggingTemplate: 'draggingTemplate'
             },
             top: 3,
-            left: 2
+            left: 2,
+            restrictiveContainer: 'body'
          };
          var draggingTemplateOptions = {
                position: {

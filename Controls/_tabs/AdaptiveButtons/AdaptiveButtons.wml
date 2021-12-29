@@ -45,6 +45,12 @@
                             displayProperty="{{_options.displayProperty}}" />
             </ws:itemTemplate>
             <ws:itemRightTemplate>
+                <ws:if data="{{itemRightTemplate.item.icon}}">
+                    <ws:partial template="wml!Controls/_tabs/Buttons/templates/IconTemplate"
+                                icon="{{itemRightTemplate.item.icon}}"
+                                iconStyle="{{itemRightTemplate.item.iconStyle}}"
+                    />
+                </ws:if>
                 <ws:if data="{{_lastIndex < _items.getCount() - 1 && itemRightTemplate.index === _visibleItems.getCount() - 1 && _options.align === 'left'}}">
                     <ws:partial template="templateMore" />
                 </ws:if>

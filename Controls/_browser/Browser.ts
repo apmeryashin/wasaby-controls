@@ -22,7 +22,8 @@ import {
     TSelectionType,
     ISearchValueOptions,
     TKey,
-    ISelectFieldsOptions
+    ISelectFieldsOptions,
+    IExpandedItemsOptions
 } from 'Controls/interface';
 import {ErrorViewMode, ErrorViewConfig} from 'Controls/error';
 import Store from 'Controls/Store';
@@ -45,7 +46,7 @@ type TViewMode = 'search' | 'tile' | 'table' | 'list';
 
 export interface IListConfiguration extends IControlOptions, ISearchOptions, ISourceOptions,
     Required<IFilterOptions>, Required<IHierarchyOptions>, IHierarchySearchOptions,
-    IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions, ISearchValueOptions {
+    IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions, ISearchValueOptions, IExpandedItemsOptions {
     searchNavigationMode?: string;
     groupHistoryId?: string;
     filterButtonSource?: IFilterItem[];
@@ -87,6 +88,7 @@ type TErrbackConfig = ErrorViewConfig & { error: Error };
  * @implements Controls/browser:IBrowser
  * @implements Controls/filter:IPrefetch
  * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IExpandedItems
  *
  * @demo Controls-demo/Search/FlatList/Index
  */

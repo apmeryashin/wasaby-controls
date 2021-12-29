@@ -65,7 +65,8 @@ class Mask extends Base {
             value: options.value,
             mask: options.mask,
             replacer: Mask._calcReplacer(options.replacer, options.mask),
-            formatMaskChars: options.formatMaskChars
+            formatMaskChars: options.formatMaskChars,
+            placeholder: options.placeholder
         };
     }
     protected _getViewModelConstructor(): ViewModel {

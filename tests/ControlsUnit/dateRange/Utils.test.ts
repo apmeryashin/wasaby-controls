@@ -48,4 +48,49 @@ describe('Controls/_dateRange/Utils', () => {
 
     });
 
+    describe('getQuantByRange', () => {
+        [{
+            startValue: new Date(2021, 0, 1),
+            endValue: new Date(2021, 1, 0),
+            result: 'month'
+        }, {
+            startValue: new Date(2021, 0, 1),
+            endValue: new Date(2021, 9, 0),
+            result: 'monthsRange'
+        }, {
+            startValue: new Date(2021, 0, 1),
+            endValue: new Date(2021, 0, 1),
+            result: 'date'
+        }, {
+            startValue: new Date(2021, 0, 1),
+            endValue: new Date(2021, 0, 5),
+            result: 'dateRange'
+        }, {
+            startValue: new Date(2021, 0, 1),
+            endValue: new Date(2021, 1, 5),
+            result: 'dateRange'
+        }, {
+            startValue: new Date(2021, 0, 1),
+            endValue: new Date(2021, 11, 31),
+            result: 'year'
+        }, {
+            startValue: new Date(2021, 0, 1),
+            endValue: new Date(2022, 11, 31),
+            result: 'yearsRange'
+        }, {
+            startValue: new Date(2021, 0, 1),
+            endValue: new Date(2021, 6, 0),
+            result: 'halfyear'
+        }, {
+            startValue: new Date(2021, 0, 1),
+            endValue: new Date(2021, 3, 0),
+            result: 'quarter'
+        }].forEach((test) => {
+            it('should return correct quant: ' + test.result, () => {
+                const quant = Utils.getQuantByRange(test.startValue, test.endValue);
+                assert.equal(test.result, quant);
+            });
+        });
+    });
+
 });
