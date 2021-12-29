@@ -103,21 +103,12 @@ export default abstract class Row<T extends Model = Model> {
         };
     }
 
-    getStickyHeaderMode(stickyCallback: Function): string {
-        return this.isSticked() || stickyCallback ? 'replaceable' : 'notsticky';
-    }
-
-    getStickyHeaderPosition(stickyCallback: Function): {} {
-        let stickyVerticalPosition = 'topBottom';
-
-        if (stickyCallback) {
-            const callbackResult = stickyCallback(this.getContents());
-            stickyVerticalPosition = callbackResult === true ? 'top' : callbackResult;
-        }
-
-        return {
-            vertical: stickyVerticalPosition
-        };
+    shouldWrapInScrollGroup(isStickied: boolean): boolean {
+        return isStickied !== false && (
+            this.isSticked() || (
+                this.isFullGridSupport() && this.hasNewColumnScroll() && this.getStickyColumnsCount() !== 0
+            )
+        );
     }
 
     // @TODO https://online.sbis.ru/opendoc.html?guid=907731fd-b8a8-4b58-8958-61b5c8090188
@@ -361,7 +352,7 @@ export default abstract class Row<T extends Model = Model> {
                 wrapperStyle: stickyLadderStyleForSecondProperty,
                 contentStyle: `left: -${this.getGridColumnsConfig()[0].width}; right: 0;`,
                 stickyProperty: stickyLadderProperties[1],
-                isFixed: this.hasColumnScroll(),
+                isFixed: this.hasColumnScroll() || this.hasNewColumnScroll(),
                 isPointerEventsDisabled: this._$itemActionsPosition === 'outside',
                 stickyHeaderZIndex: 1
             }));
@@ -376,7 +367,7 @@ export default abstract class Row<T extends Model = Model> {
                     wrapperStyle: stickyLadderStyleForFirstProperty,
                     contentStyle: stickyLadderStyleForSecondProperty ? `left: 0; right: -${this.getGridColumnsConfig()[0].width};` : '',
                     stickyProperty: stickyLadderProperties[0],
-                    isFixed: this.hasColumnScroll(),
+                    isFixed: this.hasColumnScroll() || this.hasNewColumnScroll(),
                     isPointerEventsDisabled: this._$itemActionsPosition === 'outside',
                     stickyHeaderZIndex: 2
                 })
@@ -548,7 +539,7 @@ export default abstract class Row<T extends Model = Model> {
                 colspan = (colspan || 1);
                 resultTotalLength += colspan;
             }
-            const isFixed = this.hasColumnScroll()
+            const isFixed = this.hasColumnScroll() || this.hasNewColumnScroll()
                 ? ((skipColumns ? columnIndex : resultTotalLength - 1) < this.getStickyColumnsCount())
                 : false;
             creatingColumnsParams.push({
@@ -713,6 +704,11 @@ export default abstract class Row<T extends Model = Model> {
 
     hasColumnScroll(): boolean {
         return this._$owner.hasColumnScroll();
+    }
+
+    hasNewColumnScroll(): boolean {
+        // FIXME: Чтобы не править кучу тестов сейчас, а потом откатывать при удалении делаю такую проверку.
+        return this._$owner.hasNewColumnScroll && this._$owner.hasNewColumnScroll();
     }
 
     getColumnScrollViewMode(): TColumnScrollViewMode {

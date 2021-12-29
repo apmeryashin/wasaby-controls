@@ -53,6 +53,14 @@ class FooterCell<TOwner extends FooterRow> extends Cell<null, FooterRow> {
     }
 
     //endregion
+
+    getVerticalStickyHeaderPosition(): string {
+        return 'bottom';
+    }
+
+    getStickyHeaderMode(): string {
+        return 'stackable';
+    }
 }
 
 Object.assign(FooterCell.prototype, {
