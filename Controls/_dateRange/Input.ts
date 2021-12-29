@@ -244,7 +244,17 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         }
     }
 
-    protected _inputCompletedHandler(): void {
+    protected _inputCompletedStartValueHandler(event: Event, value: Date): void {
+        this._rangeModel.startValue = value;
+        this._inputCompleted();
+    }
+
+    protected _inputCompletedEndValueHandler(event: Event, value: Date): void {
+        this._rangeModel.endValue = value;
+        this._inputCompleted();
+    }
+
+    private _inputCompleted(): void {
         this._validateAfterInput('startValue');
         this._validateAfterInput('endValue');
         this._notifyInputCompleted();

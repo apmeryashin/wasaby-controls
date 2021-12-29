@@ -78,7 +78,9 @@ const ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin]
 
    set startValue(value) {
       if (_private.setStartValue(this, value)) {
-         this._notify('startValueChanged', [value]);
+         if (Base.isValidDate(value)) {
+            this._notify('startValueChanged', [value]);
+         }
          _private.notifyRangeChanged(this, value, this._endValue);
       }
    },
@@ -89,7 +91,9 @@ const ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin]
 
    set endValue(value) {
       if (_private.setEndValue(this, value)) {
-         this._notify('endValueChanged', [value]);
+         if (Base.isValidDate(value)) {
+            this._notify('endValueChanged', [value]);
+         }
          _private.notifyRangeChanged(this, this._startValue, value);
       }
    },
@@ -97,11 +101,15 @@ const ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin]
    setRange(startValue, endValue) {
       let changed = false;
       if (_private.setStartValue(this, startValue)) {
-         this._notify('startValueChanged', [startValue]);
+         if (Base.isValidDate(startValue)) {
+            this._notify('startValueChanged', [startValue]);
+         }
          changed = true;
       }
       if (_private.setEndValue(this, endValue)) {
-         this._notify('endValueChanged', [endValue]);
+         if (Base.isValidDate(endValue)) {
+            this._notify('endValueChanged', [endValue]);
+         }
          changed = true;
       }
       if (changed) {
