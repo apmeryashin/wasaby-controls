@@ -53,27 +53,32 @@ export default class Sticky extends Control<IStickyPopup> {
     };
 
     protected _beforeMount(options: IStickyPopup): void {
+        this._items = options.items;
         this._setFilterParams(options.items);
     }
 
     protected _beforeUpdate(newOptions: IStickyPopup): void {
         if (!isEqual(this._options.items, newOptions.items)) {
-            this._setFilterParams(newOptions.items);
+            this._callCallbacksAndSetFilterItems(newOptions.items);
         }
     }
 
     protected _sourceChangedHandler(event: SyntheticEvent, items: IFilterItem[]): void {
-        this._setFilterParams(items);
+        this._callCallbacksAndSetFilterItems(items);
     }
 
     protected _setFilterParams(items: IFilterItem[]): void {
+        this._hasBasicItems = this._getHasBasicItems();
+        this._headingCaption = this._getHeadingCaption(this._hasBasicItems);
+        this._resetButtonVisible = !this._isFilterReseted(items);
+    }
+
+    protected _callCallbacksAndSetFilterItems(items: IFilterItem[]): void {
         const currentFilter = getFilterByFilterDescription({}, this._items);
         const updatedFilter = getFilterByFilterDescription({}, items);
         getFilterItemsAfterCallback(currentFilter, updatedFilter, items).then((newItems) => {
             this._items = newItems;
-            this._hasBasicItems = this._getHasBasicItems();
-            this._headingCaption = this._getHeadingCaption(this._hasBasicItems);
-            this._resetButtonVisible = !this._isFilterReseted(newItems);
+            this._setFilterParams(newItems);
         });
     }
 

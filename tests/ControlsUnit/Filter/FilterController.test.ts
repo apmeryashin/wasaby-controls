@@ -179,6 +179,86 @@ describe('Controls/filter:ControllerClass', () => {
         assert.deepEqual(controller._$filter, {testField: 'testValue'});
     });
 
+    it('updateFilterItems with filterChangedCallback', () => {
+        const filterController = new ControllerClass({});
+        const filterChangedCallback = (filterDescriptionItem, filter, changedFilters) => {
+            const filterItem = {...filterDescriptionItem};
+            if (changedFilters.hasOwnProperty('testId1')) {
+                filterItem.textValue = 'filterChangedValue';
+            }
+            return filterItem;
+        };
+        filterController._$filterButtonItems = getFilterButtonItems();
+        const newFilterItems = [
+            {
+                id: 'testId1',
+                value: 'secondValue',
+                textValue: 'text1'
+            }, {
+                id: 'testId2',
+                value: 'value2',
+                textValue: 'text2',
+                filterChangedCallback
+            }
+        ];
+
+        const expectedItems = [
+            {
+                id: 'testId1',
+                value: 'secondValue',
+                textValue: 'text1'
+            }, {
+                id: 'testId2',
+                value: 'value2',
+                textValue: 'filterChangedValue',
+                filterChangedCallback
+            }
+        ];
+        filterController.updateFilterItems(newFilterItems).then(() => {
+            assert.deepEqual(filterController.getFilter(), {
+                testId1: 'secondValue',
+                testId2: 'value2'
+            });
+            assert.deepEqual(filterController.getFilterButtonItems(), expectedItems);
+        });
+    });
+
+    it('updateFilterItems with filterVisibilityCallback', () => {
+        const filterController = new ControllerClass({});
+        const filterVisibilityCallback = (filterDescriptionItem, filter, changedFilters) => {
+            return !changedFilters.hasOwnProperty('testId1');
+        };
+
+        filterController._$filterButtonItems = getFilterButtonItems();
+        const newFilterItems = [
+            {
+                id: 'testId1',
+                value: 'secondValue',
+                textValue: 'text1'
+            }, {
+                id: 'testId2',
+                value: 'value2',
+                textValue: 'text2',
+                filterVisibilityCallback
+            }
+        ];
+
+        const expectedItems = [
+            {
+                id: 'testId1',
+                value: 'secondValue',
+                textValue: 'text1'
+            }
+        ];
+        filterController.updateFilterItems(newFilterItems).then(() => {
+            assert.deepEqual(filterController.getFilter(), {
+                testId1: 'secondValue',
+                testId2: 'value2'
+            });
+            assert.deepEqual(filterController.getFilterButtonItems(), expectedItems);
+        });
+    });
+
     it('updateFilterItems', () => {
         const filterController = new ControllerClass({});
         let eventFired = false;
