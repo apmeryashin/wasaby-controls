@@ -1645,7 +1645,7 @@ const _private = {
                         // то новые записи должны вытеснить старые, чтобы их было сразу видно.
                         const addItemsMode = !self._addItemsByLoadToDirection && (
                             isTop && addToStart || isBottom && addToEnd
-                        ) ? 'unfixed' : 'save';
+                        ) ? 'unfixed' : 'fixed';
                         self._listVirtualScrollController.addItems(newItemsIndex, newItems.length, addItemsMode);
                         break;
                     case IObservable.ACTION_REMOVE:
