@@ -4,6 +4,8 @@ import Template = require('wml!Controls-demo/BreadCrumbs/Multiline/MultilinePath
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/BreadCrumbs/Multiline/Style';
 
 class Multiline extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
@@ -142,7 +144,6 @@ class Multiline extends Control<IControlOptions> {
             this._containerWidth = this._container.clientWidth;
         }
     }
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 
 export default Multiline;
