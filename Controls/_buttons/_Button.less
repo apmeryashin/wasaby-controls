@@ -414,12 +414,15 @@
    border-color: var(--pale_border-color);
 }
 
-.controls-BaseButton.controls-Button_toolButton {
+.controls-Button_toolButton {
    border-width: var(--border-thickness_button);
    border-color: var(--border-color_button_toolButton);
    background: var(--background-color_button_toolButton);
-   border-radius: var(--border-radius_button_toolButton);
    box-shadow: var(--box-shadow_button_toolButton);
+}
+
+.controls-BaseButton.controls-Button_radius-toolButton {
+   border-radius: var(--border-radius_button_toolButton);
 }
 
 .ws-is-hover {
@@ -434,10 +437,13 @@
    background: var(--background-color_hover_button_toolButton);
 }
 
-.controls-BaseButton.controls-Button_functionalButton {
+.controls-Button_functionalButton {
    border-width: var(--border-thickness_button);
-   border-radius: var(--border-radius_button_functionalButton);
    border-color: transparent;
+}
+
+.controls-BaseButton.controls-Button_radius-functionalButton {
+   border-radius: var(--border-radius_button_functionalButton);
 }
 
 .controls-Button_functionalButton_style-primary {
@@ -688,9 +694,11 @@
 }
 
 //widths
-.controls-BaseButton.controls-Button_button {
+.controls-Button_button {
    //may be we need variable for this
    min-width: var(--min-width_button_button);
+}
+.controls-BaseButton.controls-Button_radius-button {
    border-radius: var(--border-radius_button);
 }
 
