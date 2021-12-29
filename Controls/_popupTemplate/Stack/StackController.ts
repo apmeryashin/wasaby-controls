@@ -248,8 +248,10 @@ export class StackController extends BaseController {
         return true;
     }
 
-    getMaximizedState(width: number, minWidth: number, maxWidth: number): boolean {
-        return width - (minWidth + maxWidth) / 2 > 0;
+    getMaximizedState(item: IStackItem): boolean {
+        const stackParentCoords = this._getStackParentCoords(item);
+        const maxPanelWidth = StackStrategy.getMaxPanelWidth(stackParentCoords);
+        return this._getMaximizedState(item, maxPanelWidth);
     }
 
     private _getMaximizedState(item: IStackItem, maxPanelWidth: number): boolean {
