@@ -76,6 +76,7 @@
                             name="collection"
                             counterClassName="controls-Lookup__counter"
                             displayProperty="{{_options.displayProperty}}"
+                            multiLine="{{_options.multiLine}}"
                             itemsLayout="{{_multiLineState ? 'default' : 'oneRow'}}"
                             items="{{_items}}"
                             _counterWidth="{{_counterWidth}}"
