@@ -300,14 +300,32 @@ export default class DatePopup extends Control implements EventProxyMixin {
         this.rangeChanged(startValue, endValue);
     }
 
-    _startValuePickerChanged(e: SyntheticEvent, value: Date): void {
+    protected _startValuePickerValueChangedHandler(event: Event, value: Date): void {
+        this._startValuePickerChanged(value);
+    }
+
+    protected _startValuePickerInputCompleted(event: SyntheticEvent, value: Date): void {
+        // Обновим значение на inputCompleted, т.к. кнопка не стреляет невалидным значением из valueChanged
+        this._startValuePickerChanged(value);
+    }
+
+    private _startValuePickerChanged(value: Date): void {
         this.rangeChanged(
             value,
             this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single ? value : this._rangeModel.endValue
         );
     }
 
-    _endValuePickerChanged(e: SyntheticEvent, value: Date): void {
+    protected _endValuePickerValueChangedHandler(event: SyntheticEvent, value: Date): void {
+        this._endValuePickerChanged(value);
+    }
+
+    protected _endValuePickerInputCompleted(event: SyntheticEvent, value: Date): void {
+        // Обновим значение на inputCompleted, т.к. кнопка не стреляет невалидным значением из valueChanged
+        this._endValuePickerChanged(value);
+    }
+
+    private _endValuePickerChanged(value: Date): void {
         let startValue = this._rangeModel.startValue;
         let endValue = value;
         if (this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single) {
