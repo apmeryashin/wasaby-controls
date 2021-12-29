@@ -34,7 +34,7 @@ export {Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';
 
 export {horizontalMeasurer} from 'Controls/_itemActions/measurers/HorizontalMeasurer';
-export {horizontalMeasurer} from 'Controls/_itemActions/measurers/VerticalMeasurer';
+export {verticalMeasurer} from 'Controls/_itemActions/measurers/VerticalMeasurer';
 export * as itemActionMeasurer from 'Controls/_itemActions/measurers/ItemActionMeasurer';
 
 import * as ItemActionsForTemplate from 'wml!Controls/_itemActions/resources/templates/ItemActionsFor';
