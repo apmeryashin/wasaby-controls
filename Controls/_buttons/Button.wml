@@ -19,8 +19,6 @@
             _translucent="{{_options.translucent}}"
             _tooltip="{{_tooltip}}"
             attr:class="{{_isWorkByKeyboard() ? 'controls-focused-item'}}"
-            on:focusin="_focusInHandler()"
-            on:focusout="_focusOutHandler()"
             on:click="_clickHandler()"
             on:mouseenter="_onMouseEnterHandler()"
             on:keypress="_keyUpHandler()"/>
