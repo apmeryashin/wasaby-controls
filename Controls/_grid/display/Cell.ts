@@ -473,7 +473,7 @@ export default class Cell<
         return '';
     }
 
-    isStickied(tmplIsStickied: boolean): boolean {
+    isStickied(tmplIsStickied?: boolean): boolean {
         return tmplIsStickied !== false && (this.isVerticalStickied() || this.isHorizontalStickied());
     }
 
@@ -482,7 +482,7 @@ export default class Cell<
     }
 
     isHorizontalStickied(): boolean {
-        return this.getOwner().hasNewColumnScroll() && this._$isFixed;
+        return this.getOwner().hasNewColumnScroll && this.getOwner().hasNewColumnScroll() && this._$isFixed;
     }
 
     getStickyHeaderPosition(stickyCallback?: Function): {
@@ -548,7 +548,7 @@ export default class Cell<
         classes += ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
         classes += ` controls-Grid__row-cell_${this.getStyle()}`;
 
-        if (!(this._$owner.isSticked && this._$owner.isSticked(null, this._$owner))) {
+        if (!this.isStickied()) {
             classes += ' controls-Grid__row-cell_relative';
         }
 

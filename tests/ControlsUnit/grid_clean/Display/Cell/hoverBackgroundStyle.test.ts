@@ -31,7 +31,8 @@ describe('Controls/grid/Display/Cell/background/hoverBackgroundStyle', () => {
         // This setting changes behavior
         isEditing: () => false,
         hasColumnScroll: () => false,
-        isMarked: () => false
+        isMarked: () => false,
+        isSticked: () => false
     } as undefined as GridRow<Model>;
 
     beforeEach(() => {

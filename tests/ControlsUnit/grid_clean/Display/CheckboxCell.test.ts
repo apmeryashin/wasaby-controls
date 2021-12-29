@@ -22,6 +22,7 @@ describe('Controls/grid_clean/Display/DataCell', () => {
             isEditing: () => false,
             getEditingBackgroundStyle: () => 'default',
             isActive: () => true,
+            isSticked: () => false,
             hasMultiSelectColumn: () => false,
             shouldDisplayMarker: () => false
         };
