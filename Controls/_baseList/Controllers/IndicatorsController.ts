@@ -54,7 +54,8 @@ export default class IndicatorsController {
     private _searchState: SEARCH_STATES = 0;
 
     private _hasNotRenderedChanges: boolean = false;
-    private _displayDrawingIndicator: boolean = false;
+    private _startDisplayDrawingIndicator: boolean = false;
+    private _startDisplayGlobalIndicator: boolean = false;
 
     constructor(options: IIndicatorsControllerOptions) {
         this._options = options;
@@ -239,7 +240,7 @@ export default class IndicatorsController {
 
     shouldDisplayGlobalIndicator(): boolean {
         // Если таймер занят показом индикатора отрисовки, то мы должны показать в первую очередь глобальный индикатор.
-        return (!this._displayIndicatorTimer || this._displayDrawingIndicator) && !this._isPortionedSearch();
+        return (!this._displayIndicatorTimer || this._startDisplayDrawingIndicator) && !this._isPortionedSearch();
     }
 
     /**
@@ -248,6 +249,8 @@ export default class IndicatorsController {
      * @param {number} topOffset Отступ сверху для центрирования ромашки
      */
     displayGlobalIndicator(topOffset: number): void {
+        this._startDisplayGlobalIndicator = true;
+        this._startDisplayDrawingIndicator = false;
         this._startDisplayIndicatorTimer(
             () => this._model.displayIndicator('global', EIndicatorState.Loading, topOffset)
         );
@@ -265,7 +268,7 @@ export default class IndicatorsController {
         if (!this._model || this._model.destroyed) {
             return;
         }
-
+        this._startDisplayGlobalIndicator = false;
         this._model.hideIndicator('global');
         this._clearDisplayIndicatorTimer();
     }
@@ -281,7 +284,7 @@ export default class IndicatorsController {
             return;
         }
 
-        this._displayDrawingIndicator = true;
+        this._startDisplayDrawingIndicator = true;
         this._startDisplayIndicatorTimer(() => {
             // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
             // т.к. браузер занят отрисовкой записей. И если мы вызовем синхронизацию для отрисовки ромашек, то
@@ -302,7 +305,7 @@ export default class IndicatorsController {
             return;
         }
 
-        this._displayDrawingIndicator = false;
+        this._startDisplayDrawingIndicator = false;
         this._clearDisplayIndicatorTimer();
         indicatorElement.style.display = 'none';
         indicatorElement.style.position = '';
@@ -447,7 +450,7 @@ export default class IndicatorsController {
         const allowByIndicators = position === 'top' && !this._model.getTopIndicator().isDisplayed() ||
             position === 'bottom' && !this._model.getBottomIndicator().isDisplayed();
         // при порционном поиске индикатор всегда отрисовать и поэтому индикатор отрисовки не нужен
-        return !this._isPortionedSearch() && allowByOptions && allowByIndicators;
+        return !this._isPortionedSearch() && allowByOptions && allowByIndicators && !this._startDisplayGlobalIndicator;
     }
 
     // endregion LoadingIndicator

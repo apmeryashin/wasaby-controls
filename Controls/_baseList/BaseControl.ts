@@ -1643,9 +1643,9 @@ const _private = {
                         const addToEnd = newItemsIndex >= self._listViewModel.getStopIndex();
                         // Если записи были просто добавлены в рекордсет и список отскроллен в край,
                         // то новые записи должны вытеснить старые, чтобы их было сразу видно.
-                        const addItemsMode = !self._addItemsByLoadToDirection && (
-                            isTop && addToStart || isBottom && addToEnd
-                        ) ? 'unfixed' : 'fixed';
+                        const addItemsMode = self._addItemsByLoadToDirection ||
+                            addToStart && !isTop ||
+                            addToEnd && !isBottom ? 'fixed' : 'unfixed';
                         self._listVirtualScrollController.addItems(newItemsIndex, newItems.length, addItemsMode);
                         break;
                     case IObservable.ACTION_REMOVE:
