@@ -378,7 +378,8 @@ export default class View extends Control<IOptions, IReceivedState> {
         clickEvent: unknown,
         columnIndex?: number
     ): unknown {
-        return this._notify('itemClick', [item, clickEvent, columnIndex]);
+        const listId = isMaster ? 'master' : 'detail';
+        return this._notify('itemClick', [item, clickEvent, columnIndex, listId]);
     }
 
     protected _createTemplateControllers(cfg: IBrowserViewConfig, options: IOptions): void {
