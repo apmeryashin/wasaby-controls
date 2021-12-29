@@ -149,6 +149,14 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
     }
 
     // endregion Аспект "Ячейка группы"
+
+    getVerticalStickyHeaderPosition(): string {
+        return 'top';
+    }
+
+    getStickyHeaderMode(): string {
+        return 'replaceable';
+    }
 }
 
 Object.assign(GroupCell.prototype, {
