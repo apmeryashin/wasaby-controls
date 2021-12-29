@@ -31,7 +31,6 @@
                 <ws:else><ws:partial template="{{_caption}}"/></ws:else>
             </span>
         </ws:if>
-        <div class="controls-focused-background controls-focused_status-{{_focusedStatus}}"></div>
     </span>
 </ws:template>
 

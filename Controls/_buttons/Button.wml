@@ -18,7 +18,7 @@
             _textAlign="{{_textAlign}}"
             _translucent="{{_options.translucent}}"
             _tooltip="{{_tooltip}}"
-            _focusedStatus="{{_focusedStatus}}"
+            attr:class="{{_isWorkByKeyboard() ? 'controls-focused-item'}}"
             on:focusin="_focusInHandler()"
             on:focusout="_focusOutHandler()"
             on:click="_clickHandler()"

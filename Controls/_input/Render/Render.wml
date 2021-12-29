@@ -13,9 +13,7 @@
             controls-text-{{_options.fontColorStyle}}
             controls-Render_state-{{_state}}_{{_options.wasActionByUser ? 'caretFilled' : 'caretEmpty'}}
             {{_options.multiline ? 'controls-Render_multiline' : ' controls-inlineheight-' + _options.inlineHeight +
-            ' controls-Render-inlineheight-' + _options.inlineHeight}}"
-     on:focusin="_focusInHandler()"
-     on:focusout="_focusOutHandler()">
+            ' controls-Render-inlineheight-' + _options.inlineHeight}}">
    <div class="controls-Render__wrapper {{_options.footerTemplate ? 'controls-Render__wrapper_footer'}}">
       <ws:if data="{{!_options.multiline}}">
          <span class="controls-Render__baseline">&#65279;</span>
@@ -55,5 +53,4 @@
                   on:click="_tagClickHandler()"
                   on:mouseenter="_tagHoverHandler()"/>
    </ws:if>
-   <div class="controls-focused-background controls-focused_status-{{_focusedStatus}}"></div>
 </div>

@@ -171,7 +171,6 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     protected _isSVGIcon: boolean = false;
     protected _textAlign: string;
     protected _tooltip: string;
-    protected _focusedStatus: string;
 
     protected _beforeMount(options: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, options);
@@ -185,19 +184,13 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
         }
     }
 
-    protected _focusInHandler(): void {
-        if (!!this.context.get('workByKeyboard')?.status && !this._options.readOnly) {
-            this._focusedStatus = 'active';
-        }
-    }
-
-    protected _focusOutHandler(): void {
-        this._focusedStatus = 'default';
+    protected _isWorkByKeyboard(): boolean {
+        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
         let key = constants.key.enter;
-        if (this._focusedStatus === 'active') {
+        if (!!this.context.get('workByKeyboard')?.status) {
             e.preventDefault();
             key = constants.key.space;
         }
