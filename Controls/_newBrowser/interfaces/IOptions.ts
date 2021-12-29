@@ -141,7 +141,7 @@ export interface IOptions extends IControlOptions, ISourceOptions {
      * Здесь вы можете указать дополнительные опции для Controls.explorer:View, отображаемом
      * в detail колонке
      */
-    detail?: IDetailOptions;
+    detail?: Partial<IDetailOptions>;
 
     /**
      * @cfg
