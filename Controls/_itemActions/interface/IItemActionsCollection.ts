@@ -1,7 +1,8 @@
-import {IBaseCollection, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
+import {IBaseCollection, ISwipeConfig} from 'Controls/display';
 import {IItemActionsItem} from './IItemActionsItem';
 import {IItemActionsTemplateConfig} from './IItemActionsTemplateConfig';
 import {Model} from 'Types/entity';
+import {VirtualScrollController} from 'Controls/display';
 
 /**
  * Интерфейс коллекции, элементы которой обладают опциями записи
@@ -90,4 +91,10 @@ export interface IItemActionsCollection extends IBaseCollection<Model, IItemActi
      * @return {Object} Конфиг специфичный для swipeTemplate
      */
     getSwipeConfig?(): ISwipeConfig;
+
+    /**
+     * Итератор виртуального скролла.
+     * Предоставляет методы для перебора показанных записей.
+     */
+    getViewIterator?(): VirtualScrollController.IVirtualScrollViewIterator;
 }

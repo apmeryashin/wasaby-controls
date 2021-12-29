@@ -88,6 +88,7 @@ import { ListVirtualScrollController } from './Controllers/ListVirtualScrollCont
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
+import {IDirection as IDirectionNew} from './Controllers/ScrollController/ScrollController';
 import {
     FlatSelectionStrategy,
     TreeSelectionStrategy,
@@ -3676,6 +3677,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._getIndicatorDomElement(this._drawingIndicatorDirection),
                 this._drawingIndicatorDirection
             );
+        }
+        if (!!this._itemActionsController && this._options.virtualScrollConfig?.mode !== 'hide') {
+            _private.updateInitializedItemActions(this, this._options);
         }
     }
 

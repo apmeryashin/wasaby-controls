@@ -29,8 +29,8 @@ import {IContextMenuConfig} from './interface/IContextMenuConfig';
 import * as mStubs from 'Core/moduleStubs';
 import {getActions} from './measurers/ItemActionMeasurer';
 import {TItemActionsVisibility} from './interface/IItemActionsOptions';
-import {TButtonStyle} from 'Controls/_buttons/interface/IButton';
-import {TIconStyle} from 'Controls/_interface/IIconStyle';
+import {TButtonStyle} from 'Controls/buttons';
+import {TIconStyle} from 'Controls/interface';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -545,7 +545,7 @@ export class Controller {
         if (this._collection.isEventRaising()) {
             this._collection.setEventRaising(false, true);
         }
-        this._collection.each((item) => {
+        this._collection.getViewIterator().each((item) => {
             const itemChanged = this._updateActionsOnParticularItem(item);
             hasChanges = hasChanges || itemChanged;
         });
