@@ -31,7 +31,6 @@ export function getItemVisivbility(item: IFilterItem,
     if (filterVisibilityCallback) {
         return filterVisibilityCallback(item, updatedFilter, changedFilters);
     }
-    return true;
 }
 
 export function getFilterItemsAfterCallback(currentFilter: TFilter,
