@@ -498,6 +498,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (this._expandedItemsToNotify) {
             this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
             this._expandedItemsToNotify = null;
+        } else if (this._options.nodeHistoryId) {
+            this._notify('expandedItemsChanged', [this._expandController.getExpandedItems()]);
         }
     }
 
