@@ -90,6 +90,7 @@ describe('Controls/grid_clean/GridView', () => {
 
                 mockListViewModel.getCount = () => 0;
                 mockListViewModel.getGridColumnsConfig = () => columns;
+                mockListViewModel.getColumnsEnumerator = () => ({ getColumns: () => columns });
                 assert.equal(gridView._getGridTemplateColumns(options), 'grid-template-columns: 1fr 1fr 0px;');
             });
 
@@ -103,6 +104,7 @@ describe('Controls/grid_clean/GridView', () => {
 
                 mockListViewModel.getCount = () => 10;
                 mockListViewModel.getGridColumnsConfig = () => columns;
+                mockListViewModel.getColumnsEnumerator = () => ({ getColumns: () => columns });
                 assert.equal(gridView._getGridTemplateColumns(options), 'grid-template-columns: 1fr 1fr 0px;');
             });
         });
