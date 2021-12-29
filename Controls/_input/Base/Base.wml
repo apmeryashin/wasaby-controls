@@ -20,9 +20,7 @@
                         transliterate="{{_options.transliterate}}"
                         on:mouseenter="_mouseEnterHandler()"
                         on:tagClick="_notifyHandler('tagClick')"
-                        on:tagHover="_notifyHandler('tagHover')"
-                        on:focusin="_focusInHandler()"
-                        on:focusout="_focusOutHandler()">
+                        on:tagHover="_notifyHandler('tagHover')">
    <ws:leftFieldWrapper>
       <ws:if data="{{_leftFieldWrapper.template}}">
          <ws:partial options="{{_options}}"
