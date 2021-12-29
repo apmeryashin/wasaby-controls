@@ -491,6 +491,7 @@ export default class ColumnScrollController {
         let newHTML = '';
 
         newHTML += ` .${transformSelector} .js-controls-ColumnScroll__thumb.controls-VScrollbar {display: flex; ${this._options.useFakeRender ? 'visibility: hidden;' : ''}}`;
+        newHTML += ` .${transformSelector} .controls-ColumnScroll__scrollToButtons {display: flex; } .controls-Grid__header-cell_withColumnScrollArrows { margin-bottom: var(--offset_xl); }`;
         if (!this._options.isFullGridSupport) {
             newHTML += ` .${transformSelector} .js-controls-ColumnScroll__thumb {width: ${this._scrollWidth}px;}`;
 
