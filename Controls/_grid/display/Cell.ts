@@ -500,6 +500,10 @@ export default class Cell<
         classes += ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
         classes += ` controls-Grid__row-cell_${this.getStyle()}`;
 
+        if (!(this._$owner.isSticked && this._$owner.isSticked(null, this._$owner))) {
+            classes += ' controls-Grid__row-cell_relative';
+        }
+
         if (isEditing && !isSingleCellEditing) {
             classes += ' controls-ListView__item_editing';
             classes += ` controls-ListView__item_background-editing_${editingBackgroundStyle}`;
