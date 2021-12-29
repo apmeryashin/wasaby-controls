@@ -24,8 +24,7 @@ export = {
 
         if (
             indexItem === 0 &&
-            itemsLength > maxVisibleItems &&
-            (maxVisibleItems === 1 || itemsLayout === 'default')
+            itemsLength > maxVisibleItems && itemsLayout === 'default'
         ) {
             itemMaxWidth = 'calc(100% - ' + counterWidth + 'px);';
         }
