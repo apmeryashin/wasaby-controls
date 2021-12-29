@@ -67,6 +67,9 @@ export interface ILoadDataConfig extends
     items?: RecordSet;
     loadTimeout?: number;
     actions?: boolean;
+    nodeProperty?: string;
+    displayProperty?: string;
+    hasChildrenProperty?: string;
 }
 
 export interface ILoadDataResult extends ILoadDataConfig {
