@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/list_new/VirtualScroll/Reload/ByCursor/ByCursor';
 import {DataSet, Memory, Query} from 'Types/source';
 import {slowDownSource} from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
+import {INavigationOptionValue, INavigationPositionSourceConfig} from 'Controls/interface';
 
 interface IItem {
     key: number;
@@ -42,21 +43,32 @@ class PositionSourceMock extends Memory {
 export default class extends Control {
     protected _template: TemplateFunction = template;
     protected _source: PositionSourceMock;
-    protected _position: number = 0;
+    protected _navigation: INavigationOptionValue<INavigationPositionSourceConfig> = this._getNavigation(0);
 
     protected _beforeMount(): void {
         this._source = new PositionSourceMock({keyProperty: 'key'});
     }
 
     protected _changePosition(_: Event, correction: number): void {
-
         if (!correction) {
-            this._position = 60;
-            // tslint:disable-next-line
-            this._children.list.reload();
+            this._navigation = this._getNavigation(60);
         } else {
-            this._position += correction;
+            const newPosition = (this._navigation.sourceConfig.position as number) + correction;
+            this._navigation = this._getNavigation(newPosition);
         }
+    }
+
+    private _getNavigation(position: number): INavigationOptionValue<INavigationPositionSourceConfig> {
+        return {
+            source: 'position',
+            view: 'infinity',
+            sourceConfig: {
+                field: 'key',
+                position,
+                direction: 'bothways',
+                limit: 20
+            }
+        };
     }
 
     protected _slowDownSource(): void {

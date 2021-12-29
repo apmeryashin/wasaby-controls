@@ -625,9 +625,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
-    protected _beforeUpdate(newOptions: TOptions) {
+    protected _startBeforeUpdate(newOptions: TOptions): void {
+        super._startBeforeUpdate(newOptions);
         const sourceController = this.getSourceController();
-        let updateSourceController = false;
         const viewModelConstructorChanged = newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
             (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
@@ -656,17 +656,24 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                 this._needResetExpandedItems = true;
             }
 
-            const sourceControllerRoot = sourceController?.getState().root;
-            if (sourceControllerRoot === undefined || sourceControllerRoot !== newOptions.root) {
-                updateSourceController = true;
-            }
-
             if (this.isEditing()) {
                 this.cancelEdit();
             }
         }
+    }
 
-        super._beforeUpdate(...arguments);
+    protected _endBeforeUpdate(newOptions: TOptions): void {
+        super._endBeforeUpdate(newOptions);
+
+        let updateSourceController = false;
+        const sourceController = this.getSourceController();
+
+        if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
+            const sourceControllerRoot = sourceController?.getState().root;
+            if (sourceControllerRoot === undefined || sourceControllerRoot !== newOptions.root) {
+                updateSourceController = true;
+            }
+        }
 
         const viewModel = this.getViewModel() as Tree;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
@@ -690,7 +697,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (wasResetExpandedItems) {
             _private.resetExpandedItems(this);
         } else if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, currentExpandedItems)) {
-
             if (
                 (newOptions.source === this._options.source || newOptions.sourceController) &&
                 !isSourceControllerLoading ||
@@ -741,15 +747,14 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
             const sourceControllerState = sourceController.getState();
             if (newOptions.parentProperty && sourceControllerState.parentProperty !== newOptions.parentProperty) {
-                Logger.error('TreeControl: для корректной работы опцию parentProperty необходимо задавать на Controls/list:DataContainer (Layout/browsers:Browser)', this);
+                Logger.error('TreeControl: для корректной работы опцию parentProperty необходимо задавать ' +
+                    'на Controls/list:DataContainer (Layout/browsers:Browser)', this);
                 updateSourceController = true;
             }
         }
         if (sourceController && updateSourceController) {
             sourceController.updateOptions({...newOptions, keyProperty: this._keyProperty});
         }
-
-        this._listVirtualScrollController.endBeforeUpdateListControl();
     }
 
     protected _afterRender() {

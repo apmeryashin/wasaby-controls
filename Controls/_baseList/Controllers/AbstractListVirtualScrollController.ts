@@ -22,7 +22,6 @@ import {
     IPlaceholders,
     ScrollController,
     IScrollControllerOptions,
-    IRangeShiftedCallback,
     IShiftRangeMode
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {
@@ -132,7 +131,6 @@ export interface IAbstractListVirtualScrollControllerOptions {
     itemsEndedCallback: IItemsEndedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
     hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
-    rangeShiftedCallback: IRangeShiftedCallback;
 }
 
 export abstract class AbstractListVirtualScrollController<
@@ -542,8 +540,7 @@ export abstract class AbstractListVirtualScrollController<
                 }
             },
             activeElementChangedCallback: options.activeElementChangedCallback,
-            itemsEndedCallback: options.itemsEndedCallback,
-            rangeShiftedCallback: options.rangeShiftedCallback
+            itemsEndedCallback: options.itemsEndedCallback
         };
     }
 
@@ -557,7 +554,7 @@ export abstract class AbstractListVirtualScrollController<
             // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
             // и мы будем знать актуальную scrollPosition.
             // Поэтому в params запоминаем необходимые параметры для подсчета EdgeItem.
-            if (params.shiftDirection && params.mode === 'save') {
+            if (params.shiftDirection && params.mode === 'fixed') {
                 this._scheduleScroll({
                     type: 'calculateRestoreScrollParams',
                     params: {
