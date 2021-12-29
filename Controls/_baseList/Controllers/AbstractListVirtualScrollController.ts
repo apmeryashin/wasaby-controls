@@ -278,7 +278,7 @@ export abstract class AbstractListVirtualScrollController<
         // Данный кейс возможен если мы, например: скроллим вверх, смещаем диапазон, показываем ромашку(т.к. следующее
         // достижение триггера долнжо подгрузить данные). В этом случае восстановление скролла будет запланировано
         // в indexesChangedCallback.
-        if (!this._scheduledScrollParams && !this._shouldResetScrollPosition) {
+        if (!this._scheduledScrollParams) {
             const edgeItem = this._scrollController.getEdgeVisibleItem({ direction: 'backward' });
             if (edgeItem) {
                 this._scheduleScroll({
