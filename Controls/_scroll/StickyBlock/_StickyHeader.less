@@ -4,7 +4,6 @@
 // Задаем z-index: 1, т.к. элементы у списков имеют такой z-index и этого достаточно
 .controls-StickyHeader {
    z-index: 1;
-   background: var(--background-color);
 }
 
 .controls-StickyHeader_position {
@@ -17,6 +16,10 @@
    .controls-StickyHeader {
       will-change: transform;
    }
+}
+
+.controls-StickyHeader_default-background {
+   background: var(--background-color_scroll_sticky-header);
 }
 
 .controls-StickyHeader__observationTargetTop,
