@@ -79,12 +79,17 @@ export {default as __ChangeEventController} from 'Controls/_input/resources/Fiel
 export {__Util};
 
 /**
- * Объект с набором методов для опции {@link Controls/_input/interface/IValue#inputCallback}
- * @class Controls/input/InputCallback
+ * @typedef {Object} InputCallback
+ * @description Объект с набором методов.
+ * @property {Controls/_input/InputCallback/hoursFormat} hoursFormat Ограничивает ввод времени с 0:00 до 24:00.
+ * @property {Controls/_input/InputCallback/lengthConstraint} lengthConstraint Ограничивает длину числа.
+ */
+
+/**
+ * @name Controls/input/InputCallback
+ * @cfg {InputCallback} Объект с набором методов для опции {@link Controls/_input/interface/IValue#inputCallback}
  * @public
  * @author Красильников А.С.
- * @mixes Controls/_input/InputCallback/hoursFormat
- * @mixes Controls/_input/InputCallback/lengthConstraint
  */
 const InputCallback = {
     hoursFormat,

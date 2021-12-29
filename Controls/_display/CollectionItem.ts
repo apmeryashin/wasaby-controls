@@ -860,17 +860,21 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             this.isMarked() && this._isSupportSticky();
     }
 
-    getStickyHeaderPosition(stickyCallback: Function): {} {
-        let stickyVerticalPosition = 'topBottom';
+    getStickyHeaderPosition(stickyCallback?: Function): {
+        vertical: string
+    } {
+        return {
+            vertical: this.getVerticalStickyHeaderPosition(stickyCallback)
+        };
+    }
 
+    protected getVerticalStickyHeaderPosition(stickyCallback?: Function): string {
         if (stickyCallback) {
             const callbackResult = stickyCallback(this.getContents());
-            stickyVerticalPosition = callbackResult === true ? 'top' : callbackResult;
+            return callbackResult === true ? 'top' : callbackResult;
+        } else {
+            return 'topBottom';
         }
-
-        return {
-            vertical: stickyVerticalPosition
-        };
     }
 
     protected _isSupportSticky(): boolean {

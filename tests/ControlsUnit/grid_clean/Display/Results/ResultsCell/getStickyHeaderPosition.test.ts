@@ -1,10 +1,13 @@
 import {assert} from 'chai';
-import {GridResultsRow} from 'Controls/grid';
+import {GridResultsCell} from 'Controls/grid';
 
 describe('Controls/grid/Display/Results/ResultsRow/getStickyHeaderPosition', () => {
     it('should be equal to "top" if results position is equal to "top"', () => {
-        const row = new GridResultsRow({
-            owner: {},
+        const row = new GridResultsCell({
+            owner: {
+                isSticked: () => true,
+                hasNewColumnScroll: () => false
+            },
             resultsPosition: 'top'
         });
 
@@ -12,8 +15,11 @@ describe('Controls/grid/Display/Results/ResultsRow/getStickyHeaderPosition', () 
     });
 
     it('should be equal to "bottom" if results position is equal to "bottom"', () => {
-        const row = new GridResultsRow({
-            owner: {},
+        const row = new GridResultsCell({
+            owner: {
+                isSticked: () => true,
+                hasNewColumnScroll: () => false
+            },
             resultsPosition: 'bottom'
         });
 
@@ -21,8 +27,11 @@ describe('Controls/grid/Display/Results/ResultsRow/getStickyHeaderPosition', () 
     });
 
     it('should be equal to "top" if results position is not setted"', () => {
-        const row = new GridResultsRow({
-            owner: {}
+        const row = new GridResultsCell({
+            owner: {
+                isSticked: () => true,
+                hasNewColumnScroll: () => false
+            }
         });
 
         assert.deepEqual(row.getStickyHeaderPosition(), { vertical: 'top' });
