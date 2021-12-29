@@ -101,7 +101,7 @@ export default class ColumnsCollection<
     //region Iterators
     /**
      * Возвращает итератор, перебирающий все итемы коллекции.
-     * В случае если передана запись группы, то будет возвращаен итеротор,
+     * В случае если передана запись группы, то будет возвращен итератор,
      * перебирающий только записи указанной группы.
      */
     getViewIterator(groupItem?: GroupItem<unknown>): IViewIterator {
@@ -174,7 +174,7 @@ export default class ColumnsCollection<
 
         if (action === 'a') {
             // Если все колонки пересчитывать не требуется,
-            // то добавляем новые итемы по месту в соответтсвии с их индексами.
+            // то добавляем новые итемы по месту в соответствии с их индексами.
             if (!this._$autoColumnsRecalculating) {
                 newItems.forEach((item, index) => {
                     if (item['[Controls/_display/GroupItem]']) {
@@ -253,7 +253,7 @@ export default class ColumnsCollection<
         let nextColumnIndex = removedItemInfo.column + 1;
         let nextColumnIndexes = nextColumnIndex < this._$columnsCount ? snapshot.columns[nextColumnIndex] : null;
 
-        // Ищем следующую колонку в которой записей больше чем в текущеё.
+        // Ищем следующую колонку в которой записей больше чем в текущей.
         // И переносим её последний итем в текущую колонку вместо удаленного.
         while (nextColumnIndexes) {
             if (nextColumnIndexes.length > affectedColumnIndexes.length) {
@@ -361,7 +361,7 @@ export default class ColumnsCollection<
     }
 
     /**
-     * Пересчитывает и обновляет снимки состояния колонк.
+     * Пересчитывает и обновляет снимки состояния колонок.
      * @param {number} [offset=-1] - пропустить записи до записи с индексом offset. (-1 - обновить все записи)
      * @param {boolean} [recalculateColumn = true] - нужно ли пересчитывать колонки для итемов списка
      */
@@ -523,7 +523,7 @@ export default class ColumnsCollection<
 
     getItemToUp(item: T): T {
         const curIndex = this.getIndex(item);
-        let newIndex: number = curIndex;
+        let newIndex: number;
 
         const curColumn = item.getColumn();
         const snapshot = this.getColumnsSnapshotByItem(item);
@@ -546,7 +546,7 @@ export default class ColumnsCollection<
 
     getItemToDown(item: T): T {
         const curIndex = this.getIndex(item);
-        let newIndex: number = curIndex;
+        let newIndex: number;
 
         const curColumn = item.getColumn();
         const snapshot = this.getColumnsSnapshotByItem(item);
