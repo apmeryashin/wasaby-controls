@@ -10,6 +10,7 @@ export interface IBaseCollection<S, T extends ICollectionItem> {
     getItemBySourceKey(key: TItemKey): T;
     find(predicate: (item: T) => boolean): T;
     nextVersion(): void;
+    isEventRaising(): boolean;
     setEventRaising(enabled: boolean, analyze?: boolean): void;
     getCollection(): ISourceCollection<S>;
     getFirst(conditionProperty?: string): T;
