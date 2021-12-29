@@ -11,12 +11,14 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import { Sticky, IStickyPopupOptions } from 'Controls/popup';
+import { ILookupOptions } from 'Controls/_lookup/Lookup';
 import 'css!Controls/lookup';
 
 const JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption';
 const JS_CLASS_CROSS_ITEM = '.js-controls-SelectedCollection__item__cross';
+const MAX_VISIBLE_ITEMS_SINGLE_LINE = 15;
 
-export interface ISelectedCollectionOptions extends IControlOptions {
+export interface ISelectedCollectionOptions extends IControlOptions, ILookupOptions {
    displayProperty: string;
    items: RecordSet;
    maxVisibleItems: number;
@@ -60,19 +62,19 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _children: ISelectedCollectionChildren;
    protected _infoBoxStickyId: string = null;
 
-   protected _beforeMount(options: IControlOptions): void {
+   protected _beforeMount(options: ISelectedCollectionOptions): void {
       this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
-      this._visibleItems = this._getVisibleItems(options.items, options.maxVisibleItems);
+      this._visibleItems = this._getVisibleItems(options);
       this._counterWidth = options._counterWidth || 0;
    }
 
-   protected _beforeUpdate(newOptions): void {
+   protected _beforeUpdate(newOptions: ISelectedCollectionOptions): void {
       const itemsCount: number = newOptions.items.getCount();
-      this._visibleItems = this._getVisibleItems(newOptions.items, newOptions.maxVisibleItems);
+      this._visibleItems = this._getVisibleItems(newOptions);
 
       if (this._isShowCounter(itemsCount, newOptions.maxVisibleItems)) {
          this._counterWidth = newOptions._counterWidth ||
-                              this._getCounterWidth(itemsCount, newOptions.readOnly, newOptions.itemsLayout);
+                              this._getCounterWidth(itemsCount, newOptions);
       } else if (this._infoBoxStickyId) {
          this._notify('closeInfoBox');
          Sticky.closePopup(this._infoBoxStickyId);
@@ -84,7 +86,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
       if (this._isShowCounter(itemsCount, this._options.maxVisibleItems) && !this._counterWidth) {
          this._counterWidth = this._counterWidth ||
-                              this._getCounterWidth(itemsCount, this._options.readOnly, this._options.itemsLayout);
+                              this._getCounterWidth(itemsCount, this._options);
          if (this._counterWidth) {
             this._forceUpdate();
          }
@@ -152,12 +154,12 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       });
    }
 
-   private _getVisibleItems(items: RecordSet, maxVisibleItems: number): Model[]  {
-      const startIndex = Math.max(maxVisibleItems ? items.getCount() - maxVisibleItems : 0, 0);
+   private _getVisibleItems({items, maxVisibleItems, multiLine}: ISelectedCollectionOptions): Model[]  {
+      const startIndex = Math.max(maxVisibleItems && multiLine ? items.getCount() - maxVisibleItems : 0, 0);
       const resultItems = [];
 
       items.each((item, index) => {
-         if (index >= startIndex) {
+         if (index >= startIndex && (index < MAX_VISIBLE_ITEMS_SINGLE_LINE || multiLine)) {
             resultItems.push(item);
          }
       });
@@ -165,13 +167,18 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       return resultItems;
    }
 
-   private _getCounterWidth(itemsCount: number, readOnly: boolean, itemsLayout: String): number {
+   private _getCounterWidth(itemsCount: number,
+                            {
+                               readOnly,
+                               itemsLayout,
+                               fontSize
+                            }: ISelectedCollectionOptions): number {
       // in mode read only and single line, counter does not affect the collection
       if (readOnly && itemsLayout === 'oneRow') {
          return 0;
       }
 
-      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme);
+      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme, fontSize);
    }
 
    private _isShowCounter(itemsCount: number, maxVisibleItems: number): boolean {

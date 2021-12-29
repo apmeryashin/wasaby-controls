@@ -21,6 +21,7 @@ describe('Controls/_display/GridMixin', () => {
         ];
         const cfg = {
             collection,
+            columns: [{displayProperty: 'title'}],
             ladderProperties: ['title']
         };
         beforeEach(() => {
@@ -35,7 +36,10 @@ describe('Controls/_display/GridMixin', () => {
     });
 
     describe('hasMultiSelectColumn', () => {
-        const grid = new GridCollection({collection: [{id: 1}]});
+        const grid = new GridCollection({
+            collection: [{id: 1}],
+            columns: [{}, {}]
+        });
 
         it('hasMultiSelectColumn()', () => {
             grid.setMultiSelectVisibility('visible');
