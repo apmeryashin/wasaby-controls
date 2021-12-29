@@ -1,10 +1,11 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/VirtualScroll/ConstantHeights/AddItemInEnd/AddItemInEnd';
 import {Memory} from 'Types/source';
-import {RecordSet } from 'Types/collection';
+import {RecordSet} from 'Types/collection';
 import {Container} from 'Controls/scroll';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 import {Model} from 'Types/entity';
+import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
 
 interface IItem {
     title: string;
@@ -13,6 +14,98 @@ interface IItem {
     count: number;
 }
 
+const itemActions: IItemAction[] = [{
+    id: 'editVote',
+    icon: 'icon-Edit',
+    iconSize: 'm',
+    title: 'Редактировать',
+    showType: TItemActionShowType.MENU,
+    style: 'msg-theme-action',
+    iconStyle: 'secondary',
+    tooltip: 'Редактировать'
+}, {
+    id: 'quoteMessage',
+    icon: 'icon-Quote',
+    iconSize: 'm',
+    title: 'Цитировать',
+    showType: TItemActionShowType.MENU_TOOLBAR,
+    style: 'msg-theme-action',
+    iconStyle: 'secondary',
+    tooltip: 'Цитировать'
+}, {
+    id: 'sendAgain',
+    icon: 'icon-Send',
+    iconSize: 'm',
+    title: 'Отправить ещё раз',
+    showType: TItemActionShowType.MENU,
+    style: 'msg-theme-action',
+    iconStyle: 'secondary',
+    tooltip: 'Отправить ещё раз'
+}, {
+    id: 'copyText',
+    icon: 'icon-Copy',
+    iconSize: 'm',
+    title: 'Копировать текст',
+    showType: TItemActionShowType.MENU,
+    style: 'msg-theme-action',
+    iconStyle: 'secondary',
+    tooltip: 'Копировать текст'
+}, {
+    id: 'CopyLink',
+    icon: 'icon-Link',
+    iconSize: 'm',
+    title: 'Получить ссылку',
+    showType: TItemActionShowType.MENU,
+    style: 'msg-theme-action',
+    iconStyle: 'secondary',
+    tooltip: 'Получить ссылку'
+}, {
+    id: 'pinMessage',
+    icon: 'icon-Pin',
+    title: 'Закрепить',
+    showType: TItemActionShowType.MENU,
+    weight: 6,
+    style: 'msg-theme-action',
+    iconStyle: 'secondary',
+    tooltip: 'Закрепить'
+}, {
+    id: 'unPinMessage',
+    icon: 'icon-PinOff',
+    title: 'Открепить',
+    showType: TItemActionShowType.MENU,
+    weight: 7,
+    style: 'msg-theme-action',
+    iconStyle: 'secondary',
+    tooltip: 'Открепить'
+}, {
+    id: 'createDiscussion',
+    icon: 'icon-Question2',
+    iconSize: 'm',
+    title: 'Создать обсуждение',
+    showType: TItemActionShowType.MENU,
+    style: 'msg-theme-action',
+    iconStyle: 'secondary',
+    tooltip: 'Создать обсуждение'
+}, {
+    id: 'info',
+    icon: 'icon-Info',
+    iconSize: 'm',
+    title: 'Информация',
+    showType: TItemActionShowType.MENU,
+    style: 'msg-theme-action',
+    iconStyle: 'secondary',
+    tooltip: 'Информация'
+}, {
+    id: 'deleteMessage',
+    icon: 'icon-Erase',
+    iconSize: 'm',
+    iconStyle: 'danger',
+    title: 'Удалить',
+    showType: TItemActionShowType.MENU,
+    style: 'msg-theme-action',
+    tooltip: 'Удалить'
+}];
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     private _viewSource: Memory;
@@ -20,6 +113,7 @@ export default class extends Control {
     private _scrollToBottom: boolean = false;
     private _items: RecordSet;
     private _itemsReady: Function;
+    private _itemActions: IItemAction[] = itemActions;
     protected _children: {
         scroll: Container;
     };
@@ -51,6 +145,10 @@ export default class extends Control {
             data: this.dataArray
         });
         this._itemsReady = this._saveItems.bind(this);
+    }
+
+    private _itemActionVisibilityCallback(action: IItemAction, item: Model, isEditing: boolean): boolean {
+        return true;
     }
 
     private _saveItems(items: RecordSet): void {

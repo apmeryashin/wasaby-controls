@@ -545,7 +545,7 @@ export class Controller {
         if (this._collection.isEventRaising()) {
             this._collection.setEventRaising(false, true);
         }
-        this._collection.each((item) => {
+        this._collection.getViewIterator().each((item) => {
             const itemChanged = this._updateActionsOnParticularItem(item);
             hasChanges = hasChanges || itemChanged;
         });
