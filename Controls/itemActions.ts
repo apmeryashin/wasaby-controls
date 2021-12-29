@@ -33,6 +33,10 @@ export {IItemActionsOptions, TItemActionsVisibility} from './_itemActions/interf
 export {Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';
 
+export {horizontalMeasurer} from 'Controls/_itemActions/measurers/HorizontalMeasurer';
+export {horizontalMeasurer} from 'Controls/_itemActions/measurers/VerticalMeasurer';
+export * as itemActionMeasurer from 'Controls/_itemActions/measurers/ItemActionMeasurer';
+
 import * as ItemActionsForTemplate from 'wml!Controls/_itemActions/resources/templates/ItemActionsFor';
 import * as ItemActionsTemplate from 'wml!Controls/_itemActions/resources/templates/ItemActionsTemplate';
 import * as SwipeActionTemplate from 'wml!Controls/_itemActions/resources/templates/SwipeAction';
