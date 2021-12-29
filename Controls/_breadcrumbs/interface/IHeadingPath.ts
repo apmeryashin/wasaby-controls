@@ -1,5 +1,6 @@
 import {ICrudPlus} from 'Types/source';
 import {IBreadCrumbsOptions} from 'Controls/_breadcrumbs/interface/IBreadCrumbs';
+import {TTextTransform} from 'Controls/interface';
 
 /**
  * Интерфейс описывает структуру объекта конфигурации компонента {@link Controls/breadcrumbs:HeadingPath}
@@ -77,4 +78,10 @@ export interface IHeadingPath extends IBreadCrumbsOptions {
     pathButtonHasChildrenProperty: string;
 
     displayMode: 'default' | 'multiline';
+
+    /**
+     * @cfg {TTextTransform} Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
+     * @default 'none'
+     */
+    backButtonTextTransform?: TTextTransform;
 }

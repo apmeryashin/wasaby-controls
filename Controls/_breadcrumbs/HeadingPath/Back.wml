@@ -14,6 +14,7 @@
                                theme="{{ _options.theme}}"
                                beforeCaptionTemplate="{{_options.beforeCaptionTemplate}}"
                                beforeCaptionTemplateOptions="{{_options.beforeCaptionTemplateOptions}}"
+                               textTransform="{{_options.backButtonTextTransform}}"
                                iconViewMode="{{_options.iconViewMode}}"
                                on:click="_onBackButtonClick()"
         />
