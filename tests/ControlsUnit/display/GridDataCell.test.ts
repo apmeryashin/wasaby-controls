@@ -53,14 +53,14 @@ describe('Controls/display/GridDataCell', () => {
             columnIndex = 0;
             assert.isTrue(initCell().shouldDisplayEditArrow());
         });
-        it('should not return true for columnIndex===1, when no multiSelect', () => {
-            editArrowIsVisible = true;
-            columnIndex = 1;
-            assert.isFalse(initCell().shouldDisplayEditArrow());
-        });
         it('should return true for columnIndex===1, when multiSelect', () => {
             editArrowIsVisible = true;
             multiSelectVisibility = 'visible';
+            columnIndex = 1;
+            assert.isTrue(initCell().shouldDisplayEditArrow());
+        });
+        it('should not return true for columnIndex===1, when no multiSelect', () => {
+            editArrowIsVisible = true;
             columnIndex = 1;
             assert.isFalse(initCell().shouldDisplayEditArrow());
         });
