@@ -34,6 +34,7 @@ import {GridControl} from './GridControl';
  * @implements Controls/grid:IPropStorage
  * @implements Controls/grid:IEditableGrid
  * @implements Controls/marker:IMarkerList
+ * @implements Controls/error:IErrorControllerOptions
  *
  * @public
  * @author Авраменко А.С.
