@@ -91,6 +91,9 @@ export {IHasMoreData} from './_display/Collection';
 export {MoreButtonVisibility} from './_display/Collection';
 export {TItemActionsPosition} from './_display/Collection';
 
+export { default as CollectionEnumerator } from 'Controls/_display/CollectionEnumerator';
+export { getFlatNearbyItem } from 'Controls/_display/utils/NearbyItemUtils';
+
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from 'Controls/_display/IItemsStrategy';
 import TreeItemDecorator from 'Controls/_display/TreeItemDecorator';
 export {IItemsStrategy, IItemsStrategyOptions};
