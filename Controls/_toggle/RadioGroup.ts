@@ -17,7 +17,7 @@ import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import {constants} from 'Env/Env';
-import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
+import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 export interface IRadioGroupOptions extends IControlOptions,
     ISingleSelectableOptions,
@@ -75,12 +75,14 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
     protected _items: RecordSet;
     protected _crudWrapper: CrudWrapper;
     protected _groups: object = {};
+    protected _workByKeyboard: WorkByKeyboardContext;
 
     protected _beforeMount(options: IRadioGroupOptions,
-                           context: object,
+                           context: IWorkByKeyboardContext,
                            receivedState: RecordSet): void | Promise<RecordSet> {
         this._selectKeyChanged = this._selectKeyChanged.bind(this);
         this._isSelected = this._isSelected.bind(this);
+        this._workByKeyboard = context.workByKeyboard;
         if (receivedState) {
             this._items = receivedState;
             this._sortGroup(options, receivedState);
@@ -93,7 +95,11 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
         }
     }
 
-    protected _beforeUpdate(newOptions: IRadioGroupOptions): Promise<void> {
+    protected _beforeUpdate(newOptions: IRadioGroupOptions, context: IWorkByKeyboardContext): Promise<void> {
+        if (this._workByKeyboard !== context.workByKeyboard) {
+            this._workByKeyboard = context.workByKeyboard;
+        }
+
         if (newOptions.source && newOptions.source !== this._options.source) {
             return this._initItems(newOptions).then((items: RecordSet) => {
                 this._items = items;
@@ -104,7 +110,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
     }
 
     protected _highlightedOnFocus(): boolean {
-        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
+        return !!this._workByKeyboard?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {

@@ -21,7 +21,7 @@ import {getTextWidth} from 'Controls/sizeUtils';
 import 'wml!Controls/_buttons/ButtonBase';
 import 'css!Controls/buttons';
 import 'css!Controls/CommonClasses';
-import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
+import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 export function defaultHeight(viewMode: string): string {
     if (viewMode === 'button') {
@@ -171,21 +171,26 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     protected _isSVGIcon: boolean = false;
     protected _textAlign: string;
     protected _tooltip: string;
+    protected _workByKeyboard: WorkByKeyboardContext;
 
-    protected _beforeMount(options: IButtonOptions): void {
+    protected _beforeMount(options: IButtonOptions, context: IWorkByKeyboardContext): void {
         simpleCssStyleGeneration.call(this, options);
         this._tooltip = options.tooltip;
+        this._workByKeyboard = context.workByKeyboard;
     }
 
-    protected _beforeUpdate(newOptions: IButtonOptions): void {
+    protected _beforeUpdate(newOptions: IButtonOptions, context: IWorkByKeyboardContext): void {
         simpleCssStyleGeneration.call(this, newOptions);
         if (this._options.tooltip !== newOptions.tooltip) {
             this._tooltip = newOptions.tooltip;
         }
+        if (this._workByKeyboard !== context.workByKeyboard) {
+            this._workByKeyboard = context.workByKeyboard;
+        }
     }
 
     protected _highlightedOnFocus(): boolean {
-        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
+        return !!this._workByKeyboard?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
