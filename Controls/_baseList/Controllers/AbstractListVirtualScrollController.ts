@@ -185,6 +185,7 @@ export abstract class AbstractListVirtualScrollController<
      * @private
      */
     private _doScrollCompletedCallback: () => void;
+    private _shouldResetScrollPosition: boolean;
 
     constructor(options: TOptions) {
         this._initCollection(options.collection);
@@ -242,6 +243,18 @@ export abstract class AbstractListVirtualScrollController<
         // Все остальные типы скролла выполняются на afterRender, когда записи уже отрисовались.
         if (this._scheduledScrollParams && this._scheduledScrollParams.type === 'calculateRestoreScrollParams') {
             this._handleScheduledScroll();
+        }
+
+        // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
+        // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
+        // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
+        // устанавливаем скролл в "0".
+        // Как итог - контент мелькает. Поэтому сбрасываем скролл в 0 именно ДО отрисовки.
+        // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=c3812a26-2301-4998-8283-bcea2751f741
+        // Демка нативного поведения: https://jsfiddle.net/alex111089/rjuc7ey6/1/
+        if (this._shouldResetScrollPosition) {
+            this._shouldResetScrollPosition = false;
+            this._doScrollUtil('top');
         }
     }
 
@@ -345,6 +358,8 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     resetItems(): void {
+        // смотри комментарий в beforeRenderListControl
+        this._shouldResetScrollPosition = !this._keepScrollPosition;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
         const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;

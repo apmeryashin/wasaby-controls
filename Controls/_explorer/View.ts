@@ -744,10 +744,6 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
     }
 
-    getLastVisibleItemKey(): number | string | void {
-        return this._children.treeControl.getLastVisibleItemKey();
-    }
-
     reloadItem(key: TKey, options: IReloadItemOptions = {}): Promise<Model | RecordSet> {
         return this._children.treeControl.reloadItem(key, options);
     }
