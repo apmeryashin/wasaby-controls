@@ -76,7 +76,7 @@ export default interface IColumnTemplateOptions {
     * Переменная **column** позволяет получить доступ к следующими свойствам:
     *
     * * **config** (тип {@link Controls/grid:IColumn IColumn}) — объект с конфигурацией колонки.
-    * * **index** — порядковый номер колонки. Отсчет от 0.
+    * * **columnIndex** — порядковый номер колонки. Отсчет от 0.
     *
     * Переменная **editArrowTemplate** позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в прикладном шаблоне для первой колонки. Переменную достаточно встроить в нужное место contentTemplate с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 4.
     *

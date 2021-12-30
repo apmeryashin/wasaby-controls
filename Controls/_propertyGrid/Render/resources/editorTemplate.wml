@@ -25,6 +25,7 @@
                                  attr:key="{{collectionItem.getUid()}}"
                                  validationStatus="{{content.validationStatus}}"
                                  caption="{{caption}}"
+                                 required="{{collectionItem.contents.required || collectionItem.getEditorOptions().required}}"
                                  scope="{{collectionItem.getEditorOptions()}}"/>
                   </ws:content>
                </Controls.Container.Async>
@@ -45,6 +46,7 @@
                attr:key="{{collectionItem.getUid()}}"
                template="{{content.resolvedTemplate}}"
                caption="{{caption}}"
+               required="{{collectionItem.contents.required || collectionItem.getEditorOptions().required}}"
                scope="{{collectionItem.getEditorOptions()}}"/>
          </ws:content>
       </Controls.Container.Async>

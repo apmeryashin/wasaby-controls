@@ -18,6 +18,7 @@
             _textAlign="{{_textAlign}}"
             _translucent="{{_options.translucent}}"
             _tooltip="{{_tooltip}}"
+            attr:class="{{_highlightedOnFocus() ? 'controls-focused-item'}}"
             on:click="_clickHandler()"
             on:mouseenter="_onMouseEnterHandler()"
             on:keypress="_keyUpHandler()"/>

@@ -1,5 +1,6 @@
 import {IOptions} from './IViewAction';
 import HierarchyRemoveStrategy from './Remove/HierarchyRemoveStrategy';
+import FlatRemoveStrategy from './Remove/FlatRemoveStrategy';
 
 export interface IRemoveOptions extends IOptions {
     strategy?: HierarchyRemoveStrategy;
@@ -12,11 +13,11 @@ export interface IRemoveOptions extends IOptions {
  */
 export default class {
     protected _options: IRemoveOptions;
-    protected _strategy;
+    protected _strategy: HierarchyRemoveStrategy|FlatRemoveStrategy;
 
     constructor(options: IRemoveOptions) {
         this._options = options;
-        this._strategy = options.strategy || new HierarchyRemoveStrategy();
+        this._strategy = options.parentProperty ? new HierarchyRemoveStrategy() : new FlatRemoveStrategy();
     }
 
     execute(meta: Partial<IRemoveOptions>): Promise<string | void> {

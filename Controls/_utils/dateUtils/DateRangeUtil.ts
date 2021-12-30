@@ -115,11 +115,6 @@ export function getPeriodLengthInDays(start: Date, end: Date): number {
     return Math.ceil(Math.abs((start.getTime() - end.getTime()) / (oneDay))) + 1;
 }
 
-// кривое название метода используется в прикладных репозиториях
-export function gePeriodLengthInDays(start: Date, end: Date): number {
-    return getPeriodLengthInDays(start, end);
-}
-
 export function getResetButtonVisible(startValue: Date, endValue: Date, resetStartValue: Date,
                                       resetEndValue: Date): boolean {
     const setTimeToZero = (date: Date): void => {

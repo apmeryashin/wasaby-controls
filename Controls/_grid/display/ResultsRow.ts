@@ -44,16 +44,6 @@ class ResultsRow extends Row<null> {
         return this.isStickyHeader() && this.isStickyResults();
     }
 
-    getStickyHeaderMode() {
-        return 'stackable';
-    }
-
-    getStickyHeaderPosition(stickyCallback: Function): {} {
-        return {
-            vertical: this._$resultsPosition
-        };
-    }
-
     //endregion
 
     //region Аспект "Стилевое оформление"
@@ -100,7 +90,8 @@ class ResultsRow extends Row<null> {
     protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IResultsRowOptions> {
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
-            metaResults: this.getMetaResults()
+            metaResults: this.getMetaResults(),
+            resultsPosition: this._$resultsPosition
         };
     }
 

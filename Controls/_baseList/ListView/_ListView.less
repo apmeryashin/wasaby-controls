@@ -3,7 +3,7 @@
    position: relative;
 }
 
-.controls-ListView__itemV {
+.controls-ListView__itemV-relative {
    position: relative;
 }
 
@@ -229,7 +229,8 @@
 .controls-ListView__itemContent_withCheckboxes,
 .controls-ListView__groupContent__leftPadding_withCheckboxes,
 .controls-ListView__footer__paddingLeft_withCheckboxes {
-   padding-left: calc(var(--checkbox_offset-left_list) + var(--click-area_width_checkbox));
+   // var(--click-area_width_checkbox). Nested calc() do not work in ie 11
+   padding-left: calc(var(--checkbox_offset-left_list) + (var(--marker-box_size_checkbox) + var(--true_marker_horizontal-padding_checkbox) * 2));
 }
 
 .controls-ListView__item-leftPadding_default,

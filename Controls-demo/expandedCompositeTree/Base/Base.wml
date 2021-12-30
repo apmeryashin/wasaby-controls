@@ -1,0 +1,23 @@
+<div class="controlsDemo__wrapper controlsDemo__maxWidth1000">
+    <Controls.browser:Browser attr:class="controlsDemo__height800">
+        <ws:listsOptions>
+            <ws:Array>
+                <ws:Object id="detail"
+                           keyProperty="key"
+                           nodeProperty="type"
+                           parentProperty="parent"
+                           source="{{_viewSource}}">
+                </ws:Object>
+            </ws:Array>
+        </ws:listsOptions>
+        <ws:content>
+            <Controls.newBrowser:View detail="{{ _detailConfig }}"
+                                      master="{{ _masterConfig }}"
+                                      listConfiguration="{{ _listConfiguration }}"
+                                      wrapDetailInScroll="{{ true }}"
+                                      on:itemClick="_onItemClick()"/>
+        </ws:content>
+    </Controls.browser:Browser>
+    <div>{{_activeElement}}</div>
+    <div>{{_infoData}}</div>
+</div>

@@ -14,6 +14,7 @@ import Row, {IOptions as IRowOptions} from './Row';
 import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
+import {IDirection} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 export type IOptions<S extends Model = Model, T extends Row<S> = Row<S>> = IGridMixinOptions;
 
@@ -92,8 +93,8 @@ export default class Collection<S extends Model = Model, T extends Row<S> = Row<
         this.getColgroup()?.reBuild();
     }
 
-    setIndexes(start: number, stop: number): void {
-        super.setIndexes(start, stop);
+    setIndexes(start: number, stop: number, shiftDirection: IDirection): void {
+        super.setIndexes(start, stop, shiftDirection);
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();
@@ -132,7 +133,7 @@ export default class Collection<S extends Model = Model, T extends Row<S> = Row<
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
         return function CollectionItemsFactory(options?: IRowOptions<S>): T {
-            options.columnsConfig = this._$columns;
+            options.columnsConfig = this.getColumnsEnumerator().getColumns();
             options.gridColumnsConfig = this._$columns;
             options.colspanCallback = this._$colspanCallback;
             options.columnSeparatorSize = this._$columnSeparatorSize;

@@ -113,6 +113,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     // region IInstantiable
 
     readonly '[Types/_entity/IInstantiable]': boolean;
+    readonly ActivatableItem: boolean = true;
     readonly Markable: boolean = true;
     readonly Fadable: boolean = true;
     readonly SelectableItem: boolean = true;
@@ -859,17 +860,21 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             this.isMarked() && this._isSupportSticky();
     }
 
-    getStickyHeaderPosition(stickyCallback: Function): {} {
-        let stickyVerticalPosition = 'topBottom';
+    getStickyHeaderPosition(stickyCallback?: Function): {
+        vertical: string
+    } {
+        return {
+            vertical: this.getVerticalStickyHeaderPosition(stickyCallback)
+        };
+    }
 
+    protected getVerticalStickyHeaderPosition(stickyCallback?: Function): string {
         if (stickyCallback) {
             const callbackResult = stickyCallback(this.getContents());
-            stickyVerticalPosition = callbackResult === true ? 'top' : callbackResult;
+            return callbackResult === true ? 'top' : callbackResult;
+        } else {
+            return 'topBottom';
         }
-
-        return {
-            vertical: stickyVerticalPosition
-        };
     }
 
     protected _isSupportSticky(): boolean {
@@ -904,9 +909,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
         const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
 
+        let wrapperClasses = '';
+        if (!this.isSticked(null, this)) {
+            wrapperClasses = 'controls-ListView__itemV-relative ';
+        }
         // TODO: Убрать js-controls-ListView__editingTarget' по задаче
         //  https://online.sbis.ru/opendoc.html?guid=deef0d24-dd6a-4e24-8782-5092e949a3d9
-        let wrapperClasses = `controls-ListView__itemV js-controls-ListView__editingTarget ${this._getCursorClasses(cursor)}`;
+        wrapperClasses += `controls-ListView__itemV js-controls-ListView__editingTarget ${this._getCursorClasses(cursor)}`;
         wrapperClasses += ` controls-ListView__item_${this.getStyle()}`;
         if (showItemActionsOnHover !== false) {
             wrapperClasses += ' controls-ListView__item_showActions';

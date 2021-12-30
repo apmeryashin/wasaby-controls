@@ -6,9 +6,7 @@
    z-index: 1;
 }
 
-/*A double selector is needed so that the "position" specified on the block that wraps the StickyHeader does not work.*/
-/*Will be fixed by: https://online.sbis.ru/opendoc.html?guid=2c58d954-7fd6-4cb0-8f6a-f17d89622004*/
-.controls-StickyHeader.controls-StickyHeader_position {
+.controls-StickyHeader_position {
    position: sticky;
 }
 
@@ -18,6 +16,10 @@
    .controls-StickyHeader {
       will-change: transform;
    }
+}
+
+.controls-StickyHeader_default-background {
+   background: var(--background-color_scroll_sticky-header);
 }
 
 .controls-StickyHeader__observationTargetTop,

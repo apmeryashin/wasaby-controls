@@ -4,7 +4,7 @@
 //button
 .controls-Button_button_style-secondary_toggled {
    border-color: var(--secondary_toggled_border-color_toggleButton_button);
-   border-width: var(--secondary_toggled_border-thickness_toggleButton_button);
+   border-width: var(--toggled_border-thickness_toggleButton_button);
 }
 
 .controls-Button_button_style-primary_toggled {
@@ -31,11 +31,11 @@
 .controls-Button_pushButton {
    border-width: var(--border-thickness_button);
    border-radius: var(--border-radius_toggleButton_pushButton);
-   box-shadow: var(--box-shadow_toggleButton_pushButton);
+   box-shadow: none;
 }
 
 .controls-Button_pushButton_style-secondary {
-   border-color: var(--secondary_border-color_toggleButton_pushButton);
+   border-color: transparent;
 }
 
 .controls-Button_pushButton_style-primary {
@@ -51,7 +51,7 @@
 }
 
 .controls-Button_pushButton_style-readonly {
-   border-color: var(--secondary_active_background-color_toggleButton_pushButton);
+   border-color: transparent;
 }
 
 .controls-Button_pushButton_style-secondary_toggled {
@@ -76,11 +76,11 @@
 
 //background
 .controls-Button_pushButton_style-secondary.controls-Button_bg-contrast {
-   background-color: var(--secondary_contrast_background-color_toggleButton_pushButton);
+   background-color: transparent;
 }
 
 .controls-Button_pushButton_style-secondary.controls-Button_bg-same {
-   background-color: var(--secondary_background-color_toggleButton_pushButton);
+   background-color: transparent;
 }
 
 .controls-Button_pushButton_style-secondary_toggled.controls-Button_bg-contrast {
@@ -92,7 +92,7 @@
 }
 
 .controls-Button_pushButton_style-readonly.controls-Button_bg-same {
-   background-color: var(--readonly_toggled_background-color_toggleButton_pushButton);
+   background-color: transparent;
 }
 
 .ws-is-hover {
@@ -101,7 +101,7 @@
    }
 
    .controls-Button_pushButton_style-secondary:hover.controls-Button_bg-same {
-      background-color: var(--secondary_hover_background-color_toggleButton_pushButton);
+      background-color: transparent;
       border-color: var(--secondary_toggled_border-color_toggleButton_pushButton);
    }
 
@@ -121,7 +121,7 @@
    }
 
    .controls-Button_pushButton_style-secondary:active.controls-Button_bg-same {
-      background-color: var(--secondary_hover_background-color_toggleButton_pushButton);
+      background-color: transparent;
       border-color: var(--secondary_toggled_border-color_toggleButton_pushButton);
    }
 

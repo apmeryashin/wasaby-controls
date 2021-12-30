@@ -12,7 +12,7 @@
                 controls-PeriodDialog_stateButton_icon {{ keyboardActive? 'controls-PeriodDialog_stateButton_icon_focus'}}">
             </span>
     </div>
-    <ws:if data="{{ selectionType === 'quantum' || selectionType === 'workdays'}}">
+    <ws:if data="{{ selectionType === 'quantum' || selectionType === 'workdays' || calendarButtonVisible === false }}">
         <div class="controls-PeriodDialog__header-period_link">
             <Controls.dateRange:LinkView
                     startValue="{{headerRangeModel.startValue}}"
@@ -48,7 +48,8 @@
                         attr:data-qa="controls-PeriodDialog__header-datePickerStart"
                         attr:ws-autofocus="true"
                         attr:class="controls-PeriodDialog__header-datePickerStart"
-                        on:valueChanged="_startValuePickerChanged()"
+                        on:valueChanged="_startValuePickerValueChangedHandler()"
+                        on:inputCompleted="_startValuePickerInputCompleted()"
                         on:inputControl="_inputControlHandler()"
                 />
                 <ws:if data="{{ rightFieldTemplate }}">
@@ -77,7 +78,8 @@
                             validateByFocusOut="{{false}}"
                             attr:data-qa="controls-PeriodDialog__header-datePickerEnd"
                             attr:class="controls-PeriodDialog__header-datePickerEnd"
-                            on:valueChanged="_endValuePickerChanged()"
+                            on:valueChanged="_endValuePickerValueChangedHandler()"
+                            on:inputCompleted="_endValuePickerInputCompleted()"
                     />
                     <ws:if data="{{ rightFieldTemplate }}">
                         <ws:partial

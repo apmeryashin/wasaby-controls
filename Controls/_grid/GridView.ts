@@ -213,7 +213,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         // todo Вынести расчёт на viewModel:
         //  https://online.sbis.ru/opendoc.html?guid=09307163-7edb-4423-999d-525271e05586
         // тогда метод можно покрыть нормально юнитом и проблемы с актуализацией колонок на самом grid-элементе не будет
-        const columns = this._listModel ? this._listModel.getGridColumnsConfig() : options.columns;
+        const columns = this._listModel ? this._listModel.getColumnsEnumerator().getColumns() : options.columns;
         const hasMultiSelect = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 
         if (!options.columns) {
@@ -310,13 +310,23 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     },
 
     _getGridViewWrapperClasses(options: IGridOptions): string {
-        return `controls_list_theme-${options.theme} ${this._getColumnScrollWrapperClasses(options)}`;
+        let classes = `controls_list_theme-${options.theme} ${this._getColumnScrollWrapperClasses(options)}`;
+        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту
+        if (options.needShowEmptyTemplate) {
+            classes += ' controls-Grid__empty_gridWrapper';
+        }
+        return classes;
     },
 
     _getGridViewClasses(options: IGridOptions, columnScrollPartName?: 'fixed' | 'scrollable'): string {
         let classes = `controls-Grid controls-Grid_${options.style}`;
         if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
             classes += ` controls-Grid_support-ladder ${this._ladderOffsetSelector}`;
+        }
+
+        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту
+        if (options.needShowEmptyTemplate) {
+            classes += ' controls-Grid__empty';
         }
 
         // Удалено в 22.1000. Быстрый фикс неправильной высоты результатов, чтобы не протягивать
@@ -327,6 +337,9 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
 
         if (options._needBottomPadding) {
             classes += ' controls-GridView__paddingBottom__itemActionsV_outside';
+            if (options.rowSeparatorSize) {
+                classes += `_size-${options.rowSeparatorSize}`;
+            }
         }
 
         // Во время днд отключаем лесенку, а контент отображаем принудительно с помощью visibility: visible

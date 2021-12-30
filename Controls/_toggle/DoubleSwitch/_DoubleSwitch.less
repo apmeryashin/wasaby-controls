@@ -6,7 +6,7 @@
    border-style: solid;
    user-select: none;
    position: relative;
-   border-width: var(--border-thickness_switcher);
+   border-width: var(--border-thickness);
    // В ie есть проблема с calc.
    // Если передавать border-radius: calc(val / 2), то это воспринимается как невалидное значение.
    // Поэтому явно указываем все значения
@@ -22,8 +22,8 @@
 }
 
 .controls-DoubleSwitch__toggle_bg-contrast_disabled {
-   border-color: var(--readonly_marker_color_switcher);
-   background-color: var(--readonly_marker_color_switcher);
+   border-color: var(--readonly_contrast_background-color);
+   background-color: var(--readonly_contrast_background-color);
 }
 
 .controls-DoubleSwitch__toggle_bg-same,
@@ -114,7 +114,7 @@
 }
 
 .controls-DoubleSwitch__fake-element {
-   height: calc(var(--height_vertical_switcher) - var(--marker_height_switcher) - var(--marker_border-offset_switcher));
+   height: calc(var(--height_vertical_switcher) - var(--marker_size_switcher) - var(--marker_border-offset_switcher));
 }
 
 .controls-DoubleSwitch__fake-element_active {
@@ -129,7 +129,7 @@
 .controls-DoubleSwitch__text_vertical {
    //If border is in height text block base line between text and toggle circle deviates to switch border height.
    //In vertical state width = height, height = width.
-   height: calc(var(--height_vertical_switcher) / 2 - var(--border-thickness_switcher));
+   height: calc(var(--height_vertical_switcher) / 2 - var(--border-thickness));
    line-height: calc(var(--height_vertical_switcher) / 2);
    display: block;
 
@@ -219,7 +219,7 @@
    .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
       .controls-SwitchCircle__borderCircle_selected,
       .controls-SwitchCircle__borderCircle_unselected {
-         stroke: var(--marker-box_hover_border-color_switcher);
+         stroke: var(--selected_marker_color_switcher);
       }
    }
 
@@ -237,23 +237,23 @@
 .controls-DoubleSwitch:active {
    .controls-SwitchCircle__borderCircle_selected,
    .controls-SwitchCircle__borderCircle_unselected {
-      stroke: var(--marker-box_hover_border-color_switcher);
+      stroke: var(--selected_marker_color_switcher);
    }
 }
 
 .controls_DoubleSwitch_SwitchCircle_vertical {
-   margin-top: calc(var(--marker_border-offset_switcher) - var(--border-thickness_switcher));
-   margin-bottom: calc(var(--marker_border-offset_switcher) - var(--border-thickness_switcher));
+   margin-top: calc(var(--marker_border-offset_switcher) - var(--border-thickness));
+   margin-bottom: calc(var(--marker_border-offset_switcher) - var(--border-thickness));
 }
 
 .controls_DoubleSwitch_SwitchCircle_horizontal {
-   margin-right: calc(var(--marker_border-offset_switcher) - var(--border-thickness_switcher));
-   margin-left: calc(var(--marker_border-offset_switcher) - var(--border-thickness_switcher));
+   margin-right: calc(var(--marker_border-offset_switcher) - var(--border-thickness));
+   margin-left: calc(var(--marker_border-offset_switcher) - var(--border-thickness));
 }
 
 .controls-DoubleSwitch__toggle_size-s {
    .controls_DoubleSwitch_SwitchCircle_horizontal {
-      margin-right: calc(var(--border-thickness_switcher) * -1);
-      margin-left: calc(var(--border-thickness_switcher) * -1);
+      margin-right: calc(var(--border-thickness) * -1);
+      margin-left: calc(var(--border-thickness) * -1);
    }
 }

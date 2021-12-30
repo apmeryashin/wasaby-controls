@@ -71,16 +71,6 @@ export default class FooterRow extends mixin<Row<null>, Footer>(Row, Footer) {
         return this.getOwner().isStickyFooter();
     }
 
-    getStickyHeaderMode() {
-        return 'stackable';
-    }
-
-    getStickyHeaderPosition(): {} {
-        return {
-            vertical: 'bottom'
-        };
-    }
-
     //region Аспект "Колонки. Создание, колспан."
     protected _initializeColumns(): void {
         super._initializeColumns({

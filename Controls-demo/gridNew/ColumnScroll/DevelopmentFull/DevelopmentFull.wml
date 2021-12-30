@@ -102,7 +102,7 @@
                             <button on:click="_changeHeader('multiDefault')" style="padding: 3px; color: #cbcbcb; pointer-events: none;"
                                     class="controlsDemo__mr1 controlsDemo__mb1">Многоуровневая шапка без колспана
                             </button>
-                            <button on:click="_changeHeader('multiColspan')" style="padding: 3px; color: #cbcbcb; pointer-events: none;"
+                            <button on:click="_changeHeader('multiColspan')" style="padding: 3px;"
                                     class="controlsDemo__mr1 controlsDemo__mb1">Многоуровневая шапка с колспаном
                             </button>
                         </ws:template>
@@ -168,7 +168,8 @@
                             <h4 class="controlsDemo__mb1">Режим отображения сроллбара</h4>
                             <button on:click="_toggleScrollBar(undefined)" class="controlsDemo__mr1" style="padding: 3px;">undefined</button>
                             <button on:click="_toggleScrollBar('scrollbar')" class="controlsDemo__mr1" style="padding: 3px;">Scrollbar</button>
-                            <button on:click="_toggleScrollBar('arrows')" style="padding: 3px;">Arrow buttons</button>
+                            <button on:click="_toggleScrollBar('arrows')" class="controlsDemo__mr1" style="padding: 3px;">Arrow buttons</button>
+                            <button on:click="_toggleScrollBar('unaccented')" style="padding: 3px;">Scrollbar and shadows are hidden</button>
                         </ws:template>
                     </ws:Object>
 

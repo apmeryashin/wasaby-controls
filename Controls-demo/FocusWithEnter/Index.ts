@@ -5,6 +5,7 @@ import template = require('wml!Controls-demo/FocusWithEnter/FocusWithEnter');
 import 'wml!Controls-demo/gridNew/EditInPlace/EditingCell/_cellEditor';
 import {Editing} from 'Controls-demo/gridNew/DemoHelpers/Data/Editing';
 import {IColumnRes} from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
+import {RecordSet} from 'Types/collection';
 
 class FocusWithEnter extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -22,10 +23,46 @@ class FocusWithEnter extends Control<IControlOptions> {
     protected _flagValue: boolean = false;
     protected _handbookSelectedKeys: string[];
     protected _selectedKey: string | null = '1';
+    protected _selectedKey1: string | null = '1';
+
+    protected _radioGroupSelectedKey: string = '1';
+    protected _radioGroupSource: Memory;
+    protected _items1: RecordSet;
 
     protected _beforeMount(cfg: IControlOptions): void {
         this._dateValue = new Date();
         this._handbookSelectedKeys = ['1'];
+        this._items1 = new RecordSet({
+            rawData: [
+                {
+                    id: '1',
+                    caption: 'Название 1'
+                },
+                {
+                    id: '2',
+                    caption: 'Название 2'
+                }
+            ],
+            keyProperty: 'id'
+        });
+        this._radioGroupSource = new Memory({
+            keyProperty: 'id',
+            displayProperty: 'caption',
+            data: [{
+                id: '1',
+                title: 'State1',
+                caption: 'Additional caption1'
+            }, {
+                id: '2',
+                title: 'State2',
+                caption: 'Additional caption2',
+                readOnly: true
+            }, {
+                id: '3',
+                title: 'State3',
+                caption: 'Additional caption3'
+            }]
+        });
 
         const sourceRawData = [{ id: '1', title: 'Красный', description: 'Стоп!'},
             { id: '2', title: 'Желтый', description: 'Жди!'},

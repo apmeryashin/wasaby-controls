@@ -38,7 +38,7 @@ export interface IStickyHeaderOptions extends IControlOptions {
     fixedZIndex: number;
     zIndex: number;
     shadowVisibility: SHADOW_VISIBILITY;
-    backgroundStyle: string;
+    backgroundStyle?: string;
     offsetTop: number;
     offsetLeft: number;
 }
@@ -1083,7 +1083,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             fixedZIndex: 2,
             zIndex: undefined,
             shadowVisibility: SHADOW_VISIBILITY.visible,
-            backgroundStyle: BACKGROUND_STYLE.DEFAULT,
             mode: MODE.replaceable,
             offsetTop: 0,
             offsetLeft: 0,

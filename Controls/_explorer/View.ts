@@ -22,7 +22,7 @@ import {
     INavigationPageSourceConfig,
     ISelectionObject, ISortingOptions, ISourceOptions,
     TKey,
-    INavigationPositionSourceConfig
+    INavigationPositionSourceConfig, TTextTransform
 } from 'Controls/interface';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {RecordSet} from 'Types/collection';
@@ -140,6 +140,10 @@ interface IExplorerOptions
      * В шаблон передается опция item в которой содержится запись хлебной крошки.
      */
     backButtonBeforeCaptionTemplate?: string | TemplateFunction;
+    /**
+     * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
+     */
+    backButtonTextTransform?: TTextTransform;
 }
 
 interface IMarkedKeysStore {
@@ -734,14 +738,10 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     //region proxy methods to TreeControl
-    scrollToItem(key: string | number, position?: string): void {
+    scrollToItem(key: string | number, position?: string, force?: boolean): void {
         if (this._children.treeControl) {
-            this._children.treeControl.scrollToItem(key, position);
+            this._children.treeControl.scrollToItem(key, position, force);
         }
-    }
-
-    getLastVisibleItemKey(): number | string | void {
-        return this._children.treeControl.getLastVisibleItemKey();
     }
 
     reloadItem(key: TKey, options: IReloadItemOptions = {}): Promise<Model | RecordSet> {
@@ -1013,7 +1013,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
     }
 
-    private _resolveViewMode(viewMode: TExplorerViewMode, useColumns: boolean) {
+    private _resolveViewMode(viewMode: TExplorerViewMode, useColumns: boolean): TExplorerViewMode | 'columns' {
         return viewMode === 'list' && useColumns ? 'columns' : viewMode;
     }
 
@@ -1370,6 +1370,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/list:IRemovableList
  * @implements Controls/marker:IMarkerList
  * @implements Controls/tile:ITreeTile
+ * @implements Controls/error:IErrorControllerOptions
  *
  * @public
  * @author Авраменко А.С.

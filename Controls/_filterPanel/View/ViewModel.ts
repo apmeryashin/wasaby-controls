@@ -61,14 +61,14 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             // Пока не перешли на предзагрузку фильтров (22.1100)
             let sourceController = this._source?.[index]?.name === newItem.name ?
                 this._source?.[index]?.editorOptions?.sourceController :
-                null;
+                editorOptions?.sourceController;
 
             if (!sourceController && editorOptions?.items && editorOptions?.items instanceof RecordSet) {
                 sourceController = new NewSourceController({...editorOptions} as ISourceControllerOptions);
             }
 
-            if (!newItem.editorCaption) {
-                newItem.editorCaption = typeof item.caption === 'string' ? item.caption : item.group;
+            if (!newItem.hasOwnProperty('editorCaption')) {
+                newItem.editorCaption = typeof item.caption !== undefined ? item.caption : item.group;
             }
             newItem.caption = '';
             newItem.editorOptions = {
@@ -83,6 +83,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 selectedAllText: item.selectedAllText,
                 selectedAllKey: item.selectedAllKey,
                 sourceController,
+                items: editorOptions?.items || sourceController?.getItems(),
                 dataLoadCallback: (items, direction) => {
                     if (!direction) {
                         this._updateEditorOptionsByLoadedItems(index, items);
@@ -124,7 +125,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 caption: item.editorCaption,
                 expanderVisible: item.expanderVisible,
                 resetButtonVisible: !isEqual(item.value, item.resetValue),
-                groupVisible: typeof item.editorCaption === 'string' && (item.editorCaption || itemIndex),
+                groupVisible: typeof item.editorCaption === 'string',
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };
         });

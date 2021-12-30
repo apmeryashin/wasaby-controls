@@ -39,6 +39,14 @@ class ModuleClass extends MaskViewModel {
             return super.handleInput.apply(this, arguments);
         }
     }
+
+    protected _convertToDisplayValue(value: string): string {
+        const result = super._convertToDisplayValue(value);
+        if (!this._value && this._options.placeholder) {
+            return this._options.placeholder;
+        }
+        return result;
+    }
 }
 
 export default ModuleClass;

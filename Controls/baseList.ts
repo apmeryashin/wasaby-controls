@@ -12,7 +12,7 @@
 export {IList, IReloadItemOptions} from './_baseList/interface/IList';
 export * from './_baseList/interface/IEditableList';
 export * from 'Controls/_baseList/interface/IMovableList';
-export {default as IVirtualScroll, IVirtualScrollConfig, IDirection} from './_baseList/interface/IVirtualScroll';
+export {default as IVirtualScroll, IVirtualScrollConfig, IDirection, TVirtualScrollMode} from './_baseList/interface/IVirtualScroll';
 export {default as IEmptyTemplateOptions} from './_baseList/interface/EmptyTemplate';
 export {IRemovableList} from 'Controls/_baseList/interface/IRemovableList';
 export {default as IListNavigation} from './_baseList/interface/IListNavigation';
@@ -80,29 +80,26 @@ export {CssClassList, createClassListCollection} from './_baseList/resources/uti
 
 //region controllers
 export * from './_baseList/Controllers/Grouping';
-export {default as ScrollController, IScrollParams} from './_baseList/ScrollController';
 export {RemoveController} from 'Controls/_baseList/Controllers/RemoveController';
-export {default as VirtualScroll} from './_baseList/ScrollContainer/VirtualScroll';
 export {MoveController, IMoveControllerOptions}  from 'Controls/_baseList/Controllers/MoveController';
 //endregion
 
 //region new scroll
 export {
     AbstractListVirtualScrollController,
-    IAbstractListVirtualScrollControllerOptions
+    IAbstractListVirtualScrollControllerOptions,
+    IScheduledScrollParams,
+    IScheduledScrollToElementParams,
+    IEdgeItemCalculatingParams
 } from './_baseList/Controllers/AbstractListVirtualScrollController';
 
 export {
-    ScrollController as NewScrollController,
     IScrollControllerOptions,
     IDirection as IDirectionNew,
     IPlaceholders,
     IEdgeItem,
-    IEdgeItemCalculatingParams,
     IHasItemsOutRange,
-    IItemsRange,
-    IScheduledScrollParams,
-    IScheduledScrollToElementParams
+    IItemsRange
 } from './_baseList/Controllers/ScrollController/ScrollController';
 export {
     IItemSize,

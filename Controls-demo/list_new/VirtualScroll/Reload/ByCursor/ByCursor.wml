@@ -7,10 +7,8 @@
         <Controls.list:View
                 name="list"
                 source="{{_source}}"
+                navigation="{{_navigation}}"
                 keyProperty="key">
-            <ws:navigation source="position" view="infinity">
-                <ws:sourceConfig field="key" position="{{_position}}" direction="bothways" limit="{{20}}"/>
-            </ws:navigation>
             <ws:virtualScrollConfig pageSize="{{20}}"/>
         </Controls.list:View>
     </Controls.scroll:Container>

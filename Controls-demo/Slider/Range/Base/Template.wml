@@ -22,4 +22,20 @@
             bind:endValue="_endValue"
             readOnly="{{true}}"
     />
+    <div class="controlsDemo__cell ws-flexbox">
+        <div>
+            <div class="controls-text-label">start</div>
+            <Controls.input:Number bind:value="_startValue"
+                                   attr:style="width:100px"
+                                   attr:data-qa="controlsDemo-Slider__startInput"
+                                   on:valueChanged="_changedStartHandler()"/>
+        </div>
+        <div attr:style="margin-left: 20px">
+            <div class="controls-text-label">end</div>
+            <Controls.input:Number bind:value="_endValue"
+                                   attr:style="width:100px;"
+                                   attr:data-qa="controlsDemo-Slider__endInput"
+                                   on:valueChanged="_changedEndHandler()"/>
+        </div>
+    </div>
 </div>

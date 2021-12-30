@@ -69,7 +69,8 @@ class ControllerClass {
                 draggingTemplate: draggingTpl
             },
             top: draggingTemplateOptions.position.y + draggingTemplateOptions.draggingTemplateOffset,
-            left: draggingTemplateOptions.position.x + draggingTemplateOptions.draggingTemplateOffset
+            left: draggingTemplateOptions.position.x + draggingTemplateOptions.draggingTemplateOffset,
+            restrictiveContainer: 'body'
         });
     }
 

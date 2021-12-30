@@ -114,6 +114,14 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
     }
 
     // endregion Аспект "Ячейка группы"
+
+    getVerticalStickyHeaderPosition(): string {
+        return 'top';
+    }
+
+    getStickyHeaderMode(): string {
+        return 'replaceable';
+    }
 }
 
 Object.assign(TreeGridGroupDataCell.prototype, {

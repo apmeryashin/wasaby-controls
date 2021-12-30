@@ -1,0 +1,3 @@
+<Controls._expandedCompositeTree.CompositeItemWrapper
+        renderTemplate="{{ item.getRenderTemplate() }}"
+        renderScope="{{ item.getRenderParams(itemTemplate) }}" />

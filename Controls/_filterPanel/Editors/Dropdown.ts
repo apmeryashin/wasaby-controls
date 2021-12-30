@@ -1,10 +1,12 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {Model} from 'Types/entity';
 import DropdownTemplate = require('wml!Controls/_filterPanel/Editors/Dropdown');
 import 'css!Controls/filterPanel';
 
 interface IDropdownOptions extends IControlOptions {
     propertyValue: number[] | string[];
+    displayProperty: string;
 }
 
 interface IDropdown {
@@ -24,21 +26,37 @@ class DropdownEditor extends Control<IDropdownOptions> implements IDropdown {
     readonly '[Controls/_filterPanel/Editors/Dropdown]': boolean = true;
     protected _template: TemplateFunction = DropdownTemplate;
     protected _textValue: string = '';
+    protected _selectedKeys: number[] | string [] = [];
 
-    protected _handleSelectedKeysChanged(event: SyntheticEvent, value: number[] | string[]): void {
-        const extendedValue = {
-            value,
-            textValue: this._textValue
-        };
-        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
+    protected _beforeMount(options: IDropdownOptions): void {
+        this._selectedKeys = options.propertyValue;
     }
 
-    protected _extendedCaptionClickHandler(): void {
-        this._notify('propertyValueChanged', [this._options.value], {bubbling: true});
+    protected _beforeUpdate(newOptions: IDropdownOptions): void {
+        if (this._options.propertyValue !== newOptions.propertyValue) {
+            this._selectedKeys = newOptions.propertyValue;
+        }
+    }
+
+    protected _handleSelectedKeysChanged(event: SyntheticEvent, value: number[] | string[]): void {
+        this._notifySelectedKeysChanged(value);
+    }
+
+    protected _handleMenuItemActivate(event: SyntheticEvent, value: Model): void {
+        this._notifySelectedKeysChanged([value.get(this._options.displayProperty)]);
     }
 
     private _handleTextValueChanged(event: SyntheticEvent, value: string): void {
         this._textValue = value;
+    }
+
+    private _notifySelectedKeysChanged(value: string[] | number[]): void {
+        const extendedValue = {
+            value,
+            textValue: this._textValue,
+            viewMode: 'basic'
+        };
+        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 }
 export default DropdownEditor;

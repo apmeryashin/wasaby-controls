@@ -35,7 +35,7 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
 
     getItemClasses(params: IItemTemplateParams): string {
         let classes = super.getItemClasses(params);
-        classes += ` controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''}`;
+        classes += ` controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''} controls-TreeGrid__groupNode`;
         return classes;
     }
 
@@ -66,16 +66,6 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
     // TODO Убрать после https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
     isIosZIndexOptimized(): boolean {
         return false;
-    }
-
-    getStickyHeaderMode(): string {
-        return 'replaceable';
-    }
-
-    getStickyHeaderPosition(): {} {
-        return {
-            vertical: 'top'
-        };
     }
 
     protected _getBaseItemClasses(): string {

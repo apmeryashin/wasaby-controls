@@ -29,6 +29,7 @@ import {EnumeratorCallback, RecordSet} from 'Types/collection';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {create} from 'Types/di';
 import {IGridAbstractColumn} from './../interface/IGridAbstractColumn';
+import {ColumnsEnumerator} from './../ColumnsEnumerator';
 import {Logger} from 'UI/Utils';
 
 export type THeaderVisibility = 'visible' | 'hasdata';
@@ -47,7 +48,12 @@ export type TColspanCallback
 
 export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => TColspanCallbackResult;
 
-export type TColumnScrollViewMode = IScrollBarOptions['mode'];
+export type TColumnScrollViewMode = IScrollBarOptions['mode'] | 'unaccented';
+
+export interface IColumnsEnumerableCollection {
+    getColumnsEnumerator(): ColumnsEnumerator;
+    setColumnsEnumerator(enumerator: ColumnsEnumerator): void;
+}
 
 export {
     IGridAbstractColumn as IEmptyTemplateColumn
@@ -92,7 +98,8 @@ export interface IOptions extends ICollectionOptions {
 /**
  * Миксин, который содержит логику отображения таблицы
  */
-export default abstract class Grid<S extends Model = Model, T extends GridRowMixin<S> = GridRowMixin<S>> {
+export default abstract class Grid<S extends Model = Model, T extends GridRowMixin<S> = GridRowMixin<S>>
+    implements IColumnsEnumerableCollection {
     readonly '[Controls/_display/grid/mixins/Grid]': boolean;
 
     protected _$columns: TColumns;
@@ -114,6 +121,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     protected _$resultsColspanCallback: TResultsColspanCallback;
     protected _$resultsTemplate: TemplateFunction;
     protected _$columnScroll: boolean;
+    protected _$newColumnScroll: boolean;
     protected _$columnScrollViewMode: TColumnScrollViewMode;
     protected _$stickyColumnsCount: number;
     protected _$emptyGridRow: EmptyRow<S>;
@@ -126,6 +134,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
 
     protected _isFullGridSupport: boolean = isFullGridSupport();
     protected _footer: FooterRow;
+    private _columnsEnumerator: ColumnsEnumerator;
 
     protected abstract _$emptyTemplateOptions: object;
 
@@ -192,8 +201,20 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     getAllGridColumns(): Array<{className?: string}> {
-        let result: Array<{className?: string}> =
-            this._$columns.map(() => ({className: 'js-controls-Grid__columnScroll__relativeCell'}));
+        let result: Array<{ className?: string }> = [];
+
+        this.getColumnsEnumerator().getIndexes(true).forEach((cellIndex, arrayItemIndex, array) => {
+            const isStickyCell = cellIndex < this.getStickyColumnsCount();
+
+            // Есть ли разрыв между застиканными ячейками и ячейками показываемого диапазона.
+            // Например, застикано 2 записи, а показываем с 5й по 10ю. Итоговый = [1,2,5...9].
+            // Смотрим на индекс ячейки после последней стикнутой, если он больше чем индекс стикнутой + 1,
+            // то есть разрыв.
+            const hasGap = isStickyCell &&
+                array[this.getStickyColumnsCount()] > (array[this.getStickyColumnsCount() - 1] + 1);
+
+            result.push(hasGap ? {} : {className: 'js-controls-Grid__virtualColumnScroll__fake-scrollable-cell-to-recalc-width'});
+        });
 
         if (this.hasMultiSelectColumn()) {
             result = [{}, ...result];
@@ -203,6 +224,19 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
             result = [...result, {}];
         }
         return result;
+    }
+
+    getColumnsEnumerator(): ColumnsEnumerator {
+        if (!this._columnsEnumerator) {
+            this._columnsEnumerator = new ColumnsEnumerator(this);
+        }
+        return this._columnsEnumerator;
+    }
+
+    setColumnsEnumerator(enumerator: ColumnsEnumerator): void {
+        if (this._columnsEnumerator !== enumerator) {
+            this._columnsEnumerator = enumerator;
+        }
     }
 
     setEmptyTemplateOptions(options: object): void {
@@ -220,7 +254,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
                 multiSelectVisibility: this._$multiSelectVisibility,
                 footerTemplate: options.footerTemplate,
                 footer: options.footer,
-                columns: options.columns,
+                columns: this.getColumnsEnumerator().getColumns(),
                 backgroundStyle: this._$backgroundStyle,
                 columnSeparatorSize: this._$columnSeparatorSize
             });
@@ -326,21 +360,23 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     setColumns(newColumns: TColumns): void {
         this._$columns = newColumns;
         this._nextVersion();
+
+        const columns = this.getColumnsEnumerator().getColumns();
         // Строки данных, группы
-        this._updateItemsProperty('setGridColumnsConfig', this._$columns);
+        this._updateItemsProperty('setGridColumnsConfig', columns);
 
         // В столбцах может измениться stickyProperty, поэтому нужно пересчитать ladder
         // Проверка, что точно изменился stickyProperty, это не быстрая операция, т.к. columns - массив объектов
         const supportLadder = GridLadderUtil.isSupportLadder(this._$ladderProperties);
         if (supportLadder) {
-            this._prepareLadder(this._$ladderProperties, this._$columns);
+            this._prepareLadder(this._$ladderProperties, columns);
             this._updateItemsLadder();
         }
 
         [
             this.getColgroup(), this.getHeader(), this.getResults(), this.getFooter(), this.getEmptyGridRow()
         ].forEach((gridUnit) => {
-            gridUnit?.setGridColumnsConfig(newColumns);
+            gridUnit?.setGridColumnsConfig(columns);
         });
     }
 
@@ -609,8 +645,17 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         this._nextVersion();
     }
 
+    setNewColumnScroll(columnScroll: boolean) {
+        this._$newColumnScroll = columnScroll;
+        this._nextVersion();
+    }
+
     hasColumnScroll(): boolean {
         return this._$columnScroll;
+    }
+
+    hasNewColumnScroll(): boolean {
+        return this._$newColumnScroll;
     }
 
     getColumnScrollViewMode() {
@@ -751,6 +796,7 @@ Object.assign(Grid.prototype, {
     _$resultsTemplate: null,
     _$colspanGroup: true,
     _$columnScroll: false,
+    _$newColumnScroll: false,
     _$columnScrollViewMode: 'scrollbar',
     _$stickyColumnsCount: 1,
     _$sorting: null,

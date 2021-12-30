@@ -30,6 +30,7 @@ import TileView from './TileView';
  * @implements Controls/list:IClickableView
  * @implements Controls/marker:IMarkerList
  * @implements Controls/list:IVirtualScroll
+ * @implements Controls/error:IErrorControllerOptions
  *
  *
  * @author Авраменко А.С.

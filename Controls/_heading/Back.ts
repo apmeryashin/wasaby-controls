@@ -9,7 +9,9 @@ import {
     IFontSize,
     IFontSizeOptions,
     IIconStyle,
-    IIconStyleOptions, TFontSize
+    IIconStyleOptions,
+    TFontSize,
+    ITextTransformOptions
 } from 'Controls/interface';
 
 /**
@@ -17,7 +19,9 @@ import {
  * @public
  * @author Уфимцев Д.Ю.
  */
-export interface IBackOptions extends IControlOptions, IFontColorStyleOptions, IFontSizeOptions, IIconStyleOptions {
+export interface IBackOptions
+    extends IControlOptions, IFontColorStyleOptions, IFontSizeOptions, IIconStyleOptions, ITextTransformOptions {
+
     /**
      * @cfg {String} Задает режим отображения текста заголовка.
      * @variant ellipsis - Текст выводится в одну строку. Если текст целиком не помещается в отведенную область, то он обрезается и к концу строки добавляется многоточие.
@@ -69,6 +73,8 @@ export interface IBackOptions extends IControlOptions, IFontColorStyleOptions, I
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/heading:IBackOptions
  *
  * @public
  * @author Красильников А.С.
@@ -159,6 +165,7 @@ export default class Back extends Control<IBackOptions> implements IFontColorSty
 
     static defaultProps: IBackOptions = {
         fontSize: '3xl',
+        textTransform: 'none',
         iconStyle: 'secondary',
         iconViewMode: 'default',
         textOverflow: 'ellipsis',

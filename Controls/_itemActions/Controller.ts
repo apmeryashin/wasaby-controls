@@ -1,35 +1,36 @@
 import {Control} from 'UI/Base';
 import {Logger} from 'UI/Utils';
-import {Memory} from 'Types/source';
+import {Memory, CrudEntityKey} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem} from 'Controls/display';
-import {IStickyPopupOptions} from 'Controls/popup';
+import {ANIMATION_STATE, CollectionItem, ISwipeConfig} from 'Controls/display';
+import {DependencyTimer, IStickyPopupOptions} from 'Controls/popup';
 import {IMenuPopupOptions} from 'Controls/menu';
 import {
-    TItemActionVisibilityCallback,
-    TItemActionShowType,
-    TItemActionsSize,
     IItemAction,
-    TItemActionsPosition,
     TActionCaptionPosition,
-    TEditArrowVisibilityCallback,
     TActionDisplayMode,
+    TEditArrowVisibilityCallback,
+    TItemActionShowType,
+    TItemActionsPosition,
+    TItemActionsSize,
+    TItemActionVisibilityCallback,
     TMenuButtonVisibility
 } from './interface/IItemAction';
 import {IItemActionsItem} from './interface/IItemActionsItem';
 import {IItemActionsCollection} from './interface/IItemActionsCollection';
-import {IShownItemAction, IItemActionsObject} from './interface/IItemActionsObject';
+import {IItemActionsObject, IShownItemAction} from './interface/IItemActionsObject';
 import {verticalMeasurer} from './measurers/VerticalMeasurer';
 import {horizontalMeasurer} from './measurers/HorizontalMeasurer';
 import {Utils} from './Utils';
 import {IContextMenuConfig} from './interface/IContextMenuConfig';
-import {DependencyTimer} from 'Controls/popup';
 import * as mStubs from 'Core/moduleStubs';
 import {getActions} from './measurers/ItemActionMeasurer';
 import {TItemActionsVisibility} from './interface/IItemActionsOptions';
+import {TButtonStyle} from 'Controls/_buttons/interface/IButton';
+import {TIconStyle} from 'Controls/_interface/IIconStyle';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -138,12 +139,12 @@ export interface IControllerOptions {
      * @description
      * https://online.sbis.ru/opendoc.html?guid=76408b97-fc91-46dc-81b0-0f375d07ab99
      */
-    feature1183020440: boolean;
+    feature1183020440?: boolean;
 
     // Временная опция, чтобы не выводить меню опций записи, если нет выводимых опций, но задан футер
     // Для устранения опции требуется переход на настоящие actions и footer по задаче:
     // https://online.sbis.ru/opendoc.html?guid=dca1ba93-ffe6-4f68-9f05-9d266a0bc28f
-    task1183329228: boolean;
+    task1183329228?: boolean;
 }
 
 /**
@@ -275,7 +276,7 @@ export class Controller {
      * @param actionsContainerWidth ширина контейнера для расчёта видимых опций записи
      * @param actionsContainerHeight высота контейнера для расчёта видимых опций записи
      */
-    activateSwipe(itemKey: TItemKey, actionsContainerWidth: number, actionsContainerHeight: number): void {
+    activateSwipe(itemKey: CrudEntityKey, actionsContainerWidth: number, actionsContainerHeight: number): void {
         const item = this._collection.getItemBySourceKey(itemKey);
         item.setSwipeAnimation(ANIMATION_STATE.OPEN);
         if (this._itemActionsVisibility === 'visible') {
@@ -292,7 +293,14 @@ export class Controller {
         this._collection.nextVersion();
     }
 
-    updateItemActions(itemKey: TItemKey, containerWidth: number): void {
+    /**
+     * Берёт ранее набранные itemActions для указанной записи, и,
+     * в зависимости от ширины контейнера определяет видимые.
+     * Затем обновляет itemActions записи.
+     * @param itemKey
+     * @param containerWidth
+     */
+    updateItemActions(itemKey: CrudEntityKey, containerWidth: number): void {
         const item = this._collection.getItemBySourceKey(itemKey);
         const actions = item.getActions();
         const visibleActions = getActions(actions, this._iconSize, null, containerWidth);
@@ -456,6 +464,15 @@ export class Controller {
         this._dependenciesTimer?.stop();
     }
 
+    destroy(): void {
+        // Коллекцию могут пробросить в список сверху, нужно на ней сбросить состояние что actions инициализированы
+        // Чтобы при переиспользовании этой коллекции, контроллер правильно обновился
+        // TODO https://online.sbis.ru/opendoc.html?guid=f955f40c-b84d-4f71-9bbd-b557e4548ddd
+        if (this._collection) {
+            this._collection.setActionsAssigned(false);
+        }
+    }
+
     /**
      * Возвращает конфиг для шаблона меню опций
      * @param item элемент коллекции, для которого выполняется действие
@@ -605,7 +622,7 @@ export class Controller {
      * @param key Ключ элемента коллекции, на котором был выполнен swipe
      * @param silent Если true, коллекция не отправит onCollectionChange
      */
-    private _setSwipeItem(key: TItemKey, silent?: boolean): void {
+    private _setSwipeItem(key: CrudEntityKey, silent?: boolean): void {
         const oldSwipeItem = this.getSwipeItem();
         const newSwipeItem = this._collection.getItemBySourceKey(key);
 
@@ -735,21 +752,6 @@ export class Controller {
     }
 
     /**
-     * Определяет есть операции, которые надо показывать в меню по ховеру.
-     * @param actions
-     * @private
-     */
-    private _hasMenuActions(actions: IItemAction[]): boolean {
-        return actions.some(
-            (action) =>
-                !action.parent && (
-                    !action.showType ||
-                    action.showType === TItemActionShowType.MENU ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR)
-        );
-    }
-
-    /**
      * Возвращает конфиг кнопки операции открытия меню.
      * @private
      */
@@ -771,59 +773,98 @@ export class Controller {
      * @private
      */
     private _getActionsObject(item: IItemActionsItem): IItemActionsObject {
-        let showed;
         const contents = Controller._getItemContents(item);
         let all: IItemAction[];
         if (this._itemActionsProperty) {
             all = contents.get(this._itemActionsProperty);
             if (all === undefined) {
                 Logger.error(`ItemActions: Property ${this._itemActionsProperty} has incorrect value for record ` +
-                    `with key ${item.getContents().getKey()}. Array was expected.`, this);
+                    `with key ${contents.getKey()}. Array was expected.`, this);
                 all = [];
             }
         } else {
             all = this._commonItemActions;
         }
-
-        const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
-        if (visibleActions.length > 1) {
-            showed = this._filterToolbarActions(visibleActions);
-            if (this._hasMenuActions(visibleActions) || this._hasMenuHeaderOrFooter()) {
-                showed.push(this._getMenuItemAction());
-            }
-            if (this._feature1183020440) {
-                showed.reverse();
-            }
-        } else {
-            showed = visibleActions;
-            if (!this._task1183329228) {
-                if (this._hasMenuHeaderOrFooter()) {
-                    showed.push(this._getMenuItemAction());
-                }
-            }
-        }
+        const showed = this._filterActionsToShowOnHover(all, contents, item.isEditing());
         return { all, showed };
     }
 
-    private _filterVisibleActions(itemActions: IItemAction[], contents: Model, isEditing: boolean): IItemAction[] {
-        return itemActions.filter((action) =>
-            this._itemActionVisibilityCallback(action, contents, isEditing)
-        );
+    /**
+     * Отфильтровывает те операции над записью, которые надо показать по ховеру
+     * @private
+     */
+    private _filterActionsToShowOnHover(itemActions: IItemAction[],
+                                        contents: Model,
+                                        isEditing: boolean): IItemAction[] {
+        let actionsToShowOnHover: IItemAction[] = [];
+        const actionsToShowInMenu: IItemAction[] = [];
+        for (let i = 0; i < itemActions.length; i++) {
+            // В любом случае не учитываем те операции над записью, в которых есть parent.
+            // Для них видимость определяется при открытии соответствующего их parent меню.
+            if (itemActions[i].parent) {
+                continue;
+            }
+            const isMenuAction = !itemActions[i].showType || itemActions[i].showType === TItemActionShowType.MENU;
+            // На этом этапе нам важно понимать только, что надо показывать кнопку меню с тремя точками,
+            // Поэтому двух операций из меню тут будет достаточно, а остальные из тех, что показываются только в меню,
+            // пропускаем. Их видимость определяется при открытии меню.
+            if (isMenuAction && actionsToShowInMenu.length > 1) {
+                continue;
+            }
+            const isVisible = this._itemActionVisibilityCallback(itemActions[i], contents, isEditing);
+            if (!isVisible) {
+                continue;
+            }
+            // Если операция должна быть видима по колбеку и показывается в меню
+            // или в меню и по ховеру, записываем её в массив записей меню.
+            if (isMenuAction || itemActions[i].showType === TItemActionShowType.MENU_TOOLBAR) {
+                actionsToShowInMenu.push(itemActions[i]);
+            }
+            // Любые другие операции записываем в список для отображения по ховеру
+            if (!isMenuAction || itemActions[i].showType === TItemActionShowType.MENU_TOOLBAR) {
+                actionsToShowOnHover.push(itemActions[i]);
+            }
+        }
+
+        if (actionsToShowOnHover.length > 0) {
+            // Если есть хоть одна видимая операция для показа в меню или в конфигурации
+            // меню указано, что надо показать подвал или шапку меню, то показываем кнопку с тремя точками.
+            if (actionsToShowInMenu.length > 0 || this._hasMenuHeaderOrFooter()) {
+                actionsToShowOnHover.push(this._getMenuItemAction());
+            }
+            if (this._feature1183020440) {
+                actionsToShowOnHover.reverse();
+            }
+        } else if (actionsToShowInMenu.length > 1) {
+            // Если записей в меню больше одной то точно показываем кнопку с тремя точками
+            actionsToShowOnHover.push(this._getMenuItemAction());
+        } else {
+            // Тут кейс, когда actionsToShowOnHover пуст, а в actionsToShowInMenu.length <= 1
+            actionsToShowOnHover = actionsToShowInMenu;
+            // По умолчанию, если actionsToShowInMenu.length <= 1, нужно показывать
+            // все кнопки на тулбаре, и не добавлять кнопку с тремя точками.
+            // Но, если в конфигурации contextMenuConfig указано, что надо показать подвал или шапку меню,
+            // нужно показывать кнопку даже тогда, когда вообще ни одной операции не было показано.
+            // Некоторым это, наоборот, не нужно. Под опцией task1183329228 принудительный показ кнопки отключен.
+            if (!this._task1183329228) {
+                if (this._hasMenuHeaderOrFooter()) {
+                    actionsToShowOnHover.push(this._getMenuItemAction());
+                }
+            }
+        }
+        return actionsToShowOnHover;
     }
 
     /**
-     * Отфильтровывает ItemActions по признаку нет родителя и по showType.
-     * @param itemActions
+     * Отфильтровывает видимые операции над записью
+     * @param itemActions Список операций, которые надо отфильтровать
+     * @param contents текущий Record для передачи в callback
+     * @param isEditing является ли запись редактируемой
      * @private
      */
-    private _filterToolbarActions(itemActions: IItemAction[]): IItemAction[] {
+    private _filterVisibleActions(itemActions: IItemAction[], contents: Model, isEditing: boolean): IItemAction[] {
         return itemActions.filter((action) =>
-            !action.parent &&
-            (
-                action.showType === TItemActionShowType.TOOLBAR ||
-                action.showType === TItemActionShowType.MENU_TOOLBAR ||
-                action.showType === TItemActionShowType.FIXED
-            )
+            this._itemActionVisibilityCallback(action, contents, isEditing)
         );
     }
 
@@ -880,11 +921,12 @@ export class Controller {
     private _fixActionsDisplayOptions(actionsObject: IItemActionsObject): IItemActionsObject {
         if (actionsObject.all && actionsObject.all.length) {
             actionsObject.all = actionsObject.all.map((action) => {
-                action.style = Utils.getStyle(action.style, 'itemActions/Controller');
+                action.style = Utils.getStyle(action.style, 'itemActions/Controller') as TButtonStyle;
 
                 // Это нужно чтобы не поддерживать старые стили типа icon-error и ховер по таким кнопкам.
-                action.iconStyle = Utils.getStyleFromIcon(action.iconStyle, action.icon, 'itemActions/Controller');
-                action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
+                action.iconStyle = Utils.getStyleFromIcon(action.iconStyle, action.icon,
+                    'itemActions/Controller') as TIconStyle;
+                action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller') as TIconStyle;
 
                 action.tooltip = Controller._getTooltip(action);
                 return action;

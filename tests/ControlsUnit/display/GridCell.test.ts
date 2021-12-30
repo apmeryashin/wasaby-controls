@@ -42,6 +42,7 @@ describe('Controls/display:Cell', () => {
     describe('isMultiSelectColumn', () => {
         const grid = new GridCollection({
             collection: [{id: 1}],
+            columns: [{}],
             keyProperty: 'id',
             multiSelectVisibility: 'visible',
             multiSelectPosition: 'default'

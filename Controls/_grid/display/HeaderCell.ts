@@ -239,7 +239,16 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
-            if (this._$owner.getColumnScrollViewMode() === 'arrows') {
+
+            // Отступ под кнопки прокрутки горизонтального скролла.
+            // Добавляется только к ячейкам последней строки.
+            if (
+                this._$owner.getColumnScrollViewMode() === 'arrows' && (
+                    !isMultilineHeader || (
+                        isMultilineHeader && this._$column.endRow === this._$owner.getBounds().row.end
+                    )
+                )
+            ) {
                 wrapperClasses += ' controls-Grid__header-cell_withColumnScrollArrows';
             }
         }
@@ -364,6 +373,14 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
         }
 
         return result;
+    }
+
+    getVerticalStickyHeaderPosition(): string {
+        return 'top';
+    }
+
+    getStickyHeaderMode(): string {
+        return 'stackable';
     }
 }
 

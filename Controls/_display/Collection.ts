@@ -42,6 +42,7 @@ import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
 import {CrudEntityKey} from 'Types/source';
 import {IDirection} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import {getFlatNearbyItem} from 'Controls/_display/utils/NearbyItemUtils';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -114,7 +115,7 @@ export type StrategyConstructor<
    F extends IItemsStrategy<S, T>,
    S extends EntityModel = EntityModel,
    T extends CollectionItem<S> = CollectionItem<S>
-   > = new() => F;
+   > = new(options?: unknown) => F;
 
 export interface ISessionItems<T> extends Array<T> {
     properties?: object;
@@ -937,19 +938,17 @@ export default class Collection<
              this._$keyProperty = (options as any).idProperty;
         }
 
-        // todo Сейчас группировка не поддержана для Columns/View. Будем делать поддержку по результатам поручения:
-        // https://online.sbis.ru/opendoc.html?guid=37b14566-12c3-44ed-ac0b-0cd7e0ae5c9d
-        if (!this._disableSupportsGrouping) {
-            if (options.groupProperty) {
-                this._$groupProperty = options.groupProperty;
-                this._$group = this._createGroupFunctor();
-            }
-
-            // Support of 'groupingKeyCallback' option
-            if (!this._$group && (options as any).groupingKeyCallback) {
-                this._$group = (options as any).groupingKeyCallback;
-            }
+        //region grouping
+        if (options.groupProperty) {
+            this._$groupProperty = options.groupProperty;
+            this._$group = this._createGroupFunctor();
         }
+
+        // Support of 'groupingKeyCallback' option
+        if (!this._$group && (options as any).groupingKeyCallback) {
+            this._$group = (options as any).groupingKeyCallback;
+        }
+        //endregion
 
         if (options.itemTemplateProperty) {
             this._$itemTemplateProperty = options.itemTemplateProperty;
@@ -3546,19 +3545,22 @@ export default class Collection<
     protected _createComposer(): ItemsStrategyComposer<S, T> {
         const composer = new ItemsStrategyComposer<S, T>();
 
-        composer.append(DirectItemsStrategy, {
-            display: this,
-            localize: this._localize,
-            keyProperty: this._$keyProperty,
-            unique: this._$unique
-        }).append(UserItemsStrategy, {
-            handlers: this._$sort
-        }).append(GroupItemsStrategy, {
-            handler: this._$group,
-            collapsedGroups: this._$collapsedGroups,
-            hiddenGroupPosition: this._$hiddenGroupPosition,
-            groupConstructor: this._getGroupItemConstructor()
-        });
+        composer
+            .append(DirectItemsStrategy, {
+                display: this,
+                localize: this._localize,
+                keyProperty: this._$keyProperty,
+                unique: this._$unique
+            })
+            .append(UserItemsStrategy, {
+                handlers: this._$sort
+            })
+            .append(GroupItemsStrategy, {
+                handler: this._$group,
+                collapsedGroups: this._$collapsedGroups,
+                hiddenGroupPosition: this._$hiddenGroupPosition,
+                groupConstructor: this._getGroupItemConstructor()
+            });
 
         this._userStrategies.forEach((us) => composer.append(us.strategy, us.options));
 
@@ -3628,21 +3630,7 @@ export default class Collection<
         isNext: boolean,
         conditionProperty?: string
     ): T {
-        const method = isNext ? 'moveNext' : 'movePrevious';
-        let nearbyItem;
-
-        enumerator.setCurrent(item);
-        while (enumerator[method]()) {
-            nearbyItem = enumerator.getCurrent();
-            if (conditionProperty && !nearbyItem[conditionProperty]) {
-                nearbyItem = undefined;
-                continue;
-            }
-            break;
-        }
-        enumerator.reset();
-
-        return nearbyItem;
+        return getFlatNearbyItem(enumerator, item, isNext, conditionProperty);
     }
 
     /**

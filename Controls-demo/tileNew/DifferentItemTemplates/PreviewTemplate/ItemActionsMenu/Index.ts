@@ -3,6 +3,7 @@ import * as Template from 'wml!Controls-demo/tileNew/DifferentItemTemplates/Prev
 import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from 'Controls-demo/tileNew/DataHelpers/DataCatalog';
 import {TItemActionShowType} from 'Controls/itemActions';
+import {Model} from 'Types/entity';
 
 const DATA = Gadgets.getPreviewItems();
 
@@ -99,6 +100,10 @@ export default class extends Control {
             parentProperty: 'parent',
             data: DATA
         });
+    }
+
+    protected _imageUrlResolver(width: number, height: number, url: string = '', item: Model): string {
+        return item.get('image');
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/tileNew/TileScalingMode/style'];

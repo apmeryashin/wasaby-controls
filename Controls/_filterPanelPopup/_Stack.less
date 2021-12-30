@@ -9,5 +9,32 @@
 }
 
 .controls-FilterViewPanel__popup-content {
-   width: var(--width_filterViewPanel);
+   width: 280px;
+}
+
+.controls-FilterViewPanel__filter-icon {
+   .icon-size(var(--reset-button_icon-size));
+   color: var(--secondary_text-color);
+}
+
+.controls-FilterViewPanel__filter-caption {
+   padding: 0 var(--offset_xs);
+}
+
+.controls-FilterViewPanel__header {
+   position: relative;
+   display: flex;
+   flex-direction: row;
+   align-items: baseline;
+   padding-left: var(--offset_m);
+   width: 100%;
+   height: var(--inline_height_default);
+   line-height: var(--inline_height_default);
+}
+
+.controls-FilterViewPanel_header__applyButton {
+   position: absolute;
+   right: 0;
+   line-height: var(--apply-button_inline-height_menuPopup);
+   top: calc((var(--heading_height_filterViewPanel) - var(--apply-button_inline-height_menuPopup)) / 2);
 }

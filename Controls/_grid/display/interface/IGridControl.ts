@@ -320,8 +320,10 @@ export interface IGridControl extends IList {
 /**
  * @typedef {String} Controls/_grid/display/interface/IGridControl/TColumnScrollViewMode
  * @description Допустимые значения для опции {@link columnScrollViewMode}.
- * @variant scrollbar Прокрутка с помощью скроллбара.
- * @variant arrows Прокрутка с помощью стрелок навигации.
+ * @variant scrollbar Отображается ползунок горизонтальной прокрутки.
+ * @variant arrows Отображаются стрелки навигации для горизонтальной прокрутки.
+ * @variant unaccented Элементы управления прокруткой скрыты, прокручиваемая область не выделяется тенью справа и слева.
+ * @see dragScrolling
  */
 
 /**
@@ -594,7 +596,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/display/interface/IGridControl#emptyTemplateColumns
- * @cfg {Array.<Controls/_grid/display/interface/IGridControl/IEmptyTemplateColumn.typedef>} Конфигурация колонок {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty-grid/#empty-template-columns пустой таблицы}.
+ * @cfg {Array.<Controls/_grid/display/interface/IGridControl/IEmptyTemplateColumn.typedef>} Конфигурация колонок {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty/#empty-template-columns пустой таблицы}.
  * @demo Controls-demo/gridNew/EmptyGrid/Editing/Index
  */
 

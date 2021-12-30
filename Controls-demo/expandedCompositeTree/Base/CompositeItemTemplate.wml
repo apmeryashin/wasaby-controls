@@ -1,0 +1,27 @@
+<ws:if data="{{ item.isNode() }}">
+    <ws:partial template="Controls/tile:RichTemplate"
+                scope="{{ _options }}"
+                titlePosition="onImage"
+                imageViewMode="rectangle"/>
+</ws:if>
+<ws:else>
+    <ws:partial template="Controls/tile:RichTemplate"
+                scope="{{ _options }}"
+                shadowVisibility="onhover"
+                imagePosition="left"
+                imageViewMode="rectangle"
+                imageSize="5xl"
+                titleLines="2"
+                contentPadding="s"
+                description="{{ item.contents.renderData.weight }}">
+        <ws:footerTemplate>
+            <div class="ControlsDemo-expandedCompositeTree__tileTemplate-footer">
+                <Controls.decorator:Money
+                        value="{{ item.contents.renderData.price }}"
+                        fontSize="3xl"
+                        fontWeight="bold"
+                        fontColorStyle="danger"/>
+            </div>
+        </ws:footerTemplate>
+    </ws:partial>
+</ws:else>

@@ -29,6 +29,16 @@ const COLSPAN_HEADER = [
     { title: 'Площадь км2', startColumn: 5, endColumn: 7 }
 ];
 
+const COLSPAN_HEADER_MULTI = [
+    { title: '#', startColumn: 1, endColumn: 2, startRow: 1, endRow: 3 },
+    { title: 'Страна', startColumn: 2, endColumn: 3, startRow: 1, endRow: 3 },
+    { title: 'Характеристики', startColumn: 3, endColumn: 7, startRow: 1, endRow: 2 },
+    { title: 'Столица', startColumn: 3, endColumn: 4, startRow: 2, endRow: 3 },
+    { title: 'Население', startColumn: 4, endColumn: 5, startRow: 2, endRow: 3 },
+    { title: 'Площадь км2', startColumn: 5, endColumn: 6, startRow: 2, endRow: 3 },
+    { title: 'Плотность населения чел/км2', startColumn: 6, endColumn: 7, startRow: 2, endRow: 3 }
+];
+
 class DemoSource extends Memory {
     private _qPromise: Promise<void>;
     private _qPromiseResolver: () => void;
@@ -62,6 +72,7 @@ class DemoSource extends Memory {
 export default class extends Control {
     private DEFAULT_HEADER = DEFAULT_HEADER;
     private COLSPAN_HEADER = COLSPAN_HEADER;
+    private COLSPAN_HEADER_MULTI = COLSPAN_HEADER_MULTI;
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _columns: IColumn[] = Countries.getColumnsWithWidths();
@@ -84,7 +95,7 @@ export default class extends Control {
     private _itemsDragNDrop: boolean = false;
     private _scrollToColumnIdx?: number;
     private _multiSelectVisibility: 'visible' | 'hidden' = 'hidden';
-    private _columnScrollViewMode?: 'scrollbar' | 'arrows';
+    private _columnScrollViewMode?: 'scrollbar' | 'arrows' | 'unaccented';
     private _isPendingScrollToColumn: boolean = false;
 
     protected _beforeMount(): void {
@@ -191,14 +202,31 @@ export default class extends Control {
             },
             width: this._newColumnWidth
         }];
-        this._header = [...this._header, {
-            title: '№ ' + (this._header.length + 1)
-        }];
+        if (this._currentHeaderName === 'multiColspan') {
+            this._header = [...this._header, {
+                title: '№ ' + (this._header.length + 1),
+                startRow: 1,
+                endRow: 3,
+                startColumn: this._columns.length,
+                endColumn: this._columns.length + 1
+            }];
+        } else {
+            this._header = [...this._header, {
+                title: '№ ' + (this._header.length + 1)
+            }];
+        }
         this.DEFAULT_HEADER = [...this.DEFAULT_HEADER, {
             title: '№ ' + (this.DEFAULT_HEADER.length + 1)
         }];
         this.COLSPAN_HEADER = [...this.COLSPAN_HEADER, {
             title: '№ ' + (this.COLSPAN_HEADER.length + 1)
+        }];
+        this.COLSPAN_HEADER_MULTI = [...this.COLSPAN_HEADER_MULTI, {
+            title: '№ ' + (this.COLSPAN_HEADER_MULTI.length + 1),
+            startRow: 1,
+            endRow: 3,
+            startColumn: this._columns.length,
+            endColumn: this._columns.length + 1
         }];
     }
 
@@ -233,6 +261,10 @@ export default class extends Control {
                 case 'colspan':
                     this._header = this.COLSPAN_HEADER;
                     break;
+                case 'multiColspan': {
+                    this._header = this.COLSPAN_HEADER_MULTI;
+                    break;
+                }
             }
         }
     }

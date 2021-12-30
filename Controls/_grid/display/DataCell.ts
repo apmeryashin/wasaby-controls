@@ -273,7 +273,7 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
     // region Аспект "Кнопка редактирования"
 
     shouldDisplayEditArrow(contentTemplate?: TemplateFunction): boolean {
-        if (!!contentTemplate || this.getColumnIndex() > 0) {
+        if (!!contentTemplate || this.getColumnIndex() > (this._$owner.hasMultiSelectColumn() ? 1 : 0)) {
             return false;
         }
         return this._$owner.editArrowIsVisible(this._$owner.getContents());

@@ -4,14 +4,19 @@ import {assert} from 'chai';
 
 describe('Controls/grid_clean/GridViewTable', () => {
 
+    let columns = [];
+
     const listModel = {
-        isDragging: () => false
+        isDragging: () => false,
+        getColumnsEnumerator: () => ({ getColumns: () => columns }),
+        getGridColumnsConfig: () => columns
     };
 
     let gridView: typeof GridViewTable;
     let options;
 
     beforeEach(() => {
+        columns = [];
         options = {};
     });
 
@@ -26,7 +31,7 @@ describe('Controls/grid_clean/GridViewTable', () => {
 
     it('_getGridTemplateColumnsWidth', () => {
         gridView = new GridViewTable(options);
-        listModel.getGridColumnsConfig = () => ([{width: '20px'}, {width: 'auto'}]);
+        columns = [{width: '20px'}, {width: 'auto'}];
         gridView._listModel = listModel;
         options = {
             ...options,

@@ -31,6 +31,22 @@
 
 <ws:template name="detailTemplate">
     <div class="controls-newBrowser__detail" style="background-color: {{_detailBgColor}};">
+        <ws:if data="{{ _isExpandedCompositeTreeMode(_listConfiguration, _appliedViewMode) }}">
+            <Controls.scroll:StickyBlock mode="stackable" backgroundStyle="master">
+                <Controls._newBrowser.context.Consumer>
+                    <Controls._newBrowser.navigation.Navigation
+                            root="{{ _detailExplorerOptions.root }}"
+                            items="{{ _options.items }}"
+                            padding="{{ _detailExplorerOptions.itemPadding }}"
+                            containerPadding="{{ _detailExplorerOptions.itemsContainerPadding }}"
+                            keyProperty="{{ _detailExplorerOptions.keyProperty }}"
+                            parentProperty="{{ _detailExplorerOptions.parentProperty }}"
+                            nodeProperty="{{ _detailExplorerOptions.nodeProperty }}"
+                            displayProperty="{{ _detailExplorerOptions.compositeViewConfig.displayProperty }}"/>
+                </Controls._newBrowser.context.Consumer>
+            </Controls.scroll:StickyBlock>
+        </ws:if>
+
         <ws:if data="{{_options.detailHeaderTemplate}}">
             <ws:partial template="{{_options.detailHeaderTemplate}}"/>
         </ws:if>
@@ -50,6 +66,21 @@
                     scope="{{_detailExplorerOptions}}"
             />
         </ws:if>
+        <ws:else data="{{ _isExpandedCompositeTreeMode(_listConfiguration, _appliedViewMode) }}">
+            <Controls._newBrowser.context.Consumer>
+                <Controls.list:Container id="detail">
+                    <Controls.list:HotKeysContainer>
+                        <Controls.expandedCompositeTree:View
+                                name="detailList"
+                                scope="{{_detailExplorerOptions}}"
+                                itemTemplate="{{ _detailExplorerOptions.compositeItemTemplate }}"
+                                on:activeElementChanged="_detailActiveElementChanged()"
+                                on:itemClick="_onExplorerItemClick(false)"
+                                attr:class="controls-newBrowser__detail-list"/>
+                    </Controls.list:HotKeysContainer>
+                </Controls.list:Container>
+            </Controls._newBrowser.context.Consumer>
+        </ws:else>
         <ws:else>
             <!-- beforeBeginEdit юзают для отмены редактирования узлов, нужна доработка списков
                  beforeEndEdit юзают для кастомной логики сохранения записи, т.к не хотят менять БЛ -->
@@ -152,15 +183,18 @@
     </ws:master>
 
     <ws:detail>
-        <ws:if data="{{_options.wrapDetailInScroll}}">
-            <Controls.scroll:HotKeysContainer>
-                <Controls.scroll:Container attr:class="controls-newBrowser__scroll">
-                    <ws:partial template="detailTemplate"/>
-                </Controls.scroll:Container>
-            </Controls.scroll:HotKeysContainer>
-        </ws:if>
-        <ws:else>
-            <ws:partial template="detailTemplate"/>
-        </ws:else>
+        <Controls._newBrowser.context.Provider activeElement="{{ _activeElement }}"
+                                               changeActiveElement="{{ _changeActiveElement }}">
+            <ws:if data="{{_options.wrapDetailInScroll}}">
+                <Controls.scroll:HotKeysContainer>
+                    <Controls.scroll:Container attr:class="controls-newBrowser__scroll">
+                        <ws:partial template="detailTemplate"/>
+                    </Controls.scroll:Container>
+                </Controls.scroll:HotKeysContainer>
+            </ws:if>
+            <ws:else>
+                <ws:partial template="detailTemplate"/>
+            </ws:else>
+        </Controls._newBrowser.context.Provider>
     </ws:detail>
 </Controls.masterDetail:Base>

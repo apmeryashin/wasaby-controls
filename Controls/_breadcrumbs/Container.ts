@@ -125,7 +125,7 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
         return itemFromRoot;
     }
 
-    private _subscribeItemsChanged(sourceController): void {
+    private _subscribeItemsChanged(sourceController: SourceController): void {
         this._sourceController = sourceController;
         this._sourceController.subscribe('itemsChanged', this._updateBreadCrumbsItems);
         this._sourceController.subscribe('breadcrumbsDataChanged', this._updateBreadCrumbsItems);
@@ -146,9 +146,9 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
         }
     }
 
-    private _updateSourceControllerSubscribe(options, dataOptions): boolean {
+    private _updateSourceControllerSubscribe(options: IContainerOptions, dataOptions?: IDataOptionsValue): boolean {
         const sourceController = options.sourceController || dataOptions?.sourceController;
-        if (this._sourceController !== sourceController) {
+        if (this._sourceController !== sourceController && sourceController) {
             this._subscribeItemsChanged(sourceController);
             return true;
         }

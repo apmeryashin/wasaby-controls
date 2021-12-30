@@ -61,6 +61,7 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
     private _selectedKeysCountByList: ISelectedKeysCountByList = {};
     private _operationsMenuVisible: boolean = false;
     protected _options: IOperationsControllerOptions;
+    protected _listActions: IAction[];
 
     constructor(options: Partial<IOperationsControllerOptions>) {
         super();
@@ -100,11 +101,15 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
         return this._setListMarkedKey(key);
     }
 
-    setOperationsMenuVisible(state: boolean): void {
-        if (state !== this._operationsMenuVisible) {
-            this._operationsMenuVisible = state;
-            this._notify('operationsMenuVisibleChanged', state);
-        }
+    getSelection(): ISelectionObject {
+        return {
+            selected: this._$selectedKeys,
+            excluded: this._$excludedKeys
+        };
+    }
+
+    handleActionClick(clickEvent: SyntheticEvent, item: Model): void {
+        this._notify('actionClick', item, clickEvent);
     }
 
     setOperationsPanelVisible(visible: boolean): TKey {
@@ -176,15 +181,16 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
     }
 
     setListActions(actions: IAction[]): void {
+        this._listActions = actions;
         this._notify('listActionsChanged', actions);
-    }
-
-    setActions(actions: IAction[]): void {
-        this._notify('actionsChanged', actions);
     }
 
     setSelectedKeysCount(count: number): void {
         this._selectedKeysCount = count;
+    }
+
+    getListActions(): IAction[] {
+        return this._listActions;
     }
 
     getSelectedKeysCount(): number {

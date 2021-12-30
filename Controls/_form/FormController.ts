@@ -98,7 +98,6 @@ class FormController extends ControllerBase<IFormController> {
     protected _errorContainer: typeof Control = dataSourceError.Container;
     private _isNewRecord: boolean = false;
     private _createMetaDataOnUpdate: unknown = null;
-    private _shouldSetFocusAfterUpdate: boolean = false;
     private _errorController: ErrorController;
     private _createdInMounting: IConfigInMounting;
     private _isMount: boolean;
@@ -110,13 +109,16 @@ class FormController extends ControllerBase<IFormController> {
     private _crudController: CrudController = null;
     private _dialogOpener: DialogOpener;
     private _updatePromise: Promise<unknown>;
+    private _repeatFunction: () => Promise<unknown> = () => Promise.resolve();
 
     protected _beforeMount(
         options?: IFormController,
         context?: object,
         receivedState: IReceivedState = {}
     ): Promise<ICrudResult> | void {
-        this._errorController = options.errorController || new ErrorController({});
+        this._errorController = options.errorController || new ErrorController();
+        this._updateErrorRepeatConfig();
+
         this._crudController = new CrudController(options.source, this._notifyHandler.bind(this),
             this.registerPendingNotifier.bind(this), this._notify.bind(this));
         const receivedError = receivedState.errorConfig;
@@ -232,17 +234,6 @@ class FormController extends ControllerBase<IFormController> {
         }
     }
 
-    private _isEqualId(oldRecord: Model, newRecord: Model): boolean {
-        // Пока не внедрили шаблон документа, нужно вручную на beforeUpdate понимать, что пытаются установить тот же
-        // рекорд (расширенный). Иначе при смене рекорда будем показывать вопрос о сохранении.
-        if (!this._checkRecordType(oldRecord) || !this._checkRecordType(newRecord)) {
-            return false;
-        }
-        const oldId: string = this._getRecordId(oldRecord) as string;
-        const newId: string = this._getRecordId(newRecord) as string;
-        return oldId === newId || parseInt(oldId, 10) === parseInt(newId, 10);
-    }
-
     private _throwInitializingWayException(initializingWay: INITIALIZING_WAY, requiredOptionName: string): void {
         throw new Error(`${this._moduleName}: Опция initializingWay установлена в значение ${initializingWay}.
         Для корректной работы требуется передать опцию ${requiredOptionName}, либо изменить значение initializingWay`);
@@ -300,11 +291,18 @@ class FormController extends ControllerBase<IFormController> {
     }
 
     private _setFunctionToRepeat(foo: Function, ...args: unknown[]): void {
-        this._errorController.setOnProcess((viewConfig) => {
+        this._repeatFunction = foo.bind(this, ...args);
+    }
+
+    private _updateErrorRepeatConfig(): void {
+        this._errorController.updateOnProcess((viewConfig) => {
+            const display = viewConfig.mode !== ErrorViewMode.dialog;
+
             viewConfig.options.repeatConfig = {
-                display: true,
-                function: foo.bind(this, ...args)
+                display,
+                function: () => this._repeatFunction().then(() => this._hideError())
             };
+
             return viewConfig;
         });
     }
@@ -371,7 +369,7 @@ class FormController extends ControllerBase<IFormController> {
         this._readInMounting = null;
     }
 
-    private  _createRecordBeforeMountNotify(): void {
+    private _createRecordBeforeMountNotify(): void {
         if (!this._createdInMounting.isError) {
             this._notifyHandler(CRUD_EVENTS.CREATE_SUCCESSED, [this._createdInMounting.result]);
 
@@ -528,7 +526,7 @@ class FormController extends ControllerBase<IFormController> {
                 // если были ошибки валидации, уведомим о них
                 const validationErrors = this._validateController.getValidationResult();
                 this._notify('validationFailed', [validationErrors]);
-                const error = new Error(rk('Некорректно заполнены обязательные поля'));
+                const error = this._createError(rk('Некорректно заполнены обязательные поля'));
                 updateDef.errback(error);
             }
         }, (e) => {
@@ -536,6 +534,10 @@ class FormController extends ControllerBase<IFormController> {
             return e;
         });
         return updateDef;
+    }
+
+    private _createError(message: string): Error {
+        return new Error(message);
     }
 
     delete(destroyMetaData: unknown, config?: ICrudConfig): Promise<Model | undefined> {

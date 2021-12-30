@@ -11,7 +11,6 @@ import {selectionToRecord} from 'Controls/operations';
 import {TKeysSelection, TFilter} from 'Controls/interface';
 
 import * as clone from 'Core/core-clone';
-import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {CrudWrapper} from 'Controls/dataSource';
 import {object, mixin} from 'Types/util';
 import {isEqual} from 'Types/object';
@@ -19,6 +18,10 @@ import {Model, ObservableMixin, SerializableMixin, OptionsToPropertyMixin} from 
 import {RecordSet} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
 import {ICrud, PrefetchProxy, Rpc} from 'Types/source';
+import getFilterByFilterDescription from 'Controls/_filter/filterCalculator';
+import isFilterItemChanged from 'Controls/_filter/Utils/isFilterItemChanged';
+
+import {updateUrlByFilter, getFilterFromUrl} from 'Controls/_filter/Utils/Url';
 
 export interface IFilterHistoryData {
     items: IFilterItem[];
@@ -101,16 +104,23 @@ export default class FilterControllerClass extends mixin<
     }
 
     setFilterItems(historyItems: THistoryData): void {
+        const filterFromUrl = getFilterFromUrl();
         // TODO: storefix207100
         if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
             this._setFilterItems(
                 state.filterSource,
                 (!state.filterSource && this._options.fastFilterSource) || [],
-                historyItems
+                historyItems,
+                filterFromUrl
             );
         } else {
-            this._setFilterItems(this._options.filterButtonSource, this._options.fastFilterSource, historyItems);
+            this._setFilterItems(
+                this._options.filterButtonSource,
+                this._options.fastFilterSource,
+                historyItems,
+                filterFromUrl
+            );
         }
         this._applyItemsToFilter(Prefetch.applyPrefetchFromHistory(this._$filter, historyItems),
             this._$filterButtonItems, this._$fastFilterItems);
@@ -209,6 +219,8 @@ export default class FilterControllerClass extends mixin<
         ) {
             this._notify('filterSourceChanged', this._$filterButtonItems);
         }
+
+        this._addToUrl(this._$filterButtonItems);
 
         if (this._options.historyId) {
             if (this._options.prefetchParams) {
@@ -317,7 +329,8 @@ export default class FilterControllerClass extends mixin<
             options.historyItems,
             options.prefetchParams
         ).then((history) => {
-            this._setFilterItems(options.filterButtonSource, options.fastFilterSource, history);
+            const filterFromUrl = getFilterFromUrl();
+            this._setFilterItems(options.filterButtonSource, options.fastFilterSource, history, filterFromUrl);
             this._applyItemsToFilter(
                 Prefetch.applyPrefetchFromHistory(filter, history),
                 this._$filterButtonItems,
@@ -501,6 +514,20 @@ export default class FilterControllerClass extends mixin<
         }
     }
 
+    private _addToUrl(filterButtonItems: IFilterItem[]): void {
+        if (!filterButtonItems) {
+            return;
+        }
+
+        const items: IFilterItem[] = filterButtonItems.filter((item) => {
+            return item.saveToUrl || (this._options.saveToUrl && !item.hasOwnProperty('saveToUrl'));
+        });
+
+        if (items.length) {
+            updateUrlByFilter(items);
+        }
+    }
+
     private _getHistoryData(filterButtonItems: IFilterItem[],
                             fastFilterItems: IFilterItem[],
                             prefetchParams?: IPrefetchHistoryParams): THistoryData {
@@ -578,34 +605,31 @@ export default class FilterControllerClass extends mixin<
     // мержит историю в итемы кнопки и итемы быстрых фильтров.
     private _setFilterItems(filterButtonOption: IFilterItem[],
                             fastFilterOption: IFilterItem[],
-                            history?: THistoryData): void {
+                            history?: THistoryData,
+                            filterFromUrl?: IFilterItem[]): void {
         let historyItems;
 
         if (history) {
             historyItems = history.items || (Array.isArray(history) ? history : []);
         }
 
-        this._$filterButtonItems = FilterControllerClass._getItemsByOption(filterButtonOption, historyItems);
+        this._$filterButtonItems = FilterControllerClass._getItemsByOption(
+            filterButtonOption,
+            historyItems,
+            filterFromUrl
+        );
         this._$fastFilterItems = FilterControllerClass._getItemsByOption(fastFilterOption, historyItems);
         this._setIsFastProperty(this._$filterButtonItems, this._$fastFilterItems);
     }
 
     private _isFilterItemsChanged(filterButtonItems: IFilterItem[], fastFilterItems: IFilterItem[]): boolean {
-        const filter = {};
-
-        function processItems(elem) {
-            // The filter can be changed by another control, in which case
-            // the value is set to the filter button, but textValue is not set.
-            if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) &&
-                getPropValue(elem, 'textValue') !== undefined && getPropValue(elem, 'textValue') !== null) {
-                const idx = getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name');
-                filter[idx] = getPropValue(elem, 'value');
+        let isChanged = false;
+        (filterButtonItems || fastFilterItems).forEach((filterItem) => {
+            if (!isChanged) {
+                isChanged = isFilterItemChanged(filterItem);
             }
-        }
-
-        this._itemsIterator(filterButtonItems, fastFilterItems, processItems);
-
-        return !isEmpty(filter);
+        });
+        return isChanged;
     }
 
     // Для итемов быстрого фильтра в кнопке пишет поле isFast = true.
@@ -638,81 +662,7 @@ export default class FilterControllerClass extends mixin<
     private _applyItemsToFilter(filter: object,
                                 filterButtonItems: IFilterItem[],
                                 fastFilterItems?: IFilterItem[]): void {
-        const filterClone = this._calculateFilterByItems(filter, filterButtonItems, fastFilterItems);
-        this._setFilter(filterClone);
-    }
-
-    private _calculateFilterByItems(filter: object,
-                                    filterButtonItems: IFilterItem[],
-                                    fastFilterItems: IFilterItem[]): object {
-        const filterClone = {...filter} || {};
-        const itemsFilter = this._getFilterByItems(filterButtonItems, fastFilterItems);
-        const emptyFilterKeys = this._getEmptyFilterKeys(filterButtonItems, fastFilterItems);
-
-        emptyFilterKeys.forEach((key) => {
-            delete filterClone[key];
-        });
-
-        Object.assign(filterClone, itemsFilter);
-
-        return filterClone;
-    }
-
-    private _getFilterByItems(filterButtonItems: IFilterItem[],
-                              fastFilterItems: IFilterItem[]): object {
-        const filter = {};
-
-        const processItems = (elem) => {
-            const prop = getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name');
-            filter[prop] = getPropValue(elem, 'value');
-        };
-
-        this._itemsIterator(filterButtonItems, fastFilterItems, processItems);
-
-        return filter;
-    }
-
-    private _getEmptyFilterKeys(filterButtonItems: IFilterItem[],
-                                fastFilterItems: IFilterItem[]): string[] {
-        const removedKeys = [];
-
-        const processItems = (elem) => {
-            removedKeys.push(getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name'));
-        };
-
-        this._itemsIterator(filterButtonItems, fastFilterItems, null, processItems);
-
-        return removedKeys;
-    }
-
-    private _itemsIterator(filterButtonItems: IFilterItem[],
-                           fastFilterItems: IFilterItem[],
-                           differentCallback: Function | null,
-                           equalCallback?: Function): void {
-        const processItems = (items) => {
-            items.forEach((elem) => {
-                const value = getPropValue(elem, 'value');
-                const visibility = getPropValue(elem, 'visibility');
-                const viewMode = getPropValue(elem, 'viewMode');
-
-                if (value !== undefined &&
-                    ((visibility === undefined || visibility === true) || viewMode === 'frequent')) {
-                    if (differentCallback) {
-                        differentCallback(elem);
-                    }
-                } else if (equalCallback) {
-                    equalCallback(elem);
-                }
-            });
-        };
-
-        if (filterButtonItems) {
-            processItems(filterButtonItems);
-        }
-
-        if (fastFilterItems) {
-            processItems(fastFilterItems);
-        }
+        this._setFilter(getFilterByFilterDescription(filter, filterButtonItems || fastFilterItems));
     }
 
     private _prepareSearchFilter(filter: object,
@@ -805,12 +755,15 @@ export default class FilterControllerClass extends mixin<
 
     // Возвращает итемы смерженнные с историей.
     private static _getItemsByOption(option: IFilterItem[] | Function,
-                                     history?: IFilterItem[]): IFilterItem[] {
+                                     history?: IFilterItem[],
+                                     filterFromUrl?: IFilterItem[]): IFilterItem[] {
         let result;
 
         if (option) {
             if (typeof option === 'function') {
                 result = option(history);
+            } else if (filterFromUrl) {
+                result = mergeSource(FilterControllerClass._cloneItems(option), filterFromUrl);
             } else if (history) {
                 result = mergeSource(FilterControllerClass._cloneItems(option), history);
             } else {
@@ -863,12 +816,13 @@ export default class FilterControllerClass extends mixin<
 function getCalculatedFilter(config) {
     const def = new Deferred();
     this._resolveHistoryItems(config.historyId, config.historyItems, config.prefetchParams).then((items) => {
-        this._setFilterItems(clone(config.filterButtonSource), clone(config.fastFilterSource), items);
+        const filterFromUrl = getFilterFromUrl();
+        this._setFilterItems(clone(config.filterButtonSource), clone(config.fastFilterSource), items, filterFromUrl);
         let calculatedFilter;
         try {
-            calculatedFilter = this._calculateFilterByItems(
-                config.filter, this._$filterButtonItems, this._$fastFilterItems
-            );
+            calculatedFilter = getFilterByFilterDescription(
+                config.filter,
+                this._$filterButtonItems || this._$fastFilterItems);
 
             if (config.prefetchParams && config.historyId) {
                 const history = this._findItemInHistory(config.historyId, this._$filterButtonItems);
