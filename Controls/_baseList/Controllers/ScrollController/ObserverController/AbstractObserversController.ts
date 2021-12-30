@@ -1,6 +1,6 @@
 import type { EdgeIntersectionObserver } from 'Controls/scroll';
 import { Control } from 'UI/Base';
-import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import type {IDirection, IHasItemsOutRange} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { Logger } from 'UI/Utils';
 import {isEqual} from 'Types/object';
 
@@ -35,7 +35,7 @@ export interface IAdditionalTriggersOffsets {
     forward: number;
 }
 
-export type TObserversCallback = (event: TIntersectionEvent) => void;
+export type TObserversCallback = (direction: IDirection) => void;
 
 export interface IAbstractObserversControllerBaseOptions {
     listControl: Control;
@@ -64,8 +64,9 @@ export abstract class AbstractObserversController {
     private _triggersQuerySelector: string;
     private _viewportSize: number;
 
-    private _scrollPosition: number;
-    private _contentSize: number;
+    private _scrollPosition: number = 0;
+    private _contentSize: number = 0;
+    private _hasItemsOutRange: IHasItemsOutRange;
 
     private _triggersOffsetCoefficients: ITriggersOffsetCoefficients;
 
@@ -154,6 +155,10 @@ export abstract class AbstractObserversController {
         }
     }
 
+    setHasItemsOutRange(hasItemsOutRange: IHasItemsOutRange) {
+        this._hasItemsOutRange = hasItemsOutRange;
+    }
+
     setBackwardTriggerPosition(position: ITriggerPosition): ITriggersOffsets {
         if (this._triggersPositions.backward !== position) {
             this._triggersPositions.backward = position;
@@ -188,10 +193,10 @@ export abstract class AbstractObserversController {
     checkTriggersVisibility(): void {
         // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
         if (this._isTriggerVisible('forward')) {
-            this._observersCallback('bottomIn');
+            this._intersectionObserverHandler('bottomIn');
         }
         if (this._isTriggerVisible('backward')) {
-            this._observersCallback('topIn');
+            this._intersectionObserverHandler('topIn');
         }
     }
 
@@ -213,6 +218,9 @@ export abstract class AbstractObserversController {
 
     private _setTriggerVisible(direction: IDirection, visible: boolean): void {
         const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
+        if (!trigger) {
+            return;
+        }
 
         if (trigger.style.display !== 'none' && trigger.style.display !== '') {
             Logger.error(`${ERROR_PATH}::_setTriggerVisibility | ` +
@@ -236,10 +244,36 @@ export abstract class AbstractObserversController {
         // Прижимаем триггер к краю, чтобы после перезагрузки не было лишних подгрузок
         this.setBackwardTriggerPosition('null');
         this.setForwardTriggerPosition('null');
+        this.setAdditionalTriggersOffsets({
+            forward: 0,
+            backward: 0
+        });
         return this.getTriggersOffsets();
     }
 
     // endregion OnCollectionChange
+
+    private _intersectionObserverHandler(eventName: TIntersectionEvent): void {
+        if (eventName === 'bottomOut' || eventName === 'topOut') {
+            return;
+        }
+
+        let direction: IDirection;
+        if (eventName === 'bottomIn') {
+            direction = 'forward';
+        }
+        if (eventName === 'topIn') {
+            direction = 'backward';
+        }
+
+        // Если у нас и так виден триггер вниз, то вверх не нужно вызывать обсервер.
+        // Это нужно, чтобы в первую очередь отображались записи вниз.
+        const shouldHandleTrigger = direction === 'forward' ||
+            direction === 'backward' && (!this._hasItemsOutRange.forward || !this._isTriggerVisible('forward'));
+        if (shouldHandleTrigger) {
+            this._observersCallback(direction);
+        }
+    }
 
     private _recalculateOffsets(): void {
         let newBackwardTriggerOffset = this._triggersPositions.backward === 'null'
@@ -285,7 +319,11 @@ export abstract class AbstractObserversController {
         this._applyTriggerOffset(this._triggers[0], 'backward', this._triggersOffsets.backward);
         this._applyTriggerOffset(this._triggers[1], 'forward', this._triggersOffsets.forward);
 
-        this._observer = this._createTriggersObserver(this._listControl, this._observersCallback, ...this._triggers);
+        this._observer = this._createTriggersObserver(
+            this._listControl,
+            this._intersectionObserverHandler.bind(this),
+            ...this._triggers
+        );
     }
 
     private _isTriggerVisible(direction: IDirection): boolean {
@@ -296,11 +334,11 @@ export abstract class AbstractObserversController {
         if (direction === 'backward') {
             const backwardViewportPosition = scrollPosition;
             const backwardTriggerPosition = this._triggersOffsets.backward;
-            return backwardTriggerPosition >= backwardViewportPosition;
+            return this._triggersVisibility.backward && backwardTriggerPosition >= backwardViewportPosition;
         } else {
             const forwardViewportPosition = scrollPosition + viewportSize;
             const forwardTriggerPosition = contentSize - this._triggersOffsets.forward;
-            return forwardTriggerPosition <= forwardViewportPosition;
+            return this._triggersVisibility.forward && forwardTriggerPosition <= forwardViewportPosition;
         }
     }
 

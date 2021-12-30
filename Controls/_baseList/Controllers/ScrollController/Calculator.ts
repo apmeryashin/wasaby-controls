@@ -15,12 +15,19 @@ import type {
     IActiveElementIndex,
     IDirection,
     IEdgeItem,
+    IHasItemsOutRange,
     IIndexesChangedParams,
     IItemsRange,
     IPlaceholders
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import type { IEdgeItemCalculatingParams } from 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 import { isEqual } from 'Types/object';
+
+interface ICalculatorState {
+    range: IItemsRange;
+    placeholders: IPlaceholders;
+    hasItemsOutRange: IHasItemsOutRange;
+}
 
 export interface IActiveElementIndexChanged extends IActiveElementIndex {
     activeElementIndexChanged: boolean;
@@ -94,7 +101,6 @@ export class Calculator {
         this._viewportSize = options.viewportSize || 0;
         this._contentSize = options.contentSize || 0;
         this._virtualScrollConfig = options.virtualScrollConfig;
-        this.resetItems(this._totalCount, false);
     }
 
     // region Getters/Setters
@@ -180,7 +186,11 @@ export class Calculator {
             scrollPosition = itemOffset + edgeItem.borderDistance - viewportSize;
         }
 
-        return scrollPosition;
+        const maxScrollPosition = Math.max(this._contentSize - this._viewportSize, 0);
+        return Math.min(
+            Math.max(scrollPosition, 0),
+            maxScrollPosition
+        );
     }
 
     private _getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
@@ -194,7 +204,6 @@ export class Calculator {
 
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
-            const nextItem = itemsSizes[index + 1];
             const itemOffset = item.offset - placeholders.backward;
             const itemBorderBottom = Math.round(itemOffset) + Math.round(item.size);
 
@@ -207,24 +216,28 @@ export class Calculator {
             }
 
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
-            const isLastItem = index === range.endIndex - 1 || item && !nextItem;
-            if (itemBorderBottom >= viewportBorderPosition || isLastItem) {
+            const isLastItem = index === range.endIndex - 1;
+            if (itemBorderBottom > viewportBorderPosition || isLastItem) {
                 let borderDistance;
                 let border;
                 if (direction === 'forward') {
                     // от верхней границы элемента до нижней границы viewPort
                     // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
-                    const bottomViewportBorder = scrollPosition + viewportSize;
                     border = 'backward';
-                    borderDistance = bottomViewportBorder - itemOffset;
+                    borderDistance = viewportBorderPosition - itemOffset;
                 } else {
                     // запись - выше, чем верхняя граница viewPort
-                    if (scrollPosition >= itemOffset) {
+                    if (viewportBorderPosition > itemOffset) {
+                        // TODO SCROLL зачем в виде крайнего видимого элемента брать тот, который не полностью виден?
+                        //  по идее условие этого ифа должно быть выше. И нам тогда вообще не нужно считать
+                        //  itemBorderBottom и всегда брать верхнюю границу записи.
                         border = 'forward';
-                        borderDistance = itemBorderBottom - scrollPosition;
+                        borderDistance = itemBorderBottom - viewportBorderPosition;
                     } else {
                         border = 'backward';
-                        borderDistance = scrollPosition - itemOffset;
+                        // TODO SCROLL очень странно что тут всегда отрицательное значение,
+                        //  хотя по факту оно должно быть положительным
+                        borderDistance = viewportBorderPosition - itemOffset;
                     }
                 }
                 edgeItem = {
@@ -250,9 +263,7 @@ export class Calculator {
      * @param direction Направление, в котором будет смещаться диапазон
      */
     shiftRangeToDirection(direction: IDirection): ICalculatorResult {
-        const oldRange = this._range;
-        const oldPlaceholders = this._placeholders;
-        let placeholdersChanged = false;
+        const oldState = this._getState();
 
         if (Calculator._hasItemsOutRangeToDirection(direction, this._range, this._totalCount)) {
             this._range = shiftRangeBySegment({
@@ -268,10 +279,14 @@ export class Calculator {
                 placeholders: this._placeholders
             });
 
-            placeholdersChanged = this._updatePlaceholders();
+            this._placeholders = getPlaceholdersByRange({
+                range: this._range,
+                totalCount: this._totalCount,
+                itemsSizes: this._itemsSizes
+            });
         }
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldState, direction);
     }
 
     // endregion ShiftRangeToDirection
@@ -283,13 +298,13 @@ export class Calculator {
      * @param index Индекс элемента
      */
     shiftRangeToIndex(index: number): ICalculatorResult {
-        const oldRange = this._range;
-        const oldPlaceholders = this._placeholders;
+        const oldState = this._getState();
         let direction = null;
-        let placeholdersChanged = false;
 
-        // если элемент уже внутри диапазона, то ничего не делаем.
-        if (!this._isItemInRange(index)) {
+        // Смещать диапазон нужно, если
+        // 1. Элемент находится за пределами текущего диапазона
+        // 2. Мы не можем к нему полноценно проскроллить(проскроллить так, чтобы элемент был в верху вьюпорта)
+        if (!this._isItemInRange(index) || !this._contentAfterItemMoreThanViewport(index)) {
             direction = index > this._range.endIndex ? 'forward' : 'backward';
             this._range = getRangeByIndex({
                 pageSize: this._virtualScrollConfig.pageSize,
@@ -297,10 +312,14 @@ export class Calculator {
                 totalCount: this._totalCount
             });
 
-            placeholdersChanged = this._updatePlaceholders();
+            this._placeholders = getPlaceholdersByRange({
+                range: this._range,
+                totalCount: this._totalCount,
+                itemsSizes: this._itemsSizes
+            });
         }
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldState, direction);
     }
 
     /**
@@ -312,6 +331,19 @@ export class Calculator {
         return index >= this._range.startIndex && index < this._range.endIndex;
     }
 
+    /**
+     * Проверяем, что после элемента записей достаточно, чтобы запонлить весь вьюпорт.
+     * @param itemIndex
+     * @private
+     */
+    private _contentAfterItemMoreThanViewport(itemIndex: number): boolean {
+        let itemsSizesSum = 0;
+        for (let i = itemIndex; i < this._range.endIndex; i++) {
+            itemsSizesSum += this._itemsSizes[i].size;
+        }
+        return itemsSizesSum >= this._viewportSize;
+    }
+
     // endregion ShiftRangeByIndex
 
     // region ShiftRangeByScrollPosition
@@ -321,22 +353,29 @@ export class Calculator {
      * @param scrollPosition Позиция скролла
      */
     shiftRangeToVirtualScrollPosition(scrollPosition: number): ICalculatorResult {
-        const oldRange = this._range;
-        const oldPlaceholders = this._placeholders;
-        const direction = scrollPosition > this._scrollPosition ? 'forward' : 'backward';
-        let placeholdersChanged;
+        const oldState = this._getState();
 
-        this._range = getRangeByScrollPosition({
-            itemsSizes: this._itemsSizes,
-            pageSize: this._virtualScrollConfig.pageSize,
-            scrollPosition,
-            totalCount: this._totalCount,
-            triggerOffset: this._triggersOffsets[direction]
-        });
+        if (this._scrollPosition !== scrollPosition) {
+            const direction = scrollPosition > this._scrollPosition ? 'forward' : 'backward';
+            this._range = getRangeByScrollPosition({
+                itemsSizes: this._itemsSizes,
+                pageSize: this._virtualScrollConfig.pageSize,
+                scrollPosition,
+                totalCount: this._totalCount,
+                triggerOffset: this._triggersOffsets[direction]
+            });
 
-        placeholdersChanged = this._updatePlaceholders();
+            this._placeholders = getPlaceholdersByRange({
+                range: this._range,
+                totalCount: this._totalCount,
+                itemsSizes: this._itemsSizes
+            });
+        }
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        // При скролле к виртуальной позиции нельзя сказать куда сместился диапазон, т.к. по сути это поведение схожее
+        // с resetItems. Мы просто создаем новый диапазон, а не смещаем старый. Поэтому shiftDirection = null;
+        // Это нужно чтобы мы не востанавливали скролл.
+        return this._getRangeChangeResult(oldState, null);
     }
 
     // endregion ShiftRangeByScrollPosition
@@ -349,17 +388,20 @@ export class Calculator {
      */
     scrollPositionChange(scrollPosition: number): IActiveElementIndexChanged {
         const oldActiveElementIndex = this._activeElementIndex;
-        this._scrollPosition = scrollPosition;
 
-        this._activeElementIndex = getActiveElementIndexByScrollPosition({
-            contentSize: this._contentSize,
-            viewportSize: this._viewportSize,
-            itemsSizes: this._itemsSizes,
-            currentRange: this._range,
-            placeholders: this._placeholders,
-            scrollPosition,
-            totalCount: this._totalCount
-        });
+        if (this._scrollPosition !== scrollPosition) {
+            this._scrollPosition = scrollPosition;
+
+            this._activeElementIndex = getActiveElementIndexByScrollPosition({
+                contentSize: this._contentSize,
+                viewportSize: this._viewportSize,
+                itemsSizes: this._itemsSizes,
+                currentRange: this._range,
+                placeholders: this._placeholders,
+                scrollPosition,
+                totalCount: this._totalCount
+            });
+        }
 
         return {
             activeElementIndex: this._activeElementIndex,
@@ -378,10 +420,8 @@ export class Calculator {
      * @param count Кол-во добавленных записей
      */
     addItems(position: number, count: number): ICalculatorResult {
-        const oldRange = this._range;
-        const oldPlaceholders = this._placeholders;
+        const oldState = this._getState();
         this._totalCount += count;
-
         const direction = this._calcAddDirection(position, count);
 
         // Корректируем старый диапазон. Т.к. записи добавились  в начало, то все индексы сместятся на count
@@ -403,8 +443,13 @@ export class Calculator {
             placeholders: this._placeholders
         });
 
-        const placeholdersChanged = this._updatePlaceholders();
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        this._placeholders = getPlaceholdersByRange({
+            range: this._range,
+            totalCount: this._totalCount,
+            itemsSizes: this._itemsSizes
+        });
+
+        return this._getRangeChangeResult(oldState, direction);
     }
 
     private _calcAddDirection(position: number, count: number): IDirection {
@@ -413,10 +458,8 @@ export class Calculator {
             return 'forward';
         }
 
-        // Если записи добавили внутрь диапазона, то мы должны ориентироваться по BackwardEdgeItem, чтобы
-        // и так видимый элемент остался виден. Поэтому direction='forward', только если записи добавили после диапазона
-        const addBeforeEndIndex = position < this._range.endIndex;
-        return addBeforeEndIndex ? 'backward' : 'forward';
+        const addBeforeStartIndex = position <= this._range.startIndex;
+        return addBeforeStartIndex ? 'backward' : 'forward';
     }
 
     /**
@@ -427,16 +470,12 @@ export class Calculator {
      * @param removeCount Кол-во удаляемых элементов
      */
     moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): ICalculatorResult {
-        const oldRange = this._range;
-        const oldPlaceholders = this._placeholders;
+        const oldState = this._getState();
 
         const resultAdd = this.addItems(addPosition, addCount);
+        this.removeItems(removePosition, removeCount);
 
-        const resultRemove = this.removeItems(removePosition, removeCount);
-
-        const placeholdersChanged = resultAdd.placeholdersChanged || resultRemove.placeholdersChanged;
-
-        return this._getRangeChangeResult(oldRange, resultAdd.shiftDirection, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldState, resultAdd.shiftDirection);
     }
 
     /**
@@ -446,10 +485,8 @@ export class Calculator {
      * @param count Кол-во удаленных элементов.
      */
     removeItems(position: number, count: number): ICalculatorResult {
-        const oldRange = this._range;
-        const oldPlaceholders = this._placeholders;
+        const oldState = this._getState();
         const direction = position <= this._range.startIndex ? 'backward' : 'forward';
-        let placeholdersChanged;
 
         this._totalCount -= count;
 
@@ -466,21 +503,24 @@ export class Calculator {
             placeholders: this._placeholders
         });
 
-        placeholdersChanged = this._updatePlaceholders();
+        this._placeholders = getPlaceholdersByRange({
+            range: this._range,
+            totalCount: this._totalCount,
+            itemsSizes: this._itemsSizes
+        });
 
-        return this._getRangeChangeResult(oldRange, direction, oldPlaceholders, placeholdersChanged);
+        return this._getRangeChangeResult(oldState, direction);
     }
 
     /**
      * Обрабатывает пересоздание всех элементов коллекции.
      * Пересчитываем виртуальный диапазон, placeholders, сбрасывает старые размеры элементов.
      * @param totalCount Новое кол-во элементов
-     * @param keepPosition Нужно ли сохранить текущию позицию
+     * @param startIndex Начальный индекс диапазона отображаемых записей
      */
-    resetItems(totalCount: number, keepPosition: boolean): void {
+    resetItems(totalCount: number, startIndex: number): void {
         this._totalCount = totalCount;
 
-        const startIndex = keepPosition ? this._range.startIndex : 0;
         if (this._givenItemsSizes) {
             this._range = getRangeByItemsSizes({
                 start: startIndex,
@@ -496,50 +536,36 @@ export class Calculator {
             });
         }
         // Пересчитываем плэйсхолдеры. При пересчете они сбросятся в 0(размеры элементов уже были сброшены)
-        this._updatePlaceholders();
-    }
-
-    // endregion HandleCollectionChanges
-
-    private _updatePlaceholders(): boolean {
-        const oldPlaceholders = this._placeholders;
-
         this._placeholders = getPlaceholdersByRange({
             range: this._range,
             totalCount: this._totalCount,
             itemsSizes: this._itemsSizes
         });
-
-        return oldPlaceholders.forward !== this._placeholders.forward ||
-            oldPlaceholders.backward !== this._placeholders.backward;
     }
 
-    private _getRangeChangeResult(oldRange: IItemsRange,
-                                  shiftDirection: IDirection|null,
-                                  oldPlaceholders: IPlaceholders,
-                                  placeholdersChanged: boolean): ICalculatorResult {
-        const indexesChanged = oldRange.startIndex !== this._range.startIndex ||
-            oldRange.endIndex !== this._range.endIndex;
+    // endregion HandleCollectionChanges
+
+    private _getRangeChangeResult(oldState: ICalculatorState, shiftDirection: IDirection|null): ICalculatorResult {
+        const indexesChanged = oldState.range.startIndex !== this._range.startIndex ||
+            oldState.range.endIndex !== this._range.endIndex;
 
         const hasItemsOutRangeBackward =
             Calculator._hasItemsOutRangeToDirection('backward', this._range, this._totalCount);
         const hasItemsOutRangeForward =
             Calculator._hasItemsOutRangeToDirection('forward', this._range, this._totalCount);
 
-        const oldHasItemsOutRangeBackward =
-            Calculator._hasItemsOutRangeToDirection('backward', oldRange, this._totalCount);
-        const oldHasItemsOutRangeForward =
-            Calculator._hasItemsOutRangeToDirection('forward', oldRange, this._totalCount);
-
-        const hasItemsOutRangeChanged = oldHasItemsOutRangeBackward !== hasItemsOutRangeBackward ||
-            oldHasItemsOutRangeForward !== hasItemsOutRangeForward;
+        const hasItemsOutRangeChanged = oldState.hasItemsOutRange.backward !== hasItemsOutRangeBackward ||
+            oldState.hasItemsOutRange.forward !== hasItemsOutRangeForward;
+        const placeholdersChanged = oldState.placeholders.backward !== this._placeholders.backward ||
+            oldState.placeholders.forward !== this._placeholders.forward;
 
         return {
             range: this._range,
-            oldRange,
-            oldPlaceholders,
+            oldRange: oldState.range,
+            oldPlaceholders: oldState.placeholders,
             indexesChanged,
             shiftDirection,
+            mode: null,
 
             hasItemsOutRangeBackward,
             hasItemsOutRangeForward,
@@ -548,6 +574,17 @@ export class Calculator {
             forwardPlaceholderSize: this._placeholders.forward,
             backwardPlaceholderSize: this._placeholders.backward,
             placeholdersChanged
+        };
+    }
+
+    private _getState(): ICalculatorState {
+        return {
+            range: this._range,
+            placeholders: this._placeholders,
+            hasItemsOutRange: {
+                backward: Calculator._hasItemsOutRangeToDirection('backward', this._range, this._totalCount),
+                forward: Calculator._hasItemsOutRangeToDirection('forward', this._range, this._totalCount)
+            }
         };
     }
 
