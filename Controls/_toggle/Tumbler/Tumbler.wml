@@ -1,5 +1,5 @@
 <div class="controls_toggle_theme-{{_options.theme}} controls-Tumbler">
-    <div class="controls-Tumbler__wrapper
+    <div class="controls-Tumbler__wrapper controls-Tumbler__wrapper_radius
     controls-Tumbler__wrapper_{{_options.contrastBackground ?  'contrast' : 'same'}}
     controls-Tumbler__wrapper_{{_options.direction}}
      {{_highlightedOnFocus() ? 'controls-focused-item'}}
