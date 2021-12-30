@@ -193,11 +193,13 @@ describe('Controls/itemActions/Controller/HoverActions', () => {
         });
 
         it ('should work with breadcrumbs', () => {
-            const originalGetContents = collection.at(0).getContents;
+            const itemAt0 = collection.at(0);
+            const originalGetContents = itemAt0.getContents.bind(itemAt0);
             // @ts-ignore
-            collection.at(0).getContents = (): any[] => (['fake', 'fake', 'fake', originalGetContents() ]);
+            itemAt0.getContents = (): any[] => (['fake', 'fake', 'fake', originalGetContents() ]);
             updateControllerOptions();
-            assert.isNotEmpty(collection.at(0).getActions());
+            assert.isArray(itemAt0.getContents());
+            assert.isNotEmpty(itemAt0.getActions());
         });
     });
 });
