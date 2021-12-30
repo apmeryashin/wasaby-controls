@@ -19,6 +19,7 @@ describe('Controls/grid_clean/Display/DataCell/textOverflow', () => {
         getColumnIndex: () => 0,
         getColumnsCount: () => 0,
         getMultiSelectVisibility: () => 'hidden',
+        hasMultiSelectColumn: () => false,
         editArrowIsVisible: () => editArrowIsVisible,
         getDefaultDisplayValue: () => 'value',
         getContents: () => ({ key: 'key'})
