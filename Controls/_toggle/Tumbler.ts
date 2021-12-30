@@ -7,7 +7,8 @@ import {IItemTemplateOptions, IContrastBackgroundOptions} from 'Controls/interfa
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
-import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
+import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
+import {ISwitchOptions} from "Controls/_toggle/Switch";
 
 interface IBackgroundPosition {
     [key: number]: IBackgroundPositionData;
@@ -228,15 +229,23 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, ICo
 class Tumbler extends ButtonGroupBase<ITumblerOptions> {
     protected _template: TemplateFunction = Template;
     protected _backgroundPosition: IBackgroundPosition = {isEmpty: true};
+    protected _workByKeyboard: WorkByKeyboardContext;
 
-    protected _beforeUpdate(newOptions: ITumblerOptions): void {
+    protected _beforeMount(options: ITumblerOptions, context: IWorkByKeyboardContext = {}): void {
+        this._workByKeyboard = context.workByKeyboard;
+    }
+
+    protected _beforeUpdate(newOptions: ITumblerOptions, context: IWorkByKeyboardContext = {}): void {
         if (this._options.items !== newOptions.items) {
             this._backgroundPosition = {isEmpty: true};
+        }
+        if (this._workByKeyboard !== context.workByKeyboard) {
+            this._workByKeyboard = context.workByKeyboard;
         }
     }
 
     protected _highlightedOnFocus(): boolean {
-        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
+        return !!this._workByKeyboard?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
