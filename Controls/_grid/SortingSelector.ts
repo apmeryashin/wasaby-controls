@@ -307,7 +307,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         });
 
         this._dropdownItems = new RecordSet({
-            items: data,
+            rawData: data,
             keyProperty: 'id'
         });
     }
