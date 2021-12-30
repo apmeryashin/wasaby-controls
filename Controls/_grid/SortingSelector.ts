@@ -2,7 +2,6 @@ import * as template from 'wml!Controls/_grid/Render/sortingSelector/SortingSele
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Record} from 'Types/entity';
-import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {IFontColorStyleOptions, IFontSizeOptions} from 'Controls/interface';
@@ -237,7 +236,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     private _currentCaption: string = '';
     private _orders: object = {};
     private _currentTitle: object = {};
-    private _source: Memory;
+    private _dropdownItems: RecordSet;
     private _saveLinkToItems: Function;
     private _items: RecordSet;
     // когда выбран пункт с иконкой, в вызывающем элементе отображается только иконка. У нее другой отступ.
@@ -307,7 +306,10 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
             data.push(dataElem);
         });
 
-        this._source = new Memory({data, keyProperty: 'id'});
+        this._dropdownItems = new RecordSet({
+            items: data,
+            keyProperty: 'id'
+        });
     }
 
     private _resetValue(): void {

@@ -23,7 +23,7 @@
                 selectedKeys="{{_selectedKeys}}"
                 keyProperty="paramName"
                 displayProperty="title"
-                source="{{_source}}"
+                items="{{_dropdownItems}}"
                 fontSize="{{_options.fontSize}}"
                 dropdownClassName="{{_options.dropdownClassName}}"
                 popupClassName="{{_options.popupClassName}}"
