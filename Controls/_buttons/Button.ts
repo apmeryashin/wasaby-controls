@@ -21,6 +21,7 @@ import {getTextWidth} from 'Controls/sizeUtils';
 import 'wml!Controls/_buttons/ButtonBase';
 import 'css!Controls/buttons';
 import 'css!Controls/CommonClasses';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 export function defaultHeight(viewMode: string): string {
     if (viewMode === 'button') {
@@ -183,6 +184,10 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
         }
     }
 
+    protected _highlightedOnFocus(): boolean {
+        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
+    }
+
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
         if (e.nativeEvent.keyCode === constants.key.enter && !this._options.readOnly) {
             this._notify('click');
@@ -214,6 +219,12 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     static getOptionTypes(): object {
         return {
             contrastBackground: descriptor(Boolean)
+        };
+    }
+
+    static contextTypes(): object {
+        return {
+            workByKeyboard: WorkByKeyboardContext
         };
     }
 }
