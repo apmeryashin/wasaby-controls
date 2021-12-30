@@ -4,20 +4,24 @@
    min-height: 0;
 }
 
+// Нужно api для отключения обводки в попапе
+.controls-TileView__itemActions_menu_template.controls-StickyTemplate-borderSize-default {
+   border: none;
+}
+
 .controls-TileView__itemActions__menu_header {
+   border-top: var(--border-thickness) solid var(--separator_color);
    display: flex;
    min-width: 0;
    width: 100%;
    align-items: center;
-}
-
-.controls-TileView__itemActions__menu_header {
-   height: var(--inline_height_xl);
+   height: var(--inline_height_4xl);
 }
 
 .controls-TileView__itemActions__menu_header_title {
    font-size: var(--font-size_l);
    padding-right: var(--offset_s);
+   padding-left: var(--offset_s);
    .text-overflow();
 }
 
@@ -30,7 +34,7 @@
 
 .controls-TileView__itemActions__menu_content {
    display: flex;
-   border-top: var(--item_border-thickness_tile) solid var(--separator_color);
+   overflow: hidden;
 }
 
 .controls-TileView__itemActions__menu {
@@ -43,9 +47,22 @@
    left: 50%;
    position: absolute;
    transform: translate(-50%, -50%);
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+
+.controls-TileView__itemActions__menu_leftContent {
+   flex-grow: 0;
+   min-width: 0;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
 }
 
 .controls-TileView__itemActions__menu_imageWrapper {
+   flex-grow: 1;
    cursor: pointer;
    position: relative;
    overflow: hidden;
@@ -58,5 +75,7 @@
 }
 
 .controls-TileView__itemActions__menu.controls-TileView__itemActions__menu {
-   width: 200px;
+   width: var(--width-menu);
+   flex-shrink: 0;
+   box-sizing: border-box;
 }

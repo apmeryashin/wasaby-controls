@@ -89,6 +89,8 @@ export const Gadgets = {
             gradientType: 'dark',
             isDocument: true,
             width: 300,
+            imageWidth: 1200,
+            imageHeight: 800,
             isShadow: true
         },
         {
@@ -100,6 +102,8 @@ export const Gadgets = {
             image: explorerImages[8],
             titleStyle: 'light',
             'parent@': true,
+            imageWidth: 1200,
+            imageHeight: 800,
             additionalText: 'папка с песцом',
             gradientType: 'dark',
             isDocument: true,
@@ -260,13 +264,13 @@ export const Gadgets = {
         type: null,
         title: 'Медведь',
         image: Images.MEDVED,
-        imageWidth: 300,
-        imageHeight: 168,
+        imageWidth: 880,
+        imageHeight: 1320,
         titleStyle: 'light',
         gradientType: 'dark',
         gradientColor: '#E0E0E8',
         isDocument: true,
-        width: 300,
+        width: 600,
         isShadow: true
     }
     ],
