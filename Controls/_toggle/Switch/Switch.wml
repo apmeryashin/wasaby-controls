@@ -8,7 +8,8 @@
                {{_options.readOnly ? 'controls-Switch_disabled' : 'controls-Switch_enabled'}}
                {{_options.value ? ' controls-Switch_checked'}}"
          title="{{tooltip}}">
-      <ws:partial template="wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{ _options.readOnly }}" attr:class="controls_Switch_SwitchCircle"
+      <ws:partial template="wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{ _options.readOnly }}"
+                  attr:class="controls_Switch_SwitchCircle"
                   selected="{{ _options.value }}"
                   contrastBackground="{{_options.contrastBackground}}"
                   isResetValue="{{_options.resetValue === _options.value}}"
@@ -16,13 +17,14 @@
    </span>
 </ws:template>
 <ws:template name="caption">
-   <ws:partial template="{{_options.captionTemplate}}" scope="{{_options}}"/>
+    <ws:partial template="{{_options.captionTemplate}}" scope="{{_options}}" tabindex="0"/>
 </ws:template>
 
-<span class="controls_toggle_theme-{{_options.theme}} controls-Switch"
-            on:click="_clickHandler()"
+<span class="controls_toggle_theme-{{_options.theme}} controls-Switch  {{_highlightedOnFocus() ? 'controls-focused-item'}}"
+      on:click="_clickHandler()"
+      on:keypress="_keyUpHandler()"
       title="{{_options.tooltip}}">
-   <div class="controls-invalid-container controls-Switch__wrapper">
+   <div class="controls-invalid-container controls-Switch__wrapper" tabindex="0">
       <ws:if data="{{_options.captionPosition === 'left'}}">
          <ws:partial template="caption"/>
          <ws:partial template="toggle"/>
@@ -31,6 +33,6 @@
          <ws:partial template="toggle"/>
          <ws:partial template="caption"/>
       </ws:else>
-       <div class="{{ _options.validationStatus!== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}"></div>
+      <div class="{{ _options.validationStatus!== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}"></div>
    </div>
 </span>

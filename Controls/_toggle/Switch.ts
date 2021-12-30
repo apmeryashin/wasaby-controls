@@ -13,6 +13,9 @@ import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 import * as CaptionTemplate from 'wml!Controls/_toggle/Switch/resources/CaptionTemplate';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {constants} from 'Env/Env';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
     ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
@@ -63,6 +66,17 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
     '[Controls/_interface/IValidationStatus]': true;
     protected _template: TemplateFunction = SwitchTemplate;
 
+    protected _highlightedOnFocus(): boolean {
+        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
+    }
+
+    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+        if (e.nativeEvent.keyCode === constants.key.space && !this._options.readOnly) {
+            e.preventDefault();
+            this._clickHandler();
+        }
+    }
+
     protected _clickHandler(): void {
         if (!this._options.readOnly) {
             this._notify('valueChanged', [!this._options.value]);
@@ -87,6 +101,12 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
                 'left',
                 'right'
             ])
+        };
+    }
+
+    static contextTypes(): object {
+        return {
+            workByKeyboard: WorkByKeyboardContext
         };
     }
 }
