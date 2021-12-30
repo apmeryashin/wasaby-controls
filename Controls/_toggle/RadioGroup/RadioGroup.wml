@@ -1,4 +1,5 @@
-<div class="controls_toggle_theme-{{_options.theme}} controls-GroupRadio controls-GroupRadio{{_options.readOnly ? '_disabled': '_enabled'}}">
+<div class="controls_toggle_theme-{{_options.theme}} controls-GroupRadio controls-GroupRadio{{_options.readOnly ? '_disabled': '_enabled'}} {{_highlightedOnFocus() ? 'controls-focused-item'}}"
+     tabindex="0">
     <ws:partial template="{{_groupTemplate}}"
                 groupTemplate="{{_groupTemplate}}"
                 defaultItemTemplate="{{_defaultItemTemplate}}"
@@ -6,5 +7,6 @@
                 groups="{{_groups}}"
                 parent="{{null}}"
                 isSelected="{{_isSelected}}"
+                on:keypress="_keyUpHandler()"
                 options="{{_options}}"/>
 </div>

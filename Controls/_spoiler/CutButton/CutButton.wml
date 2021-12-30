@@ -10,7 +10,7 @@
                 value="{{ _options.expanded }}"
                 readOnly="{{ _options.readOnly }}"
                 contrastBackground="{{ _options.contrastBackground }}"
-                on:click="_clickHandler()"
+                on:valueChanged="_onValueHandler()"
         />
     </div>
 </div>
