@@ -42,6 +42,7 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/list:IListNavigation
  * @implements Controls/interface:IItemsContainerPadding
+ * @implements Controls/error:IErrorControllerOptions
  *
  * @author Авраменко А.С.
  * @public
