@@ -785,7 +785,7 @@ export class Controller {
         } else {
             all = this._commonItemActions;
         }
-        const showed = this._filterActionsToShowOnHover(all, item.getContents(), item.isEditing());
+        const showed = this._filterActionsToShowOnHover(all, contents, item.isEditing());
         return { all, showed };
     }
 
