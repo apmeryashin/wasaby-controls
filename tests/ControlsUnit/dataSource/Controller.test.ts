@@ -1,5 +1,5 @@
 import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource';
-import {Memory, PrefetchProxy, DataSet} from 'Types/source';
+import {Memory, PrefetchProxy, DataSet, HierarchicalMemory} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
 import {adapter} from 'Types/entity';
@@ -38,27 +38,38 @@ const hierarchyItems = [
     {
         key: 0,
         title: 'Интерфейсный фреймворк',
-        parent: null
+        parent: null,
+        hasChildren: true
     },
     {
         key: 1,
         title: 'Sasha',
-        parent: 0
+        parent: 0,
+        hasChildren: false
     },
     {
         key: 2,
         title: 'Dmitry',
-        parent: 0
+        parent: 0,
+        hasChildren: false
     },
     {
         key: 3,
         title: 'Склад',
-        parent: null
+        parent: null,
+        hasChildren: true
     },
     {
         key: 4,
         title: 'Michail',
-        parent: 3
+        parent: 3,
+        hasChildren: false
+    },
+    {
+        key: 5,
+        title: 'Платформа',
+        parent: null,
+        hasChildren: false
     }
 ];
 
@@ -187,7 +198,7 @@ describe('Controls/dataSource:SourceController', () => {
         it('load with parentProperty',  async () => {
             const controller = getControllerWithHierarchy();
             const loadedItems = await controller.load();
-            ok((loadedItems as RecordSet).getCount() === 5);
+            ok((loadedItems as RecordSet).getCount() === 6);
         });
 
         it('load with direction "down"',  async () => {
@@ -707,7 +718,7 @@ describe('Controls/dataSource:SourceController', () => {
             deepStrictEqual(controller.getExpandedItems(), [null]);
 
             await controller.reload();
-            ok(controller.getItems().getCount() === 2);
+            ok(controller.getItems().getCount() === 3);
         });
     });
 
@@ -962,6 +973,21 @@ describe('Controls/dataSource:SourceController', () => {
                 navigation: getPagingNavigation(false)
             });
             ok(!controller.hasLoaded('anyFolderKey'));
+        });
+
+        it('hasLoaded with hasChildrenProperty', async () => {
+            const controller = getControllerWithHierarchy({
+                hasChildrenProperty: 'hasChildren',
+                root: null,
+                source: new HierarchicalMemory({
+                    data: hierarchyItems,
+                    keyProperty: 'key',
+                    parentProperty: 'parent'
+                })
+            });
+            await controller.reload();
+            ok(!controller.hasLoaded(0));
+            ok(controller.hasLoaded(5));
         });
     });
 
