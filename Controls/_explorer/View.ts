@@ -1374,6 +1374,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/list:IRemovableList
  * @implements Controls/marker:IMarkerList
  * @implements Controls/tile:ITreeTile
+ * @implements Controls/error:IErrorControllerOptions
  *
  * @public
  * @author Авраменко А.С.
