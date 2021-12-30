@@ -6,7 +6,7 @@ import {IIconSize, IIconSizeOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
-import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
+import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 /**
  * @typedef TViewMode
@@ -67,9 +67,20 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, 
     readonly '[Controls/_interface/IIconSize]': boolean = true;
 
     protected _template: TemplateFunction = BigSeparatorTemplate;
+    protected _workByKeyboard: WorkByKeyboardContext;
+
+    protected _beforeMount(options: IBigSeparatorOptions, context: IWorkByKeyboardContext = {}): void {
+        this._workByKeyboard = context.workByKeyboard;
+    }
+
+    protected _beforeUpdate(newOptions: IBigSeparatorOptions, context: IWorkByKeyboardContext = {}): void {
+        if (this._workByKeyboard !== context.workByKeyboard) {
+            this._workByKeyboard = context.workByKeyboard;
+        }
+    }
 
     protected _highlightedOnFocus(): boolean {
-        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
+        return !!this._workByKeyboard?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
