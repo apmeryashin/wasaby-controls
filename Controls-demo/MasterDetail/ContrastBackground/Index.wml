@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controls-demo_MasterDetail-background">
-   <div class="controlsDemo__masterDetail-container">
+   <div class="controlsDemo__masterDetail-container" attr:data-qa="grid_View">
       <div class="controls-text-label">grid:View в мастере</div>
       <Controls.masterDetail:Base>
          <ws:master>
@@ -41,7 +41,7 @@
          </ws:detail>
       </Controls.masterDetail:Base>
    </div>
-   <div class="controlsDemo__masterDetail-container">
+   <div class="controlsDemo__masterDetail-container" attr:data-qa="list_View">
       <div class="controls-text-label">list:View в мастере</div>
       <Controls.masterDetail:Base>
          <ws:master>
@@ -89,7 +89,7 @@
          </ws:detail>
       </Controls.masterDetail:Base>
    </div>
-   <div class="controlsDemo__masterDetail-container">
+   <div class="controlsDemo__masterDetail-container attr:data-qa="treeGrid_View"">
       <div class="controls-text-label">treeGrid:View в мастере</div>
       <Controls.masterDetail:Base>
          <ws:master>
