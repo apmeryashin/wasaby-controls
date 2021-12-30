@@ -199,5 +199,10 @@ export interface IErrorHandlerConfig<TError extends ProcessedError = ProcessedEr
  * @author Кашин О.А.
  */
 export interface IErrorControllerOptions {
+    /**
+     * @cfg
+     * Компонент для обработки ошибки.
+     * Данную опцию следует определять, если нужно изменить способ отображения ошибки (диалог, вместо контента или во всю страницу) или добавить свои обработчики ошибок.
+     */
     errorController?: ErrorController;
 }
