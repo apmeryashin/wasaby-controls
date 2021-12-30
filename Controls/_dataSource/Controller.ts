@@ -83,6 +83,7 @@ export interface IControllerOptions extends
     deepScrollLoad?: boolean;
     nodeTypeProperty?: string;
     error?: Error;
+    hasChildrenProperty?: string;
 }
 
 interface ILoadConfig {
@@ -642,6 +643,10 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         } else if (this._options.parentProperty) {
             loadedResult = this.getExpandedItems()?.includes(key) ||
                            !!this._getHierarchyRelation().getChildren(key, this._items).length;
+        }
+
+        if (!loadedResult && this._options.hasChildrenProperty) {
+            loadedResult = !this._items.getRecordById(key)?.get(this._options.hasChildrenProperty);
         }
 
         return loadedResult;
