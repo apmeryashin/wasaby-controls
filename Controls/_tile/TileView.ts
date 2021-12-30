@@ -288,7 +288,7 @@ export default class TileView extends ListView {
      */
     private _getTargetPoint(rect: ClientRect): { x: number, y: number } {
         return {
-            x: rect.right,
+            x: rect.left + rect.width,
             y: document.scrollingElement.scrollTop + rect.top + rect.height / 2
         };
     }
