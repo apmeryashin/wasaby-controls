@@ -5,7 +5,6 @@ import { Memory } from 'Types/source';
 import { TKey } from 'Controls/interface';
 import type { IItemPadding as IPadding } from 'Controls/display';
 import { IContextsWithActiveElementContext } from 'Controls/_newBrowser/context/Provider';
-import { instanceOfModule } from 'Core/core-instance';
 
 function findFirstNodeIndexByParentKey(items: RecordSet,
                                        parentKey: TKey,
@@ -24,6 +23,7 @@ interface INavigationControlOptions extends IControlOptions {
     items: RecordSet;
     root: TKey;
     keyProperty: string;
+    displayProperty: string;
     parentProperty: string;
     nodeProperty: string;
     activeElement: TKey;
@@ -120,56 +120,37 @@ export default class Navigation<T = unknown> extends Control<INavigationControlO
     }
 
     protected _prepareActiveDirectoryItems(params: INavigationControlOptions): void {
-        const isSBISAdapter = instanceOfModule(params.items.getAdapter(), 'Types/entity:adapter.Sbis');
-        const items = !isSBISAdapter ? [] :
-            {
-                d: [],
-                s: []
-            };
+        const items = [];
 
         params.items.forEach((item, index) => {
             if (item.get(params.parentProperty) === params.root && item.get(params.nodeProperty) === true) {
-                if (isSBISAdapter) {
-                    const rawData = item.getRawData();
-                    items.d.push(rawData.d);
-                    items.s = rawData.s;
-                } else {
-                    items.push(item.getRawData());
-                }
+                items.push({
+                    [params.keyProperty]: item.get(params.keyProperty),
+                    [params.displayProperty]: item.get(params.displayProperty)
+                });
             }
         });
 
         this._rootDirectories = new RecordSet({
-            keyProperty: params.items.getKeyProperty(),
-            adapter: params.items.getAdapter(),
-            rawData: items,
-            format: params.items.getFormat()
+            keyProperty: params.keyProperty,
+            rawData: items
         });
     }
 
     protected _prepareActiveSubdirectoryItems(params: INavigationControlOptions, rootMarkedKey: TKey): void {
-        const isSBISAdapter = instanceOfModule(params.items.getAdapter(), 'Types/entity:adapter.Sbis');
-        const items = !isSBISAdapter ? [] :
-            {
-                d: [],
-                s: []
-            };
+        const items = [];
 
         params.items.forEach((item, index) => {
             if (item.get(params.parentProperty) === rootMarkedKey && item.get(params.nodeProperty) === true) {
-                if (isSBISAdapter) {
-                    const rawData = item.getRawData();
-                    items.d.push(rawData.d);
-                    items.s = rawData.s;
-                } else {
-                    items.push(item.getRawData());
-                }
+                items.push({
+                    [params.keyProperty]: item.get(params.keyProperty),
+                    [params.displayProperty]: item.get(params.displayProperty)
+                });
             }
         });
 
         this._subdirectories = new Memory({
-            keyProperty: params.items.getKeyProperty(),
-            adapter: params.items.getAdapter(),
+            keyProperty: params.keyProperty,
             data: items
         });
     }
