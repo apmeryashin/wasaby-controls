@@ -184,24 +184,21 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     }
 
     private _getMaximizeState(options: IPageTemplate): boolean {
-        return StackController.getMaximizedState(
-            this._templateWorkSpaceWidth,
-            this._minSavedWidth || options.minWidth,
-            this._maxSavedWidth || options.maxWidth
-        );
+        const item = this._generateControllerItem(options);
+        return StackController.getMaximizedState(item);
     }
 
-    private _generateControllerItem(): Partial<IStackItem> {
+    private _generateControllerItem(options: IPageTemplate = this._options): Partial<IStackItem> {
         return {
             minSavedWidth: this._minSavedWidth,
             maxSavedWidth: this._maxSavedWidth,
             popupOptions: {
-                minWidth: this._isLiteralWidth(this._options.minWidth) ?
-                                                        themeConstants[this._options.minWidth] : this._options.minWidth,
-                maxWidth: this._isLiteralWidth(this._options.maxWidth) ?
-                                                        themeConstants[this._options.maxWidth] : this._options.maxWidth,
+                minWidth: this._isLiteralWidth(options.minWidth) ?
+                                                        themeConstants[options.minWidth] : options.minWidth,
+                maxWidth: this._isLiteralWidth(options.maxWidth) ?
+                                                        themeConstants[options.maxWidth] : options.maxWidth,
                 stackWidth: this._templateWorkSpaceWidth,
-                propStorageId: this._options.propStorageId,
+                propStorageId: options.propStorageId,
                 templateOptions: {}
             },
             position: {}
