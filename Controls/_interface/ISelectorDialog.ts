@@ -172,7 +172,7 @@ export default interface ISelectorDialog {
  * @typedef {Object} SelectorTemplate
  * @property {Function} templateName Шаблон панели выбора элементов.
  * @property {Object} templateOptions Параметры шаблона всплывающего окна.
- * @property {Object} popupOptions Параметры всплывающего окна.
+ * @property {Controls/_popup/interface/IStackOpener/PopupOptions.typedef} popupOptions Параметры всплывающего окна.
  * @property {SelectorMode} mode Режим отображения шаблона.
  */
 /*
