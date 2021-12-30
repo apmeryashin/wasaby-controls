@@ -33,6 +33,9 @@ describe('Controls/display/GridDataCell', () => {
             getColumnIndex(): number {
                 return columnIndex;
             },
+            hasMultiSelectColumn(): boolean {
+                return multiSelectVisibility === 'visible';
+            },
             editArrowIsVisible(): boolean {
                 return editArrowIsVisible;
             },
@@ -44,17 +47,24 @@ describe('Controls/display/GridDataCell', () => {
 
     // region Аспект "Кнопка редактирования"
 
-    describe('editArrow', () => {
-        it('shouldDisplayEditArrow should return true for first column', () => {
+    describe('shouldDisplayEditArrow', () => {
+        it('should return true for columnIndex===0', () => {
             editArrowIsVisible = true;
+            columnIndex = 0;
             assert.isTrue(initCell().shouldDisplayEditArrow());
         });
-        it('shouldDisplayEditArrow should not return true for non-first column', () => {
+        it('should not return true for columnIndex===1, when no multiSelect', () => {
             editArrowIsVisible = true;
-            columnIndex = 3;
+            columnIndex = 1;
             assert.isFalse(initCell().shouldDisplayEditArrow());
         });
-        it('shouldDisplayEditArrow should not return true when custom contentTemplate is set', () => {
+        it('should return true for columnIndex===1, when multiSelect', () => {
+            editArrowIsVisible = true;
+            multiSelectVisibility = 'visible';
+            columnIndex = 1;
+            assert.isFalse(initCell().shouldDisplayEditArrow());
+        });
+        it('should not return true when custom contentTemplate is set', () => {
             editArrowIsVisible = true;
             assert.isFalse(initCell().shouldDisplayEditArrow(() => ''));
         });
