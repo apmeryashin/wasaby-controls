@@ -7,6 +7,7 @@ describe('Controls/grid_clean/Display/DataCell/isEditing', () => {
         const mockedOwner = {
             getHoverBackgroundStyle: () => 'default',
             isDragged: () => false,
+            isSticked: () => false,
             getStickyLadder: () => false,
             hasItemActionsSeparatedCell: () => false,
             getTopPadding: () => 'default',
