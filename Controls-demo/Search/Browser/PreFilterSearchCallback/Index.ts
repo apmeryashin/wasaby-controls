@@ -20,6 +20,7 @@ export default class Index extends Control<IControlOptions> {
     protected _source: Memory;
     protected _navigation: object;
 
+    protected _searchValue: string;
     protected _query_timeout: string;
 
     protected _beforeMount(): void {
