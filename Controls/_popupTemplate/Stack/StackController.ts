@@ -6,7 +6,7 @@ import {List} from 'Types/collection';
 import getTargetCoords from 'Controls/_popupTemplate/TargetCoords';
 import {parse as parserLib} from 'Core/library';
 import StackContent from 'Controls/_popupTemplate/Stack/Template/StackContent';
-import {detection} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import {Bus} from 'Env/Event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import * as Deferred from 'Core/Deferred';
@@ -249,6 +249,10 @@ export class StackController extends BaseController {
     }
 
     getMaximizedState(item: IStackItem): boolean {
+        if (constants.isServerSide) {
+            const {width, minWidth, maxWidth} = item.popupOptions;
+            return width - (minWidth + maxWidth) / 2 > 0;
+        }
         const stackParentCoords = this._getStackParentCoords(item);
         const maxPanelWidth = StackStrategy.getMaxPanelWidth(stackParentCoords);
         return this._getMaximizedState(item, maxPanelWidth);
