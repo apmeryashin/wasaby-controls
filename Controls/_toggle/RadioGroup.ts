@@ -103,7 +103,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
         }
     }
 
-    protected _isWorkByKeyboard(): boolean {
+    protected _highlightedOnFocus(): boolean {
         return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
     }
 

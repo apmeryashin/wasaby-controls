@@ -1,4 +1,4 @@
-<div class="controls_toggle_theme-{{_options.theme}} controls-GroupRadio controls-GroupRadio{{_options.readOnly ? '_disabled': '_enabled'}} {{_isWorkByKeyboard() ? 'controls-focused-item'}}"
+<div class="controls_toggle_theme-{{_options.theme}} controls-GroupRadio controls-GroupRadio{{_options.readOnly ? '_disabled': '_enabled'}} {{_highlightedOnFocus() ? 'controls-focused-item'}}"
      tabindex="0">
     <ws:partial template="{{_groupTemplate}}"
                 groupTemplate="{{_groupTemplate}}"

@@ -184,17 +184,12 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
         }
     }
 
-    protected _isWorkByKeyboard(): boolean {
+    protected _highlightedOnFocus(): boolean {
         return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
-        let key = constants.key.enter;
-        if (!!this.context.get('workByKeyboard')?.status) {
-            e.preventDefault();
-            key = constants.key.space;
-        }
-        if (e.nativeEvent.keyCode === key && !this._options.readOnly) {
+        if (e.nativeEvent.keyCode === constants.key.enter && !this._options.readOnly) {
             this._notify('click');
         }
     }

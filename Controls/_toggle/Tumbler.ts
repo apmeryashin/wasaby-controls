@@ -235,7 +235,7 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
         }
     }
 
-    protected _isWorkByKeyboard(): boolean {
+    protected _highlightedOnFocus(): boolean {
         return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
     }
 

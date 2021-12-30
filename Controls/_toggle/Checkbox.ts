@@ -95,7 +95,7 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColor
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = checkBoxTemplate;
 
-   protected _isWorkByKeyboard(): boolean {
+   protected _highlightedOnFocus(): boolean {
       return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
    }
 
