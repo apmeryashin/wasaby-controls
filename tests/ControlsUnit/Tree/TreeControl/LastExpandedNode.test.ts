@@ -169,6 +169,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
         sinonAssert.calledOnce(spyQuery);
     });
 
+/*
     it ('should load from last expanded node', async () => {
         source = new HierarchicalMemory({
             keyProperty: 'id',
@@ -186,6 +187,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
 
         sinonAssert.calledTwice(stubQuery);
     });
+*/
 
     it ('should not load from last expanded node when nodeFooterTemplate is set', async () => {
         source = new HierarchicalMemory({
@@ -203,6 +205,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
         sinonAssert.calledOnce(spyQuery);
     });
 
+/*
     it ('should load from last expanded node when nodeFooterTemplate overrided by moreTemplate', async () => {
         source = new HierarchicalMemory({
             keyProperty: 'id',
@@ -218,6 +221,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
         await treeControl.handleTriggerVisible('down');
         sinonAssert.calledTwice(spyQuery);
     });
+*/
 
     it ('should not try loading for BreadcrumbsItem', async () => {
         source = new HierarchicalMemory({
