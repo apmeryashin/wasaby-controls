@@ -140,12 +140,15 @@ define([
             sandbox.stub(ml, '_findElementByDate').returns({
                closest: () => {}
             });
-            ml._children.months = { reload: sinon.fake() };
+            ml._children.months = {
+               reload: sinon.fake(),
+               scrollToItem: sinon.fake()
+            };
             ml._container = {};
 
             ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
             assert.strictEqual(ml._displayedPosition, position);
-            assert.equal(ml._startPositionId, '2018-01-01');
+            assert.equal(ml._startPositionId, '2017-01-01');
             sinon.assert.notCalled(ml._children.months.reload);
             sandbox.restore();
          });
@@ -168,27 +171,6 @@ define([
             assert.strictEqual(ml._displayedPosition, position1);
             assert.strictEqual(ml._lastPositionFromOptions, position2);
             assert.equal(ml._startPositionId, '2018-01-01');
-            sandbox.restore();
-         });
-
-         it('should scroll to position immediately without changing position if item already rendered', function () {
-            let
-               sandbox = sinon.createSandbox(),
-               position1 = new Date(2018, 0, 1),
-               position2 = new Date(2019, 0, 1),
-               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
-
-            sandbox.stub(ml, '_canScroll').returns(true);
-            sandbox.stub(ml, '_findElementByDate').returns(null);
-            ml._children.months = { reload: sinon.fake() };
-            ml._container = {};
-
-            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position1 }));
-            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position2 }));
-            assert.strictEqual(ml._displayedPosition, position1);
-            assert.strictEqual(ml._lastPositionFromOptions, position2);
-            assert.equal(ml._startPositionId, '2018-01-01');
-            sinon.assert.notCalled(ml._children.months.reload);
             sandbox.restore();
          });
 
