@@ -11,6 +11,7 @@
             controls-fontweight-{{_fontWeight}}
             {{_options.fontSize !== 'inherit' ? 'controls-Render-fontsize-' + _options.fontSize}}
             controls-text-{{_options.fontColorStyle}}
+            {{_highlightedOnFocus() ? 'controls-Render-focused-item'}}
             controls-Render_state-{{_state}}_{{_options.wasActionByUser ? 'caretFilled' : 'caretEmpty'}}
             {{_options.multiline ? 'controls-Render_multiline' : ' controls-inlineheight-' + _options.inlineHeight +
             ' controls-Render-inlineheight-' + _options.inlineHeight}}">

@@ -59,7 +59,7 @@ export default class FocusWithEnter extends Control<IControlOptions> {
         // TODO: Пропускаю кнопки при обходе по ENTER:
         // tslint:disable-next-line
         // https://online.sbis.ru/open_dialog.html?guid=5e1a9e18-3941-4725-8963-9a8fff7eec9f&user=321880e7-f6f6-463a-849b-8649be2b6dfc
-        return target && (this.context.get('workByKeyboard') || !target.closest('.controls-BaseButton'));
+        return target && !target.closest('.controls-BaseButton');
     }
 
     static contextTypes(): object {
