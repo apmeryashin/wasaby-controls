@@ -25,6 +25,8 @@
                             attr:tabindex="3"
                             name="dateInput1"
                             mask="DD.MM.YY"
+                            contrastBackground="{{true}}"
+                            selectOnClick="{{true}}"
                             bind:value="_dateValue"
                     />
                 </div>
@@ -34,6 +36,7 @@
                             attr:tabindex="4"
                             name="textInput1"
                             contrastBackground="{{true}}"
+                            selectOnClick="{{true}}"
                             bind:value="_textValue"
                     />
                 </div>
