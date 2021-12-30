@@ -30,7 +30,8 @@ describe('Controls/grid_clean/Display/ItemActionsCell', () => {
             isMarked: () => false,
             isActive: () => false,
             hasMultiSelectColumn: () => false,
-            getColumnIndex: () => 0
+            getColumnIndex: () => 0,
+            isSticked: () => false
         };
         const cell = new GridItemActionsCell({
             column: {},
