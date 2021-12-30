@@ -5,9 +5,12 @@ import CompositeItem from './strategy/CompositeItem';
 import { Tree, ITreeCollectionOptions } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { ITreeTileCollectionOptions } from 'Controls/_treeTile/display/TreeTileCollection';
+import { TemplateFunction } from 'UI/Base';
 
 export interface ICompositeViewConfig extends ITreeTileCollectionOptions {
     compositeNodesLevel: number;
+    itemTemplate: TemplateFunction|string;
+    itemTemplateOptions: Object;
 }
 
 export interface IOptions<S extends Model, T extends CollectionItem<S>>
