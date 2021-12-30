@@ -84,13 +84,6 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
             'controls-background-' + this._options.backgroundStyle;
     }
 
-    protected _getWrapperBackgroundColor(): string {
-        if (this._options.backgroundStyle === this._options.headerBackgroundStyle) {
-            return this._getBackgroundColor();
-        }
-        return '';
-    }
-
     protected close(): void {
         this._notify('close', [], {bubbling: true});
     }
