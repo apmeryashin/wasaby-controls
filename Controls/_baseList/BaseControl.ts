@@ -88,7 +88,6 @@ import { ListVirtualScrollController } from './Controllers/ListVirtualScrollCont
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
-import {IDirection as IDirectionNew} from './Controllers/ScrollController/ScrollController';
 import {
     FlatSelectionStrategy,
     TreeSelectionStrategy,

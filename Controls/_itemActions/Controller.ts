@@ -959,7 +959,7 @@ export class Controller {
      * @param action
      * @private
      */
-    private static _needShowIcon(action: IItemAction|IShownItemAction): boolean {
+    private static _needShowIcon(action: IItemAction): boolean {
         return !!action.icon && (action.displayMode !== TActionDisplayMode.TITLE);
     }
 
@@ -968,7 +968,7 @@ export class Controller {
      * @param action
      * @private
      */
-    private static _needShowTitle(action: IItemAction|IShownItemAction): boolean {
+    private static _needShowTitle(action: IItemAction): boolean {
         return !!action.title && (action.displayMode === TActionDisplayMode.TITLE ||
             action.displayMode === TActionDisplayMode.BOTH ||
             (action.displayMode === TActionDisplayMode.AUTO ||
