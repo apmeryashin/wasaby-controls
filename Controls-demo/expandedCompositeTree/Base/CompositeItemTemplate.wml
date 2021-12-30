@@ -1,7 +1,6 @@
 <ws:if data="{{ item.isNode() }}">
     <ws:partial template="Controls/tile:RichTemplate"
                 scope="{{ _options }}"
-                shadowVisibility="onhover"
                 titlePosition="onImage"
                 imageViewMode="rectangle"/>
 </ws:if>

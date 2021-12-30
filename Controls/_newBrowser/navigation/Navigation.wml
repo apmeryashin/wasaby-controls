@@ -1,12 +1,13 @@
-<div class="controls-newBrowser__navigation">
+<div class="controls-newBrowser__navigation{{ _getPaddingClasses(_options.containerPadding) }}">
     <Controls.toggle:ButtonGroup
+            attr:class="{{ _getPaddingClasses(_options.padding) }}"
             items="{{ _rootDirectories }}"
             selectedKey="{{ _activeDirectoryKey }}"
             on:selectedKeyChanged="_directoryKeyChanged()"
             displayProperty="{{ _options.displayProperty }}"
             keyProperty="{{ _options.keyProperty }}"/>
     <Controls.toggle:RadioGroup
-            attr:class="controls-newBrowser__navigation-childItems"
+            attr:class="controls-newBrowser__navigation-childItems{{ _getPaddingClasses(_options.padding) }}"
             source="{{ _subdirectories }}"
             selectedKey="{{ _activeSubdirectoryKey }}"
             on:selectedKeyChanged="_subdirectoryKeyChanged()"
