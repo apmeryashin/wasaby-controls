@@ -30,7 +30,8 @@ describe('Controls/_grid/display/DataCell', () => {
         getRowSeparatorSize: () => 's',
         isEditing: () => isEditing,
         getEditingConfig: () => ({mode: editingMode}),
-        getEditingColumnIndex: () => editingColumnIndex
+        getEditingColumnIndex: () => editingColumnIndex,
+        isSticked: () => false
     };
 
     describe('shouldDisplayMarker', () => {
