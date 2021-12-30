@@ -173,13 +173,13 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     protected _tooltip: string;
     protected _workByKeyboard: WorkByKeyboardContext;
 
-    protected _beforeMount(options: IButtonOptions, context: IWorkByKeyboardContext): void {
+    protected _beforeMount(options: IButtonOptions, context: IWorkByKeyboardContext = {}): void {
         simpleCssStyleGeneration.call(this, options);
         this._tooltip = options.tooltip;
         this._workByKeyboard = context.workByKeyboard;
     }
 
-    protected _beforeUpdate(newOptions: IButtonOptions, context: IWorkByKeyboardContext): void {
+    protected _beforeUpdate(newOptions: IButtonOptions, context: IWorkByKeyboardContext = {}): void {
         simpleCssStyleGeneration.call(this, newOptions);
         if (this._options.tooltip !== newOptions.tooltip) {
             this._tooltip = newOptions.tooltip;

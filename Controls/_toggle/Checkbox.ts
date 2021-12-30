@@ -96,11 +96,11 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColor
    protected _template: TemplateFunction = checkBoxTemplate;
    protected _workByKeyboard: WorkByKeyboardContext;
 
-   protected _beforeMount(options: ICheckboxOptions, context: IWorkByKeyboardContext): void {
+   protected _beforeMount(options: ICheckboxOptions, context: IWorkByKeyboardContext = {}): void {
       this._workByKeyboard = context.workByKeyboard;
    }
 
-   protected _beforeUpdate(newOptions: ICheckboxOptions, context: IWorkByKeyboardContext): void {
+   protected _beforeUpdate(newOptions: ICheckboxOptions, context: IWorkByKeyboardContext = {}): void {
       if (this._workByKeyboard !== context.workByKeyboard) {
          this._workByKeyboard = context.workByKeyboard;
       }

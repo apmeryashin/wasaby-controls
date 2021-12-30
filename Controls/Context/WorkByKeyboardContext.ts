@@ -18,5 +18,5 @@ export default class WorkByKeyboardContext extends DataContext {
 }
 
 export interface IWorkByKeyboardContext {
-    workByKeyboard: WorkByKeyboardContext;
+    workByKeyboard?: WorkByKeyboardContext;
 }

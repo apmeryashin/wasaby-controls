@@ -82,7 +82,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
                            receivedState: RecordSet): void | Promise<RecordSet> {
         this._selectKeyChanged = this._selectKeyChanged.bind(this);
         this._isSelected = this._isSelected.bind(this);
-        this._workByKeyboard = context.workByKeyboard;
+        this._workByKeyboard = context?.workByKeyboard;
         if (receivedState) {
             this._items = receivedState;
             this._sortGroup(options, receivedState);
@@ -95,7 +95,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
         }
     }
 
-    protected _beforeUpdate(newOptions: IRadioGroupOptions, context: IWorkByKeyboardContext): Promise<void> {
+    protected _beforeUpdate(newOptions: IRadioGroupOptions, context: IWorkByKeyboardContext = {}): Promise<void> {
         if (this._workByKeyboard !== context.workByKeyboard) {
             this._workByKeyboard = context.workByKeyboard;
         }

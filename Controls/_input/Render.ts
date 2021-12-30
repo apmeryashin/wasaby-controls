@@ -182,7 +182,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._notify('tagHover', [this._children.tag]);
     }
 
-    protected _beforeMount(options: IRenderOptions, context: IWorkByKeyboardContext): void {
+    protected _beforeMount(options: IRenderOptions, context: IWorkByKeyboardContext = {}): void {
         this._border = Render._detectToBorder(options.borderVisibility, options.minLines, options.contrastBackground);
         this._fontWeight = Render._getFontWeight(options.fontWeight, options.fontSize);
         this._setState(options);
@@ -191,7 +191,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._workByKeyboard = context.workByKeyboard;
     }
 
-    protected _beforeUpdate(options: IRenderOptions, context: IWorkByKeyboardContext): void {
+    protected _beforeUpdate(options: IRenderOptions, context: IWorkByKeyboardContext = {}): void {
         if (options.borderVisibility !== this._options.borderVisibility ||
             options.minLines !== this._options.minLines ||
             options.contrastBackground !== this._options.contrastBackground

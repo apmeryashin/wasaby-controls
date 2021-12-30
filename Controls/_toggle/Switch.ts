@@ -67,11 +67,11 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
     protected _template: TemplateFunction = SwitchTemplate;
     protected _workByKeyboard: WorkByKeyboardContext;
 
-    protected _beforeMount(options: ISwitchOptions, context: IWorkByKeyboardContext): void {
+    protected _beforeMount(options: ISwitchOptions, context: IWorkByKeyboardContext = {}): void {
         this._workByKeyboard = context.workByKeyboard;
     }
 
-    protected _beforeUpdate(newOptions: ISwitchOptions, context: IWorkByKeyboardContext): void {
+    protected _beforeUpdate(newOptions: ISwitchOptions, context: IWorkByKeyboardContext = {}): void {
         if (this._workByKeyboard !== context.workByKeyboard) {
             this._workByKeyboard = context.workByKeyboard;
         }

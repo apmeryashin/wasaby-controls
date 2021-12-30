@@ -231,11 +231,11 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
     protected _backgroundPosition: IBackgroundPosition = {isEmpty: true};
     protected _workByKeyboard: WorkByKeyboardContext;
 
-    protected _beforeMount(options: ITumblerOptions, context: IWorkByKeyboardContext): void {
+    protected _beforeMount(options: ITumblerOptions, context: IWorkByKeyboardContext = {}): void {
         this._workByKeyboard = context.workByKeyboard;
     }
 
-    protected _beforeUpdate(newOptions: ITumblerOptions, context: IWorkByKeyboardContext): void {
+    protected _beforeUpdate(newOptions: ITumblerOptions, context: IWorkByKeyboardContext = {}): void {
         if (this._options.items !== newOptions.items) {
             this._backgroundPosition = {isEmpty: true};
         }
