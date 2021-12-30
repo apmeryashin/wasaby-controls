@@ -49,7 +49,7 @@
         </ws:if>
 
         <!-- Items -->
-        <div name="itemsContainer" class="controls-GridViewV__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container">
+        <div name="itemsContainer{{columnScrollPartName === 'scrollable' ? '_fake'}}" class="controls-GridViewV__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container">
 
             <div if="{{ _options.newColumnScroll }}"
                  class="controls-Grid__columnScroll__relativeCells">

@@ -111,7 +111,7 @@ define(
                     inst._updateStyles(inst._options);
                     inst._getObserverStyle('right', 0, inst._options.shadowVisibility);
 
-                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
+                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-StickyHeader_default-background controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
                         '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                         '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
@@ -145,7 +145,7 @@ define(
 
                     inst._updateStyles(inst._options);
 
-                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
+                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-StickyHeader_default-background controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
                         '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                         '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
@@ -172,7 +172,7 @@ define(
 
                     inst._updateStyles(inst._options);
 
-                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;">' +
+                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-StickyHeader_default-background controls-StickyHeader_position" style="top: 0px;">' +
                         '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                         '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
@@ -199,7 +199,7 @@ define(
 
                     inst._updateStyles(inst._options);
 
-                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="bottom: 0px;">' +
+                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-StickyHeader_default-background controls-StickyHeader_position" style="bottom: 0px;">' +
                         '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                         '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
@@ -223,7 +223,7 @@ define(
 
                     inst._updateStyles(inst._options);
 
-                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;">' +
+                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-StickyHeader_default-background controls-StickyHeader_position" style="top: 0px;">' +
                         '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                         '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
@@ -254,7 +254,7 @@ define(
                     inst._resetGapFixClass = sinon.fake();
                     inst._updateStyles(inst._options);
 
-                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
+                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-StickyHeader_default-background controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
                         '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                         '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
@@ -286,7 +286,7 @@ define(
                     inst._resetGapFixClass = sinon.fake();
                     inst._updateStyles(inst._options);
 
-                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
+                    assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-StickyHeader_default-background controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
                         '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal"></div>' +
                         '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +

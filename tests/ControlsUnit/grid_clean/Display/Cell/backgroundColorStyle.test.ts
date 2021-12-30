@@ -26,7 +26,8 @@ describe('Controls/grid/Display/Cell/backgroundColorStyle', () => {
 
         // This setting changes behavior
         hasColumnScroll: () => hasColumnScroll,
-        isMarked: () => false
+        isMarked: () => false,
+        isSticked: () => false
     } as undefined as GridRow<Model>;
 
     beforeEach(() => {

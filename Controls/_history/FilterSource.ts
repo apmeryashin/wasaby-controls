@@ -15,7 +15,7 @@ const DEFAULT_FILTER = '{}';
 
 const _private = {
    isOldPinned(data) {
-      return !JSON.parse(data, _private.getSerialize().desirialize).hasOwnProperty('linkText');
+      return !JSON.parse(data, _private.getSerialize().desirialize)?.hasOwnProperty('linkText');
    },
 
    createRecordSet(data: object): collection.RecordSet {

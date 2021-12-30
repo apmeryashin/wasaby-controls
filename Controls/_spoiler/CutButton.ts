@@ -1,7 +1,7 @@
 import {descriptor} from 'Types/entity';
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_spoiler/CutButton/CutButton';
-import { SyntheticEvent } from 'UI/Vdom';
+import {SyntheticEvent} from 'UI/Vdom';
 import 'css!Controls/spoiler';
 
 type TIconSize = 's' | 'm' | 'l';
@@ -18,10 +18,10 @@ export interface ICutButton {
 class CutButton extends Control<ICutButton, IControlOptions> {
     protected _template: TemplateFunction = template;
 
-    protected _clickHandler(event: SyntheticEvent): void {
+    protected _onValueHandler(event: SyntheticEvent, value: boolean): void {
         event.stopPropagation();
         if (!this._options.readOnly) {
-            this._notify('expandedChanged', [!this._options.expanded]);
+            this._notify('expandedChanged', [value]);
         }
     }
 

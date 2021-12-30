@@ -5,6 +5,9 @@ import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroup
 import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
 import {IItemTemplateOptions, IContrastBackgroundOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {constants} from 'Env/Env';
+import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 interface IBackgroundPosition {
     [key: number]: IBackgroundPositionData;
@@ -232,6 +235,42 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
         }
     }
 
+    protected _highlightedOnFocus(): boolean {
+        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
+    }
+
+    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+        if (e.nativeEvent.keyCode === constants.key.space && !this._options.readOnly) {
+            e.preventDefault();
+            const newActiveItem = this._getNextActiveItem();
+            if (newActiveItem) {
+                this._onItemClick(e, newActiveItem);
+            }
+        }
+    }
+
+    private _getNextActiveItem(): Model {
+        let firstItem = null;
+        let isNextActiveItem: boolean = false;
+        let nextActiveItem: Model = null;
+        const thisActiveItem = this._options.items.getRecordById(this._options.selectedKey);
+        this._options.items.forEach((item) => {
+            if (!firstItem) {
+                firstItem = item;
+            }
+            if (item === thisActiveItem) {
+                isNextActiveItem = true;
+            } else if (isNextActiveItem) {
+                nextActiveItem = item;
+                isNextActiveItem = false;
+            }
+        });
+        if (!nextActiveItem) {
+            nextActiveItem = firstItem;
+        }
+        return nextActiveItem;
+    }
+
     protected _mouseEnterHandler(): void {
         this._setBackgroundPosition();
     }
@@ -289,6 +328,12 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
         direction: 'horizontal',
         contrastBackground: false
     };
+
+    static contextTypes(): object {
+        return {
+            workByKeyboard: WorkByKeyboardContext
+        };
+    }
 }
 
 export default Tumbler;

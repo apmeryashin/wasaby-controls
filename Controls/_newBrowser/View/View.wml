@@ -32,11 +32,13 @@
 <ws:template name="detailTemplate">
     <div class="controls-newBrowser__detail" style="background-color: {{_detailBgColor}};">
         <ws:if data="{{ _isExpandedCompositeTreeMode(_listConfiguration, _appliedViewMode) }}">
-            <Controls.scroll:StickyBlock mode="stackable">
+            <Controls.scroll:StickyBlock mode="stackable" backgroundStyle="master">
                 <Controls._newBrowser.context.Consumer>
                     <Controls._newBrowser.navigation.Navigation
                             root="{{ _detailExplorerOptions.root }}"
                             items="{{ _options.items }}"
+                            padding="{{ _detailExplorerOptions.itemPadding }}"
+                            containerPadding="{{ _detailExplorerOptions.itemsContainerPadding }}"
                             keyProperty="{{ _detailExplorerOptions.keyProperty }}"
                             parentProperty="{{ _detailExplorerOptions.parentProperty }}"
                             nodeProperty="{{ _detailExplorerOptions.nodeProperty }}"
@@ -66,12 +68,17 @@
         </ws:if>
         <ws:else data="{{ _isExpandedCompositeTreeMode(_listConfiguration, _appliedViewMode) }}">
             <Controls._newBrowser.context.Consumer>
-                <Controls.expandedCompositeTree:View
-                        name="detailList"
-                        scope="{{_detailExplorerOptions}}"
-                        on:activeElementChanged="_detailActiveElementChanged()"
-                        on:itemClick="_onExplorerItemClick(false)"
-                        attr:class="controls-newBrowser__detail-list"/>
+                <Controls.list:Container id="detail">
+                    <Controls.list:HotKeysContainer>
+                        <Controls.expandedCompositeTree:View
+                                name="detailList"
+                                scope="{{_detailExplorerOptions}}"
+                                itemTemplate="{{ _detailExplorerOptions.compositeItemTemplate }}"
+                                on:activeElementChanged="_detailActiveElementChanged()"
+                                on:itemClick="_onExplorerItemClick(false)"
+                                attr:class="controls-newBrowser__detail-list"/>
+                    </Controls.list:HotKeysContainer>
+                </Controls.list:Container>
             </Controls._newBrowser.context.Consumer>
         </ws:else>
         <ws:else>

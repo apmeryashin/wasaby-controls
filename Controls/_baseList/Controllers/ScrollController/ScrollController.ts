@@ -8,12 +8,11 @@ import {
     IAbstractObserversControllerBaseOptions,
     IAbstractObserversControllerOptions,
     IAdditionalTriggersOffsets,
-    ITriggerPosition,
-    TIntersectionEvent
+    ITriggerPosition
 } from './ObserverController/AbstractObserversController';
 import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalculatorResult} from './Calculator';
 import {CrudEntityKey} from 'Types/source';
-import type { IEdgeItemCalculatingParams } from '../AbstractListVirtualScrollController';
+import type {IEdgeItemCalculatingParams} from '../AbstractListVirtualScrollController';
 
 export interface IItemsRange {
     startIndex: number;
@@ -35,7 +34,16 @@ export interface IIndexesChangedParams {
     range: IItemsRange;
     oldRange: IItemsRange;
     oldPlaceholders: IPlaceholders;
+    mode: IShiftRangeMode;
 }
+
+/**
+ * Режим добавления элементов
+ * @param fixed Стартовая запись зафиксирована, после смещения диапазона она сохраняет свою позицию.
+ * @param unfixed Стартовая запись свободна, после смещения диапазона она будет смещена из-за добавленных записей
+ * в сторону противоположную направлению смещения.
+ */
+export type IShiftRangeMode = 'unfixed'|'fixed';
 
 export interface IActiveElementIndex {
     activeElementIndex: number;
@@ -103,8 +111,8 @@ export class ScrollController {
     private readonly _itemsEndedCallback: IItemsEndedCallback;
     private readonly _indexesInitializedCallback: IIndexesInitializedCallback;
 
-    private _viewportSize: number;
-    private _contentSize: number;
+    private _viewportSize: number = 0;
+    private _contentSize: number = 0;
 
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
@@ -135,25 +143,16 @@ export class ScrollController {
             observersCallback: this._observersCallback.bind(this)
         });
 
-        // корректируем скролл на размер контента до списка
-        const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
-        // если скролл меньше размера контента до списка, то это значит что сам список еще не проскроллен
-        const givenScrollPosition = options.scrollPosition || 0;
-        const scrollPosition = givenScrollPosition < beforeContentSize
-            ? 0
-            : givenScrollPosition - beforeContentSize;
         this._calculator = new Calculator({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
-            scrollPosition,
+            scrollPosition: options.scrollPosition,
             totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
             contentSize: options.contentSize,
             givenItemsSizes: options.givenItemsSizes
         });
-
-        this._processInitialize();
     }
 
     viewportResized(viewportSize: number): boolean {
@@ -227,7 +226,6 @@ export class ScrollController {
     setItemsContainer(newItemsContainer: HTMLElement): void {
         this._itemsSizesController.setItemsContainer(newItemsContainer);
         this._itemsSizesController.resetItems(this._calculator.getTotalItemsCount());
-
         const newItemsSizes = this._itemsSizesController.updateItemsSizes(this._calculator.getRange());
         this._calculator.updateItemsSizes(newItemsSizes);
     }
@@ -281,8 +279,9 @@ export class ScrollController {
      * Обрабатывает добавление элементов в коллекцию.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
+     * @param mode Режим добавления записей
      */
-    addItems(position: number, count: number): void {
+    addItems(position: number, count: number, mode: IShiftRangeMode): void {
         const itemsSizes = this._itemsSizesController.addItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
@@ -295,7 +294,7 @@ export class ScrollController {
             : this._observersController.setForwardTriggerPosition('offset');
         this._calculator.setTriggerOffsets(triggersOffsets);
 
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, mode);
     }
 
     /**
@@ -310,7 +309,7 @@ export class ScrollController {
         this._calculator.updateItemsSizes(itemsSizes);
 
         const result = this._calculator.moveItems(addPosition, addCount, removePosition, removeCount);
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'fixed');
     }
 
     /**
@@ -324,22 +323,29 @@ export class ScrollController {
         const itemsSizes = this._itemsSizesController.removeItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'fixed');
     }
 
     /**
      * Обрабатывает пересоздание всех элементов коллекции.
      * @param totalCount Общее кол-во элементов в коллекции
-     * @param keepPosition Нужно ли сохранить текущию позицию
+     * @param startIndex Начальный индекс диапазона отображаемых записей
      */
-    resetItems(totalCount: number, keepPosition: boolean): void {
+    resetItems(totalCount: number, startIndex: number): void {
+        // Если начальный индекс не 0, то это значит что мы должны сохранить текущую позицию.
+        if (startIndex === 0) {
+            // Сбрасываем состояние контроллера.
+            this.scrollPositionChange(0);
+        }
+        this.contentResized(0);
+
         const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
         const itemsSizes = this._itemsSizesController.resetItems(totalCount);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        this._calculator.resetItems(totalCount, keepPosition);
+        this._calculator.resetItems(totalCount, startIndex);
 
         const hasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),
@@ -356,7 +362,7 @@ export class ScrollController {
             this.setForwardTriggerPosition('offset');
         }
 
-        this._processInitialize();
+        this._handleInitializingResult();
     }
 
     // endregion Collection changes
@@ -372,9 +378,7 @@ export class ScrollController {
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        const beforeContentSize = this._itemsSizesController.getBeforeContentSize();
-        const scrollPosition = this._calculator.getScrollPositionToEdgeItem(edgeItem);
-        return edgeItem.direction === 'forward' ? scrollPosition - beforeContentSize : scrollPosition;
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
     }
 
     /**
@@ -385,7 +389,7 @@ export class ScrollController {
      */
     scrollToItem(itemIndex: number): boolean {
         const result = this._calculator.shiftRangeToIndex(itemIndex);
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'fixed');
         return result.indexesChanged;
     }
 
@@ -394,9 +398,10 @@ export class ScrollController {
      * Используется при нажатии в скролбар в позицию, где записи уже скрыты виртуальным скроллом.
      * @param position Позиция скролла.
      */
-    scrollToVirtualPosition(position: number): void {
+    scrollToVirtualPosition(position: number): boolean {
         const result = this._calculator.shiftRangeToVirtualScrollPosition(position);
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'fixed');
+        return result.indexesChanged;
     }
 
     /**
@@ -418,29 +423,16 @@ export class ScrollController {
      * Callback, вызываемый при достижении триггера.
      * Вызывает сдвиг itemsRange в направлении триггера.
      * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback или itemsEndedCallback.
-     * @param {TIntersectionEvent} eventName
+     * @param direction
      * @private
      */
-    private _observersCallback(eventName: TIntersectionEvent): void {
-        if (eventName === 'bottomOut' || eventName === 'topOut') {
-            return;
-        }
-
+    private _observersCallback(direction: IDirection): void {
         // НЕЛЬЗЯ делать рассчеты связанные со scrollPosition.
         // Т.к. в момент срабатывания триггера scrollPosition может быть не актуален.
         // Актуальное значение прийдет только после триггера в событии scrollMoveSync.
         // Выходит след-ая цепочка вызовов: scrollMoveSync -> observerCallback -> scrollMoveSync.
-
-        let direction: IDirection;
-        if (eventName === 'bottomIn') {
-            direction = 'forward';
-        }
-        if (eventName === 'topIn') {
-            direction = 'backward';
-        }
-
         const result = this._calculator.shiftRangeToDirection(direction);
-        this._processCalculatorResult(result);
+        this._processCalculatorResult(result, 'fixed');
 
         // после первого срабатывания триггера сбрасываем флаг resetTriggerOffset.
         // Чтобы дальше триггер срабатывал заранее за счет оффсета.
@@ -454,8 +446,8 @@ export class ScrollController {
         // TODO триггер может сразу стать виден, но это вызовет точно 2 перерисовки.
         //  нужно подумать, можно ли исправить. По идее мы не знаем размеры элементов.
 
-        // itemsEndedCallback должен вызываться ТОЛЬКО ТУТ, загрузка осуществляется ТОЛЬКО по достижению триггера
         if (!result.indexesChanged) {
+            // itemsEndedCallback должен вызываться ТОЛЬКО ТУТ, загрузка осуществляется ТОЛЬКО по достижению триггера
             if (this._itemsEndedCallback) {
                 this._itemsEndedCallback(direction);
             }
@@ -479,9 +471,10 @@ export class ScrollController {
      * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback.
      * Также, по необходимости, обеспечивает вызов activeElementChangedCallback.
      * @param {ICalculatorResult} result
+     * @param mode
      * @private
      */
-    private _processCalculatorResult(result: ICalculatorResult): void {
+    private _processCalculatorResult(result: ICalculatorResult, mode: IShiftRangeMode): void {
         if (result.placeholdersChanged) {
             this._placeholdersChangedCallback({
                 backward: result.backwardPlaceholderSize,
@@ -490,11 +483,13 @@ export class ScrollController {
         }
 
         if (result.hasItemsOutRangeChanged) {
+            const hasItemsOutRange: IHasItemsOutRange = {
+                backward: result.hasItemsOutRangeBackward,
+                forward: result.hasItemsOutRangeForward
+            };
+            this._observersController.setHasItemsOutRange(hasItemsOutRange);
             if (this._hasItemsOutRangeChangedCallback) {
-                this._hasItemsOutRangeChangedCallback({
-                    backward: result.hasItemsOutRangeBackward,
-                    forward: result.hasItemsOutRangeForward
-                });
+                this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
             }
         }
 
@@ -503,16 +498,25 @@ export class ScrollController {
                 range: result.range,
                 oldRange: result.oldRange,
                 oldPlaceholders: result.oldPlaceholders,
-                shiftDirection: result.shiftDirection
+                shiftDirection: result.shiftDirection,
+                mode
             });
         }
     }
 
-    private _processInitialize(): void {
+    private _handleInitializingResult(): void {
         this._indexesInitializedCallback(this._calculator.getRange());
-        this._hasItemsOutRangeChangedCallback({
+
+        const hasItemsOutRange: IHasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),
             forward: this._calculator.hasItemsOutRange('forward')
+        };
+        this._observersController.setHasItemsOutRange(hasItemsOutRange);
+        this._hasItemsOutRangeChangedCallback(hasItemsOutRange);
+
+        this._placeholdersChangedCallback({
+            backward: 0,
+            forward: 0
         });
     }
 

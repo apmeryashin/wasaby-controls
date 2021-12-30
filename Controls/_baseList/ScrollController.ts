@@ -685,6 +685,10 @@ export default class ScrollController {
                 return false;
             }
 
+            if (item.className.includes('js-controls-List_invisible-for-VirtualScroll')) {
+                return false;
+            }
+
             // Подвал узла после подгрузки данных может быть вытеснен из dom данными.
             if (item.className.includes('controls-TreeGrid__nodeFooter')) {
                 return false;

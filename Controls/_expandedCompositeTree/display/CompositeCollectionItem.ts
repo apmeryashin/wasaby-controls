@@ -68,8 +68,9 @@ export default class CollectionItem<T extends Model = Model>
 
     getRenderParams(): {} {
         return {
-            itemsContainerPadding: this._$compositeViewConfig.itemsContainerPadding,
-            itemTemplate: this._$compositeViewConfig.itemTemplate,
+            itemsContainerPadding: this._$compositeViewConfig?.itemsContainerPadding,
+            itemTemplate: this._$compositeViewConfig?.itemTemplate,
+            itemTemplateOptions: this._$compositeViewConfig?.itemTemplateOptions,
             listModel: this._renderCollection
         };
     }

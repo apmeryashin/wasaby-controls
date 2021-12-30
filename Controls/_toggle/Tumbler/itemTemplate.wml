@@ -1,11 +1,11 @@
 <ws:template name="CaptionTemplate">
-    <span data-qa="controls-Tumbler__button-caption" class="controls-Tumbler__button-caption controls-fontsize-{{fontSize}}">{{ item.get(displayProperty || 'title') ||  item.get('caption') }}</span>
+    <span data-qa="controls-Tumbler__button-caption" class="controls-Tumbler__button-caption controls-fontsize-{{fontSize}}" tabindex="0">{{ item.get(displayProperty || 'title') ||  item.get('caption') }}</span>
 </ws:template>
 
 <ws:if data="{{contentTemplate}}">
     <ws:partial template="{{contentTemplate}}" item="{{item}}">
         <ws:captionTemplate>
-            <ws:partial template="CaptionTemplate"/>
+            <ws:partial template="CaptionTemplate" tabindex="0"/>
         </ws:captionTemplate>
     </ws:partial>
 </ws:if>

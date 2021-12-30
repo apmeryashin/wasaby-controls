@@ -2,7 +2,10 @@
     <div class="controls-Tumbler__wrapper
     controls-Tumbler__wrapper_{{_options.contrastBackground ?  'contrast' : 'same'}}
     controls-Tumbler__wrapper_{{_options.direction}}
-     {{_options.direction === 'horizontal' ? 'controls-inlineheight-'+_options.inlineHeight}}" on:mouseenter="_mouseEnterHandler()" on:touchstart="_touchStartHandler()">
+     {{_highlightedOnFocus() ? 'controls-focused-item'}}
+     {{_options.direction === 'horizontal' ? 'controls-inlineheight-'+_options.inlineHeight}}" on:mouseenter="_mouseEnterHandler()" on:touchstart="_touchStartHandler()"
+         on:keypress="_keyUpHandler()"
+         tabindex="0">
         <ws:for data="index, itemData in _options.items">
             <div class="controls-Tumbler__button controls-Tumbler__button-{{_options.inlineHeight}}
                         controls-Tumbler__button-{{_options.readOnly? 'disabled' : 'enabled'}}

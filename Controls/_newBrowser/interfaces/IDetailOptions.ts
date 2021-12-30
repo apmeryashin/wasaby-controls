@@ -139,6 +139,12 @@ export
     dataLoadCallback?: (items: RecordSet, direction: string) => void;
 
     breadcrumbsVisibility?: string;
+
+    /**
+     * @name Controls/newBrowser:IDetail#compositeItemTemplate
+     * Шаблон элемента, используемый для вывода в составном дереве
+     */
+    compositeItemTemplate?: TemplateFunction | string;
 }
 
 /**
