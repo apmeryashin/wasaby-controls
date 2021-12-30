@@ -41,6 +41,7 @@ import 'css!Controls/treeGrid';
  * @implements Controls/tree:ITreeControl
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/_treeGrid/interface/ITreeGrid
+ * @implements Controls/error:IErrorControllerOptions
  *
  * @public
  * @author Авраменко А.С.
