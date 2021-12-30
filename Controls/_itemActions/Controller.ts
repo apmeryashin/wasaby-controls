@@ -779,7 +779,7 @@ export class Controller {
             all = contents.get(this._itemActionsProperty);
             if (all === undefined) {
                 Logger.error(`ItemActions: Property ${this._itemActionsProperty} has incorrect value for record ` +
-                    `with key ${item.getContents().getKey()}. Array was expected.`, this);
+                    `with key ${contents.getKey()}. Array was expected.`, this);
                 all = [];
             }
         } else {
