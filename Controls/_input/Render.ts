@@ -17,6 +17,7 @@ import {IBorderVisibilityArea} from './interface/IBorderVisibilityArea';
 
 // @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
+import {default as WorkByKeyboardContext} from 'Controls/Context/WorkByKeyboardContext';
 
 type State =
     'valid'
@@ -168,6 +169,10 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         return options.validationStatus;
     }
 
+    protected _highlightedOnFocus(): boolean {
+        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
+    }
+
     protected _tagClickHandler(event: SyntheticEvent<MouseEvent>): void {
         this._notify('tagClick', [this._children.tag]);
     }
@@ -290,6 +295,12 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
             contrastBackground: true,
             state: '',
             validationStatus: 'valid'
+        };
+    }
+
+    static contextTypes(): object {
+        return {
+            workByKeyboard: WorkByKeyboardContext
         };
     }
 }
