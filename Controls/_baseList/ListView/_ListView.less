@@ -89,7 +89,8 @@
    display: inline-block;
 }
 
-.ws-is-desktop-platform .controls-ListView__checkbox-onhover {
+// На тач устройствах нельзя скрывать чекбокс, т.к. там нет ховера
+.ws-is-no-touch .controls-ListView__checkbox-onhover {
    visibility: hidden;
 }
 
