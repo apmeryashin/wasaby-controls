@@ -225,7 +225,6 @@ export default class TileView extends ListView {
     ): Record<string, any> {
         const isActionMenu = !!action && !action.isMenu;
         if (this._shouldOpenExtendedMenu(isActionMenu) && menuConfig) {
-            const MENU_MAX_WIDTH = 200;
             const menuOptions = menuConfig.templateOptions;
             const itemContainer = clickEvent.target.closest('.controls-TileView__item');
             const imageWrapper = itemContainer.querySelector('.controls-TileView__imageWrapper');
@@ -255,8 +254,6 @@ export default class TileView extends ListView {
             return {
                 templateOptions: menuOptions,
                 closeOnOutsideClick: true,
-                // maxWidth: Math.max(menuOptions.previewWidth, menuOptions.previewHeight) + MENU_MAX_WIDTH,
-                // target: this._targetItemRect ? this._mockMenuTarget(this._targetItemRect) : imageWrapper,
                 target: this._targetItemRect ?
                     this._getTargetPoint(this._targetItemRect) :
                     this._getTargetPoint(imageWrapper.getBoundingClientRect()),
@@ -286,25 +283,13 @@ export default class TileView extends ListView {
 
     /**
      * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
-     * Поэтому мокаем объект с getBoundingClientRect так, чтобы он возвращал переданные координаты
+     * Для позиционирования достаточно координат {x, y}
      * @param rect
      */
-    private _mockMenuTarget(rect: ClientRect): HTMLElement {
-        return {
-            children: [],
-            getBoundingClientRect(): ClientRect {
-                return rect;
-            },
-            closest(): void {
-                return undefined;
-            }
-        } as undefined as HTMLElement;
-    }
-
     private _getTargetPoint(rect: ClientRect): { x: number, y: number } {
         return {
-            x: rect.left + rect.width,
-            y: rect.top + rect.height / 2
+            x: rect.right,
+            y: document.scrollingElement.scrollTop + rect.top + rect.height / 2
         };
     }
 

@@ -13,9 +13,10 @@
                 class="controls-TileView__itemActions__menu_content"
                 data-qa="controls-TileView__itemActions__menu_content"
             >
+               <!--Используем максимальную доступную высоту и пропорцию для вычисления ширины изображения-->
                <style>
                   .controls-TileView__itemActions__menu_content {
-                     --height_image: max(calc({{_options.stickyPosition.sizes.height}}px - var(--inline_height_4xl)), {{_options.previewHeight}}px);
+                     --height_image: max(calc({{_options.stickyPosition.sizes.height || _options.previewHeight}}px - var(--inline_height_4xl) - var(--border-thickness)), {{_options.previewHeight}}px);
                      --width_image: calc(var(--height_image) * {{_options.imageProportion}});
                   }
                </style>
