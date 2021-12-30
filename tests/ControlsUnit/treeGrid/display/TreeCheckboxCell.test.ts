@@ -29,7 +29,8 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterCell', () => {
             isEditing: () => false,
             isMarked: () => false,
             shouldDisplayMarker: () => false,
-            isDragTargetNode: () => false
+            isDragTargetNode: () => false,
+            isSticked: () => false
         };
     });
 
