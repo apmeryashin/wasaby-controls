@@ -24,7 +24,7 @@ class PopupStack extends Control<IControlOptions> {
     });
 
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
-        const topOffset = 300;
+        const topOffset = 490;
         this._children.scroll.scrollTo(topOffset);
     }
 

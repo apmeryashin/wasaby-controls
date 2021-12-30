@@ -1,11 +1,19 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div class="controls-text-label">slider</div>
-    <Controls.slider:Base
-            attr:data-qa="controlsDemo-Slider__bind"
-            maxValue="{{100}}"
-            minValue="{{0}}"
-            bind:value="_value"
-    />
+
+    <div class="ws-flexbox">
+        <Controls.slider:Base
+                attr:data-qa="controlsDemo-Slider__bind"
+                attr:class="ws-flex-grow-1"
+                maxValue="{{100}}"
+                minValue="{{0}}"
+                bind:value="_value"
+        />
+        <Controls.input:Number bind:value="_value"
+                               attr:style="width:100px"
+                               attr:data-qa="controlsDemo-Slider__inputBase"
+                               on:valueChanged="_changedHandler()"/>
+    </div>
     <div class="controls-text-label">default slider</div>
     <Controls.slider:Base
             attr:data-qa="controlsDemo-Slider__default"

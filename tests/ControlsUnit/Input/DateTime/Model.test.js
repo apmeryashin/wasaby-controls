@@ -119,7 +119,6 @@ define([
             sinon.assert.notCalled(model._notify);
             sandbox.restore();
          });
-
       });
 
       describe('.autocomplete', function() {

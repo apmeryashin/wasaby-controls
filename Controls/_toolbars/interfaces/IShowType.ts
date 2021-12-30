@@ -27,15 +27,18 @@
  */
 export enum showType {
    /**
-    * Опция отображается в меню опций и в контекстном меню.
+    * @name Controls/toolbars:showType#MENU
+    * @cfg {String} Элемент отображается только в меню. Рекомендуем использовать константу toolbar.showType.MENU.
     */
    MENU,
    /**
-    * Опция отображается в меню опций и в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/menu-visibility/ контекстном меню}, а также на панели опций.
+    * @name Controls/toolbars:showType#MENU_TOOLBAR
+    * @cfg {String} Элемент отображается в меню и в тулбаре.Рекомендуем использовать константу toolbar.showType.MENU_TOOLBAR.
     */
    MENU_TOOLBAR,
    /**
-    * Опция отображается только на панели опций.
+    * @name Controls/toolbars:showType#TOOLBAR
+    * @cfg {String} Элемент отображается только в тулбаре. Рекомендуем использовать константу toolbar.showType.TOOLBAR.
     */
    TOOLBAR
 }
