@@ -35,7 +35,7 @@ class FilterLink extends Control<IControlOptions> {
    static getDefaultOptions(): object {
       return {
          underline: 'none',
-         useBackground: true
+         showBackground: true
       };
    }
 }
