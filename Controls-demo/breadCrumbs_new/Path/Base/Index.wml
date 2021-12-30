@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper">
+   <div class="custom-line-height">
+      <div class="custom-line-height__text">Text</div>
+      <Controls.breadcrumbs:Path
+         fontSize="m"
+         keyPropery="id"
+         parentProperty="parent"
+         items="{{_breadcrumbs}}"
+      />
+   </div>
+</div>
