@@ -1,4 +1,4 @@
-import {IItemAction, TItemActionsSize} from './IItemAction';
+import {IItemAction} from './IItemAction';
 
 /**
  * Расширенный интерфейс IItemAction с полями для использования в шаблоне
@@ -38,11 +38,6 @@ export interface IShownItemAction extends IItemAction {
      * Размер шрифта для выравнивания иконки
      */
     fontSize?: string;
-
-    /**
-     * Размер иконки
-     */
-    iconSize?: TItemActionsSize | 'xs';
 }
 
 export interface IItemActionsObject {
