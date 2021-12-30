@@ -18,7 +18,7 @@ export type IItemsSizes = IItemSize[];
 /**
  * Класс предназначен для получения, хранения и актуализации размеров записей.
  */
-export class AbstractItemsSizesController {
+export abstract class AbstractItemsSizesController {
     private _itemsQuerySelector: string;
     private _itemsContainer: HTMLElement;
     private _itemsSizes: IItemsSizes = [];
@@ -46,13 +46,13 @@ export class AbstractItemsSizesController {
     /**
      * Возвращает размер контента, расположенного в этом же ScrollContainer-е до списка.
      */
-    getBeforeContentSize(): number {
+    getContentSizeBeforeItems(): number {
         if (!this._itemsContainer) {
             return null;
         }
 
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
-        return this._getBeforeContentSize(this._itemsContainer, scrollContent);
+        return this._getContentSizeBeforeItems(this._itemsContainer, scrollContent);
     }
 
     // region on DOM references update
@@ -99,38 +99,53 @@ export class AbstractItemsSizesController {
 
         if (this._itemsContainer) {
             const itemsElements = this._itemsContainer.querySelectorAll(this._itemsQuerySelector);
-
             if (itemsRangeLength !== itemsElements.length) {
                 Logger.error('Controls/list:ItemsSizeController.updateItemsSizes | ' +
-                    'The count of elements in the DOM differs from the length of the updating items range.');
+                    'The count of elements in the DOM differs from the length of the updating items range. ' +
+                    `Check that each item has selector: ${this._itemsQuerySelector}.`
+                );
             } else {
+                // item.offset который мы посчитали является расстоянием от края itemsContainer до элемента
+                // НО scrollPosition - это расстояние от scrollContainer до границы вьюпорта.
+                // Поэтому она учитывает еще и все что находится до itemsContainer.
+                // То есть нам нужно поставить item.offset и scrollPosition в одинаковые условия.
+                // Для этого корректируем item.offset на contentSizeBeforeItems.
+                // Корректировать scrollPosition на contentSizeBeforeItems нельзя, т.к. в кальклуторе есть другие
+                // параметры на которые тоже может повлиять contentSizeBeforeItems.
+                // Например, triggerOffset - он может содержать высоту ромашки,
+                // а ромашка является частью contentSizeBeforeItems.
+                // По идее после того как triggerOffset будет позиционироваться от ромашки
+                // и высота ромашки на него не будет влиять,
+                // то можно будет корректировать только scrollPosition на уровне ScrollController.
+                // Это вроде должно выглядеть понятнее.
+                const contentSizeBeforeItems = this.getContentSizeBeforeItems();
+                const firstItemOffset = this._itemsSizes[0]?.offset || 0;
                 let position = itemsRange.startIndex;
-
-                // Нужно учитывать оффсет элементов скрытых виртуальным диапазоном.
-                // Например, был диапазон 0 - 10, стал 5 - 15
-                // У 5-ой записи offset === 0, но перед ней есть еще 5-ть скрытых записей, у которых мы знаем offset.
-                // offset после послденей скрытой записи равен ее offset + size.
-                let hiddenItemsOffset = 0;
-                if (position > 0) {
-                    const lastHiddenItem = this._itemsSizes[position - 1];
-                    hiddenItemsOffset = lastHiddenItem.offset + lastHiddenItem.size;
-                }
+                // Возможна ситуация, что диапазон сместился с [0, 5] на [10, 15].В этом случае предыдущий отрисованный
+                // элемент это не startIndex - 1, а это первый от startIndex к началу отрендеренный элемент;
+                const beforeRangeItems = this._itemsSizes.slice(0, itemsRange.startIndex);
+                const renderedItemSizeBeforeRange = beforeRangeItems.reverse().find((it) => !!it.size);
                 Array.from(itemsElements).forEach((element: HTMLElement) => {
-                    this._itemsSizes[position] = this._getItemSize(element);
-                    this._itemsSizes[position].offset += hiddenItemsOffset;
+                    const prevRenderedItemSize = position === itemsRange.startIndex
+                        ? renderedItemSizeBeforeRange
+                        : this._itemsSizes[position - 1];
+                    // оффсет не учитывает margin-ы, нужно будет решить эту проблему. offsetTop ее не решает.
+                    // Если брать offsetTop у записи, то возникает еще проблема с застикаными записями.
+                    let offset = prevRenderedItemSize ? prevRenderedItemSize.offset + prevRenderedItemSize.size : 0;
+                    if (position === itemsRange.startIndex) {
+                        offset += contentSizeBeforeItems;
+                        // нужно вычитать оффсет первой записи, чтобы он не учитывался дважды, когда мы будем прибавлять
+                        // contentSizeBeforeItems к элементам нового диапазона.
+                        if (position !== 0) {
+                            offset -= firstItemOffset;
+                        }
+                    }
+                    this._itemsSizes[position] = {
+                        size: this._getItemSize(element),
+                        offset
+                    };
                     position++;
                 });
-
-                // Т.к. мы обновили размеры в начале массива, то у последующих элементов нужно обновить offset
-                if (itemsRange.endIndex < this._itemsSizes.length) {
-                    const lastUpdatedItem = this._itemsSizes[itemsRange.endIndex - 1];
-                    const firstNotUpdatedItem = this._itemsSizes[itemsRange.endIndex];
-                    const updatedItemsOffset = lastUpdatedItem.offset + lastUpdatedItem.size
-                        - firstNotUpdatedItem.offset;
-                    for (let i = itemsRange.endIndex; i < this._itemsSizes.length; i++) {
-                        this._itemsSizes[i].offset += updatedItemsOffset;
-                    }
-                }
             }
         } else {
             for (let position = itemsRange.startIndex; position <= itemsRange.endIndex; position++) {
@@ -139,9 +154,9 @@ export class AbstractItemsSizesController {
         }
     }
 
-    protected abstract _getBeforeContentSize(itemsContainer: HTMLElement, scrollContent: Element): number;
+    protected abstract _getContentSizeBeforeItems(itemsContainer: HTMLElement, scrollContent: Element): number;
 
-    protected abstract _getItemSize(element: HTMLElement): IItemSize;
+    protected abstract _getItemSize(element: HTMLElement): number;
 
     private static _getEmptyItemSize(): IItemSize {
         return {
