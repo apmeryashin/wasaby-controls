@@ -2,12 +2,10 @@ import { TreeGridCollection } from 'Controls/treeGrid';
 import {Model} from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 import SearchGridDataRow from './SearchGridDataRow';
-import {ItemsFactory, itemsStrategy, TreeItem} from 'Controls/display';
+import {ItemsFactory, itemsStrategy, TreeItem, CollectionEnumerator, getFlatNearbyItem} from 'Controls/display';
 import BreadcrumbsItemRow from './BreadcrumbsItemRow';
 import {IOptions as ITreeGridOptions} from 'Controls/_treeGrid/display/TreeGridCollection';
 import TreeGridDataRow from 'Controls/_treeGrid/display/TreeGridDataRow';
-import CollectionEnumerator from 'Controls/_display/CollectionEnumerator';
-import {getFlatNearbyItem} from 'Controls/_display/utils/NearbyItemUtils';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов

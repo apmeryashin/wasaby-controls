@@ -612,6 +612,9 @@ export default class View extends Control<IOptions, IReceivedState> {
     static defaultProps: Partial<IOptions> = {
         master: {
             visibility: MasterVisibilityEnum.hidden
+        },
+        detail: {
+            compositeItemTemplate: 'Controls/list:ItemTemplate'
         }
     };
 

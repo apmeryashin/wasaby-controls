@@ -29,6 +29,7 @@
 
              itemTemplate="{{ _itemTemplate }}"
              itemTemplateProperty="{{ _options.itemTemplateProperty }}"
+             itemTemplateOptions="{{ _options.itemTemplateOptions }}"
              groupTemplate="{{ _groupTemplate }}"
              markerPosition="{{ _options.markerPosition }}"
 

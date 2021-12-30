@@ -191,5 +191,15 @@ describe('Controls/itemActions/Controller/HoverActions', () => {
             // т.к. для них рассчитывается видимость при открытии соответствующего меню.
             assert.equal(visibilityCallbackCallCount, 30);
         });
+
+        it ('should work with breadcrumbs', () => {
+            const itemAt0 = collection.at(0);
+            const originalGetContents = itemAt0.getContents.bind(itemAt0);
+            // @ts-ignore
+            itemAt0.getContents = (): any[] => (['fake', 'fake', 'fake', originalGetContents() ]);
+            updateControllerOptions();
+            assert.isArray(itemAt0.getContents());
+            assert.isNotEmpty(itemAt0.getActions());
+        });
     });
 });
