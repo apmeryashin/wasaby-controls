@@ -284,7 +284,6 @@ const _private = {
 
         self._displayGlobalIndicator();
         return sourceController.load(direction, nodeKey).then((list) => {
-                self.stopBatchAdding();
                 self._needRestoreScroll = true;
                 return list;
             })
@@ -1251,12 +1250,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     resolve();
                 }
             };
-
-            if (model.getLast('Markable') === model.getItemBySourceKey(key)) {
-                this._shiftToDirection('down').then(goToNextItem);
-            } else {
-                goToNextItem();
-            }
+            goToNextItem();
         });
     }
 

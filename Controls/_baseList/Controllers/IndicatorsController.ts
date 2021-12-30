@@ -56,6 +56,7 @@ export default class IndicatorsController {
     private _hasNotRenderedChanges: boolean = false;
     private _startDisplayDrawingIndicator: boolean = false;
     private _startDisplayGlobalIndicator: boolean = false;
+    private _startDisplayBottomIndicator: boolean = false;
 
     constructor(options: IIndicatorsControllerOptions) {
         this._options = options;
@@ -227,7 +228,9 @@ export default class IndicatorsController {
             const indicatorState = this._getLoadingIndicatorState('bottom');
             this._model.displayIndicator('bottom', indicatorState);
         } else {
+            this._startDisplayBottomIndicator = true;
             this._startDisplayIndicatorTimer(() => {
+                this._startDisplayBottomIndicator = false;
                 const indicatorState = this._getLoadingIndicatorState('bottom');
                 this._model.displayIndicator('bottom', indicatorState);
             });
@@ -450,7 +453,8 @@ export default class IndicatorsController {
         const allowByIndicators = position === 'top' && !this._model.getTopIndicator().isDisplayed() ||
             position === 'bottom' && !this._model.getBottomIndicator().isDisplayed();
         // при порционном поиске индикатор всегда отрисовать и поэтому индикатор отрисовки не нужен
-        return !this._isPortionedSearch() && allowByOptions && allowByIndicators && !this._startDisplayGlobalIndicator;
+        return !this._isPortionedSearch() && allowByOptions && allowByIndicators
+            && !this._startDisplayGlobalIndicator && !this._startDisplayBottomIndicator;
     }
 
     // endregion LoadingIndicator
