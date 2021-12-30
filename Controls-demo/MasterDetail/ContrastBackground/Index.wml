@@ -89,7 +89,7 @@
          </ws:detail>
       </Controls.masterDetail:Base>
    </div>
-   <div class="controlsDemo__masterDetail-container attr:data-qa="treeGrid_View"">
+   <div class="controlsDemo__masterDetail-container" attr:data-qa="treeGrid_View">
       <div class="controls-text-label">treeGrid:View в мастере</div>
       <Controls.masterDetail:Base>
          <ws:master>
