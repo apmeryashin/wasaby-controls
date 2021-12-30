@@ -97,6 +97,11 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         this._setDragStateByOptions(this._options);
     }
 
+    protected _getBackgroundColor(): string {
+        return this._options.backgroundStyle === 'default' ? 'controls-DialogTemplate_backgroundStyle-default' :
+            'controls-background-' + this._options.backgroundStyle;
+    }
+
     private _needStartDrag(event: SyntheticEvent<MouseEvent>): boolean {
         const {target} = event;
         const isEventProcessed = event.nativeEvent.processed;
@@ -105,13 +110,6 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
 
     private _startDragNDrop(event: SyntheticEvent<Event>): void {
         this._children.dragNDrop.startDragNDrop(null, event);
-    }
-
-    protected _getWrapperBackgroundColorClass(): string {
-        if (this._options.headerBackgroundStyle === this._options.backgroundStyle) {
-            return `controls-background-${this._options.backgroundStyle}`;
-        }
-        return '';
     }
 
     static getDefaultOptions(): IDialogTemplateOptions {
