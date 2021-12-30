@@ -95,7 +95,10 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
             startIndex = Math.max(0, totalCount - pageSize);
         }
 
-        endIndex = Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount));
+        endIndex = Math.min(
+            Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount)),
+            totalCount
+        );
     } else {
         // сперва считаем именно endIndex, т.к. startIndex зависит от нового значения endIndex
         endIndex = Math.min(endIndex + correctedSegmentSize, totalCount);
@@ -298,9 +301,9 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
         return currentRange.endIndex - 1;
     } else {
         let activeElementIndex;
-        const scrollTopWithPlaceholder = fixedScrollPosition + placeholders.backward;
+        const scrollPositionWithPlaceholder = fixedScrollPosition + placeholders.backward;
         const knownContentHeight = contentSize + placeholders.forward + placeholders.backward;
-        const indexLineRatio = scrollTopWithPlaceholder / (knownContentHeight - viewportSize);
+        const indexLineRatio = scrollPositionWithPlaceholder / (knownContentHeight - viewportSize);
         const indexLine = Math.max(MIN_RATIO_INDEX_LINE, Math.min(MAX_RATIO_INDEX_LINE, indexLineRatio));
 
         for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
