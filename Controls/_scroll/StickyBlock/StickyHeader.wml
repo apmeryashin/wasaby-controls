@@ -2,7 +2,7 @@
    <!--Styles specified with attr are not merged, so as a temporary solution, we use the option.-->
    <!--https://online.sbis.ru/opendoc.html?guid=e692216c-8a18-4b42-8523-5434d436a502-->
    <div class="controls-StickyHeader controls_scroll_theme-{{ _options.theme }}
-   controls-background-{{ _options.backgroundStyle }}
+   {{_options.backgroundStyle ? ('controls-background-' + _options.backgroundStyle) : 'controls-StickyHeader_default-background'}}
    controls-StickyHeader_position
    {{_subPixelArtifactClass}} {{_topGapFixClass}}"
         style="{{_style + (_options.style || '')}}">
