@@ -14,8 +14,8 @@ const ACTION_PADDINGS = {
     bottom: 0
 };
 
-export function getItemActionSize(iconSize: TItemActionsSize, aligment: string = 'horizontal'): number {
-    return ICON_SIZES[iconSize] + (aligment === 'horizontal' ? (ACTION_PADDINGS.left + ACTION_PADDINGS.right) :
+export function getItemActionSize(iconSize: TItemActionsSize, alignment: string = 'horizontal'): number {
+    return ICON_SIZES[iconSize] + (alignment === 'horizontal' ? (ACTION_PADDINGS.left + ACTION_PADDINGS.right) :
         (ACTION_PADDINGS.top + ACTION_PADDINGS.bottom));
 }
 
@@ -27,7 +27,7 @@ export function getAvailableActionsCount(iconSize: TItemActionsSize, availableSi
 export function getActions(
     actions: IItemActionsObject,
     iconSize: TItemActionsSize,
-    aligment: string,
+    alignment: string,
     containerSize: number
 ): IItemActionsObject {
     let showedActions = [];
