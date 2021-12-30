@@ -247,6 +247,7 @@ export default class TileView extends ListView {
             menuOptions.previewWidth = this._targetItemRect && item.isScaled()
                 ? this._targetItemRect.width
                 : targetItemSize.width;
+            menuOptions.imageProportion = menuOptions.previewWidth / menuOptions.previewHeight;
             menuOptions.roundBorder = !!this._options.roundBorder;
             menuOptions.borderWidth = 'null';
             menuOptions.borderStyle = 'transparent';
@@ -254,17 +255,21 @@ export default class TileView extends ListView {
             return {
                 templateOptions: menuOptions,
                 closeOnOutsideClick: true,
-                maxWidth: menuOptions.previewWidth + MENU_MAX_WIDTH,
-                target: this._targetItemRect ? this._mockMenuTarget(this._targetItemRect) : imageWrapper,
+                // maxWidth: Math.max(menuOptions.previewWidth, menuOptions.previewHeight) + MENU_MAX_WIDTH,
+                // target: this._targetItemRect ? this._mockMenuTarget(this._targetItemRect) : imageWrapper,
+                target: this._targetItemRect ?
+                    this._getTargetPoint(this._targetItemRect) :
+                    this._getTargetPoint(imageWrapper.getBoundingClientRect()),
                 className: `controls-TileView__itemActions_menu_popup
                             controls_popupTemplate_theme-${this._options.theme}
                             controls_list_theme-${this._options.theme}`,
                 targetPoint: {
                     vertical: 'center',
-                    horizontal: 'left'
+                    horizontal: 'right'
                 },
                 direction: {
-                    vertical: 'center'
+                    vertical: 'center',
+                    horizontal: 'left'
                 },
                 fittingMode: {
                     vertical: 'overflow',
@@ -294,6 +299,13 @@ export default class TileView extends ListView {
                 return undefined;
             }
         } as undefined as HTMLElement;
+    }
+
+    private _getTargetPoint(rect: ClientRect): { x: number, y: number } {
+        return {
+            x: rect.left + rect.width,
+            y: rect.top + rect.height / 2
+        };
     }
 
     private _shouldOpenExtendedMenu(isActionMenu: boolean): boolean {
@@ -388,7 +400,12 @@ export default class TileView extends ListView {
             viewContainerRect,
             documentRect
         );
-        this._targetItemRect = {...targetItemSize, ...targetItemPositionInDocument};
+        this._targetItemRect = {
+            ...targetItemSize,
+            ...targetItemPositionInDocument,
+            x: targetItemPositionInDocument.left,
+            y: targetItemPositionInDocument.top
+        };
         // TODO This should probably be moved to some kind of animation manager
         if (targetItemPositionInDocument) {
             const targetPositionStyle = this._convertPositionToStyle(targetItemPositionInDocument);

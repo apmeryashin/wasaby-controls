@@ -13,28 +13,34 @@
                 class="controls-TileView__itemActions__menu_content"
                 data-qa="controls-TileView__itemActions__menu_content"
             >
-               <div class="controls-TileView__itemActions__menu_leftContent">
+               <style>
+                  .controls-TileView__itemActions__menu_content {
+                     --height_image: max(calc({{_options.stickyPosition.sizes.height}}px - var(--inline_height_4xl)), {{_options.previewHeight}}px);
+                     --width_image: calc(var(--height_image) * {{_options.imageProportion}});
+                  }
+               </style>
+               <div class="controls-TileView__itemActions__menu_leftContent"
+                    style="width: var(--width_image);">
                   <div class="controls-TileView__itemActions__menu_imageWrapper"
-                       style="min-width: {{_options.previewWidth}}px; min-height: {{_options.previewHeight}}px;"
+                       style="min-width: var(--width_image); min-height: var(--height_image);"
                        on:click="_itemClick()">
-                     <img class="controls-TileView__itemActions_menu_image {{_options.imageClasses}}"
-                          src="{{_options.image}}"/>
-
+                        <img class="controls-TileView__itemActions_menu_image {{_options.imageClasses}}"
+                             src="{{_options.image}}"/>
+                  </div>
+                  <div
+                     class="controls-TileView__itemActions__menu_header"
+                     data-qa="controls-TileView__itemActions__menu_header"
+                  >
+                     <div
+                         class="controls-TileView__itemActions__menu_header_title"
+                         title="{{_options.title}}"
+                     >
+                         {{_options.title}}
                      </div>
                      <div
-                        class="controls-TileView__itemActions__menu_header"
-                        data-qa="controls-TileView__itemActions__menu_header"
+                         class="controls-TileView__itemActions__menu_header_additionalTitle"
+                         title="{{_options.additionalTitle}}"
                      >
-                        <div
-                            class="controls-TileView__itemActions__menu_header_title"
-                            title="{{_options.title}}"
-                        >
-                            {{_options.title}}
-                        </div>
-                        <div
-                            class="controls-TileView__itemActions__menu_header_additionalTitle"
-                            title="{{_options.additionalTitle}}"
-                        >
                         {{_options.additionalText}}
                      </div>
                   </div>
