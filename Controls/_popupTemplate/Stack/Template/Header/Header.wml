@@ -14,7 +14,8 @@
          </div>
       </ws:if>
       <ws:if data="{{_options.headerContentTemplate}}">
-         <div class="controls-StackTemplate__headerContentTemplate">
+         <div class="controls-StackTemplate__headerContentTemplate
+                     {{!_options.hasRightPanel ? controls-StackTemplate__headerContentTemplate_padding-right : ''}}">
                <ws:partial template="{{_options.headerContentTemplate}}"
                            scope="{{_options.stackOptions}}"
                            theme="{{_options.theme}}"
