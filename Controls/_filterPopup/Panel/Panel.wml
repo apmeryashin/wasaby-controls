@@ -42,14 +42,13 @@
 <Controls.scroll:ScrollContextProvider pagingVisible="{{ false }}">
    <Controls.form:PrimaryAction on:triggered="_applyFilter()">
       <Controls.popupTemplate:Dialog headingCaption="{{_options.headingCaption}}"
-                                     headerBackgroundStyle="transparent"
-                                     backgroundStyle="transparent"
+                                     headerBackgroundStyle="{{_getPopupBackgroundStyle()}}"
+                                     backgroundStyle="{{_getPopupBackgroundStyle()}}"
                                      headingFontColorStyle="{{_options.headingStyle}}"
                                      attr:class="controls_filterPopup_theme-{{_options.theme}}
                                                  controls_filter_theme-{{_options.theme}}
                                                  controls-PanelFilter
                                                  controls-FilterPanel__{{_options.orientation}}
-                                                 controls-DialogTemplate_backgroundStyle-{{_options.orientation}}FilterPanel
                                                  {{_hasHistory || _options.emptyHistoryTemplate ? 'controls-FilterPanel__' + _options.orientation + '_withHistory'}}">
          <ws:headerContentTemplate>
             <ws:if data="{{_options.topTemplate}}">

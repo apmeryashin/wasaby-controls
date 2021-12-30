@@ -19,12 +19,9 @@ export default class extends Control {
         });
         this.menuPopupOptions = {
             templateOptions: {
-                backgroundStyle: 'custom'
+                backgroundStyle: 'warning'
             }
         };
     }
-    static _styles: string[] = [
-        'Controls-demo/Controls-demo',
-        'Controls-demo/dropdown_new/Button/MenuPopupBackground/Index'
-    ];
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
