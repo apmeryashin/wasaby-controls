@@ -110,7 +110,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
                 baseOnOpen();
             }
             toggleActionOnScroll(newCfg.target, true, () => {
-                InfoBox.closePopup();
+                InfoBox.closePopup(0);
             });
         };
         const onCloseHandler = () => {

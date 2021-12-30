@@ -206,7 +206,7 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
     }
 
     protected _scrollHandler(): void {
-        this.close();
+        this.close(false);
     }
 
     static getOptionTypes(): Record<string, Function> {
