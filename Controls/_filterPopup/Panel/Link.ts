@@ -31,6 +31,13 @@ class FilterLink extends Control<IControlOptions> {
    protected  _clickHandler(): void {
       this._notify('visibilityChanged', [true]);
    }
+
+   static getDefaultOptions(): object {
+      return {
+         underline: 'none',
+         useBackground: true
+      };
+   }
 }
 
 /**

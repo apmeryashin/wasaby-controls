@@ -59,9 +59,11 @@
                   </div>
                </ws:if>
                <ws:else>
-                  <div class="ws-flexbox ws-align-items-center">
-                     <div class="controls-icon controls-icon_size-default controls-icon_style-success icon-FilterNew"></div>
-                     <div class="controls-FilterPanel__header controls-fontsize-{{_options.headingFontSize}} controls-text-{{_options.headingStyle}}">
+                  <div class="ws-flexbox ws-align-items-center controls-margin_left-xs">
+                     <Controls.icon:Icon icon="Controls-icons/common:icon-Filter"
+                                         iconSize="2xs"
+                                         iconStyle="danger"/>
+                     <div class="controls-FilterPanel__header controls-fontsize-{{_options.headingFontSize}} controls-text-{{_options.headingStyle}} controls-margin_left-s">
                         {{_options.headingCaption}}
                      </div>
                   </div>
@@ -72,6 +74,7 @@
                                               on:click="_resetFilter()"
                                               viewMode="link"
                                               name="resetButton"
+                                              fontSize="xs"
                                               fontColorStyle="filterResetButton"
                                               attr:tabindex="-1"
                                               inlineHeight="m"
@@ -84,6 +87,8 @@
                                            caption="{{_options.applyButtonCaption}}"
                                            icon="{{!_options.applyButtonCaption ? 'icon-Yes'}}"
                                            iconStyle="contrast"
+                                           iconSize="s"
+                                           inlineHeight="m"
                                            on:click="_applyFilter()"
                                            attr:tabindex="1"
                                            attr:ws-autofocus="true"

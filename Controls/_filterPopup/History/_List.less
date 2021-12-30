@@ -29,6 +29,7 @@
 .controls-HistoryList__content {
    margin-left: 14px;
    margin-right: 20px;
+   margin-bottom: var(--offset_xs);
 }
 
 .controls-HistoryList__item {
@@ -37,8 +38,11 @@
    text-overflow: ellipsis;
    font-size: var(--item_font-size_filterPanel);
    flex-shrink: 1;
-   padding: var(--offset_3xs) var(--history_content_horizontal-offset_filterPanel);
+   height: 100%;
+   line-height: var(--history_item_height_filterPanel);
+   padding: 0 var(--horizontal-offset_filterPanel);
    border-radius: var(--border-radius_m);
+   margin-right: var(--offset_2xs);
 }
 
 .ws-is-hover .controls-HistoryList__item:hover {

@@ -43,7 +43,6 @@
          <Controls.toggle:BigSeparator
                  value="{{!_isMaxHeight}}"
                  attr:ws-no-focus="{{true}}"
-                 contrastBackground="{{true}}"
                  on:click="_clickSeparatorHandler()"/>
       </div>
    </ws:if>

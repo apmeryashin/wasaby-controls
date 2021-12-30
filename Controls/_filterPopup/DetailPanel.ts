@@ -320,7 +320,7 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
 
    static getDefaultOptions(): IFilterDetailPanelOptions {
       return {
-         headingCaption: rk('ОТБИРАЮТСЯ'),
+         headingCaption: rk('Отбираются'),
          headingStyle: 'primary',
          headingFontSize: 'xl',
          orientation: 'vertical',

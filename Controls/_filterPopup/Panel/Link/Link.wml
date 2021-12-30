@@ -1,3 +1,3 @@
-<span attr:class="controls_filterPopup_theme-{{_options.theme}} controls-FilterLink" on:mousedown="_clickHandler()">
-    <span attr:class="controls-FilterLink__text" attr:data-qa="FilterLink__text">{{_options.caption}}</span>
+<span attr:class="controls_filterPopup_theme-{{_options.theme}} controls-FilterLink {{_options.useBackground === true ? 'controls-FilterLink__text__background'}}" on:mousedown="_clickHandler()">
+    <span attr:class="controls-FilterLink__text {{_options.underline === 'hovered' ? 'controls-FilterLink__text__underline'}}" attr:data-qa="FilterLink__text">{{_options.caption}}</span>
 </span>

@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
 import itemTemplate = require('wml!Controls/_filterPopup/Panel/Select/ItemTemplate');
 import {object} from 'Types/util';
+import 'css!Controls/filterPopup';
 /**
  * Контрол, отображающий заданный набор элементов через разделитель.
  *
