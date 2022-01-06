@@ -59,6 +59,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:ISearch
+ * @implements Controls/interface:IItems
  *
  * @public
  * @author Золотова Э.Е.

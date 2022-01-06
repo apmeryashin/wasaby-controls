@@ -151,6 +151,7 @@ export interface IButtonOptions extends IButtonBaseOptions, IMenuPopupTriggerOpt
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IIcon
  * @implements Controls/interface:ISearch
+ * @implements Controls/interface:IItems
  * @mixes Controls/buttons:IButton
  *
  *
