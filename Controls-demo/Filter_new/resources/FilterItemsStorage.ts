@@ -7,6 +7,7 @@ import {merge, isEqual} from 'Types/object';
 import {object} from 'Types/util';
 import {IFilterItem} from 'Controls/filter';
 
+type THistoryItem = Record<string, unknown>;
 const STATE_VALUE = 4;
 const historyItemsValues = {
     Category: {
@@ -529,13 +530,13 @@ export function getHierarchyFilterItems(): unknown[] {
     return hierarchyFilters;
 }
 
-export function getHistoryItems(count?: number): Array<Record<string, unknown>>  {
+export function getHistoryItems(count?: number): THistoryItem[]  {
     const historyItems = defaultItems.filter((item): boolean => historyItemsValues.hasOwnProperty(item.name));
     return historyItems ? historyItems.slice(0, count) : historyItems;
 }
 
-export function getChangedHistoryItems(count?: number): Array<Record<string, unknown>> {
-    return getHistoryItems(count).map((historyItem): Record<string, unknown> => {
+export function getChangedHistoryItems(count?: number): THistoryItem[] {
+    return getHistoryItems(count).map((historyItem): THistoryItem => {
         const item = merge(object.clone(historyItem), historyItemsValues[historyItem.name as string]);
         if (item.viewMode === 'extended') {
             item.visibility = !isEqual(item.value, item.resetValue);

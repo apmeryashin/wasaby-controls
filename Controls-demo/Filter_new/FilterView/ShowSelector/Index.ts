@@ -3,11 +3,13 @@ import * as Template from 'wml!Controls-demo/Filter_new/FilterView/ShowSelector/
 import 'wml!Controls-demo/Filter_new/resources/Editors/Dropdown';
 import {Memory} from 'Types/source';
 
+type TItem = Record<string, unknown>;
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _source: unknown[] = [];
-    protected _itemsMultiSelect: Array<Record<string, any>>;
-    protected _navigation: Record<string, any>;
+    protected _itemsMultiSelect: TItem[];
+    protected _navigation: Record<string, unknown>;
 
     protected _beforeMount(): void {
         this._navigation = {source: 'page', view: 'page', sourceConfig: {pageSize: 4, page: 0, hasMore: false}};
