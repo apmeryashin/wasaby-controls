@@ -54,6 +54,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface:IHeight
  * @implements Controls/input:IPadding
  * @implements Controls/input:IBorderVisibility
+ * @implements Controls/interface:IItems
  *
  * @public
  * @author Золотова Э.Е.

@@ -1,5 +1,5 @@
 import {IControlOptions} from 'UI/Base';
-import {ISourceOptions, ITooltipOptions, ISearchOptions, IItemsOptions} from 'Controls/interface';
+import {ISourceOptions, ITooltipOptions, ISearchOptions, IItemsOptions, IItems} from 'Controls/interface';
 import { IStickyPopupOptions } from 'Controls/popup';
 import {IMenuPopupOptions} from 'Controls/menu';
 import {ICrudPlus} from 'Types/source';
@@ -11,7 +11,7 @@ export interface IDropdownSourceOptions {
 }
 
 export interface IBaseDropdownOptions extends IControlOptions, ISourceOptions,
-    IMenuPopupOptions, IStickyPopupOptions, ITooltipOptions, ISearchOptions, IItemsOptions<Record> {
+    IMenuPopupOptions, IStickyPopupOptions, ITooltipOptions, ISearchOptions, IItemsOptions<Record>, IItems {
     dropdownClassName?: string;
     historyId?: string;
     popupClassName?: string;
