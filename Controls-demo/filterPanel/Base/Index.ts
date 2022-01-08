@@ -30,19 +30,37 @@ export default class extends Control {
         });
         this._filterButtonSource = [
             {
-                caption: 'Отдел',
-                name: 'department',
-                resetValue: [],
-                value: [],
-                textValue: '',
-                editorTemplateName: 'Controls/filterPanel:ListEditor',
+                caption: 'Сообщения',
+                name: 'booleanEditor',
+                editorTemplateName: 'Controls/filterPanel:TextEditor',
+                resetValue: false,
+                viewMode: 'basic',
+                value: false,
                 editorOptions: {
-                    keyProperty: 'department',
-                    displayProperty: 'title',
-                    source: new Memory({
-                        data,
-                        keyProperty: 'department'
-                    })
+                    filterValue: true,
+                    extendedCaption: 'Непрочитанные'
+                }
+            }, {
+                caption: '',
+                name: 'booleanEditor1',
+                editorTemplateName: 'Controls/filterPanel:TextEditor',
+                resetValue: false,
+                viewMode: 'extended',
+                value: false,
+                editorOptions: {
+                    filterValue: true,
+                    extendedCaption: 'Без групп'
+                }
+            }, {
+                caption: '',
+                name: 'booleanEditor2',
+                editorTemplateName: 'Controls/filterPanel:TextEditor',
+                resetValue: false,
+                viewMode: 'extended',
+                value: false,
+                editorOptions: {
+                    filterValue: true,
+                    extendedCaption: 'Неотвеченные'
                 }
             }
         ];

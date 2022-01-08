@@ -1,5 +1,21 @@
+<ws:template name="column">
+    <ws:for data="filter in column">
+        <Controls.Container.Async templateName="{{filter.editorTemplateName}}">
+            <ws:partial template="{{content.resolvedTemplate}}"
+                        scope="{{filter.editorOptions}}"
+                        viewMode="{{filter.viewMode}}"
+                        value="{{filter.value}}"
+                        attr:class="controls-FilterViewPanel__additional-editor
+                                            controls-FilterViewPanel__additional-editor-{{_options.viewMode}}
+                                            {{!_viewModel.hasBasicItems() ? 'controls-FilterViewPanel__additional-editor_without-basic'}}"
+                        on:propertyValueChanged="_extendedValueChanged(filter)"/>
+        </Controls.Container.Async>
+    </ws:for>
+</ws:template>
+
+
 <div class="controls-FilterViewPanel__additional-editors-container">
-    <ws:if data="{{_viewModel.hasBasicItems()}}">
+    <ws:if data="{{_viewModel.hasBasicItems() || _options.viewMode === 'default'}}">
         <Controls.heading:Title caption="{{rk('Еще можно отобрать')}}"
                                 fontColorStyle="unaccented"
                                 fontSize="xs"
@@ -8,39 +24,24 @@
                                 attr:class="controls-FilterViewPanel__additional-caption"/>
     </ws:if>
     <div class="controls-FilterViewPanel__additional-editors">
-        <div class="controls-FilterViewPanel__additional_left-column">
-            <ws:for data="filter in _additionalColumns.left">
-                <Controls.Container.Async templateName="{{filter.editorTemplateName}}">
-                    <ws:partial template="{{content.resolvedTemplate}}"
-                                scope="{{filter.editorOptions}}"
-                                viewMode="{{filter.viewMode}}"
-                                value="{{filter.value}}"
-                                attr:class="controls-FilterViewPanel__additional-editor"
-                                on:propertyValueChanged="_extendedValueChanged(filter)"/>
-                </Controls.Container.Async>
-            </ws:for>
-        </div>
-        <div>
-            <ws:for data="filter in _additionalColumns.right">
-                <div class="controls-FilterViewPanel__additional_right-column">
-                    <Controls.Container.Async templateName="{{filter.editorTemplateName}}">
-                        <ws:partial template="{{content.resolvedTemplate}}"
-                                    scope="{{filter.editorOptions}}"
-                                    viewMode="{{filter.viewMode}}"
-                                    value="{{filter.value}}"
-                                    attr:class="controls-FilterPanelPopup__additional-editor"
-                                    on:propertyValueChanged="_extendedValueChanged(filter)"/>
-                    </Controls.Container.Async>
-                </div>
-            </ws:for>
-        </div>
-        <ws:if data="{{_expandButtonVisible}}">
-            <div class="controls-FilterViewPanel-additional__footer">
-                <Controls.toggle:BigSeparator iconSize="l"
-                                              value="{{_additionalListExpanded}}"
-                                              on:click="_handleExpanderClick()"/>
-            </div>
+        <ws:if data="{{_options.viewMode === 'default'}}">
+            <ws:partial template="column" column="{{_viewModel.getExtendedFilterItems()}}"/>
         </ws:if>
+        <ws:else>
+            <div class="controls-FilterViewPanel__additional_left-column">
+                <ws:partial template="column" column="{{_additionalColumns.left}}"/>
+            </div>
+            <div class="controls-FilterViewPanel__additional_right-column">
+                <ws:partial template="column" column="{{_additionalColumns.right}}"/>
+            </div>
+            <ws:if data="{{_expandButtonVisible}}">
+                <div class="controls-FilterViewPanel-additional__footer">
+                    <Controls.toggle:BigSeparator iconSize="l"
+                                                  value="{{_additionalListExpanded}}"
+                                                  on:click="_handleExpanderClick()"/>
+                </div>
+            </ws:if>
+        </ws:else>
     </div>
 </div>
 

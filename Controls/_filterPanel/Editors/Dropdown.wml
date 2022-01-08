@@ -10,7 +10,9 @@
                     attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor-cloud"
                     on:textValueChanged="_handleTextValueChanged()"
                     on:selectedKeysChanged="_handleSelectedKeysChanged()"
-                    on:menuItemActivate="_handleMenuItemActivate()">
+                    on:menuItemActivate="_handleMenuItemActivate()"
+                    attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor-cloud
+                                    controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}">
         </ws:partial>
     </Controls.Container.Async>
 </ws:template>
