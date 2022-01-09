@@ -371,14 +371,22 @@ export default class View extends Control<IOptions, IReceivedState> {
         return {...listConfig, ...listOptions};
     }
 
-    protected _onExplorerItemClick(
+    protected _onMasterItemClick(
         event: SyntheticEvent,
-        isMaster: boolean,
+        item: Model,
+        clickEvent: unknown,
+        columnIndex?: number
+    ) {
+        return this._notify('itemClick', [item, clickEvent, columnIndex, 'master']);
+    }
+
+    protected _onDetailItemClick(
+        event: SyntheticEvent,
         item: Model,
         clickEvent: unknown,
         columnIndex?: number
     ): unknown {
-        return this._notify('itemClick', [item, clickEvent, columnIndex]);
+        return this._notify('itemClick', [item, clickEvent, columnIndex, 'detail']);
     }
 
     protected _createTemplateControllers(cfg: IBrowserViewConfig, options: IOptions): void {
