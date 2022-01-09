@@ -1049,11 +1049,15 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTileItem} itemType Тип элемента
      * @param {TImageViewMode} imageViewMode Режим отображения изображения
      * @param {TImagePosition} imagePosition Позиция изображения
+     * @param {TImageEffect} imageEffect Эффект изображения
+     * @param {string} gradientColor Цвет градиента
      */
     getImageWrapperStyles(
         itemType: TTileItem = 'default',
         imageViewMode: TImageViewMode = 'rectangle',
-        imagePosition?: TImagePosition
+        imagePosition?: TImagePosition,
+        imageEffect?: TImageEffect,
+        gradientColor: string = '#ffffff'
     ): string {
         let styles = '';
         if (this.getTileMode() === 'dynamic') {
@@ -1062,6 +1066,11 @@ export default abstract class TileItem<T extends Model = Model> {
                 height *= this.getOwner().getZoomCoefficient();
             }
             styles += ` height: ${height}px;`;
+        }
+        if (itemType === 'rich') {
+            if (imageViewMode === 'rectangle' && imagePosition === 'top' && imageEffect === 'gradient') {
+                styles += ` background-color: ${rgbaToString(toRgb(gradientColor))};`;
+            }
         }
 
         return styles;
