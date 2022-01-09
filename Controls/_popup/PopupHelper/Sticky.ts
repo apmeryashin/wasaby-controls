@@ -40,8 +40,8 @@ export default class Sticky extends Base {
     protected _openHandler(): void {
         super._openHandler();
         if (this._actionOnScroll) {
-            toggleActionOnScroll(this._target, true, (event: Event, scrollEvent: Event) => {
-                this._scrollHandler(event, scrollEvent);
+            toggleActionOnScroll(this._target, true, (scrollEvent: Event) => {
+                this._scrollHandler(scrollEvent);
             });
         }
     }
@@ -53,8 +53,8 @@ export default class Sticky extends Base {
         }
     }
 
-    protected _scrollHandler(event: Event, scrollEvent: Event): void {
-        StickyOpener._scrollHandler(event, scrollEvent, this._actionOnScroll, this._popupId);
+    protected _scrollHandler(scrollEvent: Event): void {
+        StickyOpener._scrollHandler(scrollEvent, this._actionOnScroll, this._popupId);
     }
 
     private _updateState(options: IStickyPopupOptions): void {
