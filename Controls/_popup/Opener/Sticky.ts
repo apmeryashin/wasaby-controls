@@ -1,13 +1,12 @@
 import BaseOpener, {IBaseOpenerOptions} from 'Controls/_popup/Opener/BaseOpener';
 import {IStickyOpener, IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
-import {TemplateFunction} from 'UI/Base';
 import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
 import {Logger} from 'UI/Utils';
-import Template = require('wml!Controls/_popup/Opener/Sticky');
 import {detection} from 'Env/Env';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import CancelablePromise from 'Controls/_popup/utils/CancelablePromise';
 import openPopup from 'Controls/_popup/utils/openPopup';
+import {toggleActionOnScroll} from 'Controls/_popup/utils/SubscribeToScroll';
 
 const getStickyConfig = (config: IStickyOpenerOptions = {}) => {
     config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
@@ -37,12 +36,24 @@ interface IStickyOpenerOptions extends IStickyPopupOptions, IBaseOpenerOptions {
  * @public
  */
 class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
-    protected _template: TemplateFunction = Template;
     readonly '[Controls/_popup/interface/IStickyOpener]': boolean;
     private _actionOnScroll: string = 'none';
 
     open(popupOptions: IStickyPopupOptions): Promise<string | undefined> {
-        return super.open(getStickyConfig(popupOptions), POPUP_CONTROLLER);
+        const promise = super.open(getStickyConfig(popupOptions), POPUP_CONTROLLER);
+        if (this._actionOnScroll !== 'none') {
+            toggleActionOnScroll(this, true, (scrollEvent: Event) => {
+                this._scrollHandler(scrollEvent);
+            });
+        }
+        return promise;
+    }
+
+    protected _popupHandler(eventName: string, args: any[]): void {
+        if (eventName === 'onClose' && this._actionOnScroll !== 'none') {
+            toggleActionOnScroll(this, false);
+        }
+        super._popupHandler(eventName, args);
     }
 
     protected _getConfig(popupOptions: IStickyOpenerOptions = {}): IStickyOpenerOptions {
@@ -63,8 +74,8 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
         return baseConfig;
     }
 
-    protected _scrollHandler(event: Event, scrollEvent: Event, initiator: string): void {
-        Sticky._scrollHandler(event, scrollEvent, this._actionOnScroll, this._getCurrentPopupId());
+    private _scrollHandler(scrollEvent: Event): void {
+        Sticky._scrollHandler(scrollEvent, this._actionOnScroll, this._getCurrentPopupId());
     }
 
     static getDefaultOptions(): IStickyOpenerOptions {
@@ -79,8 +90,8 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
         return openPopup(newCfg, POPUP_CONTROLLER, moduleName);
     }
 
-    static _scrollHandler(event: Event, scrollEvent: Event, actionOnScroll: string, popupId: string): void {
-        if (event.type === 'scroll') {
+    static _scrollHandler(scrollEvent: Event, actionOnScroll: string, popupId: string): void {
+        if (scrollEvent.type === 'scroll') {
             // Из-за флага listenAll на listener'e, подписка доходит до application'a всегда.
             // На ios при показе клавиатуры стреляет событие скролла, что приводит к вызову текущего обработчика
             // и закрытию окна. Для ios отключаю реакцию на скролл, событие скролла стрельнуло на body.
