@@ -19,8 +19,7 @@
                     attr:class="controls-FilterViewPanel__additional-editor"/>
     </ws:if>
     <ws:else>
-        <div class="controls-FilterViewPanel__additional-editor"
-             on:click="_extendedCaptionClick()">
+        <div on:click="_extendedCaptionClick()">
             {{_options.extendedCaption}}
         </div>
     </ws:else>

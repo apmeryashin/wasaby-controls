@@ -3,7 +3,6 @@ import * as Template from 'wml!Controls-demo/filterPanelPopup/Orientation/Index'
 import * as stackTemplate from 'wml!Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate';
 import {Memory} from 'Types/source';
 import 'Controls-demo/Filter_new/resources/HistorySourceDemo';
-import {RecordSet} from 'Types/collection';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -19,7 +18,7 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._filterButtonData = [
             {
-                caption: '',
+                caption: null,
                 name: 'booleanEditor',
                 editorTemplateName: 'Controls/filterPanel:TextEditor',
                 resetValue: false,
@@ -30,11 +29,10 @@ export default class extends Control {
                     extendedCaption: 'Без рабочих групп'
                 }
             }, {
-                group: 'Город',
+                caption: 'Город',
                 name: 'city',
                 editorTemplateName: 'Controls/filterPanel:DropdownEditor',
                 resetValue: ['1'],
-                caption: '',
                 value: ['1'],
                 textValue: '',
                 viewMode: 'basic',
@@ -54,11 +52,10 @@ export default class extends Control {
                     extendedCaption: 'Город'
                 }
             }, {
-                group: 'Должность',
+                caption: 'Должность',
                 name: 'position',
                 editorTemplateName: 'Controls/filterPanel:DropdownEditor',
                 resetValue: ['1'],
-                caption: '',
                 value: ['1'],
                 textValue: '',
                 viewMode: 'basic',
@@ -74,40 +71,6 @@ export default class extends Control {
                     displayProperty: 'title',
                     keyProperty: 'id',
                     extendedCaption: 'Должность'
-                }
-            }, {
-                group: 'Должность',
-                name: 'position',
-                editorTemplateName: 'Controls/filterPanel:LookupEditor',
-                resetValue: ['1'],
-                caption: '',
-                value: ['1'],
-                textValue: '',
-                viewMode: 'extended',
-                editorOptions: {
-                    source: new Memory({
-                        keyProperty: 'id',
-                        data: [
-                            { id: '1', title: 'Разработчик' },
-                            { id: '2', title: 'Тестировщик' },
-                            { id: '3', title: 'Сборщик' }
-                        ]
-                    }),
-                    displayProperty: 'title',
-                    keyProperty: 'id',
-                    extendedCaption: 'Должность',
-                    multiSelect: true,
-                    selectorTemplate: {
-                        templateName: 'Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate',
-                        templateOptions: {items: [
-                                { id: '1', title: 'Разработчик' },
-                                { id: '2', title: 'Тестировщик' },
-                                { id: '3', title: 'Сборщик' }
-                            ]},
-                        popupOptions: {
-                            width: 300
-                        }
-                    }
                 }
             }
         ];

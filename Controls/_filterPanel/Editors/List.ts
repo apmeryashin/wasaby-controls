@@ -604,7 +604,7 @@ class ListEditor extends Control<IListEditorOptions> {
 
     private _setHiddenItemsCount(selectedKeys: string[]): void {
         if (this._options.navigation) {
-            const hiddenItems = selectedKeys.filter((itemId) => !this._items.getRecordById(itemId));
+            const hiddenItems = selectedKeys.filter((itemId) => !this._items?.getRecordById(itemId));
             this._hiddenItemsCount = hiddenItems.length;
         }
     }

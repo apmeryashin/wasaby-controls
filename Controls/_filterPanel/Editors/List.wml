@@ -75,16 +75,23 @@
    </ws:else>
 </ws:template>
 
-<div class="controls-FilterEditors__list">
-   <ws:if data="{{_options.multiSelect}}">
-      <ws:partial template="listEditor" on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
-   </ws:if>
-   <ws:else>
-      <Controls.Container.Async templateName="Controls/multiselection:SingleSelection">
-         <ws:partial template="{{content.resolvedTemplate}}"
-                     on:selectedKeyChanged="_handleSelectedKeyChanged()">
-            <ws:partial template="listEditor"/>
-         </ws:partial>
-      </Controls.Container.Async>
-   </ws:else>
+<div>
+    <ws:if data="{{_options.filterViewMode === 'default'}}">
+        <div class="controls-FilterEditors__list">
+            <ws:if data="{{_options.multiSelect}}">
+                <ws:partial template="listEditor" on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
+            </ws:if>
+            <ws:else>
+                <Controls.Container.Async templateName="Controls/multiselection:SingleSelection">
+                    <ws:partial template="{{content.resolvedTemplate}}"
+                                on:selectedKeyChanged="_handleSelectedKeyChanged()">
+                        <ws:partial template="listEditor"/>
+                    </ws:partial>
+                </Controls.Container.Async>
+            </ws:else>
+        </div>
+    </ws:if>
+    <ws:else>
+        <Controls._filterPanel.Editors.Lookup scope="{{_options}}"/>
+    </ws:else>
 </div>

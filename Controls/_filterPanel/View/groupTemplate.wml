@@ -19,7 +19,7 @@
                         {{!collapsedGroups[item] ? 'icon-CollapseLight' : 'icon-ExpandLight'}}">
                   </div>
                </ws:if>
-               <ws:if data="{{_options.viewMode !== 'popup'}}">
+               <ws:if data="{{_options.viewMode === 'default'}}">
                   <div class="controls-FilterViewPanel__group-separator"> </div>
                </ws:if>
             </div>

@@ -11,7 +11,7 @@
                 attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.viewMode}}
                             controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}">
             <ws:itemsContainerPadding top="null"
-                                      left="{{_options.viewMode === 'default' ? 'xl' : 'null'}}"
+                                      left="{{_options.viewMode === 'popupCloud' ? 'null' : 'xl'}}"
                                       right="xl"
                                       bottom="m"/>
             <ws:itemTemplate>
@@ -52,7 +52,7 @@
     <ws:if data="{{_options.orientation === 'vertical'}}">
         <Controls.scroll:Container backgroundStyle="{{_options.style || 'default'}}"
                                    attr:class="controls-FilterViewPanel__scroll
-                                                controls-FilterViewPanel__scroll-{{_options.viewMode}}">
+                                               controls-FilterViewPanel__scroll-{{_options.viewMode}}">
             <ws:partial template="propertyGrid"/>
             <ws:partial template="extendedItems" attr:class="controls-FilterPanelPopup__extendedItems-vertical
                                                              controls-FilterPanelPopup__extendedItems-vertical-{{_options.viewMode}}"/>
@@ -63,7 +63,7 @@
         <div class="controls_filterPanel-horizontal">
             <div class="controls_filterPanel-horizontal__column">
                 <ws:partial template="propertyGrid"/>
-                <ws:partial template="extendedItems"/>
+                <ws:partial template="extendedItems" attr:class="controls-FilterPanelPopup__extendedItems-horizontal"/>
             </div>
             <ws:if data="{{_options.historyId}}">
                 <div class="controls_filterPanel-horizontal__separator"></div>

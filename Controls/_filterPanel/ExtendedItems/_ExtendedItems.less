@@ -51,9 +51,11 @@
    padding: var(--offset_3xs) var(--additional-editor_horizontal-offset_filterViewPanel);
    margin-bottom: var(--offset_2xs);
    border-radius: var(--border-radius_m);
+   box-sizing: initial;
 }
 
-.controls-FilterViewPanel__additional-editor-popup {
+.controls-FilterViewPanel__additional-editor-popupCloud,
+.controls-FilterViewPanel__additional-editor-cloud {
    margin-right: auto;
 }
 
@@ -62,13 +64,21 @@
    margin-right: var(--offset_xs);
 }
 
+.controls-FilterPanelPopup__extendedItems-horizontal {
+   padding-left: calc(var(--offset_m) + var(--icon-size_2xs) + var(--offset_xs));
+}
+
 .controls-FilterPanelPopup__extendedItems-vertical-default {
    padding-left: var(--offset_xl);
 }
 
-.controls-FilterPanelPopup__extendedItems-vertical-popup {
+.controls-FilterPanelPopup__extendedItems-vertical-popupCloud {
    padding-top: var(--offset_l);
    padding-left: calc(var(--offset_m) + var(--icon-size_2xs) + var(--offset_xs));
+}
+
+.controls-FilterPanelPopup__extendedItems-vertical-cloud {
+   padding-left: var(--offset_xl);
 }
 
 .ws-is-hover {

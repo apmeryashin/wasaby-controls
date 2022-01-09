@@ -6,13 +6,11 @@
                     style="filterPanel"
                     caption="{{_options.extendedCaption}}"
                     headerTemplate="{{null}}"
-                    bind:selectedKeys="_selectedKeys"
-                    attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor-cloud"
+                    fontSize="{{_options.filterViewMode === 'default' ? 'm' : 'l'}}"
+                    selectedKeys="{{_selectedKeys}}"
                     on:textValueChanged="_handleTextValueChanged()"
                     on:selectedKeysChanged="_handleSelectedKeysChanged()"
-                    on:menuItemActivate="_handleMenuItemActivate()"
-                    attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor-cloud
-                                    controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}">
+                    on:menuItemActivate="_handleMenuItemActivate()">
         </ws:partial>
     </Controls.Container.Async>
 </ws:template>
@@ -21,7 +19,9 @@
                                   extendedCaption="{{_options.extendedCaption}}">
     <ws:editorTemplate>
         <ws:partial template="dropdown"
-                    dropdownTemplateName="Controls/dropdown:Selector"/>
+                    dropdownTemplateName="Controls/dropdown:Selector"
+                    attr:class="ws-ellipsis controls-FilterViewPanel__basicEditor-cloud
+                                controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}"/>
     </ws:editorTemplate>
 
     <ws:extendedTemplate>
