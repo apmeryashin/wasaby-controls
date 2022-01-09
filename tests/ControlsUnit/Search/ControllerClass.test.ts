@@ -443,6 +443,20 @@ describe('Controls/search:ControllerClass', () => {
 
          assert.ok(!(updateResult instanceof Promise));
       });
+
+      it('update with sourceController', async () => {
+         let sourceController = getSourceController();
+         let searchControllerOptions = getSearchControllerClassOptions();
+         const searchController = getSearchController(searchControllerOptions);
+
+         searchControllerOptions = {...searchControllerOptions, sourceController};
+         assert.ok(!searchController.update(searchControllerOptions));
+
+         await searchController.search('test');
+         sourceController = getSourceController();
+         searchControllerOptions = {...searchControllerOptions, sourceController};
+         assert.ok(searchController.update(searchControllerOptions));
+      });
    });
 
    it('search with filterOnSearchCallback option', async () => {
