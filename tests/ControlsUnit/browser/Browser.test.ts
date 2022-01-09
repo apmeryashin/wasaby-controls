@@ -490,13 +490,17 @@ describe('Controls/browser:Browser', () => {
                 it('_searchReset while loading', async () => {
                     const options = getBrowserOptions();
                     const browser = getBrowser(options);
+                    let loadAborted = false;
                     await browser._beforeMount(options);
                     browser.saveOptions(options);
 
                     const sourceController = browser._getSourceController();
-                    sourceController.reload();
+                    const loadPromise = sourceController.reload().catch(() => {
+                        loadAborted = true;
+                    });
                     browser._searchResetHandler();
-                    assert.ok(!sourceController.isLoading());
+                    await loadPromise;
+                    assert.ok(loadAborted);
                 });
 
                 it('_searchReset with startingWith === "current"', async () => {
