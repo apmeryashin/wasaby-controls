@@ -52,3 +52,17 @@
 .ws-is-hover .controls-Grid__row-cell_single-cell_not-editable:hover {
    background-color: var(--single-not-editable-cell_hover_background-color_grid);
 }
+
+.controls-Grid__editArrow_single-cell_not-editable_background {
+   background-color: var(--single-not-editable-cell_hover_background-color_grid);
+}
+
+.controls-Grid__editArrow-blur_single-cell_not-editable_background {
+   background: linear-gradient(90deg, rgba(240,245,251,0), var(--single-not-editable-cell_hover_background-color_grid));
+}
+
+.controls-Grid__editArrow-blur_single-cell_not-editable_background,
+.controls-Grid__editArrow_single-cell_not-editable_background {
+   content: '\200b';
+   font-size: var(--font-size_2xl);
+}
