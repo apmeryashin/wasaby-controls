@@ -9,7 +9,7 @@ const DATA = [
         parent: null,
         type: null,
         title: 'Шаблон 5.2 с изображением и заголовком на нем',
-        gradientColor: '#FFF',
+        gradientColor: '#E0E0E3',
         description: 'Заголовок на изображении, описание - под изображением',
         imageProportion: '1:1',
         titleLines: 3,
