@@ -1,6 +1,8 @@
 <div class="controls-Demo__wide-propertyGrid">
     <Controls.propertyGrid:PropertyGrid
             name="propertyGrid"
+            parentProperty="parent"
+            nodeProperty="parent@"
             bind:editingObject="_editingObject"
             bind:typeDescription="_typeDescription"
             on:typeDescriptionChanged="_typeDescriptionChanged()"
