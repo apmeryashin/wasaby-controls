@@ -239,7 +239,10 @@ export default class ControllerClass {
 
       if (sourceController && sourceController !== this._sourceController) {
          this._initSourceController(sourceController);
-         updateResult = true;
+
+         if (searchValue) {
+            updateResult = true;
+         }
       }
 
       if (options.hasOwnProperty('searchValue')) {
