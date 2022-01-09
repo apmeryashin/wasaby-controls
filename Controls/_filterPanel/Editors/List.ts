@@ -418,7 +418,6 @@ class ListEditor extends Control<IListEditorOptions> {
             textOverflow: 'ellipsis',
             fontSize: markerStyle !== 'primary' ? 'm' : 'l',
             width: 'auto',
-            compatibleWidth: '70%',
             template: TitleColumn,
             tooltipProperty: displayProperty
         }];
@@ -426,7 +425,8 @@ class ListEditor extends Control<IListEditorOptions> {
             this._columns.unshift({
                 template: ImageColumn,
                 imageProperty,
-                width: 'min-content'
+                width: 'min-content',
+                compatibleWidth: '30px'
             });
         }
         if (additionalTextProperty) {
