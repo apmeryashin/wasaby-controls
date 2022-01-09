@@ -55,7 +55,7 @@
                     <ws:afterContentTemplate>
                         <!-- Стрелка редактирования -->
                         <ws:if data="{{ afterContentTemplate.shouldDisplayEditArrow && editArrowTemplate }} ">
-                            <ws:partial template="{{ editArrowTemplate }}" item="{{ (gridColumn || itemData).getOwner() }}" textOverflow="{{(gridColumn || itemData).config.textOverflow}}"/>
+                            <ws:partial template="{{ editArrowTemplate }}" item="{{ (gridColumn || itemData).getOwner() }}" editable="{{afterContentTemplate.editable}}" textOverflow="{{(gridColumn || itemData).config.textOverflow}}"/>
                         </ws:if>
 
                         <!-- Тэг -->
