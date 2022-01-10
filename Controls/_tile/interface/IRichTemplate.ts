@@ -50,7 +50,7 @@ export type TImagePosition = 'top' | 'right' | 'bottom' | 'left';
  * @public
  * @demo Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/Index
  * @remark
- * Шаблон автоматическую высоту. Плитка вытягивается по высоте максимального элемента в строке. Опция tileHeight не учитывается.
+ * Высота шаблона устанавливается автоматически. Плитка вытягивается по высоте максимального элемента в строке. Опция tileHeight не учитывается.
  * Подробнее о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/tile/item/rich/ здесь}.
  */
 
