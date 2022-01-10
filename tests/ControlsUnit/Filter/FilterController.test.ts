@@ -179,6 +179,83 @@ describe('Controls/filter:ControllerClass', () => {
         assert.deepEqual(controller._$filter, {testField: 'testValue'});
     });
 
+    it('updateFilterItems with filterChangedCallback', () => {
+        const filterController = new ControllerClass({
+            filterButtonSource: getFilterButtonItems()
+        });
+        const filterChangedCallback = (filterDescriptionItem, filter, changedFilters) => {
+            const filterItem = {...filterDescriptionItem};
+            if (changedFilters.hasOwnProperty('testId1')) {
+                filterItem.textValue = 'filterChangedValue';
+            }
+            return filterItem;
+        };
+        const newFilterItems = [
+            {
+                id: 'testId1',
+                value: 'secondValue',
+                textValue: 'text1'
+            }, {
+                id: 'testId2',
+                value: 'value2',
+                textValue: 'text2',
+                filterChangedCallback
+            }
+        ];
+
+        const expectedItems = [
+            {
+                id: 'testId1',
+                value: 'secondValue',
+                textValue: 'text1'
+            }, {
+                id: 'testId2',
+                value: 'value2',
+                textValue: 'filterChangedValue',
+                filterChangedCallback
+            }
+        ];
+
+        sandbox.replace(filterController, '_updateFilterButtonItems', (newFilterItems) => {
+            assert.deepEqual(newFilterItems, expectedItems);
+        });
+        filterController.updateFilterItems(newFilterItems);
+    });
+
+    it('updateFilterItems with filterVisibilityCallback', () => {
+        const filterController = new ControllerClass({
+            filterButtonSource: getFilterButtonItems()
+        });
+        const filterVisibilityCallback = (filterDescriptionItem, filter, changedFilters) => {
+            return !changedFilters.hasOwnProperty('testId1');
+        };
+
+        const newFilterItems = [
+            {
+                id: 'testId1',
+                value: 'secondValue',
+                textValue: 'text1'
+            }, {
+                id: 'testId2',
+                value: 'value2',
+                textValue: 'text2',
+                filterVisibilityCallback
+            }
+        ];
+
+        const expectedItems = [
+            {
+                id: 'testId1',
+                value: 'secondValue',
+                textValue: 'text1'
+            }
+        ];
+        sandbox.replace(filterController, '_updateFilterButtonItems', (newFilterItems) => {
+            assert.deepEqual(newFilterItems, expectedItems);
+        });
+        filterController.updateFilterItems(newFilterItems);
+    });
+
     it('updateFilterItems', () => {
         const filterController = new ControllerClass({});
         let eventFired = false;
