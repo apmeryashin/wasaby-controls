@@ -4,14 +4,11 @@ import {Memory} from 'Types/source';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    protected _filterButtonData: unknown[] = [];
+    protected _filterButtonSource: unknown[] = [];
     protected _source: Memory = null;
-    protected _navigation: object = null;
-    protected _filterItems: object[] = null;
-    protected _detailPanelTemplateOptions: object = {};
 
     protected _beforeMount(): void {
-        this._filterButtonData = [
+        this._filterButtonSource = [
             {
                 caption: '',
                 name: 'booleanEditor',
@@ -32,6 +29,7 @@ export default class extends Control {
                 value: ['1'],
                 textValue: '',
                 viewMode: 'extended',
+                filterVisibilityCallback: 'Controls-demo/filterPanelPopup/Base/filterVisibilityCallback',
                 editorOptions: {
                     source: new Memory({
                         keyProperty: 'id',
@@ -72,6 +70,5 @@ export default class extends Control {
             }
         ];
     }
-
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Filter_new/Filter'];
 }
