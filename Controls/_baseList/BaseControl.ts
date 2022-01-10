@@ -5913,7 +5913,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return;
         }
         const isLoading = this._sourceController && this._sourceController.isLoading();
-        if (!isLoading) {
+        // Во время порционного поиска можно пользоваться клавишами
+        const allowByLoading = !isLoading || _private.isPortionedLoad(this);
+        if (allowByLoading) {
             const key = event.nativeEvent.keyCode;
             const dontStop = key === 17 // Ctrl
                 || key === 33 // PageUp
