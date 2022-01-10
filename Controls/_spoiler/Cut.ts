@@ -67,7 +67,7 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
             const entry = entries[0];
             if (this._cutHeight !== entry.contentRect.height) {
                 this._cutHeight = entry.contentRect.height;
-                // Скрываем кат, если контент поменял высоту
+                // Сворачиваем кат, если контент поменял высоту
                 this._expanded = false;
                 this._notify('expandedChanged', [this._expanded]);
             }
