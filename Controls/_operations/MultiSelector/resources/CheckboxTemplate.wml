@@ -4,5 +4,6 @@
                 value="{{_checkboxValue}}"
                 triState="{{true}}"
                 on:click="_onCheckBoxClick()"
-                attr:class="controls-MultiSelector__checkbox"/>
+                attr:class="controls-MultiSelector__checkbox"
+                attr:title="{{_checkboxValue === false ? rk('Отметить') : rk('Снять')}}"/>
 </Controls.Container.Async>
