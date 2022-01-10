@@ -54,23 +54,23 @@ export function updateFilterDescription(items: IFilterItem[],
 }
 
 export function loadCallbacks(items: IFilterItem[]): Promise<any[]> {
-    return Promise.all(
-        items?.map((item) => {
-            const callBackPromises = [];
-            callBackPromises.push(getCallBackByName(item, 'filterVisibilityCallback'));
-            callBackPromises.push(getCallBackByName(item, 'filterChangedCallback'));
-            return Promise.all(callBackPromises);
-        })
-    );
+    const callBackPromises = [];
+    items?.forEach((item) => {
+        callBackPromises.push(getCallBackByName(item, 'filterVisibilityCallback'));
+        callBackPromises.push(getCallBackByName(item, 'filterChangedCallback'));
+    });
+    return Promise.all(callBackPromises);
 }
 
 function callCallbacksOnFilterDescriptionItems(changedFilters: object,
                                                updatedFilter: TFilter,
                                                items: IFilterItem[],
                                                updateCallback: Function): void {
-    const newFilterDescription = items?.map((item) => {
+    const newFilterDescription = [];
+    items?.forEach((item) => {
         item.visibility = getItemVisivbility(item, updatedFilter, changedFilters, item.filterVisibilityCallback);
-        return getItemOnFilterChangedCallback(item, updatedFilter, changedFilters, item.filterChangedCallback);
+        newFilterDescription.push(getItemOnFilterChangedCallback(item, updatedFilter, changedFilters,
+                                                                 item.filterChangedCallback));
     });
     updateCallback(newFilterDescription);
 }
@@ -83,8 +83,12 @@ function getCallBackByName(item: IFilterItem, callbackName: string): Promise<Fun
 }
 
 function isCallbacksLoaded(items: IFilterItem[]): boolean {
-    return items?.every((item) => {
-        return (item.hasOwnProperty('filterVisibilityCallback') ? isLoaded(item.filterVisibilityCallback) : true) &&
-               (item.hasOwnProperty('filterChangedCallback') ? isLoaded(item.filterChangedCallback) : true);
+    let isCallbackLoaded = true;
+    items?.forEach((item) => {
+        if ((item.hasOwnProperty('filterVisibilityCallback') && !isLoaded(item.filterVisibilityCallback)) ||
+            (item.hasOwnProperty('filterChangedCallback') && !isLoaded(item.filterChangedCallback))) {
+            isCallbackLoaded = false;
+        }
     });
+    return isCallbackLoaded;
 }
