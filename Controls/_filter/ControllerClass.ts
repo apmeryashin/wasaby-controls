@@ -231,7 +231,8 @@ export default class FilterControllerClass extends mixin<
             !isEqual(currentFilterButtonItems, this._$filterButtonItems) ||
             !isEqual(currentFastFilterItems, this._$fastFilterItems)
         ) {
-            updateFilterDescription(items, currentFilter, this._$filter, this._updateFilterButtonItems.bind(this));
+            updateFilterDescription(this._$filterButtonItems, currentFilter, this._$filter,
+                                    this._updateFilterButtonItems.bind(this));
         }
     }
 
