@@ -130,6 +130,11 @@ export default class Controller implements IDropdownController {
    update(newOptions: IDropdownControllerOptions): Promise<RecordSet|void>|void {
       const oldOptions = {...this._options};
       this._options = newOptions;
+
+      if (oldOptions.items !== newOptions.items) {
+         this.setItems(newOptions.items);
+      }
+
       if (newOptions.readOnly && newOptions.readOnly !== oldOptions.readOnly) {
          this._closeDropdownList();
       }
