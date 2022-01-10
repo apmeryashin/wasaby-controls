@@ -1,8 +1,14 @@
 <div class="controlsDemo__wrapper">
     <Controls.compactDatePicker:View
-            bind:startValue="_startValue"
-            bind:endValue="_endValue"
-            displayedRanges="{{ _displayedRanges }}"
+            bind:startValue="_startValue1"
+            bind:endValue="_endValue1"
+            displayedRanges="{{ _displayedRanges1 }}"
+            _date="{{ _date }}"
+    />
+    <Controls.compactDatePicker:View
+            bind:startValue="_startValue2"
+            bind:endValue="_endValue2"
+            displayedRanges="{{ _displayedRanges2 }}"
             _date="{{ _date }}"
     />
 </div>
