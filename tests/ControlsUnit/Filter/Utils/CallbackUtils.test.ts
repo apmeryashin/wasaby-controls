@@ -1,7 +1,9 @@
-import {getChangedFilters, getItemOnFilterChangedCallback, getItemVisivbility} from 'Controls/_filter/Utils/CallbackUtils';
+import {getChangedFilters, getItemOnFilterChangedCallback, getItemVisivbility, loadCallbacks} from 'Controls/_filter/Utils/CallbackUtils';
 import {assert} from 'chai';
 
 describe('Controls/_filter/Utils/CallbackUtils', () => {
+    const filterChangedCallback = 'ControlsUnit/Filter/Utils/filterChangedCallback';
+    const filterVisibilityCallback = 'ControlsUnit/Filter/Utils/FilterVisibilityCallback';
     it('filters dont changed', () => {
         const currentFilter = {};
         const updatedFilter = {};
@@ -19,16 +21,13 @@ describe('Controls/_filter/Utils/CallbackUtils', () => {
         const changedFilters = {
             testValue: 2
         };
-        const item = {
-            value: 1
-        };
-        const filterChangedCallback = (item, updatedFilter, changedFilters) => {
-            if (changedFilters.testValue === 2) {
-                return { value: 2 };
-            }
-            return { value: 3 };
-        };
-        const newItem = getItemOnFilterChangedCallback(item, updatedFilter, changedFilters, filterChangedCallback);
+        const items = [{
+            name: 'testName',
+            value: 1,
+            filterChangedCallback
+        }];
+        loadCallbacks(items);
+        const newItem = getItemOnFilterChangedCallback(items[0], updatedFilter, changedFilters, filterChangedCallback);
         assert.deepEqual(newItem, { value: 2 });
     });
 
@@ -37,16 +36,13 @@ describe('Controls/_filter/Utils/CallbackUtils', () => {
         const changedFilters = {
             testValue: 1
         };
-        const item = {
-            value: 1
-        };
-        const filterChangedCallback = (item, updatedFilter, changedFilters) => {
-            if (changedFilters.testValue === 2) {
-                return { value: 2 };
-            }
-            return { value: 3 };
-        };
-        const newItem = getItemOnFilterChangedCallback(item, updatedFilter, changedFilters, filterChangedCallback);
+        const items = [{
+            name: 'testName',
+            value: 1,
+            filterChangedCallback
+        }];
+        loadCallbacks(items);
+        const newItem = getItemOnFilterChangedCallback(items[0], updatedFilter, changedFilters, filterChangedCallback);
         assert.deepEqual(newItem, { value: 3 });
     });
 
@@ -55,15 +51,13 @@ describe('Controls/_filter/Utils/CallbackUtils', () => {
         const changedFilters = {
             testValue: 1
         };
-        const item = {
-            value: 1
-        };
-        const filterVisibilityCallback = (item, updatedFilter, changedFilters) => {
-            if (changedFilters.testValue === 1) {
-                return false;
-            }
-        };
-        const visivbility = getItemVisivbility(item, updatedFilter, changedFilters, filterVisibilityCallback);
+        const items = [{
+            name: 'testName',
+            value: 1,
+            filterVisibilityCallback
+        }];
+        loadCallbacks(items);
+        const visivbility = getItemVisivbility(items[0], updatedFilter, changedFilters, filterVisibilityCallback);
         assert.isFalse(visivbility);
     });
 });

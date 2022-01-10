@@ -53,6 +53,17 @@ export function updateFilterDescription(items: IFilterItem[],
     }
 }
 
+export function loadCallbacks(items: IFilterItem[]): Promise<any[]> {
+    return Promise.all(
+        items?.map((item) => {
+            const callBackPromises = [];
+            callBackPromises.push(getCallBackByName(item, 'filterVisibilityCallback'));
+            callBackPromises.push(getCallBackByName(item, 'filterChangedCallback'));
+            return Promise.all(callBackPromises);
+        })
+    );
+}
+
 function callCallbacksOnFilterDescriptionItems(changedFilters: object,
                                                updatedFilter: TFilter,
                                                items: IFilterItem[],
@@ -62,17 +73,6 @@ function callCallbacksOnFilterDescriptionItems(changedFilters: object,
         return getItemOnFilterChangedCallback(item, updatedFilter, changedFilters, item.filterChangedCallback);
     });
     updateCallback(newFilterDescription);
-}
-
-function loadCallbacks(items: IFilterItem[]): Promise<any[]> {
-    return Promise.all(
-        items?.map((item) => {
-            const callBackPromises = [];
-            callBackPromises.push(getCallBackByName(item, 'filterVisibilityCallback'));
-            callBackPromises.push(getCallBackByName(item, 'filterChangedCallback'));
-            return Promise.all(callBackPromises);
-        })
-    );
 }
 
 function getCallBackByName(item: IFilterItem, callbackName: string): Promise<Function|void> {
