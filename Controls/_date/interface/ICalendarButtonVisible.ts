@@ -5,7 +5,7 @@ export interface ICalendarButtonVisibleOptions {
 /**
  * Интерфейс для контролов, которые имеют возможность отключения видимости иконки рядом с полем ввода, которая вызывает попап
  *
- * @interface Controls/_date/interfaces/ICalendarButtonVisible
+ * @interface Controls/_date/interface/ICalendarButtonVisible
  * @public
  * @author Красильников А.С.
  */
