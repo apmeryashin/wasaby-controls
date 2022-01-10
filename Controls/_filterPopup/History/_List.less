@@ -21,7 +21,12 @@
    color: var(--history_heading_text-color_filterPanel);
    height: var(--inline_height_default);
    display: inline-flex;
-   align-items: center;
+   align-items: baseline;
+}
+
+.controls-HistoryList__heading:before {
+   content: '\200b';
+   line-height: var(--item_height_filterPanel);
 }
 
 .controls-HistoryList__content {
