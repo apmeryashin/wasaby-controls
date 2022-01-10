@@ -72,7 +72,9 @@ const _private = {
 
       setShowType(items, type) {
          items.each((item) => {
-            item.set('showType', type);
+            if (item.get('showType') === undefined) {
+               item.set('showType', type);
+            }
          });
       }
    };
