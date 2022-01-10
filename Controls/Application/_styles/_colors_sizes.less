@@ -398,6 +398,13 @@
    border-radius: var(--border-radius_xs);
 }
 
+// todo удалить после:
+// https://online.sbis.ru/doc/bae450a2-cb82-483a-adec-fcfeda5c0a21
+.controls-focused-item_shadow:focus-within {
+   transition: box-shadow 0.5s;
+   box-shadow: 0 0 0 var(--offset_2xs) var(--focused_background-color);
+}
+
 //validate
 .controls-invalid-border {
    position: absolute;
