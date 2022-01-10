@@ -26,14 +26,13 @@ import 'css!Controls/spoiler';
 class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable {
     protected _lines: number | null = null;
     protected _expanded: boolean = false;
-    private _cutHeight: number;
+    private _cutHeight: number = null;
 
     protected _template: TemplateFunction = template;
     protected _isIE: boolean = detection.isIE11;
     protected _lineHeightForIE: Record<string, number> = IECompatibleLineHeights;
 
     private _resizeObserver: ResizeObserverUtil;
-    private _firstResizePassed: boolean = false;
 
     readonly '[Controls/_interface/IBackgroundStyle]': boolean = true;
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
@@ -45,7 +44,6 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
     }
 
     protected _afterMount(options: ICutOptions): void {
-        this._cutHeight = this._children.content.getBoundingClientRect().height;
         if (this._hasResizeObserver()) {
             this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback);
             this._resizeObserver.observe(this._children.content as HTMLElement, { box: RESIZE_OBSERVER_BOX.borderBox });
@@ -59,8 +57,8 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
     private _resizeObserverCallback(entries: [ResizeObserverEntry]): void {
         // ResizeObserver выстрелит в первый раз после инициализации. Если кат изначально был открыт - его скроет.
         // Игнорируем первый вызов.
-        if (!this._firstResizePassed) {
-            this._firstResizePassed = true;
+        if (this._cutHeight === null) {
+            this._cutHeight = this._children.content.getBoundingClientRect().height;
             return;
         }
         if (this._expanded) {
