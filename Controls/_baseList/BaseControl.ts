@@ -2598,29 +2598,6 @@ const _private = {
 
     // endregion
 
-    /**
-     * Получает размеры контейнера, которые будут использованы для измерения области отображения свайпа.
-     * Для строк таблиц, когда ширину строки можно измерить только по ширине столбцов,
-     * берём за правило, что высота всегда едина для всех колонок строки, а ширину столбцов
-     * надо сложить для получения ширины строки.
-     * @param itemContainer
-     */
-    getSwipeContainerSize(itemContainer: HTMLElement): {width: number, height: number} {
-        const result: {width: number, height: number} = { width: 0, height: 0 };
-        if (itemContainer.classList.contains(LIST_MEASURABLE_CONTAINER_SELECTOR)) {
-            result.width = itemContainer.clientWidth;
-            result.height = itemContainer.clientHeight;
-        } else {
-            itemContainer
-                .querySelectorAll(`.${LIST_MEASURABLE_CONTAINER_SELECTOR}`)
-                .forEach((container) => {
-                    result.width += container.clientWidth;
-                    result.height = result.height || container.clientHeight;
-                });
-        }
-        return result;
-    },
-
     moveItem(self, selectedKey: CrudEntityKey, direction: 'up' | 'down'): Promise<void> {
         const selection: ISelectionObject = {
             selected: [selectedKey],
@@ -4505,6 +4482,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._sourceControllerLoadingResolver) {
             this._sourceControllerLoadingResolver();
         }
+        // Перестраиваем свайп на afterUpdate, когда точно уже известен новый размер записи
+        // Перестроение должно произойти только в том случае, когда изменился размер записи
+        if (this._itemActionsController && this._itemActionsController.isSwiped()) {
+            this._itemActionsController.updateSwipeConfigIfNeed(
+                this._container,
+                _private.getViewUniqueClass(this),
+                LIST_MEASURABLE_CONTAINER_SELECTOR
+            );
+        }
         if (this._callbackAfterUpdate) {
             this._callbackAfterUpdate.forEach((callback) => {
                 callback();
@@ -6224,7 +6210,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         swipeEvent.stopPropagation();
         const key = _private.getPlainItemContents(item).getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
-        const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
+        const swipeContainer = ItemActionsController.
+            getSwipeContainerSize(itemContainer as HTMLElement, LIST_MEASURABLE_CONTAINER_SELECTOR);
         let itemActionsController: ItemActionsController;
         if (this._itemActionsMenuId) {
             _private.closeActionsMenu(this);
