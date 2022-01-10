@@ -33,14 +33,18 @@ export function getItemVisivbility(item: IFilterItem,
     }
 }
 
-export function getFilterItemsAfterCallback(currentFilter: TFilter,
+export function getFilterItemsAfterCallback(items: IFilterItem[],
+                                            currentFilter: TFilter,
                                             updatedFilter: TFilter,
-                                            updatedFilterConfig: IFilterItem[]): Promise<IFilterItem[]> {
+                                            updateCallback: Function): void {
     const changedFilters = getChangedFilters(currentFilter, updatedFilter);
     if (Object.keys(changedFilters).length) {
-        return getNewItems(changedFilters, updatedFilter, updatedFilterConfig);
+        getNewItems(changedFilters, updatedFilter, items).then((newFilterButtonItems) => {
+            updateCallback(newFilterButtonItems);
+        });
+    } else {
+        updateCallback(items);
     }
-    return Promise.resolve(updatedFilterConfig);
 }
 
 function getNewItems(changedFilters: object, updatedFilter: TFilter, items: IFilterItem[]): Promise<IFilterItem[]> {

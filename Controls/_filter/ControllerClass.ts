@@ -207,7 +207,7 @@ export default class FilterControllerClass extends mixin<
         }
     }
 
-    updateFilterItems(items: IFilterItem[]): Promise<IFilterItem[]|void> {
+    updateFilterItems(items: IFilterItem[]): void {
         const currentFilterButtonItems = this._$filterButtonItems;
         const currentFastFilterItems = this._$fastFilterItems;
         const currentFilter = this._$filter;
@@ -231,12 +231,7 @@ export default class FilterControllerClass extends mixin<
             !isEqual(currentFilterButtonItems, this._$filterButtonItems) ||
             !isEqual(currentFastFilterItems, this._$fastFilterItems)
         ) {
-            return getFilterItemsAfterCallback(currentFilter,
-                this._$filter,
-                this._$filterButtonItems).then((newFilterButtonItems) => {
-                this._$filterButtonItems = newFilterButtonItems;
-                this._notify('filterSourceChanged', this._$filterButtonItems);
-            });
+            getFilterItemsAfterCallback(items, currentFilter, this._$filter, this._updateFilterButtonItems.bind(this));
         }
     }
 
@@ -302,6 +297,11 @@ export default class FilterControllerClass extends mixin<
 
     saveFilterToHistory(config) {
         return saveFilterToHistory.call(this, config);
+    }
+
+    private _updateFilterButtonItems(newFilterButtonItems: IFilterItem[]): void {
+        this._$filterButtonItems = newFilterButtonItems;
+        this._notify('filterSourceChanged', this._$filterButtonItems);
     }
 
     private _updateFilterItems(newItems: IFilterItem[]): void {
