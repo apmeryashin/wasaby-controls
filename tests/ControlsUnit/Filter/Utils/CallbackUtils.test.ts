@@ -28,7 +28,7 @@ describe('Controls/_filter/Utils/CallbackUtils', () => {
         }];
         loadCallbacks(items);
         const newItem = getItemOnFilterChangedCallback(items[0], updatedFilter, changedFilters, filterChangedCallback);
-        assert.deepEqual(newItem, { value: 2 });
+        assert.deepEqual(newItem, { name: 'testName', value: 2 });
     });
 
     it('getItemOnFilterChangedCallback with new value', () => {
@@ -43,7 +43,7 @@ describe('Controls/_filter/Utils/CallbackUtils', () => {
         }];
         loadCallbacks(items);
         const newItem = getItemOnFilterChangedCallback(items[0], updatedFilter, changedFilters, filterChangedCallback);
-        assert.deepEqual(newItem, { value: 3 });
+        assert.deepEqual(newItem, { name: 'testName', value: 3 });
     });
 
     it('getItemVisivbility false', () => {
