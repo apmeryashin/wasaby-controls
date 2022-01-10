@@ -8,5 +8,6 @@
         parentProperty="parent"
         itemTemplateProperty="template"
         nodeProperty="parent@"
+        on:applyClick="_applyClick()"
         on:itemClick="_toolbarItemClick()"/>
 

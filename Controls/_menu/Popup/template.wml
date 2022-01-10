@@ -136,6 +136,7 @@
                        on:itemClick="_sendResult('itemClick')"
                        on:rightTemplateClick="_sendResult('rightTemplateClick')"
                        on:moreButtonClick="_sendResult('selectorDialogOpened')"
+                       on:applyClick="_sendResult('applyClick')"
                        on:pinClick="_sendResult('pinClick')"
                        on:menuOpened="_sendResult('menuOpened')"
                        on:beforeSubMenuOpen="_prepareSubMenuConfig()"

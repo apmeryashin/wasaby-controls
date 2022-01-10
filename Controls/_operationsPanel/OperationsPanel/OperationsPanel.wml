@@ -23,9 +23,11 @@
                                     keyProperty="{{_options.keyProperty}}"
                                     iconSize="m"
                                     fontColorStyle="{{_options.fontColorStyle}}"
+                                    menuSource="{{_options.menuSource}}"
                                     iconStyle="{{_options.iconStyle}}"
                                     source="{{_toolbarSource}}"
                                     on:itemClick="_itemClickHandler()"
+                                    on:applyClick="_applyClick()"
                                     itemTemplate="{{ _options.itemTemplate }}"
                                     itemTemplateProperty="{{ _options.itemTemplateProperty }}">
             </Controls.toolbars:View>
