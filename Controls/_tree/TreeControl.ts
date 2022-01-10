@@ -232,25 +232,11 @@ const _private = {
         return false;
     },
 
-    shouldLoadChildren(self: TreeControl, nodeKey): boolean {
-        // загружаем узел только если:
-        // 1. он не был загружен ранее (проверяем через sourceController, была ли выполнена загрузка)
-        // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
-        const viewModel = self.getViewModel();
-        const items = viewModel.getCollection();
-
+    shouldLoadChildren(self: TreeControl, nodeKey: TKey): boolean {
+        // загружаем узел только если он не был загружен ранее
+        // (проверяем через sourceController, была ли выполнена загрузка)
         const sourceController = self.getSourceController();
-        const isAlreadyLoaded = (sourceController ? sourceController.hasLoaded(nodeKey) : !!self._options.items);
-
-        if (isAlreadyLoaded) {
-            return false;
-        }
-
-        if (self._options.hasChildrenProperty) {
-            const node = items.getRecordById(nodeKey);
-            return node.get(self._options.hasChildrenProperty) !== false;
-        }
-        return true;
+        return sourceController ? !sourceController.hasLoaded(nodeKey) : !self._options.items;
     },
 
     updateHaseMoreStorage(collection: Tree, sourceController: NewSourceController): void {
@@ -284,7 +270,6 @@ const _private = {
 
         self._displayGlobalIndicator();
         return sourceController.load(direction, nodeKey).then((list) => {
-                self.stopBatchAdding();
                 self._needRestoreScroll = true;
                 return list;
             })
@@ -1251,12 +1236,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     resolve();
                 }
             };
-
-            if (model.getLast('Markable') === model.getItemBySourceKey(key)) {
-                this._shiftToDirection('down').then(goToNextItem);
-            } else {
-                goToNextItem();
-            }
+            goToNextItem();
         });
     }
 

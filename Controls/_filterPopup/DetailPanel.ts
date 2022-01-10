@@ -141,6 +141,10 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
       }
    }
 
+   protected _getPopupBackgroundStyle(): string {
+      return this._options.orientation === 'vertical' ? 'default' : 'unaccented';
+   }
+
    protected _resetFilter(): void {
       this._items = this._cloneItems(this._options.items);
       FilterUtils.resetFilter(this._items);

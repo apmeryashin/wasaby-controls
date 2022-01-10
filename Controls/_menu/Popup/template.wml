@@ -6,7 +6,6 @@
       <Controls.popupTemplate:Sticky
               attr:class="controls-Popup__isolatedFocusingContext
                           controls-Menu__popup-template
-                          controls-Menu__popup-background-{{_options.backgroundStyle}}
                           controls-Menu__popup-direction-vertical-{{_verticalDirection}}
                           {{!_options.headerTemplate && _verticalDirection === 'top' ? 'controls-Menu__popup-reverse'}}
                           controls-Menu__popup-shadow-{{_options.typeShadow || 'default'}}
@@ -25,14 +24,14 @@
               closeButtonViewMode="{{_options.closeButtonViewMode}}"
               stickyPosition="{{_options.stickyPosition}}"
               draggable="{{_options.draggable}}"
-              backgroundStyle="transparent"
+              backgroundStyle="{{_options.backgroundStyle}}"
               borderStyle="{{_options.borderStyle}}"
               hoverBorderStyle="{{_options.hoverBorderStyle}}"
               borderSize="{{_options.borderSize}}"
               searchPlaceholder="{{_options.searchPlaceholder}}"
               minSearchLength="{{_options.minSearchLength}}"
               searchDelay="{{_options.searchDelay}}"
-              headerBackgroundStyle="transparent"
+              headerBackgroundStyle="{{_options.backgroundStyle}}"
               markerVisibility="{{_options.markerVisibility}}"
               verticalDirection="{{_verticalDirection}}"
               on:mouseenter="_mouseEnterHandler()"

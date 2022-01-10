@@ -21,7 +21,7 @@ export default class Index extends Control<IControlOptions> {
     protected _navigation: object;
 
     protected _searchValue: string;
-    protected _query_timeout: string;
+    protected _queryTimeout: string;
 
     protected _beforeMount(): void {
         this._source = new Memory({
@@ -34,12 +34,12 @@ export default class Index extends Control<IControlOptions> {
 
         // Эмуляция задержки при получении данных через локальный источник
         const originQuery = this._source.query;
-        this._query_timeout = query.get.timeout ? query.get.timeout : '1000';
+        this._queryTimeout = query.get.timeout ? query.get.timeout : '1000';
         this._source.query = (query) => {
             return new Promise((resolve) => {
                 setTimeout(() => {
                     resolve(originQuery.call(this._source, query));
-                }, this._query_timeout);
+                }, this._queryTimeout);
             });
         };
 

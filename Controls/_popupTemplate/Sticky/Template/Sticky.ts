@@ -149,6 +149,11 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         this._notify(eventName, [event]);
     }
 
+    protected _getBackgroundColor(): string {
+        return this._options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
+            'controls-background-' + this._options.backgroundStyle;
+    }
+
     private static _getTheme(): string {
         return ManagerController.getPopupHeaderTheme();
     }

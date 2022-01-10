@@ -15,7 +15,7 @@ import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 import * as CaptionTemplate from 'wml!Controls/_toggle/Switch/resources/CaptionTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
-import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
+import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
     ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
@@ -65,9 +65,20 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
     '[Controls/_toggle/interface/ICheckable]': true;
     '[Controls/_interface/IValidationStatus]': true;
     protected _template: TemplateFunction = SwitchTemplate;
+    protected _workByKeyboard: WorkByKeyboardContext;
+
+    protected _beforeMount(options: ISwitchOptions, context: IWorkByKeyboardContext = {}): void {
+        this._workByKeyboard = context.workByKeyboard;
+    }
+
+    protected _beforeUpdate(newOptions: ISwitchOptions, context: IWorkByKeyboardContext = {}): void {
+        if (this._workByKeyboard !== context.workByKeyboard) {
+            this._workByKeyboard = context.workByKeyboard;
+        }
+    }
 
     protected _highlightedOnFocus(): boolean {
-        return !!this.context.get('workByKeyboard')?.status && !this._options.readOnly;
+        return !!this._workByKeyboard?.status && !this._options.readOnly;
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {

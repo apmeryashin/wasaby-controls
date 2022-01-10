@@ -17,6 +17,7 @@ import {IBorderVisibilityArea} from './interface/IBorderVisibilityArea';
 
 // @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
+import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from 'Controls/Context/WorkByKeyboardContext';
 
 type State =
     'valid'
@@ -130,6 +131,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     protected _horizontalPadding: string;
     protected _template: TemplateFunction = template;
     protected _isFieldZIndex: boolean = false;
+    protected _workByKeyboard: WorkByKeyboardContext;
 
     readonly '[Controls/_interface/IHeight]': boolean = true;
     readonly '[Controls/_interface/IFontSize]': boolean = true;
@@ -168,6 +170,10 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         return options.validationStatus;
     }
 
+    protected _highlightedOnFocus(): boolean {
+        return !!this._workByKeyboard?.status && !this._options.readOnly;
+    }
+
     protected _tagClickHandler(event: SyntheticEvent<MouseEvent>): void {
         this._notify('tagClick', [this._children.tag]);
     }
@@ -176,15 +182,16 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._notify('tagHover', [this._children.tag]);
     }
 
-    protected _beforeMount(options: IRenderOptions): void {
+    protected _beforeMount(options: IRenderOptions, context: IWorkByKeyboardContext = {}): void {
         this._border = Render._detectToBorder(options.borderVisibility, options.minLines, options.contrastBackground);
         this._fontWeight = Render._getFontWeight(options.fontWeight, options.fontSize);
         this._setState(options);
         this._updateHorizontalPadding(options);
         this._updateFieldZIndex(options);
+        this._workByKeyboard = context.workByKeyboard;
     }
 
-    protected _beforeUpdate(options: IRenderOptions): void {
+    protected _beforeUpdate(options: IRenderOptions, context: IWorkByKeyboardContext = {}): void {
         if (options.borderVisibility !== this._options.borderVisibility ||
             options.minLines !== this._options.minLines ||
             options.contrastBackground !== this._options.contrastBackground
@@ -195,6 +202,9 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         }
         if (options.fontWeight !== this._options.fontWeight || options.fontSize !== this._options.fontSize) {
             this._fontWeight = Render._getFontWeight(options.fontWeight, options.fontSize);
+        }
+        if (this._workByKeyboard !== context.workByKeyboard) {
+            this._workByKeyboard = context.workByKeyboard;
         }
         this._setState(options);
         this._updateHorizontalPadding(options);
@@ -290,6 +300,12 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
             contrastBackground: true,
             state: '',
             validationStatus: 'valid'
+        };
+    }
+
+    static contextTypes(): object {
+        return {
+            workByKeyboard: WorkByKeyboardContext
         };
     }
 }

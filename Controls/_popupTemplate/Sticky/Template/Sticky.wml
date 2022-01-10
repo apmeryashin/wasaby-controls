@@ -6,7 +6,8 @@
                 controls-StickyTemplate-hoverBorderStyle-{{_options.hoverBorderStyle}}
                 controls-StickyTemplate-borderSize-{{_options.borderSize}}
                 {{_options.shadowVisible ? 'controls-StickyTemplate-shadow'}}
-                {{_options.draggable ? 'ws-window-draggable'}}"
+                {{_options.draggable ? 'ws-window-draggable'}}
+                {{_getBackgroundColor()}}"
          on:mousedown="_onMouseDown()"
          on:touchstart="_onMouseDown()"
          on:mouseout="_mouseOut()"
@@ -35,16 +36,14 @@
             </ws:if>
         </ws:else>
         <ws:if data="{{_options.bodyContentTemplate}}">
-            <div class="controls-StickyTemplate__content-area {{_getRoundedClass(_options, 'body')}}
-                        {{_options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
-                                                                   'controls-background-' + _options.backgroundStyle}}">
+            <div class="controls-StickyTemplate__content-area {{_getRoundedClass(_options, 'body')}} {{_getBackgroundColor()}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
                             attr:class="{{_getRoundedClass(_options, 'body')}}"
                             headerContentTemplate="{{null}}"
                             footerContentTemplate="{{null}}"
                             borderStyle="{{undefined}}"
                             isDragging="{{_dragging}}"
-                            scope="{{_options}}"></ws:partial>
+                            scope="{{_options}}"/>
             </div>
         </ws:if>
         <ws:if data="{{_options.footerContentTemplate}}">
@@ -54,9 +53,8 @@
                         scope="{{_options}}"
                         attr:class="controls-StickyTemplate__footer
                                     controls-PopupTemplate__roundBorder_bottom controls_border-radius-s
-                                    {{_options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
-                                                                   'controls-background-' + _options.backgroundStyle}}"
-                        on:click="_proxyEvent('footerClick')"></ws:partial>
+                                    {{_getBackgroundColor()}}"
+                        on:click="_proxyEvent('footerClick')"/>
         </ws:if>
     </div>
 </Controls.dragnDrop:Container>

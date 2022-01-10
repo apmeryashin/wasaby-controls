@@ -263,6 +263,12 @@
    });
 }
 
+.controls-Render-focused-item:focus-within {
+   transition: background 0.5s, box-shadow 0.5s;
+   background: var(--focused_background-color);
+   box-shadow: 0 0 0 var(--offset_2xs) var(--focused_background-color);
+}
+
 .controls-Render_borderRadius {
    border-radius: var(--border-radius_default_inputText);
 }

@@ -24,15 +24,25 @@ export default class Demo extends Control<IControlOptions> {
         this._typeDescription = new RecordSet<IPropertyGridItem>({
             rawData: [
                 {
+                    caption: 'Папка',
+                    name: 'Папка',
+                    parent: null,
+                    'parent@': true
+                },
+                {
                     caption: 'Статическое свойство',
                     name: 'string',
-                    editorTemplateName: 'Controls/propertyGrid:StringEditor'
+                    editorTemplateName: 'Controls/propertyGrid:StringEditor',
+                    parent: 'Папка',
+                    'parent@': false
                 },
                 {
                     caption: 'Динамическое свойство',
                     name: 'dynamicString',
                     isEditable: true,
-                    editorTemplateName: 'Controls/propertyGrid:StringEditor'
+                    editorTemplateName: 'Controls/propertyGrid:StringEditor',
+                    parent: 'Папка',
+                    'parent@': false
                 }
             ],
             keyProperty: 'name'
