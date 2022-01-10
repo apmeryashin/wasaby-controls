@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth1400">
     <Controls.list:View
             keyProperty="key"
             source="{{_viewSource}}">
