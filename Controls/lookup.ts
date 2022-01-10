@@ -32,7 +32,7 @@ export {default as MultipleInput} from 'Controls/_lookup/MultipleInput';
 export {default as Collection} from 'Controls/_lookup/SelectedCollection';
 export {default as Link} from 'Controls/_lookup/Lookup/Link';
 export {default as PlaceholderChooser} from 'Controls/_lookup/PlaceholderChooser';
-export {default as Opener} from 'Controls/_lookup/Opener';
+export {Stack as Opener} from 'Controls/popup';
 export {default as MultipleInputNew, IMultipleInputNewOptions} from 'Controls/_lookup/MultipleInputNew';
 export {default as showSelector} from 'Controls/_lookup/showSelector';
 
