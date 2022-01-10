@@ -90,21 +90,6 @@ const ACTIONS_FEW = [
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    protected _viewSource: HierarchicalMemory = null;
-    protected _fullActions: any[] = ACTIONS;
-    protected _fewActions: any[] = ACTIONS_FEW;
 
-    protected _beforeMount(): void {
-        this._viewSource = new HierarchicalMemory({
-            keyProperty: 'id',
-            parentProperty: 'parent',
-            data: DATA
-        });
-    }
-
-    protected _imageUrlResolver(width: number, height: number, url: string = '', item: Model): string {
-        return item.get('image');
-    }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/tileNew/TileScalingMode/style'];
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

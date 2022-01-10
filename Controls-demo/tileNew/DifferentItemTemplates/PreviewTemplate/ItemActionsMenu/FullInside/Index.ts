@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/ItemActionsMenu/Template';
+import * as Template from 'wml!Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/ItemActionsMenu/FullInside/Template';
 import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from 'Controls-demo/tileNew/DataHelpers/DataCatalog';
 import {TItemActionShowType} from 'Controls/itemActions';

@@ -24,6 +24,6 @@
 </ws:template>
 
 <div class="controlsDemo__wrapper">
-   <div class="controls-text-label">Много операций, плитка с увеличением</div>
-   <ws:partial template="tile" actions="{{_fullActions}}" scalingMode="{{'inside'}}"/>
+   <div class="controls-text-label">Много операций, плитка без увеличения</div>
+   <ws:partial template="tile" attr:data-qa="controls-Tile_fullActions_noscale" actions="{{_fullActions}}" scalingMode="{{'none'}}"/>
 </div>
