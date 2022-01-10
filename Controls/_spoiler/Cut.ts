@@ -24,15 +24,15 @@ import 'css!Controls/spoiler';
  * @author Красильников А.С.
  */
 class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable {
-    private _lines: number | null = null;
-    private _expanded: boolean = false;
+    protected _lines: number | null = null;
+    protected _expanded: boolean = false;
+    private _cutHeight: number = null;
 
     protected _template: TemplateFunction = template;
     protected _isIE: boolean = detection.isIE11;
     protected _lineHeightForIE: Record<string, number> = IECompatibleLineHeights;
 
     private _resizeObserver: ResizeObserverUtil;
-    private _firstResizePassed: boolean = false;
 
     readonly '[Controls/_interface/IBackgroundStyle]': boolean = true;
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
@@ -54,17 +54,21 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
         return true;
     }
 
-    private _resizeObserverCallback(): void {
+    private _resizeObserverCallback(entries: [ResizeObserverEntry]): void {
         // ResizeObserver выстрелит в первый раз после инициализации. Если кат изначально был открыт - его скроет.
         // Игнорируем первый вызов.
-        if (!this._firstResizePassed) {
-            this._firstResizePassed = true;
+        if (this._cutHeight === null) {
+            this._cutHeight = this._children.content.getBoundingClientRect().height;
             return;
         }
         if (this._expanded) {
-            // Скрываем кат, если контент поменял размер
-            this._expanded = false;
-            this._notify('expandedChanged', [this._expanded]);
+            const entry = entries[0];
+            if (this._cutHeight !== entry.contentRect.height) {
+                this._cutHeight = entry.contentRect.height;
+                // Сворачиваем кат, если контент поменял высоту
+                this._expanded = false;
+                this._notify('expandedChanged', [this._expanded]);
+            }
         }
     }
 
