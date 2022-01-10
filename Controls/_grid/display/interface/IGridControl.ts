@@ -2,6 +2,7 @@ import { IList } from 'Controls/baseList';
 import { TColumns } from './IColumn';
 import { IHeaderCell } from './IHeaderCell';
 import { IFooterColumn } from './IFooterColumn';
+import {TemplateFunction} from 'UI/Base';
 
 type HeaderVisibility = 'hasdata' | 'visible';
 
@@ -15,6 +16,35 @@ export interface IGridControl extends IList {
     header?: IHeaderCell[];
     headerVisibility?: HeaderVisibility;
     footer?: IFooterColumn[];
+
+    /**
+     * @cfg {TemplateFunction|String} Пользовательский шаблон отображения контрола без элементов.
+     * @demo Controls-demo/gridNew/EmptyGrid/WithHeader/Index
+     * @default undefined
+     * @example
+     * В следующем примере показана настройка шаблона отображения для пустого плоского списка.
+     * <pre class="brush: html">
+     * <!-- WML -->
+     * <Controls.grid:View source="{{_viewSource}}" columns="{{_columns}}">
+     *     <ws:emptyTemplate>
+     *         <ws:partial template="Controls/grid:EmptyTemplate" topSpacing="xl" bottomSpacing="m">
+     *             <ws:contentTemplate>No data available!</ws:contentTemplate>
+     *         </ws:partial>
+     *     </ws:emptyTemplate>
+     * </Controls.grid:View>
+     * </pre>
+     * @remark
+     * Подробнее о настройка контрола без элементов читайте в соответствующих статьях для:
+     *
+     * * {@link /doc/platform/developmentapl/interface-development/controls/list/list/empty/ плоского списка}
+     * * {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty/ таблицы}
+     * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/empty/ дерева}
+     * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/empty/ дерева c колонками}
+     * * {@link /doc/platform/developmentapl/interface-development/controls/list/tile/empty/ плитки}
+     * * {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/empty/ иерархического проводника}
+     * * {@link /doc/platform/developmentapl/interface-development/controls/extends/help-system/pages/ подсказки на пустых страницах}
+     */
+    emptyTemplate?: TemplateFunction | string;
 }
 
 /*
@@ -554,35 +584,6 @@ export interface IGridControl extends IList {
  * Функция возвращает количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение "end".
  * @markdown
  * @see colspanCallback
- */
-
-/**
- * @name Controls/_grid/display/interface/IGridControl#emptyTemplate
- * @cfg {TemplateFunction|String} Пользовательский шаблон отображения контрола без элементов.
- * @demo Controls-demo/gridNew/EmptyGrid/WithHeader/Index
- * @default undefined
- * @example
- * В следующем примере показана настройка шаблона отображения для пустого плоского списка.
- * <pre class="brush: html">
- * <!-- WML -->
- * <Controls.grid:View source="{{_viewSource}}" columns="{{_columns}}">
- *     <ws:emptyTemplate>
- *         <ws:partial template="Controls/grid:EmptyTemplate" topSpacing="xl" bottomSpacing="m">
- *             <ws:contentTemplate>No data available!</ws:contentTemplate>
- *         </ws:partial>
- *     </ws:emptyTemplate>
- * </Controls.grid:View>
- * </pre>
- * @remark
- * Подробнее о настройка контрола без элементов читайте в соответствующих статьях для:
- *
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/list/empty/ плоского списка}
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty/ таблицы}
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/empty/ дерева}
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/empty/ дерева c колонками}
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/tile/empty/ плитки}
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/empty/ иерархического проводника}
- * * {@link /doc/platform/developmentapl/interface-development/controls/extends/help-system/pages/ подсказки на пустых страницах}
  */
 
 /**
