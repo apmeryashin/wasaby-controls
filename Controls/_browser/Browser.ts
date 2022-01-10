@@ -253,15 +253,28 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     protected _afterMount(options: IBrowserOptions): void {
         this._isMounted = true;
         if (options.useStore) {
+            this._subscribeOnStoreChanges(options);
+        }
+    }
+
+    private _subscribeOnStoreChanges(options: IBrowserOptions): void {
+        this._storeCallbackIds = this._createNewStoreObservers();
+        this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', () => {
+            this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
             this._storeCallbackIds = this._createNewStoreObservers();
-            this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', () => {
-                this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
-                this._storeCallbackIds = this._createNewStoreObservers();
-                if (!options.hasOwnProperty('searchValue') && this._searchValue) {
-                    this._setSearchValueAndNotify('');
-                    this._getSearchControllerSync()?.reset(true);
-                }
-            }, true);
+            if (!options.hasOwnProperty('searchValue') && this._searchValue) {
+                this._setSearchValueAndNotify('');
+                this._getSearchControllerSync()?.reset(true);
+            }
+        }, true);
+    }
+
+    private _unsubscribeFromStoreChanges(): void {
+        if (this._storeCallbackIds) {
+            this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
+        }
+        if (this._storeCtxCallbackId) {
+            Store.unsubscribe(this._storeCtxCallbackId);
         }
     }
 
@@ -341,6 +354,12 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const rootChanged = newOptions.root !== options.root;
         const searchController = this._getSearchControllerSync(id);
         let methodResult;
+
+        if (newOptions.useStore !== options.useStore) {
+            newOptions.useStore ?
+                this._subscribeOnStoreChanges(newOptions) :
+                this._unsubscribeFromStoreChanges();
+        }
 
         this._getOperationsController().update(newOptions);
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
@@ -525,13 +544,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._errorRegister = null;
         }
 
-        if (this._storeCallbackIds) {
-            this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
-        }
-        if (this._storeCtxCallbackId) {
-            Store.unsubscribe(this._storeCtxCallbackId);
-        }
-
+        this._unsubscribeFromStoreChanges();
         this._dataLoader.destroy();
     }
 
