@@ -67,6 +67,10 @@
             controls-Back__caption
             controls-Back__caption_style-{{_options.fontColorStyle}}
             controls-Back__caption_overflow-{{_options.textOverflow}}
+            {{
+               _options.textTransform !== 'none'
+                  ? ('controls-fontsize-' + _options.fontSize + ' controls-heading__' + _options.textTransform)
+            }}
          ">
             {{ _options.caption }}
          </div>

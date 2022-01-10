@@ -22,7 +22,7 @@ import {
     INavigationPageSourceConfig,
     ISelectionObject, ISortingOptions, ISourceOptions,
     TKey,
-    INavigationPositionSourceConfig
+    INavigationPositionSourceConfig, TTextTransform
 } from 'Controls/interface';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {RecordSet} from 'Types/collection';
@@ -140,6 +140,10 @@ interface IExplorerOptions
      * В шаблон передается опция item в которой содержится запись хлебной крошки.
      */
     backButtonBeforeCaptionTemplate?: string | TemplateFunction;
+    /**
+     * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
+     */
+    backButtonTextTransform?: TTextTransform;
 }
 
 interface IMarkedKeysStore {
@@ -1370,6 +1374,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/list:IRemovableList
  * @implements Controls/marker:IMarkerList
  * @implements Controls/tile:ITreeTile
+ * @implements Controls/error:IErrorControllerOptions
  *
  * @public
  * @author Авраменко А.С.

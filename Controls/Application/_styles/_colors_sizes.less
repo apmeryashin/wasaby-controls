@@ -391,6 +391,13 @@
    background-color: transparent;
 }
 
+.controls-focused-item:focus-within {
+   transition: background 0.5s, box-shadow 0.5s, border-radius 0.5s;
+   background: var(--focused_background-color);
+   box-shadow: 0 0 0 var(--offset_2xs) var(--focused_background-color);
+   border-radius: var(--border-radius_xs);
+}
+
 //validate
 .controls-invalid-border {
    position: absolute;

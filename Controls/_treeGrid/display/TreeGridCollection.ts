@@ -26,6 +26,7 @@ import {TGroupNodeVisibility} from '../interface/ITreeGrid';
 import {ITreeGridOptions} from '../TreeGridView';
 import NodeFooterStrategy from './itemsStrategy/NodeFooter';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
+import {IDirection} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -184,8 +185,8 @@ export default class TreeGridCollection<
         this._$colgroup?.reBuild();
     }
 
-    setIndexes(start: number, stop: number): void {
-        super.setIndexes(start, stop);
+    setIndexes(start: number, stop: number, shiftDirection: IDirection): void {
+        super.setIndexes(start, stop, shiftDirection);
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();

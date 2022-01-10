@@ -40,7 +40,7 @@ import {DimensionsMeasurer} from 'Controls/sizeUtils';
  * @implements Controls/interface:IApplication
  *
  * @public
- * @author Санников К.А.
+ * @author Крайнов Д.О.
  */
 
 interface IBodyClassesField {

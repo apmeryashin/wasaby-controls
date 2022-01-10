@@ -2,7 +2,7 @@ import { TreeGridCollection } from 'Controls/treeGrid';
 import {Model} from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 import SearchGridDataRow from './SearchGridDataRow';
-import {ItemsFactory, itemsStrategy, TreeItem} from 'Controls/display';
+import {ItemsFactory, itemsStrategy, TreeItem, CollectionEnumerator, getFlatNearbyItem} from 'Controls/display';
 import BreadcrumbsItemRow from './BreadcrumbsItemRow';
 import {IOptions as ITreeGridOptions} from 'Controls/_treeGrid/display/TreeGridCollection';
 import TreeGridDataRow from 'Controls/_treeGrid/display/TreeGridDataRow';
@@ -49,10 +49,6 @@ export default
    protected _$colspanBreadcrumbs: boolean;
 
    protected _$breadCrumbsMode: 'row' | 'cell';
-
-   constructor(options: IOptions<S, T>) {
-      super(options);
-   }
 
    protected _setupProjectionFilters(): void {
       this.addFilter(
@@ -107,6 +103,15 @@ export default
           '[Controls/_display/BreadcrumbsItem]'
       );
       this._nextVersion();
+   }
+
+   protected _getNearbyItem(
+       enumerator: CollectionEnumerator<T>,
+       item: T,
+       isNext: boolean,
+       conditionProperty?: string
+   ): T {
+      return getFlatNearbyItem(enumerator, item, isNext, conditionProperty);
    }
 
    protected _hasItemsToCreateResults(): boolean {

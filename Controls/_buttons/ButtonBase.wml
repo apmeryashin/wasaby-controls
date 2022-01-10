@@ -50,6 +50,7 @@
 <ws:partial template="buttonWrapperTemplate"
             attr:class="controls-BaseButton
                 controls-Button_{{_viewMode}}
+                controls-Button_radius-{{_viewMode}}
                 {{_hoverIcon ? ' controls-Button_hoverIcon'}} controls-Button_{{_options.readOnly ? 'readonly' : 'clickable'}}
                 {{_toggled ? ' controls-Button_toggled' : ''}}
                 controls-Button_{{_viewMode}}_style-{{_buttonStyle}}{{_toggled ? '_toggled' : ''}}

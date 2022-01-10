@@ -31,6 +31,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { ISourceCollection } from './interface/ICollection';
 import AddStrategy from 'Controls/_display/itemsStrategy/Add';
 import {TExpanderIconSize, TExpanderIconStyle} from './interface/ITree';
+import {getTreeNearbyItem} from 'Controls/_display/utils/NearbyItemUtils';
 
 export type TNodeFooterVisibilityCallback<S extends Model = Model> = (contents: S) => boolean;
 
@@ -1314,42 +1315,20 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         return projection;
     }
 
+    /**
+     * Возвращает соседний элемент проекции в рамках одного парента с исходным
+     * @param enumerator Энумератор элементов
+     * @param item Элемент проекции относительно которого искать
+     * @param isNext Искать следующий или предыдущий элемент
+     * @param [conditionProperty] Свойство, по которому происходит отбор элементов
+     */
     protected _getNearbyItem(
         enumerator: CollectionEnumerator<T>,
         item: T,
         isNext: boolean,
         conditionProperty?: string
     ): T {
-        const method = isNext ? 'moveNext' : 'movePrevious';
-        const parent = item && item.getParent && item.getParent() || this.getRoot();
-        let hasItem = true;
-        const initial = enumerator.getCurrent();
-        let sameParent = false;
-        let current;
-        let nearbyItem;
-        let isTreeItem;
-
-        enumerator.setCurrent(item);
-
-        // TODO: отлеживать по level, что вышли "выше"
-        while (hasItem && !sameParent) {
-            hasItem = enumerator[method]();
-            nearbyItem = enumerator.getCurrent();
-
-            // если мы пришли сюда, когда в enumerator ещё ничего нет, то nearbyItem будет undefined
-            if (!!nearbyItem && conditionProperty && !nearbyItem[conditionProperty]) {
-                nearbyItem = undefined;
-                continue;
-            }
-            // Когда _getNearbyItem используется для обычных групп, у них нет getParent
-            isTreeItem = nearbyItem && (nearbyItem['[Controls/_display/TreeItem]'] || nearbyItem['[Controls/_display/BreadcrumbsItem]']);
-            sameParent = nearbyItem && isTreeItem ? nearbyItem.getParent() === parent : false;
-            current = (hasItem && (!isTreeItem || sameParent)) ? nearbyItem : undefined;
-        }
-
-        enumerator.setCurrent(initial);
-
-        return current;
+        return getTreeNearbyItem(this.getRoot(), enumerator, item, isNext, conditionProperty);
     }
 
     // endregion

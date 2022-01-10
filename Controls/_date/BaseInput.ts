@@ -22,7 +22,8 @@ import {
 import IValueOptions from 'Controls/_date/interface/IValue';
 import {EventUtils} from 'UI/Events';
 import {isValidDate, Container, InputContainer} from 'Controls/validate';
-import template = require('wml!Controls/_date/BaseInput/BaseInput');
+import {Base as dateUtils} from 'Controls/dateUtils';
+import * as template from 'wml!Controls/_date/BaseInput/BaseInput';
 
 export interface IDateBaseOptions extends
     IBaseOptions,
@@ -127,10 +128,17 @@ class BaseInput extends Control<IDateBaseOptions> {
     }
 
     protected _registerModelEvents(): void {
-        EventUtils.proxyModelEvents(this, this._model, ['valueChanged']);
-        this._model.subscribe('valueChanged', () => {
-            this._updateValidators();
+        this._model.subscribe('valueChanged', (event, value) => {
+            this._valueChanged(value);
         });
+    }
+
+    private _valueChanged(value: [Date, string]): void {
+        const dateValue = value[0];
+        if (dateUtils.isValidDate(dateValue)) {
+            this._notify('valueChanged', [...value]);
+        }
+        this._updateValidators();
     }
 
     protected _inputCompletedHandler(e: SyntheticEvent<KeyboardEvent>, value: Date | WSDate, textValue: string): void {

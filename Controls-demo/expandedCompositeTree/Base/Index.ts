@@ -35,7 +35,10 @@ const COMPOSITE_VIEW_CONFIG = {
     tileWidth: 320,
     tileScalingMode: 'none',
     displayProperty: 'caption',
-    itemTemplate: CompositeItemTemplate
+    itemTemplate: CompositeItemTemplate,
+    itemTemplateOptions: {
+        shadowVisibility: 'onhover'
+    }
 };
 
 export default class extends Control {
@@ -50,7 +53,7 @@ export default class extends Control {
             top: 'l',
             bottom: 'l'
         },
-        itemTemplate: ItemTemplate,
+        compositeItemTemplate: ItemTemplate,
         compositeViewConfig: COMPOSITE_VIEW_CONFIG
     };
     protected _masterConfig: {} = {
