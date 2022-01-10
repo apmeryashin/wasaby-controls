@@ -18,6 +18,7 @@ import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import 'css!Controls/dropdown';
 import 'css!Controls/CommonClasses';
+import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from 'Controls/Context/WorkByKeyboardContext';
 
 type THorizontalPadding = 'xs' | 'null';
 
@@ -89,12 +90,13 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
    protected _value: string;
    protected _placeholder: string | Function;
    protected _horizontalPadding: string;
+   protected _workByKeyboard: WorkByKeyboardContext;
    protected _targetPoint: IStickyPosition = {
       vertical: 'bottom'
    };
 
    _beforeMount(options: IComboboxOptions,
-                context: object,
+                context: IWorkByKeyboardContext,
                 receivedState: IDropdownReceivedState): Promise<void | IDropdownReceivedState> {
       this._borderStyle = this._getBorderStyle(options.borderStyle, options.validationStatus);
       this._placeholder = options.placeholder;
@@ -103,6 +105,7 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
       this._updateHorizontalPadding(options);
 
       this._controller = new Controller(this._getControllerOptions(options));
+      this._workByKeyboard = context?.workByKeyboard;
       return loadItems(this._controller, receivedState, options);
    }
 
@@ -114,7 +117,7 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
       }
    }
 
-   protected _beforeUpdate(newOptions: IComboboxOptions): void {
+   protected _beforeUpdate(newOptions: IComboboxOptions, context: IWorkByKeyboardContext = {}): void {
       if (newOptions.readOnly !== this._options.readOnly) {
          this._readOnly = this._getReadOnly(newOptions.readOnly);
       }
@@ -124,6 +127,13 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
       }
       this._controller.update(this._getControllerOptions(newOptions));
       this._borderStyle = this._getBorderStyle(newOptions.borderStyle, newOptions.validationStatus);
+      if (this._workByKeyboard !== context.workByKeyboard) {
+         this._workByKeyboard = context.workByKeyboard;
+      }
+   }
+
+   protected _highlightedOnFocus(): boolean {
+      return !!this._workByKeyboard?.status && !this._options.readOnly;
    }
 
    _getControllerOptions(options: IComboboxOptions): object {
@@ -285,6 +295,12 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
          emptyKey: null,
          contrastBackground: false,
          closeMenuOnOutsideClick: true
+      };
+   }
+
+   static contextTypes(): object {
+      return {
+         workByKeyboard: WorkByKeyboardContext
       };
    }
 }
