@@ -38,7 +38,7 @@ export interface IItemActionsOptions {
      * @name Controls/_itemActions/interface/IItemActions#contextMenuConfig
      * @cfg {Controls/itemActions:IContextMenuConfig} Визуальное представление {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/show-type/ меню опций записи} и {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/menu-visibility/ контекстного меню}.
      * @remark
-     * Подробнее о настроке читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/context-menu-config/ здесь}.
+     * Подробнее о настройке читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/context-menu-config/ здесь}.
      * @see contextMenuVisibility
      */
 
