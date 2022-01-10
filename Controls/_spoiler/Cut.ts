@@ -24,8 +24,9 @@ import 'css!Controls/spoiler';
  * @author Красильников А.С.
  */
 class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable {
-    private _lines: number | null = null;
-    private _expanded: boolean = false;
+    protected _lines: number | null = null;
+    protected _expanded: boolean = false;
+    private _cutHeight: number;
 
     protected _template: TemplateFunction = template;
     protected _isIE: boolean = detection.isIE11;
@@ -44,6 +45,7 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
     }
 
     protected _afterMount(options: ICutOptions): void {
+        this._cutHeight = this._children.content.getBoundingClientRect().height;
         if (this._hasResizeObserver()) {
             this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback);
             this._resizeObserver.observe(this._children.content as HTMLElement, { box: RESIZE_OBSERVER_BOX.borderBox });
@@ -54,7 +56,7 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
         return true;
     }
 
-    private _resizeObserverCallback(): void {
+    private _resizeObserverCallback(entries: [ResizeObserverEntry]): void {
         // ResizeObserver выстрелит в первый раз после инициализации. Если кат изначально был открыт - его скроет.
         // Игнорируем первый вызов.
         if (!this._firstResizePassed) {
@@ -62,9 +64,13 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
             return;
         }
         if (this._expanded) {
-            // Скрываем кат, если контент поменял размер
-            this._expanded = false;
-            this._notify('expandedChanged', [this._expanded]);
+            const entry = entries[0];
+            if (this._cutHeight !== entry.contentRect.height) {
+                this._cutHeight = entry.contentRect.height;
+                // Скрываем кат, если контент поменял высоту
+                this._expanded = false;
+                this._notify('expandedChanged', [this._expanded]);
+            }
         }
     }
 
