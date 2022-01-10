@@ -236,7 +236,7 @@ export interface IEditingConfig {
 
     /**
      * @name Controls/_list/interface/IEditingConfig#sequentialEditingMode
-     * @cfg {Controls/_baseList/interface/IEditableList/TSequentialEditingMode.typedef} Автоматический запуск редактирования по месту для следующего элемента, происходящий при завершении редактирования любого (кроме последнего) элемента списка.
+     * @cfg {Controls/_list/interface/IEditableList/TSequentialEditingMode.typedef} Автоматический запуск редактирования по месту для следующего элемента, происходящий при завершении редактирования любого (кроме последнего) элемента списка.
      * @default row
      * @remark
      * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/auto/#edit здесь}.
@@ -263,7 +263,7 @@ export interface IEditingConfig {
     backgroundStyle?: string;
     /**
      * @name Controls/_list/interface/IEditingConfig#addPosition
-     * @cfg {Controls/_baseList/interface/IEditableList/TAddPosition.typedef} Позиция добавления по месту.
+     * @cfg {Controls/_list/interface/IEditableList/TAddPosition.typedef} Позиция добавления по месту.
      * @remark
      * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/code/#add-position здесь}.
      * @default bottom
@@ -298,7 +298,7 @@ export type TAsyncOperationResult = Promise<void | IOperationCanceledResult>;
 export interface IOperationCanceledResult { canceled: true; }
 
 /**
- * @typedef {String} Controls/_baseList/interface/IEditableList/TAddPosition
+ * @typedef {String} Controls/_list/interface/IEditableList/TAddPosition
  * @description Допустимые значения для свойства {@link Controls/list:IEditingConfig#addPosition addPosition}.
  * @variant top В начале.
  * @variant bottom В конце.
@@ -306,7 +306,7 @@ export interface IOperationCanceledResult { canceled: true; }
 export type TAddPosition = 'top' | 'bottom';
 
 /**
- * @typedef {String} Controls/_baseList/interface/IEditableList/TSequentialEditingMode
+ * @typedef {String} Controls/_list/interface/IEditableList/TSequentialEditingMode
  * @description Допустимые значения для свойства {@link Controls/list:IEditingConfig#sequentialEditingMode sequentialEditingMode}.
  * @variant row Запускать редактирование в следующей строке, при завершении текущего редактирования.
  * @variant none Не запускать новое редактирование, при завершении текущего редактирования.
@@ -340,7 +340,7 @@ export interface IItemAddOptions {
     shouldActivateInput?: boolean;
     /**
      * @name Controls/_list/interface/IItemAddOptions#addPosition
-     * @cfg {Controls/_baseList/interface/IEditableList/TAddPosition.typedef} Позиция добавляемой записи. В случае, если в параметрах был передан targetItem, позиция определяется относительно его, иначе — всего списка.
+     * @cfg {Controls/_list/interface/IEditableList/TAddPosition.typedef} Позиция добавляемой записи. В случае, если в параметрах был передан targetItem, позиция определяется относительно его, иначе — всего списка.
      */
     addPosition?: TAddPosition;
 }
