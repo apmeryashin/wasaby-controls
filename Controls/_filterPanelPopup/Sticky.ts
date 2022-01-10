@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_filterPanelPopup/sticky/Sticky';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as rk from 'i18n!Controls';
-import {IFilterItem} from 'Controls/filter';
+import {IFilterItem, updateFilterDescription, getFilterByFilterDescription} from 'Controls/filter';
 import {View} from 'Controls/filterPanel';
 import {isEqual} from 'Types/object';
 import 'css!Controls/filterPanelPopup';
@@ -53,18 +53,30 @@ export default class Sticky extends Control<IStickyPopup> {
     };
 
     protected _beforeMount(options: IStickyPopup): void {
+        this._items = options.items;
         this._setFilterParams(options.items);
     }
 
+    protected _beforeUpdate(newOptions: IStickyPopup): void {
+        if (!isEqual(this._options.items, newOptions.items)) {
+            this._callCallbacksAndSetFilterItems(newOptions.items);
+        }
+    }
+
     protected _sourceChangedHandler(event: SyntheticEvent, items: IFilterItem[]): void {
-        this._setFilterParams(items);
+        this._callCallbacksAndSetFilterItems(items);
     }
 
     protected _setFilterParams(items: IFilterItem[]): void {
-        this._items = items;
         this._hasBasicItems = this._getHasBasicItems();
         this._headingCaption = this._getHeadingCaption(this._hasBasicItems);
         this._resetButtonVisible = !this._isFilterReseted(items);
+    }
+
+    protected _callCallbacksAndSetFilterItems(items: IFilterItem[]): void {
+        const currentFilter = getFilterByFilterDescription({}, this._items);
+        const updatedFilter = getFilterByFilterDescription({}, items);
+        updateFilterDescription(items, currentFilter, updatedFilter, this._updateFilterParams.bind(this));
     }
 
     protected _getHeadingCaption(hasBasicItems: boolean): string {
@@ -103,6 +115,11 @@ export default class Sticky extends Control<IStickyPopup> {
         return this._items.filter((item) => {
             return item.viewMode === viewMode || (viewMode === 'basic' && !item.viewMode);
         });
+    }
+
+    private _updateFilterParams(newItems: IFilterItem[]): void {
+        this._items = newItems;
+        this._setFilterParams(newItems);
     }
 }
 
