@@ -176,11 +176,9 @@
 
     <style name="itemActionsOutsideStyle" data-vdom-ignore="true"></style>
 
-    <ws:if data="{{_listViewModel}}">
-        <ws:partial template="viewTpl"
-                    name="listView"
-                    attr:class="{{ _getViewClasses(_addShowActionsClass, _addHoverEnabledClass, _uniqueId) }}"/>
-    </ws:if>
+    <ws:partial template="viewTpl"
+                name="listView"
+                attr:class="{{ _getViewClasses(_addShowActionsClass, _addHoverEnabledClass, _uniqueId) }}"/>
 
     <ws:if data="{{_pagingVisible}}">
         <!-- Не отображаем разделитель для ipad, так как из-за разделителя появляется пустая строка после последней записи.

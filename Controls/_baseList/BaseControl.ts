@@ -3855,6 +3855,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             this._noDataBeforeReload = !(items && items.getCount());
             _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
+            this._listVirtualScrollController.setItemsContainer(null);
             this._listVirtualScrollController.setCollection(this._listViewModel);
 
             // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
@@ -3920,6 +3921,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         this._listViewModel.destroy();
                     }
                     _private.initializeModel(this, newOptions, items);
+                    this._listVirtualScrollController.setItemsContainer(null);
                     this._listVirtualScrollController.setCollection(this._listViewModel);
                     this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
                     this._indicatorsControllerOnCollectionReset();
