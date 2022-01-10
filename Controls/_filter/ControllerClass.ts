@@ -4,7 +4,7 @@ import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
 import Store from 'Controls/Store';
 import Prefetch from 'Controls/_filter/Prefetch';
 import isEqualItems from 'Controls/_filter/Utils/isEqualItems';
-import {getFilterItemsAfterCallback} from 'Controls/_filter/Utils/CallbackUtils';
+import {updateFilterDescription} from 'Controls/_filter/Utils/CallbackUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import {getHistorySource} from 'Controls/_filter/HistoryUtils';
 import {_assignServiceFilters} from '../_search/Utils/FilterUtils';
@@ -231,7 +231,7 @@ export default class FilterControllerClass extends mixin<
             !isEqual(currentFilterButtonItems, this._$filterButtonItems) ||
             !isEqual(currentFastFilterItems, this._$fastFilterItems)
         ) {
-            getFilterItemsAfterCallback(items, currentFilter, this._$filter, this._updateFilterButtonItems.bind(this));
+            updateFilterDescription(items, currentFilter, this._$filter, this._updateFilterButtonItems.bind(this));
         }
     }
 

@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_filterPanelPopup/sticky/Sticky';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as rk from 'i18n!Controls';
-import {IFilterItem, getFilterItemsAfterCallback, getFilterByFilterDescription} from 'Controls/filter';
+import {IFilterItem, updateFilterDescription, getFilterByFilterDescription} from 'Controls/filter';
 import {View} from 'Controls/filterPanel';
 import {isEqual} from 'Types/object';
 import 'css!Controls/filterPanelPopup';
@@ -76,10 +76,7 @@ export default class Sticky extends Control<IStickyPopup> {
     protected _callCallbacksAndSetFilterItems(items: IFilterItem[]): void {
         const currentFilter = getFilterByFilterDescription({}, this._items);
         const updatedFilter = getFilterByFilterDescription({}, items);
-        getFilterItemsAfterCallback(currentFilter, updatedFilter, items).then((newItems) => {
-            this._items = newItems;
-            this._setFilterParams(newItems);
-        });
+        updateFilterDescription(items, currentFilter, updatedFilter, this._updateFilterParams.bind(this));
     }
 
     protected _getHeadingCaption(hasBasicItems: boolean): string {
@@ -118,6 +115,11 @@ export default class Sticky extends Control<IStickyPopup> {
         return this._items.filter((item) => {
             return item.viewMode === viewMode || (viewMode === 'basic' && !item.viewMode);
         });
+    }
+
+    private _updateFilterParams(newItems: IFilterItem[]): void {
+        this._items = newItems;
+        this._setFilterParams(newItems);
     }
 }
 
