@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
     <Controls.browser:Browser
             source="{{_viewSource}}"
             keyProperty="key"
