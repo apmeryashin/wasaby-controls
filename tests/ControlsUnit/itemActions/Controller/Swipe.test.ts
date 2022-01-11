@@ -1,3 +1,4 @@
+import {assert} from 'chai';
 import * as sinon from 'sinon';
 import {
     Controller as ItemActionsController,
@@ -197,5 +198,40 @@ describe('Controls/itemActions/Controller/Swipe', () => {
         itemActionsController.activateSwipe(2, 100, 50);
         sinon.assert.called(spySetActions);
         spySetActions.restore();
+    });
+
+    // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
+    // Предполагаем, что контейнер содержит класс js-controls-ListView__measurableContainer
+    it('should correctly calculate row size for list', () => {
+        // fake HTMLElement
+        const fakeElement = {
+            classList: {
+                contains: (selector) => true,
+            },
+            clientWidth: 500,
+            clientHeight: 31
+        } as HTMLElement;
+        const result = ItemActionsController.getSwipeContainerSize(fakeElement, 'foo');
+        assert.equal(result.width, 500);
+        assert.equal(result.height, 31);
+    });
+
+    // Должен правильно рассчитывать ширину для записей таблицы при отображении опций свайпа
+    // Предполагаем, что сам контейнер не содержит класс js-controls-ListView__measurableContainer,
+    // а его потомки содержат
+    it('should correctly calculate row size for grid', () => {
+        // fake HTMLElement
+        const fakeElement = {
+            classList: {
+                contains: (selector) => false,
+            },
+            querySelectorAll: (selector) => (new Array(5)).fill({
+                clientWidth: 50,
+                clientHeight: 31
+            })
+        } as undefined as HTMLElement;
+        const result = ItemActionsController.getSwipeContainerSize(fakeElement, 'foo');
+        assert.equal(result.width, 250);
+        assert.equal(result.height, 31);
     });
 });

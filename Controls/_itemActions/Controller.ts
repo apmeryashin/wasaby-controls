@@ -201,6 +201,12 @@ export class Controller {
     private _task1183329228: boolean;
 
     /**
+     * Состояние "свайпнутости"
+     * Если true, то хотя бы одна запись в списке свайпнута.
+     */
+    private _isSwiped: boolean;
+
+    /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
      * TODO Когда мы перестанем использовать старую listViewModel,
@@ -462,6 +468,41 @@ export class Controller {
     }
 
     /**
+     * Возвращает состояние свайпнутости
+     */
+    isSwiped(): boolean {
+        return this._isSwiped;
+    }
+
+    /**
+     * На основании размеров контейнера "свайпнутой" записи опреляет,
+     * Нужно ли обновлять её swipeConfig
+     */
+    updateSwipeConfigIfNeed(baseContainer: HTMLElement,
+                            uniqueSelector: string,
+                            measurableSelector: string): void {
+        // Для outside нет никакого динамического расчёта
+        if (this._itemActionsPosition === 'outside') {
+            return;
+        }
+        const item = this.getSwipeItem();
+        const itemKey = item.getContents().getKey();
+        const itemSelector = `.${uniqueSelector} .controls-ListView__itemV[item-key="${itemKey}"]`;
+        const itemNode = baseContainer.querySelector(itemSelector) as HTMLElement;
+
+        // Если не нашли HTML элемент по ключу записи, то просто выходим
+        if (!itemNode) {
+            return;
+        }
+        const swipeContainerSize = Controller.getSwipeContainerSize(itemNode, measurableSelector);
+        const need = this._actionsWidth !== swipeContainerSize.width ||
+            this._actionsHeight !== swipeContainerSize.height;
+        if (need) {
+            this._updateSwipeConfig(swipeContainerSize.width, swipeContainerSize.height);
+        }
+    }
+
+    /**
      * Возвращает конфиг для шаблона меню опций
      * @param item элемент коллекции, для которого выполняется действие
      * @param isActionMenu
@@ -536,7 +577,7 @@ export class Controller {
         }
         this._collection.each((item) => {
             const itemChanged = this._updateActionsOnParticularItem(item);
-            hasChanges = hasChanges || itemChanged
+            hasChanges = hasChanges || itemChanged;
         });
         if (editingItem) {
             this._updateActionsOnParticularItem(editingItem);
@@ -614,10 +655,12 @@ export class Controller {
 
         if (oldSwipeItem) {
             oldSwipeItem.setSwiped(false, silent);
+            this._isSwiped = false;
             this._updateActionsOnParticularItem(oldSwipeItem);
         }
         if (newSwipeItem) {
             newSwipeItem.setSwiped(true, silent);
+            this._isSwiped = true;
         }
     }
 
@@ -903,6 +946,31 @@ export class Controller {
             actionsObject.showed = actionsObject.showed.map(fixShowOptionsBind);
         }
         return actionsObject;
+    }
+
+    /**
+     * Получает размеры контейнера, которые будут использованы для измерения области отображения свайпа.
+     * Для строк таблиц, когда ширину строки можно измерить только по ширине столбцов,
+     * берём за правило, что высота всегда едина для всех колонок строки, а ширину столбцов
+     * надо сложить для получения ширины строки.
+     * @param itemContainer,
+     * @param measurableSelector
+     */
+    static getSwipeContainerSize(itemContainer: HTMLElement,
+                                 measurableSelector: string): {width: number, height: number} {
+        const result: {width: number, height: number} = { width: 0, height: 0 };
+        if (itemContainer.classList.contains(measurableSelector)) {
+            result.width = itemContainer.clientWidth;
+            result.height = itemContainer.clientHeight;
+        } else {
+            itemContainer
+                .querySelectorAll(`.${measurableSelector}`)
+                .forEach((container) => {
+                    result.width += container.clientWidth;
+                    result.height = result.height || container.clientHeight;
+                });
+        }
+        return result;
     }
 
     /**
