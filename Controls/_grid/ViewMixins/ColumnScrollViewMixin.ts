@@ -656,17 +656,22 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         return classes;
     },
 
+    /**
+     * В качестве таргета для прокрутки может выступать любой элемент.
+     */
     _columnScrollScrollIntoView(target: HTMLElement): void {
         if (this._$columnScrollController) {
-            const cell = target.closest('.controls-Grid__row-cell') || target;
-            if (cell.className.indexOf(COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT) !== -1) {
+            if (
+                target.className.indexOf(COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT) !== -1 ||
+                target.closest(`.${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`)
+            ) {
                 return;
             }
             // Стили должны быть применены незамедлительно, в не через requestAnimationFrame,
             // иначе нативный подскролл сработает раньше, затем подскролл горизонтального скролла.
             const currentPosition = this._$columnScrollController.getScrollPosition();
             const newScrollPosition =
-                this._$columnScrollController.getScrollPositionToColumnRectEdge(cell.getBoundingClientRect());
+                this._$columnScrollController.getScrollPositionToColumnRectEdge(target.getBoundingClientRect());
 
             if (currentPosition !== newScrollPosition) {
                 setScrollPosition(this, newScrollPosition, true);
