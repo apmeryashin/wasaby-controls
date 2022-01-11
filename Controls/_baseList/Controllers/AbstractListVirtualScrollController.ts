@@ -424,7 +424,7 @@ export abstract class AbstractListVirtualScrollController<
     scrollToEdge(edge: IDirection): Promise<CrudEntityKey> {
         const itemIndex = edge === 'backward' ? 0 : this._collection.getCount() - 1;
         const item = this._collection.at(itemIndex);
-        const itemKey = item.getContents().getKey();
+        const itemKey = item.key;
         const scrollPosition = edge === 'forward' ? 'top' : 'bottom';
         return this.scrollToItem(itemKey, scrollPosition, true).then(() => {
             const promise = new Promise<void>((resolver) => this._doScrollCompletedCallback = resolver);
@@ -449,7 +449,7 @@ export abstract class AbstractListVirtualScrollController<
 
         const firstVisibleItemIndex = this._scrollController.getFirstVisibleItemIndex();
         const item = this._collection.at(firstVisibleItemIndex);
-        return item.getContents().getKey();
+        return item.key;
     }
 
     // endregion ScrollTo
