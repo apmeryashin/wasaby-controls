@@ -10,7 +10,7 @@ export default class BaseEditor extends Control<IControlOptions> {
         const extendedValue = {
             value: this._options.propertyValue,
             textValue: '',
-            viewMode: 'extended'
+            viewMode: this._options.editorsViewMode === 'cloud' ? 'hidden' : 'extended'
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }

@@ -1,0 +1,13 @@
+<div class="controlsDemo__wrapper">
+    <Controls.browser:Browser filterButtonSource="{{_filterButtonData}}"
+                              source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
+        <div class="controlsDemo__flexRow">
+            <Controls.filterPanel:Container>
+                <Controls.filterPanel:View editorsBackgroundStyle="contrast" editorsViewMode="cloud" attr:class="controls-demo__filterButton controls-demo__filterPanel"/>
+            </Controls.filterPanel:Container>
+            <Controls.list:Container>
+                <Controls.list:View />
+            </Controls.list:Container>
+        </div>
+    </Controls.browser:Browser>
+</div>

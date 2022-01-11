@@ -11,7 +11,7 @@
                 attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.viewMode}}
                             controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}">
             <ws:itemsContainerPadding top="null"
-                                      left="{{_options.viewMode === 'popupCloud' ? 'null' : 'xl'}}"
+                                      left="{{_options.viewMode === 'popup' ? 'null' : 'xl'}}"
                                       right="xl"
                                       bottom="m"/>
             <ws:itemTemplate>
@@ -22,7 +22,7 @@
             <ws:groupTemplate>
                 <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate"
                             scope="{{groupTemplate}}"
-                            viewMode="{{_options.viewMode}}"
+                            editorsViewMode="{{_options.editorsViewMode}}"
                             resetCaption="{{_resetCaption}}"
                             style="{{_options.style}}"
                             groupItems="{{_viewModel.getGroupItems()}}"/>
@@ -35,6 +35,7 @@
     <ws:if data="{{_viewModel.hasExtendedItems()}}">
         <Controls._filterPanel.ExtendedItems viewModel="{{_viewModel}}"
                                              viewMode="{{_options.viewMode}}"
+                                             editorsViewMode="{{_options.editorsViewMode}}"
                                              on:extendedItemsChanged="_handleExtendedItemsChanged()"/>
     </ws:if>
 </ws:template>

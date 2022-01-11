@@ -6,7 +6,7 @@
                         viewMode="{{filter.viewMode}}"
                         value="{{filter.value}}"
                         attr:class="controls-FilterViewPanel__additional-editor
-                                            controls-FilterViewPanel__additional-editor-{{_options.viewMode}}
+                                            controls-FilterViewPanel__additional-editor-{{_options.editorsViewMode}}
                                             {{!_viewModel.hasBasicItems() ? 'controls-FilterViewPanel__additional-editor_without-basic'}}"
                         on:propertyValueChanged="_extendedValueChanged(filter)"/>
         </Controls.Container.Async>
@@ -15,7 +15,7 @@
 
 
 <div class="controls-FilterViewPanel__additional-editors-container">
-    <ws:if data="{{_viewModel.hasBasicItems() || _options.viewMode === 'default'}}">
+    <ws:if data="{{_viewModel.hasBasicItems()}}">
         <Controls.heading:Title caption="{{rk('Еще можно отобрать')}}"
                                 fontColorStyle="unaccented"
                                 fontSize="xs"

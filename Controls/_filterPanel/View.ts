@@ -60,6 +60,7 @@ export interface IViewPanelOptions {
     useStore?: boolean;
     style?: string;
     orientation: string;
+    editorsViewMode: string;
 }
 
 export default class View extends Control<IViewPanelOptions> {
@@ -69,12 +70,15 @@ export default class View extends Control<IViewPanelOptions> {
     };
     protected _viewModel: ViewModel = null;
     private _resetCallbackId: string;
+    private _editorsViewMode: string;
 
     protected _beforeMount(options: IViewPanelOptions): void {
+        this._editorsViewMode = options.editorsViewMode;
         this._viewModel = new ViewModel({
             source: coreClone(options.source),
             collapsedGroups: options.collapsedGroups,
             filterViewMode: options.viewMode,
+            editorsViewMode: this._editorsViewMode,
             style: options.style
         });
     }
@@ -86,10 +90,14 @@ export default class View extends Control<IViewPanelOptions> {
     }
 
     protected _beforeUpdate(options: IViewPanelOptions): void {
+        if (options.editorsViewMode !== this._options.editorsViewMode) {
+            this._editorsViewMode = options.editorsViewMode;
+        }
         this._viewModel.update({
             source: coreClone(options.source),
             collapsedGroups: options.collapsedGroups,
             filterViewMode: options.viewMode,
+            editorsViewMode: this._editorsViewMode,
             style: options.style
         });
     }
@@ -107,6 +115,9 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _editingObjectChanged(event: SyntheticEvent, editingObject: Record<string, any>): void {
         this._viewModel.setEditingObject(editingObject);
+        if (this._viewModel.isFilterReseted()) {
+            this._resetEditorsViewMode();
+        }
         this._notifyChanges();
     }
 
@@ -158,7 +169,13 @@ export default class View extends Control<IViewPanelOptions> {
 
     resetFilter(): void {
         this._viewModel.resetFilter();
+        this._resetEditorsViewMode();
         this._notifyChanges();
+    }
+
+    private _resetEditorsViewMode(): void {
+        this._editorsViewMode = 'default';
+        this._notify('editorsViewModeChanged', ['default']);
     }
 }
 
@@ -171,7 +188,8 @@ Object.defineProperty(View, 'defaultProps', {
             backgroundStyle: 'default',
             viewMode: 'default',
             style: 'default',
-            orientation: 'vertical'
+            orientation: 'vertical',
+            editorsViewMode: 'default'
         };
     }
 });

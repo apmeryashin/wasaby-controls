@@ -14,6 +14,7 @@ interface IFilterViewModelOptions {
     source: IFilterItem[];
     collapsedGroups?: string[] | number[];
     filterViewMode?: string;
+    editorsViewMode?: string;
     style?: string;
 }
 
@@ -39,19 +40,21 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     }
 
     update(options: IFilterViewModelOptions): void {
-        if (!isEqual(this._options.source, options.source)) {
+        const sourceChanged = !isEqual(this._options.source, options.source);
+        const collapsedGroupsChanged = !isEqual(this._options.collapsedGroups, options.collapsedGroups);
+
+        this._options = options;
+        if (sourceChanged) {
             this._source = this._getSource(options.source);
             this._editingObject = this._getEditingObjectBySource(this._source);
             this.setEditingObject(this._editingObject);
             this._nextVersion();
         }
 
-        if (!isEqual(this._options.collapsedGroups, options.collapsedGroups)) {
+        if (collapsedGroupsChanged) {
             this._collapsedGroups = options.collapsedGroups;
             this._nextVersion();
         }
-
-        this._options = options;
     }
 
     private _getSource(source: IFilterItem[]): IFilterItem[] {
@@ -75,6 +78,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 ...editorOptions,
                 viewMode: item.viewMode,
                 filterViewMode: this._options.filterViewMode,
+                editorsViewMode: this._options.editorsViewMode,
                 name: item.name,
                 resetValue: item.resetValue,
                 style: this._options.style,
@@ -206,7 +210,8 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                     item.value = item.resetValue;
                 }
                 item.viewMode = newViewMode;
-            } else if (item.viewMode === 'extended' && !isEqual(item.value, item.resetValue)) {
+            } else if ((item.viewMode === 'extended' && !isEqual(item.value, item.resetValue)) ||
+                       (item.viewMode === 'hidden' && this._options.editorsViewMode === 'default')) {
                 item.viewMode = 'basic';
             }
         });

@@ -76,7 +76,7 @@
 </ws:template>
 
 <div>
-    <ws:if data="{{_options.filterViewMode === 'default'}}">
+    <ws:if data="{{_options.editorsViewMode === 'default'}}">
         <div class="controls-FilterEditors__list">
             <ws:if data="{{_options.multiSelect}}">
                 <ws:partial template="listEditor" on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
