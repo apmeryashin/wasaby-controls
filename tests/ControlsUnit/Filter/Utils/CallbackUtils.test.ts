@@ -1,4 +1,10 @@
-import {getChangedFilters, getItemOnFilterChangedCallback, getItemVisivbility, loadCallbacks} from 'Controls/_filter/Utils/CallbackUtils';
+import {
+    getChangedFilters,
+    getItemOnFilterChangedCallback,
+    getItemVisivbility,
+    loadCallbacks,
+    callCallbacksOnFilterDescriptionItems
+} from 'Controls/_filter/Utils/CallbackUtils';
 import {assert} from 'chai';
 
 describe('Controls/_filter/Utils/CallbackUtils', () => {
@@ -59,5 +65,22 @@ describe('Controls/_filter/Utils/CallbackUtils', () => {
         loadCallbacks(items);
         const visivbility = getItemVisivbility(items[0], updatedFilter, changedFilters, filterVisibilityCallback);
         assert.isFalse(visivbility);
+    });
+
+    it('callCallbacksOnFilterDescriptionItems without filterVisibilityCallback', () => {
+        const updatedFilter = { value: 2 };
+        const changedFilters = {
+            testValue: 1
+        };
+        const items = [{
+            name: 'testName',
+            value: 1,
+            visibility: true
+        }];
+        const updateCallback = (newFilterDescription) => {
+            assert.isTrue(newFilterDescription[0].visibility);
+        };
+        loadCallbacks(items);
+        callCallbacksOnFilterDescriptionItems(changedFilters, updatedFilter, items, updateCallback);
     });
 });
