@@ -50,6 +50,9 @@ function mockCollection(item: IItemActionsItem): IItemActionsCollection {
             this.eventRaising = state;
         },
         each: (callback) => callback(item, 0),
+        getViewIterator: (): any => ({
+            each: (callback) => callback(item, 0)
+        }),
         find: () => item,
         setActionsAssigned: () => {/* FIXME: sinon mock */},
         setActiveItem: () => {/* FIXME: sinon mock */},

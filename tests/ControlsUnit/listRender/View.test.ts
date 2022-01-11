@@ -149,6 +149,9 @@ describe('Controls/_listRender/View', () => {
                 isEventRaising: () => false,
                 setEventRaising: (val1, val2) => null,
                 each: (val) => null,
+                getViewIterator: (): any => ({
+                    each: (callback) => callback(item, 0)
+                }),
                 setActionsAssigned: (val) => null,
                 setActiveItem(_item: any): void {
                     this._$activeItem = _item;

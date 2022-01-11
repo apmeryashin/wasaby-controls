@@ -8,6 +8,8 @@
                 <Controls.list:View source="{{_viewSource}}"
                                     name="list"
                                     keyProperty="key"
+                                    itemActions="{{_itemActions}}"
+                                    itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                                     on:drawItems="_onDrawItems()"
                                     itemsReadyCallback="{{_itemsReady}}"
                                     navigation="{{_options.navigation}}">
