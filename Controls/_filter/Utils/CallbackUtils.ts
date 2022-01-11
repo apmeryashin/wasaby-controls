@@ -62,13 +62,15 @@ export function loadCallbacks(items: IFilterItem[]): Promise<any[]> {
     return Promise.all(callBackPromises);
 }
 
-function callCallbacksOnFilterDescriptionItems(changedFilters: object,
-                                               updatedFilter: TFilter,
-                                               items: IFilterItem[],
-                                               updateCallback: Function): void {
+export function callCallbacksOnFilterDescriptionItems(changedFilters: object,
+                                                      updatedFilter: TFilter,
+                                                      items: IFilterItem[],
+                                                      updateCallback: Function): void {
     const newFilterDescription = [];
     items?.forEach((item) => {
-        item.visibility = getItemVisivbility(item, updatedFilter, changedFilters, item.filterVisibilityCallback);
+        if (item.filterVisibilityCallback) {
+            item.visibility = getItemVisivbility(item, updatedFilter, changedFilters, item.filterVisibilityCallback);
+        }
         newFilterDescription.push(getItemOnFilterChangedCallback(item, updatedFilter, changedFilters,
                                                                  item.filterChangedCallback));
     });
