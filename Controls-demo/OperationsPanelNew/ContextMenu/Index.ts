@@ -15,15 +15,15 @@ export default class extends Control {
          keyProperty: 'id',
          data: [
             {
+               id: 'export',
+               icon: 'icon-Save',
+               title: 'Выгрузить'
+            },
+            {
                id: 'sum',
                icon: 'icon-Sum',
                title: 'Суммировать',
                showType: showType.MENU
-            },
-            {
-               id: 'export',
-               icon: 'icon-Save',
-               title: 'Выгрузить'
             }
          ]
       });
