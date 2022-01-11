@@ -24,6 +24,5 @@
 </ws:template>
 
 <div class="controlsDemo__wrapper">
-   <div class="controls-text-label">Мало операций, плитка без увеличения</div>
    <ws:partial template="tile" attr:data-qa="controls-Tile_fewActions_noscale" actions="{{_fewActions}}" scalingMode="{{'none'}}"/>
 </div>
