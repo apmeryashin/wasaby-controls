@@ -358,6 +358,12 @@ export default FilterPanel;
  */
 
 /**
+ * @name Controls/_filterPopup/DetailPanel#width
+ * @cfg {String} Размер панели фильтров. Поддерживается стандартная линейка размеров диалоговых окон.
+ * @demo Controls-demo/Filter_new/DetailPanel/PanelWidth/Index
+ */
+
+/**
  * @event Происходит при клике по кнопке "Отобрать".
  * @name Controls/_filterPopup/DetailPanel#sendResult
  * @param {Object} filter Объект фильтра {'filter_id': 'filter_value'}.
