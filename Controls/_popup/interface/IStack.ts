@@ -66,8 +66,9 @@ export interface IStackOpener extends IOpener {
  */
 
 /**
+ * Метод закрытия стекового окна.
  * @name Controls/_popup/interface/IStackOpener#close
- * @description Метод закрытия стекового окна.
+ * @function
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
@@ -98,6 +99,8 @@ export interface IStackOpener extends IOpener {
  * }
  * </pre>
  * @see open
+ * @see destroy
+ * @see isOpened
  */
 
 /**
