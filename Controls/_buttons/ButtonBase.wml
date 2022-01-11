@@ -63,6 +63,6 @@
                 controls-fontsize-{{_fontSize}}
                 controls-Button_{{_viewMode}}__wrapper-fontsize-{{_fontSize}}
                 controls-Button_{{_viewMode}}_shadow-{{(_buttonStyle !== 'readonly' && _buttonStyle !== 'pale' && _contrastBackground === true && !_translucent) ?
-                ((_height && (_height !== 'xs' && _height !== 's' && _height !== 'm' && _height !== 'l' && _height !== 'default')) ? 'big' : 'small') : (_buttonStyle === 'pale' ? 'pale' : 'none')}}"
+                ((_height && (_height !== 'xs' && _height !== 's' && _height !== 'm' && _height !== 'l' && _height !== 'xl' && _height !== 'default')) ? 'big' : 'small') : (_buttonStyle === 'pale' ? 'pale' : 'none')}}"
             attr:title="{{_options.tooltip || _tooltip}}"
 />
