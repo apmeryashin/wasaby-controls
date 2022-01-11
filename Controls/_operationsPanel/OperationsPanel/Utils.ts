@@ -72,7 +72,15 @@ const _private = {
 
       setShowType(items, type) {
          items.each((item) => {
-            item.set('showType', type);
+            const configShowType = item.get('showType');
+            // Сохраняем переданный в опции showType, чтобы при изменении размеров панели действий
+            // не потерять положение кнопки, определённое пользователем в опции
+            if (item.get('originalShowType') === undefined && configShowType !== undefined) {
+               item.set('originalShowType', configShowType);
+            }
+            if (item.get('originalShowType') !== showType.MENU) {
+               item.set('showType', type);
+            }
          });
       }
    };
