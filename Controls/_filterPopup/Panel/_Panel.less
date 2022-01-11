@@ -76,20 +76,19 @@
 
 //PropertyGrid block
 .controls-FilterPanel__PropertyGrid {
-   padding: var(--basic_content_padding-top_filterPanel) var(--basic_content_padding-right_filterPanel) 0 var(--basic_content_padding-left_filterPanel);
+   padding: var(--basic_content_padding-top_filterPanel) var(--basic_content_padding-right_filterPanel) var(--offset_l) 0;
+   margin-left: var(--margin-left_filterPanel);
 }
 
 //AdditionalParams
 .controls-FilterPanel__AdditionalParams {
-   padding:
-      var(--offset_m) var(--basic_content_padding-right_filterPanel)
-      0 var(--extended_heading_padding-left_filterPanel);
+   padding: var(--offset_m) 0 0 0;
+   background-color: var(--history_background-color_filterPanel);
 }
 
 //History
-.controls-HistoryList__vertical{
-   padding: calc(var(--history_offset_filterPanel) / 2) var(--history_content_padding-right_filterPanel) var(--padding-bottom_filterPanel) var(--history_heading_padding-left_filterPanel);
-   margin-top: calc(var(--history_offset_filterPanel) / 2);
+.controls-HistoryList__vertical {
+   padding: var(--history_offset_filterPanel) 0;
    background-color: var(--history_background-color_filterPanel);
 }
 
@@ -145,6 +144,10 @@
    color: var(--item_text-color_filterPanel);
 }
 
+.controls-text-filterPanelItem:active {
+   color: var(--item_hover_text-color_filterPanel);
+}
+
 .ws-is-hover {
    .controls-text-filterPanelItem:hover {
       color: var(--item_hover_text-color_filterPanel);
@@ -160,14 +163,15 @@
    }
 }
 
-.controls-text-filterPanelItem:active {
-   color: var(--item_hover_text-color_filterPanel);
-}
-
 .controls-text-filterPanelItem_readOnly {
    color: var(--label_text-color);
 }
 
 .controls-FilterPanel__header__buttons {
-   white-space: nowrap
+   white-space: nowrap;
+}
+
+.controls-FilterPanel__header {
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
 }
