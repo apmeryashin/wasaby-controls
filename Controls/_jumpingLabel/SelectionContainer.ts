@@ -18,7 +18,7 @@ export interface ISelectionContainerOptions extends IBaseOptions, ISingleSelecta
  * * {@link http://axure.tensor.ru/StandardsV8/%D0%BF%D0%BE%D0%BB%D1%8F_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0.html Стандарт}
  *
  * @class Controls/_jumpingLabel/SelectionContainer
- * @extends Controls/_jumpingLabel/Base
+ * @extends Controls/jumpingLabel:Abstract
  *
  * @public
  *
