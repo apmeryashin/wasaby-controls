@@ -37,6 +37,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     subMenuDirection?: TSubMenuDirection;
     itemAlign?: TItemAlign;
     headingCaptionProperty?: string;
+    itemsSpacing?: string;
 }
 
 /**
@@ -165,4 +166,19 @@ export default interface IMenuControl {
  * @see parentProperty
  * @see sourceProperty
  * @see additionalProperty
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#itemsSpacing
+ * @cfg {String} Резмер отступа между пунктами меню.
+ * @variant null Нулевой отступ
+ * @variant 3xs Минимальный отступ
+ * @variant 2xs Почти минимальный отступ
+ * @variant xs Очень маленький отступ
+ * @variant s Маленький отступ
+ * @variant m Средний отступ
+ * @variant l Большой отступ
+ * @variant xl Очень большой оступ
+ * @variant 2xl Максимальный отступ
+ * @default 3xs
  */

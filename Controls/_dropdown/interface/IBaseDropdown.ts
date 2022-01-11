@@ -200,7 +200,7 @@ export default interface IBaseDropdown {
  *     });
  *     this._menuPopupOptions = {
  *         templateOptions: {
- *             closeButtonVisibility: true
+ *             closeButtonVisibility: false
  *         }
  *     }
  * }

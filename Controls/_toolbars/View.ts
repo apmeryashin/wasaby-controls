@@ -325,14 +325,11 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             iconSize: options.iconSize,
             iconStyle: options.iconStyle,
             itemTemplateProperty: options.itemTemplateProperty,
-            closeButtonViewMode: isVertical ? 'external' : 'link',
             draggable: options.menuDraggable
         };
 
         if (isVertical) {
-           menuTemplateOptions.itemPadding = {
-               left: 's'
-           };
+           menuTemplateOptions.itemsSpacing = 'xs';
         }
 
         return menuTemplateOptions;
