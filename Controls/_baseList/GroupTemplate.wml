@@ -37,7 +37,7 @@
    <Controls.scroll:StickyBlock backgroundStyle="{{ backgroundStyle }}"
                                 fixedZIndex="{{3}}"
                                 _isIosZIndexOptimized="{{ (item || itemData).isIosZIndexOptimized() }}"
-                                attr:class="controls-ListView__group"
+                                attr:class="controls-ListView__itemV controls-ListView__group"
                                 attr:data-qa="{{ (item || itemData).listElementName }}">
       <ws:partial template="localGroupTemplate" attr:class="controls-ListView__stickyGroup_{{ style }}"/>
    </Controls.scroll:StickyBlock>
