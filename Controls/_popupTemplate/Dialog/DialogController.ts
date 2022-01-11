@@ -177,6 +177,14 @@ class DialogController extends BaseController {
         container.style.height = '';
         this._updateSizes(item, container);
 
+        if (item.popupOptions?.resizeDirection) {
+            // Если попап должен открываться только в определенном направлении - зафиксируем его
+            item.fixPosition = true;
+            const windowData = this._getRestrictiveContainerSize(item);
+            item.position = DialogStrategy.getPosition(windowData, item.sizes, item);
+            return true;
+        }
+
         // Если есть таргет и не было смещения через dnd, то позиционируемся через стики стратегию
         if (item.popupOptions.target) {
             if (!item.fixPosition) {
