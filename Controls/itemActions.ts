@@ -22,7 +22,6 @@ export {
     TActionDisplayMode,
     TItemActionViewMode,
     TItemActionsSize,
-    TIconStyle,
     IItemAction
 } from './_itemActions/interface/IItemAction';
 export {IShownItemAction, IItemActionsObject} from './_itemActions/interface/IItemActionsObject';
@@ -30,7 +29,7 @@ export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
 export {IItemActionsItem} from './_itemActions/interface/IItemActionsItem';
 export {IItemActionsCollection} from './_itemActions/interface/IItemActionsCollection';
 export {IItemActionsTemplateConfig} from './_itemActions/interface/IItemActionsTemplateConfig';
-export {IItemActionsOptions} from './_itemActions/interface/IItemActionsOptions';
+export {IItemActionsOptions, TItemActionsVisibility} from './_itemActions/interface/IItemActionsOptions';
 export {Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';
 
