@@ -98,7 +98,15 @@ export abstract class AbstractItemsSizesController {
         const itemsRangeLength = itemsRange.endIndex - itemsRange.startIndex;
 
         if (this._itemsContainer) {
-            const itemsElements = this._itemsContainer.querySelectorAll(this._itemsQuerySelector);
+            // С помощью .children берем только непосредственных детей, чтобы не взять записи из вложенных списков.
+            // И фильтруем из этого массива только записи, которые удовлетворяют селектору.
+            // Запись удовлетворяет селектору, только если она сама удовлеторяет этому селектору или
+            // внутри записи находится элемент, которые удовлеторяет селектору.
+            // Вторая проверка нужна, т.к. возможен кейс <a><ItemTemplate>custom_content</ItemTemplate></a>
+            // Такая конструкция используется например в мастере в SabyPage.
+            const itemsElements = Array.from(this._itemsContainer.children)
+                .filter((it) => it.matches(this._itemsQuerySelector) || !!it.querySelector(this._itemsQuerySelector));
+
             if (itemsRangeLength !== itemsElements.length) {
                 Logger.error('Controls/list:ItemsSizeController.updateItemsSizes | ' +
                     'The count of elements in the DOM differs from the length of the updating items range. ' +
