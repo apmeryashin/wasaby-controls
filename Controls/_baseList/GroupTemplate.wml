@@ -1,5 +1,5 @@
 <ws:template name="localGroupTemplate">
-   <div attr:class="controls-ListView__itemV {{ (item || itemData).isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-ListView__group' }}">
+   <div attr:class="{{ (item || itemData).isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-ListView__group' }}">
       <div attr:class="controls-ListView__groupContent controls-ListView__groupContent_height {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
                        {{ (item || itemData).getGroupPaddingClasses('left') }}
                        {{ !rightTemplate ? (item || itemData).getGroupPaddingClasses('right') }}">
@@ -43,5 +43,7 @@
    </Controls.scroll:StickyBlock>
 </ws:if>
 <ws:else>
-   <ws:partial template="localGroupTemplate" attr:data-qa="{{ (item || itemData).listElementName }}"/>
+   <ws:partial template="localGroupTemplate"
+               attr:class="controls-ListView__itemV"
+               attr:data-qa="{{ (item || itemData).listElementName }}"/>
 </ws:else>
