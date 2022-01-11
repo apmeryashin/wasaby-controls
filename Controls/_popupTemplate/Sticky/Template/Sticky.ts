@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_popupTemplate/Sticky/Template/Sticky';
 import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplateBase} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
 import { IPopupTemplateOptions } from 'Controls/_popupTemplate/interface/IPopupTemplate';
-import {IBackgroundStyle, IBackgroundStyleOptions} from 'Controls/interface';
+import {IBackgroundStyle, IBackgroundStyleOptions, IBorderRadiusOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDragObject} from 'Controls/dragnDrop';
 import 'css!Controls/popupTemplate';
@@ -16,7 +16,11 @@ const enum POSITION {
     DEFAULT = 'default'
 }
 
-interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions, IBackgroundStyleOptions {
+interface IStickyTemplateOptions extends
+    IControlOptions,
+    IPopupTemplateOptions,
+    IBackgroundStyleOptions,
+    IBorderRadiusOptions {
     shadowVisible?: boolean;
     stickyPosition?: object;
     borderStyle?: string;
@@ -39,6 +43,7 @@ interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions,
  * @public
  * @author Красильников А.С.
  * @implements Controls/popupTemplate:IPopupTemplateBase
+ * @implements Controls/interface:IBorderRadius
  * @demo Controls-demo/PopupTemplate/Sticky/FooterContentTemplate/Index
  * @demo Controls-demo/PopupTemplate/Sticky/CloseButtonVisible/Index
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/Index
@@ -150,7 +155,8 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             closeButtonViewMode: 'link',
             borderStyle: 'default',
             borderSize: 'default',
-            roundBorder: true
+            roundBorder: true,
+            borderRadius: 's'
         };
     }
 }
