@@ -15,7 +15,7 @@
  * @includes CheckboxItemTemplate Controls/_toggle/CheckboxGroup/resources/ItemTemplate
  * @includes ICheckable Controls/_toggle/interface/ICheckable
  * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
- * @includes switchCircleTemplate Controls/_toggle/resources/SwitchCircle/SwitchCircle
+ * @includes switchCircleTemplate Controls/toggle:switchCircleTemplate
  * @public
  * @author Крайнов Д.О.
  */
@@ -35,7 +35,7 @@
  * @includes BigSeparator Controls/_toggle/BigSeparator
  * @includes ICheckable Controls/_toggle/interface/ICheckable
  * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
- * @includes switchCircleTemplate Controls/_toggle/resources/SwitchCircle/SwitchCircle
+ * @includes switchCircleTemplate Controls/toggle:switchCircleTemplate
  * @public
  * @author Крайнов Д.О.
  */
@@ -51,6 +51,7 @@ export {default as BigSeparator} from './_toggle/BigSeparator';
 export {IToggleGroupOptions, IToggleGroup} from './_toggle/interface/IToggleGroup';
 export {default as RadioGroup} from './_toggle/RadioGroup';
 export {default as ButtonGroup} from './_toggle/ButtonGroup';
+export {default as ISwitchCircleTemplate} from './_toggle/interface/ISwitchCircleTemplate';
 export {default as ButtonGroupBase} from './_toggle/ButtonGroupBase';
 export {default as Tumbler} from './_toggle/Tumbler';
 export {default as Chips} from './_toggle/Chips';
