@@ -1,5 +1,5 @@
 export interface IExpandedItemsOptions {
-    expandedItems: boolean;
+    expandedItems?: Array<number | string>;
 }
 
 /**
