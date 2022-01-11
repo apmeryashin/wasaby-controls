@@ -72,7 +72,11 @@ const _private = {
 
       setShowType(items, type) {
          items.each((item) => {
-            if (item.get('showType') === undefined) {
+            const configShowType = item.get('showType');
+            if (item.get('originalShowType') === undefined && configShowType !== undefined) {
+               item.set('originalShowType', configShowType);
+            }
+            if (item.get('originalShowType') !== showType.MENU) {
                item.set('showType', type);
             }
          });
