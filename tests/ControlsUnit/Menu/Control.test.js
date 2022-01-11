@@ -344,11 +344,11 @@ define(
                markerVisibility: 'hidden'
             };
             let leftSpacing = menu._getLeftPadding(menuOptions);
-            assert.equal(leftSpacing, 'm');
+            assert.equal(leftSpacing, 's');
 
             menuOptions.multiSelect = true;
             leftSpacing = menu._getLeftPadding(menuOptions);
-            assert.equal(leftSpacing, 'm');
+            assert.equal(leftSpacing, 's');
 
             menuOptions.itemPadding.left = 'xs';
             leftSpacing = menu._getLeftPadding(menuOptions);
@@ -372,7 +372,7 @@ define(
             });
 
             let rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 'm');
+            assert.equal(rightSpacing, 's');
 
             items.at(0).set('node', true);
             rightSpacing = menuRender._getRightPadding(menuOptions, items);
@@ -385,7 +385,7 @@ define(
             menuOptions.itemPadding.right = null;
             menuOptions.multiSelect = true;
             rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 'menu-multiSelect');
+            assert.equal(rightSpacing, 'menu-expander');
 
             menuOptions.itemPadding.right = 'menu-close';
             menuOptions.multiSelect = true;
@@ -402,7 +402,7 @@ define(
             menuOptions.itemAlign = 'left';
             menuOptions.multiSelect = true;
             rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 'menu-multiSelect');
+            assert.equal(rightSpacing, 's');
          });
 
          describe('_addEmptyItem', function() {
@@ -1336,6 +1336,7 @@ define(
 
             it('menuOpened event', function() {
                const data = { container: 'subMenu' };
+               menuControl._subDropdownItem = {isFirstItem: () => false};
                menuControl._subMenuResult('click', 'menuOpened', data);
                assert.deepEqual(menuControl._subMenu, data);
             });
