@@ -299,6 +299,9 @@ class PositionParamsCalculator implements IParamsCalculator {
 
         if (direction === 'forward' && position[0] === EDGE_FORWARD_POSITION) {
             queryDirection = 'backward';
+        } else if (direction === 'backward' && position[0] === EDGE_BACKWARD_POSITION) {
+            // https://online.sbis.ru/opendoc.html?guid=083bc805-10f0-4e17-a645-0e5512e04dcf
+            queryDirection = 'forward';
         } else {
             queryDirection = direction;
         }
