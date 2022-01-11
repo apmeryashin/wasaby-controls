@@ -17,6 +17,7 @@
                                     caption="{{_options.headingCaption}}"
                                     fontColorStyle="{{_options.headingFontColorStyle}}"
                                     fontSize="{{_options.headingFontSize}}"
+                                    textTransform="{{_options.headingTextTransform}}"
                                     readOnly="{{true}}"
                                     fontWeight="{{_options.headingFontWeight}}"
                                     tooltip="{{_options.headingCaption}}"/>
@@ -29,13 +30,15 @@
                      theme="{{_options.theme}}"/>
       </ws:if>
       <ws:if data="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}">
-         <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
-            controls-StickyTemplate__close_button_position-{{_options.closeBtnPosition}}
+            <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
+                controls-StickyTemplate__close_button_position-{{_options.closeBtnPosition}}
+                controls-StickyTemplate__close_button-{{_options.closeButtonViewMode}}
             {{_options.verticalDirection === 'top' ?
-             'controls-StickyTemplate__close_button-default-without-header_top-spacing-' + (_options.closeButtonTopSpacing === 'none' ? 'none' : 'default') :
-              'controls-StickyTemplate__close_button-with-header'}}"
-                                              viewMode="{{_options.closeButtonViewMode}}"
-                                              on:click="close()"/>
+             'controls-StickyTemplate__close_button-' + (_options.closeButtonViewMode !== 'link' ? 'external' : 'default') + '-without-header_top-spacing-' + (_options.closeButtonTopSpacing === 'none' ? 'none' : 'default') :
+              'controls-StickyTemplate__close_button-' + (_options.closeButtonViewMode !== 'link' ? 'external' : 'default') + '-with-header'}}"
+                                                 viewMode="{{_options.closeButtonViewMode}}"
+                                                 name="closeButton"
+                                                 on:click="close()"/>
       </ws:if>
    </div>
 </div>

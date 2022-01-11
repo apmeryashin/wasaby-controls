@@ -47,6 +47,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     };
     protected _template: TemplateFunction = PopupTemplate;
     protected _headerVisible: boolean = true;
+    protected _hasHeader: boolean;
     protected _headerTemplate: TemplateFunction;
     protected _headerTheme: string;
     protected _headingCaption: string;
@@ -209,6 +210,16 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         }
     }
 
+    protected _updateCloseButtonState(event: SyntheticEvent<MouseEvent>, state: boolean): void {
+        if (!this._hasHeader && this._closeButtonVisibility !== state) {
+            if (!state) {
+                this._closeButtonVisibility = false;
+            } else {
+                this._setCloseButtonVisibility(this._options);
+            }
+        }
+    }
+
     protected _setSelectedItems(event: SyntheticEvent<MouseEvent>, items: Model[]): void {
         this._selectedItems = items;
         this._updateApplyButton();
@@ -277,6 +288,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
             this._headerTemplate = null;
             this._headingCaption = '';
         }
+        this._hasHeader = this._options.headerTemplate || this._headingCaption || this._headerTemplate;
     }
 
     private _updateHeadingIcon(options: IMenuPopupOptions, items: RecordSet): void {
@@ -304,10 +316,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     private _setItemPadding(options: IMenuPopupOptions): void {
         if (options.itemPadding) {
             this._itemPadding = options.itemPadding;
-        } else if (this._closeButtonVisibility) {
-            this._itemPadding = {
-                right: 'menu-close'
-            };
         } else if (options.allowPin) {
             this._itemPadding = {
                 right: 'menu-pin'
@@ -322,7 +330,9 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     static defaultProps: Partial<IMenuPopupOptions> = {
         selectedKeys: [],
         backgroundStyle: 'default',
-        hoverBackgroundStyle: 'default'
+        hoverBackgroundStyle: 'default',
+        closeButtonVisibility: true,
+        closeButtonViewMode: 'external'
     };
 }
 
@@ -338,7 +348,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
  *       keyProperty="key"
  *       displayProperty="title"
  *       source="{{_source}}"
- *       closeButtonVisibility="{{true}}">
+ *       closeButtonVisibility="{{false}}">
  * </Controls.menu:Popup>
  * </pre>
  * <pre class="brush: js">
