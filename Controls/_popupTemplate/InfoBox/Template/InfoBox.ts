@@ -2,12 +2,12 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/InfoBox/Template/InfoBox';
 import {TVertical, THorizontal} from 'Controls/_popupTemplate/Sticky/StickyController';
 import {IStickyPopupPosition, IInfoBoxOptions} from 'Controls/popup';
-import {ValidationStatus, IValidationStatusOptions} from 'Controls/interface';
+import {TValidationStatus, IValidationStatusOptions} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/popupTemplate';
 
 type TArrowPosition = 'start' | 'end' | 'center';
-type TStyle = 'danger' | 'secondary' | 'warning' | 'success' | 'info' | 'primary' | 'unaccented' | ValidationStatus;
+type TStyle = 'danger' | 'secondary' | 'warning' | 'success' | 'info' | 'primary' | 'unaccented' | TValidationStatus;
 
 export interface IInfoboxTemplateOptions extends IControlOptions, IInfoBoxOptions, IValidationStatusOptions {
     stickyPosition?: IStickyPopupPosition;
@@ -85,7 +85,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
         return 'center';
     }
 
-    private static _setBorderStyle(style: TStyle, validationStatus: ValidationStatus): TStyle {
+    private static _setBorderStyle(style: TStyle, validationStatus: TValidationStatus): TStyle {
         if (validationStatus !== 'valid') {
             return validationStatus;
         } else {

@@ -5,7 +5,7 @@ import * as ParallelDeferred from 'Core/ParallelDeferred';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
-import {ValidationStatus} from 'Controls/interface';
+import {TValidationStatus} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/validate';
 import {SyntheticEvent} from 'UI/Vdom';
@@ -419,7 +419,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         }
     }
 
-    protected _getValidStatus(contentActive: boolean): ValidationStatus {
+    protected _getValidStatus(contentActive: boolean): TValidationStatus {
         // ie is not support focus-within
         if (this._isValidResult()) {
             return contentActive ? 'invalidAccent' : 'invalid';
