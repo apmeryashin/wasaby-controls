@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow">
-    <div class="controlsDemo_m">
+    <div class="controlsDemo_m2">
         <div class="controls-text-label">Simple</div>
         <Controls.dropdown:Selector bind:selectedKeys="_selectedKeys"
                                  keyProperty="id"
