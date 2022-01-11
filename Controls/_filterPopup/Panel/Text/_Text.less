@@ -4,25 +4,24 @@
 
 .controls-FilterText__wrapper {
    display: inline-flex;
+}
+
+.controls-FilterText__wrapper {
    line-height: var(--item_height_filterPanel);
 }
 
 .controls-FilterPanelText-caption {
    font-size: var(--item_font-size_filterPanel);
-   padding: 0 var(--horizontal-offset_filterPanel);
-   border-radius: var(--border-radius_m);
 }
 
 .controls-FilterText__reset {
-   .icon-size(var(--reset-button_icon-size));
-
-   color: var(--reset-button_color);
    display: flex;
    align-self: center;
    cursor: pointer;
 }
 
-.controls-FilterText__reset:active {
+.controls-FilterText__reset {
+   .icon-size(var(--reset-button_icon-size));
    color: var(--reset-button_color);
 }
 
@@ -30,8 +29,8 @@
    .controls-FilterText__reset:hover {
       color: var(--reset-button_color);
    }
+}
 
-   .controls-FilterPanelText-caption:hover {
-      background: var(--unaccented_hover_same_background-color);
-   }
+.controls-FilterText__reset:active {
+   color: var(--reset-button_color);
 }
