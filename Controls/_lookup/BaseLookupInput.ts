@@ -43,7 +43,7 @@ export interface ILookupInputOptions extends
     toolbarParentProperty?: string;
     toolbarNodeProperty?: string;
     /**
-     * @name Controls/lookup:BaseLookupInput#contentTemplate
+     * @name Controls/lookup:BaseLookupInput#afterCollectionTemplate
      * @cfg {TemplateFunction} Строка или шаблон, содержащие прикладной контент, который будет отображаться между коллекцией выбранных элементов и полем ввода.
      */
     afterCollectionTemplate?: TemplateFunction;
