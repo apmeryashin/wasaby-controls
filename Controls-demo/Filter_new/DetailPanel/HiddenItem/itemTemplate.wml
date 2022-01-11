@@ -11,7 +11,7 @@
 </ws:template>
 
 <ws:template name="text">
-        <div class="controls-demo-FilterPanel__text">Text</div>
+    <div>Text</div>
 </ws:template>
 
 <ws:partial template="{{item.name}}" item="{{item}}"/>
