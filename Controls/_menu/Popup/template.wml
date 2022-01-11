@@ -15,13 +15,17 @@
               caption="{{_headingCaption}}"
               searchHeaderTheme="{{_options.theme}}"
               headingCaption="{{!_options.headerTemplate && !_headerTemplate ? _headingCaption : ''}}"
+              headingFontSize="xs"
+              headingFontColorStyle="label"
+              headingTextTransform="uppercase"
+              headingFontWeight="normal"
               iconSize="{{_options.iconSize}}"
               iconStyle="{{_options.iconStyle}}"
               footerContentTemplate="{{footerContent}}"
               headerContentTemplate="{{headerContentTemplate || _headerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
               closeButtonVisible="{{_closeButtonVisibility}}"
-              closeButtonViewMode="{{_options.closeButtonViewMode}}"
+              closeButtonViewMode="{{_applyButtonVisible ? 'externalWide' : _options.closeButtonViewMode}}"
               stickyPosition="{{_options.stickyPosition}}"
               draggable="{{_options.draggable}}"
               backgroundStyle="{{_options.backgroundStyle}}"
@@ -43,7 +47,7 @@
                         controls-Menu__popup-content">
                <ws:if data="{{_applyButtonVisible}}">
                   <div class="controls-Menu__popup_applyButton
-                        controls-Menu_{{(_options.headerTemplate || _headingCaption || _headerTemplate) ? 'withHeader' +
+                        controls-Menu_{{(_hasHeader) ? 'withHeader' +
                         (_verticalDirection === 'top' ? '-reverse') : 'withoutHeader'}}__applyButton
                         controls-Menu_{{_closeButtonVisibility ? 'withClose' : 'withoutClose'}}__applyButton">
                      <Controls.buttons:Button viewMode="functionalButton"
@@ -71,7 +75,7 @@
                </ws:if>
                <Controls._menu.Control
                        name="menuControl"
-                       attr:class="controls-Menu__popup-list controls-Menu__popup-list-padding-{{_verticalDirection}}"
+                       attr:class="controls-Menu__popup-list"
                        isDragging="{{_options.isDragging}}"
                        dropdownClassName="{{_options.dropdownClassName}}"
                        selectorOpenCallback="{{_options.selectorOpenCallback}}"
@@ -132,6 +136,7 @@
                        openedSubMenuKey="{{_options.openedSubMenuKey}}"
                        openedSubMenuOptions="{{_options.openedSubMenuOptions}}"
                        closedSubMenuKey="{{_options.closedSubMenuKey}}"
+                       itemsSpacing="{{_options.itemsSpacing}}"
                        footerContentTemplate="{{footerContent}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:rightTemplateClick="_sendResult('rightTemplateClick')"
@@ -139,6 +144,7 @@
                        on:pinClick="_sendResult('pinClick')"
                        on:menuOpened="_sendResult('menuOpened')"
                        on:beforeSubMenuOpen="_prepareSubMenuConfig()"
+                       on:closeButtonVisibilityChanged="_updateCloseButtonState()"
                        on:selectedItemsChanged="_setSelectedItems()"
                        on:subMenuMouseenter="_sendResult('subMenuMouseenter')"
                        on:expanderClick="_expanderClick()"

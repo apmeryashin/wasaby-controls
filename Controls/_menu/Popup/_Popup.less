@@ -6,11 +6,17 @@
 }
 
 .controls-Menu__popup-template {
-   padding: 0 var(--offset_xs);
+   padding: var(--offset_xs);
    max-width: var(--popup_max-width_menuPopup);
    .flexbox();
    .flex-direction(column);
    box-sizing: border-box;
+}
+
+.controls-Menu__popup {
+   .controls-StickyTemplate__close_button-with-header {
+      top: calc(var(--close-button_offset-top_sticky) + var(--offset_xs));
+   }
 }
 
 .controls-Menu__popup-list {
@@ -24,14 +30,6 @@
 
 .controls-Menu__popup-header-multiSelect {
    padding-right: calc(var(--apply-button_inline-height_menuPopup) + (var(--offset_xs) * 2));
-}
-
-.controls-Menu__popup-list-padding-top {
-   padding-bottom: var(--content_padding-top_sticky);
-}
-
-.controls-Menu__popup-list-padding-bottom {
-   padding-top: var(--content_padding-top_sticky);
 }
 
 .controls-Menu__popup-shadow-default {
@@ -50,22 +48,12 @@
    var(--popup_box-shadow-color_menuPopup) 0 var(--popup_box-shadow-offset_menuPopup) var(--popup_box-shadow-blur_menuPopup) calc(-1 * var(--popup_box-shadow-offset_menuPopup));
 }
 
-.controls-StickyTemplate.controls-Menu__popup-reverse {
-   padding-bottom: 0;
-}
-
 .controls-Menu__popup-content.controls-Menu__popup-reverse {
    flex-direction: column-reverse;
-   padding-bottom: 0;
 }
 
 .controls-Menu__popup-direction-vertical-top.controls-StickyTemplate {
-   padding-top: var(--content_padding-top_sticky);
    flex-direction: column-reverse;
-}
-
-.controls-Menu__popup-direction-vertical-bottom {
-   padding-bottom: var(--content_padding-top_sticky);
 }
 
 .controls-Menu__popup-content {
@@ -98,11 +86,6 @@
 
 .controls-Menu__popup_headerIcon_padding {
    margin-right: var(--icon-offset_button);
-}
-
-.controls-Menu__popup_headerIcon {
-   color: var(--header_color_sticky);
-   fill: var(--header_color_sticky);
 }
 
 .controls-Menu__popup_header_search {
@@ -140,13 +123,18 @@
    margin-right: calc(@padding-right_menu-multiSelect - var(--header_padding-horizontal_sticky));
 }
 
+.controls-inlineheight-menuapply {
+   height: var(--apply-button_inline-height_menuPopup);
+   width: var(--apply-button_inline-height_menuPopup);
+}
+
 .controls-Menu__popup_applyButton {
    position: absolute;
    z-index: 2;
 }
 
 .controls-Menu_withHeader__applyButton {
-   top: calc((var(--item_height_menu) - var(--apply-button_inline-height_menuPopup)) / 2);
+   top: calc(var(--offset_xs) + (var(--item_height_menu) - var(--apply-button_inline-height_menuPopup)) / 2);
 }
 
 .controls-Menu_withHeader-reverse__applyButton {
@@ -158,11 +146,15 @@
 }
 
 .controls-Menu_withClose__applyButton {
-   right: calc(var(--close-button_offset-right_sticky) + var(--width_closeButton_link) + var(--offset_xs) + var(--offset_xs));
+   right: calc(var(--width_closeButton_functionalButton) / 2);
 }
 
 .controls-Menu_withoutClose__applyButton {
    right: calc(var(--offset_xs) + var(--offset_xs));
+}
+
+.controls-StickyTemplate__close_button-externalWide {
+   width: calc(var(--apply-button_inline-height_menuPopup) + var(--width_closeButton_functionalButton));
 }
 
 // в edge не работает box-shadow с calc
