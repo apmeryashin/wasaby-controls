@@ -96,6 +96,18 @@
    padding-right: var(--offset_m);
 }
 
+.controls-FilterViewPanel__propertyGrid-popup {
+   margin-left: calc(var(--offset_m) + var(--icon-size_2xs) + var(--offset_xs));
+}
+
+.controls-FilterPanelPopup__history-vertical {
+   padding-left: calc(var(--offset_m) + var(--icon-size_2xs) + var(--offset_xs));
+}
+
+.controls-FilterPanelPopup__history-horizontal {
+   padding-left: calc(var(--offset_m) + var(--icon-size_2xs) + var(--offset_xs) - var(--offset_s));
+}
+
 .controls-FilterViewPanel__propertyGrid-default {
    background-color: var(--master_item_background-color_list); //цвет такой же как в мастер-деталь
 }
@@ -108,13 +120,13 @@
    height: 100%;
 }
 
-.controls-FilterViewPanel__scroll-cloud {
+.controls-FilterViewPanel__scroll-popup {
    height: 100%;
-   border-radius: var(--border-radius_s);
+   border-bottom-right-radius: var(--border-radius_s);
+   border-bottom-left-radius: var(--border-radius_s);
 }
 
 .controls-FilterViewPanel__history-caption {
-   margin-left: var(--offset_xl);
    letter-spacing: 0.1em;
    text-transform: uppercase;
 }
@@ -130,7 +142,7 @@
    flex-direction: column;
    width: 100%;
    box-sizing: border-box;
-   padding-left: calc(var(--offset_xl) - var(--additional-editor_horizontal-offset_filterViewPanel));
+   margin-left: calc(-1 * var(--offset_st));
    padding-right: var(--offset_m);
 }
 
@@ -218,10 +230,6 @@
    width: var(--border-thickness);
    margin: var(--offset_s);
    background: var(--readonly_border-color);
-}
-
-.controls-FilterPanelPopup__extendedItems-vertical {
-   padding-top: var(--offset_l);
 }
 
 .controls_filterPanel-horizontal__column {

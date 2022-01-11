@@ -16,7 +16,7 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._filterButtonData = [
             {
-                caption: '',
+                caption: null,
                 name: 'booleanEditor',
                 editorTemplateName: 'Controls/filterPanel:TextEditor',
                 resetValue: false,
@@ -27,11 +27,10 @@ export default class extends Control {
                     extendedCaption: 'Без рабочих групп'
                 }
             }, {
-                group: 'Должность',
+                caption: 'Должность',
                 name: 'position',
                 editorTemplateName: 'Controls/filterPanel:DropdownEditor',
                 resetValue: ['1'],
-                caption: '',
                 value: ['1'],
                 textValue: '',
                 viewMode: 'basic',
@@ -49,11 +48,10 @@ export default class extends Control {
                     extendedCaption: 'Должность'
                 }
             }, {
-                group: 'position',
-                name: 'Должность',
+                caption: 'Должность',
+                name: 'position',
                 editorTemplateName: 'Controls/filterPanel:LookupEditor',
                 resetValue: ['1'],
-                caption: '',
                 value: ['1'],
                 textValue: '',
                 viewMode: 'extended',

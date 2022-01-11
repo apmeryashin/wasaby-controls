@@ -10,7 +10,7 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._filterButtonSource = [
             {
-                caption: '',
+                caption: null,
                 name: 'booleanEditor',
                 editorTemplateName: 'Controls/filterPanel:TextEditor',
                 resetValue: false,
@@ -21,11 +21,10 @@ export default class extends Control {
                     extendedCaption: 'Без рабочих групп'
                 }
             }, {
-                group: 'Город',
                 name: 'city',
                 editorTemplateName: 'Controls/filterPanel:DropdownEditor',
                 resetValue: ['1'],
-                caption: '',
+                caption: 'Город',
                 value: ['1'],
                 textValue: '',
                 viewMode: 'extended',
@@ -46,11 +45,10 @@ export default class extends Control {
                     extendedCaption: 'Город'
                 }
             }, {
-                group: 'Должность',
+                caption: 'Должность',
                 name: 'position',
                 editorTemplateName: 'Controls/filterPanel:DropdownEditor',
                 resetValue: ['1'],
-                caption: '',
                 value: ['1'],
                 textValue: '',
                 viewMode: 'extended',

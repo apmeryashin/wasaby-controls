@@ -19,11 +19,11 @@
                         {{!collapsedGroups[item] ? 'icon-CollapseLight' : 'icon-ExpandLight'}}">
                   </div>
                </ws:if>
-               <ws:if data="{{_options.viewMode !== 'cloud'}}">
+               <ws:if data="{{_options.editorsViewMode === 'default'}}">
                   <div class="controls-FilterViewPanel__group-separator"> </div>
                </ws:if>
             </div>
-            <ws:if data="{{!collapsedGroups[item] && _options.groupItems[item].resetButtonVisible && _options.viewMode !== 'cloud'}}">
+            <ws:if data="{{!collapsedGroups[item] && _options.groupItems[item].resetButtonVisible && _options.editorsViewMode === 'default'}}">
                <div class="controls-FilterViewPanel__group-content_reset controls-FilterViewPanel__groupReset" title="{[Сбросить фильтр]}">{{rk('Сбросить')}}</div>
             </ws:if>
          </div>
