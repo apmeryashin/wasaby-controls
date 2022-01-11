@@ -49,7 +49,7 @@
    <Controls.event:Register name="resizeDetectDetail" register="controlResize" attr:fixCompatible="1">
       <div class="controls-MasterDetail_details ws-flexbox ws-flex-grow-1 {{_options.detailHeaderTemplate ? 'ws-flex-column' : ''}}">
          <ws:if data="{{_options.detailHeaderTemplate}}">
-            <ws:partial template="{{_options.detailHeaderTemplate}}"/>
+            <ws:partial template="{{_options.detailHeaderTemplate}}" attr:class="controls-MasterDetail_details_header"/>
          </ws:if>
          <ws:partial
                  attr:class="controls-MasterDetail_detailsContent
