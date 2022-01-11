@@ -3465,6 +3465,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
             itemsQuerySelector: options.itemsSelector,
+            itemsContainerUniqueSelector: `.${this._getItemsContainerUniqueClass()}`,
 
             triggersVisibility: {
                 backward: !this._hasMoreData('up') ||
