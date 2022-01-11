@@ -100,8 +100,8 @@
                         </ws:itemTemplate>
                     </Controls._lookup.SelectedCollection>
                 </ws:if>
-                <ws:if data="{{_options.afterCollectionTemplate}}">
-                    <ws:partial template="{{_options.afterCollectionTemplate}}"/>
+                <ws:if data="{{_options.leftFieldTemplate}}">
+                    <ws:partial template="{{_options.leftFieldTemplate}}"/>
                 </ws:if>
             </ws:leftFieldWrapper>
 
