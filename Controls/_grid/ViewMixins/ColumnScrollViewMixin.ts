@@ -107,7 +107,8 @@ export const isSizeAffectsOptionsChanged = (newOptions: Partial<IAbstractViewOpt
         changedOptions.hasOwnProperty('source') ||
         changedOptions.hasOwnProperty('stickyColumnsCount') ||
         (hasCheckboxColumn(oldOptions) !== hasCheckboxColumn(newOptions)) ||
-        (changedOptions.hasOwnProperty('items') && !oldOptions.items.isEqual(newOptions.items))
+        (changedOptions.hasOwnProperty('items') && !oldOptions.items.isEqual(newOptions.items)) ||
+        (changedOptions.hasOwnProperty('columnScrollViewMode') && !newOptions.isFullGridSupport)
     );
 };
 
@@ -332,13 +333,11 @@ const recalculateSizes = (self: TColumnScrollViewMixin, viewOptions, calcedSizes
     // Подсчет размеров, стилей с предпосчитанными размерами
     const wasUpdated = self._$columnScrollController.updateSizes(calcedSizes);
 
-    if (wasUpdated) {
+    const updateScrollBar = () => {
         const {
             contentSizeForHScroll, scrollWidth, containerSize, contentSize
         } = self._$columnScrollController.getSizes();
         const scrollPosition = self._$columnScrollController.getScrollPosition();
-
-        self._$columnScrollEmptyViewMaxWidth = containerSize;
 
         // Установка размеров и позиции в скроллбар
         self._children.horizontalScrollBar.setSizes({
@@ -347,11 +346,19 @@ const recalculateSizes = (self: TColumnScrollViewMixin, viewOptions, calcedSizes
             scrollWidth,
             scrollPosition
         });
+    };
+
+    if (wasUpdated) {
+        self._$columnScrollEmptyViewMaxWidth = self._$columnScrollController.getSizes().containerSize;
+
+        updateScrollBar();
 
         // Установка размеров и позиции в контроллер скроллирования мышью
         if (self._$dragScrollController) {
             updateSizesInDragScrollController(self);
         }
+    } else if (!viewOptions.isFullGridSupport && viewOptions.columnScrollViewMode === 'arrows') {
+        updateScrollBar();
     }
 };
 
