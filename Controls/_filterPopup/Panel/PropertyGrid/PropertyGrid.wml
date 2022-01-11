@@ -1,7 +1,6 @@
 <div class="controls_filterPopup_theme-{{_options.theme}} controls-FilterPanel__PropertyGrid">
    <ws:for data="index, item in _items">
       <ws:if data="{{_isItemVisible(item)}}">
-         <div class="controls-FilterPanel__PropertyGrid__header controls-text-label">{{item.name}}</div>
          <ws:if data="{{(item[_options.itemTemplateProperty] || _options.itemTemplate.templateName).charAt}}">
             <Controls.Container.Async
                tabindex="{{_changedIndex === index ? '1' : '0'}}"

@@ -1,4 +1,2 @@
 <Controls._filterPopup.Panel.Link
-        caption="{{item[_options.displayProperty]}}"
-        underline="hovered"
-        showBackground="{{false}}"/>
+        caption="{{item[_options.displayProperty]}}"/>
