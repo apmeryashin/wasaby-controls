@@ -1846,8 +1846,19 @@ export default class Collection<
         }
 
         const session = this._startUpdateSession();
-        const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
-        this._$group = groupStrategy.handler = group;
+        this._$group = group;
+
+        // При перестроении компоновщика (например, после добавления стратегии) все стратегии пересоздаются
+        // с опциями, заданными при инициализации.
+        // Правильно тут будет именно удалить и заново добавить стратегию в компоновщик,
+        // чтобы обновились опции.
+        this._composer.remove<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
+        this._composer.append(GroupItemsStrategy, {
+            handler: this._$group,
+            collapsedGroups: this._$collapsedGroups,
+            hiddenGroupPosition: this._$hiddenGroupPosition,
+            groupConstructor: this._getGroupItemConstructor()
+        }, UserItemsStrategy);
         if (group) {
             this._switchImportantPropertiesByGroup(true);
         }
