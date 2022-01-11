@@ -5,6 +5,6 @@
             attr:class="controls-MenuButton__popup-header
                         {{_options.markerVisibility && _options.markerVisibility !== 'hidden' ?
                          'controls-MenuButton__popup-header-paddingLeft_marker' : 'controls-MenuButton__popup-header-paddingLeft_default'}}
-                        {{!_options.closeButtonVisibility ? 'controls-MenuButton__popup-header-paddingRight'}}"
+                        {{_options.closeButtonVisibility === false ? 'controls-MenuButton__popup-header-paddingRight'}}"
     />
 </Controls.Container.Async>

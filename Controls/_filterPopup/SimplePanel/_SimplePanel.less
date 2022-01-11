@@ -27,16 +27,23 @@
 
 .controls-SimplePanel__applyButton {
    position: absolute;
-   top: calc((var(--item_height_menu) - var(--inline_height_l)) / 2 + var(--content_padding-top_sticky));
-   right: calc(var(--offset_l) + var(--width_closeButton_link) + var(--close-button_offset-right_sticky) + var(--border-thickness_sticky));
+   top: calc((var(--item_height_menu) - var(--apply-button_inline-height_menuPopup)) / 2 + var(--content_padding-top_sticky) + var(--border-thickness_sticky));
+   right: calc(var(--width_closeButton_functionalButton) / 2);
    z-index: 2;
 }
 
-.controls-SimplePanel-cross {
+.controls-SimplePanel-cross-externalWide {
+   width: calc(var(--apply-button_inline-height_menuPopup) + var(--width_closeButton_functionalButton));
+}
+
+.controls-SimplePanel-cross_wrapper {
    position: absolute;
-   right: calc(var(--close-button_offset-right_sticky) + var(--border-thickness_sticky) + var(--offset_xs));
-   top: calc(var(--close-button_offset-top_sticky) + var(--content_padding-top_sticky) + var(--border-thickness_sticky));
+   right: calc(var(--width_closeButton_functionalButton) / -2);
+   top: calc((var(--item_height_menu) - var(--apply-button_inline-height_menuPopup)) / 2 + var(--content_padding-top_sticky) + var(--border-thickness_sticky));
    z-index: 2;
+   display: flex;
+   flex-direction: row-reverse;
+   align-items: center;
 }
 // Шаблон пустого элемента могут юзать не через emptyText/emptyKey, поэтому мы не знаем, когда элемент "пустой" и через модель классы не поменять
 .controls-SimplePanel-dropdown__emptyItem,

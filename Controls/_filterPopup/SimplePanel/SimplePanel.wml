@@ -19,17 +19,21 @@
                         on:moreButtonClick="_moreButtonClick(item)"/>
          </ws:for>
    </Controls.scroll:Container>
+   <div class="controls-SimplePanel-cross_wrapper {{_applyButtonVisible ? 'controls-StickyTemplate__close_button_with_applyButton'}}">
+      <Controls.popupTemplate:CloseButton
+              class="controls-SimplePanel-cross controls-SimplePanel-cross-{{_applyButtonVisible ? 'externalWide' : 'external'}}"
+              viewMode="{{_applyButtonVisible ? 'externalWide' : 'external'}}"
+              on:click="_closeClick()"/>
+   </div>
    <ws:if data="{{_applyButtonVisible}}">
       <div class="controls-SimplePanel__applyButton" data-qa="SimplePanel__applyButton">
          <Controls.buttons:Button viewMode="functionalButton"
                                   icon="icon-Yes"
-                                  iconSize="m"
+                                  iconSize="s"
                                   iconStyle="contrast"
                                   buttonStyle="success"
-                                  inlineHeight="l"
+                                  inlineHeight="menuapply"
                                   on:click="_applySelection()"/>
       </div>
    </ws:if>
-   <Controls.popupTemplate:CloseButton class="controls-SimplePanel-cross" viewMode="link"
-                          on:click="_closeClick()"/>
 </div>

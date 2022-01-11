@@ -81,7 +81,11 @@
    top: calc(var(--content_padding-top_sticky) + var(--offset_3xs));
 }
 
-.controls-StickyTemplate__close_button-with-header {
+.controls-StickyTemplate__close_button-external-with-header {
+   top: calc((var(--header_min-height_sticky) - var(--width_closeButton_functionalButton)) / 2 + var(--offset_xs));
+}
+
+.controls-StickyTemplate__close_button-default-with-header {
    top: var(--close-button_offset-top_sticky);
 }
 
@@ -90,15 +94,6 @@
    align-items: center;
    overflow: hidden;
    cursor: default;
-}
-// TODO https://online.sbis.ru/opendoc.html?guid=1dcbb6f0-9ed0-4a22-8679-c2722edc754a.
-.controls-StickyTemplate__caption_text {
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-   font-size: var(--header_font-size_sticky);
-   font-weight: bold;
-   color: var(--header_color_sticky);
 }
 
 .controls-StickyTemplate__footer {

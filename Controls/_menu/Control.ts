@@ -491,7 +491,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                              eventResult: Model|HTMLElement,
                              nativeEvent: SyntheticEvent<MouseEvent>): void {
         if (eventName === 'menuOpened') {
+            if (this._subDropdownItem.isFirstItem()) {
+                this._notify('closeButtonVisibilityChanged', [false]);
+            }
             this._subMenu = eventResult as HTMLElement;
+        } else if (eventName === 'menuClosed') {
+            this._notify('closeButtonVisibilityChanged', [true]);
         } else if (eventName === 'subMenuMouseenter') {
             this._clearClosingTimout();
         } else {
@@ -965,7 +970,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getLeftPadding(options: IMenuControlOptions, items: RecordSet): string {
-        let leftSpacing = options.markerVisibility !== 'hidden' ? 's' : 'm';
+        let leftSpacing = 's';
         if (options.itemPadding.left) {
             leftSpacing = options.itemPadding.left;
         } else if (options.itemAlign === 'left' && MenuControl._hasNodesAtLevel(items, options)) {
@@ -975,11 +980,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getRightPadding(options: IMenuControlOptions, items: RecordSet): string {
-        let rightSpacing = 'm';
+        let rightSpacing = 's';
         if (!options.itemPadding.right) {
-            if (options.multiSelect) {
-                rightSpacing = 'menu-multiSelect';
-            } else if (options.itemAlign !== 'left' && MenuControl._hasNodesAtLevel(items, options)) {
+            if (options.itemAlign !== 'left' && MenuControl._hasNodesAtLevel(items, options)) {
                 rightSpacing = 'menu-expander';
             }
         } else {
@@ -1323,7 +1326,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         subMenuDirection: 'right',
         itemAlign: 'right',
         subMenuLevel: 0,
-        maxHistoryVisibleItems: 10
+        maxHistoryVisibleItems: 10,
+        itemsSpacing: '3xs'
     };
 
     private static _isPinIcon(target: EventTarget): boolean {
