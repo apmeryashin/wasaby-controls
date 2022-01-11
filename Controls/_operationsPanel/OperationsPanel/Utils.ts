@@ -73,8 +73,8 @@ const _private = {
       setShowType(items, type) {
          items.each((item) => {
             const configShowType = item.get('showType');
-            // Сохраняем переданный в опции showType, чтобы сохранить отображение элементов в меню,
-            // даже когда для них есть свободное место на панели операций
+            // Сохраняем переданный в опции showType, чтобы при изменении размеров панели действий
+            // не потерять положение кнопки, определённое пользователем в опции
             if (item.get('originalShowType') === undefined && configShowType !== undefined) {
                item.set('originalShowType', configShowType);
             }
