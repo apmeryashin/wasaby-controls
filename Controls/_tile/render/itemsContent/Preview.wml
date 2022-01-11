@@ -32,12 +32,9 @@
                     />
                 </ws:partial>
             </ws:if>
-            <ws:else data="{{ (item || itemData).shouldDisplaySwipeTemplate() }}">
-                <ws:partial template="{{swipeTemplate}}"
-                            itemData="{{(item || itemData)}}"
-                            item="{{(item || itemData)}}"
-                            itemActionsTemplate="{{itemActionsTemplate}}"
-                            highlightOnHover="{{ highlightOnHover }}"/>
+            <ws:else>
+                <!-- Внутри заголовка отображаются только itemActions. На else не нужен swipeTemplate -->
+                <invisible-node/>
             </ws:else>
         </ws:itemActionsTpl>
     </ws:partial>
