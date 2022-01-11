@@ -225,7 +225,7 @@ export default class TreeGridCollection<
 
         // Сбрасываем модель заголовка если его видимость зависит от наличия данных и текущее действие
         // это смена записей.
-        const headerIsVisible = this._headerIsVisible(this._$header);
+        const headerIsVisible = this._headerIsVisible(this._$header, this._$headerVisibility);
         if (changeAction === IObservable.ACTION_RESET && !headerIsVisible) {
             this._$headerModel = null;
         }
@@ -288,7 +288,7 @@ export default class TreeGridCollection<
     setEditing(editing: boolean): void {
         super.setEditing(editing);
 
-        if (this._$headerModel && !this._headerIsVisible(this._$header)) {
+        if (this._$headerModel && !this._headerIsVisible(this._$header, this._$headerVisibility)) {
             this._$headerModel = null;
         }
         this._nextVersion();
@@ -302,7 +302,7 @@ export default class TreeGridCollection<
     protected _removeItems(start: number, count?: number): T[] {
         const result = super._removeItems(start, count);
 
-        if (this._$headerModel && !this._headerIsVisible(this._$header)) {
+        if (this._$headerModel && !this._headerIsVisible(this._$header, this._$headerVisibility)) {
             this._$headerModel = null;
         }
 
