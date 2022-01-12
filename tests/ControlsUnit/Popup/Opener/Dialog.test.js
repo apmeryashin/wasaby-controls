@@ -674,6 +674,7 @@ define(
                   width: 123
                };
                DialogController._getPopupSizes = () => newPopupSizes;
+               DialogController._getRestrictiveContainerSize = () => windowData;
                DialogController.resizeInner(item, {
                   style: {},
                   querySelectorAll: () => []
@@ -687,6 +688,7 @@ define(
                   horizontal: HORIZONTAL_DIRECTION.LEFT,
                   vertical: VERTICAL_DIRECTION.TOP
                };
+               item.fixPosition = false;
                DialogController._getRestrictiveContainerSize = () => windowData;
                let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
                assert.equal(position.right, 860);

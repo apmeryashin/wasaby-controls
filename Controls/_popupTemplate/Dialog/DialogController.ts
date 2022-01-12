@@ -166,6 +166,14 @@ class DialogController extends BaseController {
         container.style.height = '';
         item.sizes = this._getPopupSizes(item, container);
 
+        if (item.popupOptions?.resizeDirection) {
+            // Если попап должен открываться только в определенном направлении - зафиксируем его
+            item.fixPosition = true;
+            const windowData = this._getRestrictiveContainerSize(item);
+            item.position = DialogStrategy.getPosition(windowData, item.sizes, item);
+            return true;
+        }
+
         // Если есть таргет и не было смещения через dnd, то позиционируемся через стики стратегию
         if (item.popupOptions.target) {
             if (!item.fixPosition) {
@@ -184,12 +192,6 @@ class DialogController extends BaseController {
         container.style.height = height;
         //TODO: https://online.sbis.ru/opendoc.html?guid=5ddf9f3b-2d0e-49aa-b5ed-12e943c761d8
         scroll?.scrollTop = scrollTop;
-
-        /* Если задан resizeDirection не перепозиционируем,
-           т.к. это опция отвечает как раз за ресайз без изменения позиции */
-        if (item.popupOptions?.resizeDirection) {
-            return false;
-        }
         return super.resizeInner(item, container);
     }
 
