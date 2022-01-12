@@ -43,5 +43,5 @@ export default interface ISorting {
  *    columns="{{_columns}}"
  *    bind:sorting="_sorting" />
  * </pre>
- * @see Controls/grid:SortingSelector
+ * @see Controls/sorting:Selector
  */
