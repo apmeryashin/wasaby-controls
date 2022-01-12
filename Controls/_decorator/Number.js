@@ -1,4 +1,4 @@
-define('Controls/_decorator/Number', ['UI/Executor', 'Controls/_decorator/resources/Number'], function(Executor, Number) {
+define('Controls/_decorator/Number', ['UI/Executor', 'Controls/_decorator/resources/Number', 'Controls/_decorator/Highlight'], function(Executor, Number, Highlight) {
    var filename = 'Controls/_decorator/Number';
    var thelpers = Executor.TClosure;
    var templateFunction = function Controls__decorator_Number_Number(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
@@ -28,6 +28,11 @@ define('Controls/_decorator/Number', ['UI/Executor', 'Controls/_decorator/resour
       }
       var markupGenerator = thelpers.createGenerator(isVdom, forceCompatible, generatorConfig);
       var funcContext = thelpers.getContext(this);
+      var includedTemplates = {};
+      var depsLocal = {
+         'Controls/_decorator/Highlight': Highlight
+      };
+
       try {
          var out = markupGenerator.joinElements([markupGenerator.createTag('span', {
             'attributes': {
@@ -36,7 +41,32 @@ define('Controls/_decorator/Number', ['UI/Executor', 'Controls/_decorator/resour
             },
             'events': typeof window === 'undefined' ? {} : {},
             'key': key + '0_'
-         }, [markupGenerator.createText('' + (thelpers.wrapUndef(markupGenerator.escape(formattedNumber))) + '', key + '0_0_')], attr, defCollection, viewController, true)], key, defCollection);
+         }, [
+            (thelpers.getter(data, ['_options', 'highlightedValue']))
+               ? ([markupGenerator.createControlNew('wsControl',
+                  'ws:Controls/_decorator/Highlight',
+                  {},
+                  {},
+                  {
+                     'value': formattedNumber,
+                     'highlightedValue': (thelpers.getter(data, ['_options', 'highlightedValue']))
+                  },
+                  {
+                     attr: attr,
+                     data: data,
+                     ctx: this,
+                     isVdom: isVdom,
+                     defCollection: defCollection,
+                     depsLocal: typeof depsLocal !== 'undefined' ? depsLocal : {},
+                     includedTemplates: includedTemplates,
+                     viewController: viewController,
+                     context: context,
+                     key: key + '0_0_0_',
+                     internal: isVdom ? {} : {},
+                  })])
+               : markupGenerator.createText('' + (thelpers.wrapUndef(markupGenerator.escape(formattedNumber))) + '', key + '0_0_')
+         ], attr, defCollection, viewController, true)], key, defCollection);
+
          if (defCollection && defCollection.def) {
             out = markupGenerator.chain(out, defCollection, this);
          }
