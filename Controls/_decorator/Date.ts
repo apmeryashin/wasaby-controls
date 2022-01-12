@@ -71,11 +71,14 @@ class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IF
         }
     }
 
-    private _calculateFontColorStyle(options: IDateOptions): string {
+    protected _calculateFontColorStyle(options: IDateOptions): string {
         return options.readOnly ? 'readonly' : options.fontColorStyle;
     }
 
     private _formatDate(options: IDateOptions): string {
+        if (!options.value) {
+            return null;
+        }
         return date(options.value, options.format, options.timeZoneOffset);
     }
 }
