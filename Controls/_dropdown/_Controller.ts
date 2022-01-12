@@ -116,7 +116,7 @@ export default class Controller implements IDropdownController {
          return this._getSourceController(this._options).then((sourceController) => {
             this._setItemsAndMenuSource(items);
             sourceController.setItems(this._items);
-         });
+         }).catch((error) => error);
       }
    }
 
