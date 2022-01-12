@@ -1126,7 +1126,12 @@ define(
 
             it('item parent = 1, root = null', function() {
                item.set('parent', '1');
-               isVisible = menuControl.constructor._displayFilter(hierarchyOptions, item);
+               const items = new collection.RecordSet({
+                  rawData: defaultItems,
+                  keyProperty: 'key'
+               });
+               items.add(item);
+               isVisible = menuControl.constructor._displayFilter(hierarchyOptions, items, item);
                assert.isFalse(isVisible);
             });
          });

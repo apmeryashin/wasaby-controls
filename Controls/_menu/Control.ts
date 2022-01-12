@@ -362,6 +362,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 if (this._isTouch() && item.get(this._options.nodeProperty) && this._subDropdownItem !== treeItem) {
                     this._handleCurrentItem(treeItem, sourceEvent.currentTarget, sourceEvent.nativeEvent);
                 } else {
+                    if (!MenuControl._isItemCurrentRoot(item, this._options)) {
+                        const parent = item.get(this._options.parentProperty);
+                        const parentItem = this._listModel.getCollection().getRecordById(parent);
+                        this._notify('itemClick', [item, sourceEvent, parentItem]);
+                    }
                     this._notify('itemClick', [item, sourceEvent]);
                 }
             }
@@ -950,7 +955,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             });
         } else {
             const filterFunction = options.parentProperty &&
-                                   options.nodeProperty ? MenuControl._displayFilter.bind(this, options) : null;
+                                   options.nodeProperty ? MenuControl._displayFilter.bind(this, options, items) : null;
             // В дереве не работает группировка,
             // ждем решения по ошибке https://online.sbis.ru/opendoc.html?guid=f4a3be79-5ec5-45d2-b742-2d585c5c069d
             listModel = new Collection({...collectionConfig,
@@ -1382,13 +1387,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             (secondSegmentPointX - firstSegmentPointX) * (firstSegmentPointY - curPointY);
     }
 
-    private static _hasNodesAtLevel(items: RecordSet, options: IMenuControlOptions): boolean {
-        const firstItemAtLevel = factory(items).filter((item) => {
-            return MenuControl._isItemCurrentRoot(item, options) && item.get(options.nodeProperty);
-        }).first();
-        return !!firstItemAtLevel;
-    }
-
     private static _isHistoryItem(item: Model): boolean {
         return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
     }
@@ -1401,23 +1399,37 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return (!item.get || !item.get(options.additionalProperty) || MenuControl._isHistoryItem(item));
     }
 
-    private static _displayFilter(options: IMenuControlOptions, item: Model): boolean {
+    private static _displayFilter(options: IMenuControlOptions,
+                                  items: RecordSet,
+                                  item: Model): boolean {
         let isVisible: boolean = true;
-        const isStringType = typeof options.root === 'string';
         if (item && item.get) {
-            let parent: TKey = item.get(options.parentProperty);
-            if (parent === undefined) {
-                parent = null;
-            }
-            // Для исторических меню keyProperty всегда заменяется на строковый.
-            // Если изначально был указан целочисленный ключ,
-            // то в поле родителя будет лежать также целочисленное значение, а в root будет лежать строка.
-            if (isStringType) {
-                parent = String(parent);
-            }
-            isVisible = parent === options.root;
+            const parent = MenuControl._getItemParentKey(options, item);
+
+            isVisible = parent === options.root || MenuControl._isHiddenNode(parent, items, options);
         }
         return isVisible;
+    }
+
+    private static _getItemParentKey(options: IMenuControlOptions, item: Model): TKey {
+        const isStringType = typeof options.root === 'string';
+        let parent: TKey = item.get(options.parentProperty);
+        if (parent === undefined) {
+            parent = null;
+        }
+        // Для исторических меню keyProperty всегда заменяется на строковый.
+        // Если изначально был указан целочисленный ключ,
+        // то в поле родителя будет лежать также целочисленное значение, а в root будет лежать строка.
+        if (isStringType) {
+            parent = String(parent);
+        }
+        return parent;
+    }
+
+    private static _isHiddenNode(key: TKey, items: RecordSet<Model>, options: IMenuControlOptions): boolean {
+        const parentItem = items.getRecordById(key);
+        return parentItem && parentItem.get(options.nodeProperty) === false &&
+            MenuControl._getItemParentKey(options, parentItem) === options.root;
     }
 
     private static _searchHistoryDisplayFilter(options: IMenuControlOptions,

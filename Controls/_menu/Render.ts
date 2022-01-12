@@ -78,6 +78,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             contents: treeItem.getContents(),
             treeItem,
             iconPadding: this._iconPadding,
+            levelPadding: this._getLevelPadding(treeItem),
             iconSize: treeItem.getContents() ? this._getIconSize(treeItem.getContents()) : null,
             multiSelect: this._options.multiSelect,
             parentProperty: this._options.parentProperty,
@@ -248,6 +249,18 @@ class MenuRender extends Control<IMenuRenderOptions> {
     private _getNextItem(treeItem: TreeItem<Model>): TreeItem<Model> {
         const index = treeItem.getOwner().getIndex(treeItem);
         return treeItem.getOwner().at(index + 1);
+    }
+
+    private _getLevelPadding(treeItem: TreeItem<Model>): string {
+        const item = treeItem.getContents();
+        if (treeItem.getLevel && treeItem.getLevel() > 1) {
+            return 'xl';
+        } else if (item instanceof Model) {
+            const parent = item.get(this._options.parentProperty);
+            if ( parent && parent !== this._options.root) {
+                return '3xl';
+            }
+        }
     }
 
     private _getIconSize(item: Model): string {
