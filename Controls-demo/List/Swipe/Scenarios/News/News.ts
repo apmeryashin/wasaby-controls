@@ -3,11 +3,13 @@ import cConstants = require('Core/constants');
 import * as template from 'wml!Controls-demo/List/Swipe/Scenarios/News/News';
 import { Memory } from 'Types/source';
 import { Model } from 'Types/entity';
+import {IItemAction} from 'Controls/itemActions';
 
 export default class News extends Control {
    protected _template: Function = template;
-   protected _itemActions: object[];
+   protected _itemActions: IItemAction[];
    protected _source: Memory;
+   protected _isPhotoVisible: boolean = true;
 
    _beforeMount(): void {
       const data = [{
@@ -76,26 +78,35 @@ export default class News extends Control {
       }];
       this._itemActions = [
          {
-            id: 1,
+            id: 'read',
             icon: 'icon-PhoneNull',
             title: 'Прочитано',
             showType: 2
          },
          {
             id: 2,
+            icon: 'icon-Picture',
+            title: 'Картинки',
+            handler: () => {
+               this._isPhotoVisible = !this._isPhotoVisible;
+            },
+            showType: 2
+         },
+         {
+            id: 3,
             icon: 'icon-Erase',
             title: 'Удалить',
             iconStyle: 'danger',
             showType: 2
          },
          {
-            id: 3,
+            id: 4,
             icon: 'icon-Favorite',
             title: 'В избранные',
             showType: 2
          },
          {
-            id: 4,
+            id: 5,
             icon: 'icon-EmptyMessage',
             title: 'В избранные2',
             showType: 2

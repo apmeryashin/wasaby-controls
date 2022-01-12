@@ -131,7 +131,7 @@ export default class Controller implements IDropdownController {
       const oldOptions = {...this._options};
       this._options = newOptions;
 
-      if (oldOptions.items !== newOptions.items) {
+      if (newOptions.items && oldOptions.items !== newOptions.items) {
          this.setItems(newOptions.items);
       }
 

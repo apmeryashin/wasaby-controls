@@ -146,7 +146,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
             this._prepareLadder(this._$ladderProperties, this._$columns);
         }
 
-        if (this._headerIsVisible(options.header)) {
+        if (this._headerIsVisible(options.header, this._$headerVisibility)) {
             this._initializeHeader(options);
         }
         if (this._resultsIsVisible()) {
@@ -177,7 +177,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     getHeader(): Header {
-        if (!this._$headerModel && this._headerIsVisible(this._$header)) {
+        if (!this._$headerModel && this._headerIsVisible(this._$header, this._$headerVisibility)) {
             this._initializeHeader({
                 header: this._$header,
                 columns: this._$columns,
@@ -334,7 +334,8 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
 
     protected _shouldAddEdgeSeparator(): boolean {
         const isVisibleByHeaderOrFooter = (
-            this._headerIsVisible(this._$header) || this._resultsIsVisible() || !!this.getFooter());
+            this._headerIsVisible(this._$header, this._$headerVisibility) ||
+            this._resultsIsVisible() || !!this.getFooter());
         return !this._$newDesign || (this._$newDesign && isVisibleByHeaderOrFooter);
     }
 
@@ -351,10 +352,17 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     setHeaderVisibility(headerVisibility: THeaderVisibility): void {
-        this._$headerVisibility = headerVisibility;
-        this._$headerModel = null;
+        const isEqualOption = this._$headerVisibility === headerVisibility;
+        const currentHeaderVisible = this._headerIsVisible(this._$header, this._$headerVisibility);
+        const newHeaderVisible = this._headerIsVisible(this._$header, headerVisibility);
+        const headerVisibleChanged = !isEqualOption && currentHeaderVisible !== newHeaderVisible;
 
-        this._nextVersion();
+        this._$headerVisibility = headerVisibility;
+
+        if (headerVisibleChanged) {
+            this._$headerModel = null;
+            this._nextVersion();
+        }
     }
 
     setColumns(newColumns: TColumns): void {
@@ -482,9 +490,9 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         });
     }
 
-    protected _headerIsVisible(header: THeader): boolean {
+    protected _headerIsVisible(header: THeader, headerVisibility: THeaderVisibility): boolean {
         const hasHeader = header && header.length;
-        return hasHeader && (this._$headerVisibility === 'visible' || this.getCount() > 0);
+        return hasHeader && (headerVisibility === 'visible' || this.getCount() > 0);
     }
 
     setResultsPosition(resultsPosition: TResultsPosition): void {

@@ -643,11 +643,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       const listKeys = initialState ? selection.excluded : selection.selected;
       let stateNode = initialState;
       let countChildrenInList: boolean|number|null = 0;
+      let isAllChildIsSelectedByOne = true;
 
       for (let index = 0; index < children.getCount(); index++) {
          const child = children.at(index);
          const childId = this._getKey(child);
          const childInList = listKeys.includes(childId);
+         const childIsSelected = selection.selected.includes(childId);
+         isAllChildIsSelectedByOne = isAllChildIsSelectedByOne && childIsSelected;
 
          if (this._isNode(child)) {
             const stateChildNode = this._getStateNode(child, childInList ? !initialState : initialState, selection);
@@ -667,7 +670,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       if (countChildrenInList && countChildrenInList === children.getCount() && node && node['[Controls/_display/BreadcrumbsItem]']) {
          stateNode = !initialState;
       } else if (countChildrenInList > 0) {
-         stateNode = null;
+         const hasMore = node['[Controls/_display/TreeItem]'] &&
+             (node.hasMoreStorage('forward') || node.hasMoreStorage('backward'));
+         stateNode = !hasMore && isAllChildIsSelectedByOne ? true : null;
       } else if (this._entryPath) {
          if (this._childFromEntryPathIsSelected(nodeKey, selection.selected)) {
             stateNode = null;

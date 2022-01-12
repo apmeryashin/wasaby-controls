@@ -4,7 +4,8 @@
  * @includes IAction Controls/_listCommands/interface/IAction
  */
 
-export {default as IAction, default as ICommand} from './_listCommands/interface/IAction';
+export {default as IAction} from './_listCommands/interface/IAction';
+export {default as ICommand} from './_listCommands/interface/IAction';
 export {default as IActionOptions, default as ICommandOptions} from './_listCommands/interface/IActionOptions';
 export {default as Remove} from './_listCommands/Remove';
 export {default as RemoveProvider} from './_listCommands/Remove/Provider';

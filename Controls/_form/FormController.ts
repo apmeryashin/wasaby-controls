@@ -339,13 +339,9 @@ class FormController extends ControllerBase<IFormController> {
         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать.
         // до монитрования в DOM не можем сделать notify событий (которые генерируются в CrudController,
         // а стреляются с помощью FormController'а, в данном случае), поэтому будем создавать рекорд напрямую.
-        return readWithAdditionalFields(cfg.source, cfg.key, cfg.readMetaData).then((record: Model) => {
+        return (readWithAdditionalFields(cfg.source, cfg.key, cfg.readMetaData).then((record: Model) => {
             this._setRecord(record);
             this._readInMounting = {isError: false, result: record};
-
-            if (this._isMount) {
-                this._readRecordBeforeMountNotify();
-            }
 
             return {
                 data: record
@@ -354,7 +350,11 @@ class FormController extends ControllerBase<IFormController> {
             this._readInMounting = {isError: true, result: e};
             this._setFunctionToRepeat(this.read, cfg.key, cfg.readMetaData, cfg);
             return this.processError(e).then(this._getState);
-        }) as Promise<{data: Model}>;
+        }).finally(() => {
+            if (this._isMount) {
+                this._readRecordBeforeMountNotify();
+            }
+        })) as Promise<{data: Model}>;
     }
 
     private _readRecordBeforeMountNotify(): void {

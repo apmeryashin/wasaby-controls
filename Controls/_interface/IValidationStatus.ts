@@ -1,7 +1,7 @@
-export type ValidationStatus = 'valid' | 'invalid' | 'invalidAccent';
+export type TValidationStatus = 'valid' | 'invalid' | 'invalidAccent';
 
 export interface IValidationStatusOptions {
-    validationStatus: ValidationStatus;
+    validationStatus: TValidationStatus;
 }
 
 /**

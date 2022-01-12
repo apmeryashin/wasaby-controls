@@ -277,8 +277,7 @@ const _private = {
    },
 
    loadSelectedItems(self: object, filter: QueryWhereExpression<unknown>): Promise<RecordSet> {
-      const dataOptions = self._options._dataOptionsValue;
-      const items = dataOptions.items;
+      const {items, sorting, source} = self._options._dataOptionsValue;
       let loadItemsPromise;
 
       if (_private.needLoadItemsOnSelectComplete(self)) {
@@ -288,10 +287,9 @@ const _private = {
             selectedItems.add(items.getRecordById(self._selectedKeys[0]));
             loadItemsPromise = Promise.resolve(selectedItems);
          } else {
-            const crudWrapper = _private.getCrudWrapper(dataOptions.source);
             _private.showIndicator(self);
-            loadItemsPromise = crudWrapper
-                .query({filter})
+            loadItemsPromise = _private.getCrudWrapper(source)
+                .query({filter, sorting})
                 .catch((error) => {
                     process({error});
                     return Promise.reject(error);
