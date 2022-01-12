@@ -3409,15 +3409,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      * Замораживает hover подсветку строки для указанной записи
      */
     freezeHoveredItem(item: Model): void {
-        // Если используется этот метод, значит прикладник самостоятельно запоминает item
-        // при этом метод может вызваться отложенно уже ПОСЛЕ того,
-        // как новые данные загружены и готова модель.
-        // Смотреть на состояние загрузки в этом случае не имеет смысла.
-        const collectionItem = item && this._listViewModel.getItemBySourceKey(item.getKey());
-        if (collectionItem) {
-            _private.freezeHoveredItem(this, collectionItem);
+        const collectionItem = this._listViewModel.getItemBySourceItem(item);
+        if (!collectionItem) {
+            Logger.error('freezeHoveredItem(). Указанный item отсутствует в коллекции.', this);
         } else {
-            Logger.warning('freezeHoveredItem(). Указанный item отсутствует в коллекции.', this);
+            _private.freezeHoveredItem(this, collectionItem);
         }
     }
 
