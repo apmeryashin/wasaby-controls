@@ -36,8 +36,8 @@ function startLoadersIfNecessary(config: IBaseOpenerOptions, openCallback: Funct
 }
 
 export default function openPopup(config: IBaseOpenerOptions, controller: string,
-                                  moduleName: string): CancelablePromise<string> {
-    const promise = new CancelablePromise<string>((cancelablePromise, resolve, reject) => {
+                                  moduleName: string): CancelablePromise<string | Error> {
+    const promise = new CancelablePromise<string | Error>((cancelablePromise, resolve, reject) => {
         if (!config.hasOwnProperty('isHelper')) {
             Logger.warn('Controls/popup:Dialog: Для открытия диалоговых окон из кода используйте DialogOpener');
         }
@@ -88,6 +88,7 @@ export default function openPopup(config: IBaseOpenerOptions, controller: string
         }
     }).catch((err: Error) => {
         Logger.error( `${moduleName}: ${err.message}`);
+        return err;
     });
     return promise;
 }
