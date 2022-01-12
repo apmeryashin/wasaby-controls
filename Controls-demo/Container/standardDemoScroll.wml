@@ -4,7 +4,7 @@
     <Controls.scroll:Container style="inverted" attr:class="ControlsDemo-navigation_scroll">
         <div attr:class="ControlsDemo-navigation">
             <ws:for data="item in _menuItems">
-                <div attr:class="ControlsDemo-item_nav">{{item}}</div>
+                <div attr:class="ControlsDemo-item_nav controls-text-contrast">{{item}}</div>
             </ws:for>
         </div>
     </Controls.scroll:Container>
