@@ -247,9 +247,8 @@ class Field<Value, ModelOptions>
         }
     }
 
-    /**
-     * BEGIN OF LIFE CIRCE SECTION
-     */
+    //BEGIN OF LIFE CIRCLE SECTION
+
     protected _beforeMount(options: IFieldOptions<Value, ModelOptions>): void {
         this._model = options.model;
         this._currentVersionModel = this._model.getVersion();
@@ -301,13 +300,11 @@ class Field<Value, ModelOptions>
         this._selectionFromFieldToModel = undefined;
     }
 
-    /**
-     * END OF LINE CIRCLE SECTION
-     */
+    //END OF LINE CIRCLE SECTION
+    
 
-    /**
-     * BEGIN OF HANDLERS SECTION
-     */
+    //BEGIN OF HANDLERS SECTION
+    
     protected _inputHandler(event: SyntheticEvent<KeyboardEvent>): void {
         const field = this._getField();
         const model = this._model;
@@ -471,10 +468,8 @@ class Field<Value, ModelOptions>
         this._fixBugs.mouseDownHandler();
     }
 
-    /**
-     * END OF HANDLERS SECTION
-     */
-
+    //END OF HANDLERS SECTION
+    
     setValue(value: string): boolean {
         const field: HTMLInputElement = this._getField();
 
