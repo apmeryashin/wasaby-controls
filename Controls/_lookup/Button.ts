@@ -10,7 +10,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 // @ts-ignore
 import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTemplate';
-import {IValidationStatusOptions, ValidationStatus} from '../_interface/IValidationStatus';
+import {IValidationStatusOptions, TValidationStatus} from '../_interface/IValidationStatus';
 // @ts-ignore
 import rk = require('i18n!Controls');
 import {IHashMap} from 'Types/declarations';
@@ -144,7 +144,7 @@ export default class Button extends BaseLookup<ISelectorButtonOptions> {
          maxVisibleItems: 7,
          itemTemplate,
          showSelectorCaption: `+${rk('еще')}`,
-         validationStatus: 'valid' as ValidationStatus
+         validationStatus: 'valid' as TValidationStatus
       };
       const baseOptions = BaseLookup.getDefaultOptions();
       return {...buttonOptions, ...baseOptions} as ISelectorButtonOptions;
