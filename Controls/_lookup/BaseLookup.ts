@@ -70,7 +70,7 @@ export default abstract class
 
     protected _afterMount(): void {
         if (this._options.items && this._options.hasOwnProperty('selectedKeys')) {
-            this._notifySelectedKeysChanged(this._lookupController.getSelectedKeys());
+            this._notifySelectedKeysAndTextValueChanged(this._lookupController.getSelectedKeys());
         }
     }
 
@@ -148,16 +148,16 @@ export default abstract class
 
     private _notifyChanges(options?: ILookupOptions): void {
         const controller = this._lookupController;
-        this._notifySelectedKeysChanged(controller.getSelectedKeys(), options);
-        this._notify('itemsChanged', [controller.getItems()]);
-        this._notify('textValueChanged', [controller.getTextValue()]);
+        this._notifySelectedKeysAndTextValueChanged(controller.getSelectedKeys(), options);
+        this._notify('itemsChanged', [this._lookupController.getItems()]);
     }
 
-    protected _notifySelectedKeysChanged(newSelectedKeys: TKey[], options?: ILookupOptions): void {
+    protected _notifySelectedKeysAndTextValueChanged(newSelectedKeys: TKey[], options?: ILookupOptions): void {
         const {added, removed} =
             ArrayUtil.getArrayDifference(this._getSelectedKeys(options ?? this._options), newSelectedKeys);
         if (added?.length || removed?.length) {
             this._notify('selectedKeysChanged', [newSelectedKeys, added, removed]);
+            this._notify('textValueChanged', [this._lookupController.getTextValue()]);
         }
     }
 
