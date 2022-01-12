@@ -674,6 +674,7 @@ define(
                   width: 123
                };
                DialogController._getPopupSizes = () => newPopupSizes;
+               sinon.stub(DialogStrategy, 'getPosition').returns({});
                DialogController.resizeInner(item, {
                   style: {},
                   querySelectorAll: () => []
@@ -681,12 +682,14 @@ define(
                DialogController._getPopupSizes = originGetPopupSizes;
                assert.equal(item.sizes.height, newPopupSizes.height);
                assert.equal(item.sizes.width, newPopupSizes.width);
+               sinon.restore();
             });
             it('dragging', () => {
                item.popupOptions.resizeDirection = {
                   horizontal: HORIZONTAL_DIRECTION.LEFT,
                   vertical: VERTICAL_DIRECTION.TOP
                };
+               item.fixPosition = false;
                DialogController._getRestrictiveContainerSize = () => windowData;
                let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
                assert.equal(position.right, 860);
@@ -725,6 +728,7 @@ define(
                   width: 200
                };
                DialogController._getPopupSizes = () => newPopupSizes;
+               DialogController._getRestrictiveContainerSize = () => window;
                DialogController.resizeInner(popupItem, {
                   style: {},
                   querySelectorAll: () => []

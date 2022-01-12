@@ -203,12 +203,6 @@ class DialogController extends BaseController {
         container.style.height = height;
         //TODO: https://online.sbis.ru/opendoc.html?guid=5ddf9f3b-2d0e-49aa-b5ed-12e943c761d8
         scroll?.scrollTop = scrollTop;
-
-        /* Если задан resizeDirection не перепозиционируем,
-           т.к. это опция отвечает как раз за ресайз без изменения позиции */
-        if (item.popupOptions?.resizeDirection) {
-            return false;
-        }
         return super.resizeInner(item, container);
     }
 
