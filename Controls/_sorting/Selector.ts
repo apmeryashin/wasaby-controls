@@ -7,7 +7,7 @@ import {RecordSet} from 'Types/collection';
 import {ISortingSelectorOptions} from 'Controls/_sorting/interface/ISortingSelectorOptions';
 import {ISortingParam} from 'Controls/_sorting/interface/ISortingParam';
 
-import * as template from 'wml!Controls/_sorting/Render/Selector';
+import * as template from 'wml!Controls/_sorting/Selector/Selector';
 
 import 'css!Controls/sorting';
 import 'css!Controls/CommonClasses';
