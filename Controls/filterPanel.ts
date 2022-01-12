@@ -5,6 +5,7 @@
  * @includes Container Controls/_filterPanel/View/Container
  * @includes ListEditor Controls/_filterPanel/Editors/List
  * @includes NumberRangeEditor Controls/_filterPanel/Editors/NumberRange
+ * @includes DateRangeEditor Controls/_filterPanel/Editors/DateRange
  * @public
  * @author Мельникова Е.А.
  */
