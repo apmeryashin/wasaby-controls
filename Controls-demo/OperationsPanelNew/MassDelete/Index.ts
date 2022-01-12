@@ -44,6 +44,7 @@ export default class extends Control {
       const id = item.get('id');
       if (id === 'remove') {
          this._children.list.removeItems({selected: this._selectedKeys, excluded: this._excludedKeys}).then(() => {
+            this._selectedKeys = [];
             this._children.list.reload();
          });
       }
