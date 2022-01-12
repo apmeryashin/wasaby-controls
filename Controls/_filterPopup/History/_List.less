@@ -2,7 +2,7 @@
    display: inline-flex;
    align-items: center;
    cursor: pointer;
-   height: var(--history_item_height_filterPanel);
+   height: var(--inline_height_m);
    width: 100%;
 
    &:before {
@@ -18,12 +18,13 @@
 .controls-HistoryList__heading {
    font-size: var(--font-size_xs);
    color: var(--label_text-color);
-   height: var(--inline_height_default);
+   height: var(--inline_height_xs);
    display: inline-flex;
-   align-items: baseline;
+   align-items: center;
    letter-spacing: 0.1em;
    text-transform: uppercase;
-   margin-left: var(--margin-left_filterPanel);
+   margin-left: var(--offset_st);
+   margin-bottom: var(--offset_2xs);
 }
 
 .controls-HistoryList__heading:before {
@@ -32,7 +33,7 @@
 }
 
 .controls-HistoryList__content {
-   margin: 0 var(--history_item_margin-right_filterPanel) var(--offset_xs) var(--offset_l);
+   margin-bottom: var(--offset_xs);
 }
 
 .controls-HistoryList__item {
@@ -43,7 +44,7 @@
    flex-shrink: 1;
    height: 100%;
    line-height: var(--history_item_height_filterPanel);
-   padding: 0 var(--history_item_horizontal-offset_filterPanel);
+   padding: 0 var(--offset_st);
    border-radius: var(--border-radius_m);
    margin-right: var(--offset_2xs);
 }
