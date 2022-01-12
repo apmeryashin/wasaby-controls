@@ -674,7 +674,7 @@ define(
                   width: 123
                };
                DialogController._getPopupSizes = () => newPopupSizes;
-               sinon.stub(DialogStrategy, 'getPosition').returns({});
+               DialogController._getRestrictiveContainerSize = () => windowData;
                DialogController.resizeInner(item, {
                   style: {},
                   querySelectorAll: () => []
@@ -682,7 +682,6 @@ define(
                DialogController._getPopupSizes = originGetPopupSizes;
                assert.equal(item.sizes.height, newPopupSizes.height);
                assert.equal(item.sizes.width, newPopupSizes.width);
-               sinon.restore();
             });
             it('dragging', () => {
                item.popupOptions.resizeDirection = {
