@@ -1,7 +1,6 @@
 import {IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
 export interface IPopupTemplateOptions extends IPopupTemplateBaseOptions {
     closeButtonViewMode?: string;
-    closeButtonTransparent?: boolean;
 }
 /**
  * Интерфейс для стандартных шаблонов окон.
@@ -16,14 +15,11 @@ export default interface IPopupTemplate {
 /**
  * @name Controls/_popupTemplate/interface/IPopupTemplate#closeButtonViewMode
  * @cfg {String} Стиль отображения кнопки закрытия
- * @variant toolButton
- * @variant linkButton
- * @variant link
+ * @variant toolButton Отображение как кнопки панели инструментов.
+ * @variant linkButton Отображение кнопки в виде ссылки.
+ * @variant functionalButton Отображение функциональной кнопки закрытия
+ * @variation external Отображение полупрозрачной кнопки закрытия.
  * @default linkButton
- */
-
-/**
- * @name Controls/_popupTemplate/interface/IPopupTemplate#closeButtonTransparent
- * @cfg {Boolean} Определяет прозрачность фона кнопки закрытия.
- * @default true
+ * @demo Controls-demo/PopupTemplate/Dialog/closeButtonViewMode/Index
+ * @demo Controls-demo/PopupTemplate/Stack/CloseButtonViewMode/Index
  */
