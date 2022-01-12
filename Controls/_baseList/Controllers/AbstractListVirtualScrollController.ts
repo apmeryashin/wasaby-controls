@@ -200,7 +200,6 @@ export abstract class AbstractListVirtualScrollController<
         this._updateVirtualNavigationUtil = options.updateVirtualNavigationUtil;
         this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
 
-        this._setCollectionIterator(options.virtualScrollConfig.mode);
         this._createScrollController(options);
     }
 
@@ -748,21 +747,6 @@ export abstract class AbstractListVirtualScrollController<
         });
     }
 
-    protected _setCollectionIterator(mode: TVirtualScrollMode): void {
-        switch (mode) {
-            case 'hide':
-                VirtualScrollHideController.setup(
-                    this._collection as unknown as VirtualScrollHideController.IVirtualScrollHideCollection
-                );
-                break;
-            default:
-                VirtualScrollController.setup(
-                    this._collection as unknown as VirtualScrollController.IVirtualScrollCollection
-                );
-                break;
-        }
-    }
-
     /**
      * Корректирует селктор элементов.
      * Если виртуальный скролл настроен скрывать записи вне диапазона, то нужно в селекторе исключить скрытые записи.
@@ -805,10 +789,26 @@ export abstract class AbstractListVirtualScrollController<
         }
 
         this._collection = collection;
+        this._setCollectionIterator();
 
         if (this._scrollController && this._collection) {
             const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
             this._scrollController.resetItems(this._collection.getCount(), startIndex);
+        }
+    }
+
+    protected _setCollectionIterator(): void {
+        switch (this._virtualScrollMode) {
+            case 'hide':
+                VirtualScrollHideController.setup(
+                    this._collection as unknown as VirtualScrollHideController.IVirtualScrollHideCollection
+                );
+                break;
+            default:
+                VirtualScrollController.setup(
+                    this._collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+                break;
         }
     }
 
