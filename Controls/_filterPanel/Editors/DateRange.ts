@@ -13,6 +13,7 @@ interface IDateRangeOptions extends IControlOptions {
  * @extends UI/Base:Control
  * @mixes Controls/dateRange:Selector
  * @author Мельникова Е.А.
+ * @demo Controls-demo/filterPanelPopup/Editors/DateRange/Index
  * @public
  */
 
