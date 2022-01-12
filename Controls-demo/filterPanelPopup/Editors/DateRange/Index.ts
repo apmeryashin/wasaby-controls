@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/filterPanelPopup/Editors/Date/Index';
+import * as Template from 'wml!Controls-demo/filterPanelPopup/Editors/DateRange/Index';
 import {Memory} from 'Types/source';
 
 export default class extends Control {
@@ -12,7 +12,7 @@ export default class extends Control {
             {
                 caption: 'Период',
                 name: 'dateEditor',
-                editorTemplateName: 'Controls/filterPanel:DateEditor',
+                editorTemplateName: 'Controls/filterPanel:DateRangeEditor',
                 resetValue: [],
                 viewMode: 'extended',
                 value: [],

@@ -1,31 +1,31 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import * as DateTemplate from 'wml!Controls/_filterPanel/Editors/Date';
+import * as DateRangeTemplate from 'wml!Controls/_filterPanel/Editors/DateRange';
 import 'css!Controls/filterPanel';
 
-interface IDateOptions extends IControlOptions {
+interface IDateRangeOptions extends IControlOptions {
     propertyValue: Date[];
 }
 
 /**
  * Контрол используют в качестве редактора для выбора даты или периода.
- * @class Controls/_filterPanel/Editors/Date
+ * @class Controls/_filterPanel/Editors/DateRange
  * @extends UI/Base:Control
  * @mixes Controls/dateRange:Selector
  * @author Мельникова Е.А.
  * @public
  */
 
-class DateEditor extends Control<IDateOptions> {
-    protected _template: TemplateFunction = DateTemplate;
+class DateRangeEditor extends Control<IDateRangeOptions> {
+    protected _template: TemplateFunction = DateRangeTemplate;
     protected _startValue: Date = null;
     protected _endValue: Date = null;
 
-    protected _beforeMount(options: IDateOptions): void {
+    protected _beforeMount(options: IDateRangeOptions): void {
         this._setDateRange(options.propertyValue);
     }
 
-    protected _beforeUpdate(options: IDateOptions): void {
+    protected _beforeUpdate(options: IDateRangeOptions): void {
         if (options.propertyValue !== this._options.propertyValue) {
             this._setDateRange(options.propertyValue);
         }
@@ -47,4 +47,4 @@ class DateEditor extends Control<IDateOptions> {
     }
 }
 
-export default DateEditor;
+export default DateRangeEditor;

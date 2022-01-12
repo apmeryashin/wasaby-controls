@@ -8,7 +8,7 @@
                     fontWeight="default"
                     scope="{{_options}}"
                     on:rangeChanged="_handleRangeChanged()"
-                    attr:class="controls-FilterViewPanel__dateEditor controls-FilterViewPanel__basicEditor-cloud
+                    attr:class="controls-FilterViewPanel__dateRangeEditor controls-FilterViewPanel__basicEditor-cloud
                                 controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}"/>
     </Controls.Container.Async>
 </ws:template>
