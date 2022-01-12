@@ -1,7 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/Dialog/Template/Dialog');
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Controller as ManagerController} from 'Controls/popup';
 import {getRoundClass} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
 import {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 import {Logger} from 'UI/Utils';
@@ -121,7 +120,6 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
             headingFontSize: '3xl',
             closeButtonVisible: true,
             closeButtonViewMode: 'linkButton',
-            closeButtonTransparent: true,
             borderRadius: 's',
             resizable: false
         };
