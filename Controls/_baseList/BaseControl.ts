@@ -408,9 +408,14 @@ const _private = {
         }
     },
 
-    resetScrollAfterLoad(self): void {
+    handleScrollAfterReload(self): void {
         if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
-            self._listVirtualScrollController.disableKeepScrollPosition();
+            /* Между запуском перезагрузки и отрисовкой записей могут быть не связанные с этим синхронизации.
+               BaseControl должен следить за тем, чтобы сохранить запланированное поведение до нужной перерисовки.
+             */
+            const scrollBehaviorOnReload = self._scrollBehaviorOnReload || 'reset';
+            self._scrollBehaviorOnReload = null;
+            self._listVirtualScrollController.setScrollBehaviourOnReset(scrollBehaviorOnReload);
         }
     },
 
@@ -2930,7 +2935,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _needBottomPadding = false;
     _noDataBeforeReload = false;
-
+    _scrollBehaviorOnReload = null;
     _scrollPageLocked = false;
     _bottomVisible: boolean = true;
 
@@ -3966,7 +3971,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (!this._shouldNotResetPagingCache) {
                         this._cachedPagingState = false;
                     }
-                    _private.resetScrollAfterLoad(this);
+                    _private.handleScrollAfterReload(this);
                     _private.tryLoadToDirectionAgain(this, null, newOptions);
                     _private.prepareFooter(this, newOptions, this._sourceController);
                 }
@@ -4359,9 +4364,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _beforeRender(): void {
-        this._listVirtualScrollController.beforeRenderListControl();
         const hasNotRenderedChanges = this._hasItemWithImageChanged ||
             this._indicatorsController.hasNotRenderedChanges();
+        this._listVirtualScrollController.beforeRenderListControl();
         if (hasNotRenderedChanges && !this._loadedBySourceController) {
             this._listVirtualScrollController.saveScrollPosition();
         }
@@ -4375,6 +4380,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._listVirtualScrollController.afterRenderListControl();
         this._hasItemWithImageChanged = false;
+
+        if (this._shouldNotifyOnDrawItems) {
+            this._listVirtualScrollController.setScrollBehaviourOnReset(null);
+        }
 
         // Обновлять additionalTriggersOffsets нужно только после отрисовки, чтобы триггер случайно не сработал
         this._listVirtualScrollController.setAdditionalTriggersOffsets(this._getAdditionalTriggersOffsets());
@@ -4654,7 +4663,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     reload(keepNavigation: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
 
         if (keepNavigation) {
-            this._listVirtualScrollController.enableKeepScrollPosition();
+            this._scrollBehaviorOnReload = 'keep';
+            this._listVirtualScrollController.setScrollBehaviourOnReset('keep');
             if (!sourceConfig) {
                 if (this._options.navigation?.source === 'position') {
                     const maxLimit = Math.max(this._options.navigation.sourceConfig.limit, this._items.getCount());
@@ -4667,6 +4677,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         navPageSize
                     );
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
+                }
+            } else {
+
+                // Если перезагружают на конкретной позиции, это значит, что нужно будет восстановить скролл.
+                if (this._options.navigation.source === 'position' &&
+                    this._options.navigation.sourceConfig.position !== sourceConfig.position) {
+                    this._scrollBehaviorOnReload = 'restore';
+                    this._listVirtualScrollController.setScrollBehaviourOnReset('restore');
                 }
             }
         } else {
@@ -5803,13 +5821,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _reCountCut(newExpanded: boolean): Promise<void> {
         if (newExpanded) {
             this._sourceController.setNavigation(undefined);
-            this._listVirtualScrollController.enableKeepScrollPosition();
+            this._scrollBehaviorOnReload = 'keep';
+            this._listVirtualScrollController.setScrollBehaviourOnReset('keep');
             return this._reload(this._options).then(() => {
                 _private.prepareFooter(this, this._options, this._sourceController);
             });
         } else {
             this._sourceController.setNavigation(this._options.navigation);
-            this._listVirtualScrollController.enableKeepScrollPosition();
+            this._scrollBehaviorOnReload = 'keep';
+            this._listVirtualScrollController.setScrollBehaviourOnReset('keep');
             return this._reload(this._options).then(() => {
                 _private.prepareFooter(this, this._options, this._sourceController);
             });

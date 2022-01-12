@@ -66,6 +66,7 @@ export interface IEdgeItemCalculatingParams {
 }
 
 export type IScrollParam = number | 'top' | 'bottom' | 'pageUp' | 'pageDown';
+export type IScrollBehaviour = null | 'keep' | 'reset' | 'restore';
 
 export interface IDoScrollParams {
     scrollParam: IScrollParam;
@@ -141,7 +142,7 @@ export abstract class AbstractListVirtualScrollController<
     protected _scrollController: ScrollController;
     private _itemSizeProperty: string;
     private _virtualScrollMode: TVirtualScrollMode;
-    private _keepScrollPosition: boolean = false;
+    private _scrollBehaviorOnReset: IScrollBehaviour = null;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     protected readonly _doScrollUtil: IDoScrollUtil;
@@ -185,7 +186,6 @@ export abstract class AbstractListVirtualScrollController<
      * @private
      */
     private _doScrollCompletedCallback: () => void;
-    private _shouldResetScrollPosition: boolean;
 
     constructor(options: TOptions) {
         this._initCollection(options.collection);
@@ -252,9 +252,10 @@ export abstract class AbstractListVirtualScrollController<
         // Как итог - контент мелькает. Поэтому сбрасываем скролл в 0 именно ДО отрисовки.
         // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=c3812a26-2301-4998-8283-bcea2751f741
         // Демка нативного поведения: https://jsfiddle.net/alex111089/rjuc7ey6/1/
-        if (this._shouldResetScrollPosition) {
-            this._shouldResetScrollPosition = false;
+        if (this._scrollBehaviorOnReset === 'reset') {
             this._doScrollUtil('top');
+        } else if (this._scrollBehaviorOnReset === 'restore') {
+            this.saveScrollPosition();
         }
     }
 
@@ -312,12 +313,8 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.scrollPositionChange(position);
     }
 
-    enableKeepScrollPosition(): void {
-        this._keepScrollPosition = true;
-    }
-
-    disableKeepScrollPosition(): void {
-        this._keepScrollPosition = false;
+    setScrollBehaviourOnReset(behaviour: IScrollBehaviour): void {
+        this._scrollBehaviorOnReset = behaviour;
     }
 
     contentResized(contentSize: number): void {
@@ -359,10 +356,10 @@ export abstract class AbstractListVirtualScrollController<
 
     resetItems(): void {
         // смотри комментарий в beforeRenderListControl
-        this._shouldResetScrollPosition = !this._keepScrollPosition;
+        this._scrollBehaviorOnReset = this._scrollBehaviorOnReset || 'reset';
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
-        const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
+        const startIndex = this._scrollBehaviorOnReset === 'keep' ? this._collection.getStartIndex() : 0;
         this._scrollController.resetItems(totalCount, startIndex);
     }
 
@@ -807,7 +804,7 @@ export abstract class AbstractListVirtualScrollController<
         this._collection = collection;
 
         if (this._scrollController && this._collection) {
-            const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
+            const startIndex = this._scrollBehaviorOnReset === 'keep' ? this._collection.getStartIndex() : 0;
             this._scrollController.resetItems(this._collection.getCount(), startIndex);
         }
     }
