@@ -5,5 +5,5 @@ interface IChangedFilters {
 }
 
 export default (filterDescriptionItem: IFilterItem, filter: object, changedFilters: IChangedFilters): boolean => {
-    return !changedFilters.amount.length;
+    return !changedFilters.amount?.length;
 };
