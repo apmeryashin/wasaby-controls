@@ -7,7 +7,7 @@
  * @includes PreviewTemplate Controls/_tile/interface/IPreviewTemplate
  * @includes RichTemplate Controls/_tile/interface/IRichTemplate
  * @public
- * @author Панихин К.А.
+ * @author Колесов В.А.
  */
 
 import {register} from 'Types/di';
