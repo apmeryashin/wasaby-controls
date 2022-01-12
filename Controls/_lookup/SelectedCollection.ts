@@ -75,9 +75,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       if (this._isShowCounter(itemsCount, newOptions.maxVisibleItems)) {
          this._counterWidth = newOptions._counterWidth ||
                               this._getCounterWidth(itemsCount, newOptions);
-      } else if (this._infoBoxStickyId) {
-         this._notify('closeInfoBox');
-         Sticky.closePopup(this._infoBoxStickyId);
+      } else {
+         this._closeInfobox();
       }
    }
 
@@ -91,6 +90,10 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
             this._forceUpdate();
          }
       }
+   }
+
+   protected _beforeUnmount(): void {
+      this._closeInfobox();
    }
 
    protected _itemClick(event: SyntheticEvent, item: Model): void {
@@ -116,7 +119,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       }
    }
 
-   protected _openInfoBox(): void {
+   protected _openInfoBox(): Promise<void> {
       const config: IStickyPopupOptions = {
          target: this._children.infoBoxLink,
          opener: this,
@@ -141,8 +144,10 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
          },
          eventHandlers: {
             onClose: () => {
-               this._notify('closeInfoBox', []);
-               this._infoBoxStickyId = null;
+               if (!this._destroyed) {
+                  this._notify('closeInfoBox', []);
+                  this._infoBoxStickyId = null;
+               }
             }
          }
       };
@@ -183,6 +188,13 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
    private _isShowCounter(itemsCount: number, maxVisibleItems: number): boolean {
       return itemsCount > maxVisibleItems;
+   }
+
+   private _closeInfobox(): void {
+      if (this._infoBoxStickyId) {
+         this._notify('closeInfoBox');
+         Sticky.closePopup(this._infoBoxStickyId);
+      }
    }
 
    static getDefaultOptions(): Object {
