@@ -1,5 +1,5 @@
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {detection} from 'Env/Env';
+import { TouchDetect } from 'Env/Touch';
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
@@ -40,7 +40,7 @@ export class CalmTimer {
      */
     start(delay?: number): void {
         this.stop();
-        if (!detection.isMobilePlatform) {
+        if (!TouchDetect.getInstance().isTouch()) {
             const args = arguments;
             this._openId = setTimeout(() => {
                 this._openId = null;
