@@ -17,8 +17,7 @@ export default class extends Control {
                 viewMode: 'extended',
                 value: [],
                 editorOptions: {
-                    extendedCaption: 'Дата',
-                    filterValue: true
+                    extendedCaption: 'Дата'
                 }
             }
         ];

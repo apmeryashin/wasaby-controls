@@ -1,10 +1,13 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as DateRangeTemplate from 'wml!Controls/_filterPanel/Editors/DateRange';
+import {loadSync} from 'WasabyLoader/ModulesLoader';
 import 'css!Controls/filterPanel';
 
 interface IDateRangeOptions extends IControlOptions {
     propertyValue: Date[];
+    extendedCaption?: string;
+    captionFormatter?: Function;
 }
 
 /**
@@ -42,9 +45,16 @@ class DateRangeEditor extends Control<IDateRangeOptions> {
     protected _handleRangeChanged(event: SyntheticEvent, startValue: Date, endValue: Date): void {
         const extendedValue = {
             value: [startValue, endValue],
+            textValue: this._getTextValue(startValue, endValue),
             viewMode: 'basic'
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
+    }
+
+    private _getTextValue(startValue: Date, endValue: Date): string {
+        const dateRangeLib = loadSync('Controls/dateRange');
+        const captionFormatter = this._options.captionFormatter || dateRangeLib.Utils.formatDateRangeCaption;
+        return captionFormatter(startValue, endValue, this._options.extendedCaption);
     }
 }
 
