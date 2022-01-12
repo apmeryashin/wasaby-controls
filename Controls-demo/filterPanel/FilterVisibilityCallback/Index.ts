@@ -49,7 +49,6 @@ export default class extends Control {
                 resetValue: [],
                 value: [],
                 caption: '',
-                expanderVisible: true,
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
                 filterVisibilityCallback: 'Controls-demo/filterPanel/FilterVisibilityCallback/FilterVisibilityCallback',
