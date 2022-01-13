@@ -12,7 +12,7 @@ import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions, TEditingObject, TCollapsedGroupsElement} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
 import {Move as MoveCommand} from 'Controls/listCommands';
-import {default as IPropertyGridItem} from './IProperty';
+import {default as IPropertyGridItem, IValidatorArgs} from './IProperty';
 import {
     EDIT_IN_PLACE_CANCEL,
     PROPERTY_GROUP_FIELD,
@@ -1047,7 +1047,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     startValidation({item}: IPropertyGridValidatorArguments): TValidatorResultElement[] | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
-        const validatorArgs = {
+        const validatorArgs: IValidatorArgs = {
             value: item.getPropertyValue(),
             item: item.getContents(),
             items: item.getOwner().getCollection(),
