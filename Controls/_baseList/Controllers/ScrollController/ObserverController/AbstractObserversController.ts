@@ -306,7 +306,7 @@ export abstract class AbstractObserversController {
 
     private _updateTriggers(): void {
         // нужно править юниты
-        if (!this._listContainer) {
+        if (!this._listContainer || !this._triggers || !this._triggers.length) {
             return;
         }
 
