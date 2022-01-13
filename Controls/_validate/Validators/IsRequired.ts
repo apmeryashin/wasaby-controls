@@ -1,7 +1,12 @@
-import rk = require('i18n!Controls');
-import cInstance = require('Core/core-instance');
+import * as rk from 'i18n!Controls';
+import * as cInstance from 'Core/core-instance';
+
+interface IArgs {
+   value: unknown;
+   doNotValidate: boolean;
+}
+
 /**
- *
  * Функция проверяет наличие значения в контейнере.
  * @class Controls/_validate/Validators/IsRequired
  * @public
@@ -38,9 +43,8 @@ import cInstance = require('Core/core-instance');
  *      </ws:content>
  * </Controls.validate:InputContainer>
  * </pre>
- *
  */
-function validate(args) {
+function validate(args: IArgs): boolean | string {
    // Если передали в аргументах doNotValidate, значит возвращаем true
    // (параметр нужен для опционального включения/отключения валидатора)
    if (args.doNotValidate) {
@@ -79,4 +83,4 @@ function validate(args) {
       true;
 }
 
-export = validate;
+export default validate;
