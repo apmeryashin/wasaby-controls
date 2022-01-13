@@ -13,5 +13,6 @@
             on:selectedKeyChanged="_subdirectoryKeyChanged()"
             keyProperty="{{ _options.keyProperty }}"
             displayProperty="{{ _options.displayProperty }}"
+            radioCircleVisible="{{false}}"
             direction="horizontal"/>
 </div>
