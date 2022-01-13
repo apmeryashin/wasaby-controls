@@ -1,6 +1,6 @@
 define('Controls-demo/Container/standardDemoScroll', [
     'UI/Base',
-    'tmpl!Controls-demo/Container/standardDemoScroll',
+    'wml!Controls-demo/Container/standardDemoScroll',
 ], function(Base, template) {
     'use strict';
 

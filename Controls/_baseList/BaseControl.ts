@@ -3296,15 +3296,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      * Замораживает hover подсветку строки для указанной записи
      */
     freezeHoveredItem(item: Model): void {
-        const isLoading = this._sourceController && this._sourceController.isLoading();
-        // freezeHoveredItem могут вызвать асинхронно и попасть между загрузками данных,
-        // когда запрашиваемый item уже отсутствует в коллекции.
-        // В таком случае нужно просто не запускать обработку.
-        if (!isLoading) {
-            const collectionItem = this._listViewModel.getItemBySourceItem(item);
-            if (!collectionItem) {
-                Logger.error('freezeHoveredItem(). Указанный item отсутствует в коллекции.', this);
-            }
+        const collectionItem = this._listViewModel.getItemBySourceItem(item);
+        if (!collectionItem) {
+            Logger.error('freezeHoveredItem(). Указанный item отсутствует в коллекции.', this);
+        } else {
             _private.freezeHoveredItem(this, collectionItem);
         }
     }
@@ -3451,6 +3446,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
             itemsQuerySelector: options.itemsSelector,
+            itemsContainerUniqueSelector: `.${this._getItemsContainerUniqueClass()}`,
 
             triggersVisibility: {
                 backward: !this._hasMoreData('up') ||

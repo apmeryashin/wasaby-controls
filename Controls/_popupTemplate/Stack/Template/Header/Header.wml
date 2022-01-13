@@ -35,7 +35,6 @@
                <Controls._popupTemplate.CloseButton attr:class="controls-StackTemplate__close_button"
                                                     attr:data-qa="controls-stack-Button__close"
                                                     viewMode="{{_options.closeButtonViewMode}}"
-                                                    transparent="{{_options.closeButtonTransparent}}"
                                                     on:click="close()"/>
             </ws:if>
          </div>
