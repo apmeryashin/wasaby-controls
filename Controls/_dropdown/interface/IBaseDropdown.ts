@@ -258,6 +258,25 @@ export default interface IBaseDropdown {
  */
 
 /**
+ * @event Происходит при клике на шаблон rightTemplate.
+ * @name Controls/_dropdown/interface/IBaseDropdown#rightTemplateClick
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} eventObject Выбранный элемент, содержащий rightTemplate.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:Button on:rightTemplateClick="_rightTemplateClick()"/>
+ * </pre>
+ *
+ * <pre class="brush: js">
+ * // TypeScript
+ * _rightTemplateClick(event, item) {
+ *    this._processRightTemplateClick(item)
+ * },
+ * </pre>
+ */
+
+/**
  * @event Происходит при открытии выпадающего списка.
  * @name Controls/_dropdown/interface/IBaseDropdown#dropDownOpen
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
