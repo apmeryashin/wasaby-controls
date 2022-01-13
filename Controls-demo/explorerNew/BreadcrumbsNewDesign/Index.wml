@@ -15,6 +15,7 @@
       columns="{{_columns}}"
       header="{{_gridHeader}}"
       source="{{_viewSource}}"
+      pathButtonSource="{{_pathButtonSource}}"
 
       viewMode="table"
       keyProperty="id"
