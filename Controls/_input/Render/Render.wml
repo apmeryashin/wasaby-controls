@@ -1,6 +1,4 @@
-<div class="controls-Render controls-Render
-            {{_border.top ? 'controls-Render_border-top' : 'controls-Render_border-top-empty'}}
-            {{_border.bottom ? 'controls-Render_border-bottom' : 'controls-Render_border-bottom-empty'}}
+<div class="controls-Render controls-Render{{_getBorderClass()}}
             controls-Render_background-{{ _options.contrastBackground ? 'contrast' : 'same' }}
             controls-Render_textAlign-{{_options.textAlign}}
             controls-Render{{_statePrefix}}_borderRadius

@@ -231,6 +231,14 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._setState(this._options);
     }
 
+    protected _getBorderClass(): string {
+        if (this._options.borderVisibility !== 'hidden') {
+            return ((this._border.top ? 'controls-Render_border-top' : 'controls-Render_border-top-empty') +
+                (this._border.bottom ? ' controls-Render_border-bottom' : ' controls-Render_border-bottom-empty'));
+        }
+        return '';
+    }
+
     private static notSupportFocusWithin(): boolean {
         return detection.isIE || (detection.isWinXP && detection.yandex);
     }

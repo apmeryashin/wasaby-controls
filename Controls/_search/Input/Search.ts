@@ -230,7 +230,7 @@ class Search extends Base {
 
     static getDefaultOptions(): object {
        const defaultOptions = Base.getDefaultOptions();
-       defaultOptions.borderVisibility = 'partial';
+       defaultOptions.borderVisibility = 'hidden';
        defaultOptions.contrastBackground = false;
        defaultOptions.placeholder = rk('Найти') + '...';
        defaultOptions.searchButtonVisible = true;
