@@ -92,10 +92,14 @@ export default class Base {
     protected _openPopup(config: IBasePopupOptions, popupController: string): void {
         const promise = this._getOpener()._openPopup(config, popupController);
         this._openPromise.push(promise);
-        promise.then(() => {
-            const index = this._openPromise.indexOf(promise);
-            if (index > -1) {
-                this._openPromise.splice(index, 1);
+        promise.then((res: string | Error) => {
+            if (!(res instanceof Error)) {
+                const index = this._openPromise.indexOf(promise);
+                if (index > -1) {
+                    this._openPromise.splice(index, 1);
+                }
+            } else {
+                this._hideIndicator();
             }
         });
         promise.catch(() => {
