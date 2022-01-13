@@ -43,14 +43,14 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
     // записи, и в который добавлена призрачная запись
     protected _items: T[];
 
-    private _startIndex: number;
-    // Массив, который содержит индексы всех скрытых записей
-    private _hiddenIndexes: number[] = [];
+    private _startDraggableItemIndex: number;
 
     constructor(options: IOptions<S, T>) {
         super();
+        this._isDisplayItem = this._isDisplayItem.bind(this);
         this._options = options;
-        this._startIndex = options.targetIndex;
+        this._startDraggableItemIndex = options.targetIndex;
+        options.display.addFilter(this._isDisplayItem, null, false);
     }
 
     get options(): IItemsStrategyOptions<S, T> {
@@ -108,8 +108,7 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
     }
 
     getDisplayIndex(index: number): number {
-        const displayIndex = this.source.getDisplayIndex(index);
-        return this._correctIndexByHiddenItems(displayIndex);
+        return this.source.getDisplayIndex(index);
     }
 
     getCollectionIndex(index: number): number {
@@ -138,6 +137,7 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
         // не нужно дестроить avatarItem, т.к. он попадает в Tree::onCollectionChange, а там все узлы
         // проверяются на изменения, чтобы эти изменения занотифаить. Задестроенный элемент нельзя проверить.
 
+        this._options.display.removeFilter(this._isDisplayItem, false);
         this._avatarItem = null;
         this._items = null;
         this._itemsOrder = null;
@@ -172,67 +172,28 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
         return Drag.sortItems<S, T>(items, {
             targetIndex: this._options.targetIndex,
             filterMap: this._options.display.getFilterMap(),
-            startIndex: this._startIndex,
+            startIndex: this._startDraggableItemIndex,
             avatarItem: this._avatarItem
         });
     }
 
-    protected _isDisplayItem(item, draggedItemsKeys): boolean {
-        const itemKey = item.getContents().getKey();
-        // признак того, что item входит в список перемещаемых записей
-        const isDraggableItem = this._options.draggedItemsKeys.includes(itemKey);
-
-        if (isDraggableItem) {
-            return false;
-        }
-
-        return true;
-    }
-
     protected _createItems(): T[] {
-        this._hiddenIndexes = [];
-        const filteredItems = this.source.items.filter((item, index) => {
-            if (!item.DraggableItem) {
-                return true;
-            }
-            const isDisplayItem = this._isDisplayItem(item, this._options.draggedItemsKeys);
-
-            if (!isDisplayItem) {
-                const itemKey = item.getContents().getKey();
-                // item, за который начали перемещение
-                const startingDraggableItem = this._options.draggableItem;
-
-                if (startingDraggableItem) {
-                    const startingDraggableItemKey = startingDraggableItem.getContents().getKey();
-
-                    // если item перемещается, но перемещение начали не за него,
-                    // то запоминаем его индекс в наборе скрытых элементов
-                    if (itemKey !== startingDraggableItemKey) {
-                        this._hiddenIndexes.push(index);
-                    }
-                }
-            }
-            return isDisplayItem;
-
-            /*const key = item.getContents().getKey();
-            const filtered = !this._options.draggedItemsKeys.includes(key);
-            const draggableItem = this._options.draggableItem;
-            // запоминаем индексы всех скрытых элементов
-            if (!filtered && (!draggableItem || draggableItem.getContents().getKey() !== key)) {
-                this._hiddenIndexes.push(index);
-            }
-            return filtered;*/
-        });
         // Если не передали перетаскиваемый элемент, то не нужно создавать "призрачный" элемент
         if (!this._avatarItem && this._options.draggableItem) {
             this._avatarItem = this._createAvatarItem();
         }
+
+        const items = this.source.items;
         if (this._avatarItem) {
-            this._startIndex = this._correctIndexByHiddenItems(this._startIndex);
-            filteredItems.splice(this._startIndex, 0, this._avatarItem);
+            // записи могло не быть в изначальном списке, если перемещение между списками.
+            const index = items.findIndex((it) => it.key === this._avatarItem.key);
+            if (index !== -1) {
+                this._startDraggableItemIndex = index;
+            }
+            // Заменяем оригинальный перетаскиваемый элемент на "призрачный" элемент
+            items.splice(this._startDraggableItemIndex, 1, this._avatarItem);
         }
-        this._options.targetIndex = this._correctIndexByHiddenItems(this._options.targetIndex);
-        return filteredItems;
+        return items;
     }
 
     protected _getProtoItem(): T {
@@ -256,11 +217,17 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
         return item;
     }
 
-    // Корректирует индекс исходя из скрытых элементов.
-    // Например, если начали днд нескольких первых записей, то нужно скорректировать startIndex
-    private _correctIndexByHiddenItems(index: number): number {
-        const hiddenIndexesLessIndex = this._hiddenIndexes.filter((it) => it < index);
-        return index - hiddenIndexesLessIndex.length;
+    protected _isDisplayItem(item: Model, index: number, collectionItem: CollectionItem): boolean {
+        if (!collectionItem.DraggableItem) {
+            return true;
+        }
+
+        const itemIsDraggable = this._options.draggedItemsKeys.includes(item.getKey());
+        // Проверяем contents, т.к. CollectionItem будет пересоздан(avatarItem)
+        const startDraggableItem = this._options.draggableItem;
+        const itemIsStartDraggableItem
+            = startDraggableItem && startDraggableItem.getContents() === collectionItem.getContents();
+        return !itemIsDraggable || itemIsStartDraggableItem;
     }
 
     static sortItems<S extends Model = Model, T extends CollectionItem<S> = CollectionItem<S>>(

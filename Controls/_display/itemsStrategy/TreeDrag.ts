@@ -2,6 +2,7 @@ import { Model } from 'Types/entity';
 import Drag from 'Controls/_display/itemsStrategy/Drag';
 import { IDragPosition } from 'Controls/_display/interface/IDragPosition';
 import TreeItem from 'Controls/_display/TreeItem';
+import {CrudEntityKey} from 'Types/source';
 
 /**
  * Стратегия для премещения элементов в дереве.
@@ -16,7 +17,14 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
       }
    }
 
-   protected _isDisplayParents(item, draggedItemsKeys): boolean {
+   protected _isDisplayItem(item: Model, index: number, collectionItem: TreeItem): boolean {
+      if (!super._isDisplayItem(item, index, collectionItem)) {
+         return false;
+      }
+      return this._isDisplayParents(collectionItem, this._options.draggedItemsKeys);
+   }
+
+   protected _isDisplayParents(item: TreeItem, draggedItemsKeys: CrudEntityKey[]): boolean {
       const itemParent = item.getParent();
 
       if (itemParent && !itemParent.isRoot()) {
@@ -29,13 +37,6 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
       }
 
       return true;
-   }
-
-   protected _isDisplayItem(item, draggedItemsKeys): boolean {
-      if (!super._isDisplayItem(item, draggedItemsKeys)) {
-         return false;
-      }
-      return this._isDisplayParents(item, draggedItemsKeys);
    }
 
    /**
