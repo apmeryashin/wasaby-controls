@@ -117,6 +117,11 @@ define('Controls/_decorator/Number', ['UI/Executor', 'Controls/_decorator/resour
  */
 
 /**
+ * @name Controls/_decorator/INumber#highlightedValue
+ * @cfg {string} Подсвечиваемый текст.
+ */
+
+/**
  * @name Controls/_decorator/INumber#fractionSize
  * @cfg {Number} Количество знаков после запятой. Диапазон от 0 до 20.
  * @demo Controls-demo/Decorator/Number/FractionSize/Index

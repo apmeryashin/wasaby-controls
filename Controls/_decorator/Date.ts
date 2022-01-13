@@ -92,3 +92,8 @@ export default DateDecorator;
  * @public
  * @author Сиряков М.К.
  */
+
+/**
+ * @name Controls/_decorator/IDate#highlightedValue
+ * @cfg {string} Подсвечиваемый текст.
+ */
