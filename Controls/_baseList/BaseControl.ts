@@ -4391,7 +4391,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         // save scroll
-        let directionToRestoreScroll = this._scrollController &&
+        // Заргузка записей может произойти во время цикла синхронизации.
+        // Тогда virtualScroll будет пересчитан, но изменения будут отображены только в следующием цикле.
+        // Если такое произошло, то откладываем восстановление скролла на следующий цикл.
+        // https://online.sbis.ru/opendoc.html?guid=9b41f3cf-4f93-4908-9922-78f0ead0671d
+        const actuallyHasChangesToDraw = this._itemsChanged && this._shouldNotifyOnDrawItems;
+        let directionToRestoreScroll = actuallyHasChangesToDraw && this._scrollController &&
             this._scrollController.getParamsToRestoreScrollPosition();
         if (!directionToRestoreScroll &&
             (
@@ -4483,7 +4488,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
 
             // restore scroll
-            let directionToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
+            // см. beforeRender
+            const actuallyHasChangesToDraw = this._itemsChanged && this._shouldNotifyOnDrawItems;
+            let directionToRestoreScroll = actuallyHasChangesToDraw &&
+                this._scrollController.getParamsToRestoreScrollPosition();
             if (!directionToRestoreScroll &&
                 (
                     this._hasItemWithImageChanged ||
