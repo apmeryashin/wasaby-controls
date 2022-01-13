@@ -1,6 +1,6 @@
 import {descriptor} from 'Types/entity';
 
-export type TBorderVisibility = 'visible' | 'partial' | 'hidden';
+export type TBorderVisibility = 'partial' | 'hidden';
 
 export interface IBorderVisibilityOptions {
     borderVisibility: TBorderVisibility;
@@ -15,7 +15,7 @@ export function getDefaultBorderVisibilityOptions(): Partial<IBorderVisibilityOp
 export function getOptionBorderVisibilityTypes(): object {
     return {
         borderVisibility: descriptor<string>(String).oneOf([
-            'visible', 'partial', 'hidden'
+            'partial', 'hidden'
         ])
     };
 }
@@ -33,7 +33,6 @@ export interface IBorderVisibility {
 
 /**
  * @typedef {String} Controls/_input/interface/IBorderVisibility/TBorderVisibility
- * @variant visible
  * @variant partial
  * @variant hidden
  */

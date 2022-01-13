@@ -1,10 +1,5 @@
 <div class="controlsDemo__wrapper">
    <div class="controlsDemo__cell">
-      <div class="controls-text-label">borderVisibility='visible'</div>
-      <Controls.input:Text attr:class="controlsDemo__input" borderVisibility="visible"
-                           placeholder="{{_placeholder}}"/>
-   </div>
-   <div class="controlsDemo__cell">
       <div class="controls-text-label">borderVisibility='partial'</div>
       <Controls.input:Text attr:class="controlsDemo__input" borderVisibility="partial"
                            placeholder="{{_placeholder}}"/>

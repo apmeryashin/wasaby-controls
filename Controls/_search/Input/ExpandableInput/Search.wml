@@ -23,7 +23,7 @@
                             textAlign="{{_options.textAlign}}"
                             tooltip="{{_options.tooltip}}"
                             borderStyle="{{_options.borderStyle}}"
-                            borderVisibility="{{_options.borderVisibility}}"
+                            borderVisibility="partial"
                             fontColorStyle="{{_options.fontColorStyle}}"
                             fontSize="{{_options.fontSize}}"
                             inlineHeight="{{_options.inlineHeight}}"
