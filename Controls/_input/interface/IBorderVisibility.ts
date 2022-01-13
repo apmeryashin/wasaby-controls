@@ -33,8 +33,8 @@ export interface IBorderVisibility {
 
 /**
  * @typedef {String} Controls/_input/interface/IBorderVisibility/TBorderVisibility
- * @variant partial
- * @variant hidden
+ * @variant partial Видна нижняя граница
+ * @variant hidden Границы не видны
  */
 /**
  * @name Controls/_input/interface/IBorderVisibility#borderVisibility
