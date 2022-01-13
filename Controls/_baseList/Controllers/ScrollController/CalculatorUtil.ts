@@ -154,7 +154,11 @@ function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): numb
         return 0;
     }
 
-    while (itemsSizesSum + itemsSizes[start].size < offsetDistance) {
+    // Проверка start < itemsSizes.length нужна, т.к. возможен кейс:
+    // диапазон [0, 10], добавляют записи в начало, диапазон становится [10,20](смотреть Calculator::addItems)
+    // и после этого вызывают смещение диапазона, т.к. текущий диапазон [10,20] мы тут выйдем за пределы списка.
+    // В этом кейсе не нужно скрывать записи сверху, т.к. они только были добавлены.
+    while (start < itemsSizes.length && itemsSizesSum + itemsSizes[start].size < offsetDistance) {
         itemsSizesSum += itemsSizes[start].size;
         segmentSize++;
         start++;
