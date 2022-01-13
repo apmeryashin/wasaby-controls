@@ -1,5 +1,6 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth550">
     <Controls.buttons:Button caption="Toggle multiselectVisibility" on:click="_onToggle()"/>
+    <Controls.buttons:Button caption="Change view mode" on:click="_changeViewMode()"/>
     <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}"
                                  keyProperty="id"
                                  parentProperty="parent">
