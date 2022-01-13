@@ -167,14 +167,31 @@ export default interface IMenuPopup {
  * @variant info.
  * @variant unaccented.
  */
-/**
- * @name Controls/_menu/interface/IMenuBase#backgroundStyle
- * @cfg {backgroundStyle} Цвет фона для меню.
- * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
- */
 
 /**
- * @name Controls/_menu/interface/IMenuBase#hoverBackgroundStyle
- * @cfg {backgroundStyle} Цвет фона для пункта меню при наведении.
- * @demo Controls-demo/Menu/Control/HoverBackgroundStyle/Index
+ * @name Controls/_menu/interface/IMenuPopup#closeButtonVisibility
+ * @cfg {Boolean} Видимость кнопки закрытия.
+ * @remark В значении true кнопка отображается.
+ * @demo Controls-demo/Menu/Popup/CloseButtonVisibility/Index
+ * @example
+ * <pre class="brush: html; highlight: [6]">
+ * <!-- WML -->
+ * <Controls.menu:Popup
+ *       keyProperty="key"
+ *       displayProperty="title"
+ *       source="{{_source}}"
+ *       closeButtonVisibility="{{false}}">
+ * </Controls.menu:Popup>
+ * </pre>
+ * <pre class="brush: js">
+ * // JS
+ * this._source = new Memory({
+ *    keyProperty: 'key',
+ *    data: [
+ *       {key: 1, title: 'Yaroslavl'},
+ *       {key: 2, title: 'Moscow'},
+ *       {key: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * </pre>
  */

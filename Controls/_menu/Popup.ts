@@ -29,6 +29,7 @@ type CancelableError = Error & { canceled?: boolean, isCanceled: boolean };
  * @mixes Controls/menu:IMenuPopup
  * @mixes Controls/menu:IMenuControl
  * @mixes Controls/menu:IMenuBase
+ * @mixes Controls/menu:Control
  * @implements Controls/interface:IHierarchy
  * @implements Controls/interface:IIconSize
  * @implements Controls/interface:IIconStyle
@@ -336,31 +337,4 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     };
 }
 
-/**
- * @name Controls/_menu/Popup#closeButtonVisibility
- * @cfg {Boolean} Видимость кнопки закрытия.
- * @remark В значении true кнопка отображается.
- * @demo Controls-demo/Menu/Popup/CloseButtonVisibility/Index
- * @example
- * <pre class="brush: html; highlight: [6]">
- * <!-- WML -->
- * <Controls.menu:Popup
- *       keyProperty="key"
- *       displayProperty="title"
- *       source="{{_source}}"
- *       closeButtonVisibility="{{false}}">
- * </Controls.menu:Popup>
- * </pre>
- * <pre class="brush: js">
- * // JS
- * this._source = new Memory({
- *    keyProperty: 'key',
- *    data: [
- *       {key: 1, title: 'Yaroslavl'},
- *       {key: 2, title: 'Moscow'},
- *       {key: 3, title: 'St-Petersburg'}
- *    ]
- * });
- * </pre>
- */
 export default Popup;
