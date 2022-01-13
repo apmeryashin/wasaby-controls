@@ -11,6 +11,7 @@
                             item="{{item}}"
                             readOnly="{{readOnly}}"
                             selected="{{selected}}"
+                            radioCircleVisible="{{radioCircleVisible}}"
                             displayProperty="caption">
                     <ws:contentTemplate>
                         <div>
