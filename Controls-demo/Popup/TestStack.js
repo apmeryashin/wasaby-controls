@@ -100,6 +100,15 @@ define('Controls-demo/Popup/TestStack',
             }
          },
 
+         _openStackInnerPanel: function () {
+            this._children.stack.open({
+               restrictiveContainer: '.controls-StackTemplate',
+               templateOptions: {
+                  width: '600px'
+               }
+            });
+         },
+
          _openStack: function() {
             this._children.stack.open({
                templateOptions: {
