@@ -1440,6 +1440,18 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
  */
 
 /**
+ * @name Controls/_menu/Control#backgroundStyle
+ * @cfg {backgroundStyle} Цвет фона для меню.
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
+ */
+
+/**
+ * @name Controls/_menu/Control#hoverBackgroundStyle
+ * @cfg {backgroundStyle} Цвет фона для пункта меню при наведении.
+ * @demo Controls-demo/Menu/Control/HoverBackgroundStyle/Index
+ */
+
+/**
  * @event Происходит при выборе элемента.
  * @name Controls/_menu/MenuControl#itemClick
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
