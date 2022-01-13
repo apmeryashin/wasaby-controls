@@ -45,7 +45,6 @@ export interface IListEditorOptions extends
     IHierarchyOptions {
     propertyValue: number[]|string[];
     additionalTextProperty: string;
-    additionalTextStyleProperty: string;
     imageProperty?: string;
     multiSelect: boolean;
     historyId?: string;
@@ -73,11 +72,6 @@ export interface IListEditorOptions extends
  * @name Controls/_filterPanel/Editors/List#additionalTextProperty
  * @cfg {String} Имя свойства, содержащего информацию об идентификаторе дополнительного столбца в списке.
  * @demo Controls-demo/filterPanel/ListEditor/AdditionalTextProperty/Index
- */
-
-/**
- * @name Controls/_filterPanel/Editors/List#additionalTextStyleProperty
- * @cfg {String} Цвет текста в дополнительном столбце списка.
  */
 
 /**
@@ -432,7 +426,6 @@ class ListEditor extends Control<IListEditorOptions> {
             keyProperty,
             imageProperty,
             additionalTextProperty,
-            additionalTextStyleProperty,
             markerStyle
         }: IListEditorOptions
     ): void {
@@ -457,7 +450,6 @@ class ListEditor extends Control<IListEditorOptions> {
             this._columns.push({
                 template: AdditionalColumnTemplate,
                 align: 'right',
-                style: additionalTextStyleProperty,
                 displayProperty: additionalTextProperty,
                 width: 'min-content'
             });
@@ -640,8 +632,7 @@ class ListEditor extends Control<IListEditorOptions> {
             style: 'default',
             itemPadding: {
                 right: 'm'
-            },
-            additionalTextStyleProperty: 'label'
+            }
         };
     }
 }
