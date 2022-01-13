@@ -115,6 +115,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
 
     triggersQuerySelector: string;
     itemsQuerySelector: string;
+    itemsContainerUniqueSelector: string;
 
     updateShadowsUtil?: IUpdateShadowsUtil;
     updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
@@ -141,6 +142,7 @@ export abstract class AbstractListVirtualScrollController<
     protected _scrollController: ScrollController;
     private _itemSizeProperty: string;
     private _virtualScrollMode: TVirtualScrollMode;
+    private readonly _itemsContainerUniqueSelector: string;
     private _keepScrollPosition: boolean = false;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
@@ -192,6 +194,7 @@ export abstract class AbstractListVirtualScrollController<
 
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
         this._virtualScrollMode = options.virtualScrollConfig.mode;
+        this._itemsContainerUniqueSelector = options.itemsContainerUniqueSelector;
 
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
@@ -216,7 +219,7 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     setItemsQuerySelector(newItemsQuerySelector: string): void {
-        const itemsQuerySelector = this._correctItemsSelector(newItemsQuerySelector, this._virtualScrollMode);
+        const itemsQuerySelector = this._getItemsSelector(newItemsQuerySelector, this._virtualScrollMode);
         this._scrollController.setItemsQuerySelector(itemsQuerySelector);
     }
 
@@ -488,7 +491,7 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     protected _getScrollControllerOptions(options: TOptions): IScrollControllerOptions {
-        const itemsQuerySelector = this._correctItemsSelector(
+        const itemsQuerySelector = this._getItemsSelector(
             options.itemsQuerySelector,
             options.virtualScrollConfig.mode
         );
@@ -770,10 +773,13 @@ export abstract class AbstractListVirtualScrollController<
      * @param virtualScrollMode
      * @private
      */
-    private _correctItemsSelector(selector: string, virtualScrollMode: TVirtualScrollMode): string {
+    private _getItemsSelector(selector: string, virtualScrollMode: TVirtualScrollMode): string {
         let correctedSelector = selector;
         if (virtualScrollMode === 'hide') {
             correctedSelector += `:not(${HIDDEN_ITEM_SELECTOR})`;
+        }
+        if (this._itemsContainerUniqueSelector) {
+            correctedSelector = `${this._itemsContainerUniqueSelector} > ${correctedSelector}`;
         }
         return correctedSelector;
     }
