@@ -81,6 +81,15 @@ define('Controls-demo/Popup/TestStack',
             this._stack = new popupLib.StackOpener();
             this._stack2 = new popupLib.StackOpener();
          },
+         _afterMount: function() {
+            const workspace = document.querySelector('.controls-PageTemplate');
+            const {x, y, width} = workspace.getBoundingClientRect();
+            popupLib.Controller.setContentData({
+               top: y,
+               left: x,
+               width: width - 54
+            });
+         },
          _beforeUnmount: function() {
             this._notify('hideIndicator', [this._indicatorId], { bubbling: true });
          },
@@ -99,7 +108,6 @@ define('Controls-demo/Popup/TestStack',
                this._openStack();
             }
          },
-
          _openStack: function() {
             this._children.stack.open({
                templateOptions: {
