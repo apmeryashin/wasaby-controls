@@ -1464,16 +1464,90 @@ const _private = {
                         }
                         break;
                     case IObservable.ACTION_ADD:
+                        /*
+                        При подгрузке в любую из сторон:
+                              сохранять скролл 100% надо и 100% надо пересчитать диапазон
+
+                        При добавлении в рекордсет(прикладник запушил, разворот узла, подгрузка в узел):
+                            =============ПРОСКРОЛЛЕН В НАЧАЛО===========
+                            [[[ НАЧАЛО ]]]
+                            1. был скролл ===  0, добавили запись перед текущей первой.
+                                    если virtualPageSize > (stop - start) - не сохранять скролл и дополнять диапазон.
+
+                            [[[ СЕРЕДИНА ]]]
+                            2. был скролл === 0, добавили запись после первой, перед последней.
+                                    если virtualPageSize > (stop - start) - дополняем диапазон
+
+                            [[[ КОНЕЦ ]]]
+                            3. был скролл === 0, добавили запись после текущей последней.
+                                    если virtualPageSize > (stop - start) - дополняем диапазон
+
+                            =============ПРОСКРОЛЛЕН В СЕРЕДИНУ===========
+                            [[[ НАЧАЛО ]]]
+                            4. был скролл === 100, добавили запись перед текущей первой.
+                                    если virtualPageSize > (stop - start) - дополняем диапазон
+                                        + нужно сохранять скролл (чтобы не прыгнуло, saveItem = 5)
+
+                            [[[ СЕРЕДИНА ]]]
+                            5. был скролл === 100, добавили запись после первой, но перед последней.
+                                    если virtualPageSize > (stop - start) - дополняем диапазон
+                                    ВСЕГДА нужно сохранять скролл
+                                        (чтобы не прыгнуло, ведь могут добавить перед первой видимой записью)
+
+                            [[[ КОНЕЦ ]]]
+                            6. был скролл === 100, добавили запись после последней.
+                                    если virtualPageSize > (stop - start) - дополняем диапазон
+
+                            =============ПРОСКРОЛЛЕН В КОНЕЦ===========
+                            [[[ НАЧАЛО ]]]
+                            7. был скролл === END, добавили запись перед текущей первой.
+                                    если virtualPageSize > (stop - start) - дополняем диапазон
+                                        + в случае дополнения нужно сохранять скролл
+
+                            [[[ СЕРЕДИНА ]]]
+                            8. был скролл === END, добавили запись после первой перед последней.
+                                    если virtualPageSize > (stop - start) - дополняем диапазон
+                                    ВСЕГДА нужно сохранять скролл
+
+                            [[[ КОНЕЦ ]]]
+                            9. был скролл === END, добавили запись после текущей последней.
+                                    Нужно всегда сдвигать диапазон, из-за этого записи в начале удалятся,
+                                    в конце добавятся и на скролл влиять не нужно
+                                    https://jsfiddle.net/alex111089/h25ba03s/
+                         */
                         const isTop = self._scrollTop === 0;
                         const isBottom = self._viewportSize + self._scrollTop === self._viewSize;
                         const addToStart = newItemsIndex <= self._listViewModel.getStartIndex();
                         const addToEnd = newItemsIndex >= self._listViewModel.getStopIndex();
-                        // Если записи были просто добавлены в рекордсет и список отскроллен в край,
-                        // то новые записи должны вытеснить старые, чтобы их было сразу видно.
-                        const addItemsMode = self._addItemsByLoadToDirection ||
-                            addToStart && !isTop ||
-                            addToEnd && !isBottom ? 'fixed' : 'unfixed';
-                        self._listVirtualScrollController.addItems(newItemsIndex, newItems.length, addItemsMode);
+                        const addToMiddle = !addToStart && !addToEnd;
+                        const virtualPageSize = self._options.virtualScrollConfig.pageSize;
+                        const virtualPageIsFilled = virtualPageSize && virtualPageSize ===
+                            self._listViewModel.getStopIndex() - self._listViewModel.getStartIndex();
+                        let scrollMode;
+                        let calcMode;
+                        if (self._addItemsByLoadToDirection) {
+                            scrollMode = 'fixed';
+                            calcMode = 'shift';
+                        } else if (isTop) {
+                            scrollMode = 'unfixed';
+                            calcMode = virtualPageIsFilled ? 'nothing' : 'extend';
+                        } else if (isBottom) {
+                            scrollMode = addToStart && !virtualPageIsFilled || addToMiddle ? 'fixed' : 'unfixed';
+                            if (addToEnd) {
+                                calcMode = 'shift';
+                            } else {
+                                calcMode = !virtualPageIsFilled ? 'extend' : 'nothing';
+                            }
+                        } else {
+                            // список проскроллен не в начало и не в конец
+                            // TODO надо разбираться с фиксацией если разворачиваем узел, нужно
+                            //  сохранять позицию относительно развернутого узла.
+                            scrollMode = addToStart && !virtualPageIsFilled || addToMiddle ? 'fixed' : 'unfixed';
+                            calcMode = !virtualPageIsFilled ? 'extend' : 'nothing';
+                        }
+                        self._listVirtualScrollController.addItems(
+                            newItemsIndex, newItems.length, scrollMode, calcMode
+                        );
                         break;
                     case IObservable.ACTION_REMOVE:
                         self._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);

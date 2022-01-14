@@ -34,16 +34,25 @@ export interface IIndexesChangedParams {
     range: IItemsRange;
     oldRange: IItemsRange;
     oldPlaceholders: IPlaceholders;
-    mode: IShiftRangeMode;
+    mode: IScrollMode;
 }
 
 /**
- * Режим добавления элементов
- * @param fixed Стартовая запись зафиксирована, после смещения диапазона она сохраняет свою позицию.
- * @param unfixed Стартовая запись свободна, после смещения диапазона она будет смещена из-за добавленных записей
- * в сторону противоположную направлению смещения.
+ * Режим работы скролла
+ * @param fixed DOM-элемент первой видимой записи должен сохранять свою позицию
+ * относительно viewPort после смещения диапазона.
+ * @param unfixed DOM-элемент первой видимой записи не сохраняет свою позицию
+ * относительно viewPort после смещения диапазона, а сдвигается по нативным правилам.
  */
-export type IShiftRangeMode = 'unfixed'|'fixed';
+export type IScrollMode = 'fixed'|'unfixed';
+
+/**
+ * Режим пересчета диапазона
+ * @param shift Диапазон смещается (пересчитывается и startIndex и stopIndex)
+ * @param extend Диапазон расширяется (пересчитывается или startIndex или stopIndex, зависит от направления)
+ * @param nothing Диапазон не пересчитывается
+ */
+export type ICalcMode = 'shift'|'extend'|'nothing';
 
 export interface IActiveElementIndex {
     activeElementIndex: number;
@@ -279,13 +288,14 @@ export class ScrollController {
      * Обрабатывает добавление элементов в коллекцию.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
-     * @param mode Режим добавления записей
+     * @param scrollMode Режим скролла
+     * @param calcMode Режим пересчета записей
      */
-    addItems(position: number, count: number, mode: IShiftRangeMode): void {
+    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
         const itemsSizes = this._itemsSizesController.addItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        const result = this._calculator.addItems(position, count);
+        const result = this._calculator.addItems(position, count, calcMode);
 
         // При добавлении записей в список нужно добавить оффсет триггеру,
         // чтобы далее загрузка не требовала подскролла до ромашки
@@ -294,7 +304,7 @@ export class ScrollController {
             : this._observersController.setForwardTriggerPosition('offset');
         this._calculator.setTriggerOffsets(triggersOffsets);
 
-        this._processCalculatorResult(result, mode);
+        this._processCalculatorResult(result, scrollMode);
     }
 
     /**
@@ -471,10 +481,10 @@ export class ScrollController {
      * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback.
      * Также, по необходимости, обеспечивает вызов activeElementChangedCallback.
      * @param {ICalculatorResult} result
-     * @param mode
+     * @param scrollMode
      * @private
      */
-    private _processCalculatorResult(result: ICalculatorResult, mode: IShiftRangeMode): void {
+    private _processCalculatorResult(result: ICalculatorResult, scrollMode: IScrollMode): void {
         if (result.placeholdersChanged) {
             this._placeholdersChangedCallback({
                 backward: result.backwardPlaceholderSize,
@@ -499,7 +509,7 @@ export class ScrollController {
                 oldRange: result.oldRange,
                 oldPlaceholders: result.oldPlaceholders,
                 shiftDirection: result.shiftDirection,
-                mode
+                mode: scrollMode
             });
         }
     }

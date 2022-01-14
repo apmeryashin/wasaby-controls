@@ -22,7 +22,8 @@ import {
     IPlaceholders,
     ScrollController,
     IScrollControllerOptions,
-    IShiftRangeMode
+    IScrollMode,
+    ICalcMode
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {
     AbstractItemsSizesController,
@@ -343,8 +344,8 @@ export abstract class AbstractListVirtualScrollController<
 
     // region CollectionChanges
 
-    addItems(position: number, count: number, mode: IShiftRangeMode): void {
-        this._scrollController.addItems(position, count, mode);
+    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
+        this._scrollController.addItems(position, count, scrollMode, calcMode);
     }
 
     moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): void {

@@ -18,7 +18,8 @@ import type {
     IHasItemsOutRange,
     IIndexesChangedParams,
     IItemsRange,
-    IPlaceholders
+    IPlaceholders,
+    ICalcMode
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import type { IEdgeItemCalculatingParams } from 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 import { isEqual } from 'Types/object';
@@ -418,8 +419,9 @@ export class Calculator {
      * При необходимости смещает виртуальный диапазон.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
+     * @param calcMode Режим пересчета диапазона отображаемых записей
      */
-    addItems(position: number, count: number): ICalculatorResult {
+    addItems(position: number, count: number, calcMode: ICalcMode): ICalculatorResult {
         const oldState = this._getState();
         this._totalCount += count;
         const direction = this._calcAddDirection(position, count);
@@ -433,6 +435,7 @@ export class Calculator {
         this._range = shiftRangeBySegment({
             currentRange: this._range,
             direction,
+            calcMode,
             pageSize: this._virtualScrollConfig.pageSize,
             segmentSize: this._getSegmentSize(),
             totalCount: this._totalCount,
