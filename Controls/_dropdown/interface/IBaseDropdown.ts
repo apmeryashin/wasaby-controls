@@ -215,12 +215,12 @@ export default interface IBaseDropdown {
 
 /**
  * @typedef {String} backgroundStyle
- * @variant primary.
- * @variant secondary.
- * @variant danger.
- * @variant warning.
- * @variant info.
- * @variant unaccented.
+ * @variant primary
+ * @variant secondary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant unaccented
  */
 
 /**
