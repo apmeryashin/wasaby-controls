@@ -35,6 +35,7 @@
     "Controls/sizeUtils",
     "Controls/Store",
     "Controls/dataSource",
+    "Controls/Context/WorkByKeyboardContext",
     "Controls/themes"
   ],
   "includePackages": [
