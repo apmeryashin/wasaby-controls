@@ -118,7 +118,7 @@
                        additionalProperty="{{_options.additionalProperty}}"
                        groupingKeyCallback="{{_options.groupingKeyCallback}}"
                        selectorDialogResult="{{_options.selectorDialogResult}}"
-                       itemPadding="{{_itemPadding}}"
+                       itemPadding="{{_options.itemPadding}}"
                        dataLoadCallback="{{_dataLoadCallback}}"
                        dataLoadErrback="{{_dataLoadErrback}}"
                        headingIcon="{{_headingIcon}}"

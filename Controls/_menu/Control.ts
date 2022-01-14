@@ -884,8 +884,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             unique: true,
             topPadding: 'null',
             bottomPadding: 'menu-default',
-            leftPadding: this._getLeftPadding(options, items),
-            rightPadding: this._getRightPadding(options, items)
+            leftPadding: this._getLeftPadding(options),
+            rightPadding: this._getRightPadding(options)
         };
         let listModel: Search<Model> | Collection<Model>;
 
@@ -969,23 +969,17 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return DiCreate(model, config);
     }
 
-    private _getLeftPadding(options: IMenuControlOptions, items: RecordSet): string {
+    private _getLeftPadding(options: IMenuControlOptions): string {
         let leftSpacing = 's';
         if (options.itemPadding.left) {
             leftSpacing = options.itemPadding.left;
-        } else if (options.itemAlign === 'left' && MenuControl._hasNodesAtLevel(items, options)) {
-            leftSpacing = 'menu-expander';
         }
         return leftSpacing;
     }
 
-    private _getRightPadding(options: IMenuControlOptions, items: RecordSet): string {
+    private _getRightPadding(options: IMenuControlOptions): string {
         let rightSpacing = 's';
-        if (!options.itemPadding.right) {
-            if (options.itemAlign !== 'left' && MenuControl._hasNodesAtLevel(items, options)) {
-                rightSpacing = 'menu-expander';
-            }
-        } else {
+        if (options.itemPadding.right) {
             rightSpacing = options.itemPadding.right;
             if (options.multiSelect) {
                 rightSpacing += '-multiSelect';
@@ -1188,7 +1182,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 headerContentTemplate: null,
                 additionalProperty: null,
                 searchParam: null,
-                itemPadding: null,
+                itemPadding: undefined,
                 draggable: false,
                 source,
                 sourceController: !source ? this._options.sourceController : undefined,
