@@ -674,6 +674,7 @@ define(
                   width: 123
                };
                DialogController._getPopupSizes = () => newPopupSizes;
+               DialogController._getRestrictiveContainerSize = () => windowData;
                DialogController.resizeInner(item, {
                   style: {},
                   querySelectorAll: () => []
@@ -687,6 +688,7 @@ define(
                   horizontal: HORIZONTAL_DIRECTION.LEFT,
                   vertical: VERTICAL_DIRECTION.TOP
                };
+               item.fixPosition = false;
                DialogController._getRestrictiveContainerSize = () => windowData;
                let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
                assert.equal(position.right, 860);
@@ -725,6 +727,7 @@ define(
                   width: 200
                };
                DialogController._getPopupSizes = () => newPopupSizes;
+               DialogController._getRestrictiveContainerSize = () => window;
                DialogController.resizeInner(popupItem, {
                   style: {},
                   querySelectorAll: () => []
@@ -791,6 +794,29 @@ define(
                item.position = {};
                item.fixPosition = false;
                item.startPosition = null;
+            });
+
+            it('inner resize should update position for popup with resizeDirection', () => {
+               item.popupOptions.resizeDirection = {
+                  horizontal: HORIZONTAL_DIRECTION.RIGHT,
+                  vertical: VERTICAL_DIRECTION.BOTTOM
+               };
+               const originGetPopupSizes = DialogController._getPopupSizes;
+               const newPopupSizes = {
+                  height: 111,
+                  width: 111
+               };
+               sinon.stub(DialogController, '_getRestrictiveContainerSize').returns(window);
+               sinon.stub(DialogController, '_getPopupSizes').returns(newPopupSizes);
+               sinon.stub(DialogStrategy, 'getPosition');
+               const result = DialogController.resizeInner(item, {
+                  style: {},
+                  querySelectorAll: () => []
+               });
+               DialogController._getPopupSizes = originGetPopupSizes;
+               assert.isTrue(result);
+               sinon.assert.calledOnce(DialogStrategy.getPosition);
+               sinon.restore();
             });
          });
       });
