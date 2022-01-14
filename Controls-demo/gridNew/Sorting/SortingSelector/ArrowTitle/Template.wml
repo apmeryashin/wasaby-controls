@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
         <div class="controls-text-label">svg icons</div>
-        <Controls.grid:SortingSelector
+        <Controls.sorting:Selector
                 sortingParams="{{_sortingParams}}"
                 bind:value="_sorting"/>
     </div>
