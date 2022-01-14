@@ -121,7 +121,7 @@ export default class Composer<S, T> extends mixin<
     }
 
     /**
-     * Обновляет записываемые свойства стратегии и соответствующие им опции, не пересобирая компоновщик.
+     * Обновляет опции стратегии.
      * @param Module
      * @param options
      */
@@ -130,15 +130,8 @@ export default class Composer<S, T> extends mixin<
         if (index === -1) {
             return;
         }
-
-        const instance = this._getInstance(index);
-        Object.keys(options).forEach((key) => {
-            const property = Object.getOwnPropertyDescriptor(instance, key);
-            if (property && property.writable) {
-                this._options[index][key] = options[key];
-                instance[key] = options[key];
-            }
-        });
+        this._options[index] = {...this._options[index], ...options};
+        this._reBuild(index);
 
         return this;
     }
