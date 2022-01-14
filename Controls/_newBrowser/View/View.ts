@@ -377,7 +377,7 @@ export default class View extends Control<IOptions, IReceivedState> {
         clickEvent: unknown,
         columnIndex?: number
     ) {
-        return this._notify('itemClick', [item, clickEvent, columnIndex, 'master']);
+        return this._notify('masterItemClick', [item, clickEvent, columnIndex]);
     }
 
     protected _onDetailItemClick(
@@ -386,7 +386,7 @@ export default class View extends Control<IOptions, IReceivedState> {
         clickEvent: unknown,
         columnIndex?: number
     ): unknown {
-        return this._notify('itemClick', [item, clickEvent, columnIndex, 'detail']);
+        return this._notify('detailItemClick', [item, clickEvent, columnIndex]);
     }
 
     protected _createTemplateControllers(cfg: IBrowserViewConfig, options: IOptions): void {
