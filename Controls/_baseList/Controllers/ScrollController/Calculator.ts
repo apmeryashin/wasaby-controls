@@ -463,22 +463,6 @@ export class Calculator {
     }
 
     /**
-     * Обрабатывает перемещение элементов внутри коллекции.
-     * @param addPosition Индекс элемента, после которого вставили записи
-     * @param addCount Кол-во добавляемых элементов
-     * @param removePosition Индекс элемента откуда переместили записи
-     * @param removeCount Кол-во удаляемых элементов
-     */
-    moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): ICalculatorResult {
-        const oldState = this._getState();
-
-        const resultAdd = this.addItems(addPosition, addCount);
-        this.removeItems(removePosition, removeCount);
-
-        return this._getRangeChangeResult(oldState, resultAdd.shiftDirection);
-    }
-
-    /**
      * Обрабатывает удаление элементов из коллекции.
      * Смещает соответственно виртуальный диапазон.
      * @param position Индекс первого удаленного элемента.
