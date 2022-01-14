@@ -4,4 +4,5 @@
         fontWeight="{{fontWeight}}"
         title="{{title}}"
         value="{{value}}"
+        highlightedValue="{{searchValue}}"
         scope="{{displayTypeOptions}}"/>

@@ -76,6 +76,10 @@ class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IF
     }
 
     private _formatDate(options: IDateOptions): string {
+        if (!options.value) {
+            return '';
+        }
+
         return date(options.value, options.format, options.timeZoneOffset);
     }
 }
@@ -87,4 +91,9 @@ export default DateDecorator;
  * @interface Controls/_decorator/IDate
  * @public
  * @author Сиряков М.К.
+ */
+
+/**
+ * @name Controls/_decorator/IDate#highlightedValue
+ * @cfg {string} Подсвечиваемый текст.
  */

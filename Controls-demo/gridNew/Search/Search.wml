@@ -1,7 +1,11 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__inline-flex">
-        <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="key" bind:filter="_filter"
-                                     searchParam="country" minSearchLength="{{3}}">
+        <Controls.browser:Browser
+           source="{{_viewSource}}"
+           keyProperty="key"
+           searchParam="country"
+           minSearchLength="{{3}}"
+        >
             <div class="ws-fragment">
                 <Controls.search:InputContainer>
                     <Controls.search:Input/>
@@ -13,6 +17,6 @@
                             columns="{{_columns}}"/>
                 </Controls.list:Container>
             </div>
-        </Controls.list:DataContainer>
+        </Controls.browser:Browser>
     </div>
 </div>
