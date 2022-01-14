@@ -1,42 +1,42 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
     <div class="controlsDemo__cell">
         <div class="controls-text-label">fontColorStyle=link</div>
-        <Controls.grid:SortingSelector
+        <Controls.sorting:Selector
                 sortingParams="{{_sortingParams}}"
                 bind:value="_sorting"
                 fontColorStyle="link"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">fontColorStyle=success</div>
-        <Controls.grid:SortingSelector
+        <Controls.sorting:Selector
                 sortingParams="{{_sortingParams}}"
                 bind:value="_sorting"
                 fontColorStyle="success"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">fontColorStyle=warning</div>
-        <Controls.grid:SortingSelector
+        <Controls.sorting:Selector
                 sortingParams="{{_sortingParams}}"
                 bind:value="_sorting"
                 fontColorStyle="warning"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">fontColorStyle=danger</div>
-        <Controls.grid:SortingSelector
+        <Controls.sorting:Selector
                 sortingParams="{{_sortingParams}}"
                 bind:value="_sorting"
                 fontColorStyle="danger"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">fontColorStyle=unaccented</div>
-        <Controls.grid:SortingSelector
+        <Controls.sorting:Selector
                 sortingParams="{{_sortingParams}}"
                 bind:value="_sorting"
                 fontColorStyle="unaccented"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">fontColorStyle=label</div>
-        <Controls.grid:SortingSelector
+        <Controls.sorting:Selector
                 sortingParams="{{_sortingParams}}"
                 bind:value="_sorting"
                 fontColorStyle="label"/>
