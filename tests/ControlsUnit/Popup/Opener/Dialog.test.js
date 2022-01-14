@@ -727,6 +727,7 @@ define(
                   width: 200
                };
                DialogController._getPopupSizes = () => newPopupSizes;
+               DialogController._getRestrictiveContainerSize = () => window;
                DialogController.resizeInner(popupItem, {
                   style: {},
                   querySelectorAll: () => []
@@ -739,28 +740,6 @@ define(
                let position = DialogStrategy.getPosition(window, newPopupSizes, popupItem);
                assert.equal(position.minHeight, newPopupSizes.height);
                DialogController._getPopupSizes = originGetPopupSizes;
-            });
-
-            it('inner resize should update position for popup with resizeDirection', () => {
-               item.popupOptions.resizeDirection = {
-                  horizontal: HORIZONTAL_DIRECTION.RIGHT,
-                  vertical: VERTICAL_DIRECTION.BOTTOM
-               };
-               const originGetPopupSizes = DialogController._getPopupSizes;
-               const newPopupSizes = {
-                  height: 111,
-                  width: 111
-               };
-               sinon.stub(DialogController, '_getPopupSizes').returns(newPopupSizes);
-               sinon.stub(DialogStrategy, 'getPosition');
-               const result = DialogController.resizeInner(item, {
-                  style: {},
-                  querySelectorAll: () => []
-               });
-               DialogController._getPopupSizes = originGetPopupSizes;
-               assert.isTrue(result);
-               sinon.assert.calledOnce(DialogStrategy.getPosition);
-               sinon.restore();
             });
 
             it('min height that fixed by inner resize can\'t be more than window height', () => {
@@ -815,6 +794,29 @@ define(
                item.position = {};
                item.fixPosition = false;
                item.startPosition = null;
+            });
+
+            it('inner resize should update position for popup with resizeDirection', () => {
+               item.popupOptions.resizeDirection = {
+                  horizontal: HORIZONTAL_DIRECTION.RIGHT,
+                  vertical: VERTICAL_DIRECTION.BOTTOM
+               };
+               const originGetPopupSizes = DialogController._getPopupSizes;
+               const newPopupSizes = {
+                  height: 111,
+                  width: 111
+               };
+               sinon.stub(DialogController, '_getRestrictiveContainerSize').returns(window);
+               sinon.stub(DialogController, '_getPopupSizes').returns(newPopupSizes);
+               sinon.stub(DialogStrategy, 'getPosition');
+               const result = DialogController.resizeInner(item, {
+                  style: {},
+                  querySelectorAll: () => []
+               });
+               DialogController._getPopupSizes = originGetPopupSizes;
+               assert.isTrue(result);
+               sinon.assert.calledOnce(DialogStrategy.getPosition);
+               sinon.restore();
             });
          });
       });
