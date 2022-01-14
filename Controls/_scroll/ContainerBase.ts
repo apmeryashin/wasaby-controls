@@ -662,7 +662,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     _resizeObserverCallback(entries: object[]): void {
-        if (isHidden(this._container)) {
+        if (isHidden(this._container) || this._container.closest('.controls-Popup__hidden')) {
             return;
         }
         const newState: IScrollState = {};
