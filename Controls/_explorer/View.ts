@@ -12,7 +12,7 @@ import {descriptor, Model} from 'Types/entity';
 import {IItemPadding, IList, IReloadItemOptions, ListView} from 'Controls/list';
 import {SingleColumnStrategy, MultiColumnStrategy} from 'Controls/marker';
 import {isEqual} from 'Types/object';
-import {CrudEntityKey, DataSet, LOCAL_MOVE_POSITION} from 'Types/source';
+import {CrudEntityKey, DataSet, ICrudPlus, LOCAL_MOVE_POSITION} from 'Types/source';
 import {
     IBasePageSourceConfig, IBaseSourceConfig,
     IDraggableOptions, IFilterOptions,
@@ -144,6 +144,11 @@ interface IExplorerOptions
      * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
      */
     backButtonTextTransform?: TTextTransform;
+    /**
+     * Источник данных для кнопки навигационного меню, которая отображается
+     * в блоке с хлебными крошками.
+     */
+    pathButtonSource?: ICrudPlus;
 }
 
 interface IMarkedKeysStore {
@@ -1559,6 +1564,13 @@ Object.defineProperty(Explorer, 'defaultProps', {
  *
  * * row - все ячейки строки с хлебными крошками объединяются в одну ячейку в которой выводятся хлебные крошки.
  * * cell - ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек строки с хлебными крошками.
+ */
+
+/**
+ * @name Controls/_explorer/View#pathButtonSource
+ * @cfg {Types/source:ICrudPlus} Источник данных для кнопки навигационного меню, которая отображается в блоке с хлебными крошками.
+ * По умолчанию для навигационного меню используется тот же источник данных, который был передан для работы со списком.
+ * В случае если query-метод основного источника данных слишком тяжелый то для кнопки навигационного меню рекомендуется использовать отдельный источник с облегченным query-методом.
  */
 
 /**

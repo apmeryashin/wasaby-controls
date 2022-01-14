@@ -16,7 +16,7 @@
                         backButtonBeforeCaptionTemplate="{{_options.backButtonBeforeCaptionTemplate}}"
 
                         pathButtonCaption="{{_options.breadcrumbsPathButtonCaption}}"
-                        pathButtonSource="{{_options.source}}"
+                        pathButtonSource="{{_options.pathButtonSource || _options.source}}"
                         pathButtonFilter="{{_options.filter}}"
                         pathButtonSorting="{{_options.sorting}}"
                         pathButtonNavigation="{{_options.navigation}}"
