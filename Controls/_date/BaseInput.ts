@@ -135,7 +135,7 @@ class BaseInput extends Control<IDateBaseOptions> {
 
     private _valueChanged(value: [Date, string]): void {
         const dateValue = value[0];
-        if (dateUtils.isValidDate(dateValue)) {
+        if (dateUtils.isValidDate(dateValue) || dateValue === null) {
             this._notify('valueChanged', [...value]);
         }
         this._updateValidators();
