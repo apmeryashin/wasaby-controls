@@ -1383,7 +1383,9 @@ describe('Controls/list_clean/BaseControl', () => {
                 newSourceControllerOptions.source = new Memory();
 
                 baseControl._beforeUpdate(newSourceControllerOptions);
-                assert.isFalse(baseControl._resetScrollAfterReload);
+                await baseControlOptions.sourceController.reload();
+                baseControl._beforeUpdate(newSourceControllerOptions);
+                assert.isFalse(baseControl._scrollBehaviorOnReload === 'reset');
             });
 
             it('_beforeMount without source and sourceController, then _beforeUpdate with sourceController', async () => {

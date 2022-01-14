@@ -2104,7 +2104,7 @@ define([
 
          it('before mounting', async function() {
             await baseControl._reload(cfg);
-            assert.isFalse(baseControl._resetScrollAfterReload);
+            assert.isFalse(baseControl._scrollBehaviorOnReload === 'reset');
             scrollContainer.clientHeight = 100;
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
@@ -2112,7 +2112,7 @@ define([
          it('after scroll to end', async function() {
             baseControl._wasScrollToEnd = true;
             await baseControl._reload(cfg);
-            assert.isFalse(baseControl._resetScrollAfterReload);
+            assert.isFalse(baseControl._scrollBehaviorOnReload === 'reset');
             scrollContainer.clientHeight = 100;
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
@@ -2120,7 +2120,7 @@ define([
          it('without scroll', async function() {
             baseControl._isScrollShown = false;
             await baseControl._reload(cfg);
-            assert.isFalse(baseControl._resetScrollAfterReload);
+            assert.isFalse(baseControl._scrollBehaviorOnReload === 'reset');
             await baseControl._afterUpdate(cfg);
             baseControl._afterRender();
             assert.isFalse(doScrollNotified);
@@ -2132,7 +2132,7 @@ define([
             baseControl._afterRender();
             assert.isFalse(doScrollNotified);
             baseControl._shouldNotifyOnDrawItems = true;
-            baseControl._resetScrollAfterReload = true;
+            baseControl._scrollBehaviorOnReload = 'reset';
             await baseControl._beforeRender(cfg);
             assert.isTrue(doScrollNotified);
          });

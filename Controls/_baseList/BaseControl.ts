@@ -415,13 +415,12 @@ const _private = {
         }
     },
 
-    resetScrollAfterLoad(self): void {
+    handleScrollAfterReload(self): void {
         if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
             // При полной перезагрузке данных нужно сбросить состояние скролла
             // и вернуться к началу списка, иначе браузер будет пытаться восстановить
             // scrollTop, догружая новые записи после сброса.
-            self._resetScrollAfterReload = !self._keepScrollAfterReload;
-            self._keepScrollAfterReload = false;
+            self._scrollBehaviorOnReload = self._scrollBehaviorOnReload || 'reset';
         }
     },
 
@@ -1479,7 +1478,7 @@ const _private = {
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
                             break;
                         case IObservable.ACTION_RESET:
-                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload);
+                            result = self._scrollController.handleResetItems(self._scrollBehaviorOnReload === 'keep');
                             break;
                     }
                     if (result) {
@@ -2341,7 +2340,7 @@ const _private = {
                 // Скроллить к активному элементу нужно только, когда в опции передали activeElement
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
-                    self._keepScrollAfterReload = true;
+                    self._scrollBehaviorOnReload = 'keep';
 
                     // FIXME: https://online.sbis.ru/opendoc.html?guid=35665533-5f26-432e-9b22-795ac40e65ff
                     const lastAction = self._options.fix1184259069 && self._doAfterDrawItems;
@@ -3072,8 +3071,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _needBottomPadding = false;
     _noDataBeforeReload = false;
 
-    _keepScrollAfterReload = false;
-    _resetScrollAfterReload = false;
+    _scrollBehaviorOnReload = null;
     _scrollPageLocked = false;
     _bottomVisible: boolean = true;
 
@@ -3202,7 +3200,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._loadedBySourceController = true;
             if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
                 this._children.listView.reset({
-                    keepScroll: this._keepScrollAfterReload
+                    keepScroll: this._scrollBehaviorOnReload === 'keep'
                 });
             }
             this._keepHorizontalScroll = false;
@@ -3998,7 +3996,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (!this._shouldNotResetPagingCache) {
                         this._cachedPagingState = false;
                     }
-                    _private.resetScrollAfterLoad(this);
+                    _private.handleScrollAfterReload(this);
                     _private.tryLoadToDirectionAgain(this, null, newOptions);
                     _private.prepareFooter(this, newOptions, this._sourceController);
                 }
@@ -4378,10 +4376,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=c3812a26-2301-4998-8283-bcea2751f741
         // Демка нативного поведения: https://jsfiddle.net/alex111089/rjuc7ey6/1/
         if (this._shouldNotifyOnDrawItems) {
-            if (this._resetScrollAfterReload) {
+            if (this._scrollBehaviorOnReload === 'reset') {
                 this._notify('doScroll', ['top'], {bubbling: true});
                 this._scrolled = false;
                 this._scrollTop = 0;
+            } else if (this._scrollBehaviorOnReload === 'restore') {
+                this._needRestoreScroll = true;
             }
         }
 
@@ -4397,7 +4397,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             directionToRestoreScroll = 'up';
         }
         if (directionToRestoreScroll &&
-            !(this._resetScrollAfterReload && this._shouldNotifyOnDrawItems)) {
+            !(this._scrollBehaviorOnReload === 'reset' && this._shouldNotifyOnDrawItems)) {
             this._scrollController.saveEdgeItem(directionToRestoreScroll,
                 this._getItemsContainer(),
                 this._getItemsContainerUniqueClass());
@@ -4534,7 +4534,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._finishScrollToEdgeOnDrawItems = null;
         }
         if (this._shouldNotifyOnDrawItems) {
-            this._resetScrollAfterReload = false;
+            this._scrollBehaviorOnReload = null;
         }
         this._notifyOnDrawItems();
 
@@ -4877,7 +4877,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (keepScroll) {
-            this._keepScrollAfterReload = true;
+            this._scrollBehaviorOnReload = 'keep';
             if (!sourceConfig) {
                 if (this._options.navigation?.source === 'position') {
                     const maxLimit = Math.max(this._options.navigation.sourceConfig.limit, this._items.getCount());
@@ -4887,6 +4887,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     const navPageSize = this._options.navigation.sourceConfig.pageSize;
                     const pageSize = Math.max(Math.ceil(this._items.getCount() / navPageSize) * navPageSize, navPageSize);
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
+                }
+            } else {
+
+                // Если перезагружают на конкретной позиции, это значит, что нужно будет восстановить скролл.
+                if (this._options.navigation.source === 'position' &&
+                    this._options.navigation.sourceConfig.position !== sourceConfig.position) {
+                    this._scrollBehaviorOnReload = 'restore';
                 }
             }
         }
