@@ -674,6 +674,7 @@ define(
                   width: 123
                };
                DialogController._getPopupSizes = () => newPopupSizes;
+               DialogController._getRestrictiveContainerSize = () => windowData;
                DialogController.resizeInner(item, {
                   style: {},
                   querySelectorAll: () => []
@@ -687,6 +688,7 @@ define(
                   horizontal: HORIZONTAL_DIRECTION.LEFT,
                   vertical: VERTICAL_DIRECTION.TOP
                };
+               item.fixPosition = false;
                DialogController._getRestrictiveContainerSize = () => windowData;
                let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
                assert.equal(position.right, 860);
@@ -737,6 +739,28 @@ define(
                let position = DialogStrategy.getPosition(window, newPopupSizes, popupItem);
                assert.equal(position.minHeight, newPopupSizes.height);
                DialogController._getPopupSizes = originGetPopupSizes;
+            });
+
+            it('inner resize should update position for popup with resizeDirection', () => {
+               item.popupOptions.resizeDirection = {
+                  horizontal: HORIZONTAL_DIRECTION.RIGHT,
+                  vertical: VERTICAL_DIRECTION.BOTTOM
+               };
+               const originGetPopupSizes = DialogController._getPopupSizes;
+               const newPopupSizes = {
+                  height: 111,
+                  width: 111
+               };
+               sinon.stub(DialogController, '_getPopupSizes').returns(newPopupSizes);
+               sinon.stub(DialogStrategy, 'getPosition');
+               const result = DialogController.resizeInner(item, {
+                  style: {},
+                  querySelectorAll: () => []
+               });
+               DialogController._getPopupSizes = originGetPopupSizes;
+               assert.isTrue(result);
+               sinon.assert.calledOnce(DialogStrategy.getPosition);
+               sinon.restore();
             });
 
             it('min height that fixed by inner resize can\'t be more than window height', () => {
