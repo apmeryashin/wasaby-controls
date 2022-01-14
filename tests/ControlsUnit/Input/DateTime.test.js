@@ -293,6 +293,17 @@ define([
             sinon.assert.calledOnce(component._notify);
             sinon.restore();
          });
+
+         it('should notify null', function() {
+            const component = calendarTestUtils.createComponent(date.BaseInput, {});
+            const value = [null, '  .  .  '];
+            sinon.stub(component, '_notify');
+            sinon.stub(component, '_updateValidators');
+
+            component._valueChanged(value);
+            sinon.assert.calledOnce(component._notify);
+            sinon.restore();
+         });
       });
    });
 });
