@@ -15,14 +15,16 @@
 
 .controls-Button__close__icon_toolButton,
 .controls-Button__close__icon_functionalButton,
-.controls-Button__close__icon_external {
+.controls-Button__close__icon_external,
+.controls-Button__close__icon_externalWide {
    fill: var(--icon-color_closeButton_toolButton);
    height: var(--icon-size_closeButton_toolButton);
    width: var(--icon-size_closeButton_toolButton);
    display: inline-block;
 }
 
-.controls-Button__close__icon_external {
+.controls-Button__close__icon_external,
+.controls-Button__close__icon_externalWide {
    fill: var(--contrast_icon-color);
 }
 
@@ -54,18 +56,32 @@
    background-color: var(--pale_contrast_background-color);
 }
 
-.controls-Button__close_external {
-   width: var(--width_closeButton_functionalButton);
+.controls-Button__close_external,
+.controls-Button__close_externalWide {
    height: var(--inline_height_l);
    border-width: var(--border-thickness_closeButton_functionalButton);
-   border-radius: var(--border-radius_button_functionalButton);
+   border-radius: var(--border-radius_button);
    background-color: var(--unaccented_contrast_background-color);
    backdrop-filter: blur(var(--translucent_backdrop-filter-blur_button));
 }
 
+.controls-Button__close_external {
+   width: var(--width_closeButton_functionalButton);
+}
+
+.controls-Button__close_externalWide {
+   min-width: var(--width_closeButton_functionalButton);
+   width: 100%;
+   display: flex;
+   justify-content: flex-end;
+   align-items: center;
+   padding-right: calc((var(--width_closeButton_functionalButton) - var(--icon-size_closeButton_toolButton)) / 2);
+}
+
 .controls-Button__close_toolButton,
 .controls-Button__close_functionalButton,
-.controls-Button__close_external {
+.controls-Button__close_external,
+.controls-Button__close_externalWide {
    border-style: solid;
    box-sizing: border-box;
 }
@@ -109,8 +125,9 @@
       }
    }
 
-   .controls-Button__close_external:hover {
-      background-color: var(--unaccented_hover_contrast_background-color);
+   .controls-Button__close_external:hover,
+   .controls-Button__close_externalWide:hover {
+         background-color: var(--unaccented_hover_contrast_background-color);
    }
 
    .controls-Button__close_toolButton_transparent:hover {
@@ -120,7 +137,8 @@
 
 .ws-is-no-touch,
 .ws-is-touch {
-   .controls-Button__close_external:active {
+   .controls-Button__close_external:active,
+   .controls-Button__close_externalWide:active {
       background-color: var(--unaccented_active_contrast_background-color);
       fill: var(--contrast_icon-color);
    }
@@ -148,19 +166,22 @@
 }
 
 @supports (backdrop-filter: blur()) {
-   .controls-Button__close_external {
+   .controls-Button__close_external,
+   .controls-Button__close_externalWide {
       background-color: var(--translucent_background-color_button);
    }
 
    .ws-is-hover {
-      .controls-Button__close_external:hover {
+      .controls-Button__close_external:hover,
+      .controls-Button__close_externalWide:hover {
          background-color: var(--translucent_hover_background-color_button);
       }
    }
 
    .ws-is-no-touch,
    .ws-is-touch {
-      .controls-Button__close_external:active {
+      .controls-Button__close_external:active,
+      .controls-Button__close_externalWide:active {
          background-color: var(--translucent_active_background-color_button);
       }
    }

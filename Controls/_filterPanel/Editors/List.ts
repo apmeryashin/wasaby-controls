@@ -384,7 +384,12 @@ class ListEditor extends Control<IListEditorOptions> {
         this._setMarkedKey(this._selectedKeys, this._options);
         this._setColumns(this._options);
         this._setHiddenItemsCount(this._selectedKeys);
-        this._notify('propertyValueChanged', [{value: this._getValue(this._selectedKeys)}], {bubbling: true});
+        const listValue = this._getValue(this._selectedKeys);
+        const extendedValue = {
+            value: listValue,
+            textValue: this._getTextValue(listValue)
+        };
+        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 
     protected _registerHandler(event: SyntheticEvent, type: string): void {
@@ -393,6 +398,18 @@ class ListEditor extends Control<IListEditorOptions> {
         if (event.type === 'register' && type === 'selectedTypeChanged') {
             event.stopPropagation();
         }
+    }
+
+    private _getTextValue(selectedKeys: number[]|string[]): string {
+        const textArray = [];
+
+        selectedKeys.forEach((item) => {
+            const record = this._items.getRecordById(item);
+            if (record) {
+                textArray.push(record.get(this._options.displayProperty));
+            }
+        });
+        return textArray.join(', ');
     }
 
     private _getValue(value: string[] | number[]): string[] | number[] {

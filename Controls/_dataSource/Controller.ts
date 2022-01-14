@@ -83,6 +83,7 @@ export interface IControllerOptions extends
     deepScrollLoad?: boolean;
     nodeTypeProperty?: string;
     error?: Error;
+    displayProperty?: string;
     hasChildrenProperty?: string;
 }
 
@@ -547,6 +548,9 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
 
             filter: this._filter,
 
+            hasChildrenProperty: this._options.hasChildrenProperty,
+            displayProperty: this._options.displayProperty,
+            nodeProperty: this._options.nodeProperty,
             parentProperty: this._parentProperty,
             root: this._root,
 

@@ -3,33 +3,39 @@
             controls_dropdownPopup_theme-{{_options.theme}}
             controls-SimplePanel controls-Popup__isolatedFocusingContext"
      attr:ws-no-focus="true">
-   <Controls.scroll:Container
-           attr:class="controls-ScrollContainer__flex controls-SimplePanel__scroll"
-           topShadowVisibility="hidden"
-           bottomShadowVisibility="hidden"
-           scrollbarVisible="{{false}}">
+   <div class="controls-SimplePanel_content">
+      <Controls.scroll:Container
+              attr:class="controls-ScrollContainer__flex controls-SimplePanel__scroll"
+              topShadowVisibility="hidden"
+              bottomShadowVisibility="hidden"
+              scrollbarVisible="{{false}}">
 
-         <ws:for data="index, item in _items">
-            <ws:partial template="{{_options.itemTemplate}}"
-                        isLast="{{_items.length === index + 1}}"
-                        scope="{{item}}"
-                        hasApplyButton="{{!index && _hasApplyButton}}"
-                        on:itemClick="_itemClickHandler(item)"
-                        on:checkBoxClick="_checkBoxClickHandler(index)"
-                        on:moreButtonClick="_moreButtonClick(item)"/>
-         </ws:for>
-   </Controls.scroll:Container>
-   <ws:if data="{{_applyButtonVisible}}">
-      <div class="controls-SimplePanel__applyButton" data-qa="SimplePanel__applyButton">
-         <Controls.buttons:Button viewMode="functionalButton"
-                                  icon="icon-Yes"
-                                  iconSize="m"
-                                  iconStyle="contrast"
-                                  buttonStyle="success"
-                                  inlineHeight="l"
-                                  on:click="_applySelection()"/>
+            <ws:for data="index, item in _items">
+               <ws:partial template="{{_options.itemTemplate}}"
+                           isLast="{{_items.length === index + 1}}"
+                           scope="{{item}}"
+                           hasApplyButton="{{!index && _hasApplyButton}}"
+                           on:itemClick="_itemClickHandler(item)"
+                           on:checkBoxClick="_checkBoxClickHandler(index)"
+                           on:moreButtonClick="_moreButtonClick(item)"/>
+            </ws:for>
+      </Controls.scroll:Container>
+      <div class="controls-SimplePanel-cross_wrapper {{_applyButtonVisible ? 'controls-StickyTemplate__close_button_with_applyButton'}}">
+         <Controls.popupTemplate:CloseButton
+                 class="controls-SimplePanel-cross controls-SimplePanel-cross-{{_applyButtonVisible ? 'externalWide' : 'external'}}"
+                 viewMode="{{_applyButtonVisible ? 'externalWide' : 'external'}}"
+                 on:click="_closeClick()"/>
       </div>
-   </ws:if>
-   <Controls.popupTemplate:CloseButton class="controls-SimplePanel-cross" viewMode="link"
-                          on:click="_closeClick()"/>
+      <ws:if data="{{_applyButtonVisible}}">
+         <div class="controls-SimplePanel__applyButton" data-qa="SimplePanel__applyButton">
+            <Controls.buttons:Button viewMode="functionalButton"
+                                     icon="icon-Yes"
+                                     iconSize="s"
+                                     iconStyle="contrast"
+                                     buttonStyle="success"
+                                     inlineHeight="menuapply"
+                                     on:click="_applySelection()"/>
+         </div>
+      </ws:if>
+   </div>
 </div>

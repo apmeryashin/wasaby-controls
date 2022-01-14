@@ -116,7 +116,7 @@ export default class Controller implements IDropdownController {
          return this._getSourceController(this._options).then((sourceController) => {
             this._setItemsAndMenuSource(items);
             sourceController.setItems(this._items);
-         });
+         }).catch((error) => error);
       }
    }
 
@@ -130,6 +130,11 @@ export default class Controller implements IDropdownController {
    update(newOptions: IDropdownControllerOptions): Promise<RecordSet|void>|void {
       const oldOptions = {...this._options};
       this._options = newOptions;
+
+      if (!newOptions.source && newOptions.items && oldOptions.items !== newOptions.items) {
+         this.setItems(newOptions.items);
+      }
+
       if (newOptions.readOnly && newOptions.readOnly !== oldOptions.readOnly) {
          this._closeDropdownList();
       }
@@ -758,7 +763,6 @@ export default class Controller implements IDropdownController {
       const templateOptions = {
          selectedKeys: this._selectedKeys,
          dataLoadCallback: null,
-         closeButtonVisibility: false,
          emptyText: this._options.emptyText,
          selectedAllText: this._options.selectedAllText,
          allowPin: this._options.allowPin && this._hasHistory(this._options),

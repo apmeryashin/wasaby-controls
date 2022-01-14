@@ -70,7 +70,8 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
         let filterSource;
         if (options.useStore) {
             filterSource = Store.getState().filterSource;
-        } else {
+        }
+        if (!filterSource) {
             filterSource = options.filterButtonItems || options.filterButtonSource;
         }
         this._setTumblerStates(filterSource);

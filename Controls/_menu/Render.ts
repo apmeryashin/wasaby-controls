@@ -153,6 +153,9 @@ class MenuRender extends Control<IMenuRenderOptions> {
             classes += ` controls-Menu__row_state_${readOnly ? 'readOnly' : 'default'}` +
                 `${!readOnly ? ` controls-Menu__row_hoverBackgroundStyle-${this._options.hoverBackgroundStyle}` : ''}`;
 
+            if (!treeItem.isLastItem()) {
+                classes += ` controls-margin_bottom-${this._options.itemsSpacing}`;
+            }
             if (this._isEmptyItem(treeItem)) {
                 classes += ' controls-Menu__emptyItem';
             } else {

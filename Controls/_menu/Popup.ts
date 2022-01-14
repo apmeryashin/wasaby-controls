@@ -29,6 +29,7 @@ type CancelableError = Error & { canceled?: boolean, isCanceled: boolean };
  * @mixes Controls/menu:IMenuPopup
  * @mixes Controls/menu:IMenuControl
  * @mixes Controls/menu:IMenuBase
+ * @mixes Controls/menu:Control
  * @implements Controls/interface:IHierarchy
  * @implements Controls/interface:IIconSize
  * @implements Controls/interface:IIconStyle
@@ -47,6 +48,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     };
     protected _template: TemplateFunction = PopupTemplate;
     protected _headerVisible: boolean = true;
+    protected _hasHeader: boolean;
     protected _headerTemplate: TemplateFunction;
     protected _headerTheme: string;
     protected _headingCaption: string;
@@ -209,6 +211,16 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         }
     }
 
+    protected _updateCloseButtonState(event: SyntheticEvent<MouseEvent>, state: boolean): void {
+        if (!this._hasHeader && this._closeButtonVisibility !== state) {
+            if (!state) {
+                this._closeButtonVisibility = false;
+            } else {
+                this._setCloseButtonVisibility(this._options);
+            }
+        }
+    }
+
     protected _setSelectedItems(event: SyntheticEvent<MouseEvent>, items: Model[]): void {
         this._selectedItems = items;
         this._updateApplyButton();
@@ -277,6 +289,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
             this._headerTemplate = null;
             this._headingCaption = '';
         }
+        this._hasHeader = this._options.headerTemplate || this._headingCaption || this._headerTemplate;
     }
 
     private _updateHeadingIcon(options: IMenuPopupOptions, items: RecordSet): void {
@@ -304,10 +317,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     private _setItemPadding(options: IMenuPopupOptions): void {
         if (options.itemPadding) {
             this._itemPadding = options.itemPadding;
-        } else if (this._closeButtonVisibility) {
-            this._itemPadding = {
-                right: 'menu-close'
-            };
         } else if (options.allowPin) {
             this._itemPadding = {
                 right: 'menu-pin'
@@ -322,35 +331,10 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     static defaultProps: Partial<IMenuPopupOptions> = {
         selectedKeys: [],
         backgroundStyle: 'default',
-        hoverBackgroundStyle: 'default'
+        hoverBackgroundStyle: 'default',
+        closeButtonVisibility: true,
+        closeButtonViewMode: 'external'
     };
 }
 
-/**
- * @name Controls/_menu/Popup#closeButtonVisibility
- * @cfg {Boolean} Видимость кнопки закрытия.
- * @remark В значении true кнопка отображается.
- * @demo Controls-demo/Menu/Popup/CloseButtonVisibility/Index
- * @example
- * <pre class="brush: html; highlight: [6]">
- * <!-- WML -->
- * <Controls.menu:Popup
- *       keyProperty="key"
- *       displayProperty="title"
- *       source="{{_source}}"
- *       closeButtonVisibility="{{true}}">
- * </Controls.menu:Popup>
- * </pre>
- * <pre class="brush: js">
- * // JS
- * this._source = new Memory({
- *    keyProperty: 'key',
- *    data: [
- *       {key: 1, title: 'Yaroslavl'},
- *       {key: 2, title: 'Moscow'},
- *       {key: 3, title: 'St-Petersburg'}
- *    ]
- * });
- * </pre>
- */
 export default Popup;

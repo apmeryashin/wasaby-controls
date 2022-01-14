@@ -1,0 +1,24 @@
+<ws:template name="date">
+    <Controls.Container.Async templateName="Controls/dateRange:Selector">
+        <ws:partial template="{{content.resolvedTemplate}}"
+                    bind:startValue="_startValue"
+                    bind:endValue="_endValue"
+                    fontColorStyle="default"
+                    emptyCaption="{{_options.extendedCaption}}"
+                    fontWeight="default"
+                    scope="{{_options}}"
+                    on:rangeChanged="_handleRangeChanged()"
+                    attr:class="controls-FilterViewPanel__dateRangeEditor controls-FilterViewPanel__basicEditor-cloud
+                                controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}"/>
+    </Controls.Container.Async>
+</ws:template>
+
+<Controls._filterPanel.BaseEditor scope="{{_options}}">
+    <ws:editorTemplate>
+        <ws:partial template="date"/>
+    </ws:editorTemplate>
+
+    <ws:extendedTemplate>
+        <ws:partial template="date"/>
+    </ws:extendedTemplate>
+</Controls._filterPanel.BaseEditor>

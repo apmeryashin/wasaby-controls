@@ -3,7 +3,7 @@
  * @library
  * @includes Base Controls/_masterDetail/Base
  * @public
- * @author Авраменко А.С.
+ * @author Герасимов А.М.
  */
 
 /*
@@ -11,7 +11,7 @@
  * @library
  * @includes Base Controls/_masterDetail/Base
  * @public
- * @author Авраменко А.С.
+ * @author Герасимов А.М.
  */
 
 import Base = require('wml!Controls/_masterDetail/WrappedBase');

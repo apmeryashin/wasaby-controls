@@ -101,7 +101,7 @@ function(menu, source, Clone, display, collection) {
          assert.equal(menuPopup._itemPadding.right, 'test-padding');
 
          menuPopup._setItemPadding({ allowPin: true });
-         assert.equal(menuPopup._itemPadding.right, 'menu-close');
+         assert.equal(menuPopup._itemPadding.right, 'menu-pin');
 
          menuPopup._closeButtonVisibility = false;
          menuPopup._setItemPadding({ allowPin: true });

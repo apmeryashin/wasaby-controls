@@ -878,10 +878,13 @@ describe('FormController', () => {
         };
         const setFunctionToRepeat = sinon.spy(FC, '_setFunctionToRepeat');
         const processError = sinon.spy(FC, 'processError');
+        FC._isMount = true;
+        const notifyRead = sinon.stub(FC, '_readRecordBeforeMountNotify');
         return FC._readRecordBeforeMount(cfg).catch(() => {
             assert.equal(FC._readInMounting.isError, true);
             sinon.assert.called(setFunctionToRepeat);
             sinon.assert.called(processError);
+            assert.isTrue(notifyRead.called);
             FC.destroy();
         });
     });

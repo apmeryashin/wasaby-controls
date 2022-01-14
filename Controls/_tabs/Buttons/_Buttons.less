@@ -267,9 +267,21 @@
    }
 }
 
+.controls-Tabs_style_primary__item-marker_state_selected {
+   &::after {
+      background-color: var(--primary_marker_color_tabs);
+   }
+}
+
+.controls-Tabs_style_secondary__item-marker_state_selected {
+   &::after {
+      background-color: var(--secondary_marker_color_tabs);
+   }
+}
+
 // Маркеры красятся под цвет текста
 .controls-Tabs_style_ {
-   @variants: primary, secondary, link, label, danger, warning, success, info, readonly;
+   @variants: link, label, danger, warning, success, info, readonly;
    .for(@variants, { &@{_item}__item-marker_state_selected {
       &::after {
          background-color: ~"var(--@{_item}_text-color)";
@@ -295,9 +307,17 @@
    background-color: var(--item_selected_color);
 }
 
+.controls-Tabs__marker_style-primary {
+   background-color: var(--primary_marker_color_tabs);
+}
+
+.controls-Tabs__marker_style-secondary {
+   background-color: var(--secondary_marker_color_tabs);
+}
+
 // Маркеры красятся под цвет текста
 .controls-Tabs__marker_style- {
-   @variants: primary, secondary, link, label, danger, warning, success, info, readonly;
+   @variants: link, label, danger, warning, success, info, readonly;
    .for(@variants, { &@{_item} {
       background-color: ~"var(--@{_item}_text-color)";
    } });

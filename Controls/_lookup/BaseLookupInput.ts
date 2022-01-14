@@ -9,7 +9,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {List} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {constants} from 'Env/Env';
-import {ITextOptions, IValueOptions, IBaseOptions, IPaddingOptions} from 'Controls/input';
+import {ITextOptions, IValueOptions, IBaseOptions, IPaddingOptions, IFieldTemplate} from 'Controls/input';
 import {ISelectorDialogOptions, IContrastBackgroundOptions, IBackgroundStyleOptions} from 'Controls/interface';
 import {isEqual} from 'Types/object';
 import {EventUtils} from 'UI/Events';
@@ -33,7 +33,8 @@ export interface ILookupInputOptions extends
     ISelectorDialogOptions,
     IPaddingOptions,
     IContrastBackgroundOptions,
-    IBackgroundStyleOptions {
+    IBackgroundStyleOptions,
+    IFieldTemplate {
     suggestSource?: ICrudPlus;
     multiLine?: boolean;
     autoDropDown?: boolean;

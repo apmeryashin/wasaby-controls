@@ -2598,29 +2598,6 @@ const _private = {
 
     // endregion
 
-    /**
-     * Получает размеры контейнера, которые будут использованы для измерения области отображения свайпа.
-     * Для строк таблиц, когда ширину строки можно измерить только по ширине столбцов,
-     * берём за правило, что высота всегда едина для всех колонок строки, а ширину столбцов
-     * надо сложить для получения ширины строки.
-     * @param itemContainer
-     */
-    getSwipeContainerSize(itemContainer: HTMLElement): {width: number, height: number} {
-        const result: {width: number, height: number} = { width: 0, height: 0 };
-        if (itemContainer.classList.contains(LIST_MEASURABLE_CONTAINER_SELECTOR)) {
-            result.width = itemContainer.clientWidth;
-            result.height = itemContainer.clientHeight;
-        } else {
-            itemContainer
-                .querySelectorAll(`.${LIST_MEASURABLE_CONTAINER_SELECTOR}`)
-                .forEach((container) => {
-                    result.width += container.clientWidth;
-                    result.height = result.height || container.clientHeight;
-                });
-        }
-        return result;
-    },
-
     moveItem(self, selectedKey: CrudEntityKey, direction: 'up' | 'down'): Promise<void> {
         const selection: ISelectionObject = {
             selected: [selectedKey],
@@ -3257,6 +3234,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._drawingIndicatorDirection
             );
         }
+        // В режиме 'remove' нужно обновлять itemActions, т.к.
+        // они обновляются только в видимом диапазоне виртуального скролла.
+        // В режиме 'hide' виртуальный скролл лишь скрывает через display записи,
+        // поэтому не надо делать лишние обновления.
+        // Если этот метод сработал при инициализации виртуального скролла на beforeMount,
+        // то в this._options ничего нет, поэтому проверяем на this._mounted.
+        if (this._mounted && !!this._itemActionsController && this._options.virtualScrollConfig?.mode !== 'hide') {
+            _private.updateInitializedItemActions(this, this._options);
+        }
     }
 
     protected _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
@@ -3310,15 +3296,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      * Замораживает hover подсветку строки для указанной записи
      */
     freezeHoveredItem(item: Model): void {
-        const isLoading = this._sourceController && this._sourceController.isLoading();
-        // freezeHoveredItem могут вызвать асинхронно и попасть между загрузками данных,
-        // когда запрашиваемый item уже отсутствует в коллекции.
-        // В таком случае нужно просто не запускать обработку.
-        if (!isLoading) {
-            const collectionItem = this._listViewModel.getItemBySourceItem(item);
-            if (!collectionItem) {
-                Logger.error('freezeHoveredItem(). Указанный item отсутствует в коллекции.', this);
-            }
+        const collectionItem = this._listViewModel.getItemBySourceItem(item);
+        if (!collectionItem) {
+            Logger.error('freezeHoveredItem(). Указанный item отсутствует в коллекции.', this);
+        } else {
             _private.freezeHoveredItem(this, collectionItem);
         }
     }
@@ -3465,6 +3446,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
             itemsQuerySelector: options.itemsSelector,
+            itemsContainerUniqueSelector: `.${this._getItemsContainerUniqueClass()}`,
 
             triggersVisibility: {
                 backward: !this._hasMoreData('up') ||
@@ -4506,6 +4488,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (this._sourceControllerLoadingResolver) {
             this._sourceControllerLoadingResolver();
+        }
+        // Перестраиваем свайп на afterUpdate, когда точно уже известен новый размер записи
+        // Перестроение должно произойти только в том случае, когда изменился размер записи
+        if (this._itemActionsController && this._itemActionsController.isSwiped()) {
+            this._itemActionsController.updateSwipeConfigIfNeed(
+                this._container,
+                _private.getViewUniqueClass(this),
+                LIST_MEASURABLE_CONTAINER_SELECTOR
+            );
         }
         if (this._callbackAfterUpdate) {
             this._callbackAfterUpdate.forEach((callback) => {
@@ -5913,7 +5904,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return;
         }
         const isLoading = this._sourceController && this._sourceController.isLoading();
-        if (!isLoading) {
+        // Во время порционного поиска можно пользоваться клавишами
+        const allowByLoading = !isLoading || _private.isPortionedLoad(this);
+        if (allowByLoading) {
             const key = event.nativeEvent.keyCode;
             const dontStop = key === 17 // Ctrl
                 || key === 33 // PageUp
@@ -6226,7 +6219,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         swipeEvent.stopPropagation();
         const key = _private.getPlainItemContents(item).getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
-        const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
+        const swipeContainer = ItemActionsController.
+            getSwipeContainerSize(itemContainer as HTMLElement, LIST_MEASURABLE_CONTAINER_SELECTOR);
         let itemActionsController: ItemActionsController;
         if (this._itemActionsMenuId) {
             _private.closeActionsMenu(this);

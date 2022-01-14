@@ -52,6 +52,7 @@ class EmptyCell extends mixin<
 
         if (this._$isSingleColspanedCell && hasRowTemplate) {
             classes = 'controls-ListView__empty'
+                + ` ${this._getHorizontalPaddingClasses({})}`
                 + ` controls-ListView__empty-textAlign_${align}`
                 + ` controls-ListView__empty_topSpacing_${topSpacing}`
                 + ` controls-ListView__empty_bottomSpacing_${bottomSpacing}`;

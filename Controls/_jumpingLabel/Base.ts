@@ -1,12 +1,12 @@
 import {descriptor} from 'Types/entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {
-    IValidationStatus, IValidationStatusOptions, ValidationStatus,
+    IValidationStatus, IValidationStatusOptions, TValidationStatus,
     TBorderVisibility, ICaption, ICaptionOptions
 } from 'Controls/interface';
 import 'css!Controls/jumpingLabel';
 
-type TValidationStatus = 'valid' | 'invalid';
+type TBaseValidationStatus = 'valid' | 'invalid';
 type TValidationFontColorStyle = 'default' | 'accent';
 
 /**
@@ -96,7 +96,7 @@ abstract class Base<T extends IBaseOptions = IBaseOptions>
     }
 
     private static _detectToFontColorStyle(
-        validationStatus: ValidationStatus, validationFontColorStyle: TValidationFontColorStyle
+        validationStatus: TValidationStatus, validationFontColorStyle: TValidationFontColorStyle
     ): string {
         if (validationStatus === 'valid') {
             return 'valid';
@@ -105,7 +105,7 @@ abstract class Base<T extends IBaseOptions = IBaseOptions>
         }
     }
 
-    private static _detectToValidationStatus(validationStatus: ValidationStatus): TValidationStatus {
+    private static _detectToValidationStatus(validationStatus: TValidationStatus): TBaseValidationStatus {
         /**
          * Для полей ввода с оформлением, которое задается через HOC, стандартом не предусмотрено значение invalidAccent(при фокусе меняется background).
          * Этот код при надобности может быть перенесен в поля ввода с проверкой на опцию borderVisibility === 'partial'.

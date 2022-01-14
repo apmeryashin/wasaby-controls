@@ -196,6 +196,9 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     setEditingObject(editingObject: Record<string, IExtendedPropertyValue>): void {
         this._editingObject = editingObject;
         this._source = this._getSource(this._source);
+        this._source = this._source.filter((item) => {
+            return item.visibility !== false;
+        });
         this._source.forEach((item) => {
             const editingItemProperty = editingObject[item.name];
             this._setValueToSourceItem(item, editingItemProperty);

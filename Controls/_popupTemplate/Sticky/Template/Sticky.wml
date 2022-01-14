@@ -1,7 +1,7 @@
 <Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
     <div class="controls_popupTemplate_theme-{{_options.theme}}
                 controls-StickyTemplate
-                {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder controls_border-radius-s'}}
+                {{_options.roundBorder ? ('controls-PopupTemplate__roundBorder controls_border-radius-' + _options.borderRadius)}}
                 controls-StickyTemplate-borderStyle-{{_options.borderStyle}}
                 controls-StickyTemplate-hoverBorderStyle-{{_options.hoverBorderStyle}}
                 controls-StickyTemplate-borderSize-{{_options.borderSize}}
@@ -29,6 +29,7 @@
                 <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
                 {{_options.roundBorder !== false && _closeBtnPosition === 'default' ? 'controls-StickyTemplate_roundBorder__close_button_position-' :
                 'controls-StickyTemplate__close_button_position-'}}{{_closeBtnPosition}}
+                controls-StickyTemplate__close_button-{{_options.closeButtonViewMode}}
                 controls-StickyTemplate__close_button-{{_options.closeButtonViewMode !== 'link' ? 'external' : 'default'}}-without-header_top-spacing-{{ _options.closeButtonTopSpacing === 'none' ? 'none' : 'default' }} "
                                                      viewMode="{{_options.closeButtonViewMode}}"
                                                      name="closeButton"

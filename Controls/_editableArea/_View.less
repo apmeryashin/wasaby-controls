@@ -72,26 +72,15 @@
 }
 
 .controls-EditableArea__closeButton-icon {
-   background-image: var(--icon_background-image_closeButton_editableArea);
+   fill: var(--label_text-color);
    width: var(--icon-size_closeButton_editableArea);
    height: var(--icon-size_closeButton_editableArea);
 }
 
 .controls-EditableArea__closeButton-icon:hover {
-   background-image: var(--icon_hovered_background-image_closeButton_editableArea);
+   fill: var(--link_hover_text-color);
    width: var(--icon-size_closeButton_editableArea);
    height: var(--icon-size_closeButton_editableArea);
-}
-
-// В Яндекс браузере для win-XP css переменные поддерживаются не в полном объеме, из-за чего браузер ожидает полный путь с указанием домена
-// Поэтому каскадом задаем корректный путь
-.ws-is-chrome.ws-is-windows-xp {
-   .controls-EditableArea__closeButton-icon {
-      background-image: url('/resources/Controls-default-theme/img/DefaultCloseIcon.svg');
-   }
-   .controls-EditableArea__closeButton-icon:hover {
-      background-image: url('/resources/Controls-default-theme/img/CloseIconHovered.svg');
-   }
 }
 
 .controls-EditableArea__applyButton-icon {

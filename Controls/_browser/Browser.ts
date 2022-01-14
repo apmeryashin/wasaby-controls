@@ -39,6 +39,7 @@ import {DataLoader, IDataLoaderOptions, ILoadDataResult, saveControllerState} fr
 import {Logger} from 'UI/Utils';
 import {descriptor, Model} from 'Types/entity';
 import {loadAsync, isLoaded} from 'WasabyLoader/ModulesLoader';
+import {ITreeControlOptions} from 'Controls/tree';
 
 type Key = string|number|null;
 
@@ -46,7 +47,8 @@ type TViewMode = 'search' | 'tile' | 'table' | 'list';
 
 export interface IListConfiguration extends IControlOptions, ISearchOptions, ISourceOptions,
     Required<IFilterOptions>, Required<IHierarchyOptions>, IHierarchySearchOptions,
-    IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions, ISearchValueOptions, IExpandedItemsOptions {
+    IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions, ISearchValueOptions, IExpandedItemsOptions,
+    ITreeControlOptions {
     searchNavigationMode?: string;
     groupHistoryId?: string;
     filterButtonSource?: IFilterItem[];
@@ -61,6 +63,7 @@ export interface IListConfiguration extends IControlOptions, ISearchOptions, ISo
     sourceController?: SourceController;
     filterController?: FilterControllerClass;
     id?: string;
+    displayProperty?: string;
 }
 
 export interface IBrowserOptions extends IListConfiguration {

@@ -1,4 +1,4 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import PrepareDataUtil from './PrepareDataUtil';
 import {EventUtils} from 'UI/Events';
 import template = require('wml!Controls/_breadcrumbs/Path/Path');
@@ -42,7 +42,7 @@ interface IReceivedState {
  * @demo Controls-demo/breadCrumbs_new/ClickHandler/Index
  */
 
-class BreadCrumbs extends Control<IBreadCrumbsOptions> {
+class BreadCrumbs extends Control<IBreadCrumbsOptions, IReceivedState> {
     protected _template: TemplateFunction = template;
     protected _visibleItems: any[] =  [];
     protected _notifyHandler: Function = EventUtils.tmplNotify;

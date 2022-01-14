@@ -25,6 +25,7 @@ export interface IRadioGroupOptions extends IControlOptions,
     ISourceOptions,
     IToggleGroupOptions {
     captionPosition: string;
+    radioCircleVisible?: boolean;
 }
 
 /**
@@ -207,7 +208,8 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
         return {
             direction: 'vertical',
             validationStatus: 'valid',
-            captionPosition: 'right'
+            captionPosition: 'right',
+            radioCircleVisible: true
         };
     }
 
@@ -216,7 +218,8 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
             captionPosition: EntityDescriptor(String).oneOf([
                 'left',
                 'right'
-            ])
+            ]),
+            radioCircleVisible: EntityDescriptor(Boolean)
         };
     }
 
@@ -248,6 +251,13 @@ export default Radio;
  * @name Controls/_toggle/RadioGroup#parentProperty
  * @cfg
  * @demo Controls-demo/toggle/RadioGroup/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_toggle/RadioGroup#radioCircleVisible
+ * @cfg {Boolean} Определяет, видимость иконки радиокруга.
+ * @default true
+ * @demo Controls-demo/toggle/RadioGroup/RadioCircleVisible/Index
  */
 
 /**
