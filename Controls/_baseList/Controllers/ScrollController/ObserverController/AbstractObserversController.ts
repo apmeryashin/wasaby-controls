@@ -306,13 +306,18 @@ export abstract class AbstractObserversController {
 
     private _updateTriggers(): void {
         // нужно править юниты
-        if (!this._listContainer || !this._triggers || !this._triggers.length) {
+        if (!this._listContainer) {
             return;
         }
 
         this._triggers = Array.from(
             this._listContainer.querySelectorAll(this._triggersQuerySelector)
         );
+
+        // В карусели нет триггеров, они там не нужны
+        if (!this._triggers || !this._triggers.length) {
+            return;
+        }
 
         this._triggers[0].style.display = this._triggersVisibility.backward ? '' : 'none';
         this._triggers[1].style.display = this._triggersVisibility.forward ? '' : 'none';
