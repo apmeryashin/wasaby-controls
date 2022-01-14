@@ -18,7 +18,7 @@
                     on:editArrowClick="_notifyHandler('masterEditArrowClick')"
                     on:beforeItemsMove="_notifyHandler('masterBeforeItemsMove')"
                     on:actionClick="_notifyHandler('masterActionClick')"
-                    on:itemClick="_onExplorerItemClick(true)"
+                    on:itemClick="_onMasterItemClick()"
                     on:expandedItemsChanged="_notifyHandler('masterExpandedItemsChanged')"
                     on:changeDragTarget="_notifyHandler('masterChangeDragTarget')"
             />
@@ -61,7 +61,7 @@
                     nodeImageViewMode="{{_getNodeImageViewMode(_getViewModeForItemTemplate())}}"
                     imagePosition="{{_getImagePosition(_getViewModeForItemTemplate())}}"
                     attr:class="controls-newBrowser__detail-list"
-                    on:itemClick="_onExplorerItemClick(false)"
+                    on:itemClick="_onDetailItemClick()"
                     on:viewModeChanged="_onDetailExplorerChangedViewMode()"
                     scope="{{_detailExplorerOptions}}"
             />
@@ -75,7 +75,7 @@
                                 scope="{{_detailExplorerOptions}}"
                                 itemTemplate="{{ _detailExplorerOptions.compositeItemTemplate }}"
                                 on:activeElementChanged="_detailActiveElementChanged()"
-                                on:itemClick="_onExplorerItemClick(false)"
+                                on:itemClick="_onDetailItemClick()"
                                 attr:class="controls-newBrowser__detail-list"/>
                     </Controls.list:HotKeysContainer>
                 </Controls.list:Container>
@@ -117,7 +117,7 @@
                                     on:drawItems="_notifyHandler('drawItems')"
                                     on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
                                     on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
-                                    on:itemClick="_onExplorerItemClick(false)"
+                                    on:itemClick="_onDetailItemClick()"
                                     on:itemMouseDown="_notifyHandler('detailItemMouseDown')"
                                     on:viewModeChanged="_onDetailExplorerChangedViewMode()"/>
                         </ws:content>
