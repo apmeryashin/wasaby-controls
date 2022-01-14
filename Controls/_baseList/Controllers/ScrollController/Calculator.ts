@@ -475,7 +475,7 @@ export class Calculator {
     moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): ICalculatorResult {
         const oldState = this._getState();
 
-        const resultAdd = this.addItems(addPosition, addCount);
+        const resultAdd = this.addItems(addPosition, addCount, 'shift');
         this.removeItems(removePosition, removeCount);
 
         return this._getRangeChangeResult(oldState, resultAdd.shiftDirection);
