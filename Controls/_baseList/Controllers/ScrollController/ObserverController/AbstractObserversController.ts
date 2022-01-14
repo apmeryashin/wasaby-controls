@@ -315,7 +315,7 @@ export abstract class AbstractObserversController {
         );
 
         // В карусели нет триггеров, они там не нужны
-        if (!this._triggers || !this._triggers.length) {
+        if (!this._triggers.length) {
             return;
         }
 
