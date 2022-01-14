@@ -46,7 +46,6 @@ import * as StringSearchTypeRender from 'wml!Controls/_grid/Render/types/StringS
 import * as TypesLadderWrapper from 'wml!Controls/_grid/Render/types/ladderWrapper';
 
 import SortingButton from 'Controls/_grid/SortingButton';
-import SortingSelector from 'Controls/_grid/SortingSelector';
 import {register} from 'Types/di';
 
 /**
@@ -72,8 +71,6 @@ import {register} from 'Types/di';
  * @includes IGridEditingConfig Controls/_grid/interface/IGridEditingConfig
  * @includes IItemAddOptions Controls/_grid/interface/IItemAddOptions
  * @includes IItemEditOptions Controls/_grid/interface/IItemEditOptions
- * @includes ISortingParam Controls/grid:ISortingParam
- * @includes ISortingSelector Controls/grid:ISortingSelector
  * @public
  * @author Крайнов Д.О.
  */
@@ -103,7 +100,6 @@ export {
     StringSearchTypeRender,
     TableTemplate,
     SortingButton,
-    SortingSelector,
     IndicatorTemplate,
     TableIndicatorTemplate
 };
@@ -232,3 +228,5 @@ export {
     IDisplaySearchValueOptions, IDisplaySearchValue,
     CheckboxCell
 };
+
+export {Selector as SortingSelector} from 'Controls/sorting';
