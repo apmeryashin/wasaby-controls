@@ -18,7 +18,7 @@ export default interface IPopupTemplate {
  * @variant toolButton Отображение как кнопки панели инструментов.
  * @variant linkButton Отображение кнопки в виде ссылки.
  * @variant functionalButton Отображение функциональной кнопки закрытия
- * @variation external Отображение полупрозрачной кнопки закрытия.
+ * @variant external Отображение полупрозрачной кнопки закрытия.
  * @default linkButton
  * @demo Controls-demo/PopupTemplate/Dialog/closeButtonViewMode/Index
  * @demo Controls-demo/PopupTemplate/Stack/CloseButtonViewMode/Index
