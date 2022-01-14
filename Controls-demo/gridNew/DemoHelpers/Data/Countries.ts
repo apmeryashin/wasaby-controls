@@ -38,7 +38,8 @@ export const Countries = {
             population: 143420300,
             square: 17075200,
             populationDensity: 8,
-            date: new Date('December 17, 2021 10:00:00')
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 11111111111
         },
         {
             key: 1,
@@ -49,7 +50,8 @@ export const Countries = {
             population: 32805000,
             square: 9976140,
             populationDensity: 3,
-            date: new Date('December 17, 2021 10:00:00')
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 1111111111
         },
         {
             key: 2,
@@ -60,7 +62,8 @@ export const Countries = {
             population: 295734100,
             square: 9629091,
             populationDensity: 30.71,
-            date: new Date('December 17, 2021 10:00:00')
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 111111111
         },
         {
             key: 3,
@@ -71,7 +74,8 @@ export const Countries = {
             population: 1306313800,
             square: 9596960,
             populationDensity: 136.12,
-            date: new Date('December 17, 2021 10:00:00')
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 11111111
         },
         {
             key: 4,
@@ -82,7 +86,8 @@ export const Countries = {
             population: 186112800,
             square: 8511965,
             populationDensity: 21.86,
-            date: new Date('December 17, 2021 10:00:00')
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 1111111
         },
         {
             key: 5,
@@ -92,7 +97,9 @@ export const Countries = {
             capital: 'Канберра',
             population: 20090400,
             square: 7686850,
-            populationDensity: 3
+            populationDensity: 3,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 111111
         },
         {
             key: 6,
@@ -102,7 +109,9 @@ export const Countries = {
             capital: 'Нью-Дели',
             population: 1080264400,
             square: 3287590,
-            populationDensity: 328.59
+            populationDensity: 328.59,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 11111
         },
         {
             key: 7,
@@ -112,7 +121,9 @@ export const Countries = {
             capital: 'Буэнос-Айрес',
             population: 39537900,
             square: 2766890,
-            populationDensity: 4.29
+            populationDensity: 4.29,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 1111
         },
         {
             key: 8,
@@ -122,7 +133,9 @@ export const Countries = {
             capital: 'Нур-Султан',
             population: 15185000,
             square: 2717300,
-            populationDensity: 6.00
+            populationDensity: 6.00,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 111
         },
         {
             key: 9,
@@ -132,7 +145,9 @@ export const Countries = {
             capital: 'Хартум',
             population: 40187500,
             square: 2505810,
-            populationDensity: 16.04
+            populationDensity: 16.04,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 11
         },
         {
             key: 10,
@@ -142,7 +157,9 @@ export const Countries = {
             capital: 'Алжир',
             population: 32531900,
             square: 2381740,
-            populationDensity: 13.66
+            populationDensity: 13.66,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 1
         },
         {
             key: 11,
@@ -152,7 +169,9 @@ export const Countries = {
             capital: 'Браззавиль',
             population: 60085800,
             square: 2345410,
-            populationDensity: 25.62
+            populationDensity: 25.62,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 0.1
         },
         {
             key: 12,
@@ -162,7 +181,9 @@ export const Countries = {
             capital: 'Мехико',
             population: 106202900,
             square: 1972550,
-            populationDensity: 53.84
+            populationDensity: 53.84,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 0.11
         },
         {
             key: 13,
@@ -172,7 +193,9 @@ export const Countries = {
             capital: 'Эр-Рияд',
             population: 26417600,
             square: 1960582,
-            populationDensity: 13.47
+            populationDensity: 13.47,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 0.111
         },
         {
             key: 14,
@@ -182,7 +205,9 @@ export const Countries = {
             capital: 'Джакарта',
             population: 241973900,
             square: 1919440,
-            populationDensity: 126.06
+            populationDensity: 126.06,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 11111
         },
         {
             key: 15,
@@ -192,7 +217,9 @@ export const Countries = {
             capital: 'Триполи',
             population: 5765600,
             square: 1759540,
-            populationDensity: 3.00
+            populationDensity: 3.00,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 11111
         },
         {
             key: 16,
@@ -202,7 +229,9 @@ export const Countries = {
             capital: 'Тегеран',
             population: 68017900,
             square: 1648000,
-            populationDensity: 41.27
+            populationDensity: 41.27,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 11111
         },
         {
             key: 17,
@@ -212,7 +241,9 @@ export const Countries = {
             capital: 'Улан-Батор',
             population: 2791300,
             square: 1565000,
-            populationDensity: 2.00
+            populationDensity: 2.00,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 11111
         },
         {
             key: 18,
@@ -222,7 +253,9 @@ export const Countries = {
             capital: 'Лима',
             population: 27925600,
             square: 1285220,
-            populationDensity: 21.73
+            populationDensity: 21.73,
+            date: new Date('December 17, 2021 10:00:00'),
+            gdp: 11111
         }
     ].slice(0, count || undefined),
     getHeader: (): IHeaderCell[] => [
