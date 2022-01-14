@@ -1,4 +1,14 @@
 <span class="controls-DecoratorDate controls-fontsize-{{_options.fontSize}}
-            controls-text-{{_calculateFontColorStyle(_options)}} controls-fontweight-{{_options.fontWeight}}" title="{{_formattedDate}}">
-    {{_formattedDate}}
+            controls-text-{{_calculateFontColorStyle(_options)}} controls-fontweight-{{_options.fontWeight}}"
+      title="{{_formattedDate}}"
+>
+   <ws:if data="{{_options.highlightedValue}}">
+      <Controls._decorator.Highlight
+         value="{{_formattedDate}}"
+         highlightedValue="{{_options.highlightedValue}}"
+      />
+   </ws:if>
+   <ws:else>
+      {{_formattedDate}}
+   </ws:else>
 </span>
