@@ -1,8 +1,0 @@
-{
-    "ui-modules":
-    [
-		 "Controls",
-         "Controls-default-theme",
-         "Controls-icons"
-    ]
-}
