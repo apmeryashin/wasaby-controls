@@ -2872,7 +2872,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _updateInProgress = false;
 
     _hasItemWithImageChanged = false;
-    _needRestoreScroll = false;
     _isMounted = false;
 
     _shadowVisibility = null;

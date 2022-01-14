@@ -182,11 +182,10 @@ const _private = {
                     self._notify('expandedItemsChanged', [expandedItems]);
                     self._notify('collapsedItemsChanged', [expandController.getCollapsedItems()]);
                     self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [item]);
-                    if (self._fixedItem && self._fixedItem.key === nodeKey && expanded) {
-                        return self.scrollToItem(self._fixedItem.key, 'top', false);
+                    if (expanded) {
+                        self._listVirtualScrollController.saveScrollPosition();
                     }
                     //endregion
-                    self._needRestoreScroll = true;
                 });
         }
 
@@ -270,17 +269,15 @@ const _private = {
 
         self._displayGlobalIndicator();
         return sourceController.load(direction, nodeKey).then((list) => {
-                self._needRestoreScroll = true;
-                return list;
-            })
-            .catch((error) => {
-                return error;
-            })
-            .finally(() => {
-                if (self._indicatorsController.shouldHideGlobalIndicator()) {
-                    self._indicatorsController.hideGlobalIndicator();
-                }
-            });
+            self._listVirtualScrollController.saveScrollPosition();
+            return list;
+        }).catch((error) => {
+            return error;
+        }).finally(() => {
+            if (self._indicatorsController.shouldHideGlobalIndicator()) {
+                self._indicatorsController.hideGlobalIndicator();
+            }
+        });
     },
 
     resetExpandedItems(self: TreeControl): void {
