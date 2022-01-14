@@ -13,7 +13,7 @@
             <ws:_caption>
                 <ws:partial template="{{ _options.itemTemplate }}"
                             item="{{itemData}}"
-                            fontSize="{{_options.inlineHeight === 'default' ? 'm' : _options.inlineHeight}}"
+                            fontSize="{{_options.fontSize ? _options.fontSize : _options.inlineHeight === 'default' ? 'm' : _options.inlineHeight}}"
                             displayProperty="{{ _options.displayProperty }}"
                             selected="{{ _isSelectedItem(itemData) }}"
                 />
