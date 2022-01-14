@@ -119,12 +119,10 @@ export default class Cell<
     }
 
     getCellContentRender(): string {
-        if (this.getSearchValue() &&
-            this.getDisplayValue() &&
-            this._$column.displayTypeOptions?.searchHighlight !== false) {
-            return STRING_SEARCH_RENDER;
-        }
-
+        // Подсветку значения поддерживают декораторы number и date.
+        // Декоратор money подсветку не поддерживает т.к. его реализация слишком сложная для добавления подсветки.
+        // И так как досихпор никто не обращался с проблемой подсветки значения в колонках с типом money,
+        // то она там никому и не нужна.
         switch (this._$column.displayType) {
             case 'money':
                 return MONEY_RENDER;
@@ -132,8 +130,16 @@ export default class Cell<
                 return NUMBER_RENDER;
             case 'date':
                 return DATE_RENDER;
-            default:
+            default: {
+                if (this.getSearchValue() &&
+                    this.getDisplayValue() &&
+                    this._$column.displayTypeOptions?.searchHighlight !== false
+                ) {
+                    return STRING_SEARCH_RENDER;
+                }
+
                 return STRING_RENDER;
+            }
         }
     }
 
