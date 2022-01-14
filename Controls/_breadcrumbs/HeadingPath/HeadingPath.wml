@@ -73,9 +73,7 @@
                      class="
                         controls-BreadCrumbsPath__homeContainer
                         {{ _applyHighlighter(_options.highlighter, _items ? _items[0].get(_options.parentProperty) : _options.root) }}
-                        {{_options.withoutBackButton || _options.displayMode === 'multiline'
-                           ? ' controls-BreadCrumbsPath__homeContainer__withoutBackButton'
-                           : ' controls-BreadCrumbsPath__homeContainer__withBackButton'}}
+                        {{_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__homeContainer__without-left-margin'}}
                      "
                      on:mouseEnter="_notifyHandler('hoveredItemChanged', _getRootModel(_items ? _items[0].get(_options.parentProperty) : _options.root, _options.keyProperty))"
                      on:mouseLeave="_notifyHandler('hoveredItemChanged')"
