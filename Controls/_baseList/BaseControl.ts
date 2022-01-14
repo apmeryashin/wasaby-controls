@@ -1520,7 +1520,7 @@ const _private = {
                         const addToStart = newItemsIndex <= self._listViewModel.getStartIndex();
                         const addToEnd = newItemsIndex >= self._listViewModel.getStopIndex();
                         const addToMiddle = !addToStart && !addToEnd;
-                        const virtualPageSize = self._options.virtualScrollConfig.pageSize;
+                        const virtualPageSize = self._options.virtualScrollConfig?.pageSize;
                         const virtualPageIsFilled = virtualPageSize && virtualPageSize ===
                             self._listViewModel.getStopIndex() - self._listViewModel.getStartIndex();
                         let scrollMode;
