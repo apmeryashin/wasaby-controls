@@ -26,6 +26,7 @@ export default {
     _contentData: null,
     _rightTemplate: null,
     _rightBottomTemplate: null,
+    _popupDirection: 'right',
     _popupHeaderTheme: undefined,
     _theme: undefined,
     _popupSettingsController: undefined,
@@ -167,6 +168,14 @@ export default {
 
     getRightPanelBottomTemplate(): string {
         return this._rightBottomTemplate;
+    },
+
+    setPopupDirection(position: string): void {
+        this._popupDirection = position;
+    },
+
+    getPopupDirection(): string {
+        return this._popupDirection;
     },
 
     hasRightPanel(): boolean {

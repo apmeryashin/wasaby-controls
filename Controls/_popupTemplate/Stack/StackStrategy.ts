@@ -24,10 +24,11 @@ export class StackStrategy {
     getPosition(tCoords, item: IStackItem, isAboveMaximizePopup: boolean = false): IPopupPosition {
         const maxPanelWidth = this.getMaxPanelWidth(tCoords);
         const width = this._getPanelWidth(item, tCoords, maxPanelWidth);
-        const right = this._getRightPosition(tCoords, isAboveMaximizePopup);
+        const direction = Controller.getPopupDirection();
+        const horizontalPosition = this._getHorizontalPosition(tCoords, isAboveMaximizePopup, direction);
         const position: IPopupPosition = {
             width,
-            right,
+            [direction]: horizontalPosition,
             top: tCoords.top
         };
 
@@ -97,11 +98,11 @@ export class StackStrategy {
         }
     }
 
-    private _getRightPosition(tCoords, isAboveMaximizePopup: boolean): number {
+    private _getHorizontalPosition(tCoords, isAboveMaximizePopup: boolean, position: string): number {
         if (isAboveMaximizePopup) {
-            return getRightPanelWidth();
+            return position === 'right' ? getRightPanelWidth() : 0;
         }
-        return tCoords.right;
+        return tCoords[position];
     }
 
     private _getPanelWidth(item: IStackItem, tCoords, maxPanelWidth: number): number {
