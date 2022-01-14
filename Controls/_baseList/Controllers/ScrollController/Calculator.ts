@@ -277,7 +277,8 @@ export class Calculator {
                 contentSize: this._contentSize,
                 triggersOffsets: this._triggersOffsets,
                 itemsSizes: this._itemsSizes,
-                placeholders: this._placeholders
+                placeholders: this._placeholders,
+                calcMode: 'shift'
             });
 
             this._placeholders = getPlaceholdersByRange({
@@ -503,7 +504,8 @@ export class Calculator {
             contentSize: this._contentSize,
             triggersOffsets: this._triggersOffsets,
             itemsSizes: this._itemsSizes,
-            placeholders: this._placeholders
+            placeholders: this._placeholders,
+            calcMode: 'shift'
         });
 
         this._placeholders = getPlaceholdersByRange({
