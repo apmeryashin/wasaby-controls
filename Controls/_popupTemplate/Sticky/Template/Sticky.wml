@@ -1,6 +1,7 @@
 <Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
     <div class="controls_popupTemplate_theme-{{_options.theme}}
                 controls-StickyTemplate
+                {{ _options.borderVisible ? 'controls-StickyTemplate__border' }}
                 {{_options.roundBorder ? ('controls-PopupTemplate__roundBorder controls_border-radius-' + _options.borderRadius)}}
                 controls-StickyTemplate-borderStyle-{{_options.borderStyle}}
                 controls-StickyTemplate-hoverBorderStyle-{{_options.hoverBorderStyle}}
