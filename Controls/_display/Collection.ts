@@ -1848,17 +1848,9 @@ export default class Collection<
         const session = this._startUpdateSession();
         this._$group = group;
 
-        // При перестроении компоновщика (например, после добавления стратегии) все стратегии пересоздаются
-        // с опциями, заданными при инициализации.
-        // Правильно тут будет именно удалить и заново добавить стратегию в компоновщик,
-        // чтобы обновились опции.
-        this._composer.remove<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
-        this._composer.append(GroupItemsStrategy, {
-            handler: this._$group,
-            collapsedGroups: this._$collapsedGroups,
-            hiddenGroupPosition: this._$hiddenGroupPosition,
-            groupConstructor: this._getGroupItemConstructor()
-        }, UserItemsStrategy);
+        this._composer.update(GroupItemsStrategy, {
+            handler: this._$group
+        });
         if (group) {
             this._switchImportantPropertiesByGroup(true);
         }
@@ -2844,8 +2836,10 @@ export default class Collection<
     }
 
     setCollapsedGroups(collapsedGroups: TArrayGroupKey): void {
-        const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
-        this._$collapsedGroups = groupStrategy.collapsedGroups = collapsedGroups;
+        this._$collapsedGroups = collapsedGroups;
+        this._composer.update(GroupItemsStrategy, {
+            collapsedGroups: this._$collapsedGroups
+        });
         const session = this._startUpdateSession();
         // Сбрасываем кэш расчётов по всем стратегиям, чтобы спровацировать полный пересчёт с актуальными данными
         this._getItemsStrategy().invalidate();
@@ -3894,15 +3888,6 @@ export default class Collection<
             return;
         }
         const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
-        // prependStrategy вызывает _reGroup после composer.prepend().
-        // Внутри composer.prepend() имеющийся экземпляр стратегии удаляется, и пересоздаётся с опциями,
-        // которые были переданы для неё при добавлении в компоновщик.
-        // Необходимо устанавливать актуальное состояние "свёрнутости" групп,
-        // т.к. после пересоздания стратегии, она ничего не знает об актуальном значении collapsedGroups.
-        // Чтобы убрать этот костыль, надо или научить компоновщик пересоздавать стратегии с актуальными опциями
-        // или сделать получение collapsedGroups через callback или пересмотреть необходимость пересоздания
-        // стратегий при prepend.
-        groupStrategy.collapsedGroups = this._$collapsedGroups;
         groupStrategy.invalidate();
     }
 

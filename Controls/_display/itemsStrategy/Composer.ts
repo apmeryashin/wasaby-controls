@@ -1,6 +1,7 @@
 import IItemsStrategy from '../IItemsStrategy';
 import {DestroyableMixin, SerializableMixin, ISerializableState} from 'Types/entity';
 import {mixin} from 'Types/util';
+import AdjacencyListStrategy from 'Controls/_display/itemsStrategy/AdjacencyList';
 
 interface IState<S, T> extends ISerializableState {
     _modules: Function[];
@@ -115,6 +116,28 @@ export default class Composer<S, T> extends mixin<
         this._modules.length = 0;
         this._options.length = 0;
         this._result = null;
+
+        return this;
+    }
+
+    /**
+     * Обновляет опции и публичные свойства стратегии, не пересобирая компоновщик.
+     * @param Module
+     * @param options
+     */
+    update(Module: Function, options?: object): this {
+        const index = this._modules.indexOf(Module);
+        if (index === -1) {
+            return;
+        }
+
+        const instance = this._getInstance(index);
+        Object.keys(options).forEach((key) => {
+            if (instance.hasOwnProperty(key)) {
+                this._options[index][key] = options[key];
+                instance[key] = options[key];
+            }
+        });
 
         return this;
     }
