@@ -79,7 +79,7 @@ export function getCalcMode(params: IGetModeParams): ICalcMode {
         }
     } else {
         // список проскроллен не в начало и не в конец
-        calcMode = !virtualPageIsFilled ? 'extend' : 'nothing';
+        calcMode = 'shift';
     }
 
     return calcMode;
@@ -101,9 +101,7 @@ export function getScrollMode(params: IGetModeParams): IScrollMode {
         scrollMode = addToStart && !virtualPageIsFilled || addToMiddle ? 'fixed' : 'unfixed';
     } else {
         // список проскроллен не в начало и не в конец
-        // TODO надо разбираться с фиксацией если разворачиваем узел, нужно
-        //  сохранять позицию относительно развернутого узла.
-        scrollMode = addToStart && !virtualPageIsFilled || addToMiddle ? 'fixed' : 'unfixed';
+        scrollMode = 'fixed';
     }
 
     return scrollMode;
