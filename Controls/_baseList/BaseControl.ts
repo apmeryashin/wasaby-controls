@@ -2874,6 +2874,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _scrollTop = 0;
     _popupOptions = null;
     protected _listVirtualScrollController: ListVirtualScrollController;
+    protected _addItemsByLoadToDirection: boolean;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
