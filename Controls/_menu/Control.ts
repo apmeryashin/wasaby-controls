@@ -2,7 +2,8 @@ import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
 import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
-import {RecordSet, List} from 'Types/collection';
+import {RecordSet, List, format} from 'Types/collection';
+import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
 import {ICrudPlus, PrefetchProxy} from 'Types/source';
 import {Collection, CollectionItem, Search} from 'Controls/display';
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
@@ -18,13 +19,16 @@ import { TouchDetect } from 'Env/Touch';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
+import {ISwipeEvent} from 'Controls/listRender';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
-import {StickyOpener, StackOpener, IStickyPopupOptions} from 'Controls/popup';
+import {Controller as HistoryController, Source as HistorySource} from 'Controls/history';
+import {StickyOpener, Sticky, StackOpener, IStickyPopupOptions} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
 import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOptions} from 'Controls/multiselection';
 import {create as DiCreate} from 'Types/di';
 import 'css!Controls/menu';
+import HistoryService from '../_history/Service';
 
 interface IMenuPosition {
     left: number;
@@ -58,12 +62,12 @@ const SUB_DROPDOWN_DELAY = 400;
  *
  * @author Герасимов А.М.
  */
-export default class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
+export default class MenuControl extends Control<IMenuControlOptions, RecordSet> implements IMenuControl {
     readonly '[Controls/_menu/interface/IMenuControl]': boolean = true;
     protected _template: TemplateFunction = ViewTemplate;
 
-    protected _children: {
-        Sticky: StickyOpener
+    protected _children: Record<string, Control> = {
+        sticky: StickyOpener
     };
 
     protected _listModel: Collection<Model>;
@@ -75,55 +79,71 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _subDropdownItem: CollectionItem<Model>|null;
     private _preventCloseSubMenu: boolean = false;
     private _selectionChanged: boolean = false;
-    private _expandedItems: RecordSet;
+    protected _expandedItems: RecordSet;
     private _itemsCount: number;
     private _visibleIds: TKey[] = [];
     private _openingTimer: number = null;
     private _closingTimer: number = null;
     private _isMouseInOpenedItemArea: boolean = false;
-    private _expandedItemsFilter: Function;
+    private _openedTarget: HTMLElement;
+    protected _expandedItemsFilter: Function;
+    private _itemActionSticky: StickyOpener;
+    protected _needStickyHistoryItems: boolean = false;
     private _additionalFilter: Function;
     private _limitHistoryFilter: Function;
     private _notifyResizeAfterRender: Boolean = false;
     private _itemActionsController: ItemActionsController;
 
     private _subMenu: HTMLElement;
+    private _historyController: HistoryController = null;
     private _hoveredItem: CollectionItem<Model>;
     private _hoveredTarget: EventTarget;
     private _enterEvent: MouseEvent;
     private _subMenuPosition: IMenuPosition;
     private _openSubMenuEvent: MouseEvent;
     private _errorController: ErrorController;
-    private _errorConfig: ErrorViewConfig|void;
+    protected _errorConfig: ErrorViewConfig|void;
     private _stack: StackOpener;
     private _markerController: MarkerController;
     private _selectionController: SelectionController = null;
 
     protected _beforeMount(options: IMenuControlOptions,
                            context?: object,
-                           receivedState?: void): Promise<RecordSet> {
+                           receivedState?: RecordSet): Promise<RecordSet> {
         this._expandedItemsFilter = this._expandedItemsFilterCheck.bind(this);
+        this._itemsChangedCallback = this._itemsChangedCallback.bind(this);
         this._additionalFilter = MenuControl._additionalFilterCheck.bind(this, options);
         this._limitHistoryFilter = this._limitHistoryCheck.bind(this);
-
         this._dataName = options.dataName + '_root_' + options.root;
 
         this._stack = new StackOpener();
 
         if (options.sourceController) {
-            options.sourceController.setDataLoadCallback(this._updateAfterLoad.bind(this));
-            const error = options.sourceController.getLoadError();
+            this._sourceController = this._getSourceController(options);
+            this._sourceController.setDataLoadCallback(this._updateAfterLoad.bind(this));
+            const error = this._sourceController.getLoadError();
             if (error) {
                 this._processError(error);
             } else {
-                return this._setItems(options.sourceController.getItems(), options);
+                this._setItems(options.sourceController.getItems(), options);
+                this._initHistoryControllerIfNeed(options);
+                return;
             }
         } else if (options.source) {
             return this._loadItems(options).then((items) => {
                 this._setItems(items, options);
+                this._initHistoryControllerIfNeed(options);
             }, (error) => {
                 return error;
             });
+        }
+    }
+
+    private _destroySourceController(): void {
+        if (this._sourceController) {
+            this._sourceController.unsubscribe('itemsChanged', this._itemsChangedCallback);
+            this._sourceController.destroy();
+            this._sourceController = null;
         }
     }
 
@@ -161,7 +181,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         } else if ((rootChanged || sourceChanged || filterChanged) &&
             !(newOptions.sourceController && newOptions.sourceController.isLoading())) {
             if (sourceChanged) {
-                this._sourceController = null;
+                this._destroySourceController();
             }
             this._closeSubMenu();
             result = this._loadItems(newOptions).then((res) => {
@@ -200,7 +220,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
         if (this._sourceController) {
             this._sourceController.cancelLoading();
-            this._sourceController = null;
+            this._destroySourceController();
         }
 
         if (this._listModel) {
@@ -235,9 +255,22 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
+    private _initHistoryControllerIfNeed(options: IMenuControlOptions): void {
+        let source = options.sourceController?.getSource() || options.source;
+        if (source instanceof PrefetchProxy) {
+            source = source.getOriginal();
+        }
+        if (options.historyId && (source instanceof HistorySource)) {
+            this._historyController = new HistoryController({
+                source,
+                keyProperty: source.getKeyProperty()
+            });
+        }
+    }
+
     protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>,
                               item: CollectionItem<Model>,
-                              sourceEvent: SyntheticEvent<MouseEvent>) {
+                              sourceEvent: SyntheticEvent<MouseEvent>): void {
         if (this._isNeedStartOpening(item, sourceEvent)) {
             // mousemove всплывает с внутренних элементов, из-за чего будет неправильно определен target
             // поэтому сохраняем target на mouseenter
@@ -266,10 +299,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _itemSwipe(e: SyntheticEvent<null>,
                          item: CollectionItem<Model>,
-                         swipeEvent: SyntheticEvent<TouchEvent>,
+                         swipeEvent: ISwipeEvent,
                          swipeContainerWidth: number,
                          swipeContainerHeight: number): void {
-        const isSwipeLeft = swipeEvent.nativeEvent.direction === 'left';
+        const isSwipeLeft = swipeEvent.direction === 'left';
         const itemKey = item.getContents().getKey();
         if (this._options.itemActions) {
             if (isSwipeLeft) {
@@ -332,7 +365,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _updateAfterLoad(items): void {
+    private _updateAfterLoad(items: RecordSet): void {
         this._updateItems(items, this._options);
     }
 
@@ -369,7 +402,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._markerController.setMarkedKey(markedKey);
     }
 
-    private _getSelectionStrategyOptions(): IFlatSelectionStrategyOptions {
+    private _getSelectionStrategyOptions(): Partial<IFlatSelectionStrategyOptions> {
         return {
             model: this._listModel
         };
@@ -416,7 +449,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _pinClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
-        this._notify('pinClick', [item]);
+        this._historyController.togglePin(item).then(() => {
+            const items = this._historyController.getItems();
+            items.setKeyProperty(this._listModel.getKeyProperty());
+            this._sourceController.setItems(items);
+            this._listModel.setCollection(items);
+            this._notify('pinClick', [item]);
+        });
     }
 
     private _rightTemplateClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
@@ -535,7 +574,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return this._isMouseInOpenedItemArea;
     }
 
-    private _closeSubMenuByKey(key?: string): void {
+    private _closeSubMenuByKey(key?: TKey): void {
         if (this._subDropdownItem && this._subDropdownItem.getContents().getKey() === key) {
             this.closeSubMenu();
         } else if (this._children.Sticky.isOpened()) {
@@ -570,7 +609,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             height: clientRect.height
         };
 
-        if (this._subMenuPosition.left < this._openSubMenuEvent.clientX) {
+        if (this._subMenuPosition.left < this._openSubMenuEvent?.clientX) {
             this._subMenuPosition.left += clientRect.width;
         }
     }
@@ -628,7 +667,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _isMouseInOpenedItemAreaCheck(curMouseEvent: MouseEvent): boolean {
-        const firstSegment: number = MenuControl._calculatePointRelativePosition(this._openSubMenuEvent.clientX,
+        const firstSegment: number = MenuControl._calculatePointRelativePosition(this._openSubMenuEvent?.clientX,
             this._subMenuPosition.left, this._openSubMenuEvent.clientY,
             this._subMenuPosition.top, curMouseEvent.clientX, curMouseEvent.clientY);
 
@@ -637,8 +676,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._subMenuPosition.height, curMouseEvent.clientX, curMouseEvent.clientY);
 
         const thirdSegment: number = MenuControl._calculatePointRelativePosition(this._subMenuPosition.left,
-            this._openSubMenuEvent.clientX, this._subMenuPosition.top +
-            this._subMenuPosition.height, this._openSubMenuEvent.clientY, curMouseEvent.clientX, curMouseEvent.clientY);
+            this._openSubMenuEvent?.clientX,
+            this._subMenuPosition.top + this._subMenuPosition.height,
+            this._openSubMenuEvent?.clientY, curMouseEvent.clientX, curMouseEvent.clientY);
 
         return Math.sign(firstSegment) === Math.sign(secondSegment) &&
             Math.sign(firstSegment) === Math.sign(thirdSegment);
@@ -714,7 +754,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
     }
 
-    private _dataLoadCallback(items, options): void {
+    private _dataLoadCallback(items: RecordSet, options: IMenuControlOptions): void {
         if (options.dataLoadCallback) {
             options.dataLoadCallback(items);
         }
@@ -737,7 +777,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _setStateByItems(items: RecordSet, options: IMenuControlOptions): void {
+    protected _setStateByItems(items: RecordSet, options: IMenuControlOptions): void {
         this._setButtonVisibleState(items, options);
         this._createViewModel(items, options);
         this._needStickyHistoryItems = this._checkStickyHistoryItems(options);
@@ -828,9 +868,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return index <= this._itemsCount;
     }
 
-    private _limitHistoryCheck(item: Model): boolean {
+    private _limitHistoryCheck(item: Model | Model[]): boolean {
         let isVisible: boolean = true;
-        if (item && item.getKey) {
+        if (item instanceof Model) {
             isVisible = this._visibleIds.includes(item.getKey());
         } else if (item && item.forEach) {
             isVisible = this._visibleIds.includes(item[0].getKey());
@@ -854,7 +894,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._listModel.nextVersion();
     }
 
-    private _checkStickyHistoryItems(options: IMenuControlOptions): boolean {
+    protected _checkStickyHistoryItems(options: IMenuControlOptions): boolean {
         let countSticky = 0;
         if (options.allowPin) {
             this._listModel.each((item) => {
@@ -927,7 +967,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _addSingleSelectionItem(itemText: string,
-                                    key: string,
+                                    key: TKey,
                                     items: RecordSet,
                                     options: IMenuControlOptions): void {
         const emptyItem = this._getItemModel(items, options.keyProperty);
@@ -1012,17 +1052,25 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 root,
                 parentProperty
             });
+            this._sourceController.subscribe('itemsChanged', this._itemsChangedCallback);
         }
         return this._sourceController;
+    }
+
+    private _itemsChangedCallback(e: SyntheticEvent, items: RecordSet): void {
+        if (this._listModel && this._listModel.getCollection() !== items) {
+            this._setButtonVisibleState(items, this._options);
+            this._listModel.setCollection(items);
+        }
     }
 
     private _loadExpandedItems(options: IMenuControlOptions): void {
         const loadConfig: IMenuControlOptions = merge({}, options);
 
         delete loadConfig.navigation;
-        this._sourceController = null;
+        this._destroySourceController();
 
-        this._loadItems(loadConfig).addCallback((items: RecordSet): void => {
+        this._loadItems(loadConfig).then((items: RecordSet): void => {
             this._expandedItems = items;
             this._createViewModel(items, options);
         });
@@ -1077,13 +1125,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return hasAdditional;
     }
 
-    private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: string) {
+    private _openSubMenuByKey(popupOptions?: IStickyPopupOptions, key?: TKey): void {
         const dataName = this._options.dataName + '_item_' + key;
-        const target = this._container.querySelector(`[data-target=${dataName}]`);
+        const target = this._container.querySelector(`[data-target=${dataName}]`) as HTMLElement;
         const item = this._listModel.getItemBySourceKey(key);
         if (item && this._canOpenSubMenu(item)) {
             this._preventCloseSubMenu = true;
-            this._openSubMenuEvent = {};
+            this._openSubMenuEvent = null;
             this._subDropdownItem = item;
             this._openedTarget = target;
             this._openSubMenu(target, item, popupOptions);
@@ -1109,7 +1157,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _getMenuPopupOffsetClass(item: CollectionItem<Model>, options: object): string {
+    private _getMenuPopupOffsetClass(item: CollectionItem<Model>, options: IMenuControlOptions): string {
         let classes = '';
 
         if (options.subMenuDirection === 'bottom') {
@@ -1162,14 +1210,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         });
     }
 
-    private _getTemplateOptions(item: CollectionItem<Model>): Promise<object> {
-        const root: TKey = item.getContents().get(this._options.keyProperty);
-        const headingCaption = item.getContents().get(this._options.headingCaptionProperty);
+    private _getTemplateOptions(item: CollectionItem<Model>): Promise<IMenuControlOptions> {
+        const sourceItem = item.getContents();
+        const root: TKey = sourceItem.get(this._options.keyProperty);
+        const headingCaption = sourceItem.get(this._options.headingCaptionProperty);
+        const historyId = this._historyController.getHistoryId();
         const isLoadedChildItems = this._isLoadedChildItems(root);
         const sourcePropertyConfig = item.getContents().get(this._options.sourceProperty);
         const dataLoadCallback = !isLoadedChildItems &&
         !sourcePropertyConfig ? this._subMenuDataLoadCallback.bind(this) : null;
-        return this._getSourceSubMenu(isLoadedChildItems, sourcePropertyConfig).then((source) => {
+        return this._getSourceSubMenu(isLoadedChildItems, sourcePropertyConfig, historyId).then((source) => {
             const subMenuOptions: object = {
                 root: sourcePropertyConfig ? null : root,
                 bodyContentTemplate: 'Controls/_menu/Control',
@@ -1181,6 +1231,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     item: item.getContents()
                 },
                 closeButtonVisibility: false,
+                historyId,
                 emptyText: null,
                 showClose: false,
                 showHeader: false,
@@ -1191,7 +1242,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 itemPadding: null,
                 draggable: false,
                 source,
-                sourceController: !source ? this._options.sourceController : undefined,
+                sourceController: this._sourceController,
                 items: isLoadedChildItems ? this._options.items : null,
                 ...item.getContents().get('menuOptions'),
                 subMenuLevel: this._options.subMenuLevel + 1,
@@ -1202,21 +1253,32 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         });
     }
 
-    private _getSourceSubMenu(isLoadedChildItems: boolean,
-                              sourcePropertyConfig: ISourcePropertyConfig | ICrudPlus): Promise<ICrudPlus> {
-        let result = Promise.resolve(this._options.source);
+    private _getSourceSubMenu(
+        isLoadedChildItems: boolean,
+        sourcePropertyConfig: ISourcePropertyConfig | ICrudPlus,
+        historyId?: string
+    ): Promise<ICrudPlus | HistorySource> {
+        let targetSource = this._options.source;
+        const targetIsHistorySource = this._options.source instanceof HistorySource;
 
         if (isLoadedChildItems) {
-            result = Promise.resolve(new PrefetchProxy({
+            targetSource = new PrefetchProxy({
                 target: this._options.source,
                 data: {
                     query: this._listModel.getCollection()
                 }
-            }));
+            });
         } else if (sourcePropertyConfig) {
-            result = this._createMenuSource(sourcePropertyConfig);
+            targetSource = this._createMenuSource(sourcePropertyConfig);
         }
-        return result;
+
+        if (historyId) {
+            if (targetIsHistorySource && this._options.source.getHistoryId() !== historyId || !targetIsHistorySource) {
+                targetSource = getSource(targetSource, this._options);
+            }
+        }
+
+        return Promise.resolve(targetSource);
     }
 
     private _createMenuSource(source: ISourcePropertyConfig | ICrudPlus): Promise<ICrudPlus> {
@@ -1251,8 +1313,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._listModel.getCollection().append(items);
     }
 
-    private _addField(name: string, items, format): void {
-        if (format.getFieldIndex(name) === -1) {
+    private _addField(name: string, items: RecordSet | Model, RSFormat: format.Format): void {
+        if (RSFormat.getFieldIndex(name) === -1) {
             items.addField({
                 name,
                 type: 'string'
@@ -1316,7 +1378,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     static defaultProps: object = {
         selectedKeys: [],
         root: null,
-        historyRoot: null,
         emptyKey: null,
         moreButtonCaption: rk('Еще') + '...',
         groupTemplate,

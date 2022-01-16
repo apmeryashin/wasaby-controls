@@ -1,0 +1,3 @@
+<Controls.actions:Container
+    actions="{{_actions}}"
+/>

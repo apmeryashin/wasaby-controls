@@ -1,0 +1,28 @@
+{
+   "moduleType": "amd",
+   "patchedRequire": true,
+   "ignoreLeaks": true,
+   "root": "C:/Users/se.mihaylov/Desktop/repos/wasaby-controls/application",
+   "tests": [
+      "ControlsUnit"
+   ],
+   "report": "C:/Users/se.mihaylov/Desktop/repos/wasaby-controls/wasaby-cli_artifacts/UnitTests/saby_wasaby-controls/node/result/xunit-report.xml",
+   "htmlCoverageReport": "C:/Users/se.mihaylov/Desktop/repos/wasaby-controls/wasaby-cli_artifacts/UnitTests/saby_wasaby-controls/node/coverage/index.html",
+   "jsonCoverageReport": "C:/Users/se.mihaylov/Desktop/repos/wasaby-controls/wasaby-cli_artifacts/UnitTests/saby_wasaby-controls/node/coverage/index.json",
+   "nyc": {
+      "include": [
+         "Controls/**/*.js",
+         "Controls/**/*.jsx",
+         "Controls-default-theme/**/*.js",
+         "Controls-default-theme/**/*.jsx",
+         "SbisEnvUI/**/*.js",
+         "SbisEnvUI/**/*.jsx"
+      ],
+      "reportDir": "C:/Users/se.mihaylov/Desktop/repos/wasaby-controls/wasaby-cli_artifacts/UnitTests/saby_wasaby-controls/node/coverage",
+      "cwd": "C:/Users/se.mihaylov/Desktop/repos/wasaby-controls/application",
+      "report": "html"
+   },
+   "url": {
+      "port": 777
+   }
+}

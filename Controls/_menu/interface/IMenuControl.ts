@@ -8,10 +8,11 @@ import {
     INavigationSourceConfig
 } from 'Controls/interface';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
-import {Stack, CalmTimer} from 'Controls/popup';
+import {Stack, CalmTimer, IStickyPopupOptions} from 'Controls/popup';
 import {NewSourceController} from 'Controls/dataSource';
 import {default as IBackgroundStyle, IBackgroundStyleOptions} from 'Controls/_interface/IBackgroundStyle';
 import {RecordSet} from 'Types/collection';
+import {Visibility as MarkerVisibility} from 'Controls/marker';
 
 export type TKey = string|number|null;
 
@@ -33,11 +34,31 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     selectorDialogResult?: Function;
     sourceController?: NewSourceController;
     calmTimer?: CalmTimer;
-    historyRoot?: string;
     subMenuDirection?: TSubMenuDirection;
     itemAlign?: TItemAlign;
     headingCaptionProperty?: string;
     itemsSpacing?: string;
+    menuOpenedCallback?: Function;
+    allowPin?: boolean;
+    dataName?: string;
+    searchValue?: string;
+    isDragging?: boolean;
+    openedSubMenuKey?: TKey;
+    closedSubMenuKey?: TKey;
+    emptyKey?: TKey;
+    searchParam?: string;
+    viewMode?: string;
+    maxHistoryVisibleItems?: number;
+    selectedAllKey?: TKey;
+    markerVisibility?: MarkerVisibility;
+    additionalProperty?: string;
+    selectorOpenCallback?: Function;
+    groupingKeyCallback?: Function;
+    subMenuLevel?: number;
+    openedSubMenuOptions?: IStickyPopupOptions;
+    headingCaption?: string;
+    historyId?: string;
+    trigger?: string;
 }
 
 /**

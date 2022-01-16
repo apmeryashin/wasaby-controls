@@ -10,6 +10,7 @@ import rk = require('i18n!Controls');
 import {process} from 'Controls/error';
 import * as Constants from './Constants';
 import {default as Service} from './Service';
+import {TKey} from 'Controls/interface';
 
 export interface IHistorySourceOptions {
     originSource: ICrud;
@@ -240,6 +241,10 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
     _prepareHistoryItem(item: Model, historyType: string): void {
         item.set(historyType, true);
         return item.has('group') && item.set('group', null);
+    }
+
+    getRoot(): TKey {
+        return this._$root;
     }
 
     private _itemNotExist(id: string, historyType: string): void {
@@ -698,6 +703,10 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
 
     getHistory(): IHistoryData {
         return this._$history;
+    }
+
+    getHistoryId(): string {
+        return this._$historySource.getHistoryId();
     }
 
     setHistory(history: IHistoryData): void {

@@ -24,6 +24,7 @@ import FilterSource = require('Controls/_history/FilterSource');
 
 export {default as Source} from './_history/Source';
 export {default as Service} from './_history/Service';
+export {default as Controller} from './_history/Controller';
 
 export {
     Constants,

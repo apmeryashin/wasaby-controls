@@ -6,7 +6,9 @@ let historySource;
 function overrideOrigSourceMethod(): void {
     dropdownHistoryUtils.getSource = () => {
         if (!historySource) {
-            historySource = new HistorySourceMenu({});
+            historySource = new HistorySourceMenu({
+                root: 5
+            });
         }
         return Promise.resolve(historySource);
     };

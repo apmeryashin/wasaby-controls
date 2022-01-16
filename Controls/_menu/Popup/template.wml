@@ -81,6 +81,7 @@
                        isDragging="{{_options.isDragging}}"
                        dropdownClassName="{{_options.dropdownClassName}}"
                        selectorOpenCallback="{{_options.selectorOpenCallback}}"
+                       historyId="{{_options.historyId}}"
                        menuOpenedCallback="{{_options.menuOpenedCallback}}"
                        nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
                        root="{{_options.root}}"

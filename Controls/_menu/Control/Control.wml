@@ -11,6 +11,7 @@
                                        topShadowVisibility="hidden"
                                        bottomShadowVisibility="{{(_options.footerContentTemplate || _expandButtonVisible) ? 'auto' : 'hidden'}}">
                <Controls._menu.Render scope="{{_options}}"
+                                      historyRoot="{{_historyController ? _historyController.getRoot() : null}}"
                                       listModel="{{_listModel}}"
                                       needStickyHistoryItems="{{_needStickyHistoryItems}}"
                                       dataName="{{_options.dataName}}"

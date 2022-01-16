@@ -14,7 +14,7 @@ import {ANIMATION_STATE, ICollectionItem} from 'Controls/display';
  * @public
  * @author Аверкиев П.А.
  */
-export interface IItemActionsItem extends ICollectionItem {
+export interface IItemActionsItem extends CollectionItem {
     ItemActionsItem: boolean;
 
     /**
@@ -82,7 +82,7 @@ export interface IItemActionsItem extends ICollectionItem {
      * @function
      * @public
      */
-    setSwipeAnimation?(state: ANIMATION_STATE): void;
+    setSwipeAnimation(state: ANIMATION_STATE): void;
 
     /**
      * Получить текущее состояние анимации
@@ -90,5 +90,5 @@ export interface IItemActionsItem extends ICollectionItem {
      * @public
      * @return {Controls/display:ANIMATION_STATE} Текущее состояние анимации
      */
-    getSwipeAnimation?(): ANIMATION_STATE;
+    getSwipeAnimation(): ANIMATION_STATE;
 }

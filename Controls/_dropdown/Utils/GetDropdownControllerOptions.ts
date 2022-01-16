@@ -9,6 +9,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         hoverBorderStyle: options.menuHoverBorderStyle,
         borderWidth: options.menuBorderWidth,
         sourceController: options.sourceController,
+        historyIdProperty: options.historyIdProperty,
         source: options.source,
         items: options.items,
         filter: options.filter,

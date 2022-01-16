@@ -57,6 +57,12 @@ export default class Controller implements IDropdownController {
    private _selectedItems: RecordSet<Model>;
    private _sticky: StickyOpener;
    private _popupOptions: IStickyPopupOptions = {};
+   private _isOpened: boolean = false;
+   private _menuSource: Memory | PrefetchProxy = null;
+   private _opening: boolean = false;
+   private _loadMenuTempPromise: Promise<void> = null;
+   private _loadDependsPromise: Promise<void> = null;
+   private _updateHistoryPromise: Promise<void> = null;
 
    constructor(options: IDropdownControllerOptions) {
       this._options = options;
@@ -335,14 +341,8 @@ export default class Controller implements IDropdownController {
        this._menuSource = null;
    }
 
-   pinClick(item): void {
-      const preparedItem = this._prepareItem(item, this._options.keyProperty, this._source);
-      this._source.update(preparedItem, {
-         $_pinned: !preparedItem.get('pinned')
-      }).then(() => {
-         this._setItemsAndMenuSource(this._source.getItems());
-         this._open();
-      }).catch((error) =>  error);
+   pinClick(): void {
+      this._setItemsAndMenuSource(this._source.getItems());
    }
 
    getItems(): RecordSet<Model> {
@@ -426,7 +426,7 @@ export default class Controller implements IDropdownController {
       this._items = items;
    }
 
-   private _createMenuSource(items: RecordSet|Error): void {
+   private _createMenuSource(items: RecordSet): void {
       if (this._options.items && !this._options.source) {
          this._menuSource = new Memory({
             data: items,
@@ -657,14 +657,6 @@ export default class Controller implements IDropdownController {
       return newItems;
    }
 
-   private _prepareItem(item, keyProperty, source): Model {
-      if (this._isHistoryMenu()) {
-         return source.resetHistoryFields(item, keyProperty);
-      } else {
-         return item;
-      }
-   }
-
    private _updateHistory(items): void {
       if (isHistorySource(this._source)) {
          // FIXME https://online.sbis.ru/opendoc.html?guid=300c6a3f-6870-492e-8308-34a457ad7b85
@@ -768,6 +760,8 @@ export default class Controller implements IDropdownController {
          allowPin: this._options.allowPin && this._hasHistory(this._options),
          keyProperty: this._isHistoryMenu() ? 'copyOriginalId' : baseConfig.keyProperty,
          headerTemplate: this._options.headTemplate || this._options.headerTemplate,
+         historyIdProperty: this._options.historyIdProperty,
+         historyId: this._options.historyId,
          footerContentTemplate: this._options.footerContentTemplate,
          items: !this._isHistoryMenu() ? this._items : null,
          source: this._menuSource,
