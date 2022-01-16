@@ -33,6 +33,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
    multiline?: boolean;
    horizontalPadding?: string;
    checkboxStyle?: 'primary' | 'default';
+   markerSize?: 'm' | 'l';
 }
 
 const mapTriState = {false: true, true: null, null: false};
@@ -138,7 +139,8 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColor
          contrastBackground: false,
          multiline: true,
          horizontalPadding: 'default',
-         checkboxStyle: 'primary'
+         checkboxStyle: 'primary',
+         markerSize: 'm'
       };
    }
 
@@ -413,5 +415,13 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @name Controls/_toggle/Checkbox#fontColorStyle
  * @cfg {TFontColorStyle} Стиль цвета текста контрола.
  * @demo Controls-demo/toggle/Checkbox/FontColorStyle/Index
+ */
+/**
+ * @name Controls/_toggle/Checkbox#markerSize
+ * @cfg {String} Определяет размер галочки чекбокса.
+ * @variant m
+ * @variant l
+ * @default m
+ * @demo Controls-demo/toggle/Checkbox/MarkerSize/Index
  */
 export default Checkbox;
