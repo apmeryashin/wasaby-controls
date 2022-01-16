@@ -552,7 +552,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         // Если последняя корневая запись это раскрытый узел у которого есть данные для подгрузки,
         // то загружаем его дочерние элементы
         if (this._canLoadNodeDataOnScroll(direction, lastRootItem, this._options.root)) {
-            return this._loadNodeChildrenRecursive(lastRootItem);
+            this._addItemsByLoadToDirection = true;
+            return this._loadNodeChildrenRecursive(lastRootItem).then((result) => {
+                this._addItemsByLoadToDirection = false;
+                return result;
+            });
         } else {
             // Вызов метода подгрузки данных по умолчанию (по сути - loadToDirectionIfNeed).
             return super._loadMore(direction);
