@@ -1104,6 +1104,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         removedItems: TreeItem[],
         removedItemsIndex: number
     ) {
+        // Если подгрузили записи в узел, то скролл нужно восстанавливать относительно первой полностью видимой записи.
         if (action === IObservable.ACTION_ADD && this._loadItemsToNode) {
             this._listVirtualScrollController.setPredicatedRestoreDirection('backward');
         }

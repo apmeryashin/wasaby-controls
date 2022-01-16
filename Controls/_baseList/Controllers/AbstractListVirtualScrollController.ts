@@ -575,6 +575,7 @@ export abstract class AbstractListVirtualScrollController<
                 const restoreDirection = this._predicatedRestoreDirection
                     ? this._predicatedRestoreDirection
                     : params.shiftDirection;
+                this._predicatedRestoreDirection = null;
                 this._scheduleScroll({
                     type: 'calculateRestoreScrollParams',
                     params: {
