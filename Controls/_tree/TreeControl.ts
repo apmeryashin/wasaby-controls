@@ -8,7 +8,7 @@ import {constants} from 'Env/Env';
 
 import {CrudEntityKey, QueryWhereExpression} from 'Types/source';
 import {isEqual} from 'Types/object';
-import {RecordSet} from 'Types/collection';
+import {IObservable, RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
 import {
@@ -182,10 +182,9 @@ const _private = {
                     self._notify('expandedItemsChanged', [expandedItems]);
                     self._notify('collapsedItemsChanged', [expandController.getCollapsedItems()]);
                     self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [item]);
-                    if (expanded) {
-                        self._listVirtualScrollController.saveScrollPosition();
-                    }
                     //endregion
+
+                    self._loadItemsToNode = false;
                 });
         }
 
@@ -201,6 +200,10 @@ const _private = {
                 self._editingItem.getContents().getKey(),
                 dispItem.contents.getKey()
             );
+        }
+
+        if (expanded) {
+            self._loadItemsToNode = true;
         }
 
         // TODO: Переписать
@@ -268,8 +271,9 @@ const _private = {
         const sourceController = self.getSourceController();
 
         self._displayGlobalIndicator();
+        self._loadItemsToNode = true;
         return sourceController.load(direction, nodeKey).then((list) => {
-            self._listVirtualScrollController.saveScrollPosition();
+            self._loadItemsToNode = false;
             return list;
         }).catch((error) => {
             return error;
@@ -1091,6 +1095,19 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (result.collapsedItems) {
             this._notify('collapsedItemsChanged', [result.collapsedItems]);
         }
+    }
+
+    protected _onCollectionChangedScroll(
+        action: string,
+        newItems: TreeItem[],
+        newItemsIndex: number,
+        removedItems: TreeItem[],
+        removedItemsIndex: number
+    ) {
+        if (action === IObservable.ACTION_ADD && this._loadItemsToNode) {
+            this._listVirtualScrollController.setPredicatedRestoreDirection('backward');
+        }
+        super._onCollectionChangedScroll(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     }
 
     protected _beforeDataLoadCallback(items: RecordSet, direction: IDirection): void {

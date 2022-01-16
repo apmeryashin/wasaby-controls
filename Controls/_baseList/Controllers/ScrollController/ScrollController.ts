@@ -34,7 +34,7 @@ export interface IIndexesChangedParams {
     range: IItemsRange;
     oldRange: IItemsRange;
     oldPlaceholders: IPlaceholders;
-    mode: IScrollMode;
+    scrollMode: IScrollMode;
 }
 
 /**
@@ -506,7 +506,7 @@ export class ScrollController {
                 oldRange: result.oldRange,
                 oldPlaceholders: result.oldPlaceholders,
                 shiftDirection: result.shiftDirection,
-                mode: scrollMode
+                scrollMode
             });
         }
     }

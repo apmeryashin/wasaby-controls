@@ -162,6 +162,15 @@ export abstract class AbstractListVirtualScrollController<
     private _checkTriggersVisibilityTimeout: number;
 
     /**
+     * Предопределенное направление для восстановления скролла.
+     * @remark Используется при подгрузке в узел, т.к. в этом случае обязательно нужно
+     * восстанавливать скролл относительно верхней записи. В данном кейсе сделать это через shiftDirection нельзя, т.к.
+     * смещать диапазон точно нужно вниз, но скролл восстанавливаем относительно верхней записи.
+     * @private
+     */
+    private _predicatedRestoreDirection: IDirection;
+
+    /**
      * Стейт используется, чтобы определить что сейчас идет отрисовка.
      * Нужно для того, чтобы не менять индексы уже во время отрисовки.
      * @private
@@ -275,6 +284,10 @@ export abstract class AbstractListVirtualScrollController<
             this._handleChangedIndexesAfterSynchronizationCallback = null;
         }
         this._renderInProgress = false;
+    }
+
+    setPredicatedRestoreDirection(restoreDirection: IDirection): void {
+        this._predicatedRestoreDirection = restoreDirection;
     }
 
     saveScrollPosition(): void {
@@ -558,11 +571,14 @@ export abstract class AbstractListVirtualScrollController<
             // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
             // и мы будем знать актуальную scrollPosition.
             // Поэтому в params запоминаем необходимые параметры для подсчета EdgeItem.
-            if (params.shiftDirection && params.mode === 'fixed') {
+            if (params.shiftDirection && params.scrollMode === 'fixed') {
+                const restoreDirection = this._predicatedRestoreDirection
+                    ? this._predicatedRestoreDirection
+                    : params.shiftDirection;
                 this._scheduleScroll({
                     type: 'calculateRestoreScrollParams',
                     params: {
-                        direction: params.shiftDirection,
+                        direction: restoreDirection,
                         range: params.oldRange,
                         placeholders: params.oldPlaceholders
                     } as IEdgeItemCalculatingParams

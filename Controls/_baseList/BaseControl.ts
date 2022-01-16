@@ -1449,53 +1449,7 @@ const _private = {
                 }
             }
 
-            // TODO SCROLL self._listVirtualScrollController нужно юниты чинить, чтобы убрать
-            if (self._listVirtualScrollController) {
-                switch (action) {
-                    case IObservable.ACTION_RESET:
-                        self._listVirtualScrollController.resetItems();
-                        // TODO SCROLL по идее это нужно делать после релоада.
-                        if (action === IObservable.ACTION_RESET) {
-                            // если есть данные и вниз и вверх, то скрываем триггер вверх,
-                            // т.к. в первую очередь грузим вниз
-                            if (self._hasMoreData('down') && self._hasMoreData('up')) {
-                                self._listVirtualScrollController.setBackwardTriggerVisible(false);
-                                self._listVirtualScrollController.setForwardTriggerVisible(true);
-                            }
-                        }
-                        break;
-                    case IObservable.ACTION_ADD:
-                        const params = {
-                            range: {
-                                startIndex: self._listViewModel.getStartIndex(),
-                                endIndex: self._listViewModel.getStopIndex()
-                            },
-                            virtualPageSize: self._options.virtualScrollConfig?.pageSize,
-                            scrolledToBackwardEdge: self._scrollTop === 0,
-                            scrolledToForwardEdge: self._viewportSize + self._scrollTop === self._viewSize,
-                            newItemsIndex,
-                            itemsLoadedByTrigger: self._addItemsByLoadToDirection
-                        };
-                        self._listVirtualScrollController.addItems(
-                            newItemsIndex,
-                            newItems.length,
-                            getScrollMode(params),
-                            getCalcMode(params)
-                        );
-                        break;
-                    case IObservable.ACTION_REMOVE:
-                        self._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
-                        break;
-                    case IObservable.ACTION_MOVE:
-                        self._listVirtualScrollController.moveItems(
-                            newItemsIndex,
-                            newItems.length,
-                            removedItemsIndex,
-                            removedItems.length
-                        );
-                        break;
-                }
-            }
+            self._onCollectionChangedScroll(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
 
             if (self._indicatorsController) {
                 switch (action) {
@@ -2919,7 +2873,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _viewportSize = null;
     _scrollTop = 0;
     _popupOptions = null;
-    private _listVirtualScrollController: ListVirtualScrollController;
+    protected _listVirtualScrollController: ListVirtualScrollController;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -3441,6 +3395,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._sourceController;
     }
 
+    // region Scroll
+
     private _createListVirtualScrollController(options): void {
         this._listVirtualScrollController = new ListVirtualScrollController({
             collection: this._listViewModel,
@@ -3585,6 +3541,66 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._changeMarkedKey(key);
         }
     }
+
+    protected _onCollectionChangedScroll(
+        action: string,
+        newItems: Array<CollectionItem<Model>>,
+        newItemsIndex: number,
+        removedItems: Array<CollectionItem<Model>>,
+        removedItemsIndex: number
+    ): void {
+        // TODO SCROLL self._listVirtualScrollController нужно юниты чинить, чтобы убрать
+        if (!this._listVirtualScrollController) {
+            return;
+        }
+
+        switch (action) {
+            case IObservable.ACTION_RESET:
+                this._listVirtualScrollController.resetItems();
+                // TODO SCROLL по идее это нужно делать после релоада.
+                if (action === IObservable.ACTION_RESET) {
+                    // если есть данные и вниз и вверх, то скрываем триггер вверх,
+                    // т.к. в первую очередь грузим вниз
+                    if (this._hasMoreData('down') && this._hasMoreData('up')) {
+                        this._listVirtualScrollController.setBackwardTriggerVisible(false);
+                        this._listVirtualScrollController.setForwardTriggerVisible(true);
+                    }
+                }
+                break;
+            case IObservable.ACTION_ADD:
+                const params = {
+                    range: {
+                        startIndex: this._listViewModel.getStartIndex(),
+                        endIndex: this._listViewModel.getStopIndex()
+                    },
+                    virtualPageSize: this._options.virtualScrollConfig?.pageSize,
+                    scrolledToBackwardEdge: this._scrollTop === 0,
+                    scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
+                    newItemsIndex,
+                    itemsLoadedByTrigger: this._addItemsByLoadToDirection
+                };
+                this._listVirtualScrollController.addItems(
+                    newItemsIndex,
+                    newItems.length,
+                    getScrollMode(params),
+                    getCalcMode(params)
+                );
+                break;
+            case IObservable.ACTION_REMOVE:
+                this._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
+                break;
+            case IObservable.ACTION_MOVE:
+                this._listVirtualScrollController.moveItems(
+                    newItemsIndex,
+                    newItems.length,
+                    removedItemsIndex,
+                    removedItems.length
+                );
+                break;
+        }
+    }
+
+    // endregion Scroll
 
     protected _afterMount(): void {
         this._isMounted = true;
@@ -4361,7 +4377,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._editInPlaceInputHelper = null;
     }
 
-    _beforeRender(): void {
+    protected _beforeRender(): void {
         this._listVirtualScrollController.beforeRenderListControl();
         const hasNotRenderedChanges = this._hasItemWithImageChanged ||
             this._indicatorsController.hasNotRenderedChanges();

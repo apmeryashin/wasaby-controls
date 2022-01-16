@@ -554,7 +554,7 @@ export class Calculator {
             oldPlaceholders: oldState.placeholders,
             indexesChanged,
             shiftDirection,
-            mode: null,
+            scrollMode: null,
 
             hasItemsOutRangeBackward,
             hasItemsOutRangeForward,
