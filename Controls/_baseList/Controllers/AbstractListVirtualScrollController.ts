@@ -190,8 +190,6 @@ export abstract class AbstractListVirtualScrollController<
     private _shouldResetScrollPosition: boolean;
 
     constructor(options: TOptions) {
-        this._initCollection(options.collection);
-
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
         this._virtualScrollMode = options.virtualScrollConfig.mode;
         this._itemsContainerUniqueSelector = options.itemsContainerUniqueSelector;
@@ -203,6 +201,7 @@ export abstract class AbstractListVirtualScrollController<
         this._updateVirtualNavigationUtil = options.updateVirtualNavigationUtil;
         this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
 
+        this._initCollection(options.collection);
         this._createScrollController(options);
     }
 
