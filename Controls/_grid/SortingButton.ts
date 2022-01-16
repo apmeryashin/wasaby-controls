@@ -15,7 +15,7 @@ export interface ISortingButtonOptions extends IControlOptions {
  *
  * @public
  *
- * @see Controls/grid:SortingSelector
+ * @see Controls/sorting:Selector
  */
 class SortingButton extends Control<ISortingButtonOptions> {
     protected _template: TemplateFunction = template;
