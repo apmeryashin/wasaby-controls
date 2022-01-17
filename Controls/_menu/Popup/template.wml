@@ -49,10 +49,9 @@
                         controls-Menu__popup-content">
                <ws:if data="{{_applyButtonVisible}}">
                   <div class="controls-Menu__popup_applyButton
-                        controls-Menu_{{(_hasHeader) ? 'withHeader' +
-                        (_verticalDirection === 'top' ? '-reverse') : 'withoutHeader'}}__applyButton
                         controls-Menu_{{_closeButtonVisibility ? 'withClose' : 'withoutClose'}}__applyButton">
                      <Controls.buttons:Button viewMode="functionalButton"
+                                              contrastBackground="{{_closeButtonVisibility ? false : true}}"
                                               icon="icon-Yes"
                                               iconSize="s"
                                               iconStyle="contrast"
