@@ -85,7 +85,7 @@
 
     <div class="ws-flexbox controls-padding_top-l">
         <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
-            <Controls.input:Text placeholder="Placeholder" borderVisibility="visible"/>
+            <Controls.input:Text placeholder="Placeholder"/>
         </div>
         <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
         </div>
