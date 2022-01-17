@@ -1,26 +1,50 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">fontSize = xs; fontColorStyle = readonly; iconStyle = readonly</div>
+      <Controls.heading:Back caption="Back" fontSize="xs" fontColorStyle="readonly" iconStyle="readonly"/>
+   </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">fontSize = l fontColorStyle = secondary iconStyle = primary</div>
-        <Controls.heading:Back caption="Back" fontSize="l" fontColorStyle="secondary" iconStyle="primary"/>
+        <div class="controls-text-label">fontSize = s; fontColorStyle = default; iconStyle = default</div>
+        <Controls.heading:Back caption="Back" fontSize="s" fontColorStyle="default" iconStyle="default"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">fontSize = 3xl fontColorStyle = secondary iconStyle = primary</div>
-        <Controls.heading:Back caption="Back" fontSize="3xl" fontColorStyle="secondary" iconStyle="primary"/>
+       <div class="controls-text-label">fontSize = m fontColorStyle = primary iconStyle = primary</div>
+       <Controls.heading:Back caption="Back" fontSize="m" fontColorStyle="primary" iconStyle="primary"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">fontSize = 4xl fontColorStyle = secondary iconStyle = primary</div>
-        <Controls.heading:Back caption="Back" fontSize="4xl" fontColorStyle="secondary" iconStyle="primary"/>
+       <div class="controls-text-label">fontSize = l fontColorStyle = secondary iconStyle = secondary</div>
+       <Controls.heading:Back caption="Back" fontSize="l" fontColorStyle="secondary" iconStyle="secondary"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">fontSize = l fontColorStyle = primary iconStyle = secondary</div>
-        <Controls.heading:Back caption="Back" fontSize="l" fontColorStyle="primary" iconStyle="secondary"/>
+       <div class="controls-text-label">fontSize = xl fontColorStyle = link iconStyle = link</div>
+       <Controls.heading:Back caption="Back" fontSize="xl" fontColorStyle="link" iconStyle="link"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">fontSize = 3xl fontColorStyle = primary iconStyle = secondary</div>
-        <Controls.heading:Back caption="Back" fontSize="3xl" fontColorStyle="primary" iconStyle="secondary"/>
+       <div class="controls-text-label">fontSize = 2xl fontColorStyle = label iconStyle = label</div>
+       <Controls.heading:Back caption="Back" fontSize="2xl" fontColorStyle="label" iconStyle="label"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">fontSize = 4xl fontColorStyle = primary iconStyle = secondary</div>
-        <Controls.heading:Back caption="Back" fontSize="4xl" fontColorStyle="primary" iconStyle="secondary"/>
+       <div class="controls-text-label">fontSize = 3xl fontColorStyle = danger iconStyle = danger</div>
+       <Controls.heading:Back caption="Back" fontSize="3xl" fontColorStyle="danger" iconStyle="danger"/>
     </div>
+    <div class="controlsDemo__cell">
+       <div class="controls-text-label">fontSize = 4xl fontColorStyle = success iconStyle = success</div>
+       <Controls.heading:Back caption="Back" fontSize="3xl" fontColorStyle="success" iconStyle="success"/>
+    </div>
+    <div class="controlsDemo__cell">
+       <div class="controls-text-label">fontSize = 5xl fontColorStyle = warning iconStyle = warning</div>
+       <Controls.heading:Back caption="Back" fontSize="5xl" fontColorStyle="warning" iconStyle="warning"/>
+    </div>
+    <div class="controlsDemo__cell">
+       <div class="controls-text-label">fontSize = 6xl fontColorStyle = unaccented iconStyle = unaccented</div>
+       <Controls.heading:Back caption="Back" fontSize="6xl" fontColorStyle="unaccented" iconStyle="unaccented"/>
+    </div>
+    <div class="controlsDemo__cell">
+       <div class="controls-text-label">fontSize = 7xl fontColorStyle = info iconStyle = info</div>
+       <Controls.heading:Back caption="Back" fontSize="7xl" fontColorStyle="info" iconStyle="info"/>
+    </div>
+   <div class="controlsDemo__cell" style="background-color: grey;">
+      <div class="controls-text-contrast">fontSize = 7xl fontColorStyle = contrast iconStyle = contrast</div>
+      <Controls.heading:Back caption="Back" fontSize="7xl" fontColorStyle="contrast" iconStyle="contrast"/>
+   </div>
 </div>
