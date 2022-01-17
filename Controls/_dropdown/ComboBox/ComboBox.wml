@@ -4,6 +4,7 @@
             {{!_readOnly && _options.contrastBackground ? 'controls-ComboBox-validationStatus-' + _options.validationStatus}}
             {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
             controls-text-{{_options.fontColorStyle}}
+            controls-fontweight-{{_options.fontWeight}}
             controls-inlineheight-{{_options.inlineHeight}}
             controls-Combobox-fontsize-{{_options.fontSize}}
             controls-ComboBox_textAlign-{{_options.textAlign}}
