@@ -75,6 +75,7 @@ define(
                     inst._isShadowVisible = ctrl._isShadowVisible;
                     inst._isShadowVisibleByScrollState = ctrl._isShadowVisibleByScrollState;
                     inst._getObserverStyle = ctrl._getObserverStyle;
+                    inst._getBackgroundClass = ctrl._getBackgroundClass;
                     inst._options.shadowVisibility = 'visible';
                     inst._reverseOffsetStyle = ctrl._reverseOffsetStyle;
                     inst._getBottomShadowStyle = ctrl._getBottomShadowStyle;
