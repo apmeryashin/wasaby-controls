@@ -18,7 +18,8 @@ import type {
     IHasItemsOutRange,
     IIndexesChangedParams,
     IItemsRange,
-    IPlaceholders
+    IPlaceholders,
+    ICalcMode
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import type { IEdgeItemCalculatingParams } from 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 import { isEqual } from 'Types/object';
@@ -276,7 +277,8 @@ export class Calculator {
                 contentSize: this._contentSize,
                 triggersOffsets: this._triggersOffsets,
                 itemsSizes: this._itemsSizes,
-                placeholders: this._placeholders
+                placeholders: this._placeholders,
+                calcMode: 'shift'
             });
 
             this._placeholders = getPlaceholdersByRange({
@@ -418,14 +420,15 @@ export class Calculator {
      * При необходимости смещает виртуальный диапазон.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
+     * @param calcMode Режим пересчета диапазона отображаемых записей
      */
-    addItems(position: number, count: number): ICalculatorResult {
+    addItems(position: number, count: number, calcMode: ICalcMode): ICalculatorResult {
         const oldState = this._getState();
         this._totalCount += count;
         const direction = this._calcAddDirection(position, count);
 
         // Корректируем старый диапазон. Т.к. записи добавились  в начало, то все индексы сместятся на count
-        if (position === 0) {
+        if (position === 0 && calcMode === 'shift') {
             this._range.startIndex = Math.min(this._totalCount, this._range.startIndex + count);
             this._range.endIndex = Math.min(this._totalCount, this._range.endIndex + count);
         }
@@ -433,6 +436,7 @@ export class Calculator {
         this._range = shiftRangeBySegment({
             currentRange: this._range,
             direction,
+            calcMode,
             pageSize: this._virtualScrollConfig.pageSize,
             segmentSize: this._getSegmentSize(),
             totalCount: this._totalCount,
@@ -484,7 +488,8 @@ export class Calculator {
             contentSize: this._contentSize,
             triggersOffsets: this._triggersOffsets,
             itemsSizes: this._itemsSizes,
-            placeholders: this._placeholders
+            placeholders: this._placeholders,
+            calcMode: 'shift'
         });
 
         this._placeholders = getPlaceholdersByRange({
@@ -549,7 +554,7 @@ export class Calculator {
             oldPlaceholders: oldState.placeholders,
             indexesChanged,
             shiftDirection,
-            mode: null,
+            scrollMode: null,
 
             hasItemsOutRangeBackward,
             hasItemsOutRangeForward,
