@@ -26,6 +26,8 @@ export interface IData {
     group?: string;
     shipper?: null | string;
     tagStyle?: null | string;
+    width?: string;
+    height?: string;
 }
 
 export interface IColumnRes extends IColumn {
