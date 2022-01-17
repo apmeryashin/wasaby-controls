@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSeparator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {IIconSize, IIconSizeOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
@@ -15,7 +14,7 @@ import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from '../Conte
  */
 type TViewMode = 'ellipsis' | 'arrow';
 
-export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions, IIconSizeOptions {
+export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions {
     /**
      * @name Controls/_toggle/BigSeparator#viewMode
      * @cfg {String} Режим отображения иконки открытия.
@@ -38,7 +37,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
      * @variant s
      * @variant m
      * @variant l
-     * @default 'm'
+     * @default m
      * @demo Controls-demo/toggle/BigSeparator/SeparatorSize/Index
      */
     iconSize?: string;
@@ -62,9 +61,8 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * @demo Controls-demo/toggle/BigSeparator/Index
  */
 
-class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, IIconSize {
+class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
     readonly '[Controls/_toggle/interface/ICheckable]': boolean = true;
-    readonly '[Controls/_interface/IIconSize]': boolean = true;
 
     protected _template: TemplateFunction = BigSeparatorTemplate;
     protected _workByKeyboard: WorkByKeyboardContext;
