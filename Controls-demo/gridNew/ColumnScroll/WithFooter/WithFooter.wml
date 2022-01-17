@@ -17,7 +17,7 @@
     </div>
 
     <div class="controlsDemo__cell">
-        <Controls.scroll:Container attr:style="width: 600px">
+        <Controls.scroll:Container attr:style="width: 600px" attr:data-qa="scrollContainer__under_specific">
             <Controls.grid:View
                     keyProperty="key"
                     source="{{_viewSource}}"
