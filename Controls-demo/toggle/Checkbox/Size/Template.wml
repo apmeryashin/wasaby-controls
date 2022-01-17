@@ -1,0 +1,10 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth350">
+    <div data-qa="controlsDemo-checkboxMarkerSize__m" class="controlsDemo__cell">
+        <div class="controls-text-label">size=m</div>
+        <Controls.toggle:Checkbox caption="Caption" bind:value="_value1" size="s"/>
+    </div>
+    <div data-qa="controlsDemo-checkboxMarkerSize__l" class="controlsDemo__cell">
+        <div class="controls-text-label">size=l</div>
+        <Controls.toggle:Checkbox caption="Caption" bind:value="_value2" size="l"/>
+    </div>
+</div>
