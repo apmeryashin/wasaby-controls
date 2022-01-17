@@ -16,6 +16,7 @@
                  titlePosition="onImage"
                  imageProportion="1:1"
                  titleLines="{{itemTemplate.item.contents.titleLines}}"
+                 titleColorStyle="{{itemTemplate.item.contents.titleColorStyle}}"
                  descriptionLines="{{descriptionLines}}"
                  imageSize="{{itemTemplate.item.contents.imageSize}}"
                  imageViewMode="{{imageViewMode}}"
