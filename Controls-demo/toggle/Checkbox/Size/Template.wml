@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth350">
-    <div data-qa="controlsDemo-checkboxMarkerSize__m" class="controlsDemo__cell">
+    <div data-qa="controlsDemo-checkboxMarkerSize__s" class="controlsDemo__cell">
         <div class="controls-text-label">size=s</div>
         <Controls.toggle:Checkbox caption="Caption" bind:value="_value1" size="s"/>
     </div>
