@@ -9,6 +9,7 @@
                         style="{{ _options.style }}"
                         isSticked="{{ columnScrollPartName !== 'scrollable' }}"
                         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
+                        fixedHeaderBackgroundStyle="{{_options.fixedHeaderBackgroundStyle}}"
                         on:click="_onHeaderRowClick()"
             />
         </ws:if>

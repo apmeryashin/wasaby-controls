@@ -652,6 +652,59 @@ define([
 
       });
 
+      describe('getBackgroundClass', function () {
+         it ('StickyBlock is fixed, backgroundStyle: default, fixedBackgroundStyle: undefined', function () {
+            const stickyOptions = {
+               backgroundStyle: 'default'
+            };
+            const component = createComponent(StickyHeader, stickyOptions);
+            component._model = {
+               fixedPosition: 'top'
+            };
+            const result = component._getBackgroundClass();
+            assert.equal(result, 'controls-StickyHeader__background_default');
+         });
+
+         it ('StickyBlock is fixed, backgroundStyle: default, fixedBackgroundStyle: danger', function () {
+            const stickyOptions = {
+               fixedBackgroundStyle: 'danger',
+               backgroundStyle: 'default'
+            };
+            const component = createComponent(StickyHeader, stickyOptions);
+            component._model = {
+               fixedPosition: 'top'
+            };
+            const result = component._getBackgroundClass();
+            assert.equal(result, 'controls-background-danger');
+         });
+
+         it ('StickyBlock is fixed, backgroundStyle: default, fixedBackgroundStyle: default', function () {
+            const stickyOptions = {
+               fixedBackgroundStyle: 'default',
+               backgroundStyle: 'default'
+            };
+            const component = createComponent(StickyHeader, stickyOptions);
+            component._model = {
+               fixedPosition: 'top'
+            };
+            const result = component._getBackgroundClass();
+            assert.equal(result, 'controls-background-default');
+         });
+
+         it ('StickyBlock is unfixed, backgroundStyle: default, fixedBackgroundStyle: default', function () {
+            const stickyOptions = {
+               fixedBackgroundStyle: 'default',
+               backgroundStyle: 'default'
+            };
+            const component = createComponent(StickyHeader, stickyOptions);
+            component._model = {
+               fixedPosition: ''
+            };
+            const result = component._getBackgroundClass();
+            assert.equal(result, 'controls-StickyHeader__background_default');
+         });
+      });
+
       describe('_restoreBottomShadowHiddenClass', function () {
          it ('should add ws-hidden class if added shadow in js and shadow should be turned off', function () {
             const component = createComponent(StickyHeader, {});
