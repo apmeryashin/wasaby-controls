@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {IHeightOptions, IItemsOptions, IMultiSelectableOptions} from 'Controls/interface';
+import {IFontSizeOptions, IHeightOptions, IItemsOptions, IMultiSelectableOptions} from 'Controls/interface';
 import {ButtonTemplate} from 'Controls/buttons';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -11,8 +11,9 @@ import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 
 export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions, IItemsOptions<object>,
-    IItemTemplateOptions, IHeightOptions {
+    IItemTemplateOptions, IHeightOptions, IFontSizeOptions {
     direction?: string;
+    keyProperty?: string;
 }
 
 /**
@@ -22,10 +23,12 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * @implements Controls/interface:IMultiSelectable
  * @implements Controls/interface:IItems
  * @implements Controls/interface:IHeight
+ * @implements Controls/interface:IFontSize
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Chips/Index
  * @demo Controls-demo/toggle/Chips/ManyContent/Index
+ * @demo Controls-demo/toggle/Chips/MultiSelect/Index
  */
 
 /**
@@ -44,6 +47,12 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
 
 /**
  * @name Controls/_toggle/Chips#inlineHeight
+ * @cfg {String}
+ * @demo Controls-demo/toggle/Chips/inlineHeight/Index
+ */
+
+/**
+ * @name Controls/_toggle/Chips#fontSize
  * @cfg {String}
  * @demo Controls-demo/toggle/Chips/inlineHeight/Index
  */
@@ -142,13 +151,18 @@ class Chips extends Control<IChipsOptions> {
         if (!this._options.readOnly) {
             const keyProperty = this._options.keyProperty;
             const selectedKeys = [...this._options.selectedKeys];
-            const itemIndex = selectedKeys.indexOf(item.get(keyProperty));
+            const added = [];
+            const deleted = [];
+            const itemKeyProperty = item.get(keyProperty);
+            const itemIndex = selectedKeys.indexOf(itemKeyProperty);
             if (itemIndex === -1) {
-                selectedKeys.push(item.get(keyProperty));
+                added.push(itemKeyProperty);
+                selectedKeys.unshift(itemKeyProperty);
             } else {
+                deleted.push(itemIndex);
                 selectedKeys.splice(itemIndex, 1);
             }
-            this._notify('selectedKeysChanged', [selectedKeys]);
+            this._notify('selectedKeysChanged', [selectedKeys, added, deleted]);
         }
     }
 
