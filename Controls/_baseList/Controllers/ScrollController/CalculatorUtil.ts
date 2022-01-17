@@ -1,4 +1,4 @@
-import type { IDirection, IItemsRange, IPlaceholders } from './ScrollController';
+import type { IDirection, IItemsRange, IPlaceholders, ICalcMode } from './ScrollController';
 import type { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import type { IItemsSizes } from './ItemsSizeController/AbstractItemsSizeController';
 
@@ -19,6 +19,7 @@ export interface IGetRangeByItemsSizesParams {
 }
 
 export interface IShiftRangeBySegmentParams extends IGetSegmentSizeToHideParams {
+    calcMode: ICalcMode;
     pageSize: number;
     totalCount: number;
     segmentSize: number;
@@ -72,8 +73,12 @@ export interface IGetFirstVisibleItemIndexParams {
  * @param {IShiftRangeBySegmentParams} params
  */
 export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsRange {
-    const { direction, segmentSize, totalCount, pageSize, currentRange } = params;
+    const { direction, segmentSize, totalCount, pageSize, currentRange, calcMode } = params;
     let { startIndex, endIndex } = currentRange;
+
+    if (calcMode === 'nothing') {
+        return { startIndex, endIndex };
+    }
 
     // Меняем segmentSize так, чтобы заполнить pageSize. То есть возможна ситуация, что переданный segmentSize
     // сместит диапазон так, что pageSize не будет заполнен.
@@ -95,10 +100,12 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
             startIndex = Math.max(0, totalCount - pageSize);
         }
 
-        endIndex = Math.min(
-            Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount)),
-            totalCount
-        );
+        if (calcMode === 'shift') {
+            endIndex = Math.min(
+                Math.max(endIndex - segmentSizeToHide, Math.min(startIndex + pageSize, totalCount)),
+                totalCount
+            );
+        }
     } else {
         // сперва считаем именно endIndex, т.к. startIndex зависит от нового значения endIndex
         endIndex = Math.min(endIndex + correctedSegmentSize, totalCount);
@@ -106,12 +113,12 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
             endIndex = Math.min(pageSize, totalCount);
         }
 
-        startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
+        if (calcMode === 'shift') {
+            startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
+        }
     }
 
-    return {
-        startIndex, endIndex
-    };
+    return { startIndex, endIndex };
 }
 
 /**
