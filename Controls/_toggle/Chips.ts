@@ -54,9 +54,7 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
 /**
  * @name Controls/_toggle/Chips#fontSize
  * @cfg {String}
- * @remark Если значение не указано, то берется из inlineHeight
- * @see Controls/_toggle/Chips#inlineHeight
- * @demo Controls-demo/toggle/Chips/FontSize/Index
+ * @demo Controls-demo/toggle/Chips/inlineHeight/Index
  */
 
 /**
