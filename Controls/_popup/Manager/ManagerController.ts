@@ -26,6 +26,7 @@ export default {
     _contentData: null,
     _rightTemplate: null,
     _rightBottomTemplate: null,
+    _stackPosition: 'right',
     _popupHeaderTheme: undefined,
     _theme: undefined,
     _popupSettingsController: undefined,
@@ -167,6 +168,14 @@ export default {
 
     getRightPanelBottomTemplate(): string {
         return this._rightBottomTemplate;
+    },
+
+    setStackPosition(position: string): void {
+        this._stackPosition = position;
+    },
+
+    getStackPosition(): string {
+        return this._stackPosition;
     },
 
     hasRightPanel(): boolean {
