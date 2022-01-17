@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo-ShortDatePicker__large-container__withCheckmarks controls_shortDatePicker_theme-{{_options.theme}}">
     <Controls.shortDatePicker:View
             startValue="{{_startValue}}"
             endValue="{{_endValue}}"
