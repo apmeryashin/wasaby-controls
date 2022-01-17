@@ -7,8 +7,16 @@
  */
 
 import { Controller as MarkerController } from 'Controls/_marker/Controller';
-import {TVisibility, Visibility, IMarkerListOptions} from 'Controls/_marker/interface';
+import {TVisibility, Visibility, IMarkerListOptions, IMarkerStrategyOptions} from 'Controls/_marker/interface';
 import { default as MultiColumnStrategy } from 'Controls/_marker/strategy/MultiColumn';
 import { default as SingleColumnStrategy } from 'Controls/_marker/strategy/SingleColumn';
 
-export { MarkerController, TVisibility, Visibility, IMarkerListOptions, MultiColumnStrategy, SingleColumnStrategy };
+export {
+    MarkerController,
+    TVisibility,
+    Visibility,
+    IMarkerListOptions,
+    MultiColumnStrategy,
+    IMarkerStrategyOptions,
+    SingleColumnStrategy
+};
