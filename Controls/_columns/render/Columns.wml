@@ -1,6 +1,6 @@
 <!--
    Внутренний шаблон отображения итема списка в том числе и итема группы
-   @param {CollectionItem} item - модель итема коллекци который нужно отрендерить
+   @param {CollectionItem} item - модель итема коллекции который нужно отрендерить
 -->
 <ws:template name="localItemTemplate">
    <ws:partial
@@ -101,7 +101,7 @@
          <ws:if data="{{_listModel.getGroup()}}">
             <ws:for data="groupIndex, groupItem in _options.listModel.getGroupsIterator()">
                <!-- Заголовок группы -->
-               <div class="controls-ColumnsView_group">
+               <div class="controls-ColumnsView_column controls-ColumnsView_column-group">
                   <ws:partial template="localItemTemplate" item="{{groupItem}}"/>
                </div>
 
