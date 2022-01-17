@@ -8,7 +8,7 @@ import {constants} from 'Env/Env';
 
 import {CrudEntityKey, QueryWhereExpression} from 'Types/source';
 import {isEqual} from 'Types/object';
-import {RecordSet} from 'Types/collection';
+import {IObservable, RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
 import {
@@ -182,11 +182,9 @@ const _private = {
                     self._notify('expandedItemsChanged', [expandedItems]);
                     self._notify('collapsedItemsChanged', [expandController.getCollapsedItems()]);
                     self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [item]);
-                    if (self._fixedItem && self._fixedItem.key === nodeKey && expanded) {
-                        return self.scrollToItem(self._fixedItem.key, 'top', false);
-                    }
                     //endregion
-                    self._needRestoreScroll = true;
+
+                    self._loadItemsToNode = false;
                 });
         }
 
@@ -202,6 +200,10 @@ const _private = {
                 self._editingItem.getContents().getKey(),
                 dispItem.contents.getKey()
             );
+        }
+
+        if (expanded) {
+            self._loadItemsToNode = true;
         }
 
         // TODO: Переписать
@@ -269,18 +271,17 @@ const _private = {
         const sourceController = self.getSourceController();
 
         self._displayGlobalIndicator();
+        self._loadItemsToNode = true;
         return sourceController.load(direction, nodeKey).then((list) => {
-                self._needRestoreScroll = true;
-                return list;
-            })
-            .catch((error) => {
-                return error;
-            })
-            .finally(() => {
-                if (self._indicatorsController.shouldHideGlobalIndicator()) {
-                    self._indicatorsController.hideGlobalIndicator();
-                }
-            });
+            self._loadItemsToNode = false;
+            return list;
+        }).catch((error) => {
+            return error;
+        }).finally(() => {
+            if (self._indicatorsController.shouldHideGlobalIndicator()) {
+                self._indicatorsController.hideGlobalIndicator();
+            }
+        });
     },
 
     resetExpandedItems(self: TreeControl): void {
@@ -551,7 +552,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         // Если последняя корневая запись это раскрытый узел у которого есть данные для подгрузки,
         // то загружаем его дочерние элементы
         if (this._canLoadNodeDataOnScroll(direction, lastRootItem, this._options.root)) {
-            return this._loadNodeChildrenRecursive(lastRootItem);
+            this._addItemsByLoadToDirection = true;
+            return this._loadNodeChildrenRecursive(lastRootItem).then((result) => {
+                this._addItemsByLoadToDirection = false;
+                return result;
+            });
         } else {
             // Вызов метода подгрузки данных по умолчанию (по сути - loadToDirectionIfNeed).
             return super._loadMore(direction);
@@ -1094,6 +1099,20 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (result.collapsedItems) {
             this._notify('collapsedItemsChanged', [result.collapsedItems]);
         }
+    }
+
+    protected _onCollectionChangedScroll(
+        action: string,
+        newItems: TreeItem[],
+        newItemsIndex: number,
+        removedItems: TreeItem[],
+        removedItemsIndex: number
+    ) {
+        // Если подгрузили записи в узел, то скролл нужно восстанавливать относительно первой полностью видимой записи.
+        if (action === IObservable.ACTION_ADD && this._loadItemsToNode) {
+            this._listVirtualScrollController.setPredicatedRestoreDirection('backward');
+        }
+        super._onCollectionChangedScroll(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     }
 
     protected _beforeDataLoadCallback(items: RecordSet, direction: IDirection): void {

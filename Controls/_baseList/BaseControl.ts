@@ -122,6 +122,7 @@ import {
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import {FadeController} from 'Controls/_baseList/Controllers/FadeController';
 import type {IHasItemsOutRange} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import {getCalcMode, getScrollMode} from 'Controls/_baseList/Controllers/ScrollController/ScrollUtil';
 
 //#endregion
 
@@ -1448,46 +1449,7 @@ const _private = {
                 }
             }
 
-            // TODO SCROLL self._listVirtualScrollController нужно юниты чинить, чтобы убрать
-            if (self._listVirtualScrollController) {
-                switch (action) {
-                    case IObservable.ACTION_RESET:
-                        self._listVirtualScrollController.resetItems();
-                        // TODO SCROLL по идее это нужно делать после релоада.
-                        if (action === IObservable.ACTION_RESET) {
-                            // если есть данные и вниз и вверх, то скрываем триггер вверх,
-                            // т.к. в первую очередь грузим вниз
-                            if (self._hasMoreData('down') && self._hasMoreData('up')) {
-                                self._listVirtualScrollController.setBackwardTriggerVisible(false);
-                                self._listVirtualScrollController.setForwardTriggerVisible(true);
-                            }
-                        }
-                        break;
-                    case IObservable.ACTION_ADD:
-                        const isTop = self._scrollTop === 0;
-                        const isBottom = self._viewportSize + self._scrollTop === self._viewSize;
-                        const addToStart = newItemsIndex <= self._listViewModel.getStartIndex();
-                        const addToEnd = newItemsIndex >= self._listViewModel.getStopIndex();
-                        // Если записи были просто добавлены в рекордсет и список отскроллен в край,
-                        // то новые записи должны вытеснить старые, чтобы их было сразу видно.
-                        const addItemsMode = self._addItemsByLoadToDirection ||
-                            addToStart && !isTop ||
-                            addToEnd && !isBottom ? 'fixed' : 'unfixed';
-                        self._listVirtualScrollController.addItems(newItemsIndex, newItems.length, addItemsMode);
-                        break;
-                    case IObservable.ACTION_REMOVE:
-                        self._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
-                        break;
-                    case IObservable.ACTION_MOVE:
-                        self._listVirtualScrollController.moveItems(
-                            newItemsIndex,
-                            newItems.length,
-                            removedItemsIndex,
-                            removedItems.length
-                        );
-                        break;
-                }
-            }
+            self._onCollectionChangedScroll(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
 
             if (self._indicatorsController) {
                 switch (action) {
@@ -2864,7 +2826,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _updateInProgress = false;
 
     _hasItemWithImageChanged = false;
-    _needRestoreScroll = false;
     _isMounted = false;
 
     _shadowVisibility = null;
@@ -2912,7 +2873,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _viewportSize = null;
     _scrollTop = 0;
     _popupOptions = null;
-    private _listVirtualScrollController: ListVirtualScrollController;
+    protected _listVirtualScrollController: ListVirtualScrollController;
+    protected _addItemsByLoadToDirection: boolean;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -3434,6 +3396,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._sourceController;
     }
 
+    // region Scroll
+
     private _createListVirtualScrollController(options): void {
         this._listVirtualScrollController = new ListVirtualScrollController({
             collection: this._listViewModel,
@@ -3578,6 +3542,66 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._changeMarkedKey(key);
         }
     }
+
+    protected _onCollectionChangedScroll(
+        action: string,
+        newItems: Array<CollectionItem<Model>>,
+        newItemsIndex: number,
+        removedItems: Array<CollectionItem<Model>>,
+        removedItemsIndex: number
+    ): void {
+        // TODO SCROLL self._listVirtualScrollController нужно юниты чинить, чтобы убрать
+        if (!this._listVirtualScrollController) {
+            return;
+        }
+
+        switch (action) {
+            case IObservable.ACTION_RESET:
+                this._listVirtualScrollController.resetItems();
+                // TODO SCROLL по идее это нужно делать после релоада.
+                if (action === IObservable.ACTION_RESET) {
+                    // если есть данные и вниз и вверх, то скрываем триггер вверх,
+                    // т.к. в первую очередь грузим вниз
+                    if (this._hasMoreData('down') && this._hasMoreData('up')) {
+                        this._listVirtualScrollController.setBackwardTriggerVisible(false);
+                        this._listVirtualScrollController.setForwardTriggerVisible(true);
+                    }
+                }
+                break;
+            case IObservable.ACTION_ADD:
+                const params = {
+                    range: {
+                        startIndex: this._listViewModel.getStartIndex(),
+                        endIndex: this._listViewModel.getStopIndex()
+                    },
+                    virtualPageSize: this._options.virtualScrollConfig?.pageSize,
+                    scrolledToBackwardEdge: this._scrollTop === 0,
+                    scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
+                    newItemsIndex,
+                    itemsLoadedByTrigger: this._addItemsByLoadToDirection
+                };
+                this._listVirtualScrollController.addItems(
+                    newItemsIndex,
+                    newItems.length,
+                    getScrollMode(params),
+                    getCalcMode(params)
+                );
+                break;
+            case IObservable.ACTION_REMOVE:
+                this._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
+                break;
+            case IObservable.ACTION_MOVE:
+                this._listVirtualScrollController.moveItems(
+                    newItemsIndex,
+                    newItems.length,
+                    removedItemsIndex,
+                    removedItems.length
+                );
+                break;
+        }
+    }
+
+    // endregion Scroll
 
     protected _afterMount(): void {
         this._isMounted = true;
@@ -4354,7 +4378,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._editInPlaceInputHelper = null;
     }
 
-    _beforeRender(): void {
+    protected _beforeRender(): void {
         this._listVirtualScrollController.beforeRenderListControl();
         const hasNotRenderedChanges = this._hasItemWithImageChanged ||
             this._indicatorsController.hasNotRenderedChanges();
