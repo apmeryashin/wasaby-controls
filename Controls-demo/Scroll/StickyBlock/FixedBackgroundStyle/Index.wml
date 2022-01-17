@@ -1,12 +1,12 @@
 <div class="controlsDemo__wrapper">
-    <div>stuckBackgroundStyle="danger"</div>
+    <div>fixedBackgroundStyle="danger"</div>
     <Controls.scroll:Container attr:class="controlsDemo_fixedWidth350 controlsDemo__height300">
         <div>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
             dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
             ea commodo consequat.
         </div>
-        <Controls.scroll:StickyBlock stuckBackgroundStyle="danger">
+        <Controls.scroll:StickyBlock fixedBackgroundStyle="danger">
             <h2 class="controlsDemo__wrapper">Header</h2>
         </Controls.scroll:StickyBlock>
         <div>

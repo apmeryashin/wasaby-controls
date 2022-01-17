@@ -41,7 +41,7 @@ export interface IStickyHeaderOptions extends IControlOptions {
     backgroundStyle?: string;
     offsetTop: number;
     offsetLeft: number;
-    stuckBackgroundStyle?: string;
+    fixedBackgroundStyle?: string;
 }
 
 const CONTENT_CLASS = '.controls-StickyHeader__content';
@@ -1012,11 +1012,11 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     protected _getBackgroundClass(): string {
         const isFixed = !!this._model?.fixedPosition;
         const backgroundStyle = isFixed ?
-            (this._options.stuckBackgroundStyle || this._options.backgroundStyle) :
+            (this._options.fixedBackgroundStyle || this._options.backgroundStyle) :
             this._options.backgroundStyle;
 
         let backgroundClass = '';
-        if (backgroundStyle && backgroundStyle !== 'default' || (this._options.stuckBackgroundStyle && isFixed)) {
+        if (backgroundStyle && backgroundStyle !== 'default' || (this._options.fixedBackgroundStyle && isFixed)) {
             backgroundClass = `controls-background-${backgroundStyle}`;
         } else {
             backgroundClass = 'controls-StickyHeader__background_default';
@@ -1257,10 +1257,10 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
  */
 
 /**
- * @name Controls/_interface/IBackgroundStyle#stuckBackgroundStyle
+ * @name Controls/_interface/IBackgroundStyle#fixedBackgroundStyle
  * @cfg {String} Определяет постфикс стиля для настройки фона зафиксированного блока.
  * @default default (фон цвета темы)
- * @demo Controls-demo/Scroll/StickyBlock/StuckBackgroundStyle/Index
+ * @demo Controls-demo/Scroll/StickyBlock/FixedBackgroundStyle/Index
  */
 
 /**

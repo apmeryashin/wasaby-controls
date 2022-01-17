@@ -88,7 +88,7 @@
 					<Controls.scroll:StickyBlock position="{{ column.getStickyHeaderPosition(stickyCallback) }}"
 												 mode="{{ column.getStickyHeaderMode(stickyCallback) }}"
 												 backgroundStyle="{{ column.getStickyBackgroundStyle() }}"
-                                                 stuckBackgroundStyle="{{ stuckHeaderBackgroundStyle }}"
+                                                 fixedBackgroundStyle="{{ fixedHeaderBackgroundStyle }}"
 												 shadowVisibility="{{column.shadowVisibility}}"
 												 _isIosZIndexOptimized="{{ (item || itemData).isIosZIndexOptimized() }}"
 												 fixedZIndex="{{ column.getZIndex()}}"
