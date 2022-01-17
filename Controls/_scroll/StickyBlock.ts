@@ -1258,8 +1258,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
 /**
  * @name Controls/_interface/IBackgroundStyle#fixedBackgroundStyle
- * @cfg {String} Определяет постфикс стиля для настройки фона зафиксированного блока.
- * @default default (фон цвета темы)
+ * @cfg {String} Определяет цвет фона зафиксированного заголовка.
+ * @default default
  * @demo Controls-demo/Scroll/StickyBlock/FixedBackgroundStyle/Index
  */
 
