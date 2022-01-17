@@ -272,26 +272,32 @@ define([
       });
 
       describe('_valueChanged', () => {
-         it('should not notify Invalid Date', function() {
-            const component = calendarTestUtils.createComponent(date.BaseInput, {});
-            const value = [new Date('invalid'), '00.00.00'];
-            sinon.stub(component, '_notify');
-            sinon.stub(component, '_updateValidators');
+         [{
+            value: [new Date('invalid'), '00.00.00'],
+            text: 'should not notify Invalid Date',
+            shouldNotify: false
+         }, {
+            value: [new Date(2021, 0, 1), '01.01.21'],
+            text: 'should notify valid date',
+            shouldNotify: true
+         }, {
+            value: [null, '  .  .  '],
+            text: 'should notify valid null',
+            shouldNotify: true
+         }].forEach((test) => {
+            it(test.text, () => {
+               const component = calendarTestUtils.createComponent(date.BaseInput, {});
+               sinon.stub(component, '_notify');
+               sinon.stub(component, '_updateValidators');
 
-            component._valueChanged(value);
-            sinon.assert.notCalled(component._notify);
-            sinon.restore();
-         });
-
-         it('should notify valid date', function() {
-            const component = calendarTestUtils.createComponent(date.BaseInput, {});
-            const value = [new Date(2021, 0, 1), '01.01.21'];
-            sinon.stub(component, '_notify');
-            sinon.stub(component, '_updateValidators');
-
-            component._valueChanged(value);
-            sinon.assert.calledOnce(component._notify);
-            sinon.restore();
+               component._valueChanged(test.value);
+               if (test.shouldNotify) {
+                  sinon.assert.calledOnce(component._notify);
+               } else {
+                  sinon.assert.notCalled(component._notify);
+               }
+               sinon.restore();
+            });
          });
       });
    });
