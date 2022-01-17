@@ -84,7 +84,7 @@ export default class GroupItem<T> extends mixin<
     }
 
     isSticked(): boolean {
-        return this.isStickyHeader() && !this.isHiddenGroup();
+        return this._$owner.isStickyGroup() && !this.isHiddenGroup();
     }
 
     // TODO Убрать после https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb

@@ -76,19 +76,19 @@ describe('Controls/_display/GroupItem', () => {
 
     describe('isSticked', () => {
         it('sticky enabled', () => {
-            const owner = { isStickyHeader: () => true };
+            const owner = { isStickyGroup: () => true };
             const item = new GroupItem({owner});
             assert.isTrue(item.isSticked());
         });
 
         it('sticky disabled', () => {
-            const owner = { isStickyHeader: () => false };
+            const owner = { isStickyGroup: () => false };
             const item = new GroupItem({owner});
             assert.isFalse(item.isSticked());
         });
 
         it('hidden group', () => {
-            const owner = { isStickyHeader: () => true };
+            const owner = { isStickyGroup: () => true };
             const item = new GroupItem({owner, contents: 'CONTROLS_HIDDEN_GROUP'});
             assert.isFalse(item.isSticked());
         });
