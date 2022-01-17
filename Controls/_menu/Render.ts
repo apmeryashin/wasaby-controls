@@ -160,6 +160,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
                 classes += ` controls-ListView__item-rightPadding_${this._options.itemPadding.right || 's'}`;
             }
 
+            if (treeItem.isHovered()) {
+                classes += ' controls-Menu__row_hovered';
+            }
+
             if (!treeItem.isLastItem()) {
                 classes += ` controls-margin_bottom-${this._options.itemsSpacing}`;
             }

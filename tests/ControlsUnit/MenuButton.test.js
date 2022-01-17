@@ -239,6 +239,7 @@ define(
                nativeEvent: {
                   keyCode: 27
                },
+               preventDefault: () => {},
                stopPropagation: () => {}
             };
             menu._handleKeyDown(event);
