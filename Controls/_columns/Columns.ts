@@ -1,7 +1,7 @@
 import {View} from 'Controls/baseList';
 import {TemplateFunction} from 'UI/Base';
 import {default as ItemContainerGetter} from 'Controls/_columns/itemsStrategy/getItemContainerByIndex';
-import {MultiColumnStrategy} from 'Controls/marker';
+import {MultiColumnStrategy, IMarkerStrategyOptions} from 'Controls/marker';
 import {default as Render} from 'Controls/_columns/render/Columns';
 import 'css!Controls/columns';
 
@@ -10,7 +10,7 @@ import 'css!Controls/columns';
  */
 export default class Columns extends View { /** @lends Controls/_list/List.prototype */
     protected _viewName: TemplateFunction = Render;
-    protected _markerStrategy: new (options) => MultiColumnStrategy = MultiColumnStrategy;
+    protected _markerStrategy: new (options: IMarkerStrategyOptions) => MultiColumnStrategy = MultiColumnStrategy;
     protected _itemsSelector: string = '.controls-ColumnsView_column > .controls-ListView__itemV';
     protected _itemContainerGetter: ItemContainerGetter = ItemContainerGetter;
     protected _plainItemsContainer: boolean = false;
