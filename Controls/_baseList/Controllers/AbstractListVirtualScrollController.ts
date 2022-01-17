@@ -22,7 +22,8 @@ import {
     IPlaceholders,
     ScrollController,
     IScrollControllerOptions,
-    IShiftRangeMode
+    IScrollMode,
+    ICalcMode
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {
     AbstractItemsSizesController,
@@ -161,6 +162,15 @@ export abstract class AbstractListVirtualScrollController<
     private _checkTriggersVisibilityTimeout: number;
 
     /**
+     * Предопределенное направление для восстановления скролла.
+     * @remark Используется при подгрузке в узел, т.к. в этом случае обязательно нужно
+     * восстанавливать скролл относительно верхней записи. В данном кейсе сделать это через shiftDirection нельзя, т.к.
+     * смещать диапазон точно нужно вниз, но скролл восстанавливаем относительно верхней записи.
+     * @private
+     */
+    private _predicatedRestoreDirection: IDirection;
+
+    /**
      * Стейт используется, чтобы определить что сейчас идет отрисовка.
      * Нужно для того, чтобы не менять индексы уже во время отрисовки.
      * @private
@@ -276,6 +286,10 @@ export abstract class AbstractListVirtualScrollController<
         this._renderInProgress = false;
     }
 
+    setPredicatedRestoreDirection(restoreDirection: IDirection): void {
+        this._predicatedRestoreDirection = restoreDirection;
+    }
+
     saveScrollPosition(): void {
         // Если и так запланировано восстановление скролла, то не нужно пытаться еще раз сохранять позицию.
         // Данный кейс возможен если мы, например: скроллим вверх, смещаем диапазон, показываем ромашку(т.к. следующее
@@ -343,8 +357,8 @@ export abstract class AbstractListVirtualScrollController<
 
     // region CollectionChanges
 
-    addItems(position: number, count: number, mode: IShiftRangeMode): void {
-        this._scrollController.addItems(position, count, mode);
+    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
+        this._scrollController.addItems(position, count, scrollMode, calcMode);
     }
 
     moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): void {
@@ -557,11 +571,15 @@ export abstract class AbstractListVirtualScrollController<
             // EdgeItem мы можем посчитать только на _beforeRender - это момент когда точно прекратятся события scroll
             // и мы будем знать актуальную scrollPosition.
             // Поэтому в params запоминаем необходимые параметры для подсчета EdgeItem.
-            if (params.shiftDirection && params.mode === 'fixed') {
+            if (params.shiftDirection && params.scrollMode === 'fixed') {
+                const restoreDirection = this._predicatedRestoreDirection
+                    ? this._predicatedRestoreDirection
+                    : params.shiftDirection;
+                this._predicatedRestoreDirection = null;
                 this._scheduleScroll({
                     type: 'calculateRestoreScrollParams',
                     params: {
-                        direction: params.shiftDirection,
+                        direction: restoreDirection,
                         range: params.oldRange,
                         placeholders: params.oldPlaceholders
                     } as IEdgeItemCalculatingParams
