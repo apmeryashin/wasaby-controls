@@ -133,9 +133,7 @@ export default class Selector extends BaseDropdown {
             dataLoadCallback: this._dataLoadCallback.bind(this),
             selectorOpener: this,
             selectedKeys: options.selectedKeys || [],
-            popupClassName: options.popupClassName || ((options.showHeader ||
-                options.headerTemplate || options.headerContentTemplate) ?
-                'controls-DropdownList__margin-head' : options.multiSelect ?
+            popupClassName: options.popupClassName || (options.multiSelect ?
                     'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin'),
             allowPin: false,
             selectedItemsChangedCallback: this._prepareDisplayState.bind(this, options),
