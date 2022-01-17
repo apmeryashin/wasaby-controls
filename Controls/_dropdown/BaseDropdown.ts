@@ -28,12 +28,15 @@ export abstract class BaseDropdown extends Control<IControlOptions, IDropdownRec
     abstract openMenu(popupOptions?: IStickyPopupOptions): void;
 
     protected _handleKeyDown(event): void {
-        if (event.nativeEvent.keyCode === constants.key.esc && this._isOpened) {
-            this._controller.closeMenu();
+        const key = event.nativeEvent.keyCode;
+        if (key === constants.key.esc && this._isOpened || key === constants.key.space && !this._isOpened) {
             event.stopPropagation();
-        } else if (event.nativeEvent.keyCode === constants.key.space && !this._isOpened) {
-            this.openMenu();
-            event.stopPropagation();
+            event.preventDefault();
+            if (key === constants.key.esc) {
+                this._controller.closeMenu();
+            } else {
+                this.openMenu();
+            }
         }
     }
 
