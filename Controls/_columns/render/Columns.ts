@@ -7,7 +7,6 @@ import {ListView, IList} from 'Controls/baseList';
 import ColumnsCollection from 'Controls/_columns/display/Collection';
 import {DEFAULT_COLUMNS_COUNT} from '../Constants';
 import { IItemPadding } from 'Controls/display';
-import 'Controls/listRender';
 
 export interface IColumnsRenderOptions extends IList {
     columnMinWidth: number;
