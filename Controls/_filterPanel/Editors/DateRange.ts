@@ -56,6 +56,21 @@ class DateRangeEditor extends Control<IDateRangeOptions> {
         const captionFormatter = this._options.captionFormatter || dateRangeLib.Utils.formatDateRangeCaption;
         return captionFormatter(startValue, endValue, this._options.extendedCaption);
     }
+
+    static getDefaultOptions(): object {
+        return {
+            propertyValue: [null, null]
+        };
+    }
 }
+
+Object.defineProperty(DateRangeEditor, 'defaultProps', {
+    enumerable: true,
+    configurable: true,
+
+    get(): object {
+        return DateRangeEditor.getDefaultOptions();
+    }
+});
 
 export default DateRangeEditor;
