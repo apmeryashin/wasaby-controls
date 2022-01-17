@@ -24,16 +24,9 @@ import isFilterItemChanged from 'Controls/_filter/Utils/isFilterItemChanged';
 
 import {updateUrlByFilter, getFilterFromUrl} from 'Controls/_filter/Utils/Url';
 
-interface IFilterHistoryParams {
-    [key: string]: {
-        data: IFilterItem
-    };
-}
-
 export interface IFilterHistoryData {
     items: IFilterItem[];
     prefetchParams?: IPrefetchHistoryParams;
-    historyParams: IFilterHistoryParams;
 }
 
 type THistoryData = IFilterHistoryData | IFilterItem[];
