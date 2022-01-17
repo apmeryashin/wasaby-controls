@@ -1,27 +1,32 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/OpenUrl/Template';
 import {Memory} from 'Types/source';
+import {MaskResolver} from 'Router/router';
+
+function convertUrl(url: string): string {
+    return MaskResolver.calculateHref('Controls-demo/app/:app', {app: url});
+}
 
 const DATA = [
     {
         key: 1,
         title: 'В этом списке',
-        url: 'Controls-demo%2Flist_new%2FOpenUrl%2FPages%2FFirst'
+        url: convertUrl('Controls-demo/list_new/OpenUrl/Pages/First')
     },
     {
         key: 2,
         title: 'При нажатии на записи',
-        url: 'Controls-demo%2Flist_new%2FOpenUrl%2FPages%2FSecond'
+        url: convertUrl('Controls-demo/list_new/OpenUrl/Pages/Second')
     },
     {
         key: 3,
         title: 'Средней кнопкой',
-        url: 'Controls-demo%2Flist_new%2FOpenUrl%2FPages%2FThird'
+        url: convertUrl('Controls-demo/list_new/OpenUrl/Pages%2FThird')
     },
     {
         key: 4,
         title: 'Открываются новые вкладки. А если нажать на ссылку www.google.com, то откроется она.',
-        url: 'Controls-demo%2Flist_new%2FOpenUrl%2FPages%2FFourth'
+        url: convertUrl('Controls-demo/list_new/OpenUrl/Pages/Fourth')
     }
 ];
 export default class extends Control {
