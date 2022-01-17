@@ -58,7 +58,7 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
     protected _popupDirection: string;
 
     protected _beforeMount(options: IStackTemplateOptions): void {
-        this._popupDirection = ManagerController.getPopupDirection();
+        this._popupDirection = ManagerController.getStackPosition();
         this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть', 'окно')}`;
         this._hasRightPanel = ManagerController.hasRightPanel() || !!options.toolbarContentTemplate;
         this._updateMaximizeButton(options);

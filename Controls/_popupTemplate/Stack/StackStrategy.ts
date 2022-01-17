@@ -24,7 +24,7 @@ export class StackStrategy {
     getPosition(tCoords, item: IStackItem, isAboveMaximizePopup: boolean = false): IPopupPosition {
         const maxPanelWidth = this.getMaxPanelWidth(tCoords);
         const width = this._getPanelWidth(item, tCoords, maxPanelWidth);
-        const direction = Controller.getPopupDirection();
+        const direction = Controller.getStackPosition();
         const horizontalPosition = this._getHorizontalPosition(tCoords, isAboveMaximizePopup, direction);
         const position: IPopupPosition = {
             width,
