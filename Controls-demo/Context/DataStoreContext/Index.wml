@@ -1,3 +1,0 @@
-<Controls.context:DataStoreContextProvider value="{{_loadResult}}">
-    <Controls-demo.Context.DataStoreContext.Widget/>
-</Controls.context:DataStoreContextProvider>

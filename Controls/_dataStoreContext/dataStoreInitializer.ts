@@ -7,12 +7,12 @@ export interface IDataStore extends ILoadDataResult {
     filterStore: IFilterStore;
 }
 
-export default function(initialState: ILoadDataResult, stateChangedCallback: Function): IDataStore {
+export default function(initialState: IDataStore, stateChangedCallback: Function): IDataStore {
     const store = {...initialState};
 
     if (initialState.source) {
-        const filterInitializerFunc = loadSync<typeof listInitializer>('Controls/dataSource:listInitializer');
-        store.listStore = filterInitializerFunc(store);
+        const listInitializerFunc = loadSync<typeof listInitializer>('Controls/dataSource:listInitializer');
+        store.listStore = listInitializerFunc(store);
     }
 
     if (initialState.filterController) {

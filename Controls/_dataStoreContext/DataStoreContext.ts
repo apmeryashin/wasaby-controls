@@ -1,5 +1,5 @@
 import * as DataContext from 'Core/DataContext';
-import {IDataStore} from 'Controls/_context/dataStoreInitializer';
+import {IDataStore} from 'Controls/_dataStoreContext/dataStoreInitializer';
 
 export interface IDataStoreOptions {
     value: IDataStore;

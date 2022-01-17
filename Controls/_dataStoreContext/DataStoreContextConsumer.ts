@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_context/DataStoreContextConsumer';
+import * as template from 'wml!Controls/_dataStoreContext/DataStoreContextConsumer';
 import Context from './DataStoreContext';
-import {IDataStore} from 'Controls/_context/dataStoreInitializer';
+import {IDataStore} from 'Controls/_dataStoreContext/dataStoreInitializer';
 
 interface IPrefetchOptionsConsumerContext {
     dataStore: typeof Context;

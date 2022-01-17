@@ -1,8 +1,8 @@
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
-import * as template from 'wml!Controls/_context/DataStoreContextProvider';
+import * as template from 'wml!Controls/_dataStoreContext/DataStoreContextProvider';
 import Context from './DataStoreContext';
 import {isEqual} from 'Types/object';
-import {default as dataStoreInitializer, IDataStore} from 'Controls/_context/dataStoreInitializer';
+import {default as dataStoreInitializer, IDataStore} from 'Controls/_dataStoreContext/dataStoreInitializer';
 import {ILoadDataResult} from 'Controls/dataSource';
 
 interface IPrefetchProviderOptions extends IControlOptions {

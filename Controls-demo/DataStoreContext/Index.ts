@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls-demo/Context/DataStoreContext/Index';
+import * as template from 'wml!Controls-demo/DataStoreContext/Index';
 import {DataLoader, ILoadDataResult} from 'Controls/dataSource';
 import {Memory} from 'Types/source';
 import {IFilterItem} from 'Controls/filter';

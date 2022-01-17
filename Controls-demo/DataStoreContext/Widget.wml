@@ -1,10 +1,10 @@
 <div>
 <div>
     <h2>Кнопка, которая запускает фильтрацию через вызов метода applyFilterDescription из контекста</h2>
-    <Controls-demo.Context.DataStoreContext.filterWidget.Widget/>
+    <Controls-demo.DataStoreContext.filterWidget.Widget/>
 </div>
 <div>
     <h2>Список, который строится по контексту</h2>
-    <Controls-demo.Context.DataStoreContext.listWidget.Widget/>
+    <Controls-demo.DataStoreContext.listWidget.Widget/>
 </div>
 </div>
