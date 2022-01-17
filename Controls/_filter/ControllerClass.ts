@@ -375,7 +375,8 @@ export default class FilterControllerClass extends mixin<
             result = Promise.resolve([]);
         } else {
             const historyIds = [];
-            filterSource.forEach((filterItem) => {
+            const filterButtonItems = FilterControllerClass._getFilterButtonItems(filterSource);
+            filterButtonItems.forEach((filterItem) => {
                 if (filterItem.historyId) {
                     historyIds.push(filterItem.historyId);
                 }
@@ -737,6 +738,14 @@ export default class FilterControllerClass extends mixin<
     private _setFilter(filter: object): void {
         this._$filter = filter;
         this._notify('filterChanged', this._$filter);
+    }
+
+    private static _getFilterButtonItems(filterSource: IFilterItem[]): IFilterItem[] {
+        return FilterControllerClass._getItemsByOption(
+            filterSource,
+            null,
+            getFilterFromUrl()
+        );
     }
 
     private static _minimizeItem(item: IFilterItem): IFilterItem {
