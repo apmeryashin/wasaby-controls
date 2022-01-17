@@ -1,34 +1,34 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">inlineHeight=s</div>
-        <Controls.toggle:Chips items="{{_items}}" inlineHeight="s" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-s"/>
+        <div class="controls-text-label">inlineHeight=s fontSize=s</div>
+        <Controls.toggle:Chips items="{{_items}}" inlineHeight="s" fontSize="s" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-s"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">inlineHeight=m</div>
-        <Controls.toggle:Chips items="{{_items}}" inlineHeight="m" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-m"/>
+        <div class="controls-text-label">inlineHeight=m fontSize=m</div>
+        <Controls.toggle:Chips items="{{_items}}" inlineHeight="m" fontSize="m" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-m"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">inlineHeight=l</div>
-        <Controls.toggle:Chips items="{{_items}}" inlineHeight="l" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-l"/>
+        <div class="controls-text-label">inlineHeight=l fontSize=l</div>
+        <Controls.toggle:Chips items="{{_items}}" inlineHeight="l" fontSize="l" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-l"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">inlineHeight=xl</div>
-        <Controls.toggle:Chips items="{{_items}}" inlineHeight="xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-xl"/>
+        <div class="controls-text-label">inlineHeight=xl fontSize=xl</div>
+        <Controls.toggle:Chips items="{{_items}}" inlineHeight="xl" fontSize="xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-xl"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">inlineHeight=2xl</div>
-        <Controls.toggle:Chips items="{{_items}}" inlineHeight="2xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-2xl"/>
+        <div class="controls-text-label">inlineHeight=2xl fontSize=2xl</div>
+        <Controls.toggle:Chips items="{{_items}}" inlineHeight="2xl" fontSize="2xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-2xl"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">inlineHeight=3xl</div>
-        <Controls.toggle:Chips items="{{_items}}" inlineHeight="3xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-3xl"/>
+        <div class="controls-text-label">inlineHeight=3xl fontSize=3xl</div>
+        <Controls.toggle:Chips items="{{_items}}" inlineHeight="3xl" fontSize="3xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-3xl"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">inlineHeight=4xl</div>
-        <Controls.toggle:Chips items="{{_items}}" inlineHeight="4xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-4xl"/>
+        <div class="controls-text-label">inlineHeight=4xl fontSize=4xl</div>
+        <Controls.toggle:Chips items="{{_items}}" inlineHeight="4xl" fontSize="4xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-4xl"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">inlineHeight=5xl</div>
-        <Controls.toggle:Chips items="{{_items}}" inlineHeight="5xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-5xl"/>
+        <div class="controls-text-label">inlineHeight=5xl fontSize=5xl</div>
+        <Controls.toggle:Chips items="{{_items}}" inlineHeight="5xl" fontSize="5xl" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__inlineHeight-5xl"/>
     </div>
 </div>

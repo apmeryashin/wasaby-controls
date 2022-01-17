@@ -1,6 +1,6 @@
 import {Control, IControlOptions} from 'UI/Base';
 import {Model} from 'Types/entity';
-import {ISingleSelectableOptions, IItemsOptions, IHeightOptions} from 'Controls/interface';
+import {ISingleSelectableOptions, IItemsOptions, IHeightOptions, IFontSizeOptions} from 'Controls/interface';
 import * as itemTemplate from 'wml!Controls/_toggle/ButtonGroup/itemTemplate';
 import {IItemTemplateOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -9,7 +9,7 @@ import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 
 export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlOptions, IItemsOptions<object>,
-    IItemTemplateOptions, IHeightOptions {
+    IItemTemplateOptions, IHeightOptions, IFontSizeOptions {
     allowEmptySelection?: boolean;
     direction?: string;
 }
@@ -74,7 +74,8 @@ class ButtonGroupBase<TOptions extends IButtonGroupOptions = IButtonGroupOptions
         allowEmptySelection: false,
         itemTemplate,
         inlineHeight: 'm',
-        direction: 'horizontal'
+        direction: 'horizontal',
+        fontSize: 'm'
     };
 }
 
