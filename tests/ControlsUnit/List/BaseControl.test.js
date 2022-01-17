@@ -3736,7 +3736,8 @@ define([
                   shouldUpdateOnCollectionChange: () => {
                      shouldUpdateOnCollectionChangeCalled = true;
                   }
-               }
+               },
+               _onCollectionChangedScroll: () => null
             };
             shouldUpdateOnCollectionChangeCalled = false;
             items = [{}];
