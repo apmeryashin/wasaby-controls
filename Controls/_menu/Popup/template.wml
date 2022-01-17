@@ -77,6 +77,7 @@
                </ws:if>
                <Controls._menu.Control
                        name="menuControl"
+                       focusable="{{_options.focusable}}"
                        attr:class="controls-Menu__popup-list"
                        isDragging="{{_options.isDragging}}"
                        dropdownClassName="{{_options.dropdownClassName}}"

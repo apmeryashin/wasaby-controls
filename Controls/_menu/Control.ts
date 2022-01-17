@@ -1,4 +1,5 @@
 import rk = require('i18n!Controls');
+import {constants} from 'Env/Env';
 import {Control, TemplateFunction} from 'UI/Base';
 import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
@@ -175,15 +176,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 this._notifyResizeAfterRender = true;
                 return res;
             });
-        } else if (selectedKeysChanged) {
-            if (this._selectionController) {
-                this._updateSelectionController(newOptions);
-                this._notify('selectedItemsChanged', [this._getSelectedItems()]);
-            }
-
-            if (this._markerController) {
-                this._updateMakerController(newOptions);
-            }
+        } else if (selectedKeysChanged && this._selectionController) {
+            this._updateSelectionController(newOptions);
+            this._notify('selectedItemsChanged', [this._getSelectedItems()]);
+        } else if ((selectedKeysChanged || newOptions.focusable) && this._markerController) {
+            this._updateMarkerController(newOptions);
         }
 
         return result;
@@ -241,6 +238,17 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
+    protected _handleKeyDown(event: SyntheticEvent<KeyboardEvent>): void {
+        const code = event.nativeEvent.keyCode;
+        if (code === constants.key.up) {
+            this._updateSelectedItemKeyboard(event, 'previous');
+        } else if (code === constants.key.down) {
+            this._updateSelectedItemKeyboard(event, 'next');
+        } else if (code === constants.key.enter && this._listModel.getHoveredItem()) {
+            this._notify('itemClick', [this._listModel.getHoveredItem().getContents(), event]);
+        }
+    }
+
     protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>,
                               item: CollectionItem<Model>,
                               sourceEvent: SyntheticEvent<MouseEvent>) {
@@ -248,6 +256,27 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             // mousemove всплывает с внутренних элементов, из-за чего будет неправильно определен target
             // поэтому сохраняем target на mouseenter
             this._hoveredTarget = sourceEvent.target;
+        }
+    }
+
+    private _updateSelectedItemKeyboard(event: SyntheticEvent, direction: string): void {
+        let newItem;
+        if (direction === 'previous') {
+            newItem = this._listModel.getPrevious(this._listModel.getHoveredItem());
+        } else if (direction === 'next') {
+            newItem = this._listModel.getNext(this._listModel.getHoveredItem());
+        }
+        if (newItem) {
+            this._updateKeyboardItem(newItem);
+        }
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    private _updateKeyboardItem(item: CollectionItem<Model>): void {
+        this._listModel.setHoveredItem(item);
+        if (this._markerController) {
+            this._updateMarkerController(this._options);
         }
     }
 
@@ -267,6 +296,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._setItemParamsOnHandle(item, sourceEvent.nativeEvent);
             this._checkOpenedMenu(sourceEvent.nativeEvent, item);
             this._startOpeningTimeout();
+        }
+        if (this._options.focusable && this._listModel.getHoveredItem()) {
+            this._updateKeyboardItem(null);
         }
     }
 
@@ -384,7 +416,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
     }
 
-    private _updateMakerController(newOptions: IMenuControlOptions): void {
+    private _updateMarkerController(newOptions: IMenuControlOptions): void {
         this._getMarkerController(newOptions).updateOptions(this._getMarkerControllerConfig(newOptions));
         const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions);
         this._markerController.setMarkedKey(markedKey);
@@ -754,13 +786,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._updateSelectionController(options);
         }
         if (this._markerController) {
-            this._updateMakerController(options);
+            this._updateMarkerController(options);
         }
     }
 
     private _setStateByItems(items: RecordSet, options: IMenuControlOptions): void {
         this._setButtonVisibleState(items, options);
         this._createViewModel(items, options);
+        if (options.focusable && !this._listModel.getHoveredItem()) {
+            this._updateKeyboardItem(this._listModel.getNext(null));
+        }
         this._needStickyHistoryItems = this._checkStickyHistoryItems(options);
     }
 
@@ -814,8 +849,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }
             }
         } else {
-            const selectedKey = selectedKeys[0];
-            markedKey = selectedKey === undefined && emptyKey !== undefined ? emptyKey : selectedKey;
+            if (this._listModel.getHoveredItem()) {
+                markedKey = this._listModel.getHoveredItem().getContents().getKey();
+            } else {
+                const selectedKey = selectedKeys[0];
+                markedKey = selectedKey === undefined && emptyKey !== undefined ? emptyKey : selectedKey;
+            }
         }
         return markedKey;
     }
@@ -1338,7 +1377,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         itemAlign: 'right',
         subMenuLevel: 0,
         maxHistoryVisibleItems: 10,
-        itemsSpacing: '3xs'
+        itemsSpacing: '3xs',
+        focusable: false
     };
 
     private static _isPinIcon(target: EventTarget): boolean {
