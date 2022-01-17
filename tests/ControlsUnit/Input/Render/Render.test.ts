@@ -11,19 +11,6 @@ describe('Controls.input:Render', () => {
    });
    describe('_beforeMount', () => {
       describe('Check _border state', () => {
-         it('visible', () => {
-            inst._beforeMount({
-               ...defaultOptions,
-               borderVisibility: 'visible'
-            } as IRenderOptions);
-
-            assert.deepEqual(inst._border, {
-               top: true,
-               right: true,
-               bottom: true,
-               left: true
-            });
-         });
          it('partial', () => {
             inst._beforeMount({
                ...defaultOptions,
@@ -33,9 +20,7 @@ describe('Controls.input:Render', () => {
 
             assert.deepEqual(inst._border, {
                top: false,
-               right: false,
-               bottom: true,
-               left: false
+               bottom: true
             });
          });
          it('partial and minLines', () => {
@@ -47,9 +32,7 @@ describe('Controls.input:Render', () => {
 
             assert.deepEqual(inst._border, {
                top: false,
-               right: false,
-               bottom: true,
-               left: false
+               bottom: true
             });
 
             inst._beforeUpdate({
@@ -61,9 +44,7 @@ describe('Controls.input:Render', () => {
 
             assert.deepEqual(inst._border, {
                top: true,
-               right: false,
-               bottom: true,
-               left: false
+               bottom: true
             });
 
             inst._beforeUpdate({
@@ -74,9 +55,7 @@ describe('Controls.input:Render', () => {
 
             assert.deepEqual(inst._border, {
                top: false,
-               right: false,
-               bottom: true,
-               left: false
+               bottom: true
             });
          });
          it('hidden', () => {
@@ -87,9 +66,7 @@ describe('Controls.input:Render', () => {
 
             assert.deepEqual(inst._border, {
                top: false,
-               right: false,
-               bottom: false,
-               left: false
+               bottom: false
             });
          });
       });

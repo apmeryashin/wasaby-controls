@@ -34,9 +34,7 @@ type State =
 
 export interface IBorder {
     top: boolean;
-    right: boolean;
     bottom: boolean;
-    left: boolean;
 }
 
 export interface IRenderOptions extends IControlOptions, IHeightOptions, IBorderVisibilityOptions,
@@ -233,6 +231,14 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._setState(this._options);
     }
 
+    protected _getBorderClass(): string {
+        if (this._options.borderVisibility !== 'hidden') {
+            return ((this._border.top ? 'controls-Render_border-top' : 'controls-Render_border-top-empty') +
+                (this._border.bottom ? ' controls-Render_border-bottom' : ' controls-Render_border-bottom-empty'));
+        }
+        return '';
+    }
+
     private static notSupportFocusWithin(): boolean {
         return detection.isIE || (detection.isWinXP && detection.yandex);
     }
@@ -240,36 +246,16 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     private static _detectToBorder(borderVisibility: TBorderVisibility | IBorderVisibilityArea,
                                    minLines: number,
                                    contrastBackground: boolean): IBorder {
-        switch (borderVisibility) {
-            case 'visible':
-                return {
-                    top: true,
-                    right: true,
-                    bottom: true,
-                    left: true
-                };
-            case 'partial':
-                return {
-                    top: minLines > 1 && !contrastBackground,
-                    right: false,
-                    bottom: true,
-                    left: false
-                };
-            case 'hidden':
-                return {
-                    top: false,
-                    right: false,
-                    bottom: false,
-                    left: false
-                };
-            case 'bottom':
-                return {
-                    top: false,
-                    right: false,
-                    bottom: true,
-                    left: false
-                };
+        if (borderVisibility === 'hidden') {
+            return {
+                top: false,
+                bottom: false
+            };
         }
+        return {
+            top: minLines > 1 && !contrastBackground,
+            bottom: true
+        };
     }
 
     private static _getFontWeight(fontWeight: string, fontSize: string): string {
