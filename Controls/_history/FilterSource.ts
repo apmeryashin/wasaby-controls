@@ -2,7 +2,7 @@
  * Created by am.gerasimov on 21.03.2018.
  */
 import CoreExtend = require('Core/core-extend');
-import collection = require('Types/collection');
+import {RecordSet} from 'Types/collection';
 import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
 import entity = require('Types/entity');
@@ -12,14 +12,16 @@ import {isEqual} from 'Types/object';
 
 const historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 const DEFAULT_FILTER = '{}';
+const TYPE_RECENT = 'r';
+const TYPE_PINNED = 'p';
 
 const _private = {
    isOldPinned(data) {
       return !JSON.parse(data, _private.getSerialize().desirialize)?.hasOwnProperty('linkText');
    },
 
-   createRecordSet(data: object): collection.RecordSet {
-       return new collection.RecordSet({
+   createRecordSet(data: object): RecordSet {
+       return new RecordSet({
            rawData: data,
            keyProperty: 'ObjectId',
            adapter: 'adapter.sbis'
@@ -62,30 +64,86 @@ const _private = {
       return JSON.parse(data, this.getSerialize(self).deserialize);
    },
 
-   initHistory(self, data) {
-      if (data.getRow) {
-         const rows = data.getRow();
-         const pinned = rows.get('pinned');
-         const recent = rows.get('recent');
-         const frequent = rows.get('frequent');
-         const client = rows.get('client');
+   getHistoryParamsItems(items) {
+      const historyParams = {};
+      items.forEach((item) => {
+         if (item.historyId) {
+            const clonedItem = clone(item);
+            delete clonedItem.historyId;
+            historyParams[item.historyId] = {
+               data: clonedItem
+            };
+         }
+      });
+      return historyParams;
+   },
 
-         self._history = {
-            pinned,
-            recent
-         };
-         if (client) {
-            self._history.client = client;
-         } else if (frequent) {
-            self._history.frequent = frequent;
+   initHistory(self, data) {
+      if (self.historySource._$favorite) {
+         if (data.getRow) {
+            const rows = data.getRow();
+            const pinned = rows.get('pinned');
+            const recent = rows.get('recent');
+            const frequent = rows.get('frequent');
+            const client = rows.get('client');
+
+            self._history = {
+               pinned,
+               recent
+            };
+            if (client) {
+               self._history.client = client;
+            } else if (frequent) {
+               self._history.frequent = frequent;
+            }
+         } else {
+            self._history = data;
          }
       } else {
-         self._history = data;
+         const rows = data.getRow();
+         if (rows && rows.get('pinned')) {
+            self._history = {
+               pinned: rows.get('pinned'),
+               recent: rows.get('recent'),
+               params: rows.get('params')
+            };
+         } else {
+            const items = data.getAll();
+            const pinned = new RecordSet({
+               keyProperty: 'ObjectId',
+               adapter: 'adapter.sbis'
+            });
+            const recent = new RecordSet({
+               keyProperty: 'ObjectId',
+               adapter: 'adapter.sbis'
+            });
+            const params = {};
+            const historyId = self.historySource.getHistoryId();
+            items.each((item) => {
+               if (item.get('HistoryId') === historyId) {
+                  switch (item.get('rtype')) {
+                     case TYPE_RECENT:
+                        recent.add(item);
+                        break;
+                     case TYPE_PINNED:
+                        pinned.add(item);
+                        break;
+                  }
+               } else {
+                  params[item.get('HistoryId')] = item;
+               }
+            });
+            self._history = {
+               pinned,
+               recent,
+               params
+            };
+         }
       }
    },
 
    getItemsWithHistory(self, history) {
-      const items = new collection.RecordSet({
+      const items = new RecordSet({
          adapter: new entity.adapter.Sbis(),
          keyProperty: 'ObjectId'
       });
@@ -122,7 +180,7 @@ const _private = {
       };
       return new entity.Model({
          rawData,
-         adapter: item.getAdapter(),
+         adapter: 'adapter.sbis',
          format
       });
    },
@@ -168,18 +226,25 @@ const _private = {
    },
 
    fillRecent(self, history, items) {
-      const pinnedCount = self.historySource._$pinned !== false ? history.pinned.getCount() : 0;
+      let pinnedCount = 0;
+      if (self.historySource._$pinned !== false) {
+         pinnedCount = history.pinned.getCount ? history.pinned.getCount() : history.pinned.length;
+      }
       const maxLength = self.historySource._$recent - pinnedCount - 1;
       let currentCount = 0;
       let isPinned;
 
       _private.fillItems(history.recent, items, 'recent', (item) => {
-         isPinned = history.pinned.getRecordById(item.getId());
+         isPinned = _private.getPinnedItem(self, history, item.getKey);
          if (!isPinned && item.get('ObjectData') !== DEFAULT_FILTER) {
             currentCount++;
          }
          return !isPinned && currentCount <= maxLength && item.get('ObjectData') !== DEFAULT_FILTER;
       });
+   },
+
+   getPinnedItem(self, history, key) {
+      return history.pinned.getRecordById(key);
    },
 
    addProperty(self, record, name, type, defaultValue) {
@@ -217,9 +282,9 @@ const _private = {
 
    deleteClient(self, item) {
       const client = self._history.client;
-      _private.deleteHistoryItem(client, item.getId());
-      _private.deleteHistoryItem(self._history.recent, item.getId());
-      _private.deleteHistoryItem(self._history.pinned, item.getId());
+      _private.deleteHistoryItem(self, client, item.getId());
+      _private.deleteHistoryItem(self, self._history.recent, item.getId());
+      _private.deleteHistoryItem(self, self._history.pinned, item.getId());
 
       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
    },
@@ -237,16 +302,16 @@ const _private = {
       const isPinned = !!meta.$_pinned;
       const pinned = self._history.pinned;
       item.set('pinned', isPinned);
+      const pinItem = _private.getPinnedItem(self, self._history, item.getKey());
 
       if (isPinned) {
-         const pinItem = pinned.getRecordById(item.getId());
          if (pinItem) {
             _private.updateDataItem(pinItem, item.get('ObjectData'));
          } else {
             pinned.add(this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId')));
          }
       } else if (!isPinned) {
-         pinned.remove(pinned.getRecordById(item.getId()));
+         pinned.remove(pinItem);
       }
       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
    },
@@ -255,11 +320,11 @@ const _private = {
       item.set('ObjectData', ObjectData);
    },
 
-    deleteHistoryItem(history, id) {
-       const hItem = history.getRecordById(id);
-       if (hItem) {
-          history.remove(hItem);
-       }
+    deleteHistoryItem(self, history, key) {
+      const hItem = history.getRecordById(key);
+      if (hItem) {
+         history.remove(hItem);
+      }
     },
 
    updateRecent(self, item) {
@@ -267,7 +332,7 @@ const _private = {
       const recent = self._history.recent;
       let records;
 
-      _private.deleteHistoryItem(recent, id);
+      _private.deleteHistoryItem(self, recent, id);
 
       records = [this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId'))];
       recent.prepend(records);
@@ -292,7 +357,7 @@ const _private = {
                }
             ]
          },
-         adapter: self._history.recent.getAdapter()
+         adapter: 'adapter.sbis'
       });
    },
 
@@ -335,7 +400,7 @@ const _private = {
    // идентификатор в сериалайзере на клиенте может совпасть с идентификатором сохранённым в истории
    // и мы по итогу получим некорректный результат
    // Для этого всегда создаём новый инстанс Serializer'a
-   getSerialize() {
+   getSerialize(): Serializer {
       return new Serializer();
    },
 
@@ -343,7 +408,7 @@ const _private = {
       const recent = self._history && self._history.recent;
 
       if (recent) {
-         _private.deleteHistoryItem(recent, id);
+         _private.deleteHistoryItem(self, recent, id);
       }
    }
 };
@@ -426,6 +491,12 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          _private.updateFavorite(this, data, meta);
       }
       if (meta.hasOwnProperty('$_addFromData')) {
+         let historyParams;
+         if (data.items) {
+            historyParams = _private.getHistoryParamsItems(data.items);
+            data.items = data.items.filter((item) => !item.historyId);
+         }
+
          item = _private.findHistoryItem(this, data);
          if (item) {
             meta = {
@@ -435,10 +506,21 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
             _private.getSourceByMeta(this, meta).update(item, meta);
             return Deferred.success(item.getId());
          }
+         if (historyParams) {
+            for (const historyId in historyParams) {
+               if (historyParams.hasOwnProperty(historyId)) {
+                  historyParams[historyId].data =
+                      JSON.stringify(historyParams[historyId].data, _private.getSerialize().serialize);
+               }
+            }
+         }
 
-         serData = JSON.stringify(data, _private.getSerialize(this).serialize);
+         serData = JSON.stringify(data, _private.getSerialize().serialize);
 
-         return _private.getSourceByMeta(this, meta).update(serData, meta).addCallback((dataSet) => {
+         return _private.getSourceByMeta(this, meta).update({
+            items: serData,
+            historyParams
+         }, meta).addCallback((dataSet) => {
             if (dataSet) {
                 const hId = item ? item.get('HistoryId') : this.historySource.getHistoryId();
                 _private.updateRecent(
@@ -459,7 +541,7 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          hService.deleteItem(data, { isClient: 0 });
       } else {
          _private.updatePinned(this, data, meta);
-         _private.deleteHistoryItem(this._history.recent, data.getId());
+         _private.deleteHistoryItem(this, this._history.recent, data.getId());
       }
       hService.deleteItem(data, meta);
    },
@@ -491,7 +573,7 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          if (!this._loadDef || this._loadDef.isReady()) {
             this._loadDef = new Deferred();
 
-            this.historySource.query().addCallback((data) => {
+            this.historySource.query(query).addCallback((data) => {
                _private.initHistory(this, data);
                prepareHistory();
             }).addErrback((error): Promise<sourceLib.DataSet> => {
@@ -529,6 +611,10 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
 
    getPinned() {
       return this._history.pinned;
+   },
+
+   getParams() {
+      return this._history.params || {};
    },
 
    /**
