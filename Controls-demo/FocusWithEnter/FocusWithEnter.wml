@@ -181,6 +181,13 @@
                             bind:value="_numberValue2"
                     />
                 </div>
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label controlsDemo__maxWidth200">Search</div>
+                    <Controls.search:Input attr:tabindex="19"
+                                           placeholder="Найдется все"
+                                           contrastBackground="{{true}}"
+                                           attr:class="controlsDemo__searchBase_field"/>
+                </div>
             </div>
         </Controls.form:FocusWithEnter>
     </Controls.form:ContextProvider>
