@@ -1839,6 +1839,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTileItem} itemType Тип элемента
      * @param {number} titleLines Кол-во строк в заголовке
      * @param {string} textColor Цвет текста заголовка
+     * @param {Controls/_interface/IFontColorStyle/TFontColorStyle.typedef} titleColorStyle Стиль цвета заголовка
      * @param {TTitlePosition} titlePosition Положение заголовка относительно изображения
      * @param {TImageViewMode} imageViewMode Режим отображения изображения
      * @param {TContentPosition} contentPosition Положение контента относительно изображения
@@ -1846,6 +1847,7 @@ export default abstract class TileItem<T extends Model = Model> {
     getTitleStyles(itemType: TTileItem = 'default',
                    titleLines: number = 1,
                    textColor: string = 'inherit',
+                   titleColorStyle: TFontColorStyle = 'default',
                    titlePosition: TTitlePosition = 'underImage',
                    imageViewMode: TImageViewMode = 'rectangle',
                    contentPosition: TContentPosition = 'underImage'): string {
@@ -1858,9 +1860,12 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'medium':
                 break;
             case 'rich':
-                const color = imageViewMode !== 'none' && (
+                let color = imageViewMode !== 'none' && (
                     titlePosition === 'onImage' || contentPosition !== 'underImage'
                 ) ? '#fff' : textColor;
+                if (titleColorStyle !== 'default') {
+                    color = textColor;
+                }
                 styles = `-webkit-line-clamp: ${titleLines};`;
                 styles += `color: ${color};`;
                 break;
