@@ -664,6 +664,12 @@ export interface IGridControl extends IList {
  */
 
 /**
+ * @name Controls/_grid/display/interface/IGridControl#fixedHeaderBackgroundStyle
+ * @cfg {String} Определяет цвет фона зафиксированного заголовка.
+ * @default default
+ */
+
+/**
  * Устанавливает положение горизонтального скролла в крайнее левое положение, в начало таблицы.
  * @function
  * @name Controls/_grid/display/interface/IGridControl#scrollToLeft
