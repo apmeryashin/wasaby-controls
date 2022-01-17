@@ -11,6 +11,7 @@ type TStyle = 'danger' | 'secondary' | 'warning' | 'success' | 'info' | 'primary
 
 export interface IInfoboxTemplateOptions extends IControlOptions, IInfoBoxOptions, IValidationStatusOptions {
     stickyPosition?: IStickyPopupPosition;
+    backgroundStyle?: string;
 }
 /**
  * Базовый шаблон {@link /doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
@@ -69,10 +70,20 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
         this._notify('close', [], { bubbling: true });
     }
 
+    protected _getBackgroundStyle(): string {
+        const backgroundStyle = this._options.backgroundStyle;
+        // Добавляем проверку на значение по умолчанию, что бы навесить класс с переменной для возможности темизации.
+        if (backgroundStyle === 'secondary') {
+            return 'controls-InfoBoxTemplate__backgroundStyle-secondary';
+        }
+        return `controls-background-${backgroundStyle}`;
+    }
+
     static defaultProps: Partial<IInfoboxTemplateOptions> = {
         closeButtonVisible: true,
         validationStatus: 'valid',
-        style: 'secondary'
+        style: 'secondary',
+        backgroundStyle: 'secondary'
     };
 
     private static _getArrowPosition(side: TVertical | THorizontal): TArrowPosition {
@@ -149,4 +160,13 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
 /**
  * @name Controls/_popupTemplate/InfoBox#content
  * @cfg {function|String} Шаблон, который будет отображать всплывающая подсказка.
+ */
+
+/**
+ * @name Controls/_popupTemplate/InfoBox#backgroundStyle
+ * @cfg {String} Устанавливает фон отображения всплывающей подсказки.
+ * @default secondary
+ * @variant default
+ * @variant secondary
+ * @demo Controls-demo/PopupTemplate/Infobox/BackgroundStyle/Index
  */
