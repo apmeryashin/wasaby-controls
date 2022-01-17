@@ -1,4 +1,11 @@
-import {Controller as ManagerController, IPopupItem, IPopupPosition, IPopupSizes, IPopupController, IDragOffset} from 'Controls/popup';
+import {
+    Controller as ManagerController,
+    IPopupItem,
+    IPopupPosition,
+    IPopupSizes,
+    IPopupController,
+    IDragOffset,
+} from 'Controls/popup';
 import getTargetCoords from 'Controls/_popupTemplate/TargetCoords';
 import {Control} from 'UI/Base';
 import {goUpByControlTree} from 'UI/Focus';
@@ -10,12 +17,14 @@ import * as cMerge from 'Core/core-merge';
 import * as cInstance from 'Core/core-instance';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
-export const RIGHT_PANEL_WIDTH = 54;
+export const RIGHT_PANEL_WIDTH = 54; // --width_stack-right_panel + borders
+export const RIGHT_PANEL_DEFAULT_WIDTH = 52; // --width_stack-right_panel
 
-export const getRightPanelWidth = () => {
+export const getRightPanelWidth = (popupOptions: IPopupController) => {
     // Вычисляем значение при вызове. Если делать при загрузке модуля,
     // то тема в контроллеры проставиться не успеет и результат будет неверный
-    return ManagerController.hasRightPanel() ? RIGHT_PANEL_WIDTH : 0; // --width_stack-right_panel + borders
+    return ManagerController.hasRightPanel() ?
+        ((popupOptions?.rightBorderVisible !== false) ? RIGHT_PANEL_WIDTH : RIGHT_PANEL_DEFAULT_WIDTH) : 0;
 };
 let _fakeDiv: HTMLElement;
 /**

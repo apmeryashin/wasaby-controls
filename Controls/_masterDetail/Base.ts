@@ -34,6 +34,7 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions, IMasterWid
     masterPosition: 'left' | 'right';
     _dataOptionsValue?: IContextOptionsValue;
     newDesign?: boolean;
+    restricted?: boolean;
 }
 /**
  * Контрол, который обеспечивает связь между двумя контролами для отображения подробной информации по выбранному элементу.
@@ -174,6 +175,11 @@ class Base extends Control<IMasterDetail, string> {
      * @name Controls/_masterDetail/Base#newDesign
      * @cfg {Boolean} Флаг для настройки отображения двухколоночного реестра в новом дизайне.
      * @demo Controls-demo/MasterDetail/NewDesign/Index
+     */
+
+    /**
+     * @name Controls/_masterDetail/Base#restricted
+     * @cfg {Boolean} Флаг для ограничения отображения двухколоночного реестра.
      */
 
     /**
