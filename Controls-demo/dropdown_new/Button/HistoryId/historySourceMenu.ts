@@ -2,6 +2,7 @@ import {DataSet, Memory} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {Source, Service} from 'Controls/history';
+import {TKey} from 'Controls/interface';
 
 function getHistoryData() {
     return {
@@ -35,18 +36,18 @@ function getHistoryData() {
     };
 }
 
-export function getItems(): any[] {
+export function getItems(root: TKey = null, keyProperty: string = 'key', nodeProperty: string = '@parent'): any[] {
     const hierarchyItems = [
-        {key: 1, title: 'Task in development', parent: null},
-        {key: 2, title: 'Error in development', parent: null},
-        {key: 3, title: 'Commission', parent: null},
-        {key: 4, title: 'Assignment', parent: null},
-        {key: 5, title: 'Coordination', '@parent': true},
-        {key: 6, title: 'Development', '@parent': true},
-        {key: 7, title: 'Assignment for accounting', parent: null},
-        {key: 8, title: 'Assignment for delivery', parent: null},
-        {key: 9, title: 'Assignment for logisticians', parent: null},
-        {key: 100, title: 'Не сохраняется в историю', parent: null, doNotSaveToHistory: true}
+        {[keyProperty]: 1, title: 'Task in development', parent: root},
+        {[keyProperty]: 2, title: 'Error in development', parent: root},
+        {[keyProperty]: 3, title: 'Commission', parent: root},
+        {[keyProperty]: 4, title: 'Assignment', parent: root},
+        {[keyProperty]: 5, title: 'Coordination', [nodeProperty]: true},
+        {[keyProperty]: 6, title: 'Development', [nodeProperty]: true},
+        {[keyProperty]: 7, title: 'Assignment for accounting', parent: root},
+        {[keyProperty]: 8, title: 'Assignment for delivery', parent: root},
+        {[keyProperty]: 9, title: 'Assignment for logisticians', parent: root},
+        {[keyProperty]: 100, title: 'Не сохраняется в историю', parent: root, doNotSaveToHistory: true}
     ];
 
     const coordSub = ['Coordination', 'Negotiate the discount', 'Harmonization of price changes', 'Approval of participation in trading',
@@ -61,26 +62,37 @@ export function getItems(): any[] {
         'Component development (test)', 'Release report', 'Acceptance of the project (functional testing)'
     ];
 
-    if (hierarchyItems[4].parent !== null) {
-        hierarchyItems[4].parent = null;
+    if (hierarchyItems[4].parent !== root) {
+        hierarchyItems[4].parent = root;
         for (let i = 0; i < coordSub.length; i++) {
             hierarchyItems.push({
-                key: i + 10,
+                [keyProperty]: i + 10,
                 title: coordSub[i],
                 parent: 5,
-                '@parent': false
+                [nodeProperty]: false
             });
         }
-        hierarchyItems[5].parent = null;
+        hierarchyItems[5].parent = root;
         for (let j = 0; j < devSub.length; j++) {
             hierarchyItems.push({
-                key: j + 22,
+                [keyProperty]: j + 22,
                 title: devSub[j],
                 parent: 6,
-                '@parent': false
+                [nodeProperty]: false
             });
         }
     }
+    hierarchyItems.forEach((item) => {
+        if (!item.hasOwnProperty('doNotSaveToHistory')) {
+            item.doNotSaveToHistory = false;
+        }
+        if (!item.hasOwnProperty(nodeProperty)) {
+            item[nodeProperty] = false;
+        }
+        if (!item.hasOwnProperty('parent')) {
+            item.parent = root;
+        }
+    });
     return hierarchyItems;
 }
 
@@ -88,6 +100,7 @@ class HistorySourceMenu extends Source {
     private _srcData: DataSet = null;
     constructor(config) {
         super(config);
+        this._$parentProperty = undefined;
         const data = getHistoryData();
         this._pinnedData = data.pinned;
         this._recentData = data.recent;
@@ -95,8 +108,8 @@ class HistorySourceMenu extends Source {
         this._srcData = this._createDataSet(this._frequentData, this._pinnedData, this._recentData);
         this._$parentProperty = 'parent';
         this._$originSource = new Memory({
-            keyProperty: 'key',
-            data: getItems()
+            keyProperty: config.keyProperty || 'key',
+            data: getItems(config.root, config.keyProperty || 'key', config.nodeProperty || '@parent')
         });
 
         this._$historySource = new Service({

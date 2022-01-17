@@ -4,7 +4,7 @@ import {RecordSet} from 'Types/collection';
 import {mixin} from 'Types/util';
 import {IBaseAction} from './BaseAction';
 import {IAction} from './IAction';
-import {ISelectionObject} from 'Controls/interface';
+import {ISelectionObject, TKey} from 'Controls/interface';
 import {isEqual} from 'Types/object';
 import {showType} from 'Controls/toolbars';
 import {Logger} from 'UI/Utils';
@@ -82,6 +82,23 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
             return action;
         } else {
             const parentKey = item.get('parent');
+            const parentRS = Object.values(this._childItems).find((childs) => {
+                return childs.getRecordById(parentKey);
+            });
+            const parentItem = parentRS?.getRecordById(parentKey);
+            if (!parentItem) {
+                return this.getActionById(parentKey);
+            } else {
+                return this.getActionByItem(parentItem);
+            }
+        }
+    }
+
+    getActionByParentItemKey(parentKey: TKey) {
+        const action = this.getActionById(parentKey);
+        if (action) {
+            return action;
+        } else {
             const parentRS = Object.values(this._childItems).find((childs) => {
                 return childs.getRecordById(parentKey);
             });

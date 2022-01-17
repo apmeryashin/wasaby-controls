@@ -118,7 +118,7 @@ export default class MenuControl extends Control<IMenuControlOptions, RecordSet>
 
         this._stack = new StackOpener();
 
-        if (options.sourceController) {
+        if (options.sourceController && options.sourceController.hasLoaded(options.root)) {
             this._sourceController = this._getSourceController(options);
             this._sourceController.setDataLoadCallback(this._updateAfterLoad.bind(this));
             const error = this._sourceController.getLoadError();
@@ -256,7 +256,7 @@ export default class MenuControl extends Control<IMenuControlOptions, RecordSet>
     }
 
     private _initHistoryControllerIfNeed(options: IMenuControlOptions): void {
-        let source = options.sourceController?.getSource() || options.source;
+        let source = options.source || options.sourceController?.getSource();
         if (source instanceof PrefetchProxy) {
             source = source.getOriginal();
         }
@@ -448,7 +448,7 @@ export default class MenuControl extends Control<IMenuControlOptions, RecordSet>
         }
     }
 
-    private _pinClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
+    protected _pinClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
         this._historyController.togglePin(item).then(() => {
             const items = this._historyController.getItems();
             items.setKeyProperty(this._listModel.getKeyProperty());
@@ -1052,6 +1052,7 @@ export default class MenuControl extends Control<IMenuControlOptions, RecordSet>
                 root,
                 parentProperty
             });
+            this._sourceController.setRoot(root);
             this._sourceController.subscribe('itemsChanged', this._itemsChangedCallback);
         }
         return this._sourceController;
@@ -1060,7 +1061,9 @@ export default class MenuControl extends Control<IMenuControlOptions, RecordSet>
     private _itemsChangedCallback(e: SyntheticEvent, items: RecordSet): void {
         if (this._listModel && this._listModel.getCollection() !== items) {
             this._setButtonVisibleState(items, this._options);
-            this._listModel.setCollection(items);
+            if (this._options.root === this._sourceController.getRoot()) {
+                this._listModel.setCollection(items);
+            }
         }
     }
 
@@ -1214,7 +1217,7 @@ export default class MenuControl extends Control<IMenuControlOptions, RecordSet>
         const sourceItem = item.getContents();
         const root: TKey = sourceItem.get(this._options.keyProperty);
         const headingCaption = sourceItem.get(this._options.headingCaptionProperty);
-        const historyId = this._historyController.getHistoryId();
+        const historyId = this._historyController?.getHistoryId();
         const isLoadedChildItems = this._isLoadedChildItems(root);
         const sourcePropertyConfig = item.getContents().get(this._options.sourceProperty);
         const dataLoadCallback = !isLoadedChildItems &&
@@ -1232,6 +1235,7 @@ export default class MenuControl extends Control<IMenuControlOptions, RecordSet>
                 },
                 closeButtonVisibility: false,
                 historyId,
+                historyRoot: this._historyController?.getRoot() || null,
                 emptyText: null,
                 showClose: false,
                 showHeader: false,
@@ -1384,6 +1388,7 @@ export default class MenuControl extends Control<IMenuControlOptions, RecordSet>
         itemPadding: {},
         markerVisibility: 'hidden',
         hoverBackgroundStyle: 'default',
+        historyRoot: null,
         subMenuDirection: 'right',
         itemAlign: 'right',
         subMenuLevel: 0,

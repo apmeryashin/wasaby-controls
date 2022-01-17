@@ -114,7 +114,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
 
     protected _executeAction(item: Model, clickEvent: SyntheticEvent, toolbarSelectedKeys: TKey[]): void {
         const action = this._actionsCollection.getExecuteAction(item);
-        this._operationsController.executeAction({
+        this._operationsController?.executeAction({
             action,
             toolbarItem: item,
             source: this._sourceController?.getSource(),

@@ -1,6 +1,5 @@
 import {Memory, Query, FilterExpression} from 'Types/source';
 import {RecordSet} from 'Types/collection';
-import {showType} from 'Controls/toolbars';
 import ActionsCollection from './ActionsCollection';
 
 export interface IActionsSourceOptions {
@@ -16,8 +15,8 @@ export default class ActionsSource extends Memory {
     query(query?: Query): Promise<RecordSet> {
         const where = query.getWhere() as FilterExpression;
         if (where.parent) {
-            const action = this._collection.getActionById(where.parent);
-            return action.getChildren(where.parent).then((result) => {
+            const action = this._collection.getActionByParentItemKey(where.parent);
+            return action.getChildren(where.parent, query).then((result) => {
                 this._collection.addChildItems(where.parent, result);
                 return result;
             });

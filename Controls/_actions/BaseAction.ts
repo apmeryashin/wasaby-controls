@@ -9,10 +9,10 @@ import {merge} from 'Types/object';
 import {IAction} from './IAction';
 import {IExecuteCommandParams, ControllerClass as OperationsController} from 'Controls/operations';
 import {ControllerClass as FilterController} from 'Controls/filter';
-import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {NewSourceController as SourceController, ILoadDataResult} from 'Controls/dataSource';
 import {IToolBarItem} from 'Controls/toolbars';
 import {RecordSet} from 'Types/collection';
-import {DataSet} from 'Types/source';
+import {DataSet, Query} from 'Types/source';
 import {IMenuControlOptions} from 'Controls/menu';
 import {TKey} from 'Controls/interface';
 
@@ -28,14 +28,15 @@ export interface IViewCommandOptions {
 }
 
 export interface IBaseActionOptions {
-    id: string;
-    visible: boolean;
-    iconStyle: string;
-    icon: string;
+    id?: string;
+    visible?: boolean;
+    iconStyle?: string;
+    icon?: string;
     commandName?: string;
     commandOptions?: ICommandOptions;
     viewCommandOptions?: IViewCommandOptions;
     viewCommandName?: string;
+    actionName?: string;
     order?: number;
     title?: string;
     tooltip?: string;
@@ -43,7 +44,8 @@ export interface IBaseActionOptions {
     onExecuteHandler?: Function;
     parent?: string | number;
     permissions?: string[];
-    requiredLevel: string[];
+    requiredLevel?: string[];
+    [key: string]: unknown;
 }
 
 export interface IExecuteOptions {
@@ -54,6 +56,8 @@ export interface IExecuteOptions {
 }
 
 const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType', 'template', 'order'];
+type LoadPromiseResult = RecordSet|Error;
+type LoadResult = Promise<LoadPromiseResult>;
 
 export default abstract class BaseAction extends mixin<ObservableMixin>(
     ObservableMixin
@@ -141,8 +145,18 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         return this._executeCommand(options);
     }
 
-    getChildren(root: number | string): Promise<RecordSet | DataSet> | void {
-        // for override
+    getChildren(root: number | string, query?: Query): void | LoadResult {
+        const menuOptions = this.getMenuOptions();
+        if (menuOptions.historyId) {
+            query.getWhere().$_history = true;
+        }
+        if (menuOptions.source) {
+            return new SourceController({
+                keyProperty: menuOptions.keyProperty || menuOptions.source.getKeyProperty(),
+                source: menuOptions.source
+            }).load('down', root, query.getWhere());
+        }
+        return null;
     }
 
     getValue(): TKey | TKey[] {
@@ -220,6 +234,9 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         const value = this.getValue();
         if (value !== undefined) {
             menuOptions.selectedKeys = value instanceof Array ? value : [value];
+        }
+        if (menuOptions.historyId) {
+            menuOptions.allowPin = true;
         }
         config.menuOptions = menuOptions;
         return config;
