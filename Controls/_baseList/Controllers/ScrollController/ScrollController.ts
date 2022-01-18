@@ -160,7 +160,8 @@ export class ScrollController {
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
             contentSize: options.contentSize,
-            givenItemsSizes: options.givenItemsSizes
+            givenItemsSizes: options.givenItemsSizes,
+            feature1183225611: options.feature1183225611
         });
     }
 

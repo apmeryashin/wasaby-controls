@@ -133,6 +133,8 @@ export interface IAbstractListVirtualScrollControllerOptions {
     itemsEndedCallback: IItemsEndedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
     hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
+
+    feature1183225611: boolean;
 }
 
 export abstract class AbstractListVirtualScrollController<
@@ -531,6 +533,7 @@ export abstract class AbstractListVirtualScrollController<
             contentSize: 0,
             totalCount: this._collection.getCount(),
             givenItemsSizes: this._getGivenItemsSizes(),
+            feature1183225611: options.feature1183225611,
 
             indexesInitializedCallback: this._indexesInitializedCallback.bind(this),
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
