@@ -19,7 +19,7 @@ describe('Controls/_search/Input/Container', () => {
       cont._value = '';
       cont._beforeMount(options);
       assert.equal(cont._value, 'test');
-      assert.ok(cont._getSearchResolverController()._searchStarted);
+      assert.ok(cont._getSearchResolverController().isSearchStarted());
    });
 
    describe('_beforeUpdate', () => {
@@ -36,7 +36,7 @@ describe('Controls/_search/Input/Container', () => {
          options.inputSearchValue = 'test';
          cont._beforeUpdate(options);
          assert.equal(cont._value, 'test');
-         assert.ok(cont._getSearchResolverController()._searchStarted);
+         assert.ok(cont._getSearchResolverController().isSearchStarted());
       });
 
       it('inputSearchValue.length === minSearchLength', () => {
@@ -51,7 +51,7 @@ describe('Controls/_search/Input/Container', () => {
          options.inputSearchValue = 'tes';
          cont._beforeUpdate(options);
          assert.equal(cont._value, 'tes');
-         assert.ok(cont._getSearchResolverController()._searchStarted);
+         assert.ok(cont._getSearchResolverController().isSearchStarted());
       });
 
       it('inputSearchValue.length < minSearchLength', () => {
@@ -66,7 +66,7 @@ describe('Controls/_search/Input/Container', () => {
          options.inputSearchValue = 'te';
          cont._beforeUpdate(options);
          assert.equal(cont._value, 'te');
-         assert.ok(!cont._getSearchResolverController()._searchStarted);
+         assert.ok(!cont._getSearchResolverController().isSearchStarted());
       });
 
       it('inputSearchValue equals current value in input', () => {
@@ -84,7 +84,13 @@ describe('Controls/_search/Input/Container', () => {
          cont._valueChanged(null, 'te');
          cont._beforeUpdate(options);
          assert.equal(cont._value, 'te');
-         assert.ok(cont._getSearchResolverController()._searchStarted);
+         assert.ok(cont._getSearchResolverController().isSearchStarted());
+
+         options = {...options};
+         options.inputSearchValue = 'ту';
+         cont._beforeUpdate(options);
+         assert.equal(cont._value, 'ту');
+         assert.ok(cont._getSearchResolverController().isSearchStarted());
       });
 
    });
