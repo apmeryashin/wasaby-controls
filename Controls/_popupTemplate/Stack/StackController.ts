@@ -674,7 +674,7 @@ export class StackController extends BaseController {
 
     static calcStackParentCoords(item: IStackItem): IPopupPosition {
         let rootCoords;
-        const rightPanelWidth = getRightPanelWidth(item.popupOptions);
+        const rightPanelWidth = getRightPanelWidth();
         // TODO: Ветка для старой страницы
         if (!isNewEnvironment()) {
             let stackRoot = document.querySelector('.ws-float-area-stack-root') as HTMLElement;
