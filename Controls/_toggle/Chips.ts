@@ -159,7 +159,7 @@ class Chips extends Control<IChipsOptions> {
                 added.push(itemKeyProperty);
                 selectedKeys.unshift(itemKeyProperty);
             } else {
-                deleted.push(itemIndex);
+                deleted.push(itemKeyProperty);
                 selectedKeys.splice(itemIndex, 1);
             }
             this._notify('selectedKeysChanged', [selectedKeys, added, deleted]);
