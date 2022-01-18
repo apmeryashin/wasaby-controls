@@ -42,7 +42,7 @@ class ModuleClass extends MaskViewModel {
 
     protected _convertToDisplayValue(value: string): string {
         const result = super._convertToDisplayValue(value);
-        if (!this._value && this._options.placeholder) {
+        if (!this._value && this._options.placeholder && !this._options.calendarButtonVisible) {
             return this._options.placeholder;
         }
         return result;
