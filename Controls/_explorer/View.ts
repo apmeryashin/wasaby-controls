@@ -325,7 +325,9 @@ export default class Explorer extends Control<IExplorerOptions> {
             addPageDeps(['css!Controls/columns']);
         }
 
-        return this._setViewMode(cfg.viewMode, cfg);
+        return new Promise((resolve) => {
+            this._setViewMode(cfg.viewMode, cfg, () => resolve());
+        });
     }
 
     protected _afterMount(): void {
@@ -434,7 +436,7 @@ export default class Explorer extends Control<IExplorerOptions> {
             cfg.sourceController) {
             // https://online.sbis.ru/opendoc.html?guid=7d20eb84-51d7-4012-8943-1d4aaabf7afe
             if (!VIEW_MODEL_CONSTRUCTORS[this._pendingViewMode]) {
-                Promise.resolve(this._loadTileViewMode()).then(() => {
+                this._loadTileViewMode(() => {
                     this._setViewModeSync(this._pendingViewMode, cfg);
                 });
             } else {
@@ -1047,31 +1049,29 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
     }
 
-    private _setViewMode(viewMode: TExplorerViewMode, cfg: IExplorerOptions): Promise<void> | void {
+    private _setViewMode(viewMode: TExplorerViewMode, cfg: IExplorerOptions, callback: Function): void {
         if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
             this._updateRootOnViewModeChanged(viewMode, cfg);
         }
-        let action: Promise<void> | void;
 
         const resolvedViewMode = this._resolveViewMode(viewMode, cfg.useColumns);
 
         if (!VIEW_MODEL_CONSTRUCTORS[resolvedViewMode]) {
             if (resolvedViewMode === 'columns') {
-                action = this._loadColumnsViewMode();
+                this._loadColumnsViewMode(() => {
+                    this._setViewModeSync(viewMode, cfg);
+                    callback();
+                });
             } else {
-                action = this._loadTileViewMode();
+                this._loadTileViewMode(() => {
+                    this._setViewModeSync(viewMode, cfg);
+                    callback();
+                });
             }
         } else {
-            return this._setViewModeSync(viewMode, cfg);
+            this._setViewModeSync(viewMode, cfg);
+            callback();
         }
-
-        if (action instanceof Promise) {
-            return action.then(() => {
-                this._setViewModeSync(viewMode, cfg);
-            });
-        }
-
-        return this._setViewModeSync(viewMode, cfg);
     }
 
     private _applyNewVisualOptions(): void {
@@ -1171,20 +1171,22 @@ export default class Explorer extends Control<IExplorerOptions> {
         return itemFromRoot;
     }
 
-    private _loadTileViewMode(): Promise<void> | void {
-        return executeSyncOrAsync(['Controls/treeTile'], (tile) => {
+    private _loadTileViewMode(loadingCallback: Function): void {
+        executeSyncOrAsync(['Controls/treeTile'], (tile) => {
             VIEW_NAMES.tile = tile.TreeTileView;
             VIEW_TABLE_NAMES.tile = tile.TreeTileView;
             VIEW_MODEL_CONSTRUCTORS.tile = 'Controls/treeTile:TreeTileCollection';
+            loadingCallback();
         });
     }
 
-    private _loadColumnsViewMode(): Promise<void> | void {
-        return executeSyncOrAsync(['Controls/columns'], (columns) => {
+    private _loadColumnsViewMode(loadingCallback: Function): void {
+        executeSyncOrAsync(['Controls/columns'], (columns) => {
             VIEW_NAMES.columns = columns.ViewTemplate;
             VIEW_TABLE_NAMES.columns = columns.ViewTemplate;
             ITEM_GETTER.columns = columns.ItemContainerGetter;
             VIEW_MODEL_CONSTRUCTORS.columns = 'Controls/columns:ColumnsCollection';
+            loadingCallback();
         });
     }
 
@@ -1193,7 +1195,7 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     private _checkedChangeViewMode(viewMode: TExplorerViewMode, cfg: IExplorerOptions): void {
-        Promise.resolve(this._setViewMode(viewMode, cfg)).then(() => { //
+        this._setViewMode(viewMode, cfg, () => { //
             // Обрабатываем searchNavigationMode только после того как
             // проставится setViewMode, т.к. он может проставится асинхронно
             // а код ниже вызывает изменение версии модели что приводит к лишней
