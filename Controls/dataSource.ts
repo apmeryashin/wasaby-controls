@@ -46,3 +46,4 @@ export {
 } from './_dataSource/DataLoader';
 export {default as PageController, IPageConfig} from './_dataSource/PageController';
 export {getState as getControllerState, saveState as saveControllerState} from 'Controls/_dataSource/Controller/State';
+export {default as listInitializer, IListStore} from 'Controls/_dataSource/listInitializer';
