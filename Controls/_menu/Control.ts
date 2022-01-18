@@ -5,6 +5,7 @@ import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/inter
 import {RecordSet, List} from 'Types/collection';
 import {ICrudPlus, PrefetchProxy} from 'Types/source';
 import {Collection, CollectionItem, Search} from 'Controls/display';
+import {getItemParentKey} from 'Controls/_menu/Util';
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -20,7 +21,7 @@ import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {StickyOpener, StackOpener, IStickyPopupOptions} from 'Controls/popup';
-import {TKey} from 'Controls/_menu/interface/IMenuControl';
+import {TKey} from 'Controls/_menu/interface/IMenuBase';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
 import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOptions} from 'Controls/multiselection';
 import {create as DiCreate} from 'Types/di';
@@ -1364,32 +1365,17 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                                   item: Model): boolean {
         let isVisible: boolean = true;
         if (item && item.get) {
-            const parent = MenuControl._getItemParentKey(options, item);
+            const parent = getItemParentKey(options, item);
 
             isVisible = parent === options.root || MenuControl._isHiddenNode(parent, items, options);
         }
         return isVisible;
     }
 
-    private static _getItemParentKey(options: IMenuControlOptions, item: Model): TKey {
-        const isStringType = typeof options.root === 'string';
-        let parent: TKey = item.get(options.parentProperty);
-        if (parent === undefined) {
-            parent = null;
-        }
-        // Для исторических меню keyProperty всегда заменяется на строковый.
-        // Если изначально был указан целочисленный ключ,
-        // то в поле родителя будет лежать также целочисленное значение, а в root будет лежать строка.
-        if (isStringType) {
-            parent = String(parent);
-        }
-        return parent;
-    }
-
     private static _isHiddenNode(key: TKey, items: RecordSet<Model>, options: IMenuControlOptions): boolean {
         const parentItem = items.getRecordById(key);
         return parentItem && parentItem.get(options.nodeProperty) === false &&
-            MenuControl._getItemParentKey(options, parentItem) === options.root;
+            getItemParentKey(options, parentItem) === options.root;
     }
 
     private static _searchHistoryDisplayFilter(options: IMenuControlOptions,

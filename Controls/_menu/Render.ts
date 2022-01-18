@@ -1,11 +1,11 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {IRenderOptions} from 'Controls/listRender';
-import {IMenuBaseOptions} from 'Controls/_menu/interface/IMenuBase';
+import {IMenuBaseOptions, TKey} from 'Controls/_menu/interface/IMenuBase';
 import {TreeItem, GroupItem} from 'Controls/display';
 import * as itemTemplate from 'wml!Controls/_menu/Render/itemTemplate';
 import * as multiSelectTpl from 'wml!Controls/_menu/Render/multiSelectTpl';
 import ViewTemplate = require('wml!Controls/_menu/Render/Render');
-import {TKey} from 'Controls/_menu/interface/IMenuControl';
+import {getItemParentKey} from 'Controls/_menu/Util';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import Utils = require('Types/util');
@@ -231,8 +231,8 @@ class MenuRender extends Control<IMenuRenderOptions> {
         if (treeItem.getLevel && treeItem.getLevel() > 1) {
             return 'xl';
         } else if (item instanceof Model) {
-            const parent = item.get(this._options.parentProperty);
-            if ( parent && parent !== this._options.root) {
+            const parent = getItemParentKey(this._options, item);
+            if (parent && parent !== this._options.root) {
                 return '3xl';
             }
         }
