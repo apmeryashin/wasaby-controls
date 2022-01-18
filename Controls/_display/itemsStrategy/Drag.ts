@@ -222,11 +222,10 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
             return true;
         }
 
-        const itemIsDraggable = this._options.draggedItemsKeys.includes(item.getKey());
-        // Проверяем contents, т.к. CollectionItem будет пересоздан(avatarItem)
-        const startDraggableItem = this._options.draggableItem;
-        const itemIsStartDraggableItem
-            = startDraggableItem && startDraggableItem.getContents() === collectionItem.getContents();
+        const itemIsDraggable = this._options.draggedItemsKeys.includes(collectionItem.key);
+        // Проверяем key, т.к. CollectionItem будет пересоздан(avatarItem)
+        const startDraggableItemKey = this._options.draggableItem && this._options.draggableItem.key;
+        const itemIsStartDraggableItem = startDraggableItemKey === collectionItem.key;
         return !itemIsDraggable || itemIsStartDraggableItem;
     }
 

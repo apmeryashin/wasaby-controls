@@ -21,19 +21,25 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
       if (!super._isDisplayItem(item, index, collectionItem)) {
          return false;
       }
-      return this._isDisplayParents(collectionItem, this._options.draggedItemsKeys);
+
+      const startDraggableItemKey = this._options.draggableItem && this._options.draggableItem.key;
+      const itemIsStartDraggableItem = startDraggableItemKey === collectionItem.key;
+      if (itemIsStartDraggableItem) {
+         return true;
+      }
+
+      return this._isDisplayByParents(collectionItem, this._options.draggedItemsKeys);
    }
 
-   protected _isDisplayParents(item: TreeItem, draggedItemsKeys: CrudEntityKey[]): boolean {
-      const itemParent = item.getParent();
-
+   protected _isDisplayByParents(item: TreeItem, draggedItemsKeys: CrudEntityKey[]): boolean {
+      const itemParent = item['[Controls/_display/TreeItem]'] && item.getParent();
       if (itemParent && !itemParent.isRoot()) {
          const itemParentKey = itemParent.getContents().getKey();
          if (draggedItemsKeys.includes(itemParentKey)) {
             return false;
          }
 
-         return this._isDisplayParents(itemParent, draggedItemsKeys);
+         return this._isDisplayByParents(itemParent, draggedItemsKeys);
       }
 
       return true;
@@ -49,7 +55,7 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
 
       // avatarItem может не создасться, например когда тащат запись в мастер
       if (this.avatarItem) {
-         const parent = this._getParentConsideringHiddenItems(this.avatarItem, newItems);
+         const parent = this._getParentConsideringHiddenItems(this.avatarItem);
          if (parent) {
             this.avatarItem.setParent(parent);
          }
@@ -72,10 +78,12 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
     * @param items Текущие элементы списка
     * @private
     */
-   private _getParentConsideringHiddenItems(item: T, items: T[]): T {
+   private _getParentConsideringHiddenItems(item: T): T {
       let parent = item.getParent() as T;
-      while (parent && !parent.isRoot() && !items.includes(parent)) {
+      let parentIndex = this._options.display.getIndex(parent);
+      while (parent && !parent.isRoot() && !this._isDisplayItem(parent.contents, parentIndex, parent)) {
          parent = parent.getParent() as T;
+         parentIndex = this._options.display.getIndex(parent);
       }
       return parent;
    }
