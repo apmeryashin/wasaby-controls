@@ -18,6 +18,7 @@
                 itemActionsClass="{{ itemActionsClass }}"
                 ladderWrapper="{{ ladderWrapper }}"
                 multiSelectTemplate="{{ multiSelectTemplate }}"
+                editable="{{ editable }}"
                 editArrowTemplate="{{ editArrowTemplate }}"/>
 
     </ws:if>

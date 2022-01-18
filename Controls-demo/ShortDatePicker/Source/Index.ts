@@ -1,6 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import DateLitePopupSource from './DateLitePopupSource';
 import template = require('wml!Controls-demo/ShortDatePicker/Source/Source');
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/ShortDatePicker/ShortDatePicker';
 
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -8,8 +10,6 @@ class DemoControl extends Control<IControlOptions> {
     protected _endValue: Date = new Date(2020, 11, 31);
 
     private _source: DateLitePopupSource = new DateLitePopupSource();
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 
 export default DemoControl;

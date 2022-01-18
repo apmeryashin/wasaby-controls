@@ -1,4 +1,4 @@
-import {SbisService, DataSet, ICrud, IData} from 'Types/source';
+import {SbisService, DataSet, ICrud, Query} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {OptionsToPropertyMixin, SerializableMixin, Model} from 'Types/entity';
 import * as Constants from './Constants';
@@ -122,6 +122,26 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
                     getObjectData: true
                 }
             });
+        } else  if (this._$dataLoaded) {
+            const params = {
+                history_query: {
+                    [this._$historyId]: {
+                        recentCount:  this._$recent || Constants.MAX_HISTORY,
+                        frequentCount: this._$frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0,
+                        pinnedCount: this._$pinned ? Constants.MAX_HISTORY : 0
+                    }
+                }
+            };
+            if (this._$historyIds) {
+                this._$historyIds.forEach((id) => {
+                    params.history_query[id] = {
+                        recentCount: 1,
+                        frequentCount: 0,
+                        pinnedCount: 0
+                    };
+                });
+            }
+            resultDef = this._callQuery('BatchIndexesList', params);
         } else {
             if (this._$historyId || this._$historyIds?.length) {
                 resultDef = this._callQuery('UnionMultiHistoryIndexesList', {
@@ -174,7 +194,14 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
         return resultPromise;
     }
 
-    private _addFromData(data: any): any {
+    private _addFromData(data: { items: unknown, historyParams: unknown }): unknown {
+        if (this._$dataLoaded && this._$historyIds) {
+            return this._getHistoryDataSource().call('AddFromDataAndSetParams', {
+                history_id: this._$historyId,
+                data: data.items,
+                params: data.historyParams
+            });
+        }
         return this._getHistoryDataSource().call('AddFromData', {
             history_id: this._$historyId,
             data
@@ -255,7 +282,7 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
         return this._deleteItem(data, meta);
     }
 
-    query(): Deferred<DataSet> {
+    query(query?: Query): Deferred<DataSet> {
         const historyId = this.getHistoryIdForStorage();
         const storageDef = LoadPromisesStorage.read(historyId);
         const storageData = DataStorage.read(historyId);

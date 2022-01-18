@@ -52,7 +52,7 @@ export default class extends Control {
     private _setColumns(): void {
         this._columns = Editing.getEditingColumns().map((column, index) => ({
             ...column,
-            editable: index === 0 || index === 3 ? false : undefined,
+            editable: index === 3 ? false : undefined,
             template: !(index === 0 || index === 3) ? cellTemplate : undefined
         }));
         this._columns[0].template = firstCellTemplate;

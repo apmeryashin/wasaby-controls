@@ -1,8 +1,4 @@
-<div class="controls-Render controls-Render
-            {{_border.top ? 'controls-Render_border-top' : 'controls-Render_border-top-empty'}}
-            {{_border.right ? 'controls-Render_border-right' : 'controls-Render_border-right-empty'}}
-            {{_border.bottom ? 'controls-Render_border-bottom' : 'controls-Render_border-bottom-empty'}}
-            {{_border.left ? 'controls-Render_border-left' : 'controls-Render_border-left-empty'}}
+<div class="controls-Render controls-Render {{_getBorderClass()}}
             controls-Render_background-{{ _options.contrastBackground ? 'contrast' : 'same' }}
             controls-Render_textAlign-{{_options.textAlign}}
             controls-Render{{_statePrefix}}_borderRadius
@@ -11,7 +7,7 @@
             controls-fontweight-{{_fontWeight}}
             {{_options.fontSize !== 'inherit' ? 'controls-Render-fontsize-' + _options.fontSize}}
             controls-text-{{_options.fontColorStyle}}
-            {{_highlightedOnFocus() ? 'controls-Render-focused-item'}}
+            {{_highlightedOnFocus() ? (_options.contrastBackground ? 'controls-focused-item_shadow' : 'controls-Render-focused-item')}}
             controls-Render_state-{{_state}}_{{_options.wasActionByUser ? 'caretFilled' : 'caretEmpty'}}
             {{_options.multiline ? 'controls-Render_multiline' : ' controls-inlineheight-' + _options.inlineHeight +
             ' controls-Render-inlineheight-' + _options.inlineHeight}}">
