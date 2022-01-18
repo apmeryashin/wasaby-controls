@@ -19,10 +19,13 @@ class CutButton extends Control<ICutButton, IControlOptions> {
     protected _template: TemplateFunction = template;
 
     protected _onValueHandler(event: SyntheticEvent, value: boolean): void {
-        event.stopPropagation();
         if (!this._options.readOnly) {
             this._notify('expandedChanged', [value]);
         }
+    }
+
+    protected _clickHandler(event: SyntheticEvent): void {
+        event.stopPropagation();
     }
 
     static getOptionTypes(): object {
