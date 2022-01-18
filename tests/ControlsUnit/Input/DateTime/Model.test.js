@@ -150,5 +150,21 @@ define([
          });
       });
 
+      describe('_updateValue', () => {
+         it('should not update text value with invalid date', () => {
+            const model = new DateTimeModel.default(options);
+            const textValue = '22.01.2021';
+            model._textValue = textValue;
+            model._updateValue(new Date('invalid'));
+            assert.equal(textValue, model._textValue);
+         });
+
+         it('should update text value with null', () => {
+            const model = new DateTimeModel.default(options);
+            model._textValue = '22.01.2021';
+            model._updateValue(null);
+            assert.equal('', model._textValue);
+         });
+      });
    });
 });
