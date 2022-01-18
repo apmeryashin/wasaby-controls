@@ -51,23 +51,21 @@
                                                  controls-FilterPanel__{{_options.orientation}}
                                                  {{_hasHistory || _options.emptyHistoryTemplate ? 'controls-FilterPanel__' + _options.orientation + '_withHistory'}}">
          <ws:headerContentTemplate>
-            <div class="ws-flexbox ws-flex-grow-1 ws-justify-content-between">
-               <ws:if data="{{_options.topTemplate}}">
-                  <div class="controls-FilterPanel__header-topTemplate">
+            <div class="ws-flexbox ws-flex-grow-1 ws-justify-content-between ws-align-items-baseline controls-FilterPanel__headerContent">
+               <div class="ws-flexbox ws-align-items-baseline controls-margin_left-xs controls-FilterPanel__headerContent-left">
+                  <ws:if data="{{_options.topTemplate}}">
                      <ws:partial template="{{_options.topTemplate}}"/>
-                  </div>
-               </ws:if>
-               <ws:else>
-                  <div class="ws-flexbox ws-align-items-center controls-margin_left-xs">
+                  </ws:if>
+                  <ws:else>
                      <Controls.icon:Icon icon="Controls-icons/common:icon-Filter"
                                          iconSize="2xs"
                                          iconStyle="danger"/>
-                     <div class="controls-FilterPanel__header controls-fontsize-{{_options.headingFontSize}} controls-text-{{_options.headingStyle}} controls-margin_left-s">
-                        {{_options.headingCaption}}
-                     </div>
+                  </ws:else>
+                  <div class="controls-FilterPanel__header controls-fontsize-{{_options.headingFontSize}} controls-text-{{_options.headingStyle}} controls-margin_left-s controls-margin_right-s">
+                     {{_options.headingCaption}}
                   </div>
-               </ws:else>
-               <div class="controls-FilterPanel__header__buttons ws-flexbox ws-align-items-center">
+               </div>
+               <div class="controls-FilterPanel__header__buttons ws-flexbox ws-align-items-baseline">
                   <ws:if data="{{_hasResetValue && _isChanged}}">
                      <Controls.buttons:Button attr:class="controls-FilterPanel__resetButton"
                                               on:click="_resetFilter()"
@@ -91,7 +89,7 @@
                                            on:click="_applyFilter()"
                                            attr:tabindex="1"
                                            attr:ws-autofocus="true"
-                                           attr:class="controls-FilterPanel__filterButton"
+                                           attr:class="controls-FilterPanel__filterButton controls-margin_right-2xs"
                                            attr:data-qa="FilterPanel__filterButton"/>
                </div>
             </div>

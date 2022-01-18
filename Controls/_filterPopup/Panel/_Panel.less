@@ -57,13 +57,8 @@
    width: var(--width_xl_filterPanel);
 }
 
-//Header of panel
-.controls-FilterPanel__header-topTemplate {
-   margin-right: var(--offset_l);
-}
-
 .controls-FilterPanel__resetButton {
-   margin-right: var(--reset-button_offset-right_filterPanel);
+   margin-right: var(--offset_st);
 }
 
 .controls-text-filterResetButton {
@@ -174,4 +169,15 @@
 .controls-FilterPanel__header {
    letter-spacing: 0.1em;
    text-transform: uppercase;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   overflow: hidden;
+}
+
+.controls-FilterPanel__headerContent {
+   width: 100%;
+}
+
+.controls-FilterPanel__headerContent-left {
+   min-width: 0;
 }
