@@ -254,6 +254,30 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         );
     },
 
+    _getGridEmptyTemplateRows(options: IGridOptions): string {
+        let styles = 'grid-template-rows:';
+        const hasHeader = !!this._listModel.getHeader();
+        const hasResults = !!this._listModel.getResults();
+        const resultsPosition = this._listModel.getResultsPosition();
+
+        // auto делает высоту ячейки по контенту.
+        if (hasHeader) {
+            styles += ' auto';
+        }
+        if (hasResults && resultsPosition === 'top') {
+            styles += ' auto';
+        }
+
+        // Две строки, т.к. ScrollBar + RelativeColumns
+        if (options.columnScroll) {
+            styles += ' auto auto';
+        }
+
+        // Сама строка пустого представления должна максимально растягиваться
+        styles += ' 1fr; ';
+        return styles;
+    },
+
     _hasItemActionsCell(options): boolean {
         return Boolean(
             options.isFullGridSupport && (
@@ -357,26 +381,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         // с пустым представлением на всю высоту таблицы.
         // Это можно сделать при помощи grid-template-rows.
         if (options.needShowEmptyTemplate) {
-            styles += 'grid-template-rows:';
-            const hasHeader = !!this._listModel.getHeader();
-            const hasResults = !!this._listModel.getResults();
-            const resultsPosition = this._listModel.getResultsPosition();
-
-            // auto делает высоту ячейки по контенту.
-            if (hasHeader) {
-                styles += ' auto';
-            }
-            if (hasResults && resultsPosition === 'top') {
-                styles += ' auto';
-            }
-
-            // Две строки, т.к. ScrollBar + RelativeColumns
-            if (options.columnScroll) {
-                styles += ' auto auto';
-            }
-
-            // Сама строка пустого представления должна максимально растягиваться
-            styles += ' 1fr; ';
+            styles += this._getGridEmptyTemplateRows(options);
         }
         return styles;
     },
