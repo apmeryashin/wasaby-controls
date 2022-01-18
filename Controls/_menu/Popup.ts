@@ -54,7 +54,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _headingCaption: string;
     protected _headingIcon: string;
     protected _headingIconSize: string;
-    protected _itemPadding: object;
     protected _closeButtonVisibility: boolean;
     protected _verticalDirection: string = 'bottom';
     protected _horizontalDirection: string = 'right';
@@ -69,7 +68,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
         this._setCloseButtonVisibility(options);
         this._prepareHeaderConfig(options);
-        this._setItemPadding(options);
 
         if (options.items) {
             this._updateHeadingIcon(options, options.items);
@@ -102,10 +100,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
             this._verticalDirection = newOptions.footerContentTemplate || newOptions.searchParam ? 'bottom' :
                 newOptions.stickyPosition.direction.vertical;
             this._horizontalDirection = newOptions.stickyPosition.direction.horizontal;
-        }
-
-        if (this._options.itemPadding !== newOptions.itemPadding) {
-            this._setItemPadding(newOptions);
         }
 
         if (this._options.headerContentTemplate !== newOptions.headerContentTemplate ||
@@ -311,16 +305,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
             } else {
                 this._headingIconSize = sizes[headingIconSize] || options.iconSize;
             }
-        }
-    }
-
-    private _setItemPadding(options: IMenuPopupOptions): void {
-        if (options.itemPadding) {
-            this._itemPadding = options.itemPadding;
-        } else if (options.allowPin) {
-            this._itemPadding = {
-                right: 'menu-pin'
-            };
         }
     }
 
