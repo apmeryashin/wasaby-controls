@@ -54,6 +54,7 @@
                                           _initBreadCrumbsMode="{{_searchInitialBreadCrumbsMode}}"
                                           itemsSelector="{{_itemsSelector}}"
                                           autoColumnsRecalculating="{{_options.useColumns && _viewMode === 'list'}}"
+                                          supportExpand="{{_viewMode === 'table'}}"
                                           on:itemClick="_onItemClick()"
                                           on:itemMouseDown="_notifyHandler('itemMouseDown')"
                                           on:itemMouseLeave="_notifyHandler('itemMouseLeave')"

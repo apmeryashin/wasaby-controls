@@ -455,13 +455,17 @@ export default class Explorer extends Control<IExplorerOptions> {
             this._notify('doScroll', ['top'], {bubbling: true});
             this._resetScrollAfterViewModeChange = false;
         }
-
     }
 
     protected _afterRender(): void {
         if (this._markerForRestoredScroll !== null) {
             this.scrollToItem(this._markerForRestoredScroll);
             this._markerForRestoredScroll = null;
+        }
+
+        // Сбрасываем флаг, который прокидывается в TreeControl иначе модель будет постоянно пересоздаваться
+        if (this._recreateCollection) {
+            this._recreateCollection = false;
         }
     }
 
