@@ -24,15 +24,14 @@ define([
    };
 
    describe("\"Controls/_date/BaseInput/MaskViewModel", function() {
+      beforeEach(() => {
+         sinon.stub(Env.constants, 'isServerSide').value(false);
+      });
+
+      afterEach(() => {
+         sinon.restore();
+      });
       describe("handleInput", function() {
-         beforeEach(() => {
-            sinon.stub(Env.constants, 'isServerSide').value(false);
-         });
-
-         afterEach(() => {
-            sinon.restore();
-         });
-
          [
             // Inserting date from buffer
             { mask: "DD.MM.YYYY", before: "", after: "  .  .    ", insert: "23", delete: "", displayValue: "23.  .    ", value: "23      ", selection: 3},
@@ -71,6 +70,44 @@ define([
                selection = test.selection !== undefined ? test.selection : model.displayValue.length;
                assert.strictEqual(model._selection.start, selection);
                assert.strictEqual(model._selection.end, selection);
+            });
+         });
+      });
+
+      describe('_convertToDisplayValue', () => {
+         it('should return placeholder if calendarButtonVisible === false and there is placeholder', () => {
+            const placeholder = 'test';
+            const value = '';
+            const model = new MaskViewModel.default({
+               ...options,
+               preferSource: true,
+               placeholder,
+               calendarButtonVisible: false,
+               mask: 'DD.MM.YY'
+            }, value);
+            const result = model._convertToDisplayValue(value);
+            assert.equal(result, placeholder);
+         });
+
+         [{
+            placeholder: 'test',
+            calendarButtonVisible: true
+         }, {
+            placeholder: null,
+            calendarButtonVisible: false
+         }].forEach((test) => {
+            it('should return value if calendarButtonVisible === true or there is no placeholder', () => {
+               const value = '';
+               const newValue = '  .  .  ';
+               const model = new MaskViewModel.default({
+                  ...options,
+                  preferSource: true,
+                  placeholder: test.placeholder,
+                  calendarButtonVisible: test.calendarButtonVisible,
+                  mask: 'DD.MM.YY'
+               }, value);
+               const result = model._convertToDisplayValue(value);
+               assert.equal(result, newValue);
             });
          });
       });
