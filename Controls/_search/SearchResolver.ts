@@ -144,4 +144,8 @@ export default class SearchResolver {
    setSearchStarted(value: boolean): void {
       this._searchStarted = value;
    }
+
+   isSearchStarted(): boolean {
+      return this._searchStarted;
+   }
 }
