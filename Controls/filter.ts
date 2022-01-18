@@ -43,6 +43,7 @@ export {IFilterItem} from 'Controls/_filter/View/interface/IFilterItem';
 export {IFilterViewOptions, IFilterView} from 'Controls/_filter/View/interface/IFilterView';
 export {ICalculatedFilter, ICalculateFilterParams} from './_filter/ControllerClass';
 export {default as getFilterByFilterDescription} from 'Controls/_filter/filterCalculator';
+export {default as filterInitializer, IFilterStore} from 'Controls/_filter/filterInitializer';
 
 export {
    ViewItemTemplate,
