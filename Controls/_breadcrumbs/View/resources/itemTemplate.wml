@@ -1,7 +1,12 @@
 <div class="
    controls-BreadCrumbsView__crumb {{'controls-fontsize-' + fontSize}}
    {{edge ? ' controls-BreadCrumbsView__max-width__edge' : ' controls-BreadCrumbsView__max-width'}}
-   {{fontColorStyle ? 'controls-text-' + fontColorStyle : 'controls-BreadCrumbsView__crumb_color'}}
+   {{readOnly
+      ? 'controls-text-readonly'
+      : fontColorStyle
+         ? 'controls-text-' + fontColorStyle
+         : 'controls-BreadCrumbsView__crumb_color'
+   }}
    {{itemData.withOverflow
       ? (itemData.hasArrow
          ? ' controls-BreadCrumbsView__crumb_withOverflow'
