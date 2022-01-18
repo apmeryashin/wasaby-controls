@@ -14,6 +14,9 @@ interface IScrollBarCoords {
     offset: number;
 }
 
+const MIN_HEIGHT = 46;
+const MIN_WIDTH = 116;
+
 export interface IScrollBarOptions extends IControlOptions {
     position?: number;
     contentSize: number;
@@ -21,6 +24,7 @@ export interface IScrollBarOptions extends IControlOptions {
     trackVisible: boolean;
     thumbStyle?: string;
     thumbThickness?: string;
+    clientSize: number;
 }
 /**
  * Thin scrollbar.
@@ -68,11 +72,12 @@ class Scrollbar extends Control<IScrollBarOptions> {
         if (options.getParentScrollPosition) {
             this._scrollPosition = options.getParentScrollPosition();
         }
+
+        this._options = options;
+        this._resizeHandler();
     }
 
     protected _afterMount(): void {
-        this._resizeHandler();
-        this._forceUpdate();
         const position = this._scrollPosition || this._options.position || 0;
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
             this._thumbSize, position, this._options.contentSize);
@@ -229,19 +234,15 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * @return {boolean} изменились ли размеры.
      */
     private _setSizes(contentSize: number): boolean {
-        const verticalDirection = this._options.direction === SCROLL_DIRECTION.VERTICAL;
         const scrollbar = this._children.scrollbar;
-        if (!Scrollbar._isScrollBarVisible(scrollbar as HTMLElement)) {
+        if (scrollbar && !Scrollbar._isScrollBarVisible(scrollbar as HTMLElement)) {
             return false;
         }
 
-        let scrollbarAvailableSize: number;
         if (this._viewportSize !== null) {
             this._scrollBarSize = this._viewportSize;
-            scrollbarAvailableSize = this._viewportSize;
         } else {
-            this._scrollBarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'];
-            scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'];
+            this._scrollBarSize = this._options.clientSize;
         }
 
         let thumbSize: number;
@@ -252,7 +253,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
 
         thumbSize = Scrollbar._calcThumbSize(
             this._children.thumb,
-            scrollbarAvailableSize,
+            this._scrollBarSize,
             viewportRatio,
             this._options.direction
         );
@@ -429,8 +430,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private static _calcThumbSize(thumb: HTMLElement, scrollbarAvailableSize: number,
                                   viewportRatio: number, direction: TDirection): number {
         const thumbSize = scrollbarAvailableSize * viewportRatio;
-        const minSize = parseFloat(getComputedStyle(thumb)[direction === SCROLL_DIRECTION.VERTICAL ? 'min-height' : 'min-width']);
-
+        const minSize = direction === SCROLL_DIRECTION.VERTICAL ? MIN_HEIGHT : MIN_WIDTH;
         return Math.max(minSize, thumbSize);
     }
 

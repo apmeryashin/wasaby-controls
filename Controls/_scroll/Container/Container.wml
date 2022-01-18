@@ -38,6 +38,7 @@
                         position="{{_scrollbars.vertical.position}}"
                         name="scrollBar"
                         contentSize="{{_scrollbars.vertical.contentSize}}"
+                        clientSize="{{_scrollbars.vertical.clientSize}}"
                         attr:class="controls-Scroll__scrollbar {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}
                             {{_scrollbars.horizontal.isVisible ? 'controls-VScrollbar_vertical_offset'}}"
                         on:positionChanged="_positionChangedHandler('vertical')"
@@ -51,6 +52,7 @@
                         direction="horizontal"
                         name="horizontalScrollBar"
                         contentSize="{{_scrollbars.horizontal.contentSize}}"
+                        clientSize="{{_scrollbars.horizontal.clientSize}}"
                         thumbStyle="accented"
                         thumbThickness="l"
                         attr:class="controls-Scroll__scrollbar controls-ScrollContainer__scrollbar_horizontal {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}

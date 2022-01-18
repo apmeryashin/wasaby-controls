@@ -13,7 +13,6 @@ import {
 } from './Container/Interface/IScrollbars';
 import {
     getDefaultOptions as getShadowsDefaultOptions,
-    IShadows,
     IShadowsOptions,
     IShadowsVisibilityByInnerComponents,
     SHADOW_MODE,
@@ -23,7 +22,6 @@ import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import fastUpdate from './StickyBlock/FastUpdate';
 import StickyHeaderController from './StickyBlock/Controller';
 import {IFixedEventData, IRegisterEventData, TYPE_FIXED_HEADERS, MODE} from './StickyBlock/Utils';
-import StickyBlock from './StickyBlock';
 import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
 import {IHasUnrenderedContent, IScrollState} from './Utils/ScrollState';
@@ -684,8 +682,15 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             TYPE_FIXED_HEADERS.initialFixed,
             true);
         // Обновляем скролбары только после наведения мышкой.
-        this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom },
-            this._isInitializationDelayed());
+        const clientSizes = {
+            vertical: this._oldScrollState.clientHeight,
+            horizontal: this._oldScrollState.clientWidth
+        };
+        const offsets = {
+            top: scrollbarOffsetTop,
+            bottom: scrollbarOffsetBottom
+        };
+        this._scrollbars.setOffsets(clientSizes, offsets, this._isInitializationDelayed());
         if (this._scrollbars.vertical && this._scrollbars.vertical.isVisible && this._children.hasOwnProperty('scrollBar')) {
             this._children.scrollBar.setViewportSize(
                 this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);

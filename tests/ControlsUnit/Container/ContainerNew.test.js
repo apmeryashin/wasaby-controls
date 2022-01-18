@@ -124,6 +124,10 @@ define(
                         getStickyHeadersShadowsVisibility: sinon.stub().returns({ then: () => 'auto' })
                      }
                   };
+                  scroll._oldScrollState = {
+                     clientHeight: 100,
+                     clientWidth: 100
+                  };
                   scroll._stickyFixedHandler({}, {});
 
                   if (test.result) {

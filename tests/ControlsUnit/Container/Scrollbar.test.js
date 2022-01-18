@@ -135,28 +135,27 @@ define(
          });
 
          describe('_resizeHandler', function () {
-            it('Should update position if scroll height is changed', function () {
-               let
-                  sandbox = sinon.sandbox.create(),
-                  options = { contentSize: 200, position: 10 },
-                  component = createComponent(Scrollbar.default, options);
-
-               sinon.stub(Scrollbar.default, '_calcThumbSize').returns(10);
-               component._children.scrollbar = {
-                  offsetHeight: 50,
-                  closest: () => false
-               };
-               component._scrollPosition = options.position;
-               component._afterMount(options);
-               assert.strictEqual(component._thumbPosition, 2.6666666666666665);
-
-               component._children.scrollbar.offsetHeight = 100;
-
-               component._resizeHandler();
-               assert.strictEqual(component._thumbPosition, 9);
-               sandbox.restore();
+            sinon.stub(Scrollbar.default, '_calcThumbSize').returns(10);
+            [{
+               clientSize: 50,
+               result: 2.6666666666666665
+            }, {
+               clientSize: 100,
+               result: 9
+            }].forEach(function (test) {
+               it('Should update position if scroll height is changed', function () {
+                  let sandbox = sinon.createSandbox();
+                  let options = { contentSize: 200, position: 10, clientSize: test.clientSize };
+                  let component = createComponent(Scrollbar.default, options);
+                  component._children.scrollbar = {
+                     closest: () => false
+                  };
+                  component._scrollPosition = options.position;
+                  component._beforeMount(options);
+                  assert.strictEqual(component._thumbPosition, test.result);
+                  sandbox.restore();
+               });
             });
-
          });
       });
    }

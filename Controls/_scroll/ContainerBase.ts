@@ -7,7 +7,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {ResizeObserverUtil, RESIZE_OBSERVER_BOX} from 'Controls/sizeUtils';
 import {getScrollContainerPageCoords, isCursorAtBorder, SCROLL_DIRECTION, SCROLL_POSITION} from './Utils/Scroll';
 import {scrollToElement} from './Utils/scrollToElement';
-import {scrollTo} from './Utils/Scroll';
 import {ListCompatible} from './Utils/ListCompatible';
 import ScrollState from './Utils/ScrollState';
 import ScrollModel from './Utils/ScrollModel';
@@ -78,7 +77,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     private _observedElements: HTMLElement[] = [];
 
     private _resizeObserverSupported: boolean;
-    // private _edgeObservers: IntersectionObserver[] = [];
 
     private _scrollLockedPosition: number = null;
     protected _scrollCssClass: string;

@@ -10,13 +10,6 @@ import {IScrollState} from '../Utils/ScrollState';
 import {SCROLL_MODE} from './Type';
 import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
 
-interface ISerializeState {
-    overflowHidden: boolean;
-    styleHideScrollbar: string;
-}
-
-const UPDATE_CONTAINER_SIZES_DELAY: number = 20;
-
 export default class ScrollbarsModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
     readonly '[Types/_entity/VersionableMixin]': true;
 
@@ -180,10 +173,12 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
-    setOffsets(offsets: Offsets, needUpdate: boolean = true): void {
+    setOffsets(scrollClientSizes: object, offsets: Offsets, needUpdate: boolean = true): void {
         let changed: boolean = false;
+        let scrollClientSize;
         for (const scrollbar of Object.keys(this._models)) {
-            changed = this._models[scrollbar].setOffsets(offsets) || changed;
+            scrollClientSize = scrollClientSizes[scrollbar];
+            changed = this._models[scrollbar].setOffsets(scrollClientSize, offsets) || changed;
         }
         if (changed && needUpdate) {
             this._nextVersion();
