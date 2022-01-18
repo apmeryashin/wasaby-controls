@@ -4,9 +4,13 @@ import {Model} from 'Types/entity';
 import {TEditingObject, TTypeDescription} from 'Controls/_propertyGrid/IPropertyGrid';
 
 type TProperty = 'string' | 'boolean' | 'number' | 'date' | 'enum' | 'text' | 'list' | 'propertyGrid';
-export type TValidator = (value: TEditingObject,
-                          item: Model<IProperty>,
-                          items: TTypeDescription) => boolean | string;
+export interface IValidatorArgs {
+    value: unknown;
+    item: Model<IProperty>;
+    items: TTypeDescription;
+    editingObject: TEditingObject;
+}
+export type TValidator = (args: IValidatorArgs) => boolean | string;
 
 /**
  * Интерфейс опций для {@link Controls/propertyGrid:PropertyGrid}.
