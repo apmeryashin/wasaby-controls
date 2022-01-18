@@ -1479,7 +1479,9 @@ const _private = {
             // и выполнять обработку selection для всех удалённых записей.
             if (action === IObservable.ACTION_REMOVE) {
                 self._removedItems.push(...removedItems);
-                self._removedItemsIndex = removedItemsIndex;
+                if (self._removedItemsIndex === null) {
+                    self._removedItemsIndex = removedItemsIndex;
+                }
             }
 
             // Тут вызывается nextVersion на коллекции, и это приводит к вызову итератора.
@@ -2935,7 +2937,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _removedItems = [];
 
-    private _removedItemsIndex: number;
+    private _removedItemsIndex: number = null;
 
     private _itemsChanged: boolean;
 
