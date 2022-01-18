@@ -376,11 +376,13 @@ export default class FilterControllerClass extends mixin<
         } else {
             const historyIds = [];
             const filterButtonItems = FilterControllerClass._getFilterButtonItems(filterSource);
-            filterButtonItems.forEach((filterItem) => {
-                if (filterItem.historyId) {
-                    historyIds.push(filterItem.historyId);
-                }
-            });
+            if (filterButtonItems) {
+                filterButtonItems.forEach((filterItem) => {
+                    if (filterItem.historyId) {
+                        historyIds.push(filterItem.historyId);
+                    }
+                });
+            }
             const source = getHistorySource({historyId, favorite: !!prefetchParams, historyIds});
 
             if (!this._crudWrapper) {
@@ -743,7 +745,7 @@ export default class FilterControllerClass extends mixin<
     private static _getFilterButtonItems(filterSource: IFilterItem[]): IFilterItem[] {
         return FilterControllerClass._getItemsByOption(
             filterSource,
-            null,
+            [],
             getFilterFromUrl()
         );
     }
