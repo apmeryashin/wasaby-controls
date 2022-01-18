@@ -31,13 +31,25 @@ describe('Controls/toggle:Chips', () => {
         const notifySpy = sandbox.spy(control, '_notify');
         control._onItemClick({}, recordSet.at(0));
         assert.equal(notifySpy.args[0][1][1][0], '1');
-        control._options.selectedKeys = notifySpy.args[0][1][0];
+        control.saveOptions({
+            keyProperty: 'id',
+            selectedKeys: notifySpy.args[0][1][0],
+            items: recordSet
+        });
         control._onItemClick({}, recordSet.at(2));
         assert.equal(notifySpy.args[1][1][1][0], '3');
-        control._options.selectedKeys = notifySpy.args[1][1][0];
+        control.saveOptions({
+            keyProperty: 'id',
+            selectedKeys: notifySpy.args[1][1][0],
+            items: recordSet
+        });
         control._onItemClick({}, recordSet.at(2));
         assert.equal(notifySpy.args[2][1][2][0], '3');
-        control._options.selectedKeys = notifySpy.args[2][1][0];
+        control.saveOptions({
+            keyProperty: 'id',
+            selectedKeys: notifySpy.args[2][1][0],
+            items: recordSet
+        });
         control._onItemClick({}, recordSet.at(1));
         assert.equal(notifySpy.args[3][1][2][0], '2');
         sandbox.restore();
