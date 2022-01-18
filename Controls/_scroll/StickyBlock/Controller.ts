@@ -758,6 +758,18 @@ class StickyHeaderController {
                         return offset;
                     }
                     curHeader = null;
+
+                    // Если предыдущий заголовок replaceable и не имеет общих родителей с текущим - нужно вычесть
+                    // со смещения высоту последнего stackable заголовка.
+                    prevHeader = this._headers[this._headersStack[position][i - 1]];
+                    if (prevHeader?.mode === 'replaceable' && header.mode === 'stackable') {
+                        const parentNode = this._getGeneralParentNode(prevHeader, header);
+                        if (parentNode === document.body) {
+                            const size = this._getPrevStackableHeaderHeight(i, position);
+                            offset -= size;
+                        }
+                    }
+
                     offsets[position][headerId] = offset;
                     if (
                         header.mode === 'stackable' && header.position?.vertical &&
@@ -806,6 +818,18 @@ class StickyHeaderController {
 
         this._updateTopBottomInitialized = false;
         return promise;
+    }
+
+    private _getPrevStackableHeaderHeight(curHeaderIndex: number, position: POSITION): number {
+        for (let i = (curHeaderIndex - 1); i >= 0; i--) {
+            const prevHeader = this._headers[this._headersStack[position][i]];
+            if (prevHeader.mode === 'stackable') {
+                const headerSize = this._getHeaderSize(prevHeader, position);
+                if (headerSize !== 0) {
+                    return headerSize;
+                }
+            }
+        }
     }
 
     private _getHeaderSize(header: IRegisterEventData, position: POSITION): number {
