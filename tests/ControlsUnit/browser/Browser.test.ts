@@ -1311,6 +1311,21 @@ describe('Controls/browser:Browser', () => {
                 expandedItems: []
             });
         });
+
+        it('update root with sourceController in options', async () => {
+            const sourceController = new NewSourceController(getBrowserOptions());
+            let options = {...getBrowserOptions(), sourceController};
+            const browser = await getBrowserWithMountCall(options);
+            const notifyStub = sinon.stub(browser, '_notify');
+
+            options = {...options};
+            options.root = 'newRoow';
+            await browser._beforeUpdate(options);
+            assert.ok(notifyStub.notCalled);
+
+            sourceController.setRoot('nextRoot');
+            assert.ok(notifyStub.calledOnce);
+        });
     });
 
     describe('_updateSearchController', () => {
