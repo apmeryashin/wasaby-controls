@@ -32,7 +32,7 @@ describe('Controls/toggle:Chips', () => {
         });
         let step: number = 1;
         const sandbox = sinon.createSandbox();
-        sandbox.replace(control, '_notify', ((text, args: string[]) => {
+        sandbox.replace(control, '_notify', ((name, args: string[]) => {
             switch (step) {
                 case 1:
                     assert.equal(args[1][0], '1');
@@ -47,7 +47,7 @@ describe('Controls/toggle:Chips', () => {
                     assert.equal(args[2][0], '2');
                     break;
             }
-            return text.length;
+            control._options.selectedKeys = args[0];
         }));
         control._onItemClick({}, item1);
         step++;
