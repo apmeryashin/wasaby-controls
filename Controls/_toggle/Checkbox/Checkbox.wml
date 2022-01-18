@@ -14,6 +14,7 @@
                         checkboxStyle="{{_options.checkboxStyle}}"
                         resetValue="{{_options.resetValue}}"
                         horizontalPadding="{{_options.horizontalPadding}}"
+                        size="{{_options.size}}"
                         on:keyup="_keyUpHandler()"/>
             <ws:partial template="wml!Controls/_toggle/Checkbox/resources/CheckboxCaption"
                         readOnly="{{_options.value !== null && !_options.value ? _options.readOnly : false}}"
