@@ -3654,7 +3654,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         // После создания observersController'а нужно обновить scrollController:
         // для вычисления сдвига виртуального скролла нужно знать об отступах триггеров
-        this._updateScrollController();
+        this._updateScrollController(this._options, true);
 
         // Если нет данных, то сразу же показываем триггер, чтобы при наличии данных вверх инициировалась их загрузка
         // Если вверх нет данных, то сразу показываем триггер, т.к. ромашку показывать не будем, а триггер нужен для виртуального скролла.
@@ -3692,10 +3692,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.tryLoadToDirectionAgain(this);
     }
 
-    _updateScrollController(newOptions?: IBaseControlOptions) {
+    _updateScrollController(newOptions?: IBaseControlOptions, isMount: boolean) {
         if (this._scrollController) {
             const options = newOptions || this._options;
-            this._scrollController.setRendering(true);
+            if (!isMount) {
+                this._scrollController.setRendering(true);
+            }
             const result = this._scrollController.update({
                 options: {
                     ...options,
