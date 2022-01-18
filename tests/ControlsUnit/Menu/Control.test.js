@@ -376,7 +376,7 @@ define(
 
             items.at(0).set('node', true);
             rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 'menu-expander');
+            assert.equal(rightSpacing, 's');
 
             menuOptions.itemPadding.right = 'xs';
             rightSpacing = menuRender._getRightPadding(menuOptions, items);
@@ -385,7 +385,7 @@ define(
             menuOptions.itemPadding.right = null;
             menuOptions.multiSelect = true;
             rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 'menu-expander');
+            assert.equal(rightSpacing, 's');
 
             menuOptions.itemPadding.right = 'menu-close';
             menuOptions.multiSelect = true;
@@ -844,7 +844,7 @@ define(
             expectedOptions.headerTemplate = null;
             expectedOptions.headingCaption = defaultOptions.headingCaption;
             expectedOptions.additionalProperty = null;
-            expectedOptions.itemPadding = null;
+            expectedOptions.itemPadding = undefined;
             expectedOptions.searchParam = null;
             expectedOptions.subMenuLevel = 1;
             expectedOptions.draggable = false;
