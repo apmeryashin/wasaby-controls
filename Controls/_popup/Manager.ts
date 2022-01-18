@@ -516,7 +516,8 @@ class Manager {
 
     private _handlePopupWithOverlay(): void {
         const popupContainer = ManagerController.getContainer();
-        const popupItem = ManagerController.find(popupContainer.getOverlayIndex());
+        const overlayIndex = popupContainer.getOverlayIndex();
+        const popupItem = overlayIndex !== -1 && this._popupItems.at(overlayIndex);
         if (popupItem && popupItem.popupState !== popupItem.controller.POPUP_STATE_INITIALIZING) {
             this._closePopupByOutsideClick(popupItem);
         }
