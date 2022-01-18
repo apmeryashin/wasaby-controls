@@ -29,7 +29,6 @@
                 fontSize="{{item.captionOptions && item.captionOptions.fontSize || captionFontSize}}"
                 scope="{{item.captionOptions}}"
                 attr:class="controls-PropertyGrid__editor-caption
-                            controls-PropertyGrid__gridLayout_editor-caption
                             controls-PropertyGrid__gridLayout_editor-caption-baseline"
                 attr:tabindex="-1"
     />
