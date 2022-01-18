@@ -421,7 +421,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._inputSearchValue = newOptions.searchValue;
 
             if (!newOptions.searchValue && (sourceChanged || rootChanged) && searchController) {
-                this._resetSearch();
+                // сброс поиска производим без выполнения запроса с новым фильтров
+                // из-за смены корня/источника и так будет перезапрос данных
+                this._resetSearch(false);
                 sourceController.setFilter(this._filter);
             }
         }
@@ -987,7 +989,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         });
     }
 
-    private _resetSearch(): void {
+    private _resetSearch(sendRequestWithNewFilter: boolean = !!this._options.sourceController): void {
         const configsCount = Object.keys(this._dataLoader.getState()).length;
 
         if (configsCount > 1) {
@@ -1002,7 +1004,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             // в противном случае происходит рассинхрон фильтров в контексте и в контроллере
             // Решается тут https://online.saby.ru/opendoc.html?guid=6c15ea37-fdf6-4dc8-a8fa-d54bd7be01bb
             const searchController = this._getSearchControllerSync();
-            searchController.reset(!this._options.sourceController);
+            searchController.reset(!sendRequestWithNewFilter);
             const filter = searchController.getFilter();
             if (!isEqual(this._filter, filter)) {
                 this._filterChanged(null, filter);
