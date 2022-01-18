@@ -5,6 +5,7 @@ import {Selector, showSelector} from 'Controls/lookup';
 import * as rk from 'i18n!Controls';
 import {Model} from 'Types/entity';
 import {List} from 'Types/collection';
+import {isEqual} from 'Types/object';
 import 'css!Controls/filterPanel';
 
 interface ILookupOptions extends IControlOptions {
@@ -40,7 +41,7 @@ class LookupEditor extends Control<ILookupOptions> implements ILookup {
     }
 
     protected _beforeUpdate(options: ILookupOptions): void {
-        if (this._options.propertyValue !== options.propertyValue) {
+        if (!isEqual(this._options.propertyValue, options.propertyValue)) {
             this._selectedKeys = this._getSelectedKeys(options.propertyValue, options.multiSelect);
         }
     }
