@@ -189,7 +189,10 @@ export default class Model extends mixin<VersionableMixin, ObservableMixin>(Vers
       this._value = value;
 
       this._updateLastValue();
-      this._textValue = this._stringValueConverter.getStringByValue(value);
+      // Не будем обновлять текст у невалидной даты
+      if (dateUtils.isValidDate(value) || value === null) {
+         this._textValue = this._stringValueConverter.getStringByValue(value);
+      }
 
       // если ничего не поменялось - не надо изменять версию
       if (oldValue !== value || oldTextValue !== this._textValue) {
