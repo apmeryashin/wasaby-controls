@@ -1,1 +1,1 @@
-<ws:partial template="{{ _options.content }}" toggleHorizontalScrollCallback="{{ _toggleHorizontalScrollCallback }}"/>
+<ws:partial template="{{ _options.content }}" setScrollContainerViewMode="{{ _setScrollContainerViewMode }}"/>

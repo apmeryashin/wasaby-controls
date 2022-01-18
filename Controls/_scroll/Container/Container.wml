@@ -1,5 +1,5 @@
 <ws:template name="scrollTpl">
-	<Controls._scroll.ListScrollContextProvider toggleHorizontalScrollCallback="{{ _toggleHorizontalScrollCallback }}">
+	<Controls._scroll.ListScrollContextProvider setScrollContainerViewMode="{{ _setScrollContainerViewMode }}">
 		<div class="controls-Scroll-Container controls-Scroll controls_scroll_theme-{{ _options.theme }}">
 			<ws:partial template="{{_baseTemplate}}"
 						scope="{{_options}}"
@@ -8,7 +8,7 @@
 						_scrollCssClass="{{_scrollCssClass}}"
 						_contentWrapperCssClass="{{_contentWrapperCssClass}}"
 						_initialScrollPositionCssClass="{{_initialScrollPositionCssClass}}"
-						newColumnScroll="{{ _newColumnScroll }}"
+						_scrollContainerViewMode="{{ _scrollContainerViewMode }}"
 						attr:class="controls-Scroll-Container__base controls-BlockLayout__blockGroup
 						{{ _optimizeShadowClass }}"
 						on:intersectionObserverRegister="_intersectionObserverRegisterHandler()"

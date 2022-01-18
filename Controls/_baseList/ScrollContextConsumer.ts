@@ -4,11 +4,11 @@ import ListScrollContext, {IListScrollContext} from 'Controls/Context/ListScroll
 
 export default class ScrollContextConsumer extends Control {
     _template: TemplateFunction = template;
-    private _toggleHorizontalScrollCallback: Function;
+    private _setScrollContainerViewMode: Function;
 
     protected _beforeMount(options: unknown, context: IListScrollContext): void {
         if (context.listScrollContext) {
-            this._toggleHorizontalScrollCallback = context.listScrollContext.toggleHorizontalScrollCallback;
+            this._setScrollContainerViewMode = context.listScrollContext.setScrollContainerViewMode;
         }
     }
 

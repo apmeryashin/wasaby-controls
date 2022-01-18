@@ -34,7 +34,7 @@ export class GridControl extends BaseControl<IGridControlOptions> {
     protected _prepareItemsOnMount(self: this, newOptions: IGridControlOptions): Promise<unknown> {
         super._prepareItemsOnMount(self, newOptions);
         if (newOptions.newColumnScroll && newOptions.virtualColumnScrollConfig) {
-            newOptions.toggleHorizontalScrollCallback(true);
+            newOptions.setScrollContainerViewMode('custom');
             return import('Controls/horizontalScroll').then((lib) => {
                 this._createColumnScrollController(lib.Controller, newOptions);
             });

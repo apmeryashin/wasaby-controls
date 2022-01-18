@@ -1,16 +1,16 @@
 import * as DataContext from 'Core/DataContext';
 
 export interface IListScrollContextOptions {
-    toggleHorizontalScrollCallback: (state: boolean) => void;
+    setScrollContainerViewMode: (state: boolean) => void;
 }
 
 export default class ListScrollContext extends DataContext {
     _moduleName: string = 'Controls/_scroll/ListScrollContext';
-    toggleHorizontalScrollCallback: IListScrollContextOptions['toggleHorizontalScrollCallback'];
+    setScrollContainerViewMode: IListScrollContextOptions['setScrollContainerViewMode'];
 
     constructor(options: IListScrollContextOptions) {
         super();
-        this.toggleHorizontalScrollCallback = options.toggleHorizontalScrollCallback;
+        this.setScrollContainerViewMode = options.setScrollContainerViewMode;
     }
 }
 

@@ -28,7 +28,7 @@
 		</div>
 	</div>
 
-	<div class="controlsDemo_fixedWidth300">
+	<div class="controlsDemo_fixedWidth300 controlsDemo__ml3">
 		<div class="wrap-container demo-HorizontalScrollbarVisible__true">
 			<div class="controls-text-label">scrollbarVisible.vertical = false</div>
 			<Controls.scroll:Container attr:class="ControlsDemo-scroll_container2 ControlsDemo-ScrollContainer-size"
