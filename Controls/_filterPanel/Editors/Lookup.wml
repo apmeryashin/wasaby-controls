@@ -5,7 +5,7 @@
                     scope="{{_options}}"
                     counterVisibility="hidden"
                     fontColorStyle="default"
-                    selectedKeys="{{_selectedKeys}}"
+                    bind:selectedKeys="_propertyValue"
                     style="filterPanel"
                     readOnly="{{true}}"
                     on:textValueChanged="_handleTextValueChanged()"

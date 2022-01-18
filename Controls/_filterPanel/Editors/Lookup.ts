@@ -31,40 +31,30 @@ class LookupEditor extends Control<ILookupOptions> implements ILookup {
     readonly '[Controls/_filterPanel/Editors/Lookup]': boolean = true;
     protected _template: TemplateFunction = LookupTemplate;
     protected _textValue: string = rk('Еще');
-    protected _selectedKeys: string[] | number[] = [];
+    protected _propertyValue: string[] | number[] = [];
     protected _children: {
         lookupEditor: Selector
     };
 
     protected _beforeMount(options: ILookupOptions): void {
-        this._selectedKeys = this._getSelectedKeys(options.propertyValue, options.multiSelect);
+        this._propertyValue = this._getPropertyValueBySelectedKeys(options.propertyValue, options.multiSelect);
     }
 
-    protected _beforeUpdate(options: ILookupOptions): void {
-        if (!isEqual(this._options.propertyValue, options.propertyValue)) {
-            this._selectedKeys = this._getSelectedKeys(options.propertyValue, options.multiSelect);
-        }
-    }
-
-    protected _getSelectedKeys(propertyValue: number[] | string[] | number | string, multiSelect: boolean):
-                               number[] | string[] {
+    protected _getPropertyValueBySelectedKeys(propertyValue: number[] | string[] | number | string,
+                                              multiSelect: boolean): number[] | string[] {
         return multiSelect ? propertyValue : [propertyValue];
     }
 
-    protected _handleCloseEditorClick(event: SyntheticEvent): void {
-        const extendedValue = {
-            value: this._options.propertyValue,
-            textValue: '',
-            viewMode: 'extended'
-        };
-        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
+    protected _handleSelectedKeysChanged(event: SyntheticEvent, value: number[] | string[]): void {
+        this._propertyValue = this._getPropertyValueBySelectedKeys(value, this._options.multiSelect);
+        this._propertyValueChanged(value);
     }
 
-    protected _handleSelectedKeysChanged(event: SyntheticEvent, value: number[] | string[]): void {
-        this._selectedKeys = this._getSelectedKeys(value, this._options.multiSelect);
+    protected _propertyValueChanged(value: number[] | string[]): void {
         const extendedValue = {
             value,
-            textValue: this._textValue
+            textValue: this._textValue,
+            viewMode: 'basic'
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
