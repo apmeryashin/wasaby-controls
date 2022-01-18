@@ -67,7 +67,7 @@
 </ws:template>
 
 <div class="controls-MasterDetail controls-MasterDetail-{{_options.masterContrastBackground ? 'contrast' : 'transparent'}}
-            ws-flexbox controls_list_theme-{{_options.theme}}">
+            ws-flexbox controls_list_theme-{{_options.theme}} {{_options.restricted ? 'controls-MasterDetail-restricted'}}">
    <ws:if data="{{_options.masterPosition === 'right'}}">
       <ws:partial template="detail" />
       <ws:partial template="resizingLineTemplate" />
