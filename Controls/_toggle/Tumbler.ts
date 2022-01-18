@@ -6,7 +6,7 @@ import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
 import {IItemTemplateOptions, IContrastBackgroundOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {constants, detection} from 'Env/Env';
+import {constants} from 'Env/Env';
 import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
 
 interface IBackgroundPosition {
@@ -251,17 +251,6 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
         if (this._workByKeyboard !== context.workByKeyboard) {
             this._workByKeyboard = context.workByKeyboard;
         }
-    }
-
-    protected _getItemStyle(): string {
-        if (this._options.workspaceWidth) {
-            const minWidth = this._options.workspaceWidth / this._options.items.getCount();
-            if (detection.isIE) {
-                return `min-width:calc(${minWidth}px - 24px - 2px)`;
-            }
-            return `min-width:calc(${minWidth}px - (var(--offset_m) * 2) - var(--button_offset_tumbler))`;
-        }
-        return '';
     }
 
     protected _highlightedOnFocus(): boolean {

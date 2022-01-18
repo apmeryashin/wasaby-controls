@@ -5,6 +5,7 @@
      {{_highlightedOnFocus() ? 'controls-focused-item'}}
      {{_options.direction === 'horizontal' ? 'controls-inlineheight-'+_options.inlineHeight}}" on:mouseenter="_mouseEnterHandler()" on:touchstart="_touchStartHandler()"
          on:keypress="_keyUpHandler()"
+         style="{{_options.workspaceWidth ? ('width:' + _options.workspaceWidth+'px')}}"
          tabindex="0">
         <ws:for data="index, itemData in _options.items">
             <div class="controls-Tumbler__button controls-Tumbler__button-{{_options.inlineHeight}}
@@ -20,7 +21,6 @@
                         }}"
                  data-qa="controls-Tumbler__button"
                  on:click="_onItemClick(itemData)"
-                 style="{{_getItemStyle()}}"
                  name="TumblerButton{{index}}">
                 <ws:partial
                     template="{{_getTemplate(_options.itemTemplate, itemData, _options.itemTemplateProperty)}}"
