@@ -51,6 +51,7 @@ export interface ICalculatorBaseOptions {
     viewportSize?: number;
     contentSize?: number;
     totalCount: number;
+    feature1183225611: boolean;
 
     /**
      * Размеры элементов заданные прикладниками.
@@ -85,6 +86,7 @@ export class Calculator {
     private _givenItemsSizes: IItemsSizes;
     private _triggersOffsets: ITriggersOffsets;
     private _virtualScrollConfig: IVirtualScrollConfig;
+    private readonly _feature1183225611: boolean;
     private _scrollPosition: number;
     private _viewportSize: number;
     private _contentSize: number;
@@ -99,6 +101,7 @@ export class Calculator {
         this._triggersOffsets = options.triggersOffsets;
         this._scrollPosition = options.scrollPosition || 0;
         this._totalCount = options.totalCount;
+        this._feature1183225611 = options.feature1183225611;
         this._viewportSize = options.viewportSize || 0;
         this._contentSize = options.contentSize || 0;
         this._virtualScrollConfig = options.virtualScrollConfig;
@@ -401,7 +404,8 @@ export class Calculator {
                 currentRange: this._range,
                 placeholders: this._placeholders,
                 scrollPosition,
-                totalCount: this._totalCount
+                totalCount: this._totalCount,
+                feature1183225611: this._feature1183225611
             });
         }
 
