@@ -18,6 +18,22 @@ const DATA = [
         imageHeight: 's',
         image: explorerImages[8],
         isShadow: true
+    },
+    {
+        id: 2,
+        parent: null,
+        type: null,
+        title: 'Шаблон 5.2 с изображением и заголовком на нем',
+        gradientColor: '#E0E0E3',
+        titleColorStyle: 'danger',
+        description: 'Проверяем работу titleColorStyle. Заголовок красный.',
+        imageProportion: '1:1',
+        titleLines: 3,
+        imagePosition: 'top',
+        'parent@': null,
+        imageHeight: 's',
+        image: explorerImages[8],
+        isShadow: true
     }
 ];
 

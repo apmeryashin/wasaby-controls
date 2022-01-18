@@ -1,0 +1,12 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">used Controls.source:SelectedKey</div>
+        <Controls.source:SelectedKey bind:selectedKey="_selectedKey">
+            <Controls.toggle:Chips items="{{_items}}" attr:class="ControlsDemo-ButtonGroup__use-selectedKey"/>
+        </Controls.source:SelectedKey>
+    </div>
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+        <div class="controls-text-label">default</div>
+        <Controls.toggle:Chips items="{{_items}}" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__default"/>
+    </div>
+</div>

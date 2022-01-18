@@ -19,7 +19,7 @@
                     <ws:partial template="{{beforeTitleTemplate}}"/>
                 </div>
             </ws:if>
-            <div attr:itemprop="name" class="{{ item.getEllipsisClasses(itemType, titleLines, staticHeight, hasTitle) }}" style="{{ item.getTitleStyles(itemType, titleLines, textColor, titlePosition, imageViewMode, contentPosition) }}">
+            <div attr:itemprop="name" class="{{ item.getEllipsisClasses(itemType, titleLines, staticHeight, hasTitle) }}" style="{{ item.getTitleStyles(itemType, titleLines, textColor, titleColorStyle, titlePosition, imageViewMode, contentPosition) }}">
                 <ws:if data="{{ item.getSearchValue() }}">
                     <Controls.decorator:Highlight highlightedValue="{{ item.getSearchValue() }}" className="{{highlightClassName}}">
                         <ws:value>
