@@ -6,9 +6,8 @@ import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
 import {IItemTemplateOptions, IContrastBackgroundOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {constants} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
-import {ISwitchOptions} from "Controls/_toggle/Switch";
 
 interface IBackgroundPosition {
     [key: number]: IBackgroundPositionData;
@@ -23,7 +22,17 @@ interface IBackgroundPositionData {
     top: number;
 }
 
-interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IContrastBackgroundOptions {}
+interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IContrastBackgroundOptions {
+    workspaceWidth?: number;
+}
+
+/**
+ * @name Controls/_toggle/Tumbler#workspaceWidth
+ * @cfg {Number} Текущая ширина тумблера
+ * @remark
+ * Если опция задана, то минимальная ширина элементов будут распределена равномерно в зависимости от переданного значения.
+ * @demo Controls-demo/toggle/Tumbler/WorkspaceWidth/Index
+ */
 
 /**
  * @name Controls/_toggle/Tumbler#direction
@@ -242,6 +251,17 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
         if (this._workByKeyboard !== context.workByKeyboard) {
             this._workByKeyboard = context.workByKeyboard;
         }
+    }
+
+    protected _getItemStyle(): string {
+        if (this._options.workspaceWidth) {
+            const minWidth = this._options.workspaceWidth / this._options.items.getCount();
+            if (detection.isIE) {
+                return `min-width:calc(${minWidth}px - 24px - 2px)`;
+            }
+            return `min-width:calc(${minWidth}px - (var(--offset_m) * 2) - var(--button_offset_tumbler))`;
+        }
+        return '';
     }
 
     protected _highlightedOnFocus(): boolean {
