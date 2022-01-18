@@ -270,21 +270,19 @@
 }
 
 .controls-Menu__arrow {
-   .inline-flexbox();
-   .align-items(center);
+   display: inline-flex;
+   align-items: center;
+   align-self: center;
    .icon-size(var(--hierarchy_icon-size_menu));
    .box-sizing(border-box);
-
-   position: absolute;
-   top: calc((var(--item_height_menu) - var(--hierarchy_icon-size_menu)) / 2);
 }
 
 .controls-Menu__arrow_right {
-   right: var(--hierarchy_icon_offset-right_menu);
+   margin-left: var(--hierarchy_icon_offset-left_menu);
 }
 
 .controls-Menu__arrow_left {
-   left: var(--hierarchy_icon_offset-right_menu);
+   margin-right: var(--hierarchy_icon_offset-right_menu);
 }
 
 .controls-Menu__arrow_readOnly {
@@ -303,11 +301,9 @@
    .align-items(center);
    .icon-size(var(--pin-button_icon-size_menu));
 
-   position: absolute;
-   display: none;
-   right: var(--pin-button_offset-right_menu);
-   top: calc((var(--item_height_menu) - var(--pin-button_icon-size_menu)) / 2);
+   visibility: hidden;
    color: var(--pin-button_icon-color_menu);
+   margin-left: var(--pin-button_offset-left_menu);
 }
 
 .controls-Menu__iconPin.controls-Menu__iconPin_swiped {
@@ -430,14 +426,6 @@
    padding-right: @padding-right_menu-multiSelect;
 }
 
-.controls-ListView__item-rightPadding_menu-expander {
-   padding-right: calc(var(--hierarchy_icon_offset-right_menu) + var(--hierarchy_icon-size_menu) + var(--hierarchy_icon_offset-left_menu));
-}
-
-.controls-ListView__item-leftPadding_menu-expander {
-   padding-left: calc(var(--hierarchy_icon_offset-right_menu) + var(--hierarchy_icon-size_menu) + var(--hierarchy_icon_offset-left_menu));
-}
-
 .controls-Menu__content_align_left {
    width: 100%;
    justify-content: space-between;
@@ -451,10 +439,6 @@
 
 .controls-ListView__item-rightPadding_menu-close-multiselect {
    padding-right: calc(@padding-right_menu-close + @padding-right_menu-multiSelect);
-}
-
-.controls-ListView__item-rightPadding_menu-pin {
-   padding-right: calc(var(--pin-button_offset-left_menu) + var(--pin-button_icon-size_menu) + var(--pin-button_offset-right_menu));
 }
 
 .controls-ListView__item-rightPadding_menu-s {
@@ -490,7 +474,7 @@
        }
 
         .controls-Menu__iconPin {
-           .inline-flexbox();
+            visibility: visible;
         }
 
         .controls-itemActionsV {
