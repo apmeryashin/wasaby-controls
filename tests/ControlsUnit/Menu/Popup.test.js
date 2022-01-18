@@ -94,20 +94,6 @@ function(menu, source, Clone, display, collection) {
          assert.equal(menuPopup._headingIconSize, 's');
       });
 
-      it('_setItemPadding', function() {
-         let menuPopup = new menu.Popup();
-         menuPopup._closeButtonVisibility = true;
-         menuPopup._setItemPadding({ itemPadding: { right: 'test-padding' }, allowPin: true });
-         assert.equal(menuPopup._itemPadding.right, 'test-padding');
-
-         menuPopup._setItemPadding({ allowPin: true });
-         assert.equal(menuPopup._itemPadding.right, 'menu-pin');
-
-         menuPopup._closeButtonVisibility = false;
-         menuPopup._setItemPadding({ allowPin: true });
-         assert.equal(menuPopup._itemPadding.right, 'menu-pin');
-      });
-
       describe('_beforeUpdate', () => {
          it('popup directions', () => {
             let menuPopup = new menu.Popup();
