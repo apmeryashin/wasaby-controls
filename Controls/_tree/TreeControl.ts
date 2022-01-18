@@ -34,7 +34,7 @@ import 'css!Controls/itemActions';
 import 'css!Controls/CommonClasses';
 import 'css!Controls/treeGrid';
 import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
-import {ExpandController} from 'Controls/expandCollapse';
+import {ExpandController, ALL_EXPANDED_VALUE} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {
@@ -616,10 +616,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const sourceController = this.getSourceController();
         const viewModelConstructorChanged = newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
             (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
-
-        // Если выполняется поиск, то развернем все узлы
-        const newExpandedItems = newOptions.searchValue ? [null] : newOptions.expandedItems;
-
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
 
@@ -640,7 +636,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             // списка и не факт что это будет актуально
             if (
                 this._loadedRoot !== newOptions.root &&
-                isEqual(newExpandedItems, this._options.expandedItems)
+                isEqual(newOptions.expandedItems, this._options.expandedItems)
             ) {
                 this._needResetExpandedItems = true;
             }
@@ -682,6 +678,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const wasResetExpandedItems = !isSourceControllerLoading &&
             expandedItemsFromSourceCtrl && !expandedItemsFromSourceCtrl.length &&
             currentExpandedItems && currentExpandedItems.length;
+
+        // Если выполняется поиск и нет развернутых элементов, то развернем все узлы
+        const newExpandedItems = newOptions.searchValue && !newOptions.expandedItems.length ?
+            [ALL_EXPANDED_VALUE] : newOptions.expandedItems;
 
         if (wasResetExpandedItems) {
             _private.resetExpandedItems(this);
