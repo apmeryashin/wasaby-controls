@@ -1,3 +1,4 @@
+import jsdom = require('jsdom');
 import { assert } from 'chai';
 import { spy } from 'sinon';
 
@@ -6,14 +7,17 @@ import {IAbstractListVirtualScrollControllerOptions as ControllerOptions} from '
 import { Collection } from 'Controls/display';
 import {RecordSet} from 'Types/collection';
 
+const ItemsContainerUniqueSelector = 'itemsContainer';
+const ItemsQuerySelector = 'item';
+
 function getDefaultControllerOptions(): ControllerOptions {
     return {
         itemsContainer: null,
         listContainer: null,
         listControl: null,
         collection: null,
-        itemsContainerUniqueSelector: '',
-        itemsQuerySelector: '',
+        itemsContainerUniqueSelector: `.${ItemsContainerUniqueSelector}`,
+        itemsQuerySelector: `.${ItemsQuerySelector}`,
         triggersQuerySelector: '',
         triggersPositions: {backward: 'offset', forward: 'offset'},
         triggersVisibility: {backward: true, forward: true},
@@ -28,7 +32,8 @@ function getDefaultControllerOptions(): ControllerOptions {
         updateVirtualNavigationUtil: (hasItems) => null,
         activeElementChangedCallback: (activeElementIndex) => null,
         hasItemsOutRangeChangedCallback: (hasItems) => null,
-        itemsEndedCallback: (direction) => null
+        itemsEndedCallback: (direction) => null,
+        feature1183225611: false
     };
 }
 
@@ -39,7 +44,7 @@ function getController(options: Partial<ControllerOptions>): ListVirtualScrollCo
     });
 }
 
-function getCollection(items: []): Collection {
+function getCollection(items: object[]): Collection {
     return new Collection({
         collection: new RecordSet({
             rawData: items,
@@ -49,7 +54,35 @@ function getCollection(items: []): Collection {
     });
 }
 
+function getItemsContainer(collection: Collection): HTMLElement {
+    const dom = new jsdom.JSDOM(`
+        <!DOCTYPE html>
+        <div class="${ItemsContainerUniqueSelector}"></div>
+    `);
+
+    const itemsContainer: HTMLElement = dom.window.document.querySelector('.itemsContainer');
+
+    collection.each((item) => {
+        const itemElement: HTMLElement = dom.window.document.createElement('div');
+
+        itemElement.className = ItemsQuerySelector;
+        itemElement.setAttribute('item-key', item.key);
+
+        itemsContainer.appendChild(itemElement);
+    });
+
+    return itemsContainer;
+}
+
 describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', () => {
+    before(() => {
+        window = new jsdom.JSDOM('').window;
+    });
+
+    after(() => {
+        window = {};
+    });
+
     describe('set iterator to collection', () => {
         it('in constructor', () => {
             const collection = getCollection([]);
@@ -67,6 +100,36 @@ describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', (
             const setIteratorSpy = spy(newCollection, 'setViewIterator');
             controller.setCollection(newCollection);
             assert.isTrue(setIteratorSpy.calledOnce);
+        });
+    });
+
+    describe('scroll to active element', () => {
+        it('after mount', () => {
+            const collection = getCollection([{key: 1}]);
+            const itemsContainer = getItemsContainer(collection);
+            const scrollToElementUtil = spy(() => null);
+            const controller = getController({
+                collection,
+                scrollToElementUtil,
+                itemsContainer,
+                activeElementKey: 1
+            });
+            controller.afterMountListControl();
+            assert.isTrue(scrollToElementUtil.calledOnce);
+        });
+
+        it('on reset items', () => {
+            const collection = getCollection([{key: 1}]);
+            const itemsContainer = getItemsContainer(collection);
+            const scrollToElementUtil = spy(() => null);
+            const controller = getController({
+                collection,
+                scrollToElementUtil,
+                itemsContainer,
+                activeElementKey: 1
+            });
+            controller.resetItems();
+            assert.isTrue(scrollToElementUtil.calledOnce);
         });
     });
 });
