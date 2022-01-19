@@ -3610,9 +3610,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._listVirtualScrollController.setListContainer(this._container);
         this._listVirtualScrollController.afterMountListControl();
-        if (this._options.activeElement) {
-            this._listVirtualScrollController.scrollToItem(this._options.activeElement, 'top', true);
-        }
 
         if (constants.isBrowserPlatform) {
             window.addEventListener('resize', this._onWindowResize);
@@ -3804,6 +3801,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (isSourceControllerLoadingNow) {
             _private.setReloadingState(this, true);
+        }
+
+        if (this._options.activeElement !== newOptions.activeElement) {
+            this._listVirtualScrollController.setActiveElementKey(newOptions.activeElement);
         }
 
         if (navigationChanged) {
@@ -6576,13 +6577,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         // Скроллить нужно после того как ромашка отрисуется, то есть на _afterRender
         if (onDrawItems) {
-
-            // FIXME: https://online.sbis.ru/opendoc.html?guid=35665533-5f26-432e-9b22-795ac40e65ff
-            const lastAction = this._options.fix1184259069 && this._doAfterDrawItems;
             this._doAfterDrawItems = () => {
-                if (lastAction) {
-                    lastAction();
-                }
                 scrollAndShowTrigger();
             };
         } else {
