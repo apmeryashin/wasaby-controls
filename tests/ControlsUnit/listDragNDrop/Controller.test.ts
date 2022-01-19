@@ -168,8 +168,8 @@ describe('Controls/_listDragNDrop/Controller', () => {
          assert.equal(newPosition.position, 'after');
 
          newPosition = controller.calculateDragPosition({targetItem: model.getItemBySourceKey(1)});
-         assert.equal(newPosition.index, 0);
-         assert.equal(newPosition.position, 'before');
+         assert.equal(newPosition.index, 1);
+         assert.equal(newPosition.position, 'after');
       });
    });
 
