@@ -87,7 +87,7 @@ define(
                   x: 10,
                   y: 10
                };
-               popupItem.startPosition = {
+               popupTemplate.NotificationController._startPosition = {
                   bottom: 210,
                   right: 115
                };
@@ -139,7 +139,7 @@ define(
                      x: 10,
                      y: 10
                   };
-                  popupItem.startPosition = test.startPosition
+                  popupTemplate.NotificationController._startPosition = test.startPosition;
                   popupTemplate.NotificationController.popupDragStart(popupItem, null, offset);
                   assert.equal(popupTemplate.NotificationController._historyCoords.right, test.result.right);
                   assert.equal(popupTemplate.NotificationController._historyCoords.bottom, test.result.bottom);

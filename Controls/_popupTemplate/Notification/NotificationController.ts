@@ -35,6 +35,10 @@ class NotificationController extends BaseController {
         right: number;
     };
     private _direction: string = 'up';
+    private _startPosition: {
+        bottom: number;
+        right: number;
+    };
 
     elementCreated(item: INotificationItem, container: HTMLDivElement): boolean {
         item.height = container.offsetHeight;
@@ -76,16 +80,12 @@ class NotificationController extends BaseController {
 
     popupDragEnd(item: INotificationItem, offset: number): void {
         this._savePopupCoords(item);
-        delete item.startPosition;
+        this._startPosition = null;
     }
 
     popupDragStart(item: INotificationItem,
                    container: HTMLElement,
                    offset: IDragOffset): void {
-        // Нужно учитывать разницу в высоте между первым элементом и итемом
-        let offsetBottom = 0;
-        // В списке each нельзя остановить, не будем считать высоту после того, как найдем элемент
-        let elementFound = false;
         // Окна могут быть разной ширины, чтобы окна побольше не выходили за экран, будем делать расчеты по самой
         // большой ширине
         let maxWidth = 0;
@@ -93,42 +93,31 @@ class NotificationController extends BaseController {
             if (listItem.width > maxWidth ) {
                 maxWidth = listItem.width;
             }
-            if (!elementFound) {
-                if (listItem.id === item.id) {
-                    elementFound = true;
-                    return;
-                }
-                offsetBottom += this._direction === 'up' ? +listItem.height : -listItem.height;
-            }
         });
 
-        if (!item.startPosition) {
-            item.startPosition = {
-                right: item.position.right,
-                bottom: item.position.bottom
+        if (!this._startPosition) {
+            this._startPosition = {
+                right: this._historyCoords.right,
+                bottom: this._historyCoords.bottom
             };
         }
 
         const horizontalOffset = -offset.x;
         const verticalOffset = -offset.y;
-        let bottomPosition = item.startPosition.bottom + verticalOffset;
-        let rightPosition = item.startPosition.right + horizontalOffset;
+        let bottomPosition = Math.max(this._startPosition.bottom + verticalOffset, 0);
+        let rightPosition = Math.max(this._startPosition.right + horizontalOffset, 0);
 
         const windowDimensions = DimensionsMeasurer.getWindowDimensions(container);
 
-        // В случае, если попап после днд выходит за пределы поля, спозиционируем попап прямо на краю.
-        if (rightPosition < 0) {
-            rightPosition = 0;
-        } else if (rightPosition + maxWidth > windowDimensions.innerWidth) {
+        if (rightPosition + maxWidth > windowDimensions.innerWidth) {
             rightPosition = windowDimensions.innerWidth - maxWidth;
         }
-        if (bottomPosition - offsetBottom < 0) {
-            bottomPosition = offsetBottom;
-        } else if (bottomPosition + item.height - offsetBottom > windowDimensions.innerHeight ) {
-            bottomPosition = windowDimensions.innerHeight + offsetBottom - item.height;
+
+        if (bottomPosition > windowDimensions.innerHeight - this._stack.at(0).height) {
+            bottomPosition = windowDimensions.innerHeight - this._stack.at(0).height;
         }
         this._historyCoords = {
-            bottom: bottomPosition - offsetBottom,
+            bottom: bottomPosition,
             right: rightPosition
         };
         this._updatePositions();
