@@ -4,20 +4,20 @@
       <Controls.heading:Back caption="Back" fontSize="xs" fontColorStyle="readonly" iconStyle="readonly"/>
    </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">fontSize = s; fontColorStyle = default; iconStyle = default</div>
-        <Controls.heading:Back caption="Back" fontSize="s" fontColorStyle="default" iconStyle="default"/>
+        <div class="controls-text-label">fontSize = s; fontColorStyle = default; iconStyle = link</div>
+        <Controls.heading:Back caption="Back" fontSize="s" fontColorStyle="default" iconStyle="link"/>
     </div>
     <div class="controlsDemo__cell">
-       <div class="controls-text-label">fontSize = m fontColorStyle = primary iconStyle = primary</div>
-       <Controls.heading:Back caption="Back" fontSize="m" fontColorStyle="primary" iconStyle="primary"/>
+       <div class="controls-text-label">fontSize = m fontColorStyle = primary iconStyle = secondary</div>
+       <Controls.heading:Back caption="Back" fontSize="m" fontColorStyle="primary" iconStyle="secondary"/>
     </div>
     <div class="controlsDemo__cell">
-       <div class="controls-text-label">fontSize = l fontColorStyle = secondary iconStyle = secondary</div>
-       <Controls.heading:Back caption="Back" fontSize="l" fontColorStyle="secondary" iconStyle="secondary"/>
+       <div class="controls-text-label">fontSize = l fontColorStyle = secondary iconStyle = primary</div>
+       <Controls.heading:Back caption="Back" fontSize="l" fontColorStyle="secondary" iconStyle="primary"/>
     </div>
     <div class="controlsDemo__cell">
-       <div class="controls-text-label">fontSize = xl fontColorStyle = link iconStyle = link</div>
-       <Controls.heading:Back caption="Back" fontSize="xl" fontColorStyle="link" iconStyle="link"/>
+       <div class="controls-text-label">fontSize = xl fontColorStyle = link iconStyle = default</div>
+       <Controls.heading:Back caption="Back" fontSize="xl" fontColorStyle="link" iconStyle="default"/>
     </div>
     <div class="controlsDemo__cell">
        <div class="controls-text-label">fontSize = 2xl fontColorStyle = label iconStyle = label</div>
