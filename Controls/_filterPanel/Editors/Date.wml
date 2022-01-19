@@ -1,0 +1,14 @@
+<Controls._filterPanel.BaseEditor scope="{{_options}}"
+                                  on:extendedCaptionClick="_extendedCaptionClickHandler()"
+                                  extendedCaption="{{_options.extendedCaption}}">
+   <ws:editorTemplate>
+       <div class="controls-FilterViewPanel__dateEditor">
+           <div class="controls-FilterViewPanel__dateEditor-additionalText">{{_options.additionalText}}</div>
+           <Controls.Container.Async templateName="Controls/date:Input">
+               <ws:partial template="{{content.resolvedTemplate}}"
+                           bind:value="_value"
+                           on:valueChanged="_valueChangedHandler()"/>
+           </Controls.Container.Async>
+       </div>
+   </ws:editorTemplate>
+</Controls._filterPanel.BaseEditor>
