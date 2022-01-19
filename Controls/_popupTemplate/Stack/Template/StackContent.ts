@@ -9,7 +9,6 @@ interface IStackContentOptions extends IControlOptions {
 }
 
 class StackContent extends Control<IStackContentOptions> {
-    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
     protected _template: TemplateFunction = template;
     protected _tmplNotify: Function = EventUtils.tmplNotify;
     protected _minOffset: number;

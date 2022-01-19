@@ -2,7 +2,7 @@
            controls-StackTemplate
            {{ _hasRightPanel ? 'controls-StackTemplate__with-right-panel'}}"
      ws-tab-cycling="true">
-    <div class="controls-StackTemplate-shadow {{ _options.leftContentTemplate ? 'controls-StackTemplate-shadow_zindex' }}"></div>
+    <div class="controls-StackTemplate-shadow controls-StackTemplate-shadow_direction-{{ _popupDirection }} {{ _options.leftContentTemplate ? 'controls-StackTemplate-shadow_zindex' }}"></div>
 
     <ws:if data="{{_options.leftContentTemplate }}">
         <div class="controls-StackTemplate__leftArea">
