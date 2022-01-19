@@ -451,6 +451,7 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
 /**
  * @name Controls/_history/Service#dataLoaded
  * @cfg {Boolean} Записи, загруженные с данными объекта.
+ * @private
  * @remark
  * true - БЛ вернет записи с данными.
  * false - Бл вернет записи без данных.
