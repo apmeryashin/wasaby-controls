@@ -32,7 +32,7 @@ export default class ContrastWrapper extends Control<IControlOptions> {
             '--readonly_border-color': '#DFE2E7',
             '--pale_contrast_background-color': '#E7E9E9',
             '--pale_hover_contrast_background-color': '#DFE2E7',
-            '--background-color_scroll_sticky-header': '#F3F5F7'
+            '--default_background-color': '#F3F5F7'
         };
     }
 }
