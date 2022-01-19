@@ -278,9 +278,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
             options.placeholderVisibility :
             PLACEHOLDER_VISIBILITY.HIDDEN;
         this._updatePlaceholderDisplay(options);
-        if (options.borderVisibility === 'visible') {
-            Logger.warn('Controls/input:Base Передано не поддерживаемое значение для опции borderVisibility. Удалите задание опции, либо передайте partial');
-        }
     }
 
     protected _afterMount(options: IBaseInputOptions): void {
