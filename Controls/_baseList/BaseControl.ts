@@ -4773,8 +4773,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !shouldFireEvent) {
             return newMarkedKey;
         }
-
-        const suitableKey = markerController.getSuitableMarkedKey(this._listViewModel.getItemBySourceKey(newMarkedKey));
+        const item = this._listViewModel.getItemBySourceKey(newMarkedKey);
+        const suitableKey = item && markerController.getSuitableMarkedKey(item) || newMarkedKey;
         const eventResult: Promise<CrudEntityKey>|CrudEntityKey =
             this._notify('beforeMarkedKeyChanged', [suitableKey]);
 
