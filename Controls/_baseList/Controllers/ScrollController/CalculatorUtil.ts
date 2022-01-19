@@ -218,7 +218,7 @@ export function getRangeByItemsSizes(params: IGetRangeByItemsSizesParams): IItem
         if (sumHeight + itemSize <= params.viewportSize) {
             sumHeight += itemSize;
         } else {
-            end = i;
+            end = i + 1;
             break;
         }
     }
