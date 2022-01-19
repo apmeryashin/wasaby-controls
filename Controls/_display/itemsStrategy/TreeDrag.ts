@@ -2,6 +2,7 @@ import { Model } from 'Types/entity';
 import Drag from 'Controls/_display/itemsStrategy/Drag';
 import { IDragPosition } from 'Controls/_display/interface/IDragPosition';
 import TreeItem from 'Controls/_display/TreeItem';
+import {CrudEntityKey} from 'Types/source';
 
 /**
  * Стратегия для премещения элементов в дереве.
@@ -16,26 +17,32 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
       }
    }
 
-   protected _isDisplayParents(item, draggedItemsKeys): boolean {
-      const itemParent = item.getParent();
+   protected _isDisplayItem(item: Model, index: number, collectionItem: TreeItem): boolean {
+      if (!super._isDisplayItem(item, index, collectionItem)) {
+         return false;
+      }
 
+      const startDraggableItemKey = this._options.draggableItem && this._options.draggableItem.key;
+      const itemIsStartDraggableItem = startDraggableItemKey === collectionItem.key;
+      if (itemIsStartDraggableItem) {
+         return true;
+      }
+
+      return this._isDisplayByParents(collectionItem, this._options.draggedItemsKeys);
+   }
+
+   protected _isDisplayByParents(item: TreeItem, draggedItemsKeys: CrudEntityKey[]): boolean {
+      const itemParent = item['[Controls/_display/TreeItem]'] && item.getParent();
       if (itemParent && !itemParent.isRoot()) {
          const itemParentKey = itemParent.getContents().getKey();
          if (draggedItemsKeys.includes(itemParentKey)) {
             return false;
          }
 
-         return this._isDisplayParents(itemParent, draggedItemsKeys);
+         return this._isDisplayByParents(itemParent, draggedItemsKeys);
       }
 
       return true;
-   }
-
-   protected _isDisplayItem(item, draggedItemsKeys): boolean {
-      if (!super._isDisplayItem(item, draggedItemsKeys)) {
-         return false;
-      }
-      return this._isDisplayParents(item, draggedItemsKeys);
    }
 
    /**
@@ -48,7 +55,7 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
 
       // avatarItem может не создасться, например когда тащат запись в мастер
       if (this.avatarItem) {
-         const parent = this._getParentConsideringHiddenItems(this.avatarItem, newItems);
+         const parent = this._getParentConsideringHiddenItems(this.avatarItem);
          if (parent) {
             this.avatarItem.setParent(parent);
          }
@@ -71,10 +78,12 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
     * @param items Текущие элементы списка
     * @private
     */
-   private _getParentConsideringHiddenItems(item: T, items: T[]): T {
+   private _getParentConsideringHiddenItems(item: T): T {
       let parent = item.getParent() as T;
-      while (parent && !parent.isRoot() && !items.includes(parent)) {
+      let parentIndex = this._options.display.getIndex(parent);
+      while (parent && !parent.isRoot() && !this._isDisplayItem(parent.contents, parentIndex, parent)) {
          parent = parent.getParent() as T;
+         parentIndex = this._options.display.getIndex(parent);
       }
       return parent;
    }
