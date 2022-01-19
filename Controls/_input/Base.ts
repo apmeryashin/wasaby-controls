@@ -20,7 +20,6 @@ import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
 import { getOptionBorderVisibilityTypes } from 'Controls/_input/interface/IBorderVisibility';
 import BaseViewModel from 'Controls/_input/BaseViewModel';
-import {Logger} from 'UI/Utils';
 
 interface IFieldTemplate {
     template: string|TemplateFunction;
