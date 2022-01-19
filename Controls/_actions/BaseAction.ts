@@ -13,6 +13,8 @@ import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {IToolBarItem} from 'Controls/toolbars';
 import {RecordSet} from 'Types/collection';
 import {DataSet} from 'Types/source';
+import {IMenuControlOptions} from 'Controls/menu';
+import {TKey} from 'Controls/interface';
 
 export interface IBaseAction {
     execute: (options: Partial<IExecuteOptions>) => Promise<unknown>;
@@ -143,8 +145,8 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         // for override
     }
 
-    getValue() {
-        // for override
+    getValue(): TKey | TKey[] {
+        return undefined;
     }
 
     private _executeCommand(options): Promise<unknown> | void {
@@ -205,17 +207,21 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         return command.execute(commandOptions);
     }
 
+    getMenuOptions(): Partial<IMenuControlOptions> {
+        return {};
+    }
+
     getState(): IToolBarItem {
         const config: IToolBarItem = {id: this.id};
+        const menuOptions = this.getMenuOptions();
         TOOLBAR_PROPS.forEach((prop) => {
             config[prop] = this[prop];
         });
         const value = this.getValue();
         if (value !== undefined) {
-            config.menuOptions = {
-                selectedKeys: value instanceof Array ? value : [value]
-            };
+            menuOptions.selectedKeys = value instanceof Array ? value : [value];
         }
+        config.menuOptions = menuOptions;
         return config;
     }
 
