@@ -172,6 +172,11 @@ class NotificationController extends BaseController {
                         bottom,
                         right
                     });
+                } else {
+                    resolve({
+                        bottom: 0,
+                        right: 0
+                    });
                 }
             });
         });
