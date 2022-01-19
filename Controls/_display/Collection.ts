@@ -2341,7 +2341,7 @@ export default class Collection<
     resetDraggedItems(): void {
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
         if (strategy) {
-            strategy.reset();
+            strategy.destroy();
             this.removeStrategy(this._dragStrategy);
             this._reIndex();
             this._updateEdgeItems();

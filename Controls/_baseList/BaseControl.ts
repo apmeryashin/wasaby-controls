@@ -1560,6 +1560,9 @@ const _private = {
                     case IObservable.ACTION_REPLACE:
                         markerController.onCollectionReplace(newItems);
                         break;
+                    case IObservable.ACTION_CHANGE:
+                        markerController.onCollectionChange(newItems);
+                        break;
                 }
 
                 self._changeMarkedKey(newMarkedKey);

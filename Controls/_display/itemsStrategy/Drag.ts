@@ -134,11 +134,14 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
         );
     }
 
+    destroy(): void {
+        this._options.display.removeFilter(this._isDisplayItem, false);
+    }
+
     reset(): void {
         // не нужно дестроить avatarItem, т.к. он попадает в Tree::onCollectionChange, а там все узлы
         // проверяются на изменения, чтобы эти изменения занотифаить. Задестроенный элемент нельзя проверить.
 
-        this._options.display.removeFilter(this._isDisplayItem, false);
         this._avatarItem = null;
         this._items = null;
         this._itemsOrder = null;
