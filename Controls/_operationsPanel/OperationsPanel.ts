@@ -7,7 +7,7 @@ import {ActualApi} from 'Controls/buttons';
 import {EventUtils} from 'UI/Events';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Record} from 'Types/entity';
+import {Record, Model} from 'Types/entity';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import {IOperationsPanelItem, IOperationsPanelOptions} from './_interface/IOperationsPanel';
 import 'css!Controls/toolbars';
@@ -162,6 +162,10 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
 
    protected _onResize(): void {
       this._checkToolbarWidth();
+   }
+
+   protected _applyClick(e: SyntheticEvent, selectedItems: Model[]): void {
+      this._notify('applyClick', [selectedItems]);
    }
 
    protected _afterUpdate(oldOptions: IOperationsPanelOptions): void {
