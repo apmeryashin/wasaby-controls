@@ -60,6 +60,7 @@ export default abstract class
             updateResult.then((items) => {
                 this._lookupController.setItems(items);
                 updateResultCallback();
+                this._notifyOnItemsChanged();
             });
         } else if (updateResult) {
             updateResultCallback();
@@ -151,14 +152,18 @@ export default abstract class
         newSelectedKeys: TKey[] = this._lookupController.getSelectedKeys()
     ): void {
         const lookupOptions = options || this._options;
-        const controller = this._lookupController;
         const {added, removed} =
             ArrayUtil.getArrayDifference(this._getSelectedKeys(lookupOptions), newSelectedKeys);
         if (lookupOptions.selectedKeys === undefined || (added?.length || removed?.length)) {
             this._notify('selectedKeysChanged', [newSelectedKeys, added, removed]);
-            this._notify('itemsChanged', [controller.getItems()]);
-            this._notify('textValueChanged', [controller.getTextValue()]);
+            this._notifyOnItemsChanged();
         }
+    }
+
+    protected _notifyOnItemsChanged(): void {
+        const controller = this._lookupController;
+        this._notify('itemsChanged', [controller.getItems()]);
+        this._notify('textValueChanged', [controller.getTextValue()]);
     }
 
     abstract showSelector(popupOptions?: IStackPopupOptions): void;
