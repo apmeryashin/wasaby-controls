@@ -150,22 +150,14 @@ export default abstract class
         options?: ILookupOptions,
         newSelectedKeys: TKey[] = this._lookupController.getSelectedKeys()
     ): void {
+        const lookupOptions = options || this._options;
         const controller = this._lookupController;
         const {added, removed} =
-            ArrayUtil.getArrayDifference(this._getSelectedKeys(options ?? this._options), newSelectedKeys);
-        if (added?.length || removed?.length) {
+            ArrayUtil.getArrayDifference(this._getSelectedKeys(lookupOptions), newSelectedKeys);
+        if (lookupOptions.selectedKeys === undefined || (added?.length || removed?.length)) {
             this._notify('selectedKeysChanged', [newSelectedKeys, added, removed]);
             this._notify('itemsChanged', [controller.getItems()]);
             this._notify('textValueChanged', [controller.getTextValue()]);
-        }
-    }
-
-    protected _notifySelectedKeysAndTextValueChanged(newSelectedKeys: TKey[], options?: ILookupOptions): void {
-        const {added, removed} =
-            ArrayUtil.getArrayDifference(this._getSelectedKeys(options ?? this._options), newSelectedKeys);
-        if (added?.length || removed?.length) {
-            this._notify('selectedKeysChanged', [newSelectedKeys, added, removed]);
-            this._notify('textValueChanged', [this._lookupController.getTextValue()]);
         }
     }
 
