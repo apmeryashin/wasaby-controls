@@ -1473,6 +1473,17 @@ const _private = {
                 self._resetPagingOnResetItems = true;
             }
 
+            // Обработка удаления должна происходить на afterCollectionChanged.
+            // Это позволяет при удалении записей в цикле по одной
+            // учитывать актуальные индексы диапазона виртуального скролла,
+            // и выполнять обработку selection для всех удалённых записей.
+            if (action === IObservable.ACTION_REMOVE) {
+                self._removedItems.push(...removedItems);
+                if (self._removedItemsIndex === null) {
+                    self._removedItemsIndex = removedItemsIndex;
+                }
+            }
+
             // Тут вызывается nextVersion на коллекции, и это приводит к вызову итератора.
             // Поэтому это должно быть после обработки изменений коллекции scrollController'ом, чтобы итератор
             // вызывался с актуальными индексами
@@ -1512,14 +1523,6 @@ const _private = {
 
                         const entryPath = self._listViewModel.getCollection().getMetaData().ENTRY_PATH;
                         newSelection = selectionController.onCollectionReset(entryPath);
-                        break;
-                    case IObservable.ACTION_REMOVE:
-                        /* Когда в цикле удаляют записи из рекордсета по одному и eventRaising=false, то
-                        * после eventRaising=true нам последовательно прилетают события удаления с отдельными записями.
-                        * Т.к. селекшин меняется в _beforeUpdate, то учитывается только последнее событие.
-                        * Чтобы учитывались все события, обрабатываем удаление всех записей на afterCollectionChanged
-                        */
-                        self._removedItems.push(...removedItems);
                         break;
                     case IObservable.ACTION_REPLACE:
                         selectionController.onCollectionReplace(newItems);
@@ -1569,14 +1572,11 @@ const _private = {
         // for example if Controls.explorer:View is switched from list to tile mode. The controller
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
-        // But we should not update any ItemActions when marker has changed
-        if (changesType === 'collectionChanged' ||
-            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) || newModelChanged) {
+        if (changesType === 'collectionChanged' || newModelChanged) {
             self._itemsChanged = true;
-
-            if (!!self._itemActionsController && self._itemActionsController
-                .shouldUpdateOnCollectionChange(action, newItems, removedItems)) {
-                _private.updateInitializedItemActions(self, self._options);
+            if (!!self._itemActionsController && !self._shouldUpdateActionsAfterCollectionChange) {
+                self._shouldUpdateActionsAfterCollectionChange = self._itemActionsController
+                    .shouldUpdateOnCollectionChange(action, newItems, removedItems);
             }
         }
 
@@ -2936,6 +2936,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _validateController = null;
 
     _removedItems = [];
+
+    private _removedItemsIndex: number = null;
+
+    private _itemsChanged: boolean;
+
+    // Флаг, устанавливающий, что после изменения коллекции надо обновить ItemActions
+    private _shouldUpdateActionsAfterCollectionChange: boolean;
+
     _keyProperty = null;
 
     // callback'ки передаваемые в sourceController
@@ -3160,7 +3168,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const newSelection = _private.getSelectionController(this).onCollectionRemove(this._removedItems);
             _private.changeSelection(this, newSelection);
         }
-
+        if (this._listVirtualScrollController && this._removedItems.length && this._removedItemsIndex !== null) {
+            this._listVirtualScrollController.removeItems(this._removedItemsIndex, this._removedItems.length);
+        }
+        if (this._itemActionsController && this._shouldUpdateActionsAfterCollectionChange) {
+            _private.updateInitializedItemActions(this, this._options);
+        }
+        this._removedItemsIndex = null;
+        this._shouldUpdateActionsAfterCollectionChange = false;
         this._removedItems = [];
     }
 
@@ -3586,9 +3601,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     getScrollMode(params),
                     getCalcMode(params)
                 );
-                break;
-            case IObservable.ACTION_REMOVE:
-                this._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
                 break;
             case IObservable.ACTION_MOVE:
                 this._listVirtualScrollController.moveItems(
