@@ -9,6 +9,7 @@ import entity = require('Types/entity');
 import {Serializer} from 'UI/State';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
+import * as clone from 'Core/core-clone';
 
 const historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 const DEFAULT_FILTER = '{}';
