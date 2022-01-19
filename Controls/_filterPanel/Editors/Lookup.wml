@@ -29,7 +29,7 @@
         <ws:else>
             <Controls.Container.Async templateName="Controls/multiselection:SingleSelection">
                 <ws:partial template="{{content.resolvedTemplate}}"
-                            on:selectedKeyChanged="_handleSelectedKeysChanged()">
+                            on:selectedKeyChanged="_handleSelectedKeyChanged()">
                     <ws:partial template="lookupEditor"/>
                 </ws:partial>
             </Controls.Container.Async>

@@ -42,15 +42,24 @@ class LookupEditor extends Control<ILookupOptions> implements ILookup {
 
     protected _getPropertyValueBySelectedKeys(propertyValue: number[] | string[] | number | string,
                                               multiSelect: boolean): number[] | string[] {
-        return multiSelect ? propertyValue : [propertyValue];
+
+        if (propertyValue !== undefined) {
+            return multiSelect ? propertyValue : [propertyValue];
+        } else {
+            return [];
+        }
     }
 
-    protected _handleSelectedKeysChanged(event: SyntheticEvent, value: number[] | string[]): void {
-        this._propertyValue = this._getPropertyValueBySelectedKeys(value, this._options.multiSelect);
+    protected _handleSelectedKeyChanged(event: SyntheticEvent, value: number | string): void {
         this._propertyValueChanged(value);
     }
 
-    protected _propertyValueChanged(value: number[] | string[]): void {
+    protected _handleSelectedKeysChanged(event: SyntheticEvent, value: number[] | string[]): void {
+        this._propertyValueChanged(value);
+    }
+
+    protected _propertyValueChanged(value: number[] | string[] | number | string): void {
+        this._propertyValue = this._getPropertyValueBySelectedKeys(value, this._options.multiSelect);
         const extendedValue = {
             value,
             textValue: this._textValue,
