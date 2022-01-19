@@ -8,7 +8,7 @@ import {RecordSet} from 'Types/collection';
 import {NewSourceController as SourceController, ILoadDataResult} from 'Controls/dataSource';
 import {Object as EventObject} from 'Env/Event';
 import {ISelectionObject, TKeySelection} from 'Controls/interface';
-import Store from 'Controls/Store';
+import {TKey} from 'Controls/interface';
 import MenuSource from './MenuSource';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 import {ControllerClass as FilterController} from 'Controls/filter';
@@ -109,6 +109,10 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         clickEvent: SyntheticEvent
     ): void {
         event.stopPropagation();
+        this._executeAction(item, clickEvent, [item.getKey()]);
+    }
+
+    protected _executeAction(item: Model, clickEvent: SyntheticEvent, toolbarSelectedKeys: TKey[]): void {
         const action = this._actionsCollection.getExecuteAction(item);
         this._operationsController.executeAction({
             action,
@@ -117,6 +121,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             target: clickEvent,
             selection: this._operationsController?.getSelection(),
             filter: this._filterController?.getFilter() || {},
+            toolbarSelectedKeys,
             keyProperty: this._sourceController?.getKeyProperty(),
             parentProperty: this._sourceController?.getParentProperty(),
             sourceController: this._sourceController,
@@ -143,6 +148,14 @@ export default class ActionsContainer extends Control<IContainerOptions> {
 
     private _updateActions(event: EventObject, items: RecordSet): void {
         this._actionsCollection.collectionChange(items);
+    }
+
+    protected _applyClick(e: SyntheticEvent, selectedItems: Model[]): void {
+        e.stopImmediatePropagation();
+        if (selectedItems.length) {
+            const toolbarKeys = selectedItems.map((item) => item.getKey());
+            this._executeAction(selectedItems[0], e, toolbarKeys);
+        }
     }
 
     protected _unsubscribeFromControllers(): void {
