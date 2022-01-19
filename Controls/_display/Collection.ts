@@ -1641,6 +1641,7 @@ export default class Collection<
      * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
      * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
      * @param [at] Порядковый номер метода (если не передан, добавляется в конец)
+     * @param reFilter
      * @see filter
      * @see getFilter
      * @see setFilter
@@ -1676,7 +1677,7 @@ export default class Collection<
      *     });
      * </pre>
      */
-    addFilter(filter: FilterFunction<S>, at?: number): void {
+    addFilter(filter: FilterFunction<S>, at?: number, reFilter: boolean = true): void {
         if (this._$filter.indexOf(filter) > -1) {
             return;
         }
@@ -1686,9 +1687,11 @@ export default class Collection<
             this._$filter.splice(at, 0, filter);
         }
 
-        const session = this._startUpdateSession();
-        this._reFilter();
-        this._finishUpdateSession(session);
+        if (reFilter) {
+            const session = this._startUpdateSession();
+            this._reFilter();
+            this._finishUpdateSession(session);
+        }
         this._nextVersion();
     }
 
@@ -1740,7 +1743,7 @@ export default class Collection<
      *     });
      * </pre>
      */
-    removeFilter(filter: FilterFunction<S>): boolean {
+    removeFilter(filter: FilterFunction<S>, reFilter: boolean = true): boolean {
         const at = this._$filter.indexOf(filter);
         if (at === -1) {
             return false;
@@ -1748,9 +1751,11 @@ export default class Collection<
 
         this._$filter.splice(at, 1);
 
-        const session = this._startUpdateSession();
-        this._reFilter();
-        this._finishUpdateSession(session);
+        if (reFilter) {
+            const session = this._startUpdateSession();
+            this._reFilter();
+            this._finishUpdateSession(session);
+        }
         this._nextVersion();
 
         return true;
@@ -2305,7 +2310,7 @@ export default class Collection<
         return this._$itemsDragNDrop;
     }
 
-    setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
+    setDraggedItems(draggableItem: T, draggedItemsKeys: CrudEntityKey[]): void {
         const draggableItemIndex = this.getIndex(draggableItem);
 
         let targetIndex;
@@ -2339,9 +2344,9 @@ export default class Collection<
     resetDraggedItems(): void {
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
         if (strategy) {
+            strategy.destroy();
             this.removeStrategy(this._dragStrategy);
             this._reIndex();
-            this._reFilter();
             this._updateEdgeItems();
         }
     }
