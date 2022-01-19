@@ -108,7 +108,8 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
     }
 
     getDisplayIndex(index: number): number {
-        return this.source.getDisplayIndex(index);
+        const sourceIndex = this.source.getDisplayIndex(index);
+        return sourceIndex === this._startDraggableItemIndex ? this._options.targetIndex : sourceIndex;
     }
 
     getCollectionIndex(index: number): number {
