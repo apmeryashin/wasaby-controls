@@ -135,7 +135,6 @@ define(
          });
 
          describe('_resizeHandler', function () {
-            sinon.stub(Scrollbar.default, '_calcThumbSize').returns(10);
             [{
                clientSize: 50,
                result: 2.6666666666666665
@@ -144,6 +143,9 @@ define(
                result: 9
             }].forEach(function (test) {
                it('Should update position if scroll height is changed', function () {
+                  sinon.restore();
+                  sinon.stub(Scrollbar.default, '_calcThumbSize').returns(10);
+
                   let sandbox = sinon.createSandbox();
                   let options = { contentSize: 200, position: 10, clientSize: test.clientSize };
                   let component = createComponent(Scrollbar.default, options);
