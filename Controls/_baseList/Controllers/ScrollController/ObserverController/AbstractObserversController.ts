@@ -336,8 +336,8 @@ export abstract class AbstractObserversController {
      */
     private _getTriggers(): HTMLElement[] {
         const backwardTrigger = this._listContainer.querySelector(this._triggersQuerySelector);
-        const sisterlyItems = Array.from(backwardTrigger.parentNode.children);
-        const triggers = sisterlyItems.filter((it) => it.matches(this._triggersQuerySelector)) as HTMLElement[];
+        const siblingItems = Array.from(backwardTrigger.parentNode.children);
+        const triggers = siblingItems.filter((it) => it.matches(this._triggersQuerySelector)) as HTMLElement[];
         if (triggers.length !== COUNT_TRIGGERS) {
             Logger.error('Неверное кол-во триггеров в списке.'
                 + ` Убедитесь, что на всех триггерах есть класс: ${this._triggersQuerySelector}`);
