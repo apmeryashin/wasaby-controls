@@ -1393,6 +1393,13 @@ define([
             var checkResultNode = linkDecorateUtils.getLinks(str);
             assert.deepEqual(result, checkResultNode);
          });
+
+         it('wrapped in <>', function() {
+            var str = '<https://google.com>';
+            var result = ['https://google.com'];
+            var checkResultNode = linkDecorateUtils.getLinks(str);
+            assert.deepEqual(result, checkResultNode);
+         });
       });
 
       describe('normalizeLink', function() {
