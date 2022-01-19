@@ -64,6 +64,7 @@ export interface IListEditorOptions extends
  * @extends Core/Control
  * @implements Controls/grid:IGridControl
  * @implements Controls/interface:INavigation
+ * @implements Controls/itemActions:IItemActions
  * @author Мельникова Е.А.
  * @demo Controls-demo/filterPanel/Base/Index
  * @public
@@ -123,6 +124,13 @@ export interface IListEditorOptions extends
  * @name Controls/_filterPanel/Editors/List#selectedAllKey
  * @cfg {string} Ключ для пункта списка, который используется для установки фильтрации по всем доступным значениям для данного параметра.
  * @see selectedAllText
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#selectedAllText
+ * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
+ * Используется для установки фильтрации по всем доступным значениям для данного параметра.
+ * @remark При активации снимает отметку чекбоксами со всех записей в списке
  */
 
 /**
