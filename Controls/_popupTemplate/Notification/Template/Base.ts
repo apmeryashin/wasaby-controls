@@ -2,6 +2,8 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Notification/Template/Base/Base';
 import {INotificationBase} from 'Controls/_popupTemplate/interface/INotification';
 import 'css!Controls/popupTemplate';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {IDragObject} from 'Controls/dragnDrop';
 
 export interface INotificationBaseOptions extends INotificationBase, IControlOptions {
     bodyContentTemplate?: Control<IControlOptions, void> | TemplateFunction;
@@ -40,6 +42,24 @@ class Notification extends Control<INotificationBaseOptions> {
         // Клик по крестику закрытия не должен всплывать выше и обрабатываться событием click на контейнере
         ev.stopPropagation();
         this._notify('close', []);
+    }
+
+    protected _onDragEnd(): void {
+        this._notify('popupDragEnd', [], {bubbling: true});
+    }
+
+    protected _onDragMove(event: SyntheticEvent<Event>, dragObject: IDragObject): void {
+        this._notify('popupDragStart', [dragObject.offset], {bubbling: true});
+    }
+
+    protected _onMouseDown(event: SyntheticEvent<MouseEvent>): void {
+        if (this._needStartDrag(event)) {
+            this._children.dragNDrop.startDragNDrop(null, event);
+        }
+    }
+
+    private _needStartDrag(event: SyntheticEvent<MouseEvent>): boolean {
+        return !event.nativeEvent.processed;
     }
 
     private static _prepareBorderStyle(popupOptions: INotificationBaseOptions): String {

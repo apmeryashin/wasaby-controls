@@ -4,9 +4,10 @@ define(
       'Controls/_popupTemplate/Notification/Template/NotificationContent',
       'Controls/popup',
       'Controls/_popupTemplate/Notification/NotificationController',
-      'Types/collection'
+      'Types/collection',
+      'Controls/sizeUtils'
    ],
-   (popupTemplate, NotificationContent, popup, NotificationController, collection) => {
+   (popupTemplate, NotificationContent, popup, NotificationController, collection, sizeUtils) => {
       'use strict';
 
       NotificationContent = NotificationContent.default;
@@ -14,18 +15,136 @@ define(
       describe('Controls/_popup/Opener/Notification', () => {
          const containers = [
             {
-               offsetHeight: 10
+               offsetHeight: 10,
+               offsetWidth: 10
             },
             {
-               offsetHeight: 20
+               offsetHeight: 20,
+               offsetWidth: 20
             },
             {
-               offsetHeight: 30
+               offsetHeight: 30,
+               offsetWidth: 30
             }
          ];
 
+         beforeEach(() => {
+            popupTemplate.NotificationController._historyCoords = {
+               bottom: 0,
+               right: 0
+            };
+            sinon.stub(popupTemplate.NotificationController, '_calculateDirection');
+         });
+
          afterEach(function() {
             popupTemplate.NotificationController._stack.clear();
+            sinon.restore();
+         });
+
+         describe('_updatePositions', () => {
+            it('should calculate correct coords for popups', () => {
+               const item1 = {
+                  popupOptions: {}
+               };
+               const item2 = {
+                  popupOptions: {}
+               };
+               popupTemplate.NotificationController._historyCoords = {
+                  bottom: 100,
+                  right: 100
+               };
+               let right;
+               let bottom;
+               popupTemplate.NotificationController.elementCreated(item1, containers[1]);
+               popupTemplate.NotificationController.elementCreated(item2, containers[2]);
+               popupTemplate.NotificationController._updatePositions();
+               right = popupTemplate.NotificationController._stack.at(0).position.right;
+               bottom = popupTemplate.NotificationController._stack.at(0).position.bottom;
+               assert.equal(right, popupTemplate.NotificationController._historyCoords.right);
+               assert.equal(bottom, popupTemplate.NotificationController._historyCoords.bottom);
+
+               right = popupTemplate.NotificationController._stack.at(1).position.right;
+               bottom = popupTemplate.NotificationController._stack.at(1).position.bottom;
+               const firstItemHeight = popupTemplate.NotificationController._stack.at(0).height;
+               assert.equal(right, popupTemplate.NotificationController._historyCoords.right);
+               assert.equal(bottom, popupTemplate.NotificationController._historyCoords.bottom + firstItemHeight);
+            });
+         });
+
+         describe('popupDragStart', () => {
+            it('should calculate correct position after dragNDrop', () => {
+               sinon.stub(popupTemplate.NotificationController, '_updatePositions');
+               const item1 = {
+                  popupOptions: {}
+               };
+               sinon.stub(sizeUtils.DimensionsMeasurer, 'getWindowDimensions').returns({
+                  innerWidth: 1000,
+                  innerHeight: 1000
+               });
+               popupTemplate.NotificationController.elementCreated(item1, containers[1]);
+               const popupItem = popupTemplate.NotificationController._stack.at(0);
+               const offset = {
+                  x: 10,
+                  y: 10
+               };
+               popupItem.startPosition = {
+                  bottom: 210,
+                  right: 115
+               };
+               popupTemplate.NotificationController.popupDragStart(popupItem, null, offset);
+               assert.equal(popupTemplate.NotificationController._historyCoords.right, 105);
+               assert.equal(popupTemplate.NotificationController._historyCoords.bottom, 200);
+            });
+
+            [{
+               startPosition: {
+                  bottom: 5,
+                  right: 5
+               },
+               result: {
+                  bottom: 0,
+                  right: 0
+               }
+            }, {
+               startPosition: {
+                  bottom: 999,
+                  right: 100
+               },
+               result: {
+                  bottom: 980,
+                  right: 90
+               }
+            }, {
+               startPosition: {
+                  bottom: 100,
+                  right: 999
+               },
+               result: {
+                  bottom: 90,
+                  right: 980
+               }
+            }].forEach((test, index) => {
+               it('should not let popup go out of window ' + index, () => {
+                  sinon.stub(popupTemplate.NotificationController, '_updatePositions');
+                  const item1 = {
+                     popupOptions: {}
+                  };
+                  sinon.stub(sizeUtils.DimensionsMeasurer, 'getWindowDimensions').returns({
+                     innerWidth: 1000,
+                     innerHeight: 1000
+                  });
+                  popupTemplate.NotificationController.elementCreated(item1, containers[1]);
+                  const popupItem = popupTemplate.NotificationController._stack.at(0);
+                  const offset = {
+                     x: 10,
+                     y: 10
+                  };
+                  popupItem.startPosition = test.startPosition
+                  popupTemplate.NotificationController.popupDragStart(popupItem, null, offset);
+                  assert.equal(popupTemplate.NotificationController._historyCoords.right, test.result.right);
+                  assert.equal(popupTemplate.NotificationController._historyCoords.bottom, test.result.bottom);
+               });
+            });
          });
 
          it('elementCreated', function() {
