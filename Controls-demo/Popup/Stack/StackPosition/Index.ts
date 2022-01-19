@@ -7,7 +7,6 @@ export default class extends Control {
     private _stackOpener: StackOpener = new StackOpener();
 
     protected _beforeMount(): void {
-        Controller.setStackPosition('left');
         Controller.setRightPanelBottomTemplate(null);
     }
 
@@ -15,7 +14,8 @@ export default class extends Control {
         this._stackOpener.open({
             template: 'Controls-demo/Popup/Opener/resources/StackTemplate',
             opener: this,
-            width: 900
+            width: 900,
+            stackPosition: 'left'
         });
     }
 }
