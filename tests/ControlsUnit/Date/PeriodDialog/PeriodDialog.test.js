@@ -23,7 +23,10 @@ define([
       end = new Date(2018, 0, 2);
 
    const formatDate = function(date) {
-      return date ? formatter.date(date, formatter.date.FULL_DATE) : 'null';
+      if (dateUtils.Base.isValidDate(date)) {
+         return formatter.date(date, formatter.date.FULL_DATE);
+      }
+      return date;
    };
 
    describe('Controls/Date/PeriodDialog', function() {
