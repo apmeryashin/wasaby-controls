@@ -122,7 +122,7 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
                     getObjectData: true
                 }
             });
-        } else  if (this._$dataLoaded) {
+        } else if (this._$dataLoaded && this._$historyIds) {
             const params = {
                 history_query: {
                     [this._$historyId]: {
@@ -132,15 +132,13 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
                     }
                 }
             };
-            if (this._$historyIds) {
-                this._$historyIds.forEach((id) => {
-                    params.history_query[id] = {
-                        recentCount: 1,
-                        frequentCount: 0,
-                        pinnedCount: 0
-                    };
-                });
-            }
+            this._$historyIds.forEach((id) => {
+                params.history_query[id] = {
+                    recentCount: 1,
+                    frequentCount: 0,
+                    pinnedCount: 0
+                };
+            });
             resultDef = this._callQuery('BatchIndexesList', params);
         } else {
             if (this._$historyId || this._$historyIds?.length) {
@@ -356,6 +354,14 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
      */
     getHistoryId(): string {
         return this._$historyId;
+    }
+
+    /**
+     * Returns a service history identifiers of parameters
+     * @returns {String}
+     */
+    getHistoryIds(): string[] {
+        return this._$historyIds;
     }
 
     getHistoryIdForStorage(): string {

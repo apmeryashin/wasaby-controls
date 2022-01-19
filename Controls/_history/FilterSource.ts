@@ -517,11 +517,17 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          }
 
          serData = JSON.stringify(data, _private.getSerialize().serialize);
+         let dataForUpdate;
+         if (this.historySource.getHistoryIds()) {
+            dataForUpdate = {
+               items: serData,
+               historyParams: historyParams || {}
+            };
+         } else {
+            dataForUpdate = serData;
+         }
 
-         return _private.getSourceByMeta(this, meta).update({
-            items: serData,
-            historyParams
-         }, meta).addCallback((dataSet) => {
+         return _private.getSourceByMeta(this, meta).update(dataForUpdate, meta).addCallback((dataSet) => {
             if (dataSet) {
                 const hId = item ? item.get('HistoryId') : this.historySource.getHistoryId();
                 _private.updateRecent(
