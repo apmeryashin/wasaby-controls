@@ -1028,7 +1028,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/debug/scroll-container/ после
         // https://online.sbis.ru/opendoc.html?guid=9e7f5914-3b96-4799-9e1d-9390944b4ab3
         const artifactFixOff = this._content?.classList.contains('controls-StickyBlock__onSideIsBorder');
-        const backgroundStyle = this._isBackgroundDefaultClass() ? 'backgroundDefault' : 'default';
+        const backgroundStyle = this._isBackgroundDefaultClass() ? 'backgroundDefault' : this._options.backgroundStyle;
         if (this._options._subPixelArtifactFix && !artifactFixOff) {
             result = `controls-StickyBlock__subpixelFix-${backgroundStyle}`;
         }
