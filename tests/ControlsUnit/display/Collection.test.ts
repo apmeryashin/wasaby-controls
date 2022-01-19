@@ -1821,6 +1821,27 @@ describe('Controls/_display/Collection', () => {
             assert.isTrue(spyAddFilter.called);
             spyAddFilter.restore();
         });
+
+        // Проверка правильной перегруппировки после добавления нового элемента.
+        it('should correctly re-group after adding new item', () => {
+            const list = new ObservableList({
+                items: [
+                    {id: 1, group: 2},
+                    {id: 2, group: 3},
+                    {id: 3, group: 2}
+                ]
+            });
+            const display = new CollectionDisplay({
+                collection: list
+            });
+            display.setGroup((item) => item.group);
+            const contents = new Model({ rawData: {id: 4, group: 3} });
+            const editingItem = display.createItem({ contents, isAdd: true });
+            editingItem.setEditing(true, contents, false);
+            display.setAddingItem(editingItem, {position: 'bottom'});
+            display.resetAddingItem();
+            assert.equal(display.getCount(false), 5);
+        });
     });
 
     describe('.getGroupItems()', () => {
