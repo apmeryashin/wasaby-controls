@@ -108,14 +108,9 @@ class NotificationController extends BaseController {
         let rightPosition = Math.max(this._startPosition.right + horizontalOffset, 0);
 
         const windowDimensions = DimensionsMeasurer.getWindowDimensions(container);
+        rightPosition = Math.min(rightPosition, windowDimensions.innerWidth - maxWidth);
+        bottomPosition = Math.min(bottomPosition, windowDimensions.innerHeight - this._stack.at(0).height);
 
-        if (rightPosition + maxWidth > windowDimensions.innerWidth) {
-            rightPosition = windowDimensions.innerWidth - maxWidth;
-        }
-
-        if (bottomPosition > windowDimensions.innerHeight - this._stack.at(0).height) {
-            bottomPosition = windowDimensions.innerHeight - this._stack.at(0).height;
-        }
         this._historyCoords = {
             bottom: bottomPosition,
             right: rightPosition
