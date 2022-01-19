@@ -39,7 +39,7 @@
 }
 
 .controls-Menu__row_roundBorder {
-   border-radius: var(--item_height_menu);
+   border-radius: calc(var(--item_height_menu) / 2);
 }
 
 .controls-background-menuPopup {
@@ -569,5 +569,12 @@
 .ws-is-no-touch {
    .controls-Menu__row-checkbox_default {
       visibility: hidden;
+   }
+}
+
+// В IE не работает border-radius с calc
+.ws-is-ie {
+   .controls-Menu__row_roundBorder {
+      border-radius: 16px;
    }
 }
