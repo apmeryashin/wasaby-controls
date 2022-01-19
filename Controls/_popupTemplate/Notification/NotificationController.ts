@@ -37,28 +37,13 @@ class NotificationController extends BaseController {
     private _direction: string = 'up';
 
     elementCreated(item: INotificationItem, container: HTMLDivElement): boolean {
-        const initItemConfig = () => {
-            item.height = container.offsetHeight;
-            item.width = container.offsetWidth;
-            this._setNotificationContent(item);
-            this._stack.add(item, 0);
-            this._calculateDirection(container);
-            this._updatePositions();
-        };
-        // При создании первого попапа запишем коордианты из истории, чтобы дальше работать со значениями синхронно
-        if (!this._historyCoords) {
-            this._getPopupCoords().then((config: object) => {
-                this._historyCoords = config;
-                for (const coord in this._historyCoords) {
-                    if (!this._historyCoords[coord]) {
-                        this._historyCoords[coord] = 0;
-                    }
-                }
-                initItemConfig();
-            });
-        } else {
-            initItemConfig();
-        }
+        item.height = container.offsetHeight;
+        item.width = container.offsetWidth;
+        this._setNotificationContent(item);
+        this._stack.add(item, 0);
+        this._calculateDirection(container);
+        this._updatePositions();
+        return true;
     }
 
     elementUpdated(item: INotificationItem, container: HTMLDivElement): boolean {
@@ -76,9 +61,17 @@ class NotificationController extends BaseController {
         return new Deferred().callback();
     }
 
-    getDefaultConfig(item: INotificationItem): void {
+    getDefaultConfig(item: INotificationItem): void | Promise<void> {
         super.getDefaultConfig.apply(this, arguments);
         this._setNotificationContent(item);
+        if (!this._historyCoords) {
+            return this._getPopupCoords().then((config: object) => {
+                this._historyCoords = {
+                    right: config.right || 0,
+                    bottom: config.bottom || 0
+                };
+            });
+        }
     }
 
     popupDragEnd(item: INotificationItem, offset: number): void {
@@ -92,7 +85,7 @@ class NotificationController extends BaseController {
         // Нужно учитывать разницу в высоте между первым элементом и итемом
         let offsetBottom = 0;
         // В списке each нельзя остановить, не будем считать высоту после того, как найдем элемент
-        let elementFounded = false;
+        let elementFound = false;
         // Окна могут быть разной ширины, чтобы окна побольше не выходили за экран, будем делать расчеты по самой
         // большой ширине
         let maxWidth = 0;
@@ -100,21 +93,15 @@ class NotificationController extends BaseController {
             if (listItem.width > maxWidth ) {
                 maxWidth = listItem.width;
             }
-            if (!elementFounded) {
+            if (!elementFound) {
                 if (listItem.id === item.id) {
-                    elementFounded = true;
+                    elementFound = true;
                     return;
                 }
-                if (this._direction === 'up') {
-                    offsetBottom += listItem.height;
-                } else {
-                    offsetBottom -= listItem.height;
-                }
+                offsetBottom += this._direction === 'up' ? +listItem.height : -listItem.height;
             }
         });
 
-        const horizontalOffset = -offset.x;
-        const verticalOffset = -offset.y;
         if (!item.startPosition) {
             item.startPosition = {
                 right: item.position.right,
@@ -122,10 +109,14 @@ class NotificationController extends BaseController {
             };
         }
 
+        const horizontalOffset = -offset.x;
+        const verticalOffset = -offset.y;
         let bottomPosition = item.startPosition.bottom + verticalOffset;
         let rightPosition = item.startPosition.right + horizontalOffset;
 
         const windowDimensions = DimensionsMeasurer.getWindowDimensions(container);
+
+        // В случае, если попап после днд выходит за пределы поля, спозиционируем попап прямо на краю.
         if (rightPosition < 0) {
             rightPosition = 0;
         } else if (rightPosition + maxWidth > windowDimensions.innerWidth) {
@@ -184,8 +175,8 @@ class NotificationController extends BaseController {
 
     private _updatePositions(): void {
         if (this._stack.getCount()) {
-            let bottom: number = this._historyCoords.bottom || 0;
-            const right: number = this._historyCoords.right || 0;
+            let bottom: number = this._historyCoords.bottom ;
+            const right: number = this._historyCoords.right;
 
             /**
              * In item.height is the height of the popup.
@@ -194,11 +185,7 @@ class NotificationController extends BaseController {
              */
             this._stack.each((item: INotificationItem) => {
                 item.position = NotificationStrategy.getPosition(right, bottom);
-                if (this._direction === 'up') {
-                    bottom += item.height;
-                } else {
-                    bottom -= item.height;
-                }
+                bottom += this._direction === 'up' ? item.height : -item.height;
             });
         }
     }
