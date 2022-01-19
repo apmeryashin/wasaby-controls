@@ -530,6 +530,12 @@ export interface IReloadItemOptions {
  */
 
 /**
+ * @name Controls/_list/interface/IList#fadedKeys
+ * @cfg {Array.<String|number>|undefined} Массив с идентификаторами высвеченных записей.
+ * @default undefined
+ */
+
+/**
  * @name Controls/_list/interface/IList#stickyCallback
  * @cfg {String} Функция обратного вызова для определения залипания элемента списка.
  * В зависимости от возвращаемого значения может контролировать залипание элемента списка:
