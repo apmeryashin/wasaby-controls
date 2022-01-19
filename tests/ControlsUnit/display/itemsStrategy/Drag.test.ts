@@ -124,19 +124,9 @@ describe('Controls/_display/itemsStrategy/Drag', () => {
             root: null,
             expandedItems: [3]
          });
-         source = getSource(display.getItems());
-         strategy = new Drag({
-            source,
-            display,
-            draggableItem: display.getItemBySourceKey(2),
-            draggedItemsKeys: [1, 2],
-            targetIndex: 0
-         });
-         // чтобы инициализировать все значения
-         // tslint:disable-next-line:no-unused-expression
-         strategy.items;
+         display.setDraggedItems(display.getItemBySourceKey(2), [1, 2]);
 
-         assert.equal(strategy.getDisplayIndex(2), 1);
+         assert.equal(display.getIndexBySourceIndex(2), 1);
       });
 
       it('drag some items separately', () => {
@@ -154,22 +144,12 @@ describe('Controls/_display/itemsStrategy/Drag', () => {
             }),
             keyProperty: 'id'
          });
-         source = getSource(display.getItems());
-         strategy = new Drag({
-            source,
-            display,
-            draggableItem: display.getItemBySourceKey(3),
-            draggedItemsKeys: [2, 3, 5],
-            targetIndex: 0
-         });
-         // чтобы инициализировать все значения
-         // tslint:disable-next-line:no-unused-expression
-         strategy.items;
+         display.setDraggedItems(display.getItemBySourceKey(3), [2, 3, 5]);
 
-         assert.equal(strategy.getDisplayIndex(1), 1);
-         assert.equal(strategy.getDisplayIndex(2), 1);
-         assert.equal(strategy.getDisplayIndex(3), 2);
-         assert.equal(strategy.getDisplayIndex(5), 3);
+         assert.equal(display.getIndexBySourceIndex(1), -1);
+         assert.equal(display.getIndexBySourceIndex(2), 1);
+         assert.equal(display.getIndexBySourceIndex(3), 2);
+         assert.equal(display.getIndexBySourceIndex(5), 3);
       });
    });
 
@@ -209,16 +189,10 @@ describe('Controls/_display/itemsStrategy/Drag', () => {
             keyProperty: 'id'
          });
          source = getSource(display.getItems());
-         strategy = new Drag({
-            source,
-            display,
-            draggableItem: display.getItemBySourceKey(2),
-            draggedItemsKeys: [2, 3, 5],
-            targetIndex: 1
-         });
+         display.setDraggedItems(display.getItemBySourceKey(2), [2, 3, 5]);
 
-         const items = strategy.items;
-         const keys = items.map((it) => it.getContents().getKey());
+         const keys = [];
+         display.each((it) => keys.push(it.getContents().getKey()));
          assert.deepEqual(keys, [1, 2, 4, 6]);
       });
 
@@ -247,16 +221,19 @@ describe('Controls/_display/itemsStrategy/Drag', () => {
             targetIndex: 1
          });
 
-         let keys = strategy.items.map((it) => it.getContents().getKey());
-         assert.deepEqual(keys, [0, 1, 2, 3, 4, 5]);
+         let keys = [];
+         display.each((it) => keys.push(it.getContents().getKey()));
+         assert.deepEqual(keys, [0, 2, 4]);
 
          strategy.setPosition({index: 2, position: 'after'});
-         keys = strategy.items.map((it) => it.getContents().getKey());
-         assert.deepEqual(keys, [0, 1, 3, 4, 2, 5]);
+         keys = [];
+         display.each((it) => keys.push(it.getContents().getKey()));
+         assert.deepEqual(keys, [0, 2, 4]);
 
          strategy.setPosition({index: 1, position: 'before'});
-         keys = strategy.items.map((it) => it.getContents().getKey());
-         assert.deepEqual(keys, [0, 1, 2, 3, 4, 5]);
+         keys = [];
+         display.each((it) => keys.push(it.getContents().getKey()));
+         assert.deepEqual(keys, [0, 2, 4]);
       });
    });
 
@@ -284,37 +261,27 @@ describe('Controls/_display/itemsStrategy/Drag', () => {
    });
 
    it('drag several items', () => {
-      strategy = new Drag({
-         source,
-         display,
-         draggableItem: display.getItemBySourceKey(1),
-         draggedItemsKeys: [1, 2],
-         targetIndex: 0
-      });
+      display.setDraggedItems(display.getItemBySourceKey(1), [1, 2]);
 
-      const items = strategy.items;
-      assert.equal(items.length, 2);
-      assert.equal(items[0].getContents(), display.getItemBySourceKey(1).getContents());
-      assert.equal(items[1].getContents(), display.getItemBySourceKey(3).getContents());
+      const keys = [];
+      display.each((it) => keys.push(it.getContents().getKey()));
+      assert.equal(keys.length, 2);
+      assert.equal(display.at(0).key, 1);
+      assert.equal(display.at(1).key, 3);
    });
 
    it('splice', () => {
       strategy.splice(0, 1, []);
       assert.isNull(strategy._items);
-      assert.equal(strategy.count, 3);
+      assert.equal(strategy.count, 2);
    });
 
    it('drag all items', () => {
-      strategy = new Drag({
-         source,
-         display,
-         draggableItem: display.getItemBySourceKey(1),
-         draggedItemsKeys: [1, 2, 3],
-         targetIndex: 0
-      });
+      display.setDraggedItems(display.getItemBySourceKey(1), [1, 2, 3]);
 
-      const items = strategy.items;
-      assert.equal(items.length, 1);
+      const keys = [];
+      display.each((it) => keys.push(it.getContents().getKey()));
+      assert.equal(keys.length, 1);
    });
 
    it('remove item when drag', () => {
@@ -397,15 +364,10 @@ describe('Controls/_display/itemsStrategy/Drag', () => {
    });
 
    it('drag some last items', () => {
-      strategy = new Drag({
-         source,
-         display,
-         draggableItem: display.getItemBySourceKey(3),
-         draggedItemsKeys: [2, 3],
-         targetIndex: 2
-      });
+      display.setDraggedItems(display.getItemBySourceKey(3), [2, 3]);
 
-      const items = strategy.items;
-      assert.equal(items.length, 2);
+      const keys = [];
+      display.each((it) => keys.push(it.getContents().getKey()));
+      assert.equal(keys.length, 2);
    });
 });
