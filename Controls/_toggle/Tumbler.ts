@@ -8,7 +8,6 @@ import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
 import {default as WorkByKeyboardContext, IWorkByKeyboardContext} from '../Context/WorkByKeyboardContext';
-import {ISwitchOptions} from "Controls/_toggle/Switch";
 
 interface IBackgroundPosition {
     [key: number]: IBackgroundPositionData;
@@ -23,7 +22,17 @@ interface IBackgroundPositionData {
     top: number;
 }
 
-interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IContrastBackgroundOptions {}
+interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IContrastBackgroundOptions {
+    workspaceWidth?: number;
+}
+
+/**
+ * @name Controls/_toggle/Tumbler#workspaceWidth
+ * @cfg {Number} Текущая ширина тумблера
+ * @remark
+ * Если опция задана, то минимальная ширина элементов будут распределена равномерно в зависимости от переданного значения.
+ * @demo Controls-demo/toggle/Tumbler/WorkspaceWidth/Index
+ */
 
 /**
  * @name Controls/_toggle/Tumbler#direction

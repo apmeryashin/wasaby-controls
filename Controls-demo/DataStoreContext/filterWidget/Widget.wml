@@ -1,0 +1,3 @@
+<Controls.dataStoreContext:DataStoreContextConsumer>
+    <Controls-demo.DataStoreContext.filterWidget.InnerControl/>
+</Controls.dataStoreContext:DataStoreContextConsumer>

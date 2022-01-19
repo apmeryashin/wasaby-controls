@@ -66,7 +66,6 @@ const DEFAULT_BACKGROUND_STYLE = 'default';
  * @implements Controls/scroll:IScrollbars
  * @implements Controls/scroll:IShadows
  *
- * @public
  * @author Миронов А.Ю.
  * @demo Controls-demo/Scroll/Container/Default/Index
  *
