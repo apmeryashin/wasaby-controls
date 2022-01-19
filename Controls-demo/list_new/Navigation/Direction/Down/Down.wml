@@ -3,6 +3,7 @@
         <Controls.list:View
                 keyProperty="key"
                 source="{{_viewSource}}">
+            <ws:virtualScrollConfig pageSize="{{25}}"/>
             <ws:navigation source="page" view="infinity">
                 <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
                 <ws:viewConfig pagingMode="basic"/>

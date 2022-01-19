@@ -4774,8 +4774,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return newMarkedKey;
         }
 
+        const suitableKey = markerController.getSuitableMarkedKey(this._listViewModel.getItemBySourceKey(newMarkedKey));
         const eventResult: Promise<CrudEntityKey>|CrudEntityKey =
-            this._notify('beforeMarkedKeyChanged', [newMarkedKey]);
+            this._notify('beforeMarkedKeyChanged', [suitableKey]);
 
         const handleResult = (key) => {
             // Прикладники могут как передавать значения в markedKey, так и передавать undefined.
@@ -4799,8 +4800,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // но это значение используется, чтобы сбросить маркер. Актуально для юнитов
             handleResult(eventResult);
         } else {
-            result = newMarkedKey;
-            handleResult(newMarkedKey);
+            result = suitableKey;
+            handleResult(suitableKey);
         }
 
         return result;

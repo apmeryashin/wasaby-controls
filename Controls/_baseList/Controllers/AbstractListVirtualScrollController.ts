@@ -415,21 +415,17 @@ export abstract class AbstractListVirtualScrollController<
      * @private
      */
     scrollToPage(direction: IDirection): Promise<CrudEntityKey> {
-        this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
-        return Promise.resolve(this._getFirstVisibleItemKey());
+        const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
 
-        // TODO SCROLL по идее нужно скролить к EdgeItem, чтобы не терялся контекст.
-        //  Но нужно сперва завести новый скролл на текущих тестах.
-        /*const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
-        // TODO SCROLL юниты
-        if (!edgeItem) {
-            return Promise.resolve(null);
+        if (edgeItem && this._scrollController.getScrollToPageMode(edgeItem.index) === 'edgeItem') {
+            const item = this._collection.at(edgeItem.index);
+            const itemKey = item.getContents().getKey();
+            const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
+            return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());
+        } else {
+            this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
+            return Promise.resolve(this._getFirstVisibleItemKey());
         }
-
-        const item = this._collection.at(edgeItem.index);
-        const itemKey = item.getContents().getKey();
-        const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
-        return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());*/
     }
 
     /**
