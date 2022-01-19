@@ -48,7 +48,7 @@ describe('Controls/_baseList/Controllers/AbstractObserversController', () => {
             const observersCallback = spy(() => null);
             const controller = getController({observersCallback});
             controller.setListContainer(listContainer);
-            assert.isTrue(observersCallback.calledTwice);
+            assert.equal(controller._triggers.length, 2);
         });
 
         it('with nested lists', () => {
@@ -58,7 +58,7 @@ describe('Controls/_baseList/Controllers/AbstractObserversController', () => {
             const observersCallback = spy(() => null);
             const controller = getController({observersCallback});
             controller.setListContainer(listContainer);
-            assert.isTrue(observersCallback.calledTwice);
+            assert.equal(controller._triggers.length, 2);
         });
     });
 });
