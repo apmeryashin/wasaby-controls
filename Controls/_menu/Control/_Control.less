@@ -416,14 +416,8 @@
    display: flex;
    align-items: center;
    height: 100%;
-   padding: 0 var(--item_padding-right_m_list) 0 var(--offset_m);
+   padding: 0 var(--item_padding-right_s_list) 0 var(--offset_m);
    flex-shrink: 0;
-}
-
-@padding-right_menu-multiSelect: calc(var(--apply-button_inline-height_menuPopup) + var(--offset_xs) * 2);
-
-.controls-ListView__item-rightPadding_menu-multiselect {
-   padding-right: @padding-right_menu-multiSelect;
 }
 
 .controls-Menu__content_align_left {
@@ -431,14 +425,10 @@
    justify-content: space-between;
 }
 
-@padding-right_menu-close: calc(var(--close-button_offset-left_sticky) + var(--width_closeButton_link) + var(--close-button_offset-right_sticky));
+@padding-right_menu-close: calc(var(--close-button_offset-left_sticky) + var(--width_closeButton_functionalButton) / 2 - var(--offset_xs));
 
 .controls-ListView__item-rightPadding_menu-close {
    padding-right: @padding-right_menu-close;
-}
-
-.controls-ListView__item-rightPadding_menu-close-multiselect {
-   padding-right: calc(@padding-right_menu-close + @padding-right_menu-multiSelect);
 }
 
 .controls-ListView__item-rightPadding_menu-s {
