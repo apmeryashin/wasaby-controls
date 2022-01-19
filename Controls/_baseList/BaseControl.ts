@@ -3429,7 +3429,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             additionalTriggersOffsets: this._getAdditionalTriggersOffsets(),
             totalCount: this._listViewModel.getCount(),
 
-            feature1183225611: options.virtualScrollConfig.feature1183225611,
+            feature1183225611: options.virtualScrollConfig?.feature1183225611,
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
                 this._scrollControllerInitializeChangeScroll = true;
