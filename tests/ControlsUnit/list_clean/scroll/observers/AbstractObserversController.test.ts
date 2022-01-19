@@ -8,13 +8,14 @@ import {
     getCollection,
     getListContainer,
     getListContainerWithNestedList,
+    getListControl,
     TriggerClass
 } from 'ControlsUnit/list_clean/scroll/initUtils';
 
 function getDefaultControllerOptions(): ControllerOptions {
     return {
         listContainer: null,
-        listControl: null,
+        listControl: getListControl(),
         triggersQuerySelector: `.${TriggerClass}`,
         triggersPositions: {backward: 'offset', forward: 'offset'},
         triggersVisibility: {backward: true, forward: true},

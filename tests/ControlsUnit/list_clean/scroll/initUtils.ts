@@ -2,6 +2,7 @@ import jsdom = require('jsdom');
 
 import {Collection, CollectionItem} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
+import {BaseControl} from 'Controls/baseList';
 
 type TGetItemElement = (item: CollectionItem) => HTMLElement;
 
@@ -59,6 +60,10 @@ export function getListContainerWithNestedList(collection: Collection, nestedCol
     };
 
     return getListContainer(collection, customGetItemElement);
+}
+
+export function getListControl(): BaseControl {
+    return new BaseControl({}, {});
 }
 
 function getItemElement(item: CollectionItem): HTMLElement {
