@@ -44,7 +44,8 @@ define([
                const component = calendarTestUtils.createComponent(bodyItem, {
                   chooseHalfyears: test.chooseHalfyears,
                   chooseQuarters: test.chooseQuarters,
-                  chooseMonths: test.chooseMonths
+                  chooseMonths: test.chooseMonths,
+                  currentYear: 2020
                });
 
                assert.strictEqual(component._template, test.tmpl);
@@ -52,7 +53,7 @@ define([
          });
 
          it('should create correct month model', function() {
-            const component = calendarTestUtils.createComponent(bodyItem, {}),
+            const component = calendarTestUtils.createComponent(bodyItem, { currentYear: 2020 }),
                year = (new Date()).getFullYear(),
                data = [{
                   name: 'I',
@@ -147,7 +148,7 @@ define([
          });
 
          it('should create correct dates type in month model', function() {
-            const component = calendarTestUtils.createComponent(bodyItem, {}),
+            const component = calendarTestUtils.createComponent(bodyItem, { currentYear: 2020 }),
                year = (new Date()).getFullYear(),
                yearModel = component._getYearModel(year, entity.Date);
             assert.isTrue(cInstance.instanceOfModule(yearModel[0].quarters[0].months[0].date, 'Types/entity:Date'));
@@ -296,7 +297,7 @@ define([
       describe('_onHalfYearClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1)});
+               component = calendarTestUtils.createComponent(bodyItem, {currentYear: 2020, year: new Date(2000, 0, 1)});
             sandbox.stub(component, '_notify');
             component._onHalfYearClick(null, 0, 2000);
 
@@ -309,7 +310,7 @@ define([
       describe('_onQuarterClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1)});
+               component = calendarTestUtils.createComponent(bodyItem, {currentYear: 2020, year: new Date(2000, 0, 1)});
             sandbox.stub(component, '_notify');
             component._onQuarterClick(null, 0, 2000);
 
@@ -322,7 +323,7 @@ define([
       describe('_onMonthClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1)});
+               component = calendarTestUtils.createComponent(bodyItem, {currentYear: 2020, year: new Date(2000, 0, 1)});
             sandbox.stub(component, '_notify');
             component._onMonthClick(null, new Date(2000, 0, 1));
 
