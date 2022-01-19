@@ -30,7 +30,8 @@ define(
 
          let defaultOptions = {
             listModel: getListModel(),
-            keyProperty: 'key'
+            keyProperty: 'key',
+            itemPadding: {}
          };
 
          let getRender = function(config) {
@@ -146,7 +147,7 @@ define(
                   groupListModel.setGroup(getGroup);
 
                   menuRender = getRender(
-                     { listModel: groupListModel }
+                     { listModel: groupListModel, itemPadding: {} }
                   );
                });
 
@@ -194,6 +195,7 @@ define(
                   },
                   theme: 'theme'
                };
+               menuRender.saveOptions(renderOptions);
             });
 
             it('row_state default|readOnly', function() {
