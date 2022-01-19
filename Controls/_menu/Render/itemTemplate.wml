@@ -24,7 +24,8 @@
                <ws:partial template="wml!Controls/_menu/Render/RadioCircle"
                            selected="{{treeItem.isMarked ? treeItem.isMarked() : treeItem.isSelected()}}"/>
          </ws:if>
-         <ws:else data="{{(multiSelectTpl || itemData.multiSelectTpl) && (itemData.multiSelect || multiSelect) && !itemData.isFixedItem && !itemData.isSingleSelectionItem}}">
+         <ws:else data="{{(multiSelectTpl || itemData.multiSelectTpl) &&
+          (itemData.multiSelect || multiSelect) && !itemData.isFixedItem && !itemData.isSingleSelectionItem}}">
             <ws:partial template="{{multiSelectTpl || itemData.multiSelectTpl}}" scope="{{_options}}"/>
          </ws:else>
       </div>

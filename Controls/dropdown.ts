@@ -42,6 +42,7 @@ export {default as IGrouped, IGroupedOptions} from 'Controls/_dropdown/interface
 export {default as IBaseDropdown} from 'Controls/_dropdown/interface/IBaseDropdown';
 export {default as Selector} from 'Controls/_dropdown/Selector';
 export {default as Toggle} from 'Controls/_dropdown/Toggle';
+export {MultiSelectAccessibility} from './display';
 
 export {
     Button,
