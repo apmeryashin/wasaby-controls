@@ -176,19 +176,30 @@ export default class Back extends Control<IBackOptions> implements IFontColorSty
         return {
             caption: EntityDescriptor(String),
             fontColorStyle: EntityDescriptor(String).oneOf([
+                'default',
                 'primary',
                 'secondary',
-                'default'
-            ]),
-            iconStyle: EntityDescriptor(String).oneOf([
-                'primary',
-                'secondary',
+                'link',
+                'label',
+                'danger',
                 'success',
                 'warning',
-                'danger',
+                'unaccented',
                 'info',
-                'label',
+                'readonly',
+                'contrast'
+            ]),
+            iconStyle: EntityDescriptor(String).oneOf([
                 'default',
+                'primary',
+                'secondary',
+                'link',
+                'label',
+                'danger',
+                'success',
+                'warning',
+                'info',
+                'readonly',
                 'contrast',
                 'unaccented'
             ])
