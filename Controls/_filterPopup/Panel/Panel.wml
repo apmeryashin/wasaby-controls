@@ -89,7 +89,7 @@
                                            on:click="_applyFilter()"
                                            attr:tabindex="1"
                                            attr:ws-autofocus="true"
-                                           attr:class="controls-FilterPanel__filterButton controls-margin_right-2xs"
+                                           attr:class="controls-FilterPanel__filterButton"
                                            attr:data-qa="FilterPanel__filterButton"/>
                </div>
             </div>
