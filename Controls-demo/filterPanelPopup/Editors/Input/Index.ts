@@ -10,13 +10,13 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._filterButtonSource = [
             {
+                caption: 'Номер РНПТ',
                 name: 'inputEditor',
                 editorTemplateName: 'Controls/filterPanel:InputEditor',
                 resetValue: '',
                 viewMode: 'basic',
                 value: '',
                 editorOptions: {
-                    additionalText: 'Номер РНПТ',
                     closeButtonVisibility: 'hidden'
                 }
             }

@@ -10,13 +10,13 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._filterButtonSource = [
             {
+                caption: 'Дата отправки',
                 name: 'dateEditor',
                 editorTemplateName: 'Controls/filterPanel:DateEditor',
                 resetValue: null,
                 viewMode: 'basic',
                 value: null,
                 editorOptions: {
-                    additionalText: 'Дата отправки',
                     closeButtonVisibility: 'hidden',
                     extendedCaption: 'Дата'
                 }

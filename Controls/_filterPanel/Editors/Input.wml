@@ -2,13 +2,10 @@
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
                                   extendedCaption="{{_options.extendedCaption}}">
    <ws:editorTemplate>
-       <div class="controls-FilterViewPanel__inputEditor">
-           <div class="controls-FilterViewPanel__inputEditor-additionalText">{{_options.additionalText}}</div>
-           <Controls.Container.Async templateName="Controls/input:Text">
-               <ws:partial template="{{content.resolvedTemplate}}"
-                           bind:value="_value"
-                           on:valueChanged="_valueChangedHandler()"/>
-           </Controls.Container.Async>
-       </div>
+       <Controls.Container.Async templateName="Controls/input:Text">
+           <ws:partial template="{{content.resolvedTemplate}}"
+                       bind:value="_value"
+                       on:valueChanged="_valueChangedHandler()"/>
+       </Controls.Container.Async>
    </ws:editorTemplate>
 </Controls._filterPanel.BaseEditor>

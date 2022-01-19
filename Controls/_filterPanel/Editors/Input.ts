@@ -8,18 +8,13 @@ interface IInputOptions extends IControlOptions {
 }
 
 /**
- * Контрол используют в качестве редактора поля ввода.
+ * Контрол используют в качестве редактора для поля фильтра с типом String.
  * @class Controls/_filterPanel/Editors/Input
  * @extends UI/Base:Control
  * @mixes Controls/input:Text
  * @author Мельникова Е.А.
  * @demo Controls-demo/filterPanelPopup/Editors/Input/Index
  * @public
- */
-
-/**
- * @name Controls/_filterPanel/Editors/Input#additionalText
- * @cfg {string} Текст, который будет отображен слева от поля ввода.
  */
 
 class InputEditor extends Control<IInputOptions> {

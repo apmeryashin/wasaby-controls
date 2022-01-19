@@ -11,18 +11,13 @@ interface IDateOptions extends IControlOptions {
 }
 
 /**
- * Контрол используют в качестве редактора для поля ввода даты.
+ * Контрол используют в качестве редактора для поля фильтра с типом Date.
  * @class Controls/_filterPanel/Editors/Date
  * @extends UI/Base:Control
  * @mixes Controls/date:Input
  * @author Мельникова Е.А.
  * @demo Controls-demo/filterPanelPopup/Editors/Date/Index
  * @public
- */
-
-/**
- * @name Controls/_filterPanel/Editors/Date#additionalText
- * @cfg {string} Текст, который будет отображен слева от поля ввода даты.
  */
 
 class DateEditor extends Control<IDateOptions> {
