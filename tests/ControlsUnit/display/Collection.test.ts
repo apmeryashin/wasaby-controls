@@ -3066,7 +3066,7 @@ describe('Controls/_display/Collection', () => {
             checkGivenAndExpected(given, expected);
         });
 
-        it('should fire "onCollectionChange" split by groups after add an items', () => {
+        it('should fire "onCollectionChange" not split by groups after add an items', () => {
             const list = new ObservableList({
                 items: [
                     {id: 1, group: 1},
@@ -3087,20 +3087,8 @@ describe('Controls/_display/Collection', () => {
             const given = [];
             const expected = [{
                 action: IBindCollection.ACTION_ADD,
-                newItems: [newItems[1]],
+                newItems: [newItems[1], 2, newItems[0], newItems[2], 3, newItems[3]],
                 newItemsIndex: 5,
-                oldItems: [],
-                oldItemsIndex: 0
-            }, {
-                action: IBindCollection.ACTION_ADD,
-                newItems: [2, newItems[0], newItems[2]],
-                newItemsIndex: 6,
-                oldItems: [],
-                oldItemsIndex: 0
-            }, {
-                action: IBindCollection.ACTION_ADD,
-                newItems: [3, newItems[3]],
-                newItemsIndex: 9,
                 oldItems: [],
                 oldItemsIndex: 0
             }];

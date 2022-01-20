@@ -3293,55 +3293,16 @@ export default class Collection<
         if (!this._isNeedNotifyCollectionChange()) {
             return;
         }
-        if (
-            action === IObservable.ACTION_RESET ||
-            !this._isGrouped()
-        ) {
-            this._notifyLater(
-                'onCollectionChange',
-                action,
-                newItems,
-                newItemsIndex,
-                oldItems,
-                oldItemsIndex,
-                reason
-            );
-            return;
-        }
 
-        // Split by groups and notify
-        const notify = (start, finish) => {
-            if (start < finish) {
-                const newItemsCopy: ISessionItems<T> = newItems.slice(start, finish);
-                newItemsCopy.properties = newItems.properties;
-                const oldItemsCopy: ISessionItems<T> = oldItems.slice(start, finish);
-                oldItemsCopy.properties = oldItems.properties;
-                this._notifyLater(
-                    'onCollectionChange',
-                    action,
-                    newItemsCopy,
-                    newItems.length ? newItemsIndex + start : 0,
-                    oldItemsCopy,
-                    oldItems.length ? oldItemsIndex + start : 0,
-                    reason
-                );
-            }
-        };
-        const isRemove = action === IObservable.ACTION_REMOVE;
-        const max = isRemove ? oldItems.length : newItems.length;
-        let notifyIndex = 0;
-        let item;
-
-        for (let i = 0; i < max; i++) {
-            item = isRemove ? oldItems[i] : newItems[i];
-            if (item['[Controls/_display/GroupItem]']) {
-                notify(notifyIndex, i);
-                notifyIndex = i;
-            }
-            if (i === max - 1) {
-                notify(notifyIndex, i + 1);
-            }
-        }
+        this._notifyLater(
+            'onCollectionChange',
+            action,
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex,
+            reason
+        );
     }
 
     protected _notifyCollectionChangeBySession(
