@@ -938,20 +938,34 @@ define(
             popupTemplate.StackController._updateItemPosition = updateItemPosition;
          });
 
-         it('strategy getRightPosition', () => {
-            const Strategy = new StackStrategyClass();
-            const tCoord = {
-               right: 10
-            };
-            let result = Strategy._getRightPosition(tCoord, false);
-            assert.equal(result, 10);
-
-            result = Strategy._getRightPosition(tCoord, true);
-            assert.equal(result, 54);
-
-            Strategy._getRightTemplate = () => 'rightTemplate.wml';
-            result = Strategy._getRightPosition(tCoord, true);
-            assert.equal(result, 54);
-         })
+         describe('strategy getHorizontalPosition', () => {
+            [{
+               isAboveMaximizePopup: false,
+               position: 'right',
+               result: 10
+            }, {
+               isAboveMaximizePopup: true,
+               position: 'right',
+               result: 54
+            }, {
+               isAboveMaximizePopup: false,
+               position: 'left',
+               result: 20
+            }, {
+               isAboveMaximizePopup: true,
+               position: 'left',
+               result: 0
+            }].forEach((test, index) => {
+               it('should return correct coords ' + index, () => {
+                  const Strategy = new StackStrategyClass();
+                  const tCoord = {
+                     right: 10,
+                     left: 20
+                  };
+                  let result = Strategy._getHorizontalPosition(tCoord, test.isAboveMaximizePopup, test.position);
+                  assert.equal(result, test.result);
+               });
+            });
+         });
       });
    });

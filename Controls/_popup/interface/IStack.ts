@@ -10,6 +10,7 @@ export interface IStackPopupOptions extends IBasePopupOptions {
     maxWidth?: number;
     propStorageId?: string;
     restrictiveContainer?: string;
+    stackPosition?: string;
 }
 
 /**
