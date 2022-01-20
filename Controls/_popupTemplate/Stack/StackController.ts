@@ -698,7 +698,8 @@ export class StackController extends BaseController {
         return {
             top: Math.max(rootCoords.top, 0),
             height: rootCoords.height,
-            right: documentDimensions.clientWidth - rootCoords.right + leftPageScroll
+            right: documentDimensions.clientWidth - rootCoords.right + leftPageScroll,
+            left: rootCoords.left
         };
     }
 }
