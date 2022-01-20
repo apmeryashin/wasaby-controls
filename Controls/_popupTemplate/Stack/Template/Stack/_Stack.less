@@ -34,10 +34,19 @@
    height: 100%;
    overflow: hidden;
    width: var(--shadow-blur_stack);
-   left: calc((var(--shadow-blur_stack) + var(--border-thickness_stack))/(-1));
-   background: linear-gradient(to right, transparent, var(--shadow-color_stack));
-   border-right: var(--border-thickness_stack) solid var(--border-color_stack);
    pointer-events: none;
+}
+
+.controls-StackTemplate-shadow_direction-right {
+   background: linear-gradient(to right, transparent, var(--shadow-color_stack));
+   left: calc((var(--shadow-blur_stack) + var(--border-thickness_stack)) / (-1));
+   border-right: var(--border-thickness_stack) solid var(--border-color_stack);
+}
+
+.controls-StackTemplate-shadow_direction-left {
+   background: linear-gradient(to right, var(--shadow-color_stack), transparent);
+   right: calc((var(--shadow-blur_stack) + var(--border-thickness_stack)) / (-1));
+   border-left: var(--border-thickness_stack) solid var(--border-color_stack);
 }
 
 .controls-StackTemplate-shadow_zindex {
