@@ -10,25 +10,25 @@
 .controls-Render_state-search-valid,
 .controls-Render_state-search-invalid,
 .controls-Render_state-search-invalidAccent {
-   border-color: var(--border-color_searchInput);
-   background: var(--background-color_searchInput);
+   border-color: var(--pale_border-color);
+   background: var(--unaccented_background-color);
 }
 
 .controls-Render_state-search-valid-active,
 .controls-Render_state-search-invalid-active,
 .controls-Render_state-search-invalidAccent-active {
-   border-color: var(--border-color_searchInput);
-   background: var(--background-color_searchInput);
+   border-color: var(--pale_border-color);
+   background: var(--unaccented_background-color);
 }
 
 .controls-Search_state-search__input_border {
-   border-color: var(--border-color_focus_searchInput);
-   background: var(--background-color_searchInput);
+   border-color: var(--pale_border-color);
+   background: var(--unaccented_background-color);
 }
 
 .controls-Search_state-searchContrast__input_border {
-   border-color: var(--border-color_contrast_focus_searchInput);
-   background: var(--background-color_contrast_searchInput);
+   border-color: var(--pale_border-color);
+   background: var(--unaccented_background-color);
 }
 
 .controls-Render_state-search-valid_caretFilled,
@@ -36,8 +36,8 @@
 .controls-Render_state-search-invalidAccent_caretFilled {
 
    &:focus-within {
-      border-color: var(--border-color_focus_searchInput);
-      background: var(--background-color_searchInput);
+      border-color: var(--pale_border-color);
+      background: var(--unaccented_background-color);
    }
 
 }
@@ -45,39 +45,39 @@
 .controls-Render_state-searchContrast-valid,
 .controls-Render_state-searchContrast-invalid,
 .controls-Render_state-searchContrast-invalidAccent {
-   border-color: var(--border-color_contrast_searchInput);
-   background: var(--background-color_contrast_searchInput);
+   border-color: var(--pale_border-color);
+   background: var(--background-color);
 }
 
 .controls-Render_state-searchContrast-valid-active,
 .controls-Render_state-searchContrast-invalid-active,
 .controls-Render_state-searchContrast-invalidAccent-active {
-   border-color: var(--border-color_contrast_focus_searchInput);
-   background: var(--background-color_contrast_searchInput);
+   border-color: var(--pale_border-color);
+   background: var(--background-color);
 }
 
 .ws-is-hover {
    .controls-Render_state-search-valid:hover,
    .controls-Render_state-search-invalid:hover,
    .controls-Render_state-search-invalidAccent:hover {
-      border-color: var(--border-color_hover_searchInput);
+      border-color: var(--unaccented_border-color);
    }
 
    .controls-Render_state-searchContrast-valid:hover,
    .controls-Render_state-searchContrast-invalid:hover,
    .controls-Render_state-searchContrast-invalidAccent:hover {
-      border-color: var(--border-color_contrast_hover_searchInput);
+      border-color: var(--unaccented_border-color);
    }
 }
 
 .controls-Render_state-search-readonly {
-   border-color: var(--readonly_border-color_searchInput);
-   background: var(--background-color_searchInput);
+   border-color: var(--pale_border-color);
+   background: var(--unaccented_background-color);
 }
 
 .controls-Render_state-searchContrast-readonly {
-   border-color: var(--readonly_border-color_searchInput);
-   background: var(--background-color_contrast_searchInput);
+   border-color: var(--pale_border-color);
+   background: var(--background-color);
 }
 
 .controls-Search__field_margin-xs {
@@ -234,14 +234,14 @@
 }
 
 .controls-Search__expandable-reset-button_background-contrast {
-   background: var(--background-color_contrast_searchInput);
+   background: var(--background-color);
    &::after {
       content: '';
       position: absolute;
       top: 0;
       height: 100%;
       width: 10px;
-      background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, var(--background-color_contrast_searchInput) 80%);
+      background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, var(--background-color) 80%);
    }
 }
 
