@@ -75,9 +75,11 @@ import {GridControl} from './GridControl';
 export default class Grid<TControl extends GridControl = GridControl> extends List<GridControl> {
     protected _viewName: TemplateFunction = null;
     protected _viewTemplate: TControl = GridControl;
+    private _useScrollContextConsumer: boolean = false;
 
     _beforeMount(options: IGridOptions): Promise<void>|void {
         const superResult = super._beforeMount(options);
+        this._useScrollContextConsumer = !!options.newColumnScroll;
         this._viewName = isFullGridSupport() ? GridView : GridViewTable;
         return superResult;
     }
