@@ -3,7 +3,7 @@
         <div class="controls-SortingButton__icon controls-SortingButton__icon">
                <ws:partial attr:class="controls-SortingButton_arrow"
                            value="{{_options.value}}"
-                           template="wml!Controls/_grid/Render/SortingButton/SortingArrow"/>
+                           template="Controls/sorting:ArrowTemplate"/>
         </div>
     </ws:if>
 </ws:template>
