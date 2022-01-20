@@ -1,12 +1,10 @@
-import {detection} from 'Env/Env';
-import {IBody} from './PathButton/Body';
 import {Path} from 'Controls/dataSource';
+import {INavigationMenu} from './NavigationMenu';
 import {Control, TemplateFunction} from 'UI/Base';
-import {SlidingPanelOpener} from 'Controls/popup';
-import {IPathButton} from 'Controls/_breadcrumbs/PathButton/interfaces';
-import * as template from 'wml!Controls/_breadcrumbs/PathButton/PathButton';
-import * as rk from 'i18n!SBIS3';
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import {IPathButton} from 'Controls/_breadcrumbs/PathButton/interfaces';
+import {Opener as NavigationMenuOpener} from 'Controls/_breadcrumbs/NavigationMenu/Opener';
+import * as template from 'wml!Controls/_breadcrumbs/PathButton/PathButton';
 
 /**
  * Контрол кнопки меню для хлебных крошек. При клике открывается popup со списком всех узлов в виде дерева.
@@ -50,12 +48,12 @@ export default class PathButton extends Control<IPathButton> {
     //endregion
 
     //region private props
-    private _menu: SlidingPanelOpener;
+    private _menu: NavigationMenuOpener;
     //endregion
 
     //region life circle hooks
     protected _afterMount(): void {
-        this._menu = new SlidingPanelOpener();
+        this._menu = new NavigationMenuOpener();
     }
     //endregion
 
@@ -69,54 +67,17 @@ export default class PathButton extends Control<IPathButton> {
 
     //region open/close menu
     /**
-     * В зависимости от текущего устройства открывает либо StickyPanel либо SlidingPanel
+     * В зависимости от текущего устройства открывает либо StickyPanel, либо SlidingPanel
      */
     protected _openMenu(): void {
-        this._menu.open({
-            modal: detection.isPhone,
-
-            slidingPanelOptions: {
-                minHeight: 100,
-                position: 'bottom',
-                autoHeight: true
-            },
-
-            desktopMode: 'sticky',
-            dialogOptions: {
-                // tslint:disable-next-line:ban-ts-ignore
-                // @ts-ignore - не видит _container
-                target: this._container,
-
-                opener: this,
-                maxWidth: 700,
-
-                actionOnScroll: 'close',
-                closeOnOutsideClick: true,
-                backgroundStyle: 'default',
-                targetPoint: {
-                    vertical: 'top',
-                    horizontal: 'left'
-                },
-                direction: {
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                },
-                offset: {
-                    horizontal: -8,
-                    vertical: -9
-                },
-                fittingMode: {
-                    vertical: 'overflow',
-                    horizontal: 'fixed'
-                }
-            },
-
-            // tslint:disable-next-line:ban-ts-ignore
-            // @ts-ignore
-            template: 'wml!Controls/_breadcrumbs/PathButton/SlidingPanel',
-            templateOptions: this._getPanelTemplateOptions(),
-            eventHandlers: this._getPanelEventHandlers()
-        });
+        this._menu.open(
+            this,
+            this._container,
+            {
+                templateOptions: this._getPanelTemplateOptions(),
+                eventHandlers: this._getPanelEventHandlers()
+            }
+        );
     }
 
     /**
@@ -129,9 +90,10 @@ export default class PathButton extends Control<IPathButton> {
     /**
      * Возвращает объект с опциями для {@link BodyComponent}, отображаемого в popup
      */
-    private _getPanelTemplateOptions(): IBody {
+    private _getPanelTemplateOptions(): INavigationMenu {
         return {
-            caption: (this._options.caption || rk('На главную')) as string,
+            readOnly: this._options.readOnly,
+            caption: this._options.caption,
             path: this._options.path,
             source: this._options.source,
             filter: this._options.filter,
