@@ -16,7 +16,7 @@
                 fontStyle="{{_options.fontStyle}}"
                 fontSize="{{_options.fontSize}}"
                 fontWeight="{{_options.fontWeight}}"
-                fontColorStyle="{{_options.fontColorStyle || (!_options.calendarButtonVisible && !_model.value && _options.placeholder) ? 'label' }}"
+                fontColorStyle="{{_options.fontColorStyle || (!_options.calendarButtonVisible && !_model.value && _options.placeholder ? 'label') }}"
                 borderStyle="{{_options.borderStyle}}"
                 borderVisibility="{{_options.borderVisibility}}"
                 inlineHeight="{{_options.inlineHeight}}"
