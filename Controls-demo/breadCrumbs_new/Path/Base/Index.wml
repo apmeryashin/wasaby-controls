@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper">
    <div class="custom-line-height">
-      <div class="custom-line-height__text">Text</div>
+      <div class="custom-line-height__text">Custom line height:&nbsp;</div>
       <div class="custom-line-height__breadcrumbs">
          <Controls.breadcrumbs:Path
             fontSize="m"

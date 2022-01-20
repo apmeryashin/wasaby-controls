@@ -473,11 +473,14 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
         } else {
             expanderIconSize = this.getExpanderIconSize(tmplExpanderIconSize);
-            expanderIconStyle = expanderIcon === 'hiddenNode' ? 'unaccented' :
-                this.getExpanderIconStyle(tmplExpanderIconStyle);
+            expanderIconStyle = this.getExpanderIconStyle(tmplExpanderIconStyle);
         }
 
         let expanderClasses = 'js-controls-Tree__row-expander controls-TreeGrid__row-expander';
+        if (expanderIconStyle === 'readonly') {
+            expanderClasses += ' controls-TreeGrid__row-expander_readonly';
+        }
+
         expanderClasses += ' js-controls-ListView__notEditable';
 
         if (expanderPosition === 'default') {

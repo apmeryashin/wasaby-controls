@@ -5,20 +5,21 @@ import {TKey} from 'Controls/_interface/IItems';
 import {View as TreeGrid} from 'Controls/treeGrid';
 import {Path} from 'Controls/_dataSource/calculatePath';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_breadcrumbs/PathButton/Body';
+import * as template from 'wml!Controls/_breadcrumbs/NavigationMenu';
+import * as rk from 'i18n!SBIS3';
 
-export interface IBody extends IControlOptions {
-    caption: string;
-    path: Path;
-    source: ICrudPlus;
-    filter: object;
-    sorting: object;
-    navigation: object;
-    keyProperty: string;
-    nodeProperty: string;
-    parentProperty: string;
-    displayProperty: string;
-    hasChildrenProperty: string;
+export interface INavigationMenu extends IControlOptions {
+    caption?: string;
+    path?: Path;
+    source?: ICrudPlus;
+    filter?: object;
+    sorting?: object;
+    navigation?: object;
+    keyProperty?: string;
+    nodeProperty?: string;
+    parentProperty?: string;
+    displayProperty?: string;
+    hasChildrenProperty?: string;
 }
 
 /**
@@ -27,7 +28,7 @@ export interface IBody extends IControlOptions {
  *
  * @author Уфимцев Д.Ю.
  */
-export default class Body extends Control<IBody> {
+export default class NavigationMenu extends Control<INavigationMenu> {
     //region base props
     protected _template: TemplateFunction = template;
 
@@ -44,7 +45,7 @@ export default class Body extends Control<IBody> {
     protected _expandedItems: TKey[] = [];
     //endregion
 
-    protected _beforeMount(options?: IBody, contexts?: object, receivedState?: void): Promise<void> | void {
+    protected _beforeMount(options?: INavigationMenu, contexts?: object, receivedState?: void): Promise<void> | void {
         // noinspection NonAsciiCharacters
         this._filter = {...options.filter, 'Только узлы': true};
 
@@ -57,7 +58,7 @@ export default class Body extends Control<IBody> {
             // Сам текущий узел раскрывать не надо
             this._expandedItems.pop();
 
-            // Обновим рут в фильтре что бы запрашивались все каталоги от корня а не от текущей папки
+            // Обновим рут в фильтре, что бы запрашивались все каталоги от корня, а не от текущей папки
             // в которой находимся
             this._filter[options.parentProperty] = options.path[0][options.parentProperty];
         }
@@ -79,9 +80,23 @@ export default class Body extends Control<IBody> {
     }
 
     /**
+     * Обработчик события beforeMarkedKeyChanged.
+     * Не даем менять маркер если находимся в режиме readOnly
+     */
+    protected _onBeforeMarkedKeyChanged(): void | TKey {
+        if (this._options.readOnly) {
+            return this._markedKey;
+        }
+    }
+
+    /**
      * Обработчик клика по записи списка. Инициирует переход в кликнутый каталог.
      */
-    protected _onItemClick(event: SyntheticEvent, item: Model): void {
+    protected _onItemClick(event: SyntheticEvent, item: Model): void | boolean {
+        if (this._options.readOnly) {
+            return false;
+        }
+
         this._changePath(item.getKey());
     }
 
@@ -93,7 +108,7 @@ export default class Body extends Control<IBody> {
     }
 
     /**
-     * Посылает событие о изменении пути
+     * Посылает событие об изменении пути
      */
     private _changePath(root: TKey): void {
         this._notify('sendResult', [this._buildPathByRoot(root)], {bubbling: true});
@@ -125,5 +140,11 @@ export default class Body extends Control<IBody> {
         }
 
         return path;
+    }
+
+    static getDefaultOptions(): INavigationMenu {
+        return {
+            caption: rk('На главную') as string
+        };
     }
 }

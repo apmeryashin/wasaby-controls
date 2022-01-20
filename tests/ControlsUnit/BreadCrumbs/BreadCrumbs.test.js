@@ -149,12 +149,11 @@ define([
                }
             };
             bc._menuOpener = {
-               open: function (openerOptions) {
-                  assert.equal(openerOptions.target, 123);
-                  assert.equal(openerOptions.templateOptions.displayProperty, 'test');
+               open: function(opener, target, options) {
+                  assert.equal(target, 123);
+                  assert.equal(options.templateOptions.displayProperty, 'test');
                },
-               close: function () {
-               }
+               close: function() {}
             };
             bc._dotsClick({
                currentTarget: 123,
@@ -175,11 +174,10 @@ define([
             let readOnly = false;
 
             bc._menuOpener = {
-               open: function (openerOptions) {
-                  readOnly = openerOptions.templateOptions.source.data[0].readOnly;
+               open: function(opener, target, options) {
+                  readOnly = options.templateOptions.readOnly;
                },
-               close: function () {
-               }
+               close: function() {}
             };
             bc._dotsClick({
                currentTarget: 123,
