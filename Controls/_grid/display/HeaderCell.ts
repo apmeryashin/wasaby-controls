@@ -211,8 +211,6 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
             + ` ${this._getHorizontalPaddingClasses(this._$cellPadding)}`
             + ` ${this._getColumnSeparatorClasses()}`;
 
-        wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
-
         const isMultilineHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
 
