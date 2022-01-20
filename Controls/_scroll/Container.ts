@@ -103,6 +103,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     private _isControllerInitialized: boolean;
     private _wasMouseEnter: boolean = false;
     private _gridAutoShadows: boolean = true;
+    private _scrollContainerViewMode: 'default' | 'custom' = 'default';
 
     private _containerLoadedResolve: Function;
     private _containerLoaded: Promise<void> | boolean;
@@ -112,6 +113,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     _beforeMount(options: IContainerOptions) {
+        this._setScrollContainerViewMode = this._setScrollContainerViewMode.bind(this, [options]);
         this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
         this._scrollbars = new ScrollbarsModel(options);
         this._stickyHeaderController = new StickyHeaderController(
@@ -140,7 +142,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         WheelEventSettings.getWheelEventSettingPromise().then((data) => {
             if (ScrollbarsModel.wheelEventHappened !== data) {
                 ScrollbarsModel.wheelEventHappened = data;
-                this._scrollbars.updateOptions(options);
+                this._scrollbars.updateOptions({
+                    ...options,
+                    scrollbarVisible: this._scrollbarVisible || options.scrollbarVisible
+                });
             }
         });
 
@@ -172,7 +177,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
         this._updateShadowsScrollState();
         this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll || (
-            this._options.newColumnScroll && this._scrollModel.canHorizontalScroll
+            this._scrollContainerViewMode === 'custom' && this._scrollModel.canHorizontalScroll
         ));
         this._containerLoadedResolve();
         this._containerLoaded = true;
@@ -217,7 +222,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
         //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
         this._updateScrollContainerPaigingSccClass(options);
-        this._scrollbars.updateOptions(options);
+        this._scrollbars.updateOptions({
+            ...options,
+            scrollbarVisible: this._scrollbarVisible || options.scrollbarVisible
+        });
         this._shadows.updateOptions(this._getShadowsModelOptions(options));
     }
 
@@ -300,7 +308,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._paging?.update(this._scrollModel);
 
             this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll || (
-                this._options.newColumnScroll && this._scrollModel.canHorizontalScroll
+                this._scrollContainerViewMode === 'custom' && this._scrollModel.canHorizontalScroll
             ));
             this._updateShadowVisibilityInController();
 
@@ -707,6 +715,22 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     // FIXME: костыль для input:Area, чтобы она напрямую в детей не лазала
     getScrollTop(): number {
         return this._children.content.scrollTop;
+    }
+
+    _setScrollContainerViewMode(options, mode: 'default' | 'custom'): void {
+        if (mode === this._scrollContainerViewMode) {
+            return;
+        }
+        this._scrollContainerViewMode = mode;
+        if (this._scrollContainerViewMode === 'custom') {
+            this._scrollbarVisible = {
+                vertical: !!(this._options && this._options.scrollbarVisible ||
+                    options && options.scrollbarVisible),
+                horizontal: false
+            };
+        } else {
+            this._scrollbarVisible = this._options.scrollbarVisible;
+        }
     }
 
     /**
