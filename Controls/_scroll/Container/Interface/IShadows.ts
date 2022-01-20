@@ -1,8 +1,8 @@
 /**
  * Допустимые значения для опций интерфейса {@link Controls/_scroll/Container/Interface/IShadows IShadows}, управляющих видимостью тени.
- * @variant hidden
- * @variant visible
- * @variant auto
+ * @variant hidden Тень всегда скрыта.
+ * @variant visible Тень всегда видима.
+ * @variant auto Видимость зависит от состояния скролируемой области. Тень отображается только с той стороны, в которую можно скролить контент, то на этой границе отображается тень.
  */
 export const enum SHADOW_VISIBILITY {
    /**
