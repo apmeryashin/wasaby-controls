@@ -41,6 +41,7 @@ interface IOffsetCache {
 interface IStickyHeaderGroupOptions extends IControlOptions {
     calculateHeadersOffsets?: boolean;
     offsetTop: number;
+    mode: string;
 }
 /**
  * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
@@ -410,7 +411,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                     id: this._index,
                     inst: this,
                     position: data.position,
-                    mode: data.mode
+                    mode: this._options.mode === 'auto' ? data.mode : this._options.mode
                 }, true], {bubbling: true});
                 this._isRegistry = true;
             }
@@ -484,9 +485,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                 const headerIdx = this._headersStack[position].indexOf(header.id);
                 const prevHeaderIdx = headerIdx > 0 ? headerIdx - 1 : 0;
                 const prevHeader = this._headers[this._headersStack[position][prevHeaderIdx]];
-                let offset = prevHeader.inst.getOffset(this._container, position);
+                let offset = prevHeader.left || 0;
 
-                if (header.mode === MODE.stackable && headerIdx > 0) {
+                if (prevHeader.mode !== MODE.replaceable && headerIdx > 0) {
                     offset += prevHeader.inst.getHeaderContainer().getBoundingClientRect().width;
                 }
 
@@ -546,13 +547,23 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     static getDefaultOptions(): Partial<IStickyHeaderGroupOptions> {
         return {
             calculateHeadersOffsets: true,
-            offsetTop: 0
+            offsetTop: 0,
+            mode: 'auto'
         };
     }
 }
 /**
  * @name Controls/_scroll/StickyBlock/Group#content
  * @cfg {Function} Content in which several fixed headers are inserted.
+ */
+
+/**
+ * @name Controls/_scroll/StickyBlock/Group#mode
+ * @cfg {String} Режим прилипания группы заголовков.
+ * @default auto
+ * @variant replaceable Заменяемая группа. Следующая группа заменяет текущую.
+ * @variant stackable Составная группа. Следующая группа прилипает к нижней части текущей.
+ * @variant auto Определяется автоматически.
  */
 
 /**
