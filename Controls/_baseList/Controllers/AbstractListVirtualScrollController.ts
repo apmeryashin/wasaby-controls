@@ -276,13 +276,13 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
-    afterRenderListControl(): void {
+    afterRenderListControl(isReact: boolean = false): void {
         this._renderNewIndexes = false;
 
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll();
-        this._handleScheduledCheckTriggerVisibility();
+        isReact ? this._handleScheduledCheckTriggerVisibilityReact() : this._handleScheduledCheckTriggerVisibility();
 
         if (this._handleChangedIndexesAfterSynchronizationCallback) {
             this._handleChangedIndexesAfterSynchronizationCallback();
@@ -692,9 +692,6 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
     private _handleScheduledCheckTriggerVisibility(): void {
-        if (this.UNSAFE_isReact) {
-            return _handleScheduledCheckTriggerVisibilityReact();
-        }
         if (this._scheduledCheckTriggersVisibility) {
             this._scheduledCheckTriggersVisibility = false;
 

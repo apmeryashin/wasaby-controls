@@ -57,7 +57,7 @@ export class GridControl extends BaseControl<IGridControlOptions> {
 
     _afterRender(...args): void {
         super._afterRender(...args);
-        this._listVirtualColumnScrollController?.afterRenderListControl();
+        this._listVirtualColumnScrollController?.afterRenderListControl(this.UNSAFE_isReact);
     }
 
     _observeScrollHandler(...args: [SyntheticEvent<Event>, string, IScrollParams]): void {

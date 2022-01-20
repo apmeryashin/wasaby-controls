@@ -4412,7 +4412,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._viewSize = _private.getViewSize(this, true);
         }
 
-        this._listVirtualScrollController.afterRenderListControl();
+        this._listVirtualScrollController.afterRenderListControl(this.UNSAFE_isReact);
         this._hasItemWithImageChanged = false;
 
         // Обновлять additionalTriggersOffsets нужно только после отрисовки, чтобы триггер случайно не сработал
