@@ -15,7 +15,7 @@ export function getDefaultBorderVisibilityOptions(): Partial<IBorderVisibilityOp
 export function getOptionBorderVisibilityTypes(): object {
     return {
         borderVisibility: descriptor<string>(String).oneOf([
-            'partial', 'hidden'
+            'partial', 'hidden', 'visible'
         ])
     };
 }
