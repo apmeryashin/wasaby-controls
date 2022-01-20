@@ -1,8 +1,8 @@
 import {Logger} from 'UI/Utils';
+import {Enum} from 'Types/collection';
 import {descriptor} from 'Types/entity';
 import {addWordCheck, escapeSpecialChars} from 'Controls/_decorator/inputUtils/RegExp';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-// @ts-ignore
 import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
 import 'css!Controls/decorator';
 
@@ -285,7 +285,7 @@ class Highlight extends Control<IHighlightOptions> {
                 'word',
                 'substring'
             ]),
-            value: descriptor(String, Number).required(),
+            value: descriptor(String, Number, Enum).required(),
             highlightedValue: descriptor(String).required()
         };
     }
