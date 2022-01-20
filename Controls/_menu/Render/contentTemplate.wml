@@ -6,8 +6,7 @@
 
 <div class="controls-Menu__content {{item.get('readOnly') ? 'controls-Menu__content-readOnly'}}
                      controls-Menu__content_{{multiLine ? 'multiLine' : 'singleLine'}}
-                     controls-Menu__content_align_{{itemAlign}}
-                     {{treeItem.getLevel && treeItem.getLevel() > 1 ? 'controls-Menu__content_levelPadding'}}"
+                     controls-Menu__content_align_{{itemAlign}}"
      title="{{item.get('tooltip') || item.get(displayProperty || 'title')}}">
    <ws:if data="{{iconAlign !== 'right' && itemAlign !== 'left'}}">
       <ws:partial template="iconTemplate" iconAlign="left"/>
