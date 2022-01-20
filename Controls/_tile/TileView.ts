@@ -248,8 +248,6 @@ export default class TileView extends ListView {
                 : targetItemSize.width;
             menuOptions.imageProportion = menuOptions.previewWidth / menuOptions.previewHeight;
             menuOptions.roundBorder = !!this._options.roundBorder;
-            menuOptions.borderWidth = 'null';
-            menuOptions.borderStyle = 'transparent';
 
             return {
                 templateOptions: menuOptions,
