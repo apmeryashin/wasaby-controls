@@ -1,4 +1,5 @@
 <div class="controlsDemo__wrapper">
+   <Controls.dragnDrop:Container name="dragNDropContainer">
    <Controls.masterDetail:Base attr:class="demo-DragNDrop__MasterDetail">
       <ws:master>
          <div>
@@ -7,12 +8,12 @@
                                       attr:class="demo-DragNDrop__MasterDetail_master_search_input"/>
             </div>
             <Controls.scroll:Container attr:class="demo-DragNDrop__MasterDetail_master">
-               <Controls.list:DataContainer name="dataContainer" source="{{_masterSource}}" keyProperty="key">
+               <Controls.list:DataContainer name="dataContainer" source="{{_masterSource}}" keyProperty="id">
                   <div>
-                     <Controls.list:Mover name="masterMover" parentProperty="Раздел"/>
                      <Controls.list:Container>
                         <Controls.masterDetail:List>
                            <Controls.treeGrid:View
+                                   name="masterList"
                                    itemsReadyCallback="{{_itemsReadyCallbackMaster}}"
                                    itemsDragNDrop="{{true}}"
                                    on:dragStart="_dragStartMaster()"
@@ -23,8 +24,7 @@
                                    markerVisibility='visible'
                                    nodeProperty="Раздел@"
                                    expanderDisplayMode="adaptive"
-                                   columns="{{gridColumns}}"
-                           >
+                                   columns="{{gridColumns}}">
                               <ws:draggingTemplate>
                                  <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                                              mainText="{{draggingTemplate.entity._options.mainText}}"
@@ -43,13 +43,11 @@
       <ws:detail>
          <div class="ws-flexbox ws-flex-column ws-flex-grow-1">
             <Controls.scroll:Container attr:class="demo-DragNDrop__MasterDetail_detail">
-               <Controls.list:DataContainer name="dataContainer" source="{{_detailSource}}" keyProperty="key">
+               <Controls.list:DataContainer name="dataContainer" source="{{_detailSource}}" keyProperty="id">
                   <div>
-                     <Controls.list:Mover name="detailMover"/>
                      <Controls.list:Container>
                         <Controls.columns:View
-                                keyProperty="key"
-                                source="{{ _viewSource }}"
+                                keyProperty="id"
                                 columnsMode="auto"
                                 name="detailList"
                                 itemsReadyCallback="{{_itemsReadyCallbackDetail}}"
@@ -59,8 +57,7 @@
                                 bind:selectedKeys="_selectedKeys"
                                 multiSelectVisibility="visible"
                                 markerVisibility="visible">
-                           <ws:filter parent="{{detail.selectedMasterValue || '0'}}">
-                           </ws:filter>
+                           <ws:filter parent="{{detail.selectedMasterValue || '0'}}"/>
                            <ws:itemTemplate>
                               <ws:partial template="Controls/columns:ItemTemplate" highlightOnHover="{{false}}">
                                  <ws:contentTemplate>
@@ -86,4 +83,5 @@
          </div>
       </ws:detail>
    </Controls.masterDetail:Base>
+   </Controls.dragnDrop:Container>
 </div>
