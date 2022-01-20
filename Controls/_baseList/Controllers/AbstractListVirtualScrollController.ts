@@ -679,8 +679,22 @@ export abstract class AbstractListVirtualScrollController<
     private _scheduleCheckTriggersVisibility() {
         this._scheduledCheckTriggersVisibility = true;
     }
-
+    private _handleScheduledCheckTriggerVisibilityReact(): void {
+        if (this._scheduledCheckTriggersVisibility) {
+            this._scheduledCheckTriggersVisibility = false;
+            window?.requestAnimationFrame(() => {
+                if (this._renderInProgress || this._isScheduledScroll() || this._renderNewIndexes) {
+                    this._scheduleCheckTriggersVisibility();
+                } else {
+                    this._scrollController.checkTriggersVisibility();
+                }
+            });
+        }
+    }
     private _handleScheduledCheckTriggerVisibility(): void {
+        if (this.UNSAFE_isReact) {
+            return _handleScheduledCheckTriggerVisibilityReact();
+        }
         if (this._scheduledCheckTriggersVisibility) {
             this._scheduledCheckTriggersVisibility = false;
 
