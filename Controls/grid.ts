@@ -228,5 +228,3 @@ export {
     IDisplaySearchValueOptions, IDisplaySearchValue,
     CheckboxCell
 };
-
-export {Selector as SortingSelector} from 'Controls/sorting';
