@@ -3,6 +3,7 @@ import * as template from 'wml!Controls/_popupTemplate/Notification/Template/Sim
 import {INotificationBase} from 'Controls/_popupTemplate/interface/INotification';
 import 'css!Controls/popupTemplate';
 import 'css!Controls/CommonClasses';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Базовый шаблон {@link /doc/platform/developmentapl/interface-development/controls/openers/notification/ простого окна уведомления}.
@@ -30,6 +31,11 @@ class NotificationSimple extends Control<INotificationSimpleOptions> {
 
     protected _beforeUpdate(options: INotificationSimpleOptions): void {
         this._iconStyle = NotificationSimple._prepareIconStyle(options);
+    }
+
+    protected _mousedownHandler(e: SyntheticEvent<MouseEvent>): void {
+        // Помечаю событиие обработанным, чтобы попап не обрабатывал начало драга
+        e.nativeEvent.processed = true;
     }
 
     private static _prepareIconStyle(popupOptions: INotificationSimpleOptions): String {
