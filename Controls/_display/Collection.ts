@@ -43,6 +43,7 @@ import {Logger} from 'UI/Utils';
 import {CrudEntityKey} from 'Types/source';
 import {IDirection} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import {getFlatNearbyItem} from 'Controls/_display/utils/NearbyItemUtils';
+import {TRowSeparatorVisibility} from 'Controls/_display/interface/ICollectionItem';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -145,6 +146,7 @@ export interface IOptions<
     itemPadding?: IItemPadding;
     emptyTemplate?: TemplateFunction;
     rowSeparatorSize?: string;
+    rowSeparatorVisibility?: TRowSeparatorVisibility;
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
     stickyCallback?: Function;
@@ -742,6 +744,8 @@ export default class Collection<
     protected _$searchValue: string;
 
     protected _$rowSeparatorSize: string;
+
+    protected _$rowSeparatorVisibility: TRowSeparatorVisibility;
 
     protected _$stickyMarkedItem: boolean;
 
@@ -2449,6 +2453,8 @@ export default class Collection<
         }
     }
 
+    // region rowSeparator
+
     getRowSeparatorSize(): string {
         return this._$rowSeparatorSize;
     }
@@ -2459,6 +2465,18 @@ export default class Collection<
         this._updateEdgeItems(true, true);
         this._updateItemsProperty('setRowSeparatorSize', this._$rowSeparatorSize);
     }
+
+    getRowSeparatorVisibility(): TRowSeparatorVisibility {
+        return this._$rowSeparatorVisibility;
+    }
+
+    setRowSeparatorVisibility(rowSeparatorVisibility: TRowSeparatorVisibility): void {
+        this._$rowSeparatorVisibility = rowSeparatorVisibility;
+        this._nextVersion();
+        this._updateEdgeItems(true, true);
+    }
+
+    // endregion rowSeparator
 
     getMultiSelectVisibility(): string {
         return this._$multiSelectVisibility;
@@ -4343,6 +4361,7 @@ Object.assign(Collection.prototype, {
     _$backgroundStyle: 'default',
     _$footerBackgroundStyle: 'default',
     _$rowSeparatorSize: null,
+    _$rowSeparatorVisibility: 'all',
     _$hiddenGroupPosition: 'first',
     _$footerTemplate: null,
     _$stickyFooter: false,

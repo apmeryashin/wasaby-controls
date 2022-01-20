@@ -3731,6 +3731,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
         }
 
+        if (this._options.rowSeparatorVisibility !== newOptions.rowSeparatorVisibility) {
+            this._listViewModel.setRowSeparatorVisibility(newOptions.rowSeparatorVisibility);
+        }
+
         if (this._options.displayProperty !== newOptions.displayProperty) {
             this._listViewModel.setDisplayProperty(newOptions.displayProperty);
         }
