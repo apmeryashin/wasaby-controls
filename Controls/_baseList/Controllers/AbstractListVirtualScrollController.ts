@@ -45,7 +45,7 @@ import { TVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll'
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
 export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement' | 'doScroll'
-    | 'applyScrollPosition';
+    | 'applyScrollPosition' | 'scrollToElementOnDrawItems';
 
 export interface IScheduledScrollToElementParams {
     key: CrudEntityKey;
@@ -181,6 +181,13 @@ export abstract class AbstractListVirtualScrollController<
     private _renderInProgress: boolean;
 
     /**
+     * Стейт используется, чтобы определить что сейчас идет отрисовка, во время которой будут отображены новые записи.
+     * Нужно для того, чтобы делать подскролл в нужную отрисовку.
+     * @private
+     */
+    private _itemsDrawing: boolean;
+
+    /**
      * Стейт, который определяет что сейчас выполняется отрисовка новых индексов.
      * Проставляется при изменении индексов и сбрасывается в afterRender
      * @private
@@ -247,6 +254,9 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
+    prepareToItemsDrawing(): void {
+        this._itemsDrawing = true;
+    }
     endBeforeUpdateListControl(): void {
         // Нужно проставлять именно тут этот флаг. Например, если нам прокинутт 2 опции, одна из которых будет source.
         // То индексы могут посчитаться где-то между beforeUpdate и beforeRender.
@@ -288,6 +298,7 @@ export abstract class AbstractListVirtualScrollController<
             this._handleChangedIndexesAfterSynchronizationCallback();
             this._handleChangedIndexesAfterSynchronizationCallback = null;
         }
+        this._itemsDrawing = false;
         this._renderInProgress = false;
     }
 
@@ -387,13 +398,28 @@ export abstract class AbstractListVirtualScrollController<
 
     resetItems(): void {
         // смотри комментарий в beforeRenderListControl
-        this._shouldResetScrollPosition = !this._keepScrollPosition;
+        // Не нужно сбрасывать скролл, если собираемся скроллить к активной записи.
+        this._shouldResetScrollPosition = !(this._keepScrollPosition || this._activeElementKey);
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
-        const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
+        const activeIndex = this._activeElementKey ? this._collection.getIndexByKey(this._activeElementKey) : 0;
+
+        // Инициализируем диапазон, начиная:
+        // с текущего startIndex, если собираемся оставить прежнюю позицию скролла,
+        // с индекса активного элемента, если он задан
+        // с нуля в остальных случаях
+        const startIndex = this._keepScrollPosition
+            ? this._collection.getStartIndex()
+            : (activeIndex !== -1 ? activeIndex : 0);
         this._scrollController.resetItems(totalCount, startIndex);
         if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
-            this.scrollToItem(this._activeElementKey, 'top', true);
+
+            // Важно делать подскролл к активному элементу именно в момент отрисовки новых записей.
+            // Если подскролл сделать в другую отрисовку, то он потеряет смысл и будет некорректен.
+            this._scheduleScroll({
+                type: 'scrollToElementOnDrawItems',
+                params: { key: this._activeElementKey, position: 'top', force: true }
+            });
         }
     }
 
@@ -745,6 +771,19 @@ export abstract class AbstractListVirtualScrollController<
                     );
                     this._scheduledScrollParams = null;
                     break;
+                case 'scrollToElementOnDrawItems':
+                    if (!this._itemsDrawing) {
+                        break;
+                    }
+                    const scrollToElementOnDrawItemsParams =
+                        this._scheduledScrollParams.params as IScheduledScrollToElementParams;
+                    this._scrollToElement(
+                        scrollToElementOnDrawItemsParams.key,
+                        scrollToElementOnDrawItemsParams.position,
+                        scrollToElementOnDrawItemsParams.force
+                    );
+                    this._scheduledScrollParams = null;
+                    break;
                 case 'doScroll':
                     const doScrollParams = this._scheduledScrollParams.params as IDoScrollParams;
                     this._doScrollUtil(doScrollParams.scrollParam);
@@ -771,10 +810,11 @@ export abstract class AbstractListVirtualScrollController<
             if (element) {
                 const result = this._scrollToElementUtil(element, position, force);
                 if (result instanceof Promise) {
-                    result.then(() => this._scrollToElementCompletedCallback());
+                    result.then(() => this._scrollToElementCompletedCallback?.());
                 } else {
-                    this._scrollToElementCompletedCallback();
+                    this._scrollToElementCompletedCallback?.();
                 }
+                this._scrollToElementCompletedCallback = null;
             } else {
                 /* TODO SCROLL починить юниты
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +

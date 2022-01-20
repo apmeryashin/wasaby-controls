@@ -241,7 +241,7 @@ export function getRangeByItemsSizes(params: IGetRangeByItemsSizesParams): IItem
         }
     }
 
-    return { startIndex: start, endIndex: end};
+    return { startIndex: start, endIndex: end + 1};
 }
 
 /**

@@ -4210,6 +4210,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
+            this._listVirtualScrollController.prepareToItemsDrawing();
         }
 
         this._spaceBlocked = false;

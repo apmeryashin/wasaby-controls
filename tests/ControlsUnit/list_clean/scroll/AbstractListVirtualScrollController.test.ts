@@ -43,6 +43,7 @@ function getController(options: Partial<ControllerOptions>): ListVirtualScrollCo
 describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', () => {
     before(() => {
         window = new jsdom.JSDOM('').window;
+        window.requestAnimationFrame = (callback) => callback.apply(null);
     });
 
     after(() => {
@@ -95,6 +96,11 @@ describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', (
                 activeElementKey: 1
             });
             controller.resetItems();
+            assert.isFalse(scrollToElementUtil.calledOnce);
+            controller.afterRenderListControl();
+            assert.isFalse(scrollToElementUtil.calledOnce);
+            controller.prepareToItemsDrawing();
+            controller.afterRenderListControl();
             assert.isTrue(scrollToElementUtil.calledOnce);
         });
     });
