@@ -3582,10 +3582,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 if (action === IObservable.ACTION_RESET) {
                     // если есть данные и вниз и вверх, то скрываем триггер вверх,
                     // т.к. в первую очередь грузим вниз
-                    if (this._hasMoreData('down') && this._hasMoreData('up')) {
-                        this._listVirtualScrollController.setBackwardTriggerVisible(false);
-                        this._listVirtualScrollController.setForwardTriggerVisible(true);
-                    }
+                    const backwardTriggerVisible = !this._hasMoreData('up') ||
+                        !this._listViewModel.getCount() ||
+                        !this._options.attachLoadTopTriggerToNull;
+                    this._listVirtualScrollController.setBackwardTriggerVisible(backwardTriggerVisible);
+                    this._listVirtualScrollController.setForwardTriggerVisible(true);
                 }
                 break;
             case IObservable.ACTION_ADD:
