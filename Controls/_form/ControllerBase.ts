@@ -239,6 +239,7 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
                         defaultAnswerCallback();
                     }, () => {
                         // Промис с необработанным исключением кидает ошибку в консоль. Ставлю заглушку
+                        this._isConfirmShowed = false;
                     });
                 } else {
                     this._isConfirmShowed = false;
