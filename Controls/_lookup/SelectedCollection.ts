@@ -159,12 +159,13 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       });
    }
 
-   private _getVisibleItems({items, maxVisibleItems, multiLine}: ISelectedCollectionOptions): Model[]  {
+   private _getVisibleItems({items, maxVisibleItems, multiLine, itemsLayout}: ISelectedCollectionOptions): Model[]  {
       const startIndex = Math.max(maxVisibleItems && multiLine ? items.getCount() - maxVisibleItems : 0, 0);
       const resultItems = [];
+      const ignoreMaxVisibleItems = multiLine || itemsLayout === 'twoColumns';
 
       items.each((item, index) => {
-         if (index >= startIndex && (index < MAX_VISIBLE_ITEMS_SINGLE_LINE || multiLine)) {
+         if (index >= startIndex && (index < MAX_VISIBLE_ITEMS_SINGLE_LINE || ignoreMaxVisibleItems)) {
             resultItems.push(item);
          }
       });
