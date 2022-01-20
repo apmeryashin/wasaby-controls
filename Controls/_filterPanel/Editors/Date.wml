@@ -1,0 +1,11 @@
+<Controls._filterPanel.BaseEditor scope="{{_options}}"
+                                  on:extendedCaptionClick="_extendedCaptionClickHandler()"
+                                  extendedCaption="{{_options.extendedCaption}}">
+   <ws:editorTemplate>
+       <Controls.Container.Async templateName="Controls/date:Input">
+           <ws:partial template="{{content.resolvedTemplate}}"
+                       bind:value="_value"
+                       on:valueChanged="_valueChangedHandler()"/>
+       </Controls.Container.Async>
+   </ws:editorTemplate>
+</Controls._filterPanel.BaseEditor>
