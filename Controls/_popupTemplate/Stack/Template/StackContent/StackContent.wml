@@ -14,6 +14,7 @@
                prefetchData="{{_options._prefetchData}}"
                isPrefetchDataMode="{{_options._isPrefetchDataMode}}"
                attr:class="controls-Stack__content"
+               stackPosition="{{ _options.stackPosition }}"
                stackMinimizedWidth="{{_options.stackMinimizedWidth}}"
                stackWidth="{{_options.stackWidth}}"
                workspaceWidth="{{_options.workspaceWidth}}"
