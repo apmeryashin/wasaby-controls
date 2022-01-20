@@ -4,11 +4,7 @@ import { spy } from 'sinon';
 
 import {ListVirtualScrollController} from 'Controls/_baseList/Controllers/ListVirtualScrollController';
 import {IAbstractListVirtualScrollControllerOptions as ControllerOptions} from 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
-import { Collection } from 'Controls/display';
-import {RecordSet} from 'Types/collection';
-
-const ItemsContainerUniqueSelector = 'itemsContainer';
-const ItemsQuerySelector = 'item';
+import {getCollection, getItemsContainer, ItemsContainerUniqueClass, ItemClass, TriggerClass} from './initUtils';
 
 function getDefaultControllerOptions(): ControllerOptions {
     return {
@@ -16,9 +12,9 @@ function getDefaultControllerOptions(): ControllerOptions {
         listContainer: null,
         listControl: null,
         collection: null,
-        itemsContainerUniqueSelector: `.${ItemsContainerUniqueSelector}`,
-        itemsQuerySelector: `.${ItemsQuerySelector}`,
-        triggersQuerySelector: '',
+        itemsContainerUniqueSelector: `.${ItemsContainerUniqueClass}`,
+        itemsQuerySelector: `.${ItemClass}`,
+        triggersQuerySelector: `.${TriggerClass}`,
         triggersPositions: {backward: 'offset', forward: 'offset'},
         triggersVisibility: {backward: true, forward: true},
         triggersOffsetCoefficients: {backward: 0, forward: 0},
@@ -42,36 +38,6 @@ function getController(options: Partial<ControllerOptions>): ListVirtualScrollCo
             ...getDefaultControllerOptions(),
             ...options
     });
-}
-
-function getCollection(items: object[]): Collection {
-    return new Collection({
-        collection: new RecordSet({
-            rawData: items,
-            keyProperty: 'key'
-        }),
-        keyProperty: 'key'
-    });
-}
-
-function getItemsContainer(collection: Collection): HTMLElement {
-    const dom = new jsdom.JSDOM(`
-        <!DOCTYPE html>
-        <div class="${ItemsContainerUniqueSelector}"></div>
-    `);
-
-    const itemsContainer: HTMLElement = dom.window.document.querySelector('.itemsContainer');
-
-    collection.each((item) => {
-        const itemElement: HTMLElement = dom.window.document.createElement('div');
-
-        itemElement.className = ItemsQuerySelector;
-        itemElement.setAttribute('item-key', item.key);
-
-        itemsContainer.appendChild(itemElement);
-    });
-
-    return itemsContainer;
 }
 
 describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', () => {
