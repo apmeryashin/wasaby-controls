@@ -29,6 +29,7 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     _previewerId: IPreviewerPopupOptions;
     _calmTimer: CalmTimer;
     _isOpened: boolean = false;
+    private _wasMouseEnter: boolean;
 
     protected _beforeMount(options: IPreviewerOptions): void {
         this._resultHandler = this._resultHandler.bind(this);
@@ -72,6 +73,15 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
      */
     close(type: string): void {
         PreviewerOpener.closePopup(this._previewerId, type);
+
+        // Если в режиме по ховеру отменили открытие, то повторное открытие будет только после того,
+        // как пользователь уведет курсор с таргета и наведен заново. Иначе по mousemove окно все равно откроется.
+        if (this._options.trigger === 'hover') {
+            if (!this._isOpened) {
+                this._wasMouseEnter = false;
+                this._calmTimer.stop();
+            }
+        }
     }
 
     private _getConfig(): IPreviewerPopupOptions {
@@ -162,6 +172,7 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     }
 
     protected _contentMouseenterHandler(event: SyntheticEvent<MouseEvent>): void {
+        this._wasMouseEnter = true;
         if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
             // We will cancel closing of the popup, if it is already open
             if (this._isOpened) {
@@ -192,7 +203,9 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
             // Устанавливаем старое значение таймера, так при небольших значениях,
             // окно может открыться когда этого не нужно
             // https://online.sbis.ru/opendoc.html?guid=55ca4037-ae40-44f4-a10f-ac93ddf990b1
-            this._calmTimer.start(CALM_DELAY, event);
+            if (this._wasMouseEnter) {
+                this._calmTimer.start(CALM_DELAY, event);
+            }
         }
     }
 
