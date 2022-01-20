@@ -1,6 +1,8 @@
 /**
  * Допустимые значения для опций интерфейса {@link Controls/_scroll/Container/Interface/IShadows IShadows}, управляющих видимостью тени.
- * @typedef SHADOW_VISIBILITY
+ * @variant hidden
+ * @variant visible
+ * @variant auto
  */
 export const enum SHADOW_VISIBILITY {
    /**
