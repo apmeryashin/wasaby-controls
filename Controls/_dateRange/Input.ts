@@ -112,17 +112,16 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
     }
 
     protected _beforeUpdate(options: IDateRangeInputOptions): void {
-        if (this._options.startValue !== options.startValue ||
-            this._options.endValue !== options.endValue) {
+        const valuesChanged = this._options.startValue !== options.startValue ||
+            this._options.endValue !== options.endValue;
+
+        if (valuesChanged) {
             this._rangeModel.update(options);
         }
         if (this._options.startValueValidators !== options.startValueValidators ||
-                this._options.startValue !== options.startValue) {
-            this._updateStartValueValidators(options.startValueValidators);
-        }
-        if (this._options.endValueValidators !== options.endValueValidators ||
-                this._options.endValue !== options.endValue) {
-            this._updateEndValueValidators(options.endValueValidators);
+            this._options.endValueValidators !== options.endValueValidators || valuesChanged) {
+            // При смене любого значение нужно обновлять валидаторы в обоих полях
+            this._updateValidators();
         }
     }
 
