@@ -23,7 +23,7 @@ export function getRootsForHierarchyReload(viewModel: Tree, nodeKey: TKey): TKey
 }
 
 /**
- * Относительно переданного набора ids возвращает массив который содержит
+ * Относительно переданного набора ids возвращает массив, который содержит
  * все идентификаторы их родительских узлов включая root.
  * Результирующий массив содержит только уникальные значения.
  */
@@ -65,7 +65,16 @@ export function getItemHierarchy(viewModel: Tree, itemKey: TKey): TKey[] {
 
     // Добавляем идентификаторы родительских узлов
     while (parent !== root) {
-        hierarchy.unshift(parent.getContents().getKey());
+        const contents = parent.getContents();
+
+        // Если contents это массив, значит parent это BreadcrumbsRow
+        // и необходимая иерархия уже содержится в ней
+        if (Array.isArray(contents)) {
+            hierarchy.unshift(...contents.map((i) => i.getKey()));
+        } else {
+            hierarchy.unshift(contents.getKey());
+        }
+
         parent = parent.getParent();
     }
 
@@ -76,7 +85,7 @@ export function getItemHierarchy(viewModel: Tree, itemKey: TKey): TKey[] {
 }
 
 /**
- * Рекурсивно итерируется по всем дочерним записям и для каждой записи вызывает либо nodeCallback либо leafCallback.
+ * Рекурсивно итерируется по всем дочерним записям и для каждой записи вызывает либо nodeCallback, либо leafCallback.
  * @param viewModel - коллекция по которой итерируемся
  * @param nodeKey - идентификатор узла с дочерних записей которого начинаем перебор
  * @param nodeCallback - ф-ия обратного вызова, которая будет вызвана для все дочерних узлов
