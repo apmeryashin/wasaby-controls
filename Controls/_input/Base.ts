@@ -20,6 +20,7 @@ import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
 import { getOptionBorderVisibilityTypes } from 'Controls/_input/interface/IBorderVisibility';
 import BaseViewModel from 'Controls/_input/BaseViewModel';
+import {Logger} from 'UI/Utils';
 
 interface IFieldTemplate {
     template: string|TemplateFunction;
@@ -277,6 +278,9 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
             options.placeholderVisibility :
             PLACEHOLDER_VISIBILITY.HIDDEN;
         this._updatePlaceholderDisplay(options);
+        if (options.borderVisibility === 'visible') {
+            Logger.warn('Controls/input:Base Передано не поддерживаемое значение для опции borderVisibility. Удалите задание опции, либо передайте partial');
+        }
     }
 
     protected _afterMount(options: IBaseInputOptions): void {
