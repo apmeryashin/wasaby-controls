@@ -12,6 +12,7 @@ class FocusWithEnter extends Control<IControlOptions> {
     protected _comboboxSource: Memory = null;
     protected _handbookSource: Memory = null;
     protected _gridSource: Memory = null;
+    protected _markedKey: string | number = null;
     protected _gridColumns: IColumnRes[] = Editing.getEditingColumns();
     protected _keyProperty: string = 'id';
     protected _displayProperty: string = 'title';
@@ -75,7 +76,23 @@ class FocusWithEnter extends Control<IControlOptions> {
             keyProperty: 'key',
             data: Editing.getEditingData()
         });
+    }
 
+    /**
+     * Обрабатывает событие активации контрола, когда фокус приходит на fakeFocusElem, с которого не ловится enter.
+     * Если фокус пришел на таблицу с записями ставим маркер на первую.
+     */
+    protected _activatedHandler(): void {
+        if (document.activeElement.className.includes('controls-BaseControl__fakeFocusElem')) {
+            this._markedKey = Editing.getEditingData()[0].key;
+        }
+    }
+
+    /**
+     * Происходит при деактивации контрола
+     */
+    protected _deactivatedHandler(): void {
+        this._markedKey = null;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/FocusWithEnter/FocusWithEnter'];
