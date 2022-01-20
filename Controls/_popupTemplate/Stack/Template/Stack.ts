@@ -24,6 +24,7 @@ export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOp
     stackWidth?: number;
     rightPanelOptions?: IRightPanelOptions;
     toolbarContentTemplate?: Function | string;
+    stackPosition?: string;
 }
 
 const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
@@ -55,8 +56,10 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
     protected _maximizeButtonVisibility: boolean = false;
     protected _hasRightPanel: boolean;
     private _maximizeButtonClickCallback: () => void;
+    protected _popupDirection: string;
 
     protected _beforeMount(options: IStackTemplateOptions): void {
+        this._popupDirection = options.stackPosition || ManagerController.getStackPosition();
         this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть', 'окно')}`;
         this._hasRightPanel = ManagerController.hasRightPanel() || !!options.toolbarContentTemplate;
         this._updateMaximizeButton(options);
@@ -232,6 +235,15 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
 /**
  * @name Controls/_popupTemplate/Stack#rightPanelOptions
  * @cfg {Controls/_popupTemplate/Stack/RightPanelOptions.typedef} Опции правой панели стековой панели.
+ */
+
+/**
+ * @name Controls/_popupTemplate/Stack#stackPosition
+ * @cfg {string} Положение стекового окна
+ * @variant left окно будет прижато к левому краю
+ * @variant right окно будет прижато к правому краю страницы
+ * @default right
+ * @demo Controls-demo/Popup/Stack/StackPosition/Index
  */
 
 /**
