@@ -912,8 +912,6 @@ export default class Collection<
 
     protected _$isEditing: boolean = false;
 
-    protected _$newDesign: false;
-
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
     protected _dragStrategy: StrategyConstructor<DragStrategy> = DragStrategy;
@@ -2471,9 +2469,22 @@ export default class Collection<
     }
 
     setRowSeparatorVisibility(rowSeparatorVisibility: TRowSeparatorVisibility): void {
-        this._$rowSeparatorVisibility = rowSeparatorVisibility;
-        this._nextVersion();
-        this._updateEdgeItems(true, true);
+        if (this._$rowSeparatorVisibility !== rowSeparatorVisibility) {
+            this._$rowSeparatorVisibility = rowSeparatorVisibility;
+            const firstItem = this.getFirst('EdgeRowSeparatorItem');
+            const lastItem = this.getLast('EdgeRowSeparatorItem');
+
+            // Обновление разделитей всех хаписей, кроме первой и последней
+            this._getItems().forEach((item: CollectionItem<S>) => {
+                if (item !== firstItem && item !== lastItem) {
+                    item.setTopSeparatorEnabled(rowSeparatorVisibility !== 'edges');
+                    item.setBottomSeparatorEnabled(false);
+                }
+            });
+            // Обновление разделителей первой и последней записи
+            this._updateEdgeItems(false);
+            this._nextVersion();
+        }
     }
 
     // endregion rowSeparator
@@ -2773,7 +2784,7 @@ export default class Collection<
     }
 
     protected _shouldAddEdgeSeparator(): boolean {
-        return !this._$newDesign || !!this.getFooter();
+        return this._$rowSeparatorVisibility !== 'items' || !!this.getFooter();
     }
 
     getMoreButtonVisibility(): MoreButtonVisibility {
@@ -3534,11 +3545,12 @@ export default class Collection<
             options.markerPosition = this._$markerPosition;
             options.roundBorder = this._$roundBorder;
             options.hasMoreDataUp = this.hasMoreDataUp();
-            options.isTopSeparatorEnabled = true;
+            options.isTopSeparatorEnabled = this._$rowSeparatorVisibility !== 'edges';
             options.isBottomSeparatorEnabled = false;
             options.isFirstItem = false;
             options.isLastItem = false;
             options.stickyCallback = this._$stickyCallback;
+            options.rowSeparatorSize = this._$rowSeparatorSize;
             const key = options.contents && options.contents.getKey && options.contents.getKey();
             options.faded = this.getFadedKeys().includes(key);
 
@@ -4389,6 +4401,5 @@ Object.assign(Collection.prototype, {
     _$emptyTemplateOptions: null,
     _$itemActionsPosition: 'inside',
     _$roundBorder: null,
-    _$newDesign: false,
     getIdProperty: Collection.prototype.getKeyProperty
 });

@@ -12,7 +12,8 @@ import {
     ILadderObject,
     isFullGridSupport,
     ICollectionOptions,
-    TItemActionsPosition
+    TItemActionsPosition,
+    TRowSeparatorVisibility
 } from 'Controls/display';
 
 import Header from '../Header';
@@ -130,7 +131,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     protected _$emptyTemplateColumns: IGridAbstractColumn[];
     protected _$colspanGroup: boolean;
     protected _$backgroundStyle: string;
-    protected _$newDesign: boolean;
+    protected _$rowSeparatorVisibility: TRowSeparatorVisibility;
 
     protected _isFullGridSupport: boolean = isFullGridSupport();
     protected _footer: FooterRow;
@@ -336,7 +337,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         const isVisibleByHeaderOrFooter = (
             this._headerIsVisible(this._$header, this._$headerVisibility) ||
             this._resultsIsVisible() || !!this.getFooter());
-        return !this._$newDesign || (this._$newDesign && isVisibleByHeaderOrFooter);
+        return this._$rowSeparatorVisibility !== 'items' || isVisibleByHeaderOrFooter;
     }
 
     getStickyColumn(): GridLadderUtil.IStickyColumn {
@@ -805,6 +806,7 @@ Object.assign(Grid.prototype, {
     _$colspanGroup: true,
     _$columnScroll: false,
     _$newColumnScroll: false,
+    _$rowSeparatorVisibility: 'all',
     _$columnScrollViewMode: 'scrollbar',
     _$stickyColumnsCount: 1,
     _$sorting: null,

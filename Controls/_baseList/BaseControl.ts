@@ -3240,7 +3240,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             ...newOptions,
             keyProperty: self._keyProperty,
             items,
-            newDesign: newOptions._dataOptionsValue?.newDesign || newOptions.newDesign,
+            rowSeparatorVisibility: (newOptions._dataOptionsValue?.newDesign || newOptions.newDesign ?
+                'items' : newOptions.rowSeparatorVisibility),
             collapsedGroups: collapsedGroups || newOptions.collapsedGroups
         };
 
