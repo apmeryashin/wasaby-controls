@@ -152,6 +152,7 @@ describe('Controls/lookup:Input', () => {
                 lookupOptions.selectedKeys = ['test'];
                 await lookup._beforeUpdate(lookupOptions);
                 stub.notCalledWith('selectedKeysChanged');
+                stub.calledOnceWith('itemsChanged');
             });
         });
     });
