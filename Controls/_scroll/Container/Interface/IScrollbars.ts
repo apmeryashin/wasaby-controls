@@ -11,7 +11,10 @@ export interface IScrollbarsOptions {
     * @name Controls/_scroll/Container/Interface/IScrollbars#scrollbarVisible
     * @cfg {Boolean} Whether scrollbar should be shown.
     */
-    scrollbarVisible: boolean;
+    scrollbarVisible: boolean | {
+        vertical?: boolean;
+        horizontal?: boolean;
+    };
 }
 
 export function getDefaultOptions(): IScrollbarsOptions {
