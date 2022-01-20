@@ -18,7 +18,7 @@
    }
 }
 
-.controls-StickyHeader_default-background {
+.controls-StickyHeader__background_default {
    background: var(--background-color_scroll_sticky-header);
 }
 
@@ -106,6 +106,10 @@
 
 // В хроме могут возникать разрывы и артефакты между заголовками из-за особенностей субпиксельного рендеринга.
 // Делаем заголовки внахлёст на 1px.
+
+.controls-StickyBlock__subpixelFix-backgroundDefault {
+   box-shadow: -1px 0 0 0 var(--background-color_scroll_sticky-header);
+}
 
 .controls-StickyBlock__subpixelFix-default,
 .controls-StickyBlock__subpixelFix-listItem,
