@@ -15,7 +15,7 @@ define('Controls-demo/FilterView/resources/PanelWithCaption',
 
          _template: template,
          _limitWidth: true,
-         _caption: 'Long caption for testing',
+         _caption: 'Long caption for testing Long caption for testing',
          _topTemplate: 'wml!Controls-demo/FilterView/resources/topTemplate'
 
       });
