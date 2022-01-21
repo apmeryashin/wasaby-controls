@@ -3,7 +3,10 @@
    <div class="controls-breadcrumbsPathButton__menu-header" data-qa="controls-breadcrumbsMenuButton__menuHeader">
       <!-- На главную -->
       <div
-         class="controls-breadcrumbsPathButton__home-button"
+         class="
+            controls-breadcrumbsPathButton__home-button
+            {{_options.readOnly ? 'controls-breadcrumbsPathButton__home-button_readonly'}}
+         "
          data-qa="controls-breadcrumbsMenuButton__menuHeaderHome"
          on:click="_goToRoot()"
       >
@@ -46,11 +49,14 @@
 
          expanderIcon="hiddenNode"
          expanderVisibility="hasChildren"
+         supportExpand="{{!_options.readOnly}}"
+         expanderIconStyle="{{_options.readOnly ? 'readonly' : 'unaccented'}}"
 
          bind:markedKey="_markedKey"
          bind:expandedItems="_expandedItems"
 
          on:itemClick="_onItemClick()"
+         on:beforeMarkedKeyChanged="_onBeforeMarkedKeyChanged()"
       >
          <ws:columns>
             <ws:Array>
@@ -60,6 +66,13 @@
                />
             </ws:Array>
          </ws:columns>
+         <ws:itemTemplate>
+            <ws:partial
+               template="Controls/treeGrid:ItemTemplate"
+               highlightOnHover="{{!_options.readOnly}}"
+               cursor="{{_options.readOnly ? 'default' : 'pointer'}}"
+            />
+         </ws:itemTemplate>
       </Controls.treeGrid:View>
    </Controls.scroll:Container>
 </div>
