@@ -92,12 +92,12 @@ export default class Popup implements IPopupHelper {
             };
 
             return this.openConfirmation(confirmationOptions).then((result) => {
-                if (eventHandlers && typeof eventHandlers.onClose === 'function') {
-                    eventHandlers.onClose(result);
-                }
-
                 if (eventHandlers && typeof eventHandlers.onResult === 'function') {
                     eventHandlers.onResult(result);
+                }
+
+                if (eventHandlers && typeof eventHandlers.onClose === 'function') {
+                    eventHandlers.onClose(result);
                 }
             });
         }
