@@ -501,7 +501,7 @@ export interface IReloadItemOptions {
 
 /**
  * @name Controls/_list/interface/IList#rowSeparatorVisibility
- * @cfg {Controls/display:TRowSeparatorVisibility} Стиль отображения {@link /doc/platform/developmentapl/interface-development/controls/list/grid/separator/#row линий-разделителей строк}.
+ * @cfg {Controls/display:TRowSeparatorVisibility} Настройка видимости {@link /doc/platform/developmentapl/interface-development/controls/list/grid/separator/#row линий-разделителей строк} по краям и внутри списка.
  * @default all
  */
 

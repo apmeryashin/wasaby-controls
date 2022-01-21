@@ -1,0 +1,20 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/RowSeparator/RowSeparatorVisibility/Edges/Index' }}">
+            <a href="{{content.href}}">Разделители только сверху и снизу</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.RowSeparator.RowSeparatorVisibility.Edges.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/RowSeparator/RowSeparatorVisibility/Items/Index' }}">
+            <a href="{{content.href}}">Разделители только внктри списка</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.RowSeparator.RowSeparatorVisibility.Items.Index/>
+    </div>
+
+</div>

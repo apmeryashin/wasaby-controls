@@ -6,5 +6,5 @@
             parentProperty="parent"
             nodeProperty="type"
             rowSeparatorSize="s"
-            rowSeparatorVisibility="edges"/>
+            rowSeparatorVisibility="items"/>
 </div>

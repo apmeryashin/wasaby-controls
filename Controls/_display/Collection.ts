@@ -2472,18 +2472,18 @@ export default class Collection<
             this._getItems().forEach((item: CollectionItem<S>) => {
                 // Обновление разделитей первой, не единственной записи
                 if (item === firstItem && item !== lastItem) {
-                    item.setTopSeparatorEnabled(this._shouldAddTopSeparator(), true);
+                    item.setTopSeparatorEnabled(this._shouldAddListTopSeparator(), true);
                     item.setBottomSeparatorEnabled(false, true);
 
                 // Обновление разделитей последней, не единственной записи
                 } else if (item === lastItem && item !== firstItem) {
                     item.setTopSeparatorEnabled(rowSeparatorVisibility !== 'edges', true);
-                    item.setBottomSeparatorEnabled(this._shouldAddBottomSeparator(), true);
+                    item.setBottomSeparatorEnabled(this._shouldAddListBottomSeparator(), true);
 
                 // Обновление разделитей единственной записи
                 } else if (item === lastItem && item === firstItem) {
-                    item.setTopSeparatorEnabled(this._shouldAddTopSeparator(), true);
-                    item.setBottomSeparatorEnabled(this._shouldAddBottomSeparator(), true);
+                    item.setTopSeparatorEnabled(this._shouldAddListTopSeparator(), true);
+                    item.setBottomSeparatorEnabled(this._shouldAddListBottomSeparator(), true);
 
                 // Обновление разделитей всех хаписей, кроме первой и последней
                 } else {
@@ -2726,7 +2726,7 @@ export default class Collection<
 
         if (firstItem !== this._firstItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
-                this._updateTopItemSeparator(this._firstItem, firstItem, this._shouldAddTopSeparator(), silent);
+                this._updateTopItemSeparator(this._firstItem, firstItem, this._shouldAddListTopSeparator(), silent);
             }
             this._updateFirstItem(this._firstItem, firstItem, silent);
         }
@@ -2734,7 +2734,7 @@ export default class Collection<
         if (lastItem !== this._lastItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
                 this._updateBottomItemSeparator(
-                    this._lastItem, lastItem, this._shouldAddBottomSeparator(), silent
+                    this._lastItem, lastItem, this._shouldAddListBottomSeparator(), silent
                 );
             }
             this._updateLastItem(this._lastItem, lastItem, silent);
@@ -2787,14 +2787,14 @@ export default class Collection<
         }
     }
 
-    protected _shouldAddTopSeparator(): boolean {
+    protected _shouldAddListTopSeparator(): boolean {
         return this._$rowSeparatorVisibility !== 'items' || !!this.getFooter();
     }
 
-    protected _shouldAddBottomSeparator(): boolean {
+    protected _shouldAddListBottomSeparator(): boolean {
         const navigation = this.getNavigation();
         const noMoreData = !navigation || navigation.view !== 'infinity' || !this.hasMoreData();
-        return noMoreData && this._shouldAddTopSeparator();
+        return noMoreData && this._shouldAddListTopSeparator();
     }
 
     getMoreButtonVisibility(): MoreButtonVisibility {
