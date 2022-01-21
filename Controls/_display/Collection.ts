@@ -2451,9 +2451,7 @@ export default class Collection<
         }
     }
 
-    // region rowSeparator
-
-    getRowSeparatorSize(): string {
+     getRowSeparatorSize(): string {
         return this._$rowSeparatorSize;
     }
 
@@ -2464,10 +2462,6 @@ export default class Collection<
         this._updateItemsProperty('setRowSeparatorSize', this._$rowSeparatorSize);
     }
 
-    getRowSeparatorVisibility(): TRowSeparatorVisibility {
-        return this._$rowSeparatorVisibility;
-    }
-
     setRowSeparatorVisibility(rowSeparatorVisibility: TRowSeparatorVisibility): void {
         if (this._$rowSeparatorVisibility !== rowSeparatorVisibility) {
             this._$rowSeparatorVisibility = rowSeparatorVisibility;
@@ -2476,18 +2470,30 @@ export default class Collection<
 
             // Обновление разделитей всех хаписей, кроме первой и последней
             this._getItems().forEach((item: CollectionItem<S>) => {
-                if (item !== firstItem && item !== lastItem) {
-                    item.setTopSeparatorEnabled(rowSeparatorVisibility !== 'edges');
-                    item.setBottomSeparatorEnabled(false);
+                // Обновление разделитей первой, не единственной записи
+                if (item === firstItem && item !== lastItem) {
+                    item.setTopSeparatorEnabled(this._shouldAddTopSeparator(), true);
+                    item.setBottomSeparatorEnabled(false, true);
+
+                // Обновление разделитей последней, не единственной записи
+                } else if (item === lastItem && item !== firstItem) {
+                    item.setTopSeparatorEnabled(rowSeparatorVisibility !== 'edges', true);
+                    item.setBottomSeparatorEnabled(this._shouldAddBottomSeparator(), true);
+
+                // Обновление разделитей единственной записи
+                } else if (item === lastItem && item === firstItem) {
+                    item.setTopSeparatorEnabled(this._shouldAddTopSeparator(), true);
+                    item.setBottomSeparatorEnabled(this._shouldAddBottomSeparator(), true);
+
+                // Обновление разделитей всех хаписей, кроме первой и последней
+                } else {
+                    item.setTopSeparatorEnabled(rowSeparatorVisibility !== 'edges', true);
+                    item.setBottomSeparatorEnabled(false, true);
                 }
             });
-            // Обновление разделителей первой и последней записи
-            this._updateEdgeItems(false);
             this._nextVersion();
         }
     }
-
-    // endregion rowSeparator
 
     getMultiSelectVisibility(): string {
         return this._$multiSelectVisibility;
@@ -2717,12 +2723,10 @@ export default class Collection<
     protected _updateEdgeItems(force?: boolean, silent?: boolean): void {
         const firstItem = this.getFirst('EdgeRowSeparatorItem');
         const lastItem = this.getLast('EdgeRowSeparatorItem');
-        const navigation = this.getNavigation();
-        const noMoreData = !navigation || navigation.view !== 'infinity' || !this.hasMoreData();
 
         if (firstItem !== this._firstItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
-                this._updateTopItemSeparator(this._firstItem, firstItem, this._shouldAddEdgeSeparator(), silent);
+                this._updateTopItemSeparator(this._firstItem, firstItem, this._shouldAddTopSeparator(), silent);
             }
             this._updateFirstItem(this._firstItem, firstItem, silent);
         }
@@ -2730,7 +2734,7 @@ export default class Collection<
         if (lastItem !== this._lastItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
                 this._updateBottomItemSeparator(
-                    this._lastItem, lastItem, noMoreData && this._shouldAddEdgeSeparator(), silent
+                    this._lastItem, lastItem, this._shouldAddBottomSeparator(), silent
                 );
             }
             this._updateLastItem(this._lastItem, lastItem, silent);
@@ -2783,8 +2787,14 @@ export default class Collection<
         }
     }
 
-    protected _shouldAddEdgeSeparator(): boolean {
+    protected _shouldAddTopSeparator(): boolean {
         return this._$rowSeparatorVisibility !== 'items' || !!this.getFooter();
+    }
+
+    protected _shouldAddBottomSeparator(): boolean {
+        const navigation = this.getNavigation();
+        const noMoreData = !navigation || navigation.view !== 'infinity' || !this.hasMoreData();
+        return noMoreData && this._shouldAddTopSeparator();
     }
 
     getMoreButtonVisibility(): MoreButtonVisibility {

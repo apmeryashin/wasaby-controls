@@ -7,7 +7,7 @@
             nodeProperty="type"
             header="{{_header}}"
             rowSeparatorSize="s"
-            newDesign="{{true}}">
+            rowSeparatorVisibility="items">
         <ws:footerTemplate>
             <div>Подвал растянут</div>
         </ws:footerTemplate>
