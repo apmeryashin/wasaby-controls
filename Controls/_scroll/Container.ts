@@ -216,7 +216,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
         //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
         this._updateScrollContainerPaigingSccClass(options);
+
         this._scrollbars.updateOptions(options);
+        this._scrollbars.setClientSize({
+            vertical: this._oldScrollState.clientHeight,
+            horizontal: this._oldScrollState.clientHeight
+        });
+
         this._shadows.updateOptions(this._getShadowsModelOptions(options));
     }
 
@@ -282,8 +288,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._stickyHeaderController.controlResizeHandler();
     }
 
-    _updateState(...args) {
-        const isUpdated: boolean = super._updateState(...args);
+    _updateState(scrollState: IScrollState): boolean {
+        const isUpdated: boolean = super._updateState(scrollState);
         if (isUpdated) {
             if (this._wasMouseEnter && this._scrollModel?.canVerticalScroll &&
                 !this._oldScrollState.canVerticalScroll) {
@@ -682,15 +688,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             TYPE_FIXED_HEADERS.initialFixed,
             true);
         // Обновляем скролбары только после наведения мышкой.
-        const clientSizes = {
-            vertical: this._oldScrollState.clientHeight,
-            horizontal: this._oldScrollState.clientWidth
-        };
-        const offsets = {
-            top: scrollbarOffsetTop,
-            bottom: scrollbarOffsetBottom
-        };
-        this._scrollbars.setOffsets(clientSizes, offsets, this._isInitializationDelayed());
+        this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom },
+            this._isInitializationDelayed());
         if (this._scrollbars.vertical && this._scrollbars.vertical.isVisible && this._children.hasOwnProperty('scrollBar')) {
             this._children.scrollBar.setViewportSize(
                 this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);

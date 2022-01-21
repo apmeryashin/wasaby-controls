@@ -81,7 +81,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     private _scrollLockedPosition: number = null;
     protected _scrollCssClass: string;
     protected _contentWrapperCssClass: string;
-    private _oldScrollState: ScrollState;
+    protected _oldScrollState: ScrollState;
     protected _scrollModel: ScrollModel;
 
     protected _tmplNotify: Function = EventUtils.tmplNotify;

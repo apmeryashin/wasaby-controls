@@ -173,15 +173,21 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
-    setOffsets(scrollClientSizes: object, offsets: Offsets, needUpdate: boolean = true): void {
+    setOffsets(offsets: Offsets, needUpdate: boolean = true): void {
         let changed: boolean = false;
-        let scrollClientSize;
         for (const scrollbar of Object.keys(this._models)) {
-            scrollClientSize = scrollClientSizes[scrollbar];
-            changed = this._models[scrollbar].setOffsets(scrollClientSize, offsets) || changed;
+            changed = this._models[scrollbar].setOffsets(offsets) || changed;
         }
         if (changed && needUpdate) {
             this._nextVersion();
+        }
+    }
+
+    setClientSize(scrollClientSizes: object): void {
+        let scrollClientSize;
+        for (const scrollbar of Object.keys(this._models)) {
+            scrollClientSize = scrollClientSizes[scrollbar];
+            this._models[scrollbar].setClientSize(scrollClientSize);
         }
     }
 

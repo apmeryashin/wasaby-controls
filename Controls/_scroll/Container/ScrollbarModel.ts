@@ -116,12 +116,11 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         return changed;
     }
 
-    setOffsets(scrollClientSize: number, offsets: IOffsets): boolean {
+    setOffsets(offsets: IOffsets): boolean {
         let changed: boolean;
 
         this._offsets = offsets;
         changed = this._updateContentSize();
-        this._updateClientSize(scrollClientSize);
 
         let style: string;
         if (this._direction === SCROLL_DIRECTION.VERTICAL) {
@@ -141,6 +140,10 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         return changed;
     }
 
+    setClientSize(scrollClientSize: number): boolean {
+        return this._updateClientSize(scrollClientSize);
+    }
+
     get style(): string {
         return this._style;
     }
@@ -153,8 +156,14 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         return this._contentSize !== oldContentSize;
     }
 
-    private _updateClientSize(scrollClientSize: number): void {
-        this._clientSize = scrollClientSize - this._offsets.top - this._offsets.bottom;
+    private _updateClientSize(scrollClientSize: number): boolean {
+        let changed = false;
+        const clientSize = scrollClientSize - this._offsets.top - this._offsets.bottom;
+        if (this._clientSize !== clientSize) {
+            this._clientSize = clientSize;
+            changed = true;
+        }
+        return changed;
     }
 
     private _updatePosition(): void {

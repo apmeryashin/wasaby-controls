@@ -177,8 +177,7 @@ describe('Controls/scroll:Container ScrollbarsModel', () => {
                 scrollOrientation: 'vertical'
             });
 
-            model.setOffsets({vertical: 10},
-                { top: 10, bottom: 20 });
+            model.setOffsets({ top: 10, bottom: 20 });
 
             assert.strictEqual(model._models.vertical.style, 'top: 10px; bottom: 20px;');
         });
