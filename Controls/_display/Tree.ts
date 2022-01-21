@@ -414,14 +414,14 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
         if (this.SupportNodeFooters) {
             this.appendStrategy(this.getNodeFooterStrategyCtor(), {
-                nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback,
-                nodeFooterModule: this._nodeFooterModule
+                extraItemVisibilityCallback: this._$nodeFooterVisibilityCallback,
+                extraItemModule: this._nodeFooterModule
             });
         }
 
         if (this.SupportNodeHeaders) {
             this.appendStrategy(this.getNodeHeaderStrategyCtor(), {
-                nodeHeaderModule: this._nodeHeaderModule
+                extraItemModule: this._nodeHeaderModule
             });
         }
     }
