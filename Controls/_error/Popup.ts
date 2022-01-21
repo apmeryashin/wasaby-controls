@@ -20,7 +20,7 @@ export type PopupId = string;
 export interface IPopupHelper {
     preloadPopup(): Promise<IPopupModule | void>;
 
-    openConfirmation(options: IConfirmationOptions): Promise<void>;
+    openConfirmation(options: IConfirmationOptions): Promise<boolean | void>;
 
     openDialog<T extends IViewConfigMessage>(
         config: ErrorViewConfig<T>,
@@ -61,14 +61,14 @@ export default class Popup implements IPopupHelper {
      * Открыть уведомление. Если не удалось открыть платформенное диалоговое окно, будет показан браузерный alert.
      * @param options Конфигурация уведомления.
      */
-    openConfirmation(options: IConfirmationOptions): Promise<void> {
+    openConfirmation(options: IConfirmationOptions): Promise<boolean | void> {
         return this.preloadPopup().then((popup) => {
             if (!popup) {
                 Popup.showDefaultDialog(options.message);
                 return;
             }
 
-            popup.Confirmation.openPopup(options);
+            return popup.Confirmation.openPopup(options);
         });
     }
 
@@ -80,21 +80,26 @@ export default class Popup implements IPopupHelper {
      * окна через {@link Controls/_popup/interface/IDialog#closePopup}.
      */
     openDialog<T extends IViewConfigMessage>(config: ErrorViewConfig<T>,
-                                             dialogOptions: IBasePopupOptions): Promise<PopupId | void> {
+                                             dialogOptions: IBasePopupOptions = {}): Promise<PopupId | void> {
         const { template } = config;
 
         if (typeof template === 'undefined') {
+            const { eventHandlers } = dialogOptions;
             const confirmationOptions: IConfirmationOptions = {
                 type: 'ok',
                 style: 'danger',
                 message: config.options.message
             };
 
-            if (dialogOptions?.eventHandlers?.onClose) {
-                confirmationOptions.closeHandler = dialogOptions.eventHandlers.onClose;
-            }
+            return this.openConfirmation(confirmationOptions).then((result) => {
+                if (eventHandlers && typeof eventHandlers.onClose === 'function') {
+                    eventHandlers.onClose(result);
+                }
 
-            return this.openConfirmation(confirmationOptions);
+                if (eventHandlers && typeof eventHandlers.onResult === 'function') {
+                    eventHandlers.onResult(result);
+                }
+            });
         }
 
         const preloadTemplate: Promise<void | TemplateFunction> = typeof template === 'string'

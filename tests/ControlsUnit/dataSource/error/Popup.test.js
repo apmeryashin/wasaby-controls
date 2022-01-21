@@ -12,15 +12,34 @@ define([
    const require = requirejs;
    describe('Controls/dataSource:error.Popup', () => {
       const Popup = dataSource.error.Popup;
+      const eventHandlers = {};
       const fakeModules = [
          ['FakePopupModule1', () => ({
             name: 'FakePopupModule1',
             Confirmation: {
-               openPopup: sinon.stub()
+               openPopup: sinon.stub().resolvesArg(0)
             },
             Dialog: {
-               openPopup: sinon.stub(),
-               closePopup: sinon.stub()
+               openPopup: sinon.stub().callsFake((dialogOptions) => {
+                  delete eventHandlers.onClose;
+                  delete eventHandlers.onResult;
+
+                  if (dialogOptions && dialogOptions.eventHandlers) {
+                     eventHandlers.onClose = dialogOptions.eventHandlers.onClose;
+                     eventHandlers.onResult = dialogOptions.eventHandlers.onResult;
+                  }
+
+                  return Promise.resolve(String(Date.now()));
+               }),
+               closePopup: sinon.stub().callsFake(() => {
+                  if (typeof eventHandlers.onClose === 'function') {
+                     eventHandlers.onClose();
+                  }
+
+                  if (typeof eventHandlers.onResult === 'function') {
+                     eventHandlers.onResult();
+                  }
+               })
             }
          })],
          ['FakePopupModule2', () => ({ name: 'FakePopupModule2' })],
@@ -35,7 +54,6 @@ define([
       });
 
       let originalModules;
-      let originalThemes;
       let originalImportThemes;
 
       beforeEach(() => {
@@ -313,6 +331,45 @@ define([
                const popup = require(fakeModuleNames[0]);
                assert.isTrue(popup.Dialog.closePopup.calledOnceWith(popupId), 'closePopup() called');
             });
+         });
+      });
+
+      describe('event handlers on close', () => {
+         let p;
+         let config;
+         let onClose;
+         let onResult;
+         let dialogOptions;
+
+         beforeEach(() => {
+            Popup.POPUP_MODULES = [fakeModuleNames[0]];
+            p = new Popup([fakeModuleNames[0]]);
+            onClose = sinon.stub();
+            onResult = sinon.stub();
+            dialogOptions = { eventHandlers: { onClose, onResult } };
+            config = {
+               template: {},
+               options: { message: 'message', details: 'details' }
+            };
+         });
+
+         it('calls event handlers after dialog closing', () => {
+            return p.openDialog(config, dialogOptions)
+               .then((popupId) => p.closeDialog(popupId))
+               .then(() => {
+                  assert.isTrue(onClose.calledOnce);
+                  assert.isTrue(onResult.calledOnce);
+               });
+         });
+
+         it('calls event handlers after confirmation closing', () => {
+            delete config.template;
+
+            return p.openDialog(config, dialogOptions)
+               .then(() => {
+                  assert.isTrue(onClose.calledOnce);
+                  assert.isTrue(onResult.calledOnce);
+               });
          });
       });
    });
