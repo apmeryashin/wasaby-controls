@@ -75,6 +75,10 @@
    cursor: pointer;
 }
 
+.controls-TreeGrid__row-expander_readonly {
+   cursor: default;
+}
+
 .controls-TreeGrid__row-expander,
 .controls-TreeGrid__row-expanderPadding {
    line-height: 1;
@@ -151,6 +155,12 @@
 .controls-TreeGrid__row-expander_emptyNode_iconStyle_unaccented::before,
 .controls-TreeGrid__row-expander_node_iconStyle_unaccented::before {
    color: var(--label_icon-color);
+}
+
+.controls-TreeGrid__row-expander_hiddenNode_iconStyle_readonly::before,
+.controls-TreeGrid__row-expander_emptyNode_iconStyle_readonly::before,
+.controls-TreeGrid__row-expander_node_iconStyle_readonly::before {
+   color: var(--readonly_color);
 }
 
 // endregion Аспект iconStyle

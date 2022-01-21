@@ -1,7 +1,6 @@
 import {IControlOptions} from 'UI/Base';
 import {Path} from 'Controls/dataSource';
 import {
-    ICaptionOptions,
     IFilterOptions, IHeightOptions,
     IHierarchyOptions, INavigationOptions, INavigationPageSourceConfig, INavigationPositionSourceConfig,
     ISortingOptions,
@@ -24,10 +23,15 @@ export interface IPathButton
         IFilterOptions,
         IItemTemplateOptions,
         ITreeControlOptions,
-        ICaptionOptions,
         ISortingOptions,
         INavigationOptions<INavigationPositionSourceConfig | INavigationPageSourceConfig>,
         IHeightOptions {
+
+    /**
+     * @cfg {String} Определяет текст в заголовке навигационного меню
+     * @default 'На главную'
+     */
+    caption?: string;
 
     /**
      * @cfg {Controls/breadcrumbs#Path} Текущий отображаемый путь

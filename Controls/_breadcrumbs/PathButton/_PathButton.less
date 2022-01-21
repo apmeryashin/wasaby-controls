@@ -59,6 +59,10 @@
    align-items: baseline;
 }
 
+.controls-breadcrumbsPathButton__home-button_readonly {
+   cursor: default;
+}
+
 .controls-breadcrumbsPathButton__home-button__icon {
    width: var(--icon-size_2xs);
    height: var(--icon-size_2xs);
@@ -87,7 +91,7 @@
       }
    }
 
-   .controls-breadcrumbsPathButton__home-button:hover {
+   .controls-breadcrumbsPathButton__home-button:not(.controls-breadcrumbsPathButton__home-button_readonly):hover {
       .controls-breadcrumbsPathButton__home-button__icon {
          fill: var(--primary_hover_icon-color);
       }
