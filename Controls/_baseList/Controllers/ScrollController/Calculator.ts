@@ -208,6 +208,7 @@ export class Calculator {
 
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
+            const nextItem = itemsSizes[index + 1];
             const itemOffset = item.offset - placeholders.backward;
             const itemBorderBottom = Math.round(itemOffset) + Math.round(item.size);
 
@@ -221,7 +222,9 @@ export class Calculator {
 
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
             const isLastItem = index === range.endIndex - 1;
-            if (itemBorderBottom > viewportBorderPosition || isLastItem) {
+            const hasNextRenderedItem = itemsSizes.slice(index + 1, range.endIndex).some((it) => it.size);
+            const isLastRenderedItem = (!nextItem || !nextItem.size) && !hasNextRenderedItem;
+            if (itemBorderBottom > viewportBorderPosition || isLastItem || isLastRenderedItem) {
                 let borderDistance;
                 let border;
                 if (direction === 'forward') {

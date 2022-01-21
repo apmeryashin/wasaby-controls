@@ -106,17 +106,8 @@ describe('Controls/_display/itemsStrategy/TreeDrag', () => {
    });
 
    it('should be corrected parent of draggable item after hide it parent', () => {
-      strategy = new TreeDrag({
-         source,
-         display,
-         draggableItem: display.getItemBySourceKey(3),
-         draggedItemsKeys: [2, 3, 4],
-         targetIndex: 2
-      });
-
-       // tslint:disable-next-line:no-unused-expression
-      strategy.items;
-      assert.equal(strategy.avatarItem.getParent(), display.getItemBySourceKey(1));
+      display.setDraggedItems(display.getItemBySourceKey(3), [2, 3, 4]);
+      assert.equal(display.getItemBySourceKey(3).getParent().key, display.getItemBySourceKey(1).key);
    });
 
    it('drag without avatar item', () => {

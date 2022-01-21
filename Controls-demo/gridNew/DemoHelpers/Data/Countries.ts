@@ -5,6 +5,7 @@ import * as multilineNumberResultTpl from 'wml!Controls-demo/gridNew/resources/R
 
 import {IColumnRes, IData} from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
 import {IColumn, IHeaderCell} from 'Controls/grid';
+import {Enum} from 'Types/collection';
 
 interface IResults {
     full: Array<{ population: number, square: number, populationDensity: number }>;
@@ -27,6 +28,30 @@ const COUNTRIES: string[] = ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'An
     , 'Turkey', 'Turkmenistan', 'Turks &amp; Caicos', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'United States Minor Outlying Islands', 'Uruguay'
     , 'Uzbekistan', 'Venezuela', 'Vietnam', 'Virgin Islands (US)', 'Yemen', 'Zambia', 'Zimbabwe'];
 
+const CURRENCIES = ['Российский рубль', 'Канадский доллар', 'Доллар США', 'Китайский юань', 'Бразильский реал', 'Австралийский доллар',
+    'Индийская рупия', 'Аргентинское песо', 'Казахстанский тенге', 'Суданский фунт', 'Алжирский динар', 'Конголезский франк',
+    'Мексиканское песо', 'Саудовский риял', 'Индонезийская рупия', 'Ливийский динар', 'Иранский риал', 'Монгольский тугрик',
+    'Перуанский новый соль'];
+
+function getCurrencyEnum(nameOrIndex: string | number): Enum<string> {
+    let index: number;
+
+    if (typeof nameOrIndex === 'string') {
+        index = CURRENCIES.indexOf(nameOrIndex);
+
+        if (index < 0) {
+            return undefined;
+        }
+    } else {
+        index = nameOrIndex;
+    }
+
+    return new Enum<string>({
+        index,
+        dictionary: CURRENCIES
+    });
+}
+
 export const Countries = {
     getData: (count?: number): IData[] => [
         {
@@ -39,7 +64,8 @@ export const Countries = {
             square: 17075200,
             populationDensity: 8,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 11111111111
+            gdp: 11111111111,
+            currency: getCurrencyEnum(0)
         },
         {
             key: 1,
@@ -51,7 +77,8 @@ export const Countries = {
             square: 9976140,
             populationDensity: 3,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 1111111111
+            gdp: 1111111111,
+            currency: getCurrencyEnum(1)
         },
         {
             key: 2,
@@ -63,7 +90,8 @@ export const Countries = {
             square: 9629091,
             populationDensity: 30.71,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 111111111
+            gdp: 111111111,
+            currency: getCurrencyEnum(2)
         },
         {
             key: 3,
@@ -75,7 +103,8 @@ export const Countries = {
             square: 9596960,
             populationDensity: 136.12,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 11111111
+            gdp: 11111111,
+            currency: getCurrencyEnum(3)
         },
         {
             key: 4,
@@ -87,7 +116,8 @@ export const Countries = {
             square: 8511965,
             populationDensity: 21.86,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 1111111
+            gdp: 1111111,
+            currency: getCurrencyEnum(4)
         },
         {
             key: 5,
@@ -99,7 +129,8 @@ export const Countries = {
             square: 7686850,
             populationDensity: 3,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 111111
+            gdp: 111111,
+            currency: getCurrencyEnum(5)
         },
         {
             key: 6,
@@ -111,7 +142,8 @@ export const Countries = {
             square: 3287590,
             populationDensity: 328.59,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 11111
+            gdp: 11111,
+            currency: getCurrencyEnum(6)
         },
         {
             key: 7,
@@ -123,7 +155,8 @@ export const Countries = {
             square: 2766890,
             populationDensity: 4.29,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 1111
+            gdp: 1111,
+            currency: getCurrencyEnum(7)
         },
         {
             key: 8,
@@ -135,7 +168,8 @@ export const Countries = {
             square: 2717300,
             populationDensity: 6.00,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 111
+            gdp: 111,
+            currency: getCurrencyEnum(8)
         },
         {
             key: 9,
@@ -147,7 +181,8 @@ export const Countries = {
             square: 2505810,
             populationDensity: 16.04,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 11
+            gdp: 11,
+            currency: getCurrencyEnum(9)
         },
         {
             key: 10,
@@ -159,7 +194,8 @@ export const Countries = {
             square: 2381740,
             populationDensity: 13.66,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 1
+            gdp: 1,
+            currency: getCurrencyEnum(10)
         },
         {
             key: 11,
@@ -171,7 +207,8 @@ export const Countries = {
             square: 2345410,
             populationDensity: 25.62,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 0.1
+            gdp: 0.1,
+            currency: getCurrencyEnum(11)
         },
         {
             key: 12,
@@ -183,7 +220,8 @@ export const Countries = {
             square: 1972550,
             populationDensity: 53.84,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 0.11
+            gdp: 0.11,
+            currency: getCurrencyEnum(12)
         },
         {
             key: 13,
@@ -195,7 +233,8 @@ export const Countries = {
             square: 1960582,
             populationDensity: 13.47,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 0.111
+            gdp: 0.111,
+            currency: getCurrencyEnum(13)
         },
         {
             key: 14,
@@ -207,7 +246,8 @@ export const Countries = {
             square: 1919440,
             populationDensity: 126.06,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 11111
+            gdp: 11111,
+            currency: getCurrencyEnum(14)
         },
         {
             key: 15,
@@ -219,7 +259,8 @@ export const Countries = {
             square: 1759540,
             populationDensity: 3.00,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 11111
+            gdp: 11111,
+            currency: getCurrencyEnum(15)
         },
         {
             key: 16,
@@ -231,7 +272,8 @@ export const Countries = {
             square: 1648000,
             populationDensity: 41.27,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 11111
+            gdp: 11111,
+            currency: getCurrencyEnum(16)
         },
         {
             key: 17,
@@ -243,7 +285,8 @@ export const Countries = {
             square: 1565000,
             populationDensity: 2.00,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 11111
+            gdp: 11111,
+            currency: getCurrencyEnum(17)
         },
         {
             key: 18,
@@ -255,7 +298,8 @@ export const Countries = {
             square: 1285220,
             populationDensity: 21.73,
             date: new Date('December 17, 2021 10:00:00'),
-            gdp: 11111
+            gdp: 11111,
+            currency: getCurrencyEnum(18)
         }
     ].slice(0, count || undefined),
     getHeader: (): IHeaderCell[] => [

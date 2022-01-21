@@ -1,10 +1,10 @@
+import jsdom = require('jsdom');
 import { assert } from 'chai';
 import { spy } from 'sinon';
 
 import {ListVirtualScrollController} from 'Controls/_baseList/Controllers/ListVirtualScrollController';
 import {IAbstractListVirtualScrollControllerOptions as ControllerOptions} from 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
-import { Collection } from 'Controls/display';
-import {RecordSet} from 'Types/collection';
+import {getCollection, getItemsContainer, ItemsContainerUniqueClass, ItemClass, TriggerClass} from './initUtils';
 
 function getDefaultControllerOptions(): ControllerOptions {
     return {
@@ -12,9 +12,9 @@ function getDefaultControllerOptions(): ControllerOptions {
         listContainer: null,
         listControl: null,
         collection: null,
-        itemsContainerUniqueSelector: '',
-        itemsQuerySelector: '',
-        triggersQuerySelector: '',
+        itemsContainerUniqueSelector: `.${ItemsContainerUniqueClass}`,
+        itemsQuerySelector: `.${ItemClass}`,
+        triggersQuerySelector: `.${TriggerClass}`,
         triggersPositions: {backward: 'offset', forward: 'offset'},
         triggersVisibility: {backward: true, forward: true},
         triggersOffsetCoefficients: {backward: 0, forward: 0},
@@ -28,7 +28,8 @@ function getDefaultControllerOptions(): ControllerOptions {
         updateVirtualNavigationUtil: (hasItems) => null,
         activeElementChangedCallback: (activeElementIndex) => null,
         hasItemsOutRangeChangedCallback: (hasItems) => null,
-        itemsEndedCallback: (direction) => null
+        itemsEndedCallback: (direction) => null,
+        feature1183225611: false
     };
 }
 
@@ -39,17 +40,15 @@ function getController(options: Partial<ControllerOptions>): ListVirtualScrollCo
     });
 }
 
-function getCollection(items: []): Collection {
-    return new Collection({
-        collection: new RecordSet({
-            rawData: items,
-            keyProperty: 'key'
-        }),
-        keyProperty: 'key'
-    });
-}
-
 describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', () => {
+    before(() => {
+        window = new jsdom.JSDOM('').window;
+    });
+
+    after(() => {
+        window = {};
+    });
+
     describe('set iterator to collection', () => {
         it('in constructor', () => {
             const collection = getCollection([]);
@@ -67,6 +66,36 @@ describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', (
             const setIteratorSpy = spy(newCollection, 'setViewIterator');
             controller.setCollection(newCollection);
             assert.isTrue(setIteratorSpy.calledOnce);
+        });
+    });
+
+    describe('scroll to active element', () => {
+        it('after mount', () => {
+            const collection = getCollection([{key: 1}]);
+            const itemsContainer = getItemsContainer(collection);
+            const scrollToElementUtil = spy(() => null);
+            const controller = getController({
+                collection,
+                scrollToElementUtil,
+                itemsContainer,
+                activeElementKey: 1
+            });
+            controller.afterMountListControl();
+            assert.isTrue(scrollToElementUtil.calledOnce);
+        });
+
+        it('on reset items', () => {
+            const collection = getCollection([{key: 1}]);
+            const itemsContainer = getItemsContainer(collection);
+            const scrollToElementUtil = spy(() => null);
+            const controller = getController({
+                collection,
+                scrollToElementUtil,
+                itemsContainer,
+                activeElementKey: 1
+            });
+            controller.resetItems();
+            assert.isTrue(scrollToElementUtil.calledOnce);
         });
     });
 });

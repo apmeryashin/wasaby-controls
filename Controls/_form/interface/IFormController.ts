@@ -154,7 +154,7 @@ export default interface IFormController extends IControllerBase {
 /**
  * Запускает процесс валидации.
  * @function Controls/form:IFormController#validate
- * @returns {Core/Deferred} Deferred результата валидации.
+ * @returns {Promise<Controls/validate:IValidateResult|Error>}
  */
 
 /**

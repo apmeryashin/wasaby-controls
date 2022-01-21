@@ -3,10 +3,10 @@
  */
 
 export class NotificationStrategy {
-   getPosition(offset: number): object {
+   getPosition(offsetRight: number, offsetBottom: number): object {
       return {
-         right: 0,
-         bottom: offset
+         right: offsetRight,
+         bottom: offsetBottom
       };
    }
 }

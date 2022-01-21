@@ -1473,6 +1473,17 @@ const _private = {
                 self._resetPagingOnResetItems = true;
             }
 
+            // Обработка удаления должна происходить на afterCollectionChanged.
+            // Это позволяет при удалении записей в цикле по одной
+            // учитывать актуальные индексы диапазона виртуального скролла,
+            // и выполнять обработку selection для всех удалённых записей.
+            if (action === IObservable.ACTION_REMOVE) {
+                self._removedItems.push(...removedItems);
+                if (self._removedItemsIndex === null) {
+                    self._removedItemsIndex = removedItemsIndex;
+                }
+            }
+
             // Тут вызывается nextVersion на коллекции, и это приводит к вызову итератора.
             // Поэтому это должно быть после обработки изменений коллекции scrollController'ом, чтобы итератор
             // вызывался с актуальными индексами
@@ -1513,14 +1524,6 @@ const _private = {
                         const entryPath = self._listViewModel.getCollection().getMetaData().ENTRY_PATH;
                         newSelection = selectionController.onCollectionReset(entryPath);
                         break;
-                    case IObservable.ACTION_REMOVE:
-                        /* Когда в цикле удаляют записи из рекордсета по одному и eventRaising=false, то
-                        * после eventRaising=true нам последовательно прилетают события удаления с отдельными записями.
-                        * Т.к. селекшин меняется в _beforeUpdate, то учитывается только последнее событие.
-                        * Чтобы учитывались все события, обрабатываем удаление всех записей на afterCollectionChanged
-                        */
-                        self._removedItems.push(...removedItems);
-                        break;
                     case IObservable.ACTION_REPLACE:
                         selectionController.onCollectionReplace(newItems);
                         break;
@@ -1560,6 +1563,9 @@ const _private = {
                     case IObservable.ACTION_REPLACE:
                         markerController.onCollectionReplace(newItems);
                         break;
+                    case IObservable.ACTION_CHANGE:
+                        markerController.onCollectionChange(newItems);
+                        break;
                 }
 
                 self._changeMarkedKey(newMarkedKey);
@@ -1569,14 +1575,11 @@ const _private = {
         // for example if Controls.explorer:View is switched from list to tile mode. The controller
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
-        // But we should not update any ItemActions when marker has changed
-        if (changesType === 'collectionChanged' ||
-            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) || newModelChanged) {
+        if (changesType === 'collectionChanged' || newModelChanged) {
             self._itemsChanged = true;
-
-            if (!!self._itemActionsController && self._itemActionsController
-                .shouldUpdateOnCollectionChange(action, newItems, removedItems)) {
-                _private.updateInitializedItemActions(self, self._options);
+            if (!!self._itemActionsController && !self._shouldUpdateActionsAfterCollectionChange) {
+                self._shouldUpdateActionsAfterCollectionChange = self._itemActionsController
+                    .shouldUpdateOnCollectionChange(action, newItems, removedItems);
             }
         }
 
@@ -2936,6 +2939,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _validateController = null;
 
     _removedItems = [];
+
+    private _removedItemsIndex: number = null;
+
+    private _itemsChanged: boolean;
+
+    // Флаг, устанавливающий, что после изменения коллекции надо обновить ItemActions
+    private _shouldUpdateActionsAfterCollectionChange: boolean;
+
     _keyProperty = null;
 
     // callback'ки передаваемые в sourceController
@@ -3160,7 +3171,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const newSelection = _private.getSelectionController(this).onCollectionRemove(this._removedItems);
             _private.changeSelection(this, newSelection);
         }
-
+        if (this._listVirtualScrollController && this._removedItems.length && this._removedItemsIndex !== null) {
+            this._listVirtualScrollController.removeItems(this._removedItemsIndex, this._removedItems.length);
+        }
+        if (this._itemActionsController && this._shouldUpdateActionsAfterCollectionChange) {
+            _private.updateInitializedItemActions(this, this._options);
+        }
+        this._removedItemsIndex = null;
+        this._shouldUpdateActionsAfterCollectionChange = false;
         this._removedItems = [];
     }
 
@@ -3429,7 +3447,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             additionalTriggersOffsets: this._getAdditionalTriggersOffsets(),
             totalCount: this._listViewModel.getCount(),
 
-            feature1183225611: options.feature1183225611,
+            feature1183225611: options.virtualScrollConfig?.feature1183225611,
 
             scrollToElementUtil: (container, position, force): Promise<void> => {
                 this._scrollControllerInitializeChangeScroll = true;
@@ -3564,10 +3582,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 if (action === IObservable.ACTION_RESET) {
                     // если есть данные и вниз и вверх, то скрываем триггер вверх,
                     // т.к. в первую очередь грузим вниз
-                    if (this._hasMoreData('down') && this._hasMoreData('up')) {
-                        this._listVirtualScrollController.setBackwardTriggerVisible(false);
-                        this._listVirtualScrollController.setForwardTriggerVisible(true);
-                    }
+                    const backwardTriggerVisible = !this._hasMoreData('up') ||
+                        !this._listViewModel.getCount() ||
+                        !this._options.attachLoadTopTriggerToNull;
+                    this._listVirtualScrollController.setBackwardTriggerVisible(backwardTriggerVisible);
+                    this._listVirtualScrollController.setForwardTriggerVisible(true);
                 }
                 break;
             case IObservable.ACTION_ADD:
@@ -3589,9 +3608,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     getCalcMode(params)
                 );
                 break;
-            case IObservable.ACTION_REMOVE:
-                this._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
-                break;
             case IObservable.ACTION_MOVE:
                 this._listVirtualScrollController.moveItems(
                     newItemsIndex,
@@ -3610,9 +3626,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._listVirtualScrollController.setListContainer(this._container);
         this._listVirtualScrollController.afterMountListControl();
-        if (this._options.activeElement) {
-            this._listVirtualScrollController.scrollToItem(this._options.activeElement, 'top', true);
-        }
 
         if (constants.isBrowserPlatform) {
             window.addEventListener('resize', this._onWindowResize);
@@ -3804,6 +3817,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (isSourceControllerLoadingNow) {
             _private.setReloadingState(this, true);
+        }
+
+        if (this._options.activeElement !== newOptions.activeElement) {
+            this._listVirtualScrollController.setActiveElementKey(newOptions.activeElement);
         }
 
         if (navigationChanged) {
@@ -6576,13 +6593,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         // Скроллить нужно после того как ромашка отрисуется, то есть на _afterRender
         if (onDrawItems) {
-
-            // FIXME: https://online.sbis.ru/opendoc.html?guid=35665533-5f26-432e-9b22-795ac40e65ff
-            const lastAction = this._options.fix1184259069 && this._doAfterDrawItems;
             this._doAfterDrawItems = () => {
-                if (lastAction) {
-                    lastAction();
-                }
                 scrollAndShowTrigger();
             };
         } else {

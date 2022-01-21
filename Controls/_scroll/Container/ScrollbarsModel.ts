@@ -43,21 +43,22 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
 
     updateScrollbarsModels(options: IScrollbarsOptions): void {
-        const scrollOrientation = options.scrollOrientation.toLowerCase();
-        if (scrollOrientation.indexOf('vertical') !== -1) {
-            if (!this._models.vertical) {
-                this._models.vertical = new ScrollbarModel(SCROLL_DIRECTION.VERTICAL, options);
+
+        const updateModel = (orientation: 'vertical' | 'horizontal') => {
+            if (options.scrollOrientation.toLowerCase().indexOf(orientation) !== -1) {
+                if (!this._models[orientation]) {
+                    this._models[orientation] = new ScrollbarModel(SCROLL_DIRECTION[orientation.toUpperCase()], {
+                        ...options,
+                        scrollbarVisible: this._isVisibleByOptions(options, orientation)
+                    });
+                }
+            } else {
+                delete this._models[orientation];
             }
-        } else {
-            delete this._models.vertical;
-        }
-        if (scrollOrientation.indexOf('horizontal') !== -1) {
-            if (!this._models.horizontal) {
-                this._models.horizontal = new ScrollbarModel(SCROLL_DIRECTION.HORIZONTAL, options);
-            }
-        } else {
-            delete this._models.horizontal;
-        }
+        };
+
+        updateModel('vertical');
+        updateModel('horizontal');
     }
 
     updateOptions(options: IScrollbarsOptions): void {
@@ -65,8 +66,9 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             // Будем показывать скроллбар до тех пор, пока пользователь не воспользовался колесиком мышки, даже если
             // прикладник задал опцию scrollbarVisible=false.
             // Таким образом пользователи без колесика мышки смогут скроллить контент.
+            const isScrollBarVisibleByOptions = this._isVisibleByOptions(options, scrollbar);
             const scrollbarVisible =
-                options.scrollbarVisible || (!ScrollbarsModel.wheelEventHappened && !this._useNativeScrollbar);
+                isScrollBarVisibleByOptions || (!ScrollbarsModel.wheelEventHappened && !this._useNativeScrollbar);
             this._models[scrollbar].updateOptions({
                 ...options,
                 scrollbarVisible
@@ -77,6 +79,15 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             if (detection.isIE) {
                 this._nextVersion();
             }
+        }
+    }
+
+    private _isVisibleByOptions(options: IScrollbarsOptions, orientation: 'vertical' | 'horizontal'): boolean {
+        if (typeof options.scrollbarVisible === 'object') {
+            return typeof options.scrollbarVisible[orientation] === 'boolean' ?
+                !!options.scrollbarVisible[orientation] : true;
+        } else {
+            return !!options.scrollbarVisible;
         }
     }
 
@@ -195,7 +206,11 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         let css = '';
         if (this._useNativeScrollbar) {
             css += this._getOverflowClass(options);
-            if (!this._options.scrollbarVisible) {
+            if (
+                !this._options.scrollbarVisible || (
+                    !this._options.scrollbarVisible.vertical && !this._options.scrollbarVisible.horizontal
+                )
+            ) {
                 css += this._getHideNativeScrollbarCssClass();
             }
         } else {

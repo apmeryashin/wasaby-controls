@@ -1641,6 +1641,7 @@ export default class Collection<
      * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
      * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
      * @param [at] Порядковый номер метода (если не передан, добавляется в конец)
+     * @param reFilter
      * @see filter
      * @see getFilter
      * @see setFilter
@@ -1676,7 +1677,7 @@ export default class Collection<
      *     });
      * </pre>
      */
-    addFilter(filter: FilterFunction<S>, at?: number): void {
+    addFilter(filter: FilterFunction<S>, at?: number, reFilter: boolean = true): void {
         if (this._$filter.indexOf(filter) > -1) {
             return;
         }
@@ -1686,9 +1687,11 @@ export default class Collection<
             this._$filter.splice(at, 0, filter);
         }
 
-        const session = this._startUpdateSession();
-        this._reFilter();
-        this._finishUpdateSession(session);
+        if (reFilter) {
+            const session = this._startUpdateSession();
+            this._reFilter();
+            this._finishUpdateSession(session);
+        }
         this._nextVersion();
     }
 
@@ -1740,7 +1743,7 @@ export default class Collection<
      *     });
      * </pre>
      */
-    removeFilter(filter: FilterFunction<S>): boolean {
+    removeFilter(filter: FilterFunction<S>, reFilter: boolean = true): boolean {
         const at = this._$filter.indexOf(filter);
         if (at === -1) {
             return false;
@@ -1748,9 +1751,11 @@ export default class Collection<
 
         this._$filter.splice(at, 1);
 
-        const session = this._startUpdateSession();
-        this._reFilter();
-        this._finishUpdateSession(session);
+        if (reFilter) {
+            const session = this._startUpdateSession();
+            this._reFilter();
+            this._finishUpdateSession(session);
+        }
         this._nextVersion();
 
         return true;
@@ -1846,8 +1851,11 @@ export default class Collection<
         }
 
         const session = this._startUpdateSession();
-        const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
-        this._$group = groupStrategy.handler = group;
+        this._$group = group;
+
+        this._composer.update(GroupItemsStrategy, {
+            handler: this._$group
+        });
         if (group) {
             this._switchImportantPropertiesByGroup(true);
         }
@@ -2302,7 +2310,7 @@ export default class Collection<
         return this._$itemsDragNDrop;
     }
 
-    setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
+    setDraggedItems(draggableItem: T, draggedItemsKeys: CrudEntityKey[]): void {
         const draggableItemIndex = this.getIndex(draggableItem);
 
         let targetIndex;
@@ -2336,9 +2344,9 @@ export default class Collection<
     resetDraggedItems(): void {
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
         if (strategy) {
+            strategy.destroy();
             this.removeStrategy(this._dragStrategy);
             this._reIndex();
-            this._reFilter();
             this._updateEdgeItems();
         }
     }
@@ -2833,8 +2841,10 @@ export default class Collection<
     }
 
     setCollapsedGroups(collapsedGroups: TArrayGroupKey): void {
-        const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
-        this._$collapsedGroups = groupStrategy.collapsedGroups = collapsedGroups;
+        this._$collapsedGroups = collapsedGroups;
+        this._composer.update(GroupItemsStrategy, {
+            collapsedGroups: this._$collapsedGroups
+        });
         const session = this._startUpdateSession();
         // Сбрасываем кэш расчётов по всем стратегиям, чтобы спровацировать полный пересчёт с актуальными данными
         this._getItemsStrategy().invalidate();
@@ -3283,55 +3293,16 @@ export default class Collection<
         if (!this._isNeedNotifyCollectionChange()) {
             return;
         }
-        if (
-            action === IObservable.ACTION_RESET ||
-            !this._isGrouped()
-        ) {
-            this._notifyLater(
-                'onCollectionChange',
-                action,
-                newItems,
-                newItemsIndex,
-                oldItems,
-                oldItemsIndex,
-                reason
-            );
-            return;
-        }
 
-        // Split by groups and notify
-        const notify = (start, finish) => {
-            if (start < finish) {
-                const newItemsCopy: ISessionItems<T> = newItems.slice(start, finish);
-                newItemsCopy.properties = newItems.properties;
-                const oldItemsCopy: ISessionItems<T> = oldItems.slice(start, finish);
-                oldItemsCopy.properties = oldItems.properties;
-                this._notifyLater(
-                    'onCollectionChange',
-                    action,
-                    newItemsCopy,
-                    newItems.length ? newItemsIndex + start : 0,
-                    oldItemsCopy,
-                    oldItems.length ? oldItemsIndex + start : 0,
-                    reason
-                );
-            }
-        };
-        const isRemove = action === IObservable.ACTION_REMOVE;
-        const max = isRemove ? oldItems.length : newItems.length;
-        let notifyIndex = 0;
-        let item;
-
-        for (let i = 0; i < max; i++) {
-            item = isRemove ? oldItems[i] : newItems[i];
-            if (item['[Controls/_display/GroupItem]']) {
-                notify(notifyIndex, i);
-                notifyIndex = i;
-            }
-            if (i === max - 1) {
-                notify(notifyIndex, i + 1);
-            }
-        }
+        this._notifyLater(
+            'onCollectionChange',
+            action,
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex,
+            reason
+        );
     }
 
     protected _notifyCollectionChangeBySession(
@@ -3883,15 +3854,6 @@ export default class Collection<
             return;
         }
         const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
-        // prependStrategy вызывает _reGroup после composer.prepend().
-        // Внутри composer.prepend() имеющийся экземпляр стратегии удаляется, и пересоздаётся с опциями,
-        // которые были переданы для неё при добавлении в компоновщик.
-        // Необходимо устанавливать актуальное состояние "свёрнутости" групп,
-        // т.к. после пересоздания стратегии, она ничего не знает об актуальном значении collapsedGroups.
-        // Чтобы убрать этот костыль, надо или научить компоновщик пересоздавать стратегии с актуальными опциями
-        // или сделать получение collapsedGroups через callback или пересмотреть необходимость пересоздания
-        // стратегий при prepend.
-        groupStrategy.collapsedGroups = this._$collapsedGroups;
         groupStrategy.invalidate();
     }
 
