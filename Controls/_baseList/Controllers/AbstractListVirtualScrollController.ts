@@ -240,6 +240,7 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterMountListControl(): void {
+        this._renderNewIndexes = false;
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
@@ -409,7 +410,7 @@ export abstract class AbstractListVirtualScrollController<
 
         const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
-        if (rangeChanged || this._scheduledScrollParams) {
+        if (rangeChanged || this._scheduledScrollParams || this._renderNewIndexes) {
             this._scheduleScroll({
                 type: 'scrollToElement',
                 params: { key, position, force }
@@ -776,10 +777,9 @@ export abstract class AbstractListVirtualScrollController<
                     this._scrollToElementCompletedCallback();
                 }
             } else {
-                /* TODO SCROLL починить юниты
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
                     'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
-                    'Промис scrollToItem не отстрельнет, возможны ошибки.');*/
+                    'Промис scrollToItem не отстрельнет, возможны ошибки.');
             }
         });
     }
