@@ -199,7 +199,8 @@ export class StickyStrategy {
              targetCoords,
              isHorizontal ? 'right' : 'bottom', direction
          );
-         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] -
+         const margins = this._getMargins(popupCfg, direction);
+         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - margins -
              (targetCoord - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']) +
              restrictiveContainerCoord;
       }
