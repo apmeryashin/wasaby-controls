@@ -40,5 +40,20 @@ class DateRangeEditor extends Control<IDateRangeEditorOptions> implements IEdito
     protected _handleInputCompleted(event: SyntheticEvent, startDate: Date, endDate: Date): void {
         this._notify('propertyValueChanged', [[startDate, endDate]], {bubbling: true});
     }
+
+    static getDefaultOptions(): object {
+        return {
+            propertyValue: [null, null]
+        };
+    }
 }
+
+Object.defineProperty(DateRangeEditor, 'defaultProps', {
+    enumerable: true,
+    configurable: true,
+
+    get(): object {
+        return DateRangeEditor.getDefaultOptions();
+    }
+});
 export default DateRangeEditor;
