@@ -32,12 +32,12 @@ define([
                   return Promise.resolve(String(Date.now()));
                }),
                closePopup: sinon.stub().callsFake(() => {
-                  if (typeof eventHandlers.onClose === 'function') {
-                     eventHandlers.onClose();
-                  }
-
                   if (typeof eventHandlers.onResult === 'function') {
                      eventHandlers.onResult();
+                  }
+
+                  if (typeof eventHandlers.onClose === 'function') {
+                     eventHandlers.onClose();
                   }
                })
             }
@@ -357,8 +357,7 @@ define([
             return p.openDialog(config, dialogOptions)
                .then((popupId) => p.closeDialog(popupId))
                .then(() => {
-                  assert.isTrue(onClose.calledOnce);
-                  assert.isTrue(onResult.calledOnce);
+                  assert.isTrue(onResult.calledBefore(onClose));
                });
          });
 
@@ -367,8 +366,7 @@ define([
 
             return p.openDialog(config, dialogOptions)
                .then(() => {
-                  assert.isTrue(onClose.calledOnce);
-                  assert.isTrue(onResult.calledOnce);
+                  assert.isTrue(onResult.calledBefore(onClose));
                });
          });
       });
