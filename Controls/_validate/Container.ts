@@ -83,6 +83,8 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
      * @function
      * @name Controls/_validate/Container#validate
      * @param {IValidateConfig} validateConfig
+     * @remark В случае успешной валидации промис вернет null, в противном случае массив из строк, содержащих текст
+     * ошибок из валидаторов.
      * @return {Promise<string[] | null>}
      * @see setValidationResult
      * @see isValid
