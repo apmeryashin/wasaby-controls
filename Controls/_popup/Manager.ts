@@ -246,9 +246,7 @@ class Manager {
     find(id: string): IPopupItem {
         const item: IPopupItem = this._findItemById(id);
 
-        if (!item ||
-            item.popupState === item.controller.POPUP_STATE_DESTROYING ||
-            item.popupState === item.controller.POPUP_STATE_DESTROYED) {
+        if (!item || this.isDestroying(id)) {
             return null;
         }
 
