@@ -161,7 +161,7 @@ export abstract class AbstractItemsSizesController {
     private _domElementsMatchToRange(itemsRange: IItemsRange, itemsElements: NodeListOf<Element>): boolean {
         const itemsRangeLength = itemsRange.endIndex - itemsRange.startIndex;
         let domElementsMatchToRange = itemsRangeLength === itemsElements.length;
-        if (!domElementsMatchToRange) {
+        if (!domElementsMatchToRange && itemsElements.length) {
             // Если ДОМ-элементы не соответствуют диапазону, то стоит проверить ситуацию, когда в ДОМ-е
             // сохранился застиканный элемент вне диапазона.
             let offsetByStickedItems = 0;
