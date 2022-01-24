@@ -16,4 +16,12 @@
                 readOnly="{{true}}"
         />
     </div>
+    <div class="controlsDemo__cell demo-RadioGroup__group2">
+        <div class="controls-text-label">with RecordSet</div>
+        <Controls.toggle:RadioGroup
+                bind:selectedKey="_selectedKey3"
+                keyProperty="id"
+                items="{{_items}}"
+        />
+    </div>
 </div>
