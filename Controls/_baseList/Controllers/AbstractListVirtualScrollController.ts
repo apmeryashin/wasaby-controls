@@ -145,6 +145,7 @@ export abstract class AbstractListVirtualScrollController<
     protected _scrollController: ScrollController;
     private _itemSizeProperty: string;
     private _virtualScrollMode: TVirtualScrollMode;
+    private _activeElementKey: CrudEntityKey;
     private readonly _itemsContainerUniqueSelector: string;
     private _keepScrollPosition: boolean = false;
 
@@ -204,6 +205,7 @@ export abstract class AbstractListVirtualScrollController<
     constructor(options: TOptions) {
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
         this._virtualScrollMode = options.virtualScrollConfig.mode;
+        this.setActiveElementKey(options.activeElementKey);
         this._itemsContainerUniqueSelector = options.itemsContainerUniqueSelector;
 
         this._scrollToElementUtil = options.scrollToElementUtil;
@@ -238,8 +240,12 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterMountListControl(): void {
+        this._renderNewIndexes = false;
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
+        if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
+            this.scrollToItem(this._activeElementKey, 'top', true);
+        }
     }
 
     endBeforeUpdateListControl(): void {
@@ -355,6 +361,12 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
+    setActiveElementKey(activeElementKey: CrudEntityKey): void {
+        if (this._activeElementKey !== activeElementKey) {
+            this._activeElementKey = activeElementKey;
+        }
+    }
+
     // region CollectionChanges
 
     addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
@@ -381,6 +393,9 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
         const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
         this._scrollController.resetItems(totalCount, startIndex);
+        if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
+            this.scrollToItem(this._activeElementKey, 'top', true);
+        }
     }
 
     // endregion CollectionChanges
@@ -395,7 +410,7 @@ export abstract class AbstractListVirtualScrollController<
 
         const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
-        if (rangeChanged || this._scheduledScrollParams) {
+        if (rangeChanged || this._scheduledScrollParams || this._renderNewIndexes) {
             this._scheduleScroll({
                 type: 'scrollToElement',
                 params: { key, position, force }
@@ -499,7 +514,7 @@ export abstract class AbstractListVirtualScrollController<
         const scrollControllerOptions = this._getScrollControllerOptions(options);
         this._scrollController = new ScrollController(scrollControllerOptions);
 
-        const activeElementIndex = this._collection.getIndexByKey(options.activeElementKey);
+        const activeElementIndex = this._collection.getIndexByKey(this._activeElementKey);
         const startIndex = activeElementIndex !== -1 ? activeElementIndex : 0;
         this._scrollController.resetItems(scrollControllerOptions.totalCount, startIndex);
     }
@@ -762,10 +777,9 @@ export abstract class AbstractListVirtualScrollController<
                     this._scrollToElementCompletedCallback();
                 }
             } else {
-                /* TODO SCROLL починить юниты
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
                     'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
-                    'Промис scrollToItem не отстрельнет, возможны ошибки.');*/
+                    'Промис scrollToItem не отстрельнет, возможны ошибки.');
             }
         });
     }

@@ -5,7 +5,7 @@
       <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
    </ws:if>
    <ws:else data="{{_options.type === 'stack'}}">
-      <div class="controls-StackTemplate-shadow"></div>
+      <div class="controls-StackTemplate-shadow controls-StackTemplate-shadow_direction-right"></div>
       <ws:if data="{{_hasRightPanel}}">
          <Controls.popupTemplate:Stack
                  closeButtonVisible="{{!_options.hideCross}}"

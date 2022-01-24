@@ -79,7 +79,7 @@ export interface ISortingSelectorOptions extends IControlOptions, IFontColorStyl
      * }
      * </pre>
      */
-    sortingParams: [ISortingParam];
+    sortingParams: ISortingParam[];
     /**
      * @name Controls/sorting:ISortingSelector#value
      * @cfg {Array.<Object>} Конфигурация сортировки.

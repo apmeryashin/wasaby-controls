@@ -278,6 +278,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             this._notify('stickyHeaderOffsetTopChanged', [], {bubbling: true});
         }
         this._bottomShadowHiddenClassRemovedinJS = null;
+        this._subPixelArtifactClass = this._getSubPixelArtifactFixClass();
     }
 
     protected _afterUpdate(oldOptions: IStickyHeaderOptions): void {
@@ -1008,6 +1009,17 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         }
     }
 
+    private _isBackgroundDefaultClass(): boolean {
+        const isFixed = !!this._model?.fixedPosition;
+        return !(this._options.backgroundStyle && (this._options.backgroundStyle !== 'default' || isFixed));
+    }
+
+    protected _getBackgroundClass(): string {
+        return this._isBackgroundDefaultClass() ?
+            'controls-StickyHeader__background_default' :
+            `controls-background-${this._options.backgroundStyle}`;
+    }
+
     protected _getSubPixelArtifactFixClass(): string {
         let result = '';
         // В StickyBlock может лежать контент, у которого по бокам рисуется border. В таком случае, border будут
@@ -1016,8 +1028,9 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/debug/scroll-container/ после
         // https://online.sbis.ru/opendoc.html?guid=9e7f5914-3b96-4799-9e1d-9390944b4ab3
         const artifactFixOff = this._content?.classList.contains('controls-StickyBlock__onSideIsBorder');
+        const backgroundStyle = this._isBackgroundDefaultClass() ? 'backgroundDefault' : this._options.backgroundStyle;
         if (this._options._subPixelArtifactFix && !artifactFixOff) {
-            result = `controls-StickyBlock__subpixelFix-${this._options.backgroundStyle}`;
+            result = `controls-StickyBlock__subpixelFix-${backgroundStyle}`;
         }
         return result;
     }

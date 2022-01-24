@@ -435,8 +435,7 @@ class ListEditor extends Control<IListEditorOptions> {
             textOverflow: 'ellipsis',
             fontSize: markerStyle !== 'primary' ? 'm' : 'l',
             width: 'auto',
-            template: TitleColumn,
-            tooltipProperty: displayProperty
+            template: TitleColumn
         }];
         if (imageProperty) {
             this._columns.unshift({

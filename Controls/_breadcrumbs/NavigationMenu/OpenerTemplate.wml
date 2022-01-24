@@ -5,7 +5,7 @@
    controlButtonVisibility="{{false}}"
 >
    <ws:bodyContentTemplate>
-      <Controls._breadcrumbs.PathButton.Body
+      <Controls._breadcrumbs.NavigationMenu
          path="{{path}}"
          source="{{source}}"
          filter="{{filter}}"

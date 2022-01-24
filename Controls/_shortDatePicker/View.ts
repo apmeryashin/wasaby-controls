@@ -274,10 +274,6 @@ class View extends Control<IDateLitePopupOptions> {
         }
     }
 
-    protected _mouseEnterHandler(): void {
-        this._children.shortDatePicker.focus();
-    }
-
     protected _onBlurYear(): void {
         this._yearHovered = null;
     }

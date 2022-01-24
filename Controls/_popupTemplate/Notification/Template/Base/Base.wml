@@ -1,13 +1,17 @@
-<div class="controls_popupTemplate_theme-{{_options.theme}} controls-Notification controls-Notification__{{_borderStyle}} controls-Popup__isolatedFocusingContext">
-   <div class="controls-Notification__content
+<Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
+   <div class="controls_popupTemplate_theme-{{_options.theme}} controls-Notification controls-Notification__{{_borderStyle}} controls-Popup__isolatedFocusingContext"
+        on:mousedown="_onMouseDown()"
+        on:touchstart="_onMouseDown()">
+      <div class="controls-Notification__content
                {{(_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible) ? 'controls-Notification__content-spacing'}}">
-      <ws:if data="{{_options.bodyContentTemplate}}">
-         <ws:partial template="{{_options.bodyContentTemplate}}"></ws:partial>
+         <ws:if data="{{_options.bodyContentTemplate}}">
+            <ws:partial template="{{_options.bodyContentTemplate}}"></ws:partial>
+         </ws:if>
+      </div>
+      <ws:if data="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}">
+         <div class="controls-Notification__closeButton" on:click="_closeClick()">
+            <Controls._popupTemplate.CloseButton viewMode="link" />
+         </div>
       </ws:if>
    </div>
-   <ws:if data="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}">
-      <div class="controls-Notification__closeButton" on:click="_closeClick()">
-         <Controls._popupTemplate.CloseButton viewMode="link" />
-      </div>
-   </ws:if>
-</div>
+</Controls.dragnDrop:Container>
