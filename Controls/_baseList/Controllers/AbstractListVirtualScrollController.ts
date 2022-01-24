@@ -245,7 +245,12 @@ export abstract class AbstractListVirtualScrollController<
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
-            this.scrollToItem(this._activeElementKey, 'top', true);
+            const activeElementIndex = this._collection.getIndexByKey(this._activeElementKey);
+            // Если активный элемент находится в начале, то на маунт он и так виден, поэтому не скроллим к нему.
+            // Если вызвать скролл, то ничего не произойдет, но при наличии графической шапки она сожмется.
+            if (activeElementIndex !== 0) {
+                this.scrollToItem(this._activeElementKey, 'top', true);
+            }
         }
     }
 
@@ -392,7 +397,7 @@ export abstract class AbstractListVirtualScrollController<
         // смотри комментарий в beforeRenderListControl
         // Не нужно сбрасывать скролл, если список не был проскроллен.
         // Т.к. из-за вызова скролла сжимается графическая шапка.
-        this._shouldResetScrollPosition = !this._keepScrollPosition && this._scrollPosition !== 0;
+        this._shouldResetScrollPosition = !this._keepScrollPosition && !!this._scrollPosition;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
         const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
