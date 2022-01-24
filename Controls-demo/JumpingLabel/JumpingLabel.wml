@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth350">
    <div class="controlsDemo__cell">
       <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" caption="Enter your name">
          <Controls.input:Text/>
