@@ -1571,8 +1571,8 @@ const _private = {
 
         if (changesType === 'collectionChanged' || newModelChanged) {
             self._itemsChanged = true;
-            if (!!self._itemActionsController && !self._shouldUpdateActionsAfterCollectionChange) {
-                self._shouldUpdateActionsAfterCollectionChange = self._itemActionsController
+            if (!!self._itemActionsController && !self._shouldUpdateActionsAfterRender) {
+                self._shouldUpdateActionsAfterRender = self._itemActionsController
                     .shouldUpdateOnCollectionChange(action, newItems, removedItems);
             }
         }
@@ -2938,8 +2938,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _itemsChanged: boolean;
 
-    // Флаг, устанавливающий, что после изменения коллекции надо обновить ItemActions
-    private _shouldUpdateActionsAfterCollectionChange: boolean;
+    // Флаг, устанавливающий, что после рендера надо обновить ItemActions
+    private _shouldUpdateActionsAfterRender: boolean;
 
     _keyProperty = null;
 
@@ -3167,14 +3167,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         if (this._listVirtualScrollController && this._removedItems.length && this._removedItemsIndex !== null) {
             this._listVirtualScrollController.removeItems(this._removedItemsIndex, this._removedItems.length);
-        }
-        // При изменении коллекции на beforeUpdate индексы раставляются отложенно.
-        // Поэтому вызывать обновление itemActions можно только тогда, когда _updateInProgress будет false.
-        if (!this._updateInProgress &&
-            this._itemActionsController &&
-            this._shouldUpdateActionsAfterCollectionChange) {
-            _private.updateInitializedItemActions(this, this._options);
-            this._shouldUpdateActionsAfterCollectionChange = false;
         }
         this._removedItemsIndex = null;
         this._removedItems = [];
@@ -4458,6 +4450,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.activateEditingRow(this);
         }
 
+        // При изменении коллекции на beforeUpdate индексы раставляются отложенно.
+        // Поэтому вызывать обновление itemActions можно только на _afterRender.
+        if (!this._updateInProgress && this._itemActionsController && this._shouldUpdateActionsAfterRender) {
+            _private.updateInitializedItemActions(this, this._options);
+            this._shouldUpdateActionsAfterRender = false;
+        }
+
         this._updateInProgress = false;
         this._notifyOnDrawItems();
         this._loadedBySourceController = false;
@@ -5207,13 +5206,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.removeShowActionsClass(this);
-        // При добавлении записи мы сюда попадаем,
-        // когда контрол находится в состоянии обновления и индексы скролла ещё не расставлены.
-        // После обновления индексов сработает _onIndexesChanged и ItemActions обновятся.
-        // При редактировании записи мы сюда попадаем уже после того как обновление произошло и ошибки нет.
-        if (!this._updateInProgress) {
-            _private.updateItemActions(this, this._options);
-        }
+        // Этот код страбатывает асинхронно. Может оказаться, что индексы ещё не расставлены.
+        // Гарантированно можно обновить itemActions только на afterRender
+        this._shouldUpdateActionsAfterRender = true;
     }
 
     _resetValidation() {
