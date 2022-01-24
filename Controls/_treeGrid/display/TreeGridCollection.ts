@@ -196,7 +196,6 @@ export default class TreeGridCollection<
 
     isLastItem(item: CollectionItem): boolean {
         // TODO Сделать возможным делать последний NodeFooter last, если он содержит данные
-        //  Сейчас прямо в шаблоне проверяется как shouldDisplayVisibleFooter(content)
         //  Как можно проверить из кода - не ясно
         const enumerator = this._getUtilityEnumerator();
 

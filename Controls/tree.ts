@@ -12,8 +12,8 @@ import { default as IItemTemplateOptions } from 'Controls/_tree/interface/ItemTe
 import { TreeSiblingStrategy } from 'Controls/_tree/Strategies/TreeSiblingStrategy';
 import { register } from 'Types/di';
 
-import * as NodeFooterTemplate from 'wml!Controls/_tree/render/NodeFooterTemplate';
-import * as NodeHeaderTemplate from 'wml!Controls/_tree/render/NodeHeaderTemplate';
+import * as NodeFooterTemplate from 'wml!Controls/_tree/render/NodeExtraItemTemplate';
+import * as NodeHeaderTemplate from 'wml!Controls/_tree/render/NodeExtraItemTemplate';
 import * as ItemTemplate from 'wml!Controls/_tree/render/Item';
 
 /**
