@@ -1263,6 +1263,7 @@ const _private = {
         if (_private.hasHoverFreezeController(self) && _private.isAllowedHoverFreeze(self)) {
             self._hoverFreezeController.unfreezeHover();
         }
+        self._scrollPageLocked = false;
     },
 
     getTopOffsetForItemsContainer(self, itemsContainer) {
