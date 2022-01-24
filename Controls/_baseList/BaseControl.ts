@@ -1568,10 +1568,7 @@ const _private = {
                 self._changeMarkedKey(newMarkedKey);
             }
         }
-        // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
-        // for example if Controls.explorer:View is switched from list to tile mode. The controller
-        // will keep firing `indexesChanged` events, but we should not mark items as changed while
-        // virtual scrolling is disabled.
+
         if (changesType === 'collectionChanged' || newModelChanged) {
             self._itemsChanged = true;
             if (!!self._itemActionsController && !self._shouldUpdateActionsAfterCollectionChange) {
@@ -3171,11 +3168,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._listVirtualScrollController && this._removedItems.length && this._removedItemsIndex !== null) {
             this._listVirtualScrollController.removeItems(this._removedItemsIndex, this._removedItems.length);
         }
-        if (this._itemActionsController && this._shouldUpdateActionsAfterCollectionChange) {
+        // При изменении коллекции на beforeUpdate индексы раставляются отложенно.
+        // Поэтому вызывать обновление itemActions можно только тогда, когда _updateInProgress будет false.
+        if (!this._updateInProgress &&
+            this._itemActionsController &&
+            this._shouldUpdateActionsAfterCollectionChange) {
             _private.updateInitializedItemActions(this, this._options);
+            this._shouldUpdateActionsAfterCollectionChange = false;
         }
         this._removedItemsIndex = null;
-        this._shouldUpdateActionsAfterCollectionChange = false;
         this._removedItems = [];
     }
 
@@ -5206,7 +5207,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.removeShowActionsClass(this);
-        _private.updateItemActions(this, this._options);
+        // При добавлении записи мы сюда попадаем
+        // когда контрол находится в состоянии обновления. На этот случай у нас есть afterCollectionChange.
+        // При редактировании записи мы сюда попадаем уже после того как обновление произошло.
+        if (!this._updateInProgress) {
+            _private.updateItemActions(this, this._options);
+        }
     }
 
     _resetValidation() {
