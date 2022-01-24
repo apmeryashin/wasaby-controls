@@ -284,7 +284,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     protected _$expanderIconStyle: TExpanderIconStyle;
 
     protected _$nodeMoreCaption: string;
-    protected _$nodeFooterTemplateMoreButton: TemplateFunction;
 
     /**
      * @cfg {Boolean} Включать корневой узел в список элементов
@@ -414,14 +413,14 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
         if (this.SupportNodeFooters) {
             this.appendStrategy(this.getNodeFooterStrategyCtor(), {
-                nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback,
-                nodeFooterModule: this._nodeFooterModule
+                extraItemVisibilityCallback: this._$nodeFooterVisibilityCallback,
+                extraItemModule: this._nodeFooterModule
             });
         }
 
         if (this.SupportNodeHeaders) {
             this.appendStrategy(this.getNodeHeaderStrategyCtor(), {
-                nodeHeaderModule: this._nodeHeaderModule
+                extraItemModule: this._nodeHeaderModule
             });
         }
     }
@@ -584,10 +583,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         return this._$nodeMoreCaption;
     }
 
-    getNodeFooterTemplateMoreButton(): TemplateFunction {
-        return this._$nodeFooterTemplateMoreButton;
-    }
-
     getNodeFooterTemplate(): TemplateFunction {
         return this._$nodeFooterTemplate;
     }
@@ -607,7 +602,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             // Нужно пересоздавать стратегию, чтобы Composer правильно запомнил опции для нее
             this.reCreateStrategy(
                 this.getNodeFooterStrategyCtor(),
-                { nodeFooterVisibilityCallback: callback, nodeFooterModule: this._nodeFooterModule}
+                { extraItemVisibilityCallback: callback, extraItemModule: this._nodeFooterModule}
             );
 
             this._nextVersion();
@@ -1512,7 +1507,6 @@ Object.assign(Tree.prototype, {
     _$nodeFooterTemplate: null,
     _$nodeFooterVisibilityCallback: null,
     _$nodeMoreCaption: null,
-    _$nodeFooterTemplateMoreButton: null,
     _$moreFontColorStyle: null,
     _$hasMoreStorage: {},
     _$collapsedItems: [],
