@@ -174,7 +174,7 @@ export class Calculator {
         return this._getEdgeVisibleItem(params);
     }
 
-    getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
+    getScrollPositionToEdgeItem(edgeItem: IEdgeItem, contentSizeBeforeList: number): number {
         let scrollPosition = 0;
 
         const item = this._itemsSizes[edgeItem.index];
@@ -190,7 +190,7 @@ export class Calculator {
             scrollPosition = itemOffset + edgeItem.borderDistance - viewportSize;
         }
 
-        const maxScrollPosition = Math.max(this._contentSize - this._viewportSize, 0);
+        const maxScrollPosition = Math.max(this._contentSize + contentSizeBeforeList - this._viewportSize, 0);
         return Math.min(
             Math.max(scrollPosition, 0),
             maxScrollPosition
