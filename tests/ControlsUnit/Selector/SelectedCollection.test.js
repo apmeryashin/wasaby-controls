@@ -94,9 +94,10 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
       it('_isShowCounter', function() {
          let collection = new lookup.Collection();
 
-         assert.isFalse(collection._isShowCounter(1, 2));
-         assert.isFalse(collection._isShowCounter(2, 2));
-         assert.isTrue(collection._isShowCounter(3, 2));
+         assert.isFalse(collection._isShowCounter(1, true, 2));
+         assert.isFalse(collection._isShowCounter(2, true, 2));
+         assert.isTrue(collection._isShowCounter(3, true, 2));
+         assert.isTrue(collection._isShowCounter(3, false, 15));
       });
 
       it('_afterMount', function() {
@@ -107,6 +108,7 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
          selectedCollection._counterWidth = 0;
          selectedCollection._options.items = getItems(3);
          selectedCollection._options.maxVisibleItems = 5;
+         selectedCollection._options.multiLine = true;
          selectedCollection._forceUpdate = function() {
             isUpdate = true;
          };
