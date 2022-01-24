@@ -184,7 +184,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
       this._searchResult = null;
 
-      this._tabsSelectedKey = null;
+      if (this._tabsSelectedKey !== null) {
+         this._tabsSelectedKey = null;
+         this._setFilter(this._options.filter);
+      }
       // when closing popup we reset the cache with recent keys
       this._historyLoad = null;
       this._historyKeys = null;
@@ -407,8 +410,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return preparedFilter;
    }
 
-   private _setFilter(filter: QueryWhereExpression<unknown>,
-                      options: IInputControllerOptions, tabId?: Key): void {
+   private _setFilter(
+       filter: QueryWhereExpression<unknown>,
+       options: IInputControllerOptions = this._options,
+       tabId: Key = this._tabsSelectedKey
+   ): void {
       this._filter = this._prepareFilter(filter,
          options.searchParam ?? this._options.searchParam,
          this._searchValue,
@@ -451,7 +457,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       } else if ((shouldSearch ||
           this._options.autoDropDown && !this._options.suggestState ||
           !this._options.autoDropDown && this._options.suggestState && !isValueReseted) && shouldShowSuggest) {
-         this._setFilter(this._options.filter, this._options);
+         this._setFilter(this._options.filter);
          this._open();
          state = true;
       } else if (!this._options.autoDropDown && (!shouldShowSuggest || !this._searchValue)) {
@@ -757,7 +763,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
       value = value || '';
       this._searchValue = value;
-      this._setFilter(this._filter, this._options, this._tabsSelectedKey);
+      this._setFilter(this._filter);
       /* preload suggest dependencies on value changed */
       this._loadDependencies();
       if (this._options.suggestTemplate) {
@@ -846,7 +852,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                               (this._inputActive || this._tabsSelectedKey !== null)
                           ) {
                              this._setItems(recordSet);
-                             this._setFilter(this._options.filter, this._options);
+                             this._setFilter(this._options.filter);
                              this._open();
                              this._markerVisibility = 'visible';
                           }
