@@ -20,7 +20,7 @@
                     <ws:partial template="{{ _options.counterTemplate }}" scope="{{ _options }}"/>
                 </ws:else>
             </ws:if>
-            <div class="controls-EditorList__additional-column" a="{{debug()}}">
+            <div class="controls-EditorList__additional-column">
                 <Controls.Container.Async templateName="Controls/decorator:Number">
                     <ws:partial template="{{ content.resolvedTemplate }}"
                                 value="{{item.contents[column.config.displayProperty]}}"
