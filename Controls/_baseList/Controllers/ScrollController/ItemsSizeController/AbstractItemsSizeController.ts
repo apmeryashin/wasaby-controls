@@ -1,6 +1,7 @@
 import type { IItemsRange } from '../ScrollController';
 import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
+import {getStickyHeadersHeight} from 'Controls/scroll';
 
 export interface IAbstractItemsSizesControllerOptions {
     itemsContainer?: HTMLElement;
@@ -20,7 +21,7 @@ export type IItemsSizes = IItemSize[];
  */
 export abstract class AbstractItemsSizesController {
     private _itemsQuerySelector: string;
-    private _itemsContainer: HTMLElement;
+    protected _itemsContainer: HTMLElement;
     private _itemsSizes: IItemsSizes = [];
 
     constructor(options: IAbstractItemsSizesControllerOptions) {
@@ -53,6 +54,14 @@ export abstract class AbstractItemsSizesController {
 
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
         return this._getContentSizeBeforeItems(this._itemsContainer, scrollContent);
+    }
+
+    getFixedContentSizeBeforeItems(): number {
+        if (this._itemsContainer) {
+            return getStickyHeadersHeight(this._itemsContainer, 'top', 'allFixed') || 0;
+        } else {
+            return 0;
+        }
     }
 
     // region on DOM references update

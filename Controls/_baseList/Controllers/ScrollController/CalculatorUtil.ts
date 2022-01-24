@@ -51,6 +51,7 @@ export interface IGetActiveElementIndexByPosition {
     scrollPosition: number;
     viewportSize: number;
     contentSize: number;
+    fixedContentSize: number;
     placeholders: IPlaceholders;
     currentRange: IItemsRange;
     feature1183225611: boolean;
@@ -295,7 +296,8 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
             placeholders,
             totalCount,
             currentRange,
-            feature1183225611 } = params;
+            feature1183225611,
+            fixedContentSize } = params;
 
     let fixedScrollPosition: number;
 
@@ -313,9 +315,9 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
     // верхней границы ScrollContainer. Активным является тот, который либо пересек верхнюю
     // границу либо находится вплотную к ней
     if (feature1183225611) {
-        let activeElementIndex;
+        let activeElementIndex = 0;
         for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
-            if (params.itemsSizes[i].offset <= fixedScrollPosition) {
+            if (params.itemsSizes[i].offset <= scrollPosition + fixedContentSize) {
                 activeElementIndex = i;
             } else {
                 break;

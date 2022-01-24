@@ -155,6 +155,7 @@ export class ScrollController {
         this._calculator = new Calculator({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
+            fixedContentSize: this._itemsSizesController.getFixedContentSizeBeforeItems(),
             scrollPosition: options.scrollPosition,
             totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
@@ -418,6 +419,8 @@ export class ScrollController {
      * @param position
      */
     scrollPositionChange(position: number): void {
+        const fixedContentSize = this._itemsSizesController.getFixedContentSizeBeforeItems();
+        this._calculator.setFixedContentSize(fixedContentSize);
         const result = this._calculator.scrollPositionChange(position);
         this._processActiveElementIndexChanged(result);
         this._observersController.setScrollPosition(position);

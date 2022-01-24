@@ -23,6 +23,7 @@ import type {
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import type { IEdgeItemCalculatingParams } from 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 import { isEqual } from 'Types/object';
+import {getStickyHeadersHeight} from 'Controls/scroll';
 
 interface ICalculatorState {
     range: IItemsRange;
@@ -50,6 +51,7 @@ export interface ICalculatorBaseOptions {
     scrollPosition?: number;
     viewportSize?: number;
     contentSize?: number;
+    fixedContentSize?: number;
     totalCount: number;
     feature1183225611: boolean;
 
@@ -90,6 +92,7 @@ export class Calculator {
     private _scrollPosition: number;
     private _viewportSize: number;
     private _contentSize: number;
+    private _fixedContentSize: number;
     private _totalCount: number;
     private _range: IItemsRange = { startIndex: 0, endIndex: 0 };
     private _placeholders: IPlaceholders = { backward: 0, forward: 0 };
@@ -104,6 +107,7 @@ export class Calculator {
         this._feature1183225611 = options.feature1183225611;
         this._viewportSize = options.viewportSize || 0;
         this._contentSize = options.contentSize || 0;
+        this._fixedContentSize = options.fixedContentSize || 0;
         this._virtualScrollConfig = options.virtualScrollConfig;
     }
 
@@ -134,6 +138,12 @@ export class Calculator {
     setContentSize(contentSize: number): void {
         if (this._contentSize !== contentSize) {
             this._contentSize = contentSize;
+        }
+    }
+
+    setFixedContentSize(fixedContentSize: number): void {
+        if (this._fixedContentSize !== fixedContentSize) {
+            this._fixedContentSize = fixedContentSize;
         }
     }
 
@@ -402,6 +412,7 @@ export class Calculator {
 
             this._activeElementIndex = getActiveElementIndexByScrollPosition({
                 contentSize: this._contentSize,
+                fixedContentSize: this._fixedContentSize,
                 viewportSize: this._viewportSize,
                 itemsSizes: this._itemsSizes,
                 currentRange: this._range,
