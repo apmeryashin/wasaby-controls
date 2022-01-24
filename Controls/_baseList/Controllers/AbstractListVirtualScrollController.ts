@@ -134,6 +134,8 @@ export interface IAbstractListVirtualScrollControllerOptions {
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
     hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
+    scrollPositionChangeCallback: (position: number) => void;
+
     feature1183225611: boolean;
 }
 
@@ -202,6 +204,8 @@ export abstract class AbstractListVirtualScrollController<
     private _doScrollCompletedCallback: () => void;
     private _shouldResetScrollPosition: boolean;
 
+    private _scrollPositionChangeCallback: (position: number) => void;
+
     constructor(options: TOptions) {
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
         this._virtualScrollMode = options.virtualScrollConfig.mode;
@@ -214,6 +218,7 @@ export abstract class AbstractListVirtualScrollController<
         this._updatePlaceholdersUtil = options.updatePlaceholdersUtil;
         this._updateVirtualNavigationUtil = options.updateVirtualNavigationUtil;
         this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
+        this._scrollPositionChangeCallback = options.scrollPositionChangeCallback;
 
         this._initCollection(options.collection);
         this._createScrollController(options);
@@ -333,6 +338,10 @@ export abstract class AbstractListVirtualScrollController<
         }
 
         this._scrollController.scrollPositionChange(position);
+
+        if (this._scrollPositionChangeCallback) {
+            this._scrollPositionChangeCallback(position);
+        }
     }
 
     enableKeepScrollPosition(): void {

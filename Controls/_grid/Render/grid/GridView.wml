@@ -47,6 +47,12 @@
                     on:positionChanged="_onColumnScrollThumbPositionChanged()"
                     on:dragEnd="_onColumnScrollThumbDragEnd()"/>
         </ws:if>
+		<ws:else data="{{ _options.newColumnScroll }}">
+			<Controls.horizontalScroll:ScrollBar
+				name="horizontalScrollBar"
+				scope="{{ _options.listVirtualColumnScrollScope }}"
+			/>
+		</ws:else>
 
         <!-- Items -->
         <div name="itemsContainer{{columnScrollPartName === 'scrollable' ? '_fake'}}" class="controls-GridViewV__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container">

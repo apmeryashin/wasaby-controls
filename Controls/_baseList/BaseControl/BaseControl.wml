@@ -93,6 +93,7 @@
                 listModel="{{_listViewModel}}"
                 startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
                 preventServerSideColumnScroll="{{ !_useServerSideColumnScroll }}"
+				listVirtualColumnScrollScope="{{ _listVirtualColumnScrollScope }}"
                 on:arrowClick="_notifyHandler('arrowClick')"
                 on:closeSwipe="_onCloseSwipe()"
                 on:validateCreated="_onValidateCreated()"

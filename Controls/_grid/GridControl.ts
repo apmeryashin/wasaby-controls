@@ -30,21 +30,36 @@ export interface IGridControlOptions extends IBaseControlOptions {
 
 export class GridControl extends BaseControl<IGridControlOptions> {
     private _listVirtualColumnScrollController?: ListVirtualColumnScrollController;
+    private _listVirtualColumnScrollScope?: object;
+
+    protected constructor(...args: unknown[]) {
+        super(...args);
+        this._columnScrollThumbPositionChangedCallback = this._columnScrollThumbPositionChangedCallback.bind(this);
+    }
 
     protected _prepareItemsOnMount(self: this, newOptions: IGridControlOptions): Promise<unknown> {
         super._prepareItemsOnMount(self, newOptions);
-        if (newOptions.newColumnScroll && newOptions.virtualColumnScrollConfig) {
+        this._listVirtualColumnScrollScope = this._getListVirtualColumnScrollScope(newOptions);
+        if (newOptions.newColumnScroll) {
             newOptions.setScrollContainerViewMode('custom');
             return import('Controls/horizontalScroll').then((lib) => {
-                this._createColumnScrollController(lib.Controller, newOptions);
+                this._createColumnScrollController(lib.Controller, {
+                    ...newOptions,
+                    virtualColumnScrollConfig: newOptions.virtualColumnScrollConfig || {
+                        pageSize: newOptions.columns.length
+                    }
+                });
             });
         }
     }
 
-    protected _afterMount(...args): void {
+    protected _afterMount(...args: [IGridControlOptions]): void {
         super._afterMount(...args);
-        this._listVirtualColumnScrollController?.setItemsContainer(this._getItemsContainer());
-        this._listVirtualColumnScrollController?.setListContainer(this._container);
+        if (this._listVirtualColumnScrollController) {
+            this._listVirtualColumnScrollScope = this._getListVirtualColumnScrollScope(args[0]);
+            this._listVirtualColumnScrollController.setItemsContainer(this._getItemsContainer());
+            this._listVirtualColumnScrollController.setListContainer(this._container);
+        }
     }
 
     _beforeRender(...args): void {
@@ -76,7 +91,10 @@ export class GridControl extends BaseControl<IGridControlOptions> {
 
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         super.viewportResizeHandler(viewportHeight, viewportRect, scrollTop);
-        this._listVirtualColumnScrollController?.viewportResized(viewportRect.width);
+        if (this._listVirtualColumnScrollController) {
+            this._listVirtualColumnScrollController.viewportResized(viewportRect.width);
+            this._listVirtualColumnScrollScope = this._getListVirtualColumnScrollScope(this._options);
+        }
     }
 
     scrollToLeft(): void {
@@ -149,6 +167,7 @@ export class GridControl extends BaseControl<IGridControlOptions> {
                 backward: true,
                 forward: true
             },
+            scrollPositionChangeCallback: this._scrollPositionChangeCallback.bind(this),
             doScrollUtil: (position) => {
                 this._notify('doHorizontalScroll', [position, true], {bubbling: true});
             },
@@ -162,8 +181,35 @@ export class GridControl extends BaseControl<IGridControlOptions> {
         });
     }
 
+    _getListVirtualColumnScrollScope(options: IGridControlOptions): object {
+        if (!this._listVirtualColumnScrollController) {
+            return {};
+        }
+
+        return {
+            columnScrollPositionChangedCallback: this._columnScrollThumbPositionChangedCallback,
+            viewportSize: this._listVirtualColumnScrollController._scrollController._viewportSize,
+            contentSize: this._listVirtualColumnScrollController._scrollController._contentSize,
+            fixedWidth: 300,
+            scrollableWidth: this._listVirtualColumnScrollController._scrollController._viewportSize - 300,
+            stickyColumnsCount: options.stickyColumnsCount || 1,
+            columnsLength: this._listViewModel.getColumnsEnumerator().getColumns().length
+        };
+    }
+
+    _columnScrollThumbPositionChangedCallback(position: number): void {
+        this._notify('doHorizontalScroll', [position, true], {bubbling: true});
+    }
+
+    _scrollPositionChangeCallback(position: number): void {
+        this._children.listView._children.horizontalScrollBar.setScrollPosition(position);
+    }
+
     _onContentResized(width: number, height: number): void {
-        this._listVirtualColumnScrollController?.contentResized(width);
+        if (this._listVirtualColumnScrollController) {
+            this._listVirtualColumnScrollController.contentResized(width);
+            this._listVirtualColumnScrollScope = this._getListVirtualColumnScrollScope(this._options);
+        }
     }
 
     static getDefaultOptions(): Partial<IGridControlOptions> {
