@@ -1,18 +1,27 @@
 import {IScrollParams} from 'Controls/baseList';
 import {TreeControl, ITreeControlOptions} from 'Controls/tree';
 import {GridControl, IGridControlOptions} from 'Controls/grid';
-import {Controller as ListVirtualColumnScrollController} from 'Controls/horizontalScroll';
+import {
+    Controller as ListVirtualColumnScrollController,
+    IControllerOptions as IListVirtualColumnScrollControllerOptions
+} from 'Controls/horizontalScroll';
 import {SyntheticEvent} from 'UI/Vdom';
+
+type ListVirtualColumnScrollControllerCtor =
+    new (options: IListVirtualColumnScrollControllerOptions) => ListVirtualColumnScrollController;
 
 export interface ITreeGridControlOptions extends ITreeControlOptions, IGridControlOptions {}
 
 export class TreeGridControl extends TreeControl<ITreeGridControlOptions> {
     private _listVirtualColumnScrollController?: ListVirtualColumnScrollController;
 
-    protected _prepareItemsOnMount(self: this, newOptions: ITreeGridControlOptions): void {
+    protected _prepareItemsOnMount(self: this, newOptions: ITreeGridControlOptions): Promise<void> {
         super._prepareItemsOnMount(self, newOptions);
         if (newOptions.newColumnScroll && newOptions.virtualColumnScrollConfig) {
-            this._createColumnScrollController(newOptions);
+            newOptions.setScrollContainerViewMode('custom');
+            return import('Controls/horizontalScroll').then((lib) => {
+                this._createColumnScrollController(lib.Controller, newOptions);
+            });
         }
     }
 
@@ -105,8 +114,9 @@ export class TreeGridControl extends TreeControl<ITreeGridControlOptions> {
         }
     }
 
-    private _createColumnScrollController(options: IGridControlOptions): void {
-        this._listVirtualColumnScrollController = new ListVirtualColumnScrollController({
+    private _createColumnScrollController(controllerCtor: ListVirtualColumnScrollControllerCtor,
+                                          options: IGridControlOptions): void {
+        this._listVirtualColumnScrollController = new controllerCtor({
             ...options,
             listControl: this,
             collection: this._listViewModel,
