@@ -431,7 +431,8 @@ class ListEditor extends Control<IListEditorOptions> {
     private _getSelectedKeysByValue(value: string[] | number[] | string | number,
                                     multiSelect: boolean): string[] | number[] {
         if (multiSelect) {
-            return this._isEmptyKeySelected(value) || !value ? [] : value;
+            const selectedKeys = value || [];
+            return this._isEmptyKeySelected(selectedKeys) ? [] : selectedKeys;
         }
         return Array.isArray(value) ? value : [value];
     }
