@@ -4452,7 +4452,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         // При изменении коллекции на beforeUpdate индексы раставляются отложенно.
         // Поэтому вызывать обновление itemActions можно только на _afterRender.
-        if (!this._updateInProgress && this._itemActionsController && this._shouldUpdateActionsAfterRender) {
+        if (this._itemActionsController && this._shouldUpdateActionsAfterRender) {
             _private.updateInitializedItemActions(this, this._options);
             this._shouldUpdateActionsAfterRender = false;
         }
