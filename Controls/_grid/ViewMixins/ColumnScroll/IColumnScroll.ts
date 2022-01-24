@@ -71,6 +71,7 @@ interface IColumnScrollViewMixin {
     // Scrolled to end server-side render
     _$columnScrollUseFakeRender: boolean;
     _$pendingMouseEnterForActivate: boolean;
+    _$wasViewResize: boolean;
 
     _$relativeCellContainers: HTMLElement[];
     _relativeCellContainersUpdateCallback(newContainers: HTMLElement[]): void;

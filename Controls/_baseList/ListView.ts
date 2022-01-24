@@ -70,11 +70,11 @@ const ListView = Control.extend(
         _forTemplate: null,
         _modelChanged: false,
         _resizeObserver: null,
+        _wasViewResize: false,
 
         constructor() {
             ListView.superclass.constructor.apply(this, arguments);
             this._debouncedSetHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
-            this.onViewResized = this.onViewResized.bind(this);
         },
 
         _doAfterReload(callback): void {
@@ -123,7 +123,10 @@ const ListView = Control.extend(
             }
             this._forTemplate = forTemplate;
             this._itemTemplate = this._resolveItemTemplate(newOptions);
-            this._resizeObserver = new ResizeObserverUtil(this, this.onViewResized);
+            this._resizeObserver = new ResizeObserverUtil(
+                this,
+                () => this._updateInProgress ? this._wasViewResize = true : this.onViewResized()
+            );
         },
 
         _afterMount() {
@@ -226,6 +229,10 @@ const ListView = Control.extend(
                 if (this._listModel) {
                     this._notify('itemsContainerReady', [this.getItemsContainer.bind(this)]);
                 }
+            }
+            if (this._wasViewResize) {
+                this._wasViewResize = false;
+                this.onViewResized();
             }
         },
 

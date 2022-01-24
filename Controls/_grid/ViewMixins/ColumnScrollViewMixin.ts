@@ -385,6 +385,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     _$columnScrollEmptyViewMaxWidth: 0,
     _$columnScrollUseFakeRender: false,
     _$pendingMouseEnterForActivate: false,
+    _$wasViewResize: false,
     _$oldOptionsForPendingUpdate: null,
 
     _$relativeCellContainers: null,
@@ -769,6 +770,12 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     },
 
     _onColumnScrollViewResized(): void {
+        // Не нужно обрабатывать первый ресайз, т.к. он происходит из-за подмены фейковой вьюхи на настоящую
+        if (!this._$wasViewResize && this._$pendingMouseEnterForActivate) {
+            this._$wasViewResize = true;
+            return;
+        }
+
         if (this._options.columnScroll) {
             if (canShowColumnScroll(this, this._options)) {
 
