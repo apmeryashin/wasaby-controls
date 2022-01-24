@@ -164,7 +164,7 @@ class ListEditor extends Control<IListEditorOptions> {
         this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
         this._onCollectionChange = this._onCollectionChange.bind(this);
 
-        this._selectedKeys = options.propertyValue;
+        this._selectedKeys = this._getSelectedKeysByValue(options.propertyValue, options.multiSelect);
         this._setMarkedKey(this._selectedKeys, options);
         this._setColumns(options);
         this._setFilter(this._selectedKeys, options);
@@ -182,7 +182,14 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
-        const {propertyValue, sourceController, filter, additionalTextProperty, displayProperty, source} = options;
+        const {
+            propertyValue,
+            sourceController,
+            filter,
+            additionalTextProperty,
+            displayProperty,
+            source,
+            multiSelect} = options;
         const valueChanged =
             !isEqual(propertyValue, this._options.propertyValue) &&
             !isEqual(propertyValue, this._selectedKeys);
@@ -191,7 +198,7 @@ class ListEditor extends Control<IListEditorOptions> {
         const additionalDataChanged = additionalTextProperty !== this._options.additionalTextProperty;
         const sourceChanged = source !== this._options.source;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
-            this._selectedKeys = propertyValue;
+            this._selectedKeys = this._getSelectedKeysByValue(propertyValue, multiSelect);
             this._setColumns(options);
             this._navigation = this._getNavigation(options);
             this._setHiddenItemsCount(this._selectedKeys);
@@ -386,17 +393,17 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _processPropertyValueChanged(value: string[] | number[]): void {
-        this._selectedKeys = this._getValue(value);
+        this._selectedKeys = this._getSelectedKeysByValue(value, this._options.multiSelect);
         if (!this._selectedKeys.length) {
             this._handleResetItems();
         }
         this._setMarkedKey(this._selectedKeys, this._options);
         this._setColumns(this._options);
         this._setHiddenItemsCount(this._selectedKeys);
-        const listValue = this._getValue(this._selectedKeys);
+        const listValue = this._getPropertyValue(value);
         const extendedValue = {
             value: listValue,
-            textValue: this._getTextValue(listValue)
+            textValue: this._getTextValue(this._selectedKeys)
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
@@ -421,8 +428,16 @@ class ListEditor extends Control<IListEditorOptions> {
         return textArray.join(', ');
     }
 
-    private _getValue(value: string[] | number[]): string[] | number[] {
-        return this._isEmptyKeySelected(value) ? [] : value;
+    private _getSelectedKeysByValue(value: string[] | number[] | string | number,
+                                    multiSelect: boolean): string[] | number[] {
+        if (multiSelect) {
+            return this._isEmptyKeySelected(value) ? [] : value;
+        }
+        return Array.isArray(value) ? value : [value];
+    }
+
+    private _getPropertyValue(value: string[] | number[]): string[] | number[] | string | number {
+        return this._options.multiSelect ? value : value[0];
     }
 
     private _isEmptyKeySelected(value: string[] | number[]): boolean {
