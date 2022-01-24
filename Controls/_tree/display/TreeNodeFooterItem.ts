@@ -3,7 +3,6 @@ import TreeNodeExtraItem from './TreeNodeExtraItem';
 
 export default class TreeNodeFooterItem extends TreeNodeExtraItem {
     readonly listInstanceName: string =  'controls-Tree__node-footer';
-    readonly listElementName: string = 'item';
 
     getTemplate(): TemplateFunction | string {
         return this._$owner.getNodeFooterTemplate() || super.getTemplate();

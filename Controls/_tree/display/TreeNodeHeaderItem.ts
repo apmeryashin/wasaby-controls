@@ -6,7 +6,6 @@ import TreeNodeExtraItem from './TreeNodeExtraItem';
 
 export default class TreeNodeHeaderItem extends TreeNodeExtraItem {
     readonly listInstanceName: string =  'controls-Tree__node-header';
-    readonly listElementName: string = 'item';
 
     getMoreClasses(): string {
         return 'controls-TreeGrid__nodeHeaderLoadMore';

@@ -5,7 +5,6 @@ import TreeGridNodeExtraRow from './TreeGridNodeExtraRow';
  */
 export default class TreeGridNodeHeaderRow extends TreeGridNodeExtraRow {
     readonly listInstanceName: string =  'controls-TreeGrid__node-header';
-    readonly listElementName: string = 'row';
 
     getItemClasses(): string {
         return super.getItemClasses() + ' controls-TreeGrid__nodeHeader';

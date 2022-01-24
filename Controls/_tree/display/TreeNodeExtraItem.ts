@@ -3,6 +3,8 @@ import { Model } from 'Types/entity';
 import TreeItem from './TreeItem';
 
 export default abstract class TreeNodeExtraItem extends TreeItem<null> {
+    readonly listElementName: string = 'item';
+
     readonly Markable: boolean = false;
     readonly Fadable: boolean = false;
     readonly DraggableItem: boolean = false;

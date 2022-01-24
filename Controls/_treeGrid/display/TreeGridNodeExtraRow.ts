@@ -8,6 +8,8 @@ import {IColumn, TColspanCallbackResult, TColumns} from 'Controls/grid';
  * Дополнительный элемент узла в иерархической таблице
  */
 export default abstract class TreeGridNodeExtraRow extends TreeGridDataRow<null> {
+    readonly listElementName: string = 'row';
+
     readonly Markable: boolean = false;
     readonly Fadable: boolean = false;
     readonly DraggableItem: boolean = false;
