@@ -19,6 +19,8 @@ interface IPrefetchResult {
     prefetchResult: ILoadDataResult;
 }
 
+const MIN_ACTIONS_FOR_MENU = 6;
+
 interface IActionsCollectionOptions {
     actions: IAction[];
     prefetch: IPrefetchResult[];
@@ -124,9 +126,19 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     }
 
     getToolbarItems(): IAction[] {
-        return this._toolbarItems.filter((toolbarItem) => {
+        const visibleItems = this._toolbarItems.filter((toolbarItem) => {
             return toolbarItem.visible;
         });
+        const rootItems = visibleItems.filter((item) => {
+            return item.parent === null;
+        });
+        if (rootItems.length < MIN_ACTIONS_FOR_MENU) {
+            return visibleItems.map((visibleItem) => {
+                visibleItem.showType = showType.TOOLBAR;
+                return visibleItem;
+            });
+        }
+        return visibleItems;
     }
 
     getMenuItems(): IAction[] {
