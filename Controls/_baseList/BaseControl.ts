@@ -5207,9 +5207,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.removeShowActionsClass(this);
-        // При добавлении записи мы сюда попадаем
-        // когда контрол находится в состоянии обновления. На этот случай у нас есть afterCollectionChange.
-        // При редактировании записи мы сюда попадаем уже после того как обновление произошло.
+        // При добавлении записи мы сюда попадаем,
+        // когда контрол находится в состоянии обновления и индексы скролла ещё не расставлены.
+        // После обновления индексов сработает _onIndexesChanged и ItemActions обновятся.
+        // При редактировании записи мы сюда попадаем уже после того как обновление произошло и ошибки нет.
         if (!this._updateInProgress) {
             _private.updateItemActions(this, this._options);
         }
