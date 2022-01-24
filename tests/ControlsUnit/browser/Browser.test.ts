@@ -1030,7 +1030,7 @@ describe('Controls/browser:Browser', () => {
 
                 it('root changed with sourceController in listsOptions', async () => {
                     const listsOptions = getListsOptions();
-                    let browserOptions = getBrowserOptions();
+                    let browserOptions = {...getBrowserOptionsHierarchy(), root: null};
                     const sourceController = new NewSourceController({
                         source: browserOptions.source
                     });
