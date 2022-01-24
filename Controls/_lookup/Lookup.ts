@@ -155,7 +155,7 @@ export default class Lookup extends BaseLookupInput {
             inputWidth = this._getInputWidth(fieldWrapperWidth, lastRowCollectionWidth, availableWidth);
             multiLineState = this._getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
          } else {
-            maxVisibleItems = Math.min(options.maxVisibleItems, MAX_VISIBLE_ITEMS_SINGLE_LINE);
+            maxVisibleItems = MAX_VISIBLE_ITEMS_SINGLE_LINE;
          }
       } else {
          multiLineState = false;
