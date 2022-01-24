@@ -85,7 +85,7 @@ export default class extends Control {
      */
     protected _masterRoot: TKey = null;
 
-    protected _fallbackImage: string = constants.resourceRoot + 'Controls-demo/resources/images/development.png';
+    protected _fallbackImage: string = constants.resourceRoot + 'Controls-demo/resources/images/green_development.png';
 
     /**
      * Флаг, идентифицирующий видна или нет master-колонка
