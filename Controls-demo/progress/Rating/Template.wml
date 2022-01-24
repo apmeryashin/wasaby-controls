@@ -5,19 +5,11 @@
             <Router.router:Reference attr:class="controls-text-label"
                                      state="/Controls-demo/app/:app"
                                      app="{{ 'Controls-demo/progress/Rating/Base/Index' }}">
-               <a href="{{content.href}}">Базовая настройка компонента рейтинга</a>
+               <a href="{{content.href}}">Базовая настройка</a>
             </Router.router:Reference>
             <Controls-demo.progress.Rating.Base.Index/>
          </div>
 
-         <div class="controlsDemo__cell">
-            <Router.router:Reference attr:class="controls-text-label"
-                                     state="/Controls-demo/app/:app"
-                                     app="{{ 'Controls-demo/progress/Rating/IconPadding/Index' }}">
-               <a href="{{content.href}}">Настройка расстояния между иконками</a>
-            </Router.router:Reference>
-            <Controls-demo.progress.Rating.IconPadding.Index/>
-         </div>
          <div class="controlsDemo__cell">
             <Router.router:Reference attr:class="controls-text-label"
                                      state="/Controls-demo/app/:app"
@@ -26,8 +18,6 @@
             </Router.router:Reference>
             <Controls-demo.progress.Rating.IconColorMode.Index/>
          </div>
-      </div>
-      <div class="ws-flexbox">
 
          <div class="controlsDemo__cell">
             <Router.router:Reference attr:class="controls-text-label"
@@ -37,6 +27,7 @@
             </Router.router:Reference>
             <Controls-demo.progress.Rating.IconSize.Index/>
          </div>
+
          <div class="controlsDemo__cell">
             <Router.router:Reference attr:class="controls-text-label"
                                      state="/Controls-demo/app/:app"
