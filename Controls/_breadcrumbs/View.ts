@@ -1,20 +1,39 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {descriptor, Record} from 'Types/entity';
 import {Memory} from 'Types/source';
-import {StickyOpener} from 'Controls/popup';
+import {TKey} from 'Controls/interface';
+import {Path} from 'Controls/dataSource';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {applyHighlighter} from 'Controls/_breadcrumbs/resources/applyHighlighter';
+import {Opener as NavigationMenuOpener} from 'Controls/_breadcrumbs/NavigationMenu/Opener';
+import {IVisibleItem} from 'Controls/_breadcrumbs/PrepareDataUtil';
 import template = require('wml!Controls/_breadcrumbs/View/View');
 import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
 import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplate');
 import calculatedItemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/calculatedItemsTemplate');
-import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemTemplate');
-import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
-import {Record} from 'Types/entity';
 import 'css!Controls/breadcrumbs';
+import Common from 'Controls/_breadcrumbs/HeadingPath/Common';
 
 const CRUMBS_COUNT = 2;
 const MIN_COUNT_OF_LETTER = 3;
+
+// noinspection NonAsciiCharacters
+interface ISourceItem {
+    displayProperty: string;
+    node: boolean;
+    parent: TKey;
+    'Только узлы': boolean;
+    [key: string]: unknown;
+}
+
+interface IBreadCrumbsView extends IControlOptions {
+    items?: Path;
+    visibleItems?: IVisibleItem[];
+    keyProperty?: string;
+    parentProperty?: string;
+    displayProperty?: string;
+}
 
 /**
  * BreadCrumbs/View.
@@ -35,24 +54,24 @@ const MIN_COUNT_OF_LETTER = 3;
  * @demo Controls-demo/BreadCrumbs/FontSize/Index
  */
 
-class BreadCrumbsView extends Control<IControlOptions> {
+class BreadCrumbsView extends Control<IBreadCrumbsView> {
     protected _template: TemplateFunction =  template;
     protected _itemsTemplate: TemplateFunction = itemsTemplate;
     protected _calculatedItemsTemplate: TemplateFunction = calculatedItemsTemplate;
     protected _popupIsOpen: boolean = false;
-    private _menuOpener: StickyOpener;
-    protected _items: Record[];
+    private _menuOpener: NavigationMenuOpener;
+    protected _items: IVisibleItem[];
 
-    protected _applyHighlighter = applyHighlighter;
+    protected _applyHighlighter: typeof applyHighlighter = applyHighlighter;
 
-    protected _beforeMount(options): void {
+    protected _beforeMount(options: IBreadCrumbsView): void {
         this._items = options.visibleItems;
         this._addWithOverflow(options.displayProperty);
         // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
         this._onResult = this._onResult.bind(this);
-        this._menuOpener = new StickyOpener();
+        this._menuOpener = new NavigationMenuOpener();
     }
-    protected _beforeUpdate(newOptions): void {
+    protected _beforeUpdate(newOptions: IBreadCrumbsView): void {
         if (newOptions.visibleItems !== this._items) {
             this._items = newOptions.visibleItems;
             this._addWithOverflow(newOptions.displayProperty);
@@ -69,7 +88,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
         }
     }
 
-    protected _afterMount(options?: IControlOptions, contexts?: any): void {
+    protected _afterMount(options?: IControlOptions): void {
         RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
     }
 
@@ -82,18 +101,18 @@ class BreadCrumbsView extends Control<IControlOptions> {
         this._menuOpener.close();
     }
 
-    private _onItemClick(e: SyntheticEvent<Event>, itemData): void {
+    protected _onItemClick(e: SyntheticEvent<Event>, itemData: IVisibleItem): void {
             e.stopPropagation();
             if (!this._options.readOnly) {
                 this._notify('itemClick', [itemData.item]);
             } else {
                 // Если мы не обработали клик по хлебным крошкам (например они readOnly),
-                // то не блокируем событие клика, но делаем его невсплывающим
+                // то не блокируем событие клика, но делаем его не всплывающим
                 this._notify('click', []);
             }
     }
 
-    protected _afterRender(oldOptions): void {
+    protected _afterRender(oldOptions: IBreadCrumbsView): void {
         if (oldOptions.visibleItems !== this._options.visibleItems) {
             // Если крошки пропали (стало 0 записей), либо наоборот появились (стало больше 0 записей), кинем ресайз,
             // т.к. изменится высота контрола
@@ -102,79 +121,92 @@ class BreadCrumbsView extends Control<IControlOptions> {
             }
         }
     }
+
     // На mousedown (зажатии кнопки мыши над точками) должно открываться только меню хлебных крошек.
     // Но так как мы не стопим другие клики срабатывает проваливание.
     // Поэтому прекращаем распространение события клика:
-    private _clickHandler(e: SyntheticEvent<MouseEvent>): void {
+    protected _clickHandler(e: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
     }
 
-    private _dotsClick(e: SyntheticEvent<MouseEvent>): void {
-            const rs = new Memory({
-                data: this._options.items.map((item, index) => {
-                    const newItem = {};
-                    item.each((field) => {
-                        newItem[field] = item.get(field);
-                        newItem.indentation = index;
-                        newItem.displayProperty = this._options.displayProperty;
-                        newItem.readOnly = this._options.readOnly;
-                    });
-                    return newItem;
-                }),
-                keyProperty: this._options.items[0].getKeyProperty()
+    /**
+     * Обработчик клика по '...', показывает навигационное меню с полным путем.
+     */
+    protected _dotsClick(e: SyntheticEvent<MouseEvent>): void {
+        let parent = null;
+        const data = this._options.items.map((item) => {
+            const newItem = {} as ISourceItem;
+
+            item.each((field) => {
+                newItem[field] = item.get(field);
             });
 
-            if (!this._popupIsOpen) {
-                const templateClassName = 'controls-BreadCrumbsController__menu';
-                this._menuOpener.open({
-                    template: 'Controls/menu:Popup',
-                    opener: this,
-                    target: e.currentTarget,
-                    closeOnOutsideClick: true,
-                    eventHandlers: {
-                        onResult: this._onResult,
-                        onOpen: () => {
-                            this._popupIsOpen = true;
-                        },
-                        onClose: () => {
-                            if (!this._destroyed) {
-                                this._popupIsOpen = false;
-                            }
+            newItem.node = true;
+            newItem.parent = parent;
+            newItem['Только узлы'] = true;
+            newItem.displayProperty = this._options.displayProperty;
+
+            parent = item.getKey();
+
+            return newItem;
+        });
+
+        if (this._popupIsOpen) {
+            this._menuOpener.close();
+        }
+
+        const keyProperty = this._options.items[0].getKeyProperty();
+        this._menuOpener.open(
+            this,
+            e.currentTarget as HTMLElement,
+            {
+                eventHandlers: {
+                    onResult: this._onResult,
+                    onOpen: () => {
+                        this._popupIsOpen = true;
+                    },
+                    onClose: () => {
+                        // tslint:disable-next-line:ban-ts-ignore
+                        // @ts-ignore
+                        if (!this._destroyed) {
+                            this._popupIsOpen = false;
                         }
-                    },
-                    templateOptions: {
-                        dropdownClassName: templateClassName,
-                        source: rs,
-                        itemTemplate: menuItemTemplate,
-                        displayProperty: this._options.displayProperty
-                    },
-                    targetPoint: {
-                        vertical: 'bottom',
-                        horizontal: 'left'
-                    },
-                    direction: {
-                        horizontal: 'right'
-                    },
-                    fittingMode: 'overflow'
-                });
-            } else {
-                this._menuOpener.close();
+                    }
+                },
+                templateOptions: {
+                    source: new Memory({data, keyProperty}),
+                    keyProperty,
+                    nodeProperty: 'node',
+                    parentProperty: 'parent',
+                    path: this._options.items,
+                    readOnly: this._options.readOnly,
+                    displayProperty: this._options.displayProperty
+                }
             }
+        );
     }
 
-    private _onHoveredItemChanged(event: SyntheticEvent<Event>, item): void {
+    protected _onHoveredItemChanged(event: SyntheticEvent<Event>, item: Record): void {
         this._notify('hoveredItemChanged', [item]);
     }
 
-    protected _onResult(actionName: string, data): void {
-        if (actionName === 'itemClick' && !this._options.readOnly) {
-            this._notify('itemClick', [data]);
-            this._menuOpener.close();
+    protected _onResult(path: Path): void {
+        let item;
+        if (path.length) {
+            item = path[path.length - 1];
+        } else {
+            item = Common.getRootModel(
+                this._options.items[0].get(this._options.parentProperty),
+                this._options.keyProperty
+            );
         }
+
+        this._notify('itemClick', [item]);
+        this._menuOpener.close();
     }
     static _styles: string[] = ['Controls/_breadcrumbs/resources/FontLoadUtil'];
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): object {
         return {
             itemTemplate,
             backgroundStyle: 'default',

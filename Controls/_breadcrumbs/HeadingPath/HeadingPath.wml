@@ -96,6 +96,7 @@
                      visibleItems="{{_visibleItems}}"
                      backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                      keyProperty="{{_options.keyProperty}}"
+                     parentProperty="{{_options.parentProperty}}"
                      displayProperty="{{_options.displayProperty}}"
                      highlighter="{{_options.highlighter}}"
                      fontColorStyle="{{_options.fontColorStyle}}"
