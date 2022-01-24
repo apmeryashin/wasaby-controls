@@ -69,6 +69,16 @@ export interface IListEditorOptions extends
  */
 
 /**
+ * @typedef {object} ListSourceItem
+ * @property {string} additionalTextStyleProperty Цвет текста дополнительного столбца записи.
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#source
+ * @cfg {ListSourceItem[]} Устанавливает источник данных контрола.
+ */
+
+/**
  * @name Controls/_filterPanel/Editors/List#additionalTextProperty
  * @cfg {String} Имя свойства, содержащего информацию об идентификаторе дополнительного столбца в списке.
  * @demo Controls-demo/filterPanel/ListEditor/AdditionalTextProperty/Index
