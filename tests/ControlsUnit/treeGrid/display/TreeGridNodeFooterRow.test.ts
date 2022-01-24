@@ -97,7 +97,7 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterRow', () => {
       CssClassesAssert.isSame(nodeFooterRow.getExpanderPaddingClasses('s'), 'controls-TreeGrid__node-extraItem-expanderPadding controls-TreeGrid__row-expanderPadding_size_s js-controls-ListView__notEditable');
    });
 
-   it('.shouldDisplayVisibleFooter()', () => {
+   it('.shouldDisplayExtraItem()', () => {
       assert.isFalse(nodeFooterRow.shouldDisplayExtraItem(undefined));
       assert.isTrue(nodeFooterRow.shouldDisplayExtraItem({}));
 
