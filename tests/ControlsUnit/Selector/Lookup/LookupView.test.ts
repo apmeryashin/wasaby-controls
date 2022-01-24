@@ -336,12 +336,12 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    strictEqual(lookup._counterWidth, 20);
 
    // из 300 px, 100 для input, 20 для счетчика, для коллекции остается 180, в которую влезут 3 по 50.
-   strictEqual(lookup._maxVisibleItems, 7);
+   strictEqual(lookup._maxVisibleItems, 15);
 
    // Если айтема 4, то влезут все, т.к не нужно показывать счетчик
    lookup._items = getItems(4);
    lookup._calculateSizes(newOptions);
-   strictEqual(lookup._maxVisibleItems, 7);
+   strictEqual(lookup._maxVisibleItems, 15);
 
    newOptions.multiLine = true;
    lookup._calculateSizes(newOptions);
