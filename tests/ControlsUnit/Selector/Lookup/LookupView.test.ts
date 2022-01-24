@@ -341,7 +341,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    // Если айтема 4, то влезут все, т.к не нужно показывать счетчик
    lookup._items = getItems(4);
    lookup._calculateSizes(newOptions);
-   strictEqual(lookup._maxVisibleItems, 4);
+   strictEqual(lookup._maxVisibleItems, 7);
 
    newOptions.multiLine = true;
    lookup._calculateSizes(newOptions);
