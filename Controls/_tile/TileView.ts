@@ -217,14 +217,15 @@ export default class TileView extends ListView {
 
     protected _getPreviewMenuImageStyles(menuHeight: number, previewHeight: number, imageProportion: number): string {
         if (detection.isIE) {
-            const titleHeightFallback = 43;
+            // Высота блока с заголовком: var(--inline_height_4xl) + var(--border-thickness)
+            const titleHeightFallback = 45;
             const imageHeight = Math.max((menuHeight || previewHeight) - titleHeightFallback, previewHeight);
             const imageWidth = imageHeight * imageProportion;
-            return `ws-is-ie .controls-TileView__itemActions__menu_imageWrapper {
+            return `.ws-is-ie .controls-TileView__itemActions__menu_imageWrapper {
                         min-width: ${imageHeight}px;
                         min-height: ${imageWidth}px;
                     }
-                    ws-is-ie .controls-TileView__itemActions__menu_leftContent {
+                    .ws-is-ie .controls-TileView__itemActions__menu_leftContent {
                         width: ${imageWidth}px;
                     }`;
         }
@@ -303,7 +304,7 @@ export default class TileView extends ListView {
     private _getTargetPoint(rect: ClientRect): { x: number, y: number } {
         return {
             x: rect.left + rect.width,
-            y: document.scrollingElement.scrollTop + rect.top + rect.height / 2
+            y: document.documentElement.scrollTop + rect.top + rect.height / 2
         };
     }
 
