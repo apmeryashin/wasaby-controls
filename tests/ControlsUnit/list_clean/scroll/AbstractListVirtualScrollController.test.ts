@@ -72,14 +72,14 @@ describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', (
 
     describe('scroll to active element', () => {
         it('after mount', () => {
-            const collection = getCollection([{key: 1}]);
+            const collection = getCollection([{key: 1}, {key: 2}]);
             const itemsContainer = getItemsContainer(collection);
             const scrollToElementUtil = spy(() => null);
             const controller = getController({
                 collection,
                 scrollToElementUtil,
                 itemsContainer,
-                activeElementKey: 1
+                activeElementKey: 2
             });
             controller.afterMountListControl();
             assert.isTrue(scrollToElementUtil.calledOnce);
