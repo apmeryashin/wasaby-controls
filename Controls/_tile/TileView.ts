@@ -9,7 +9,7 @@ import TileCollectionItem from './display/TileCollectionItem';
 import TileCollection from './display/TileCollection';
 import {SyntheticEvent} from 'UI/Vdom';
 import {Model} from 'Types/entity';
-import {constants} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import {getItemSize} from './utils/imageUtil';
 import {TImageFit, TImageUrlResolver, TTileMode, TTileScalingMode, TTileSize} from './display/mixins/Tile';
 import { TActionMode } from './display/mixins/TileItem';
@@ -215,6 +215,21 @@ export default class TileView extends ListView {
         this._notify('unregister', ['scroll', this, {listenAll: true}], {bubbling: true});
     }
 
+    protected _getPreviewMenuImageStyles(menuHeight: number, previewHeight: number, imageProportion: number): string {
+        if (detection.isIE) {
+            const titleHeightFallback = 43;
+            const imageHeight = Math.max((menuHeight || previewHeight) - titleHeightFallback, previewHeight);
+            const imageWidth = imageHeight * imageProportion;
+            return `ws-is-ie .controls-TileView__itemActions__menu_imageWrapper {
+                        min-width: ${imageHeight}px;
+                        min-height: ${imageWidth}px;
+                    }
+                    ws-is-ie .controls-TileView__itemActions__menu_leftContent {
+                        width: ${imageWidth}px;
+                    }`;
+        }
+    }
+
     getActionsMenuConfig(
         contents: Model,
         clickEvent: SyntheticEvent,
@@ -248,6 +263,7 @@ export default class TileView extends ListView {
                 : targetItemSize.width;
             menuOptions.imageProportion = menuOptions.previewWidth / menuOptions.previewHeight;
             menuOptions.roundBorder = !!this._options.roundBorder;
+            menuOptions.getFallbackStyles = this._getPreviewMenuImageStyles;
 
             return {
                 templateOptions: menuOptions,
