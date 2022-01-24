@@ -108,7 +108,7 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
          selectedCollection._counterWidth = 0;
          selectedCollection._options.items = getItems(3);
          selectedCollection._options.maxVisibleItems = 5;
-         selectedCollection._options.multiline = true;
+         selectedCollection._options.multiLine = true;
          selectedCollection._forceUpdate = function() {
             isUpdate = true;
          };
