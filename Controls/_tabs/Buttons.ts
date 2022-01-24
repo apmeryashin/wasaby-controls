@@ -339,6 +339,10 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
             classes.push(`controls-Tabs_horizontal-padding-${options.horizontalPadding}_last`);
         }
 
+        if (this._itemsArray.length > 1) {
+            classes.push('controls-Tabs__item-maxWidth');
+        }
+
         const itemAlign: string = item.align;
         const align: string = itemAlign ? itemAlign : DEFAULT_ITEM_ALIGN;
 
