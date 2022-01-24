@@ -1,30 +1,28 @@
 import TreeGridDataCell from './TreeGridDataCell';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
-import TreeGridNodeFooterRow from 'Controls/_treeGrid/display/TreeGridNodeFooterRow';
 import {TemplateFunction} from 'UI/Base';
+import TreeGridNodeExtraRow from './TreeGridNodeExtraRow';
 
 /**
- * Ячейка футера узла в иерархической таблице
+ * Ячейка дополнительного элемента узла в иерархической таблице
  */
 export default class TreeGridNodeExtraItemCell extends TreeGridDataCell<null> {
     readonly '[Controls/treeGrid:TreeGridNodeExtraItemCell]': boolean;
 
-    readonly listInstanceName: string =  'controls-TreeGrid__node-footer';
+    readonly listInstanceName: string =  'controls-TreeGrid__node-extra-item';
 
     readonly listElementName: string = 'cell';
 
     getTemplate(): TemplateFunction | string {
-        const hasRowTemplate = this._$isSingleColspanedCell && !!this._$owner.getRowTemplate();
-        const customTemplate = hasRowTemplate ? this._$column.template : this._$column.nodeFooterTemplate;
-        return customTemplate || 'Controls/treeGrid:NodeFooterTemplate';
+        return this._$column.template;
     }
 
-    isMoreButtonFooter(): boolean {
-        return !!((this.getOwner() as TreeGridNodeFooterRow).needMoreButton());
+    isMoreButton(): boolean {
+        return !!((this.getOwner() as TreeGridNodeExtraRow).needMoreButton());
     }
 
     shouldRenderHasMoreButton(): boolean {
-        return this.isMoreButtonFooter() && this._$isFirstDataCell;
+        return this.isMoreButton() && this._$isFirstDataCell;
     }
 
     isFirstColumn(): boolean {
@@ -32,32 +30,32 @@ export default class TreeGridNodeExtraItemCell extends TreeGridDataCell<null> {
     }
 
     getWrapperClasses(): string {
-        return `controls-TreeGrid__nodeFooter__wrapper ${this._getColumnSeparatorClasses()}`;
+        return `controls-TreeGrid__node-extraItem__wrapper ${this._getColumnSeparatorClasses()}`;
     }
 
     getContentClasses(params: {hasContent: boolean}): string {
         const rowSeparatorSize = this._$owner.getRowSeparatorSize();
 
         let classes =
-            'controls-TreeGrid__nodeFooter-cell__content' +
-            ' controls-TreeGrid__nodeFooterContent' +
-            ` controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${rowSeparatorSize}` +
+            'controls-TreeGrid__nodeExtraItem-cell__content' +
+            ' controls-TreeGrid__nodeExtraItemContent' +
+            ` controls-TreeGrid__nodeExtraItemContent_rowSeparatorSize-${rowSeparatorSize}` +
             ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
 
-        if (params.hasContent || this.isMoreButtonFooter()) {
-            classes += ' controls-TreeGrid__nodeFooter-cell_withContent';
+        if (params.hasContent || this.isMoreButton()) {
+            classes += ' controls-TreeGrid__nodeExtraItem-cell_withContent';
 
             if (this.getOwner().isFullGridSupport()) {
-                classes += ' controls-TreeGrid__nodeFooterContent__baseline';
+                classes += ' controls-TreeGrid__nodeExtraItemContent__baseline';
             }
         }
 
         if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn()) {
-            classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${this._$owner.getLeftPadding()}`;
+            classes += ` controls-TreeGrid__nodeExtraItemContent_spacingLeft-${this._$owner.getLeftPadding()}`;
         }
 
         if (this.isLastColumn()) {
-            classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${this._$owner.getRightPadding()}`;
+            classes += ` controls-TreeGrid__nodeExtraItemContent_spacingRight-${this._$owner.getRightPadding()}`;
         }
 
         return classes;
@@ -66,8 +64,8 @@ export default class TreeGridNodeExtraItemCell extends TreeGridDataCell<null> {
     getRelativeCellWrapperClasses(params: { hasContent: boolean }): string {
         let classes = super.getRelativeCellWrapperClasses();
 
-        if (params.hasContent || this.isMoreButtonFooter()) {
-            classes += ' controls-TreeGrid__nodeFooterContent__baseline';
+        if (params.hasContent || this.isMoreButton()) {
+            classes += ' controls-TreeGrid__nodeExtraItemContent__baseline';
         }
 
         return classes;
@@ -77,5 +75,5 @@ export default class TreeGridNodeExtraItemCell extends TreeGridDataCell<null> {
 Object.assign(TreeGridNodeExtraItemCell.prototype, {
     '[Controls/treeGrid:TreeGridNodeExtraItemCell]': true,
     _moduleName: 'Controls/treeGrid:TreeGridNodeExtraItemCell',
-    _instancePrefix: 'tree-grid-node-footer-cell-'
+    _instancePrefix: 'tree-grid-node-extra-item-cell-'
 });

@@ -238,11 +238,11 @@
 }
 
 //Классы совместимости для перехода со старого дизайна masterDetail на новый
-.controls-master-template-newDesign .controls-TreeGrid__nodeFooterContent_spacingRight-default {
+.controls-master-template-newDesign .controls-TreeGrid__nodeExtraItemContent_spacingRight-default {
    padding-left: var(--item_padding-left_s_list);
 }
 
-.controls-TreeGrid__nodeFooter-cell__content {
+.controls-TreeGrid__nodeExtraItem-cell__content {
    width: 100%;
    display: inline-flex;
    align-items: baseline;
@@ -252,15 +252,15 @@
    height: 100%;
 }
 
-.controls-TreeGrid__nodeFooter-cell_withContent {
+.controls-TreeGrid__nodeExtraItem-cell_withContent {
    min-height: var(--node-footer_height_treeGrid);
 }
 
-.controls-TreeGrid__nodeFooter__wrapper {
+.controls-TreeGrid__node-extraItem__wrapper {
    display: flex;
 }
 
-.controls-TreeGrid__nodeFooterContent {
+.controls-TreeGrid__nodeExtraItemContent {
    display: inline-flex;
    align-items: baseline;
    box-sizing: border-box;
@@ -275,20 +275,20 @@
    border-left: var(--column_separator_s_thickness_grid) solid var(--column_separator_s_color_grid);
 }
 
-/* row separators for node */
-.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-null {
+/* row separators for extraItems */
+.controls-TreeGrid__nodeExtraItemContent_rowSeparatorSize-null {
    border-top-width: 0;
 }
 
-.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s {
+.controls-TreeGrid__nodeExtraItemContent_rowSeparatorSize-s {
    border-top: var(--item-separator_s_thickness_list) solid var(--item_separator_s_color_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-l {
+.controls-TreeGrid__nodeExtraItemContent_rowSeparatorSize-l {
    border-top: var(--item-separator_l_thickness_list) solid var(--item_separator_l_color_list);
 }
 
-.controls-TreeGrid__nodeFooterContent__baseline::before {
+.controls-TreeGrid__nodeExtraItemContent__baseline::before {
    content: '\200b';
    font-size: var(--font-size_2xl);
 }
@@ -361,69 +361,69 @@
   font-size: var(--item_font-size_m_grid);
 }
 
-// Отступы подвала слева
-.controls-TreeGrid__nodeFooterContent_spacingLeft-default {
+// Отступы extraItem слева
+.controls-TreeGrid__nodeExtraItemContent_spacingLeft-default {
    padding-left: var(--item_padding-left_default_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingLeft-null {
+.controls-TreeGrid__nodeExtraItemContent_spacingLeft-null {
    padding-left: 0;
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingLeft-xs {
+.controls-TreeGrid__nodeExtraItemContent_spacingLeft-xs {
    padding-left: var(--item_padding-left_xs_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingLeft-s {
+.controls-TreeGrid__nodeExtraItemContent_spacingLeft-s {
    padding-left: var(--item_padding-left_s_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingLeft-m {
+.controls-TreeGrid__nodeExtraItemContent_spacingLeft-m {
    padding-left: var(--item_padding-left_m_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingLeft-l {
+.controls-TreeGrid__nodeExtraItemContent_spacingLeft-l {
    padding-left: var(--item_padding-left_l_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingLeft-xl {
+.controls-TreeGrid__nodeExtraItemContent_spacingLeft-xl {
    padding-left: var(--item_padding-left_xl_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingLeft-xxl {
+.controls-TreeGrid__nodeExtraItemContent_spacingLeft-xxl {
    padding-left: var(--item_padding-left_2xl_list);
 }
 
-// Отступы подвала справа
-.controls-TreeGrid__nodeFooterContent_spacingRight-default {
+// Отступы extraItem справа
+.controls-TreeGrid__nodeExtraItemContent_spacingRight-default {
    padding-right: var(--item_padding-right_default_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingRight-null {
+.controls-TreeGrid__nodeExtraItemContent_spacingRight-null {
    padding-right: 0;
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingRight-xs {
+.controls-TreeGrid__nodeExtraItemContent_spacingRight-xs {
    padding-right: var(--item_padding-right_xs_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingRight-s {
+.controls-TreeGrid__nodeExtraItemContent_spacingRight-s {
    padding-right: var(--item_padding-right_s_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingRight-m {
+.controls-TreeGrid__nodeExtraItemContent_spacingRight-m {
    padding-right: var(--item_padding-right_m_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingRight-l {
+.controls-TreeGrid__nodeExtraItemContent_spacingRight-l {
    padding-right: var(--item_padding-right_l_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingRight-xl {
+.controls-TreeGrid__nodeExtraItemContent_spacingRight-xl {
    padding-right: var(--item_padding-right_xl_list);
 }
 
-.controls-TreeGrid__nodeFooterContent_spacingRight-xxl {
+.controls-TreeGrid__nodeExtraItemContent_spacingRight-xxl {
    padding-right: var(--item_padding-right_2xl_list);
 }
 
@@ -436,12 +436,12 @@
    align-items: baseline;
 }
 
-.controls-Grid_table-layout .controls-TreeGrid__nodeFooter__wrapper {
+.controls-Grid_table-layout .controls-TreeGrid__node-extraItem__wrapper {
    display: table-cell;
 }
 
-// IE only. Обертка для выравнивания контента в подвалах узлов должна быть 24, в отличае от строки(31px)
-.controls-TreeGrid__nodeFooter__wrapper .controls-TreeGridView__row-cell_innerWrapper {
+// IE only. Обертка для выравнивания контента в подвалах/заголовках узлов должна быть 24, в отличие от строки (31px)
+.controls-TreeGrid__node-extraItem__wrapper .controls-TreeGridView__row-cell_innerWrapper {
    min-height: var(--inline_height_m);
 }
 

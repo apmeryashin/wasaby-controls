@@ -13,7 +13,7 @@
                         linkFontSize="xs"
                         linkClass="{{ item.getMoreClasses() }}"/>
         </ws:if>
-        <ws:else data="{{ !gridColumn.isMoreButtonFooter() }}">
+        <ws:else data="{{ !gridColumn.isMoreButton() }}">
             <div class="controls-TreeGrid__nodeFooter-cell__customContent">
                 <!-- Прикладной контент -->
                 <ws:partial template="{{ content || contentTemplate }}"
