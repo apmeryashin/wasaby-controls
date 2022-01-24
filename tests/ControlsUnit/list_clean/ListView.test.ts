@@ -34,50 +34,5 @@ describe('Controls/list_clean/ListView', () => {
             listView._componentDidMount();
             assert.isTrue(notifySpy.withArgs('controlResize').called);
         });
-
-        describe('update subscription on viewModel change', () => {
-            it('unsubscribe from old, subscribe to ne', () => {
-                const newListModel = new Collection({
-                    collection: [],
-                    keyProperty: 'id'
-                });
-
-                listView._beforeMount(listViewCfg);
-
-                const sandBox = sinon.createSandbox();
-
-                const unsubscribeSpy = sandBox.spy(listView._listModel, 'unsubscribe');
-                const subscribeSpy = sandBox.spy(newListModel, 'subscribe');
-
-                listView._beforeUpdate({...listViewCfg, listModel: newListModel});
-
-                assert.isTrue(unsubscribeSpy.called);
-                assert.isTrue(subscribeSpy.called);
-
-                sandBox.restore();
-            });
-
-            it('old view model destroyed', () => {
-                const newListModel = new Collection({
-                    collection: [],
-                    keyProperty: 'id'
-                });
-
-                listView._beforeMount(listViewCfg);
-
-                const sandBox = sinon.createSandbox();
-
-                const unsubscribeSpy = sandBox.spy(listView._listModel, 'unsubscribe');
-                const subscribeSpy = sandBox.spy(newListModel, 'subscribe');
-
-                listView._listModel.destroy();
-                listView._beforeUpdate({...listViewCfg, listModel: newListModel});
-
-                assert.isTrue(unsubscribeSpy.notCalled);
-                assert.isTrue(subscribeSpy.called);
-
-                sandBox.restore();
-            });
-        });
     });
 });

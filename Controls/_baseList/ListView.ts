@@ -11,6 +11,7 @@ import 'css!Controls/baseList';
 import { Collection, CollectionItem } from 'Controls/display';
 import {IRoundBorder} from 'Controls/interface';
 import { Model } from 'Types/entity';
+import { ResizeObserverUtil } from 'Controls/sizeUtils';
 
 export interface IListViewOptions {
     listModel: Collection;
@@ -40,11 +41,6 @@ const _private = {
         }
     },
 
-    resizeNotifyOnListChanged(self) {
-       // command to scroll watcher
-       self._notify('controlResize', [], {bubbling: true});
-    },
-
     setHoveredItem(self, itemData, nativeEvent) {
         // setHoveredItem вызывается с задержкой, поэтому список уже может задестроиться
         // Не надо посылать ховер по элементам, которые нельзя выбирать
@@ -68,50 +64,17 @@ const ListView = Control.extend(
         _template: ListViewTpl,
         _groupTemplate: GroupTemplate,
         _defaultItemTemplate: defaultItemTemplate,
-        _pendingRedraw: false,
         _reloadInProgress: false,
         _callbackAfterReload: null,
         _callbackAfterUpdate: null,
         _forTemplate: null,
         _modelChanged: false,
+        _resizeObserver: null,
 
         constructor() {
             ListView.superclass.constructor.apply(this, arguments);
             this._debouncedSetHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
-           // TODO при полном переходе на новую модель нужно переписать, уберется параметр changesType
-            this._onListChangeFnc = (event, changesType, action, newItems) => {
-               if (this._destroyed) {
-                   return;
-               }
-               if (this._isPendingRedraw(event, changesType, action, newItems)) {
-                  this._pendingRedraw = true;
-               }
-            };
-            this._onIndexesChanged = () => {
-                this._pendingRedraw = true;
-            };
-        },
-
-        _isPendingRedraw(event, changesType, action, newItems) {
-            // todo refactor by task https://online.sbis.ru/opendoc.html?guid=80fbcf1f-5804-4234-b635-a3c1fc8ccc73
-            // Из новой коллекции нотифается collectionChanged, в котором тип изменений указан в newItems.properties
-            let itemChangesType;
-            // В событии новой модели нет такого параметра как changesType, из-за этого в action лежит newItems
-            itemChangesType = action ? action.properties : null;
-
-            if (changesType !== 'hoveredItemChanged' &&
-                changesType !== 'activeItemChanged' &&
-                changesType !== 'loadingPercentChanged' &&
-                changesType !== 'markedKeyChanged' &&
-                changesType !== 'itemActionsUpdated' &&
-                itemChangesType !== 'marked' &&
-                itemChangesType !== 'hovered' &&
-                itemChangesType !== 'active' &&
-                itemChangesType !== 'canShowActions' &&
-                itemChangesType !== 'animated' &&
-                itemChangesType !== 'fixedPosition') {
-                return true;
-            }
+            this.onViewResized = this.onViewResized.bind(this);
         },
 
         _doAfterReload(callback): void {
@@ -120,18 +83,6 @@ const ListView = Control.extend(
                     this._callbackAfterReload.push(callback);
                 } else {
                     this._callbackAfterReload = [callback];
-                }
-            } else {
-                callback();
-            }
-        },
-
-        _doAfterUpdate(callback): void {
-            if (this._updateInProgress) {
-                if (this._callbackAfterUpdate) {
-                    this._callbackAfterUpdate.push(callback);
-                } else {
-                    this._callbackAfterUpdate = [callback];
                 }
             } else {
                 callback();
@@ -169,20 +120,19 @@ const ListView = Control.extend(
             }
             if (newOptions.listModel) {
                 this._listModel = newOptions.listModel;
-
-                this._listModel.subscribe('onCollectionChange', this._onListChangeFnc);
-                this._listModel.subscribe('indexesChanged', this._onIndexesChanged);
             }
             this._forTemplate = forTemplate;
             this._itemTemplate = this._resolveItemTemplate(newOptions);
+            this._resizeObserver = new ResizeObserverUtil(this, this.onViewResized);
+        },
+
+        _afterMount() {
+            this._resizeObserver.observe(this._container);
         },
 
         _beforeUnmount() {
             this._notify('viewUnmount', []);
-            if (this._listModel && !this._listModel.destroyed) {
-                this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
-                this._listModel.unsubscribe('indexesChanged', this._onIndexesChanged);
-            }
+            this._resizeObserver.terminate();
         },
 
         _beforeUpdate(newOptions) {
@@ -190,13 +140,7 @@ const ListView = Control.extend(
             this._waitingComponentDidUpdate = true;
             if (newOptions.listModel && (this._listModel !== newOptions.listModel)) {
                 this._modelChanged = true;
-                if (this._listModel && !this._listModel.destroyed) {
-                    this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
-                    this._listModel.unsubscribe('indexesChanged', this._onIndexesChanged);
-                }
                 this._listModel = newOptions.listModel;
-                this._listModel.subscribe('onCollectionChange', this._onListChangeFnc);
-                this._listModel.subscribe('indexesChanged', this._onIndexesChanged);
             }
             if (this._options.groupTemplate !== newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
@@ -263,7 +207,7 @@ const ListView = Control.extend(
         },
 
         onViewResized() {
-            _private.resizeNotifyOnListChanged(this);
+            this._notify('controlResize', [], {bubbling: true});
         },
 
         _componentDidMount() {
@@ -277,11 +221,6 @@ const ListView = Control.extend(
         },
 
         _afterRender() {
-            if (this._pendingRedraw) {
-                this.onViewResized();
-            }
-            this._pendingRedraw = false;
-
             if (this._modelChanged) {
                 this._modelChanged = false;
                 if (this._listModel) {
