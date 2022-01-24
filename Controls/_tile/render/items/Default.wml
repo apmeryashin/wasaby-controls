@@ -19,7 +19,7 @@
                      item="{{ item || itemData }}"
                      attr:style="{{ (item || itemData).getMultiSelectStyles((item || itemData).getItemType(itemType, nodeContentTemplate)) }}"/>
 
-         <ws:partial template="{{ (item || itemData).getContentTemplate((item || itemData).getItemType(itemType, nodeContentTemplate), contentTemplate, nodeContentTemplate) }}"
+         <ws:partial template="{{ (item || itemData).getContentTemplate((item || itemData)['[Controls/_tile/display/mixins/AddItem]'] ? 'adding' : (item || itemData).getItemType(itemType, nodeContentTemplate), contentTemplate, nodeContentTemplate) }}"
                      scope="{{_options}}"
                      itemType="{{ (item || itemData).getItemType(itemType, nodeContentTemplate) }}">
          </ws:partial>
