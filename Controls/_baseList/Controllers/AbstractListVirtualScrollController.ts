@@ -331,7 +331,6 @@ export abstract class AbstractListVirtualScrollController<
             this._inertialScrolling.scrollStarted();
         }
 
-        this._scrollController.updateItemsSizes();
         this._scrollController.scrollPositionChange(position);
     }
 

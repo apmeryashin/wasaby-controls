@@ -51,6 +51,11 @@ export interface ICalculatorBaseOptions {
     scrollPosition?: number;
     viewportSize?: number;
     contentSize?: number;
+
+    /**
+     * Размер фиксированных элементов до списка.
+     * При скролле они закрывают собой часть вьюпорта, влияя на вычисление активного элемента
+     */
     fixedContentSize?: number;
     totalCount: number;
     feature1183225611: boolean;
