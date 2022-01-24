@@ -1,5 +1,5 @@
 import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
-import {TreeGridNodeFooterCell} from 'Controls/treeGrid';
+import {TreeGridNodeExtraItemCell} from 'Controls/treeGrid';
 
 describe('Controls/treeGrid_clean/Display/NodeFooterCell', () => {
     let columnIndex = 0;
@@ -15,7 +15,7 @@ describe('Controls/treeGrid_clean/Display/NodeFooterCell', () => {
         });
         it('first cell without separators', () => {
             columnIndex = 0;
-            const cell = new TreeGridNodeFooterCell({
+            const cell = new TreeGridNodeExtraItemCell({
                 owner: getMockedOwner(),
                 columnSeparatorSize: 's'
             });
@@ -25,7 +25,7 @@ describe('Controls/treeGrid_clean/Display/NodeFooterCell', () => {
 
         it('second cell with separators', () => {
             columnIndex = 1;
-            const cell = new TreeGridNodeFooterCell({
+            const cell = new TreeGridNodeExtraItemCell({
                 owner: getMockedOwner(),
                 columnSeparatorSize: 's'
             });

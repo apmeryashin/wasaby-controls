@@ -1,7 +1,7 @@
 import { assert } from 'chai';
-import TreeGridNodeFooterCell from 'Controls/_treeGrid/display/TreeGridNodeFooterCell';
+import TreeGridNodeExtraItemCell from 'Controls/_treeGrid/display/TreeGridNodeExtraItemCell';
 
-describe('Controls/_treeGrid/display/TreeGridNodeFooterCell', () => {
+describe('Controls/_treeGrid/display/TreeGridNodeExtraItemCell', () => {
     let mockedOwner;
 
     beforeEach(() => {
