@@ -14,6 +14,7 @@ import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTempl
 const MAX_VISIBLE_ITEMS = 20;
 let SHOW_SELECTOR_WIDTH = 0;
 let CLEAR_RECORDS_WIDTH = 0;
+const MAX_VISIBLE_ITEMS_SINGLE_LINE = 15;
 
 export interface ILookupOptions extends ILookupInputOptions {
    multiLine?: boolean;
@@ -154,12 +155,7 @@ export default class Lookup extends BaseLookupInput {
             inputWidth = this._getInputWidth(fieldWrapperWidth, lastRowCollectionWidth, availableWidth);
             multiLineState = this._getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
          } else {
-            maxVisibleItems = this._getMaxVisibleItems(
-                lastSelectedItems,
-                itemsSizesLastRow,
-                availableWidth,
-                counterWidth
-            );
+            maxVisibleItems = Math.min(options.maxVisibleItems, MAX_VISIBLE_ITEMS_SINGLE_LINE);
          }
       } else {
          multiLineState = false;
@@ -195,38 +191,6 @@ export default class Lookup extends BaseLookupInput {
       return itemsSizes.reduce((currentWidth, itemWidth) => {
          return currentWidth + itemWidth;
       }, 0);
-   }
-
-   private _getMaxVisibleItems(
-       items: Model[],
-       itemsSizes: number[],
-       availableWidth: number,
-       counterWidth: number): number {
-      const itemsCount = items.length;
-      const collectionWidth = this._getCollectionWidth(itemsSizes);
-      let maxVisibleItems = 0;
-      let visibleItemsWidth = 0;
-      let availableCollectionWidthWidth = availableWidth;
-
-      if (collectionWidth <= availableCollectionWidthWidth) {
-         maxVisibleItems = items.length;
-      } else {
-         availableCollectionWidthWidth -= counterWidth || 0;
-         for (let currentIndex = itemsCount - 1; currentIndex >= 0; currentIndex--) {
-            if ((visibleItemsWidth + itemsSizes[currentIndex]) > availableCollectionWidthWidth) {
-               /* If no element is inserted, then only the last selected */
-               if (!maxVisibleItems) {
-                  maxVisibleItems++;
-               }
-               break;
-            }
-
-            maxVisibleItems++;
-            visibleItemsWidth += itemsSizes[currentIndex];
-         }
-      }
-
-      return maxVisibleItems;
    }
 
    private _isShowCounter(multiLine: boolean, itemsCount: number, maxVisibleItems: number): boolean {

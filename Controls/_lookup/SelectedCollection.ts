@@ -160,12 +160,12 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    }
 
    private _getVisibleItems({items, maxVisibleItems, multiLine, itemsLayout}: ISelectedCollectionOptions): Model[]  {
-      const lastIndex = Math.min(maxVisibleItems, MAX_VISIBLE_ITEMS_SINGLE_LINE);
-      const ignoreMaxVisibleItems = multiLine || itemsLayout === 'twoColumns';
+      const startIndex = Math.max(maxVisibleItems && multiLine ? items.getCount() - maxVisibleItems : 0, 0);
       const resultItems = [];
+      const ignoreMaxVisibleItems = multiLine || itemsLayout === 'twoColumns';
 
       items.each((item, index) => {
-         if (index < lastIndex || ignoreMaxVisibleItems) {
+         if (index >= startIndex && (index < maxVisibleItems || ignoreMaxVisibleItems)) {
             resultItems.push(item);
          }
       });
