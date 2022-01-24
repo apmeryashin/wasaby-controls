@@ -422,7 +422,14 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             this._listModel.isEditing() &&
             (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')
         ) {
-            this._columnScrollScrollIntoView(target.closest('.js-controls-Render') || target);
+            // Подскроливаем к ячейке с полем ввода, чтобы она была полностью видна перед активацией.
+            // Если ячейка заколспанена, скролим к полю ввода, т.к. она может быть шире всей видимой области.
+            const isCellColspaned = !!target.closest('.js-controls-Grid__cell_colspaned');
+            this._columnScrollScrollIntoView(
+                isCellColspaned ?
+                    target.closest('.js-controls-Render') || target :
+                    target.closest('.controls-Grid__row-cell') || target
+            );
         }
     },
 
