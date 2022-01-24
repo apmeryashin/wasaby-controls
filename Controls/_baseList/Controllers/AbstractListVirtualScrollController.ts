@@ -148,6 +148,7 @@ export abstract class AbstractListVirtualScrollController<
     private _activeElementKey: CrudEntityKey;
     private readonly _itemsContainerUniqueSelector: string;
     private _keepScrollPosition: boolean = false;
+    private _scrollPosition: number;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     protected readonly _doScrollUtil: IDoScrollUtil;
@@ -332,6 +333,7 @@ export abstract class AbstractListVirtualScrollController<
             this._inertialScrolling.scrollStarted();
         }
 
+        this._scrollPosition = position;
         this._scrollController.scrollPositionChange(position);
     }
 
@@ -388,7 +390,9 @@ export abstract class AbstractListVirtualScrollController<
 
     resetItems(): void {
         // смотри комментарий в beforeRenderListControl
-        this._shouldResetScrollPosition = !this._keepScrollPosition;
+        // Не нужно сбрасывать скролл, если список не был проскроллен.
+        // Т.к. из-за вызова скролла сжимается графическая шапка.
+        this._shouldResetScrollPosition = !this._keepScrollPosition && this._scrollPosition !== 0;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
         const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
