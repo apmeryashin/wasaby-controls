@@ -56,6 +56,7 @@ export interface IListEditorOptions extends
     sourceController?: SourceController;
     expandedItems?: TKey[];
     itemActions?: IItemAction[];
+    counterTemplate?: TemplateFunction|string;
 }
 
 /**
@@ -124,6 +125,27 @@ export interface IListEditorOptions extends
  * @name Controls/_filterPanel/Editors/List#selectedAllKey
  * @cfg {string} Ключ для пункта списка, который используется для установки фильтрации по всем доступным значениям для данного параметра.
  * @see selectedAllText
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#counterTemplate
+ * @cfg {string} Задаёт шаблон счётчика для элемента списка.
+ * @example
+ * <pre class="brush: html; highlight: [9]">
+ * this._filterButtonData = [{
+ *    caption: 'Ответственный',
+ *    name: 'owner',
+ *    resetValue: [],
+ *    value: [],
+ *    textValue: '',
+ *    editorTemplateName: 'Controls/filterPanel:ListEditor',
+ *    editorOptions: {
+ *        counterTemplate: 'Controls-demo/filterPanel/CompositeFilter/resources/CheckboxEditor',
+ *        source: new Memory({...})
+ *    }
+ * }]
+ * </pre>
+ * @see additionalTextProperty
  */
 
 /**
@@ -435,7 +457,8 @@ class ListEditor extends Control<IListEditorOptions> {
             keyProperty,
             imageProperty,
             additionalTextProperty,
-            markerStyle
+            markerStyle,
+            counterTemplate
         }: IListEditorOptions
     ): void {
         this._columns = [{
@@ -454,12 +477,15 @@ class ListEditor extends Control<IListEditorOptions> {
                 compatibleWidth: '30px'
             });
         }
-        if (additionalTextProperty) {
+        if (additionalTextProperty || counterTemplate) {
             this._columns.push({
                 template: AdditionalColumnTemplate,
                 align: 'right',
                 displayProperty: additionalTextProperty,
-                width: 'min-content'
+                width: 'min-content',
+                templateOptions: {
+                    counterTemplate
+                }
             });
         }
     }
