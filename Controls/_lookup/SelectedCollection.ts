@@ -16,7 +16,6 @@ import 'css!Controls/lookup';
 
 const JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption';
 const JS_CLASS_CROSS_ITEM = '.js-controls-SelectedCollection__item__cross';
-const MAX_VISIBLE_ITEMS_SINGLE_LINE = 15;
 
 export interface ISelectedCollectionOptions extends IControlOptions, ILookupOptions {
    displayProperty: string;
@@ -72,7 +71,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       const itemsCount: number = newOptions.items.getCount();
       this._visibleItems = this._getVisibleItems(newOptions);
 
-      if (this._isShowCounter(itemsCount, newOptions.maxVisibleItems)) {
+      if (this._isShowCounter(itemsCount, newOptions.multiLine, newOptions.maxVisibleItems)) {
          this._counterWidth = newOptions._counterWidth ||
                               this._getCounterWidth(itemsCount, newOptions);
       } else {
@@ -83,7 +82,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _afterMount(): void {
       const itemsCount: number = this._options.items.getCount();
 
-      if (this._isShowCounter(itemsCount, this._options.maxVisibleItems) && !this._counterWidth) {
+      if (this._isShowCounter(itemsCount,
+                              this._options.multiLine, this._options.maxVisibleItems) && !this._counterWidth) {
          this._counterWidth = this._counterWidth ||
                               this._getCounterWidth(itemsCount, this._options);
          if (this._counterWidth) {
@@ -187,8 +187,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme, fontSize);
    }
 
-   private _isShowCounter(itemsCount: number, maxVisibleItems: number): boolean {
-      return itemsCount > maxVisibleItems;
+   private _isShowCounter(itemsCount: number, multiline: boolean, maxVisibleItems?: number): boolean {
+      return multiline ? itemsCount > maxVisibleItems : itemsCount > 1;
    }
 
    private _closeInfobox(): void {

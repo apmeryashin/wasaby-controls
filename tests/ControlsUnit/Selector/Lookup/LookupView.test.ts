@@ -270,108 +270,108 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       }));
    });
 
-//    it('_calculatingSizes', () => {
-//    // min width const 4 * FIELD_WRAPPER_MIN_HEIGHT = 100;
-//    const FIELD_WRAPPER_MIN_HEIGHT = 25;
-//    const FIELD_WRAPPER_WIDTH = 300;
-//    const ITEM_WIDTH = 50;
-//    const COUNTER_WIDTH = 20;
-//    const MAX_ITEMS_IN_ONE_ROW = FIELD_WRAPPER_WIDTH / ITEM_WIDTH;
-//
-//    const lookup = new Lookup();
-//    const getItemsSizesLastRow = lookup._getItemsSizesLastRow;
-//    const getCounterWidth = lookup._getCounterWidth;
-//    const initializeConstants = lookup._initializeConstants;
-//    const newOptions = {
-//       maxVisibleItems: 7,
-//       multiSelect: true,
-//       multiLine: false,
-//       readOnly: false,
-//       fontSize: 's',
-//       theme: 'testTheme'
-//    };
-//
-//    const sandbox = createSandbox();
-//
-//    sandbox.replace(lookup, '_getFieldWrapperComputedStyle', () => {
-//       return {
-//          paddingLeft: '4px',
-//          paddingRight: '4px',
-//          borderLeftWidth: '1px',
-//          borderRightWidth: '1px'
-//       };
-//    });
-//
-//    lookup._fieldWrapper = {
-//       offsetWidth: FIELD_WRAPPER_WIDTH
-//    };
-//    lookup._items = getItems(6);
-//    lookup._fieldWrapperWidth = FIELD_WRAPPER_WIDTH;
-//    lookup._fieldWrapperMinHeight = FIELD_WRAPPER_MIN_HEIGHT;
-//
-//    lookup._getItemsSizesLastRow = () => {
-//       let numberItems = lookup._items.getCount();
-//
-//       if (newOptions.multiLine) {
-//
-//          // Счетчик сместит запись
-//          if (lookup._items.getCount() > newOptions.maxVisibleItems) {
-//             numberItems++;
-//          }
-//
-//          numberItems = numberItems % MAX_ITEMS_IN_ONE_ROW || MAX_ITEMS_IN_ONE_ROW;
-//       }
-//
-//       return new Array(numberItems).fill(ITEM_WIDTH);
-//    };
-//
-//    lookup._getCounterWidth = () => {
-//       return COUNTER_WIDTH;
-//    };
-//    lookup._initializeConstants = () => {/* FIXME: sinon mock */};
-//
-//    newOptions.multiSelect = true;
-//    lookup._calculateSizes(newOptions);
-//    ok(!lookup._multiLineState);
-//    strictEqual(lookup._counterWidth, 20);
-//
-//    // из 300 px, 100 для input, 20 для счетчика, для коллекции остается 180, в которую влезут 3 по 50.
-//    strictEqual(lookup._maxVisibleItems, 3);
-//
-//    // Если айтема 4, то влезут все, т.к не нужно показывать счетчик
-//    lookup._items = getItems(4);
-//    lookup._calculateSizes(newOptions);
-//    strictEqual(lookup._maxVisibleItems, 4);
-//
-//    newOptions.multiLine = true;
-//    lookup._calculateSizes(newOptions);
-//    ok(!lookup._multiLineState);
-//    strictEqual(lookup._inputWidth, 100);
-//    strictEqual(lookup._maxVisibleItems, 7);
-//    strictEqual(lookup._counterWidth, undefined);
-//
-//    // Инпут на уровне с последними элементами коллекции(расположение по строкам 3-4-4-1 и input)
-//    lookup._items = getItems(12);
-//    lookup._calculateSizes(newOptions);
-//    ok(lookup._multiLineState);
-//    strictEqual(lookup._inputWidth, 250);
-//
-//    // Инпут с новой строки(расположение 3-4-4-input)
-//    lookup._items = getItems(11);
-//    lookup._calculateSizes(newOptions);
-//    strictEqual(lookup._inputWidth, undefined);
-//
-//    // Режим readOnly
-//    newOptions.readOnly = true;
-//    newOptions.multiSelect = false;
-//    lookup._calculateSizes(newOptions);
-//    strictEqual(lookup._inputWidth, undefined);
-//    strictEqual(lookup._maxVisibleItems, lookup._items.getCount());
-//
-//    lookup._getItemsSizesLastRow = getItemsSizesLastRow;
-//    lookup._getCounterWidth = getCounterWidth;
-//    lookup._initializeConstants = initializeConstants;
-// });
+   it('_calculatingSizes', () => {
+   // min width const 4 * FIELD_WRAPPER_MIN_HEIGHT = 100;
+   const FIELD_WRAPPER_MIN_HEIGHT = 25;
+   const FIELD_WRAPPER_WIDTH = 300;
+   const ITEM_WIDTH = 50;
+   const COUNTER_WIDTH = 20;
+   const MAX_ITEMS_IN_ONE_ROW = FIELD_WRAPPER_WIDTH / ITEM_WIDTH;
+
+   const lookup = new Lookup();
+   const getItemsSizesLastRow = lookup._getItemsSizesLastRow;
+   const getCounterWidth = lookup._getCounterWidth;
+   const initializeConstants = lookup._initializeConstants;
+   const newOptions = {
+      maxVisibleItems: 7,
+      multiSelect: true,
+      multiLine: false,
+      readOnly: false,
+      fontSize: 's',
+      theme: 'testTheme'
+   };
+
+   const sandbox = createSandbox();
+
+   sandbox.replace(lookup, '_getFieldWrapperComputedStyle', () => {
+      return {
+         paddingLeft: '4px',
+         paddingRight: '4px',
+         borderLeftWidth: '1px',
+         borderRightWidth: '1px'
+      };
+   });
+
+   lookup._fieldWrapper = {
+      offsetWidth: FIELD_WRAPPER_WIDTH
+   };
+   lookup._items = getItems(6);
+   lookup._fieldWrapperWidth = FIELD_WRAPPER_WIDTH;
+   lookup._fieldWrapperMinHeight = FIELD_WRAPPER_MIN_HEIGHT;
+
+   lookup._getItemsSizesLastRow = () => {
+      let numberItems = lookup._items.getCount();
+
+      if (newOptions.multiLine) {
+
+         // Счетчик сместит запись
+         if (lookup._items.getCount() > newOptions.maxVisibleItems) {
+            numberItems++;
+         }
+
+         numberItems = numberItems % MAX_ITEMS_IN_ONE_ROW || MAX_ITEMS_IN_ONE_ROW;
+      }
+
+      return new Array(numberItems).fill(ITEM_WIDTH);
+   };
+
+   lookup._getCounterWidth = () => {
+      return COUNTER_WIDTH;
+   };
+   lookup._initializeConstants = () => {/* FIXME: sinon mock */};
+
+   newOptions.multiSelect = true;
+   lookup._calculateSizes(newOptions);
+   ok(!lookup._multiLineState);
+   strictEqual(lookup._counterWidth, 20);
+
+   // из 300 px, 100 для input, 20 для счетчика, для коллекции остается 180, в которую влезут 3 по 50.
+   strictEqual(lookup._maxVisibleItems, 7);
+
+   // Если айтема 4, то влезут все, т.к не нужно показывать счетчик
+   lookup._items = getItems(4);
+   lookup._calculateSizes(newOptions);
+   strictEqual(lookup._maxVisibleItems, 4);
+
+   newOptions.multiLine = true;
+   lookup._calculateSizes(newOptions);
+   ok(!lookup._multiLineState);
+   strictEqual(lookup._inputWidth, 100);
+   strictEqual(lookup._maxVisibleItems, 7);
+   strictEqual(lookup._counterWidth, undefined);
+
+   // Инпут на уровне с последними элементами коллекции(расположение по строкам 3-4-4-1 и input)
+   lookup._items = getItems(12);
+   lookup._calculateSizes(newOptions);
+   ok(lookup._multiLineState);
+   strictEqual(lookup._inputWidth, 250);
+
+   // Инпут с новой строки(расположение 3-4-4-input)
+   lookup._items = getItems(11);
+   lookup._calculateSizes(newOptions);
+   strictEqual(lookup._inputWidth, undefined);
+
+   // Режим readOnly
+   newOptions.readOnly = true;
+   newOptions.multiSelect = false;
+   lookup._calculateSizes(newOptions);
+   strictEqual(lookup._inputWidth, undefined);
+   strictEqual(lookup._maxVisibleItems, lookup._items.getCount());
+
+   lookup._getItemsSizesLastRow = getItemsSizesLastRow;
+   lookup._getCounterWidth = getCounterWidth;
+   lookup._initializeConstants = initializeConstants;
+});
 
    it('getCollectionOptions', () => {
       const standardOptions = {
