@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth600">
    <div class="controlsDemo__cell">
       <Controls.spoiler:View captions="{{_captions}}">
          <div>Контентная область</div>
