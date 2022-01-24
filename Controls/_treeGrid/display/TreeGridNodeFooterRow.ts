@@ -59,6 +59,7 @@ export default class TreeGridNodeFooterRow extends TreeGridNodeExtraRow {
 }
 
 Object.assign(TreeGridNodeFooterRow.prototype, {
+    _cellModule: 'Controls/treeGrid:TreeGridNodeFooterCell',
     '[Controls/treeGrid:TreeGridNodeFooterRow]': true,
     '[Controls/tree:TreeNodeFooterItem]': true,
     _moduleName: 'Controls/treeGrid:TreeGridNodeFooterRow',

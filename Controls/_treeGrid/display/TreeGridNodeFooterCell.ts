@@ -1,5 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
-import {TreeGridNodeExtraItemCell} from 'Controls/treeGrid';
+import TreeGridNodeExtraItemCell from './TreeGridNodeExtraItemCell';
 
 /**
  * Ячейка футера узла в иерархической таблице
