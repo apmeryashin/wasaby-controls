@@ -80,7 +80,7 @@
                             itemsLayout="{{_multiLineState ? 'default' : 'oneRow'}}"
                             items="{{_items}}"
                             _counterWidth="{{_counterWidth}}"
-                            maxVisibleItems="{{!_options.readOnly || _options.multiLine || _maxVisibleItems === _items.getCount() ? _maxVisibleItems : 0}}"
+                            maxVisibleItems="{{_maxVisibleItems}}"
                             readOnly="{{_options.readOnly}}"
                             fontSize="{{_options.fontSize}}"
                             fontColorStyle="{{_options.fontColorStyle}}"
