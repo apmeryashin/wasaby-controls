@@ -93,17 +93,17 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterRow', () => {
    });
 
    it('.getExpanderPaddingClasses()', () => {
-      CssClassesAssert.isSame(nodeFooterRow.getExpanderPaddingClasses(), 'controls-TreeGrid__node-footer-expanderPadding controls-TreeGrid__row-expanderPadding_size_default js-controls-ListView__notEditable');
-      CssClassesAssert.isSame(nodeFooterRow.getExpanderPaddingClasses('s'), 'controls-TreeGrid__node-footer-expanderPadding controls-TreeGrid__row-expanderPadding_size_s js-controls-ListView__notEditable');
+      CssClassesAssert.isSame(nodeFooterRow.getExpanderPaddingClasses(), 'controls-TreeGrid__node-extraItem-expanderPadding controls-TreeGrid__row-expanderPadding_size_default js-controls-ListView__notEditable');
+      CssClassesAssert.isSame(nodeFooterRow.getExpanderPaddingClasses('s'), 'controls-TreeGrid__node-extraItem-expanderPadding controls-TreeGrid__row-expanderPadding_size_s js-controls-ListView__notEditable');
    });
 
    it('.shouldDisplayVisibleFooter()', () => {
-      assert.isFalse(nodeFooterRow.shouldDisplayVisibleFooter(undefined));
-      assert.isTrue(nodeFooterRow.shouldDisplayVisibleFooter({}));
+      assert.isFalse(nodeFooterRow.shouldDisplayExtraItem(undefined));
+      assert.isTrue(nodeFooterRow.shouldDisplayExtraItem({}));
 
       treeGridCollection.setHasMoreStorage({
          3: { forward: true, backward: false }
       });
-      assert.isTrue(nodeFooterRow.shouldDisplayVisibleFooter(undefined));
+      assert.isTrue(nodeFooterRow.shouldDisplayExtraItem(undefined));
    });
 });

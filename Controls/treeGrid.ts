@@ -53,7 +53,7 @@ import TreeGridDataRow from 'Controls/_treeGrid/display/TreeGridDataRow';
 import TreeGridDataCell from 'Controls/_treeGrid/display/TreeGridDataCell';
 import TreeGridNodeHeaderRow from 'Controls/_treeGrid/display/TreeGridNodeHeaderRow';
 import TreeGridNodeFooterRow from 'Controls/_treeGrid/display/TreeGridNodeFooterRow';
-import TreeGridNodeFooterCell from 'Controls/_treeGrid/display/TreeGridNodeFooterCell';
+import TreeGridNodeExtraItemCell from 'Controls/_treeGrid/display/TreeGridNodeExtraItemCell';
 import TreeGridFooterRow from 'Controls/_treeGrid/display/TreeGridFooterRow';
 import TreeGridFooterCell from 'Controls/_treeGrid/display/TreeGridFooterCell';
 import {isFullGridSupport} from 'Controls/display';
@@ -78,7 +78,7 @@ export {
     TreeGridDataCell,
     TreeGridNodeFooterRow,
     TreeGridNodeHeaderRow,
-    TreeGridNodeFooterCell,
+    TreeGridNodeExtraItemCell,
     TreeGridGroupDataRow,
     TreeGridGroupDataCell,
     IGroupNodeColumn,
@@ -90,7 +90,7 @@ register('Controls/treeGrid:TreeGridDataRow', TreeGridDataRow, {instantiate: fal
 register('Controls/treeGrid:TreeGridDataCell', TreeGridDataCell, {instantiate: false});
 register('Controls/treeGrid:TreeGridNodeFooterRow', TreeGridNodeFooterRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridNodeHeaderRow', TreeGridNodeHeaderRow, {instantiate: false});
-register('Controls/treeGrid:TreeGridNodeFooterCell', TreeGridNodeFooterCell, {instantiate: false});
+register('Controls/treeGrid:TreeGridNodeExtraItemCell', TreeGridNodeExtraItemCell, {instantiate: false});
 register('Controls/treeGrid:TreeGridFooterRow', TreeGridFooterRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridFooterCell', TreeGridFooterCell, {instantiate: false});
 register('Controls/treeGrid:TreeGridHeaderRow', TreeGridHeaderRow, {instantiate: false});

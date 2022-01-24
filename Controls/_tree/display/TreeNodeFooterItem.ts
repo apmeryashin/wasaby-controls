@@ -31,10 +31,6 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
         return this._$owner.getNodeFooterTemplate() || 'Controls/tree:NodeFooterTemplate';
     }
 
-    getNodeFooterTemplateMoreButton(): TemplateFunction {
-        return this._$owner.getNodeFooterTemplateMoreButton();
-    }
-
     getItemClasses(): string {
         return 'controls-ListView__itemV controls-Tree__nodeFooter';
     }

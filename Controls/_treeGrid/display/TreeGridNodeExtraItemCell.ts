@@ -6,8 +6,8 @@ import {TemplateFunction} from 'UI/Base';
 /**
  * Ячейка футера узла в иерархической таблице
  */
-export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
-    readonly '[Controls/treeGrid:TreeGridNodeFooterCell]': boolean;
+export default class TreeGridNodeExtraItemCell extends TreeGridDataCell<null> {
+    readonly '[Controls/treeGrid:TreeGridNodeExtraItemCell]': boolean;
 
     readonly listInstanceName: string =  'controls-TreeGrid__node-footer';
 
@@ -74,8 +74,8 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
     }
 }
 
-Object.assign(TreeGridNodeFooterCell.prototype, {
-    '[Controls/treeGrid:TreeGridNodeFooterCell]': true,
-    _moduleName: 'Controls/treeGrid:TreeGridNodeFooterCell',
+Object.assign(TreeGridNodeExtraItemCell.prototype, {
+    '[Controls/treeGrid:TreeGridNodeExtraItemCell]': true,
+    _moduleName: 'Controls/treeGrid:TreeGridNodeExtraItemCell',
     _instancePrefix: 'tree-grid-node-footer-cell-'
 });
