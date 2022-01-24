@@ -71,6 +71,7 @@ export default class extends Control {
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
                     imageProperty: 'sourceImage',
+                    multiSelect: true,
                     navigation: {
                         source: 'page',
                         view: 'page',
