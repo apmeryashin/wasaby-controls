@@ -54,12 +54,12 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
     private _listMarkedKey: TKey = null;
     private _savedListMarkedKey: TKey = null;
     private _isOperationsPanelVisible: boolean = false;
+    private _isOperationsPanelVisibleChanged: boolean = false;
     private _selectedTypeRegister: RegisterClass = null;
     private _selectedKeysCount: number = null;
     private _selectedKeysByList: IKeysByList = {};
     private _excludedKeysByList: IKeysByList = {};
     private _selectedKeysCountByList: ISelectedKeysCountByList = {};
-    private _operationsMenuVisible: boolean = false;
     protected _options: IOperationsControllerOptions;
     protected _listActions: IAction[];
 
@@ -193,16 +193,22 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
         return this._listActions;
     }
 
+    openOperationsPanel() {
+        this._operationsPanelOpened = true;
+        this._notify('operationsPanelOpened');
+    }
+
+    closeOperationsPanel() {
+        this._operationsPanelOpened = false;
+        this._notify('operationsPanelClose');
+    }
+
     getSelectedKeysCount(): number {
         return this._selectedKeysCount;
     }
 
     getOperationsPanelVisible(): boolean {
         return this._isOperationsPanelVisible;
-    }
-
-    getOperationsMenuVisible(): boolean {
-        return this._operationsMenuVisible;
     }
 
     updateExcludedKeys(values: TKey[],
