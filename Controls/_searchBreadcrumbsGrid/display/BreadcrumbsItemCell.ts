@@ -87,11 +87,11 @@ export default class BreadcrumbsItemCell<S extends Model, TOwner extends Breadcr
 
       if (this.getBreadCrumbsMode() === 'row') {
          classes += ' controls-SearchView_colspanedBreadcrumbs';
-         const leftPadding = this._$owner.getLeftPadding();
-         const rightPadding = this._$owner.getRightPadding();
+         const leftPosition = this.getOwner().hasMultiSelectColumn() ? 'null' : this._$owner.getLeftPadding();
+         const rightPosition = this._$owner.getRightPadding();
 
-         classes += ` controls-SearchView_colspanedBreadcrumbs__leftPadding_${leftPadding}`;
-         classes += ` controls-SearchView_colspanedBreadcrumbs__rightPadding_${rightPadding}`;
+         classes += ` controls-SearchView_colspanedBreadcrumbs__leftPosition_${leftPosition}`;
+         classes += ` controls-SearchView_colspanedBreadcrumbs__rightPosition_${rightPosition}`;
       }
 
       return classes;
