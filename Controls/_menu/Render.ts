@@ -129,8 +129,13 @@ class MenuRender extends Control<IMenuRenderOptions> {
         this._notify('itemActionMouseDown', [item, action, sourceEvent]);
     }
 
-    protected _checkBoxClick(): void {
-        this._notify('checkBoxClick');
+    protected _checkBoxClick(event: SyntheticEvent<MouseEvent>,
+                             item: TreeItem<Model>): void {
+        if (item.isVisibleCheckbox() && !item.isReadonlyCheckbox()) {
+            this._notify('checkBoxClick');
+        } else {
+            event.stopPropagation();
+        }
     }
 
     protected _separatorMouseEnter(event: SyntheticEvent<MouseEvent>): void {

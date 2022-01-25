@@ -4,7 +4,7 @@ import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {RecordSet, List} from 'Types/collection';
 import {ICrudPlus, PrefetchProxy} from 'Types/source';
-import {Collection, CollectionItem, Search} from 'Controls/display';
+import {Collection, CollectionItem, MultiSelectAccessibility, Search} from 'Controls/display';
 import {getItemParentKey} from 'Controls/_menu/Util';
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
@@ -23,7 +23,12 @@ import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {StickyOpener, StackOpener, IStickyPopupOptions} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuBase';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
-import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOptions} from 'Controls/multiselection';
+import {
+    FlatSelectionStrategy,
+    SelectionController,
+    IFlatSelectionStrategyOptions,
+    ISelectionControllerOptions
+} from 'Controls/multiselection';
 import {create as DiCreate} from 'Types/di';
 import 'css!Controls/menu';
 
@@ -317,6 +322,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         } else if (MenuControl._isRightTemplateClick(sourceEvent.target)) {
             this._rightTemplateClick(event, item);
         } else {
+            if (this._options.multiSelectAccessibilityProperty) {
+                const checkBoxState = item.get(this._options.multiSelectAccessibilityProperty);
+                if (checkBoxState === MultiSelectAccessibility.hidden ||
+                    checkBoxState === MultiSelectAccessibility.disabled) {
+                    return;
+                }
+            }
             if (this._options.multiSelect && this._selectionChanged &&
                 !this._isSingleSelectionItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
                 this._changeSelection(key);
@@ -351,22 +363,25 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _createSelectionController(options: IMenuControlOptions): SelectionController {
         return new SelectionController({
-            model: this._listModel,
-            selectedKeys: this._getKeysForSelectionController(options),
-            excludedKeys: [],
-            searchValue: options.searchValue,
+            ...this._getSelectionControllerOptions(options),
             strategy: new FlatSelectionStrategy(this._getSelectionStrategyOptions())
         });
     }
 
     private _updateSelectionController(newOptions: IMenuControlOptions): void {
         this._getSelectionController().updateOptions({
-            model: this._listModel,
-            selectedKeys: this._getKeysForSelectionController(newOptions),
-            excludedKeys: [],
-            searchValue: newOptions.searchValue,
+            ...this._getSelectionControllerOptions(newOptions),
             strategyOptions: this._getSelectionStrategyOptions()
         });
+    }
+
+    private _getSelectionControllerOptions(options: IMenuControlOptions): ISelectionControllerOptions {
+        return {
+            model: this._listModel,
+            selectedKeys: this._getKeysForSelectionController(options),
+            excludedKeys: [],
+            searchValue: options.searchValue
+        };
     }
 
     private _updateMakerController(newOptions: IMenuControlOptions): void {
@@ -756,8 +771,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._markerController.setMarkedKey(markedKey);
         }
         if (options.selectedKeys && options.selectedKeys.length && options.multiSelect) {
-            this._selectionController = this._createSelectionController(options);
+            this._selectionController = this._getSelectionController(options);
             this._selectionController.setSelection(this._selectionController.getSelection());
+            if (options.multiSelectAccessibilityProperty) {
+                this._selectionChanged = this._getSelectedItems().some((item) => {
+                    return item.get(options.multiSelectAccessibilityProperty) === MultiSelectAccessibility.disabled;
+                });
+            }
         }
     }
 
@@ -812,7 +832,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return selectedKeys;
     }
 
-    private _getSelectedItems(): object[] {
+    private _getSelectedItems(): Model[] {
         const selectedItems = this._getSelectionController().getSelectedItems().map((item) => {
             return item.getContents();
         }).reverse();
@@ -888,6 +908,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             collection: items,
             keyProperty: options.keyProperty,
             unique: true,
+            multiSelectAccessibilityProperty: options.multiSelectAccessibilityProperty,
             topPadding: 'null',
             bottomPadding: 'menu-default',
             leftPadding: this._getLeftPadding(options),
