@@ -125,7 +125,7 @@ const ListView = Control.extend(
             this._itemTemplate = this._resolveItemTemplate(newOptions);
             this._resizeObserver = new ResizeObserverUtil(
                 this,
-                () => this._updateInProgress ? this._wasViewResize = true : this.onViewResized()
+                () => this._renderInProgress ? this._wasViewResize = true : this.onViewResized()
             );
         },
 
@@ -154,6 +154,7 @@ const ListView = Control.extend(
             this._itemTemplate = this._resolveItemTemplate(newOptions);
 
             this._applyNewOptionsAfterReload(this._options, newOptions);
+            this._renderInProgress = true;
         },
 
         _componentDidUpdate() {
@@ -234,6 +235,7 @@ const ListView = Control.extend(
                 this._wasViewResize = false;
                 this.onViewResized();
             }
+            this._renderInProgress = false;
         },
 
         getItemsContainer() {
