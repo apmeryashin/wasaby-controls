@@ -502,6 +502,38 @@ export default class Selector extends BaseDropdown {
  */
 
 /**
+ * @name Controls/_propertyGrid/IPropertyGrid#multiSelectAccessibilityProperty
+ * @cfg {Controls/display:MultiSelectAccessibility} Имя поля записи, в котором хранится состояние видимости чекбокса.
+ * @demo Controls-demo/dropdown_new/Input/MultiSelect/MultiSelectAccessibilityProperty/Index
+ * @example
+ * Множественный выбор установлен.
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:Selector
+ *    bind:selectedKeys="_selectedKeys"
+ *    keyProperty="id"
+ *    displayProperty="title"
+ *    source="{{_source}}"
+ *    multiSelectAccessibilityProperty="checkBoxState"
+ *    multiSelect="{{true}}" />
+ * </pre>
+ * <pre class="brush: js">
+ * // JavaScript
+ * import {MultiSelectAccessibility} from 'Controls/dropdown';
+ *
+ * this._source = new Memory({
+ *    keyProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Yaroslavl', checkBoxState: MultiSelectAccessibility.disabled},
+ *       {id: 2, title: 'Moscow'},
+ *       {id: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * this._selectedKeys = [1, 3];
+ * </pre>
+ */
+
+/**
  * @name Controls/_dropdown/Selector#selectedAllText
  * @cfg {String} Добавляет пустой элемент в список с заданным текстом.
  * Ключ элемента по умолчанию null, для изменения значения ключа используйте {@link selectedAllKey}.
