@@ -6,6 +6,7 @@ export default class TabButtonsDemo extends Control {
     protected _template: TemplateFunction = template;
     protected SelectedKey1: string = '6';
     protected SelectedKey2: string = '1';
+    protected SelectedKey3: string = '4';
     protected SelectedKeyIcon: string = '1';
     protected _items: RecordSet | null = null;
     protected _items2: RecordSet | null = null;
@@ -17,31 +18,31 @@ export default class TabButtonsDemo extends Control {
             rawData: [
                 {
                     id: '1',
-                    title: 'Сводно'
+                    title: 'Контакты'
                 },
                 {
                     id: '2',
-                    title: 'Лучший продавец десертов'
+                    title: 'Задачи'
                 },
                 {
                     id: '3',
-                    title: 'Лучший менеджер'
+                    title: 'Бизнес'
                 },
                 {
                     id: '4',
-                    title: 'Самый отзывчивый сотрудник'
+                    title: 'Деньги'
                 },
                 {
                     id: '5',
-                    title: 'Лучший по сложным продуктам'
+                    title: 'Лучшие сотрудники'
                 },
                 {
                     id: '6',
-                    title: 'Чемпион'
+                    title: 'Самые важные документы'
                 },
                 {
                     id: '7',
-                    title: 'Лучший продавец'
+                    title: 'Очень дорогие компании'
                 }
             ]
         });
@@ -50,55 +51,55 @@ export default class TabButtonsDemo extends Control {
             rawData: [
                 {
                     id: '1',
-                    caption: 'Лучший по сложным продуктам'
+                    caption: 'Компании'
                 },
                 {
                     id: '2',
-                    caption: 'Лучший продавец'
+                    caption: 'Контактный-центр'
                 },
                 {
                     id: '3',
-                    caption: 'Самый отзывчивый сотрудник'
+                    caption: 'Календарь'
                 },
                 {
                     id: '4',
-                    caption: 'Чемпион'
+                    caption: 'Самый ответственный сотрудник'
                 },
                 {
                     id: '5',
-                    caption: 'Лучший продавец десертов'
+                    caption: 'Настройка глобального приложения'
                 },
                 {
                     id: '6',
-                    caption: 'Лучший продавец десертов'
+                    caption: 'Документация'
                 },
                 {
                     id: '7',
-                    caption: 'Самый отзывчивый сотрудник'
+                    caption: 'Доски'
                 },
                 {
                     id: '8',
-                    caption: 'Чемпион'
+                    caption: 'Проекты'
                 },
                 {
                     id: '9',
-                    caption: 'Чемпион'
+                    caption: 'Планы и сроки'
                 },
                 {
                     id: '10',
-                    caption: 'Лучший продавец десертов'
+                    caption: 'Вехи'
                 },
                 {
                     id: '11',
-                    caption: 'Самый отзывчивый сотрудник'
+                    caption: 'Торги'
                 },
                 {
                     id: '12',
-                    caption: 'Лучший продавец десертов'
+                    caption: 'Избранное'
                 },
                 {
                     id: '13',
-                    caption: 'Лучший продавец десертов'
+                    caption: 'Реализация'
                 }
             ]
         });

@@ -13,7 +13,7 @@ import {
     TBorderVisibility, IBorderVisibilityOptions,
     getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes, IBorderVisibility
 } from './interface/IBorderVisibility';
-import {IBorderVisibilityArea} from './interface/IBorderVisibilityArea';
+import {TBorderVisibilityArea} from './interface/IBorderVisibilityArea';
 
 // @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
@@ -243,19 +243,26 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         return detection.isIE || (detection.isWinXP && detection.yandex);
     }
 
-    private static _detectToBorder(borderVisibility: TBorderVisibility | IBorderVisibilityArea,
+    private static _detectToBorder(borderVisibility: TBorderVisibility | TBorderVisibilityArea,
                                    minLines: number,
                                    contrastBackground: boolean): IBorder {
-        if (borderVisibility === 'hidden') {
-            return {
-                top: false,
-                bottom: false
-            };
+        switch (borderVisibility) {
+            case 'hidden':
+                return {
+                    top: false,
+                    bottom: false
+                };
+            case 'bottom':
+                return {
+                    top: false,
+                    bottom: true
+                };
+            default:
+                return {
+                    top: minLines > 1 && !contrastBackground,
+                    bottom: true
+                };
         }
-        return {
-            top: minLines > 1 && !contrastBackground,
-            bottom: true
-        };
     }
 
     private static _getFontWeight(fontWeight: string, fontSize: string): string {
