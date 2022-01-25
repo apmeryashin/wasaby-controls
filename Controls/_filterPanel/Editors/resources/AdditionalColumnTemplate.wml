@@ -10,7 +10,7 @@
             </div>
         </ws:if>
         <ws:else data="{{item.contents[column.config.displayProperty] !== undefined}}">
-            <div class="controls-EditorList__additional-column">
+            <div class="controls-EditorList__additional-column controls-text-{{item.contents['additionalTextStyleProperty'] || 'label'}}">
                 <Controls.Container.Async templateName="Controls/decorator:Number">
                     <ws:partial template="{{ content.resolvedTemplate }}"
                                 value="{{item.contents[column.config.displayProperty]}}"
