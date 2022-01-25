@@ -78,7 +78,7 @@ export interface IListEditorOptions extends
 
 /**
  * @name Controls/_filterPanel/Editors/List#additionalTextStyleProperty
- * @cfg {String} Поле записи, содержащее цвет текста дополнительного столбца записи.л
+ * @cfg {String} Поле записи, содержащее цвет текста дополнительного столбца записи.
  * @see Controls/interface:IFontColorStyle#fontColorStyle
  */
 
