@@ -7,6 +7,6 @@
             nodeProperty="type"
             header="{{_header}}"
             rowSeparatorSize="s"
-            rowSeparatorVisibility="items"
+            newDesign="{{true}}"
             groupProperty="group"/>
 </div>

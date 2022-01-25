@@ -6,5 +6,5 @@
             parentProperty="parent"
             nodeProperty="type"
             rowSeparatorSize="s"
-            rowSeparatorVisibility="items"/>
+            newDesign="{{true}}"/>
 </div>

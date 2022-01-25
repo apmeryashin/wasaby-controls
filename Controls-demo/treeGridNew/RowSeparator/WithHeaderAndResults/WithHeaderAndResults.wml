@@ -7,6 +7,6 @@
             nodeProperty="type"
             header="{{_header}}"
             rowSeparatorSize="l"
-            rowSeparatorVisibility="items"
+            newDesign="{{true}}"
             resultsPosition="top"/>
 </div>
