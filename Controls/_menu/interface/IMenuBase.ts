@@ -7,9 +7,12 @@ interface IItemPadding {
     right: string;
 }
 
+export type TKey = string|number|null;
+
 export interface IMenuBaseOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
         IGroupedOptions, IItemTemplateOptions, IMultiSelectableOptions {
     keyProperty: string;
+    root?: TKey;
     displayProperty: string;
     selectedAllText?: string;
     emptyText?: string;

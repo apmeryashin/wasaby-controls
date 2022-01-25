@@ -9,6 +9,7 @@
 
 .controls-PropertyGrid__row_captionPosition-top {
    flex-direction: column;
+   align-items: flex-start;
 }
 
 .controls-PropertyGrid__editor_captionPosition-none,
@@ -88,6 +89,7 @@
 .ws-is-hover {
    .controls-PropertyGrid__row_highlightOnHover:hover {
       background-color: var(--hover_background-color);
+      cursor: pointer;
    }
 
    .controls-PropertyGrid__row_highlightOnHover:hover .controls-ListView__multiSelect__borderCircle {
@@ -184,6 +186,7 @@
 .controls-PropertyGrid__editor_checkbox_control,
 .controls-PropertyGrid__editor_dropdown_control,
 .controls-PropertyGrid__editor_time-interval_control,
+.controls-PropertyGrid__editor_dateRange_control,
 .controls-PropertyGrid__editor_date_control {
    max-width: 100%;
    width: auto;

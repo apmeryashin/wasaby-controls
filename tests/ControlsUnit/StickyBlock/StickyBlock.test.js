@@ -652,6 +652,56 @@ define([
 
       });
 
+      describe('getBackgroundClass', function () {
+         it ('StickyBlock is fixed, backgroundStyle: default', function () {
+            const stickyOptions = {
+               backgroundStyle: 'default'
+            };
+            const component = createComponent(StickyHeader, stickyOptions);
+            component._model = {
+               fixedPosition: 'top'
+            };
+            const result = component._getBackgroundClass();
+            assert.equal(result, 'controls-background-default');
+         });
+
+         it ('StickyBlock is unfixed, backgroundStyle: default', function () {
+            const stickyOptions = {
+               backgroundStyle: 'default'
+            };
+            const component = createComponent(StickyHeader, stickyOptions);
+            component._model = {
+               fixedPosition: ''
+            };
+            const result = component._getBackgroundClass();
+            assert.equal(result, 'controls-StickyHeader__background_default');
+         });
+
+         it ('StickyBlock is fixed, backgroundStyle: danger', function () {
+            const stickyOptions = {
+               backgroundStyle: 'danger'
+            };
+            const component = createComponent(StickyHeader, stickyOptions);
+            component._model = {
+               fixedPosition: 'top'
+            };
+            const result = component._getBackgroundClass();
+            assert.equal(result, 'controls-background-danger');
+         });
+
+         it ('StickyBlock is unfixed, backgroundStyle: danger', function () {
+            const stickyOptions = {
+               backgroundStyle: 'danger'
+            };
+            const component = createComponent(StickyHeader, stickyOptions);
+            component._model = {
+               fixedPosition: ''
+            };
+            const result = component._getBackgroundClass();
+            assert.equal(result, 'controls-background-danger');
+         });
+      });
+
       describe('_restoreBottomShadowHiddenClass', function () {
          it ('should add ws-hidden class if added shadow in js and shadow should be turned off', function () {
             const component = createComponent(StickyHeader, {});

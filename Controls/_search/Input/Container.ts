@@ -99,12 +99,15 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    private _updateSearchData(inputSearchValue: string, minSearchLength: number): void {
       const searchResolver = this._getSearchResolverController();
       if (this._value !== inputSearchValue) {
+         const currentValueLength = this._value?.length;
          this._value = inputSearchValue;
 
          if (!inputSearchValue) {
             searchResolver.clearTimer();
          }
-         searchResolver.setSearchStarted(this._value && this._value.length >= minSearchLength);
+         if (currentValueLength !== inputSearchValue?.length) {
+            searchResolver.setSearchStarted(this._value && this._value.length >= minSearchLength);
+         }
       }
    }
 

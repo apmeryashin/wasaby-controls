@@ -132,6 +132,11 @@ export interface IFilterItem {
      */
     type?: 'dateRange';
     /**
+     * Идентификатор, под которым будет сохранена история элемента фильтра.
+     * Значение такого фильтра не будет сохраняться в общую историю.
+     */
+    historyId?: string;
+    /**
      * Опции для редактора.
      */
     editorOptions?: IEditorOptions;

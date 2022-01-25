@@ -194,6 +194,11 @@ describe('Controls/_form/ControllerBase', () => {
             then: (thenCallback) => thenCallback(showConfirmPopupResult)
          };
       };
+      const mokePromiseRejectFunction = () => {
+         return {
+            then: (thenCallback, catchCallback) => catchCallback()
+         };
+      };
 
       FC._needShowConfirmation = () => false;
       FC._confirmRecordChangeHandler(defaultAnswerCallback, negativeAnswerCallback);
@@ -213,6 +218,13 @@ describe('Controls/_form/ControllerBase', () => {
       FC._confirmRecordChangeHandler(defaultAnswerCallback, negativeAnswerCallback);
       assert.equal(isDefaultCalled, true);
       assert.equal(isNegativeCalled, false);
+      isDefaultCalled = false;
+
+      FC.update = mokePromiseRejectFunction;
+      FC._confirmRecordChangeHandler(defaultAnswerCallback, negativeAnswerCallback);
+      assert.equal(isDefaultCalled, false);
+      assert.equal(isNegativeCalled, false);
+      assert.isFalse(FC._isConfirmShowed);
       FC.destroy();
    });
 

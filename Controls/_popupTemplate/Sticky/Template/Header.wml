@@ -2,7 +2,7 @@
             {{_options.roundBorder ? 'controls-PopupTemplate__roundBorder_top controls_border-radius-s'}}
             {{_options.headerBackgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
                                                              'controls-background-' + _options.headerBackgroundStyle}}
-            controls-StickyTemplate__top-area-{{(_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible) ? 'withClose' : 'withoutClose'}}">
+            controls-StickyTemplate__top-area-{{((_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible) && _options.closeButtonViewMode !== 'external') ? 'withClose' : 'withoutClose'}}">
    <div class="controls-StickyTemplate__top-area-content">
       <ws:if data="{{_options.headingIcon}}">
          <div class="controls-StickyTemplate__top-area-icon">

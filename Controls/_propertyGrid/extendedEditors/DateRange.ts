@@ -24,14 +24,15 @@ class DateRangeEditor extends Control<IDateRangeEditorOptions> implements IEdito
     protected _endDate: Date;
 
     protected _beforeMount(options: IDateRangeEditorOptions): void {
-        const [startDate, endDate] = options.propertyValue;
+        const [startDate, endDate] = this._getPropertyValueByOptions(options.propertyValue);
         this._startDate = startDate;
         this._endDate = endDate;
     }
 
     protected _beforeUpdate(newOptions: IDateRangeEditorOptions): void {
-        if (this._options.propertyValue !== newOptions.propertyValue) {
-            const [startDate, endDate] = newOptions.propertyValue;
+        const propertyValue = this._getPropertyValueByOptions(newOptions.propertyValue);
+        if (this._options.propertyValue !== propertyValue) {
+            const [startDate, endDate] = propertyValue;
             this._startDate = startDate;
             this._endDate = endDate;
         }
@@ -40,5 +41,24 @@ class DateRangeEditor extends Control<IDateRangeEditorOptions> implements IEdito
     protected _handleInputCompleted(event: SyntheticEvent, startDate: Date, endDate: Date): void {
         this._notify('propertyValueChanged', [[startDate, endDate]], {bubbling: true});
     }
+
+    private _getPropertyValueByOptions(value: Date[] | null): Date[] {
+        return value || [null, null];
+    }
+
+    static getDefaultOptions(): object {
+        return {
+            propertyValue: [null, null]
+        };
+    }
 }
+
+Object.defineProperty(DateRangeEditor, 'defaultProps', {
+    enumerable: true,
+    configurable: true,
+
+    get(): object {
+        return DateRangeEditor.getDefaultOptions();
+    }
+});
 export default DateRangeEditor;

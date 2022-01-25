@@ -12,6 +12,7 @@ export interface IRightPanelOptions {
 
 export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOptions {
     headerBackgroundStyle?: string;
+    footerBackgroundStyle?: string;
     backgroundStyle?: string;
     maximizeButtonVisibility?: boolean;
     workspaceWidth?: number;
@@ -24,6 +25,7 @@ export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOp
     stackWidth?: number;
     rightPanelOptions?: IRightPanelOptions;
     toolbarContentTemplate?: Function | string;
+    stackPosition?: string;
 }
 
 const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
@@ -55,8 +57,10 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
     protected _maximizeButtonVisibility: boolean = false;
     protected _hasRightPanel: boolean;
     private _maximizeButtonClickCallback: () => void;
+    protected _popupDirection: string;
 
     protected _beforeMount(options: IStackTemplateOptions): void {
+        this._popupDirection = options.stackPosition || ManagerController.getStackPosition();
         this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть', 'окно')}`;
         this._hasRightPanel = ManagerController.hasRightPanel() || !!options.toolbarContentTemplate;
         this._updateMaximizeButton(options);
@@ -79,9 +83,9 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
         }
     }
 
-    protected _getBackgroundColor(): string {
-        return this._options.backgroundStyle === 'default' ? 'controls-StackTemplate_backgroundColor' :
-            'controls-background-' + this._options.backgroundStyle;
+    protected _getBackgroundColor(backgroundStyle: string): string {
+        return backgroundStyle === 'default' ? 'controls-StackTemplate_backgroundColor' :
+            'controls-background-' + backgroundStyle;
     }
 
     protected close(): void {
@@ -114,9 +118,9 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
 
     static getDefaultOptions(): IStackTemplateOptions {
         return {
-            headingFontSize: '3xl',
+            headingFontSize: '4xl',
             backgroundStyle: 'default',
-            headingFontColorStyle: 'secondary',
+            headingFontColorStyle: 'default',
             closeButtonVisible: true,
             closeButtonViewMode: 'toolButton',
             headerBorderVisible: true,
@@ -157,6 +161,21 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
  * @variant info
  * @default unaccented
  * @demo Controls-demo/PopupTemplate/Stack/backgroundStyle/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Stack#footerBackgroundStyle
+ * @cfg {String} Определяет цвет фона футера стекового окна.
+ * @variant default
+ * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant success
+ * @variant info
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Stack/FooterBackgroundStyle/Index
  */
 
 /**
@@ -220,6 +239,7 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
  * @default true
  * @remark
  * Позволяет скрыть отображение правой границы.
+ * @demo Controls-demo/PopupTemplate/Stack/RightBorderVisible/Index
  */
 
 /**
@@ -232,6 +252,15 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
 /**
  * @name Controls/_popupTemplate/Stack#rightPanelOptions
  * @cfg {Controls/_popupTemplate/Stack/RightPanelOptions.typedef} Опции правой панели стековой панели.
+ */
+
+/**
+ * @name Controls/_popupTemplate/Stack#stackPosition
+ * @cfg {string} Положение стекового окна
+ * @variant left окно будет прижато к левому краю
+ * @variant right окно будет прижато к правому краю страницы
+ * @default right
+ * @demo Controls-demo/Popup/Stack/StackPosition/Index
  */
 
 /**

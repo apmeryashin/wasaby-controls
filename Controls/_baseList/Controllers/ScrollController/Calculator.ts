@@ -51,6 +51,7 @@ export interface ICalculatorBaseOptions {
     viewportSize?: number;
     contentSize?: number;
     totalCount: number;
+    feature1183225611: boolean;
 
     /**
      * Размеры элементов заданные прикладниками.
@@ -85,6 +86,7 @@ export class Calculator {
     private _givenItemsSizes: IItemsSizes;
     private _triggersOffsets: ITriggersOffsets;
     private _virtualScrollConfig: IVirtualScrollConfig;
+    private readonly _feature1183225611: boolean;
     private _scrollPosition: number;
     private _viewportSize: number;
     private _contentSize: number;
@@ -99,6 +101,7 @@ export class Calculator {
         this._triggersOffsets = options.triggersOffsets;
         this._scrollPosition = options.scrollPosition || 0;
         this._totalCount = options.totalCount;
+        this._feature1183225611 = options.feature1183225611;
         this._viewportSize = options.viewportSize || 0;
         this._contentSize = options.contentSize || 0;
         this._virtualScrollConfig = options.virtualScrollConfig;
@@ -171,7 +174,7 @@ export class Calculator {
         return this._getEdgeVisibleItem(params);
     }
 
-    getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
+    getScrollPositionToEdgeItem(edgeItem: IEdgeItem, contentSizeBeforeList: number): number {
         let scrollPosition = 0;
 
         const item = this._itemsSizes[edgeItem.index];
@@ -187,7 +190,7 @@ export class Calculator {
             scrollPosition = itemOffset + edgeItem.borderDistance - viewportSize;
         }
 
-        const maxScrollPosition = Math.max(this._contentSize - this._viewportSize, 0);
+        const maxScrollPosition = Math.max(this._contentSize + contentSizeBeforeList - this._viewportSize, 0);
         return Math.min(
             Math.max(scrollPosition, 0),
             maxScrollPosition
@@ -205,6 +208,7 @@ export class Calculator {
 
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
+            const nextItem = itemsSizes[index + 1];
             const itemOffset = item.offset - placeholders.backward;
             const itemBorderBottom = Math.round(itemOffset) + Math.round(item.size);
 
@@ -218,7 +222,9 @@ export class Calculator {
 
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
             const isLastItem = index === range.endIndex - 1;
-            if (itemBorderBottom > viewportBorderPosition || isLastItem) {
+            const hasNextRenderedItem = itemsSizes.slice(index + 1, range.endIndex).some((it) => it.size);
+            const isLastRenderedItem = (!nextItem || !nextItem.size) && !hasNextRenderedItem;
+            if (itemBorderBottom > viewportBorderPosition || isLastItem || isLastRenderedItem) {
                 let borderDistance;
                 let border;
                 if (direction === 'forward') {
@@ -401,7 +407,8 @@ export class Calculator {
                 currentRange: this._range,
                 placeholders: this._placeholders,
                 scrollPosition,
-                totalCount: this._totalCount
+                totalCount: this._totalCount,
+                feature1183225611: this._feature1183225611
             });
         }
 

@@ -7,6 +7,7 @@ export interface ICheckboxMarkerOptions extends IControlOptions {
     value?: boolean | null;
     horizontalPadding?: string;
     checkboxStyle?: 'default' | 'primary';
+    size?: 's' | 'l';
 }
 /**
  * Контрол, отображающий элемент контрола "чекбокс" - галочку
@@ -24,7 +25,8 @@ class CheckboxMarker extends Control<ICheckboxMarkerOptions> {
     protected _template: TemplateFunction = controlTemplate;
     static defaultProps: ICheckboxMarkerOptions = {
         horizontalPadding: 'default',
-        checkboxStyle: 'primary'
+        checkboxStyle: 'primary',
+        size: 's'
     };
 }
 
@@ -63,5 +65,13 @@ class CheckboxMarker extends Control<ICheckboxMarkerOptions> {
  * @variant primary
  * @variant default
  * @default primary
+ */
+
+/**
+ * @name Controls/_toggle/CheckboxMarker#size
+ * @cfg {String} Определяет размер галочки.
+ * @variant s
+ * @variant l
+ * @default s
  */
 export default CheckboxMarker;

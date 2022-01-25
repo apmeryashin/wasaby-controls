@@ -11,4 +11,17 @@
          on:pathChanged="_updateRootTitle()"
       />
    </div>
+   <div>
+      <div class="controls-text-label">Readonly</div>
+      <Controls.breadcrumbs:PathButton
+         source="{{_source}}"
+         keyProperty="id"
+         nodeProperty="node"
+         parentProperty="parent"
+         displayProperty="title"
+         readOnly="{{true}}"
+         bind:path="_path"
+         on:pathChanged="_updateRootTitle()"
+      />
+   </div>
 </div>

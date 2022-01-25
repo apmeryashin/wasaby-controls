@@ -1,5 +1,6 @@
 <div class="controlsDemo__wrapper">
-    <Controls.scroll:Container attr:style="width: 600px; height: 400px" shadowMode="js" scrollOrientation="verticalHorizontal" newColumnScroll="{{ true }}">
+    <Controls.scroll:Container attr:style="width: 600px; height: 400px"
+							   scrollOrientation="verticalHorizontal">
         <Controls.grid:View
                 keyProperty="key"
                 source="{{_viewSource}}"

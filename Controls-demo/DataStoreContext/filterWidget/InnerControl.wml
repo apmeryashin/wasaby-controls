@@ -1,0 +1,1 @@
+<Controls.buttons:Button viewMode='link' caption='Отфильтровать список по имени "Александр"' on:click="_clickHandler()"/>

@@ -293,6 +293,10 @@ export default class Cell<
         wrapperClasses += ' controls-Grid__cell_fit';
     }
 
+    if (this.getColspan() > 1) {
+        wrapperClasses += ' js-controls-Grid__cell_colspaned';
+    }
+
     if (this.isEditing()) {
             wrapperClasses += ' controls-Grid__row-cell-editing';
         }

@@ -490,13 +490,17 @@ describe('Controls/browser:Browser', () => {
                 it('_searchReset while loading', async () => {
                     const options = getBrowserOptions();
                     const browser = getBrowser(options);
+                    let loadAborted = false;
                     await browser._beforeMount(options);
                     browser.saveOptions(options);
 
                     const sourceController = browser._getSourceController();
-                    sourceController.reload();
+                    const loadPromise = sourceController.reload().catch(() => {
+                        loadAborted = true;
+                    });
                     browser._searchResetHandler();
-                    assert.ok(!sourceController.isLoading());
+                    await loadPromise;
+                    assert.ok(loadAborted);
                 });
 
                 it('_searchReset with startingWith === "current"', async () => {
@@ -1026,7 +1030,7 @@ describe('Controls/browser:Browser', () => {
 
                 it('root changed with sourceController in listsOptions', async () => {
                     const listsOptions = getListsOptions();
-                    let browserOptions = getBrowserOptions();
+                    let browserOptions = {...getBrowserOptionsHierarchy(), root: null};
                     const sourceController = new NewSourceController({
                         source: browserOptions.source
                     });
@@ -1310,6 +1314,21 @@ describe('Controls/browser:Browser', () => {
                 searchValue: 'testSearchValue',
                 expandedItems: []
             });
+        });
+
+        it('update root with sourceController in options', async () => {
+            const sourceController = new NewSourceController(getBrowserOptions());
+            let options = {...getBrowserOptions(), sourceController};
+            const browser = await getBrowserWithMountCall(options);
+            const notifyStub = sinon.stub(browser, '_notify');
+
+            options = {...options};
+            options.root = 'newRoow';
+            await browser._beforeUpdate(options);
+            assert.ok(notifyStub.notCalled);
+
+            sourceController.setRoot('nextRoot');
+            assert.ok(notifyStub.calledOnce);
         });
     });
 

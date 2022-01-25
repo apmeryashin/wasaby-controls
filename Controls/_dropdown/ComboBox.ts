@@ -51,6 +51,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface:IValidationStatus
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontWeight
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IHeight
  * @implements Controls/input:IPadding
@@ -292,6 +293,7 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
          inlineHeight: 'default',
          fontSize: 'm',
          fontColorStyle: 'default',
+         fontWeight: 'default',
          tooltip: '',
          emptyKey: null,
          contrastBackground: false,

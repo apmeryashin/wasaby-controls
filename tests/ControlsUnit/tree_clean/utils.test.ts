@@ -2,6 +2,7 @@
 import {assert} from 'chai';
 import {Tree} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
+import {SearchGridCollection} from 'Controls/searchBreadcrumbsGrid';
 import {getItemHierarchy, getReloadItemsHierarchy} from 'Controls/_tree/utils';
 
 const data = [
@@ -71,11 +72,29 @@ describe('Controls/_tree/utils', () => {
             assert.includeOrderedMembers(result, [null, 1, 11, 111, 1111]);
         });
 
-        // Для записи из корня дерева должен вернуть массив из 2х элементов (корень и сам итем)
+        // Для записи из корня дерева должен вернуть массив из 2-х элементов (корень и сам итем)
         it('root item', function () {
             const result = getItemHierarchy(collection, 2);
             assert.equal(result.length, 2);
             assert.includeOrderedMembers(result, [null, 2]);
+        });
+
+        // Проверяем работоспособность getItemHierarchy для итема SearchGridCollection, т.к.
+        // там могут быть строки с хлебными крошками, которые и так уже содержат в себе необходимую иерархию
+        it('search collection', function() {
+            const searchGridCollection = new SearchGridCollection({
+                // @ts-ignore
+                root: null,
+                columns: [{}],
+                keyProperty: 'id',
+                nodeProperty: 'node',
+                parentProperty: 'parent',
+                collection: new RecordSet({keyProperty: 'id', rawData: data})
+            }) as unknown as Tree;
+
+            const result = getItemHierarchy(searchGridCollection, 1111);
+            assert.equal(result.length, 5);
+            assert.includeOrderedMembers(result, [null, 1, 11, 111, 1111]);
         });
 
     });

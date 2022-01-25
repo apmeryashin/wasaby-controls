@@ -434,9 +434,17 @@ export default class Explorer extends Control<IExplorerOptions> {
             cfg.sourceController) {
             // https://online.sbis.ru/opendoc.html?guid=7d20eb84-51d7-4012-8943-1d4aaabf7afe
             if (!VIEW_MODEL_CONSTRUCTORS[this._pendingViewMode]) {
-                Promise.resolve(this._loadTileViewMode()).then(() => {
+                // Делаю синхронным установку viewMode, что требуется для отрисовки без моргания, когда библиотека
+                // Controls/columns или Controls/treeTile уже загружены HOC'ом (например, newBrowser'ом)
+                // https://online.sbis.ru/opendoc.html?guid=88261118-1965-41ec-ac73-b0a32caa26ed
+                const res = this._loadTileViewMode();
+                if (res instanceof Promise) {
+                    res.then(() => {
+                        this._setViewModeSync(this._pendingViewMode, cfg);
+                    });
+                } else {
                     this._setViewModeSync(this._pendingViewMode, cfg);
-                });
+                }
             } else {
                 this._setViewModeSync(this._pendingViewMode, cfg);
             }
@@ -455,13 +463,17 @@ export default class Explorer extends Control<IExplorerOptions> {
             this._notify('doScroll', ['top'], {bubbling: true});
             this._resetScrollAfterViewModeChange = false;
         }
-
     }
 
     protected _afterRender(): void {
         if (this._markerForRestoredScroll !== null) {
             this.scrollToItem(this._markerForRestoredScroll);
             this._markerForRestoredScroll = null;
+        }
+
+        // Сбрасываем флаг, который прокидывается в TreeControl иначе модель будет постоянно пересоздаваться
+        if (this._recreateCollection) {
+            this._recreateCollection = false;
         }
     }
 

@@ -167,7 +167,11 @@
                             attr:class="controlsDemo__inline-flex controlsDemo__maxWidth800"
                             source="{{ _gridSource }}"
                             columns="{{ _gridColumns }}"
-                            keyProperty="key">
+                            keyProperty="key"
+                            markerVisibility="onactivated"
+                            on:activated="_activatedHandler()"
+                            on:deactivated="_deactivatedHandler()"
+                            bind:markedKey="_markedKey">
                         <ws:editingConfig>
                             <ws:Object editOnClick="{{ true }}" sequentialEditingMode="cell"/>
                         </ws:editingConfig>

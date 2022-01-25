@@ -202,9 +202,11 @@ export class Controller {
       // Если Record заменили, например, через метод RecordSet.replace, то в таком случае создается новый
       // CollectionItem без состояния и для него нужно восстановить маркер
       // https://online.sbis.ru/doc/03a1208c-96ef-4641-bda8-fa7c72f6ebfb
-      if (this._containsMarkedItem(items)) {
-         this.setMarkedKey(this._markedKey);
-      }
+      this._restoreMarker(items);
+   }
+
+   onCollectionChange(items: CollectionItem[]): void {
+      this._restoreMarker(items);
    }
 
    /**
@@ -239,6 +241,12 @@ export class Controller {
       this._markedKey = null;
       this._markerVisibility = null;
       this._model = null;
+   }
+
+   private _restoreMarker(items: CollectionItem[]): void {
+      if (this._containsMarkedItem(items)) {
+         this.setMarkedKey(this._markedKey);
+      }
    }
 
    private _getKey(item: CollectionItem<Model>): CrudEntityKey {

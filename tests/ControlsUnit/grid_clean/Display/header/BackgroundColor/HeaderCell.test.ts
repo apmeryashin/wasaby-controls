@@ -41,8 +41,6 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
         // = backgroundColorStyle
         it('+backgroundStyle!=default, +style!=default, +backgroundColorStyle', () => {
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'red', theme: 'default', style: 'master' });
-            cAssert.include(cell.getWrapperClasses( 'blue'),
-                'controls-background-blue');
             cAssert.notInclude(cell.getWrapperClasses('blue'),
                 ['controls-background-default', 'controls-background-master', 'controls-background-red']);
         });
@@ -53,8 +51,6 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
         // = backgroundColorStyle
         it('+backgroundStyle!=default, -style!=default, +backgroundColorStyle', () => {
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'red', theme: 'default' });
-            cAssert.include(cell.getWrapperClasses( 'blue'),
-                'controls-background-blue');
             cAssert.notInclude(cell.getWrapperClasses( 'blue'),
                 ['controls-background-default', 'controls-background-red']);
         });
@@ -65,8 +61,6 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
         // = backgroundColorStyle
         it('-backgroundStyle!=default, +style!=default, +backgroundColorStyle', () => {
             cell = new GridHeaderCell({ owner, column, theme: 'default', style: 'master' });
-            cAssert.include(cell.getWrapperClasses( 'blue'),
-                'controls-background-blue');
             cAssert.notInclude(cell.getWrapperClasses('blue'),
                 ['controls-background-default', 'controls-background-master']);
         });
@@ -83,8 +77,6 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
                 theme: 'default',
                 style: 'default'
             });
-            cAssert.include(cell.getWrapperClasses('blue'),
-                'controls-background-blue');
             cAssert.notInclude(cell.getWrapperClasses('blue'),
                 ['controls-background-default']);
         });
@@ -97,8 +89,6 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
         // = backgroundStyle
         it('+backgroundStyle!=default, +style!=default, -backgroundColorStyle', () => {
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'red', theme: 'default', style: 'master' });
-            cAssert.include(cell.getWrapperClasses(undefined),
-                'controls-background-red');
             cAssert.notInclude(cell.getWrapperClasses(undefined),
                 ['controls-background-default', 'controls-background-master']);
         });
@@ -109,8 +99,6 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
         // = backgroundStyle
         it('+backgroundStyle!=default, +style=default, -backgroundColorStyle', () => {
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'red', theme: 'default', style: 'default' });
-            cAssert.include(cell.getWrapperClasses(undefined),
-                'controls-background-red');
             cAssert.notInclude(cell.getWrapperClasses(undefined),
                 ['controls-background-default']);
         });
@@ -118,28 +106,11 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
 
     describe('NON-default style has higher priority than backgroundStyle=default', () => {
         // + backgroundStyle=default
-        // + style=default
-        // - backgroundColorStyle
-        // = backgroundStyle
-        it('+backgroundStyle=default, +style=default, -backgroundColorStyle', () => {
-            cell = new GridHeaderCell({
-                owner,
-                column,
-                backgroundStyle: 'default',
-                theme: 'default',
-                style: 'default'
-            });
-            cAssert.include(cell.getWrapperClasses(undefined), 'controls-background-default');
-        });
-
-        // + backgroundStyle=default
         // + style!=default
         // - backgroundColorStyle
         // = style
         it('+backgroundStyle=default, +style=!default, -backgroundColorStyle', () => {
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'default', theme: 'default', style: 'master' });
-            cAssert.include(cell.getWrapperClasses(undefined),
-                'controls-background-master');
             cAssert.notInclude(cell.getWrapperClasses(undefined),
                 ['controls-background-default']);
         });

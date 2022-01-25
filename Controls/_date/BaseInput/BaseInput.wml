@@ -1,6 +1,7 @@
 <ws:partial template="{{_validationContainer}}" on:valueChanged="_valueChangedHandler()" validators="{{_validators}}" name="validator">
     <ws:content>
         <Controls._date.BaseInput.Mask
+                calendarButtonVisible="{{ _options.calendarButtonVisible }}"
                 contrastBackground="{{ _options.contrastBackground }}"
                 horizontalPadding="{{ _options.horizontalPadding }}"
                 readOnly="{{ !_options.calendarButtonVisible || options.readOnly }}"
@@ -15,7 +16,7 @@
                 fontStyle="{{_options.fontStyle}}"
                 fontSize="{{_options.fontSize}}"
                 fontWeight="{{_options.fontWeight}}"
-                fontColorStyle="{{_options.fontColorStyle || (!_model.value && _options.placeholder) ? 'label' }}"
+                fontColorStyle="{{_options.fontColorStyle || (!_options.calendarButtonVisible && !_model.value && _options.placeholder ? 'label') }}"
                 borderStyle="{{_options.borderStyle}}"
                 borderVisibility="{{_options.borderVisibility}}"
                 inlineHeight="{{_options.inlineHeight}}"

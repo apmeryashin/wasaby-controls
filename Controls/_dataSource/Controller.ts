@@ -15,7 +15,8 @@ import {
     ISourceOptions,
     TKey,
     TNavigationPagingMode,
-    ISelectFieldsOptions
+    ISelectFieldsOptions,
+    TFilter
 } from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {
@@ -396,7 +397,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         return this._loadError;
     }
 
-    setFilter(filter: QueryWhereExpression<unknown>): QueryWhereExpression<unknown> {
+    setFilter(filter: TFilter): QueryWhereExpression<unknown> {
         return this._filter = filter;
     }
 

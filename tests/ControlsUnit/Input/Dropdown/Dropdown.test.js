@@ -479,7 +479,7 @@ define(
                   headerContentTemplate: 'template'
                });
 
-               assert.include(result.popupClassName, 'controls-DropdownList__margin-head');
+               assert.include(result.popupClassName, 'controls-DropdownList__margin');
             });
 
             it('emptyTemplate', () => {

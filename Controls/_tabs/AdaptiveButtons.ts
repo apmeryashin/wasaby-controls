@@ -9,13 +9,13 @@ import {CrudWrapper} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
 import {ITabsButtonsOptions} from './interface/ITabsButtons';
+import {TSelectedKey} from 'Controls/interface';
 import * as rk from 'i18n!Controls';
 
 const MARGIN = 13;
 const MIN_WIDTH = 26;
 const ICON_WIDTH = 16;
 const PADDING_OF_MORE_BUTTON = 6;
-const MIN_VISIBLE_LETTERS = 3;
 const COUNT_OF_MARGIN = 2;
 const MORE_BUTTON_TEXT = rk('Ещё...');
 
@@ -89,7 +89,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             }
             this._setItems(receivedState.items);
             this._moreButtonWidth = this._getTextWidth(MORE_BUTTON_TEXT, 'm');
-            this._calcVisibleItems(this._items, options);
+            this._calcVisibleItems(this._items, options, options.selectedKey);
             if (this._lastIndex < 0) {
                 return;
             }
@@ -137,6 +137,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
 
         if (isItemsChanged || isContainerWidthChanged) {
             this._prepareItems(newOptions);
+            this._calcVisibleItems(this._items, newOptions, newOptions.selectedKey);
         }
     }
 
@@ -167,6 +168,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         // для вызова перерисовки Controls.tabs:Buttons необходимо передать новые items
         this._visibleItems = this._visibleItems.clone();
         this._updateFilter(this._options);
+        this._calcVisibleItems(this._items, this._options, keys[0], true);
     }
 
     // при нажатии на кнопку еще останавливаем событие для того, чтобы вкладка не выбралась.
@@ -178,7 +180,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         this._items.forEach((item: Model<object>) => {
             item.set('align', options.align);
         });
-        this._calcVisibleItems(this._items, options);
+        this._calcVisibleItems(this._items, options, options.selectedKey);
         if (this._lastIndex < 0) {
             return;
         }
@@ -207,104 +209,56 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         this._filter = filter;
     }
 
-    private _calcVisibleItems(items: RecordSet<object>, options: ITabsAdaptiveButtonsOptions): void {
-        this._lastIndex = this._getLastTabIndex(items, options);
-        if (this._lastIndex < 0) {
-            return;
-        }
-        const clonedItems = items.clone();
-        const oldRawData = clonedItems.getRawData();
+    private _calcVisibleItems(
+        items: RecordSet<object>,
+        options: ITabsAdaptiveButtonsOptions,
+        key: TSelectedKey,
+        afterMenuSelection: boolean = false
+    ): void {
+        const arrWidth = this._getItemsWidth(items, options.displayProperty);
+        const containerWidth = options.containerWidth;
+        const clonedItems = items.clone().getRawData();
         if (options.align === 'right') {
-            oldRawData.reverse();
+            clonedItems.reverse();
+            arrWidth.reverse();
         }
-        const rawData = oldRawData.slice(0, this._lastIndex + 1);
-
-        /**
-         * Если отмеченного элемента нет в rawData, то добавляем его вместо последнего.
-         */
-        const selectedItem = rawData.find((data) => data[items.getKeyProperty()] === options.selectedKey);
-        if (selectedItem === undefined) {
-            const item = items.getRecordById(options.selectedKey);
-            if (item) {
-                rawData[rawData.length - 1] = items.getRecordById(options.selectedKey).getRawData();
-            }
+        const currentItemIndex = clonedItems.findIndex((item) => item.id === key);
+        let currentContainerWidth = this._moreButtonWidth + PADDING_OF_MORE_BUTTON + arrWidth[currentItemIndex];
+        const rawData = [];
+        rawData.push(clonedItems[currentItemIndex]);
+        const minWidth = MIN_WIDTH + MARGIN * COUNT_OF_MARGIN;
+        for (let i = 0; i <= arrWidth.length - 1; i++) {
+             if (containerWidth - currentContainerWidth > minWidth) {
+                 if (i !== currentItemIndex) {
+                     const add = !afterMenuSelection || currentContainerWidth + arrWidth[i] < containerWidth;
+                     const leftPosition = afterMenuSelection ? options.align === 'right' : i < currentItemIndex;
+                     if (add) {
+                         currentContainerWidth += arrWidth[i];
+                         if (leftPosition) {
+                             rawData.unshift(clonedItems[i]);
+                         } else {
+                             rawData.push(clonedItems[i]);
+                         }
+                     }
+                 }
+             } else {
+                 break;
+             }
         }
-        rawData.forEach((item) => {
-            item.canShrink = false;
-        });
-        // чтобы ужималась
-        rawData[this._lastIndex].canShrink = true;
+        if (afterMenuSelection && options.align === 'left') {
+            rawData[rawData.length - 1] = rawData.shift();
+        }
+        this._lastIndex = rawData.length - 1;
+        rawData.forEach((item) => item.canShrink = false);
         if (options.align === 'right') {
             rawData.reverse();
         }
-        this._visibleItems = clonedItems;
+        // Чтобы ужималась последняя вкладка.
+        const indexCanShrinkElement = options.align === 'right' ? 0 : rawData.length - 1;
+        rawData[indexCanShrinkElement].canShrink = true;
+        this._visibleItems = new RecordSet();
         this._visibleItems.setRawData(rawData);
         this._position = options.align === 'right' ? 0 : this._visibleItems.getCount() - 1;
-    }
-
-    private _getLastTabIndex(items: RecordSet<object>, options: ITabsAdaptiveButtonsOptions): number {
-        // находим индекс последней уместившейся вкладки с учетом текста, отступов и разделителей.
-        let width = 0;
-        let indexLast = 0;
-        const arrWidth = this._getItemsWidth(items, options.displayProperty);
-
-        if (options.align === 'right') {
-            arrWidth.reverse();
-        }
-        while (width < options.containerWidth && indexLast !== items.getCount()) {
-            width += arrWidth[indexLast];
-            indexLast++;
-        }
-        indexLast -= 2;
-
-        if (indexLast === arrWidth.length - 1) {
-            return indexLast;
-        }
-
-        const currentWidth = arrWidth.reduce((sum, current) => {
-            return sum + current;
-        }, 0);
-
-        if (indexLast === arrWidth.length - 2) {
-            const minWidth = this._getMinWidth(this._getTextOfTabByIndex(options, items, 0)) + MARGIN * 2;
-            width = currentWidth - arrWidth[arrWidth.length - 1] + minWidth;
-            if (width < options.containerWidth) {
-                indexLast++;
-                return indexLast;
-            } else {
-                indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options, items);
-            }
-        }
-
-        if (indexLast < arrWidth.length - 2) {
-            indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options, items);
-        }
-        return indexLast;
-    }
-
-    private _getLastVisibleItemIndex(lastIndex: number,  arrWidth: number[], currentWidth: number,
-                                     options: ITabsAdaptiveButtonsOptions, items: RecordSet): number {
-        let i = arrWidth.length - 1;
-        let indexLast = lastIndex;
-        let width = currentWidth;
-        while (i !== lastIndex) {
-            width = width - arrWidth[i];
-            i--;
-        }
-        indexLast++;
-        if (indexLast < 0) {
-            return indexLast;
-        }
-        const currentTextOfTab = this._getTextOfTabByIndex(options, items, indexLast);
-        let currentMinWidth = this._getMinWidth(currentTextOfTab);
-        width = width + this._moreButtonWidth + currentMinWidth + COUNT_OF_MARGIN * MARGIN + PADDING_OF_MORE_BUTTON;
-        while (width > options.containerWidth) {
-            indexLast--;
-            width = width - arrWidth[indexLast] - currentMinWidth;
-            currentMinWidth = this._getMinWidth(this._getTextOfTabByIndex(options, items, indexLast));
-            width += currentMinWidth;
-        }
-        return indexLast;
     }
 
     private _getItemsWidth(items: RecordSet<object>, displayProperty: string): number[] {
@@ -322,15 +276,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             widthArray.push(itemTextWidth + COUNT_OF_MARGIN * MARGIN + iconWidth);
         }
         return widthArray;
-    }
-
-    private _getTextOfTabByIndex(options: ITabsAdaptiveButtonsOptions, items: RecordSet, index: number): string {
-        const tab = options.align === 'right' ? items.at(items.getCount() - 1 - index) : items.at(index);
-        return tab.get(options.displayProperty);
-    }
-
-    private _getMinWidth(text: string): number {
-        return this._getTextWidth(text.substring(0, MIN_VISIBLE_LETTERS) + '...', 'l');
     }
 
     private _getTextWidth(text: string, size: string  = 'l'): number {

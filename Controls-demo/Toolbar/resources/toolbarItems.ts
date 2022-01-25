@@ -444,7 +444,7 @@ export const data = {
             icon: 'icon-Groups',
             fontColorStyle: 'secondary',
             title: 'Совещания',
-            '@parent': false,
+            '@parent': null,
             parent: null,
             additional: true
         }, {

@@ -2,7 +2,7 @@
             closeButtonVisible="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}"
             style="{{_options.style}}">
     <ws:bodyContentTemplate>
-        <div class="controls-Notification__simpleTemplate">
+        <div class="controls-Notification__simpleTemplate" on:mousedown="_mousedownHandler()">
             <ws:if data="{{_options.icon}}">
                 <div class="{{_options.icon}} controls-Notification__simpleTemplate-icon
                             controls-Notification__simpleTemplate-icon-size

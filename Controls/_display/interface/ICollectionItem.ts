@@ -2,6 +2,15 @@ import {IInstantiable, IVersionable, Model} from 'Types/entity';
 import {ICollection} from './ICollection';
 
 /**
+ * @typedef {String} Controls/display:TRowSeparatorVisibility
+ * Варианты значений для опции rowSeparatorVisibility
+ * @variant all Разделители строк и по краям списка и между записями
+ * @variant edges разделители только по краям
+ * @variant items разделители только между записями
+ */
+export type TRowSeparatorVisibility = 'all'|'items'|'edges';
+
+/**
  * Варианты настройки размеров маркера
  * @typedef {String} Controls/_display/interface/ICollectionItem/TMarkerClassName
  * @variant default Маркер по высоте растягивается на весь контейнер записи.

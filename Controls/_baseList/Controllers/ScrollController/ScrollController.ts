@@ -160,7 +160,8 @@ export class ScrollController {
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
             contentSize: options.contentSize,
-            givenItemsSizes: options.givenItemsSizes
+            givenItemsSizes: options.givenItemsSizes,
+            feature1183225611: options.feature1183225611
         });
     }
 
@@ -257,6 +258,7 @@ export class ScrollController {
      */
     setListContainer(newListContainer: HTMLElement): void {
         this._observersController.setListContainer(newListContainer);
+        this._itemsSizesController.setListContainer(newListContainer);
     }
 
     /**
@@ -385,7 +387,8 @@ export class ScrollController {
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
+        const contentSizeBeforeList = this._itemsSizesController.getContentSizeBeforeList();
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem, contentSizeBeforeList);
     }
 
     /**

@@ -5,6 +5,7 @@
    height: 100%;
 }
 
+// TODO https://online.sbis.ru/opendoc.html?guid=bf944c40-805f-456a-b70f-686f9c3e3aa5
 .controls-Menu__popup_with-closeButton {
    padding-right: calc(var(--width_closeButton_functionalButton) / 2);
 }
@@ -29,11 +30,7 @@
 }
 
 .controls-Menu__popup-header-close {
-   padding-right: calc(var(--close-button_offset-left_sticky) + var(--width_closeButton_link) + var(--close-button_offset-right_sticky));
-}
-
-.controls-Menu__popup-header-multiSelect {
-   padding-right: calc(var(--apply-button_inline-height_menuPopup) + (var(--offset_xs) * 2));
+   padding-right: var(--header_padding-horizontal_sticky);
 }
 
 .controls-Menu__popup-shadow-default {
@@ -135,17 +132,6 @@
 .controls-Menu__popup_applyButton {
    position: absolute;
    z-index: 2;
-}
-
-.controls-Menu_withHeader__applyButton {
-   top: calc(var(--offset_xs) + (var(--item_height_menu) - var(--apply-button_inline-height_menuPopup)) / 2);
-}
-
-.controls-Menu_withHeader-reverse__applyButton {
-   bottom: calc((var(--item_height_menu) - var(--apply-button_inline-height_menuPopup)) / 2);
-}
-
-.controls-Menu_withoutHeader__applyButton {
    top: calc((var(--item_height_menu) - var(--apply-button_inline-height_menuPopup)) / 2 + var(--content_padding-top_sticky));
 }
 

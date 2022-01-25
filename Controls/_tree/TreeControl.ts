@@ -26,7 +26,7 @@ import {
     IReloadItemOptions,
     ISiblingStrategy
 } from 'Controls/baseList';
-import {Collection, CollectionItem, Tree, TreeItem} from 'Controls/display';
+import {Collection, CollectionItem, IDragPosition, Tree, TreeItem} from 'Controls/display';
 import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
 import {MouseButtons, MouseUp} from 'Controls/popup';
 import 'css!Controls/list';
@@ -36,13 +36,13 @@ import 'css!Controls/treeGrid';
 import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
 import {ExpandController} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
-import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import {
     applyReloadedNodes,
     getReloadItemsHierarchy,
     getRootsForHierarchyReload
 } from 'Controls/_tree/utils';
 import {IHasMoreStorage} from 'Controls/_display/Tree';
+import {IDragObject} from 'Controls/dragnDrop';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -75,6 +75,7 @@ export interface ITreeControlOptions extends IBaseControlOptions, IHierarchyOpti
     expanderSize?: 's'|'m'|'l'|'xl';
     markedLeafChangeCallback: Function;
     singleExpand?: boolean;
+    supportExpand?: boolean;
 }
 
 const _private = {
@@ -183,8 +184,6 @@ const _private = {
                     self._notify('collapsedItemsChanged', [expandController.getCollapsedItems()]);
                     self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [item]);
                     //endregion
-
-                    self._loadItemsToNode = false;
                 });
         }
 
@@ -202,9 +201,7 @@ const _private = {
             );
         }
 
-        if (expanded) {
-            self._loadItemsToNode = true;
-        }
+        self._collectionChangeCauseByNode = true;
 
         // TODO: Переписать
         //  https://online.sbis.ru/opendoc.html?guid=974ac162-4ee4-48b5-a2b7-4ff75dccb49c
@@ -271,9 +268,8 @@ const _private = {
         const sourceController = self.getSourceController();
 
         self._displayGlobalIndicator();
-        self._loadItemsToNode = true;
+        self._collectionChangeCauseByNode = true;
         return sourceController.load(direction, nodeKey).then((list) => {
-            self._loadItemsToNode = false;
             return list;
         }).catch((error) => {
             return error;
@@ -426,8 +422,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _scrollToLeafOnDrawItems: boolean = false;
     protected _plainItemsContainer: boolean = true;
 
-    private _itemOnWhichStartCountDown = null;
-    private _timeoutForExpandOnDrag = null;
+    private _timeoutForExpandOnDrag: number = null;
     private _loadedRoot: TKey;
 
     _expandController: ExpandController;
@@ -438,7 +433,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     constructor(options: TOptions, context?: object) {
         super(options, context);
-        this._expandNodeOnDrag = this._expandNodeOnDrag.bind(this);
         this._nodeDataMoreLoadCallback = this._nodeDataMoreLoadCallback.bind(this);
         if (typeof options.root !== 'undefined') {
             this._root = options.root;
@@ -840,22 +834,30 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     // region Drag
 
+    /**
+     * Реализует автоматическое раскрытие узла дерева когда при перетаскивании записи
+     * курсор на некоторое время ({@link EXPAND_ON_DRAG_DELAY}) задерживается над ним.
+     */
     protected _draggingItemMouseMove(item: TreeItem, event: MouseEvent): boolean {
         const changedPosition = super._draggingItemMouseMove(item, event);
+        if (
+            !changedPosition ||
+            item.isNode() === null ||
+            !this._options.supportExpand ||
+            !item['[Controls/_display/TreeItem]']
+        ) {
+            return changedPosition;
+        }
 
-        if (changedPosition) {
-            const dndListController = this.getDndListController();
-            if (item['[Controls/_display/TreeItem]'] && item.isNode() !== null) {
-                const position = dndListController.getDragPosition();
-                this._clearTimeoutForExpandOnDrag();
-                if (
-                    !item['[Controls/_tile/mixins/TileItem]'] &&
-                    !item.isExpanded() &&
-                    position.position === 'on'
-                ) {
-                    this._startCountDownForExpandNode(item, this._expandNodeOnDrag);
-                }
-            }
+        const dndListController = this.getDndListController();
+        const position = dndListController.getDragPosition();
+        this._clearTimeoutForExpandOnDrag();
+
+        if (!item.isExpanded() && position.position === 'on') {
+            this._timeoutForExpandOnDrag = setTimeout(
+                () => _private.toggleExpanded(this, item),
+                EXPAND_ON_DRAG_DELAY
+            );
         }
 
         return changedPosition;
@@ -885,13 +887,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         this._clearTimeoutForExpandOnDrag();
     }
 
-    protected _notifyDragEnd(dragObject, targetPosition) {
+    protected _notifyDragEnd(dragObject: IDragObject, targetPosition: IDragPosition<CollectionItem>): unknown {
         this._clearTimeoutForExpandOnDrag();
         return super._notifyDragEnd(dragObject, targetPosition);
-    }
-
-    private _expandNodeOnDrag(dispItem: TreeItem<Model>): void {
-        _private.toggleExpanded(this, dispItem);
     }
 
     protected _getSourceControllerOptionsForGetDraggedItems(selection: ISelectionObject): ISourceControllerOptions {
@@ -907,25 +905,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return options;
     }
 
-    private _startCountDownForExpandNode(item: TreeItem<Model>, expandNode: Function): void {
-        if (!this._itemOnWhichStartCountDown && item.isNode()) {
-            this._itemOnWhichStartCountDown = item;
-            this._setTimeoutForExpandOnDrag(item, expandNode);
-        }
-    }
-
     private _clearTimeoutForExpandOnDrag(): void {
-        if (this._timeoutForExpandOnDrag) {
-            clearTimeout(this._timeoutForExpandOnDrag);
-            this._timeoutForExpandOnDrag = null;
-            this._itemOnWhichStartCountDown = null;
-        }
-    }
-
-    private _setTimeoutForExpandOnDrag(item: TreeItem<Model>, expandNode: Function): void {
-        this._timeoutForExpandOnDrag = setTimeout(() => {
-            expandNode(item);
-        }, EXPAND_ON_DRAG_DELAY);
+        clearTimeout(this._timeoutForExpandOnDrag);
+        this._timeoutForExpandOnDrag = null;
     }
 
     // endregion Drag
@@ -1108,10 +1090,15 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         removedItems: TreeItem[],
         removedItemsIndex: number
     ) {
-        // Если подгрузили записи в узел, то скролл нужно восстанавливать относительно первой полностью видимой записи.
-        if (action === IObservable.ACTION_ADD && this._loadItemsToNode) {
+        // Если развернули или свернули узел,
+        // то скролл нужно восстанавливать относительно первой полностью видимой записи.
+        if (
+            (action === IObservable.ACTION_ADD || action === IObservable.ACTION_REMOVE)
+            && this._collectionChangeCauseByNode
+        ) {
             this._listVirtualScrollController.setPredicatedRestoreDirection('backward');
         }
+        this._collectionChangeCauseByNode = false;
         super._onCollectionChangedScroll(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     }
 

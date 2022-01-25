@@ -454,6 +454,7 @@ define(
                      footerContentTemplate: undefined,
                      itemActions: undefined,
                      itemActionVisibilityCallback: undefined,
+                     dataLoadCallback: undefined,
                      closeButtonVisibility: true,
                      dropdownClassName: 'controls-Toolbar-horizontal__dropdown',
                      draggable: undefined

@@ -36,6 +36,11 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
             }
          };
 
+         collection._stickyOpener = {
+            isOpened: () => false,
+            close: () => {}
+         };
+
          collection._beforeUpdate({
             items: getItems(1),
             maxVisibleItems: 1
@@ -48,7 +53,7 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
          });
          assert.isFalse(isNotifyCloseInfoBox);
 
-         collection._infoBoxStickyId = 'testId';
+         collection._stickyOpener.isOpened = () => true;
          collection._beforeUpdate({
             items: getItems(2),
             maxVisibleItems: 1
@@ -65,38 +70,34 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
       it('_openInfoBox', async () => {
          const items = [1, 2, 3, 4];
          const lookupCollection = new lookup.Collection();
-         const stickyOpen = Sticky.openPopup;
          const stickyId = 'testId';
-         let templateOptions;
          let stickyOptions;
+         lookupCollection._stickyOpener = {
+            open: (config) => {
+               stickyOptions = config;
+               return Promise.resolve(stickyId);
+            }
+         };
 
          items.clone = () => items.slice();
          lookupCollection._options.items = items;
          lookupCollection._container = {};
-         Sticky.openPopup = (config) => {
-            stickyOptions = config;
-            return Promise.resolve(stickyId);
-         };
 
          await lookupCollection._openInfoBox();
          assert.deepEqual(stickyOptions.templateOptions.items, items);
-         assert.equal(lookupCollection._infoBoxStickyId, stickyId);
-
-         stickyOptions.eventHandlers.onClose();
-         assert.isNull(lookupCollection._infoBoxStickyId);
 
          // Проверка на то что список элементов не будет меняться по ссылке
          stickyOptions.templateOptions.items.push(10);
          assert.notDeepEqual(stickyOptions.templateOptions.items, items);
-         Sticky.openPopup = stickyOpen;
       });
 
       it('_isShowCounter', function() {
          let collection = new lookup.Collection();
 
-         assert.isFalse(collection._isShowCounter(1, 2));
-         assert.isFalse(collection._isShowCounter(2, 2));
-         assert.isTrue(collection._isShowCounter(3, 2));
+         assert.isFalse(collection._isShowCounter(1, true, 2));
+         assert.isFalse(collection._isShowCounter(2, true, 2));
+         assert.isTrue(collection._isShowCounter(3, true, 2));
+         assert.isTrue(collection._isShowCounter(3, false, 15));
       });
 
       it('_afterMount', function() {
@@ -107,6 +108,7 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
          selectedCollection._counterWidth = 0;
          selectedCollection._options.items = getItems(3);
          selectedCollection._options.maxVisibleItems = 5;
+         selectedCollection._options.multiLine = true;
          selectedCollection._forceUpdate = function() {
             isUpdate = true;
          };

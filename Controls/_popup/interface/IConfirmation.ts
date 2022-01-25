@@ -2,13 +2,15 @@ import {IConfirmationFooterOptions} from 'Controls/_popup/interface/IConfirmatio
 import {IControlOptions} from 'UI/Base';
 
 export interface IConfirmationOptions extends IConfirmationFooterOptions, IControlOptions {
-    style?: string;
+    style?: IConfirmationStyle;
     size?: string;
     message?: string;
     details?: string;
     closeHandler?: Function;
     zIndex?: number; // todo: Compatible
 }
+
+type IConfirmationStyle = 'default' | 'success' | 'danger' | 'primary';
 
 /**
  * Интерфейс для опций окон подтверждения.
@@ -42,12 +44,16 @@ export interface IConfirmationOpener {
 
 /**
  * @name Controls/_popup/interface/IConfirmationOpener#style
- * @cfg {String} Внешний вид диалога подтверждения.
+ * @cfg {Controls/_popup/interface/IConfirmationOpener/TConfirmationStyle.typedef} Внешний вид диалога подтверждения.
+ * @default default
+ */
+
+/**
+ * @typedef {String} TConfirmationStyle
  * @variant default
  * @variant success
  * @variant danger
  * @variant primary
- * @default default
  */
 
 /**

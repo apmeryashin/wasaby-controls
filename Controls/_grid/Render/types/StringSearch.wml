@@ -1,5 +1,6 @@
-<Controls.decorator:Highlight attr:title="{{title}}" highlightedValue="{{ searchValue }}">
-   <ws:value>
-      <ws:String>{{ value }}</ws:String>
-   </ws:value>
-</Controls.decorator:Highlight>
+<Controls.decorator:Highlight
+   value="{{value}}"
+   highlightedValue="{{ searchValue }}"
+
+   attr:title="{{title}}"
+/>

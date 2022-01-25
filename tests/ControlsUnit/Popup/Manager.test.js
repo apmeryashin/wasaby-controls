@@ -393,7 +393,7 @@ define(
                   }
                };
                const popupContainer = ManagerController.getContainer();
-               popupContainer.getOverlayIndex = () => item.id;
+               popupContainer.getOverlayIndex = () => 0;
                Manager.mouseDownHandler(event);
                assert.equal(popupRemoved, true);
                Manager.destroy();

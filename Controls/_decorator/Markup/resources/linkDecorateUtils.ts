@@ -42,7 +42,7 @@ const simpleLinkPrefixPattern = '([\\w\\-а-яёА-ЯЁ]{1,2048}(?:\\.[a-zA-Zа-
 const linkPrefixPattern = `(?:${protocolLinkPrefixPattern}|${simpleLinkPrefixPattern})`;
 const linkPattern = `(${linkPrefixPattern}(?:[^\\s\\ud800-\\udfff]{0,2048}))`;
 const emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]{1,2048}@[^\\s@()\\ud800-\\udfff]{1,2048}\\.([\\wа-яёА-ЯЁ]{1,2048}))';
-const endingPattern = '([^.,:\\s()\\ud800-\\udfff\"\'])';
+const endingPattern = '([^.,:\\s()\\ud800-\\udfff\"\'<>])';
 const characterRegExp = /[\wа-яёА-ЯЁ]/;
 export const linkParseRegExp = new RegExp(`(?:(?:${emailPattern}|${linkPattern})${endingPattern})|(.|\\s)`, 'g');
 

@@ -30,6 +30,7 @@
       </div>
 
       <div class="controls-Menu__content_baseline
+                  controls-Menu__row_levelPadding_{{itemData.levelPadding}}
                   {{additionalTextTemplate ? 'controls-Menu__content_padding'}}"
            style="width: {{_options.roundBorder !== false && _options.width ? _options.width + 'px'}};
                   max-width: {{_options.roundBorder !== false && _options.width ? _options.width + 'px'}}">

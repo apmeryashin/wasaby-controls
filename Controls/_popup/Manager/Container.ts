@@ -103,7 +103,7 @@ class Container extends Control<IControlOptions> {
         }
     }
 
-    getOverlayIndex(): string {
+    getOverlayIndex(): number {
         return this._overlayIndex;
     }
 

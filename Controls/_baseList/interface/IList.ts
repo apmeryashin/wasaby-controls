@@ -5,6 +5,7 @@ import { IItemPaddingOptions } from 'Controls/interface';
 import {Direction, IFontColorStyle, IItemTemplateOptions} from 'Controls/interface';
 import {IMovableOptions} from './IMovableList';
 import {RecordSet} from 'Types/collection';
+import {TRowSeparatorVisibility} from 'Controls/display';
 
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 
@@ -31,6 +32,7 @@ export interface IList extends
     IMovableOptions,
     IItemTemplateOptions,
     IItemPaddingOptions {
+    rowSeparatorVisibility?: TRowSeparatorVisibility;
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction | string;
     footerTemplate?: TemplateFunction | string;
@@ -498,6 +500,12 @@ export interface IReloadItemOptions {
  */
 
 /**
+ * @name Controls/_list/interface/IList#rowSeparatorVisibility
+ * @cfg {Controls/display:TRowSeparatorVisibility} Настройка видимости {@link /doc/platform/developmentapl/interface-development/controls/list/grid/separator/#row линий-разделителей строк} по краям и внутри списка.
+ * @default all
+ */
+
+/**
  * @name Controls/_list/interface/IList#hoverBackgroundStyle
  * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#hover Стиль подсветки строки} при наведении курсора мыши.
  * @default default
@@ -527,6 +535,12 @@ export interface IReloadItemOptions {
  * @name Controls/_list/interface/IList#urlProperty
  * @cfg {String} Имя поля записи, в котором содержится ссылка для открытия в новой вкладке.
  * @default url
+ */
+
+/**
+ * @name Controls/_list/interface/IList#fadedKeys
+ * @cfg {Array.<String|number>|undefined} Массив с идентификаторами высвеченных записей.
+ * @default undefined
  */
 
 /**

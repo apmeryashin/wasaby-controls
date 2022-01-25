@@ -133,6 +133,8 @@ export interface IAbstractListVirtualScrollControllerOptions {
     itemsEndedCallback: IItemsEndedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
     hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
+
+    feature1183225611: boolean;
 }
 
 export abstract class AbstractListVirtualScrollController<
@@ -143,8 +145,10 @@ export abstract class AbstractListVirtualScrollController<
     protected _scrollController: ScrollController;
     private _itemSizeProperty: string;
     private _virtualScrollMode: TVirtualScrollMode;
+    private _activeElementKey: CrudEntityKey;
     private readonly _itemsContainerUniqueSelector: string;
     private _keepScrollPosition: boolean = false;
+    private _scrollPosition: number;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     protected readonly _doScrollUtil: IDoScrollUtil;
@@ -200,10 +204,9 @@ export abstract class AbstractListVirtualScrollController<
     private _shouldResetScrollPosition: boolean;
 
     constructor(options: TOptions) {
-        this._initCollection(options.collection);
-
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
         this._virtualScrollMode = options.virtualScrollConfig.mode;
+        this.setActiveElementKey(options.activeElementKey);
         this._itemsContainerUniqueSelector = options.itemsContainerUniqueSelector;
 
         this._scrollToElementUtil = options.scrollToElementUtil;
@@ -213,7 +216,7 @@ export abstract class AbstractListVirtualScrollController<
         this._updateVirtualNavigationUtil = options.updateVirtualNavigationUtil;
         this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
 
-        this._setCollectionIterator(options.virtualScrollConfig.mode);
+        this._initCollection(options.collection);
         this._createScrollController(options);
     }
 
@@ -238,8 +241,17 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterMountListControl(): void {
+        this._renderNewIndexes = false;
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
+        if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
+            const activeElementIndex = this._collection.getIndexByKey(this._activeElementKey);
+            // Если активный элемент находится в начале, то на маунт он и так виден, поэтому не скроллим к нему.
+            // Если вызвать скролл, то ничего не произойдет, но при наличии графической шапки она сожмется.
+            if (activeElementIndex !== 0) {
+                this.scrollToItem(this._activeElementKey, 'top', true);
+            }
+        }
     }
 
     endBeforeUpdateListControl(): void {
@@ -326,6 +338,7 @@ export abstract class AbstractListVirtualScrollController<
             this._inertialScrolling.scrollStarted();
         }
 
+        this._scrollPosition = position;
         this._scrollController.scrollPositionChange(position);
     }
 
@@ -355,6 +368,12 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
+    setActiveElementKey(activeElementKey: CrudEntityKey): void {
+        if (this._activeElementKey !== activeElementKey) {
+            this._activeElementKey = activeElementKey;
+        }
+    }
+
     // region CollectionChanges
 
     addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
@@ -376,11 +395,16 @@ export abstract class AbstractListVirtualScrollController<
 
     resetItems(): void {
         // смотри комментарий в beforeRenderListControl
-        this._shouldResetScrollPosition = !this._keepScrollPosition;
+        // Не нужно сбрасывать скролл, если список не был проскроллен.
+        // Т.к. из-за вызова скролла сжимается графическая шапка.
+        this._shouldResetScrollPosition = !this._keepScrollPosition && !!this._scrollPosition;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
         const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
         this._scrollController.resetItems(totalCount, startIndex);
+        if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
+            this.scrollToItem(this._activeElementKey, 'top', true);
+        }
     }
 
     // endregion CollectionChanges
@@ -395,7 +419,7 @@ export abstract class AbstractListVirtualScrollController<
 
         const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
-        if (rangeChanged || this._scheduledScrollParams) {
+        if (rangeChanged || this._scheduledScrollParams || this._renderNewIndexes) {
             this._scheduleScroll({
                 type: 'scrollToElement',
                 params: { key, position, force }
@@ -499,7 +523,7 @@ export abstract class AbstractListVirtualScrollController<
         const scrollControllerOptions = this._getScrollControllerOptions(options);
         this._scrollController = new ScrollController(scrollControllerOptions);
 
-        const activeElementIndex = this._collection.getIndexByKey(options.activeElementKey);
+        const activeElementIndex = this._collection.getIndexByKey(this._activeElementKey);
         const startIndex = activeElementIndex !== -1 ? activeElementIndex : 0;
         this._scrollController.resetItems(scrollControllerOptions.totalCount, startIndex);
     }
@@ -531,6 +555,7 @@ export abstract class AbstractListVirtualScrollController<
             contentSize: 0,
             totalCount: this._collection.getCount(),
             givenItemsSizes: this._getGivenItemsSizes(),
+            feature1183225611: options.feature1183225611,
 
             indexesInitializedCallback: this._indexesInitializedCallback.bind(this),
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
@@ -761,27 +786,11 @@ export abstract class AbstractListVirtualScrollController<
                     this._scrollToElementCompletedCallback();
                 }
             } else {
-                /* TODO SCROLL починить юниты
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
                     'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
-                    'Промис scrollToItem не отстрельнет, возможны ошибки.');*/
+                    'Промис scrollToItem не отстрельнет, возможны ошибки.');
             }
         });
-    }
-
-    protected _setCollectionIterator(mode: TVirtualScrollMode): void {
-        switch (mode) {
-            case 'hide':
-                VirtualScrollHideController.setup(
-                    this._collection as unknown as VirtualScrollHideController.IVirtualScrollHideCollection
-                );
-                break;
-            default:
-                VirtualScrollController.setup(
-                    this._collection as unknown as VirtualScrollController.IVirtualScrollCollection
-                );
-                break;
-        }
     }
 
     /**
@@ -829,10 +838,26 @@ export abstract class AbstractListVirtualScrollController<
         }
 
         this._collection = collection;
+        this._setCollectionIterator();
 
         if (this._scrollController && this._collection) {
             const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
             this._scrollController.resetItems(this._collection.getCount(), startIndex);
+        }
+    }
+
+    protected _setCollectionIterator(): void {
+        switch (this._virtualScrollMode) {
+            case 'hide':
+                VirtualScrollHideController.setup(
+                    this._collection as unknown as VirtualScrollHideController.IVirtualScrollHideCollection
+                );
+                break;
+            default:
+                VirtualScrollController.setup(
+                    this._collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+                break;
         }
     }
 

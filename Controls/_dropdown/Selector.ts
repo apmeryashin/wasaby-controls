@@ -133,9 +133,7 @@ export default class Selector extends BaseDropdown {
             dataLoadCallback: this._dataLoadCallback.bind(this),
             selectorOpener: this,
             selectedKeys: options.selectedKeys || [],
-            popupClassName: options.popupClassName || ((options.showHeader ||
-                options.headerTemplate || options.headerContentTemplate) ?
-                'controls-DropdownList__margin-head' : options.multiSelect ?
+            popupClassName: options.popupClassName || (options.multiSelect ?
                     'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin'),
             allowPin: false,
             selectedItemsChangedCallback: this._prepareDisplayState.bind(this, options),
@@ -187,7 +185,8 @@ export default class Selector extends BaseDropdown {
          this._icon = this._isEmptyItem || this._isAllSelectedItem ? null : getPropValue(this._item, 'icon');
          this._text = this._getText(items, options);
          this._hasMoreText = this._getMoreText(items, options.maxVisibleItems);
-         this._tooltip = this._getFullText(items, options.displayProperty);
+         this._tooltip = this._getFullText(items, options.displayProperty,
+             options.parentProperty, options.nodeProperty);
       }
    }
 
@@ -296,11 +295,24 @@ export default class Selector extends BaseDropdown {
       return keys;
    }
 
-   private _getFullText(items: Model[], displayProperty: string, maxVisibleItems?: number): string {
+   private _getFullText(items: Model[],
+                        displayProperty: string,
+                        parentProperty: string,
+                        nodeProperty: string,
+                        maxVisibleItems?: number): string {
       const texts = [];
       factory(items).each((item) => {
+         let text = '';
          if (!maxVisibleItems || texts.length < maxVisibleItems) {
-            texts.push(getPropValue(item, displayProperty));
+            if (parentProperty) {
+               const parentKey = getPropValue(item, parentProperty);
+               const parent = parentKey && this._controller.getItems().getRecordById(parentKey);
+               if (getPropValue(parent, nodeProperty) === false) {
+                  text += `${getPropValue(parent, displayProperty)} `;
+               }
+            }
+            text += getPropValue(item, displayProperty) ?? '';
+            texts.push(text);
          }
       });
       return texts.join(', ');
@@ -311,6 +323,8 @@ export default class Selector extends BaseDropdown {
                      selectedAllKey,
                      emptyText,
                      emptyKey,
+                     parentProperty,
+                     nodeProperty,
                      keyProperty,
                      displayProperty,
                      maxVisibleItems}: Partial<IInputOptions>): string {
@@ -321,7 +335,7 @@ export default class Selector extends BaseDropdown {
       } else if (isSingleSelectionItem(item, emptyText, keyProperty, emptyKey)) {
          text = prepareEmpty(emptyText);
       } else {
-         text = this._getFullText(items, displayProperty, maxVisibleItems);
+         text = this._getFullText(items, displayProperty, parentProperty, nodeProperty, maxVisibleItems);
       }
       return text;
    }

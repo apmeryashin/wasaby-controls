@@ -15,11 +15,11 @@ export enum showType {
 }
 
 const SELECT_ACTION_ID = 'selector.action';
-const ACTION_TITLE = rk('Выбрать');
 const ACTION = {
    id: SELECT_ACTION_ID,
-   title: ACTION_TITLE,
-   showType: showType.TOOLBAR
+   icon: 'icon-RoundPlus',
+   showType: showType.TOOLBAR,
+   viewMode: 'functionalButton'
 };
 
 const _private = {

@@ -143,6 +143,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                            receivedState?: TReceivedState): void | Promise<TReceivedState | Error | void> {
         this._initStates(options, receivedState);
         this._dataLoader = new DataLoader(this._getDataLoaderOptions(options, receivedState));
+        this._operationsPanelOpen = this._operationsPanelOpen.bind(this);
 
         return this._loadDependencies<TReceivedState | Error | void>(options, () => {
             return this._beforeMountInternal(options, undefined, receivedState);
@@ -414,7 +415,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._inputSearchValue = newOptions.searchValue;
 
             if (!newOptions.searchValue && (sourceChanged || rootChanged) && searchController) {
-                this._resetSearch();
+                // сброс поиска производим без выполнения запроса с новым фильтров
+                // из-за смены корня/источника и так будет перезапрос данных
+                this._resetSearch(false);
                 sourceController.setFilter(this._filter);
             }
         }
@@ -701,12 +704,20 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     protected _rootChanged(event: SyntheticEvent, root: Key, id?: string): void {
+        let currentRoot;
+
+        if (id && this._getListOptionsById(id)?.root !== undefined) {
+            currentRoot = this._getListOptionsById(id)?.root;
+        } else {
+            currentRoot = this._root;
+        }
+
         if (!Browser._hasRootInOptions(this._options)) {
             this._setRoot(root, id);
             // Стейт _root не реактивный, поэтому необходимо звать forceUpdate
             this._forceUpdate();
         }
-        if (this._isMounted) {
+        if (this._isMounted && currentRoot !== root) {
             this._notify('rootChanged', [root, id]);
         }
     }
@@ -1000,7 +1011,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         });
     }
 
-    private _resetSearch(): void {
+    private _resetSearch(sendRequestWithNewFilter: boolean = !!this._options.sourceController): void {
         const configsCount = Object.keys(this._dataLoader.getState()).length;
 
         if (configsCount > 1) {
@@ -1015,7 +1026,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             // в противном случае происходит рассинхрон фильтров в контексте и в контроллере
             // Решается тут https://online.saby.ru/opendoc.html?guid=6c15ea37-fdf6-4dc8-a8fa-d54bd7be01bb
             const searchController = this._getSearchControllerSync();
-            searchController.reset(!this._options.sourceController);
+            if (sendRequestWithNewFilter) {
+                searchController.reset().catch((error) => error);
+            } else {
+                searchController.reset(true);
+            }
             const filter = searchController.getFilter();
             if (!isEqual(this._filter, filter)) {
                 this._filterChanged(null, filter);

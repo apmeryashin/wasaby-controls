@@ -58,5 +58,9 @@ export default class extends Control {
         this._multiselect = this._multiselect === 'visible' ? 'hidden' : 'visible';
     }
 
+    protected _changeViewMode(): void {
+        this._viewMode = this._viewMode === 'table' ? 'list' : 'table';
+    }
+
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

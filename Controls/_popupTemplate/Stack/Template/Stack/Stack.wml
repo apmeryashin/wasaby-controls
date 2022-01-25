@@ -2,7 +2,7 @@
            controls-StackTemplate
            {{ _hasRightPanel ? 'controls-StackTemplate__with-right-panel'}}"
      ws-tab-cycling="true">
-    <div class="controls-StackTemplate-shadow {{ _options.leftContentTemplate ? 'controls-StackTemplate-shadow_zindex' }}"></div>
+    <div class="controls-StackTemplate-shadow controls-StackTemplate-shadow_direction-{{ _popupDirection }} {{ _options.leftContentTemplate ? 'controls-StackTemplate-shadow_zindex' }}"></div>
 
     <ws:if data="{{_options.leftContentTemplate }}">
         <div class="controls-StackTemplate__leftArea">
@@ -16,7 +16,7 @@
         </div>
     </ws:if>
 
-    <div class="controls-StackTemplate-content_wrapper {{_getBackgroundColor()}}">
+    <div class="controls-StackTemplate-content_wrapper {{_getBackgroundColor(_options.backgroundStyle)}}">
         <div class="controls-StackTemplate-content">
             <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}">
                 <ws:partial template="Controls/_popupTemplate/Stack/Template/Header" scope="{{_options}}"
@@ -48,7 +48,7 @@
             </ws:else>
 
             <ws:if data="{{ _options.bodyContentTemplate }}">
-                <div class="controls-StackTemplate__content-area {{_getBackgroundColor()}}">
+                <div class="controls-StackTemplate__content-area {{_getBackgroundColor(_options.backgroundStyle)}}">
                     <ws:partial template="{{_options.bodyContentTemplate}}"
                                 scope="{{_options}}"
                                 hasRightTemplate="{{_hasRightPanel}}"
@@ -61,7 +61,7 @@
             </ws:if>
 
             <ws:if data="{{_options.footerContentTemplate }}">
-                <div class="controls-StackTemplate__bottomArea {{_getBackgroundColor()}}">
+                <div class="controls-StackTemplate__bottomArea {{_getBackgroundColor(_options.footerBackgroundStyle)}}">
                     <ws:partial template="{{_options.footerContentTemplate}}"
                                 scope="{{_options}}"
                                 bodyContentTemplate="{{null}}"
