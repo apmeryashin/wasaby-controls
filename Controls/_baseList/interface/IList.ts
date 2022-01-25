@@ -5,6 +5,7 @@ import { IItemPaddingOptions } from 'Controls/interface';
 import {Direction, IFontColorStyle, IItemTemplateOptions} from 'Controls/interface';
 import {IMovableOptions} from './IMovableList';
 import {RecordSet} from 'Types/collection';
+import {TRowSeparatorVisibility} from 'Controls/display';
 
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 
@@ -31,6 +32,7 @@ export interface IList extends
     IMovableOptions,
     IItemTemplateOptions,
     IItemPaddingOptions {
+    rowSeparatorVisibility?: TRowSeparatorVisibility;
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction | string;
     footerTemplate?: TemplateFunction | string;
@@ -495,6 +497,12 @@ export interface IReloadItemOptions {
  * @variant l Wide row separator line.
  * @variant null Without row separator line
  * @default null
+ */
+
+/**
+ * @name Controls/_list/interface/IList#rowSeparatorVisibility
+ * @cfg {Controls/display:TRowSeparatorVisibility} Настройка видимости {@link /doc/platform/developmentapl/interface-development/controls/list/grid/separator/#row линий-разделителей строк} по краям и внутри списка.
+ * @default all
  */
 
 /**

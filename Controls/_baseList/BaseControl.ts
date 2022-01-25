@@ -3243,7 +3243,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             ...newOptions,
             keyProperty: self._keyProperty,
             items,
-            newDesign: newOptions._dataOptionsValue?.newDesign || newOptions.newDesign,
+            // Сейчас при условии newDesign предполагается, что разделителей по краям нет.
+            // Прежде чем убирать это условие, стоит поправить прикладные репозитории.
+            rowSeparatorVisibility: (newOptions._dataOptionsValue?.newDesign || newOptions.newDesign ?
+                'items' : newOptions.rowSeparatorVisibility),
             collapsedGroups: collapsedGroups || newOptions.collapsedGroups
         };
 
@@ -3733,6 +3736,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
+        }
+
+        if (this._options.rowSeparatorVisibility !== newOptions.rowSeparatorVisibility) {
+            this._listViewModel.setRowSeparatorVisibility(newOptions.rowSeparatorVisibility);
         }
 
         if (this._options.displayProperty !== newOptions.displayProperty) {
