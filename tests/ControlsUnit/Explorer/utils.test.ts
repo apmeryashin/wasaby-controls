@@ -1,6 +1,14 @@
+/* tslint:disable:no-magic-numbers */
 import {assert} from 'chai';
+import {Model} from 'Types/entity';
 import {IHeaderCell, THeaderVisibility} from 'Controls/grid';
-import {getHeaderVisibility, needBackButtonInHeader} from 'Controls/_explorer/utils';
+import {
+    getCursorValue,
+    getHeaderVisibility,
+    isCursorNavigation,
+    needBackButtonInHeader
+} from 'Controls/_explorer/utils';
+import {INavigationOptionValue, INavigationPositionSourceConfig} from 'Controls/_interface/INavigation';
 
 describe('Explorer utils', () => {
     it('needBackButtonInHeader', () => {
@@ -63,5 +71,34 @@ describe('Explorer utils', () => {
         result = getHeaderVisibility(null, null, [{}], 'visible', 'visible');
         assert.equal(result, 'visible', 'Находимся в корне, должен вернутся указанный headerVisibility');
         //endregion
+    });
+
+    it('isCursorNavigation', () => {
+        assert.isFalse(isCursorNavigation({}));
+        assert.isFalse(isCursorNavigation({source: 'page'}));
+        assert.isTrue(isCursorNavigation({source: 'position'}));
+    });
+
+    it('getCursorValue', () => {
+        const item = new Model({
+            keyProperty: 'id',
+            rawData: {
+                id: 12,
+                title: 'Title'
+            }
+        });
+        const navigation: INavigationOptionValue<INavigationPositionSourceConfig> = {
+            sourceConfig: {
+                field: 'id'
+            }
+        };
+
+        assert.deepEqual(getCursorValue(item, navigation), [12]);
+
+        navigation.sourceConfig.field = ['id'];
+        assert.deepEqual(getCursorValue(item, navigation), [12]);
+
+        navigation.sourceConfig.field = ['id', 'title'];
+        assert.deepEqual(getCursorValue(item, navigation), [12, 'Title']);
     });
 });
