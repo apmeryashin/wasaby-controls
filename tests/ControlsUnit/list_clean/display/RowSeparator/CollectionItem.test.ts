@@ -150,13 +150,13 @@ describe('Controls/list/display/RowSeparator/CollectionItem', () => {
         });
 
         // 2.4 Записи добавились через prepend
-        it('RecordSet + prepend + newDesign', () => {
+        it('RecordSet + prepend + rowSeparatorVisibility=items', () => {
             const recordSet = new RecordSet({ rawData: [{id: 1}, {id: 2}], keyProperty: 'id' });
             const collection = new Collection({
                 keyProperty: 'id',
                 collection: recordSet,
                 rowSeparatorSize: 's',
-                newDesign: true
+                rowSeparatorVisibility: 'items'
             });
 
             const initialFirstItem = collection.at(0);

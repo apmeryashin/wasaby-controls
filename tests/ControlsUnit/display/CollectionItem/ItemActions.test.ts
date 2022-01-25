@@ -16,6 +16,7 @@ describe('Controls/display/CollectionItem/ItemActions', () => {
             owner,
             ...options,
             isBottomSeparatorEnabled: bottomSeparatorVisible,
+            rowSeparatorSize,
             contents: new Model({
                 keyProperty: 'key',
                 rawData: {
