@@ -1,7 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_lookup/SelectedCollection/SelectedCollection');
 import ItemTemplate = require('wml!Controls/_lookup/SelectedCollection/ItemTemplate');
-import chain = require('Types/chain');
 import {EventUtils} from 'UI/Events';
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
@@ -63,13 +62,13 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
    protected _beforeMount(options: ISelectedCollectionOptions): void {
       this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
-      this._visibleItems = this._getVisibleItems(options);
+      this._visibleItems = selectedCollectionUtils.getVisibleItems(options);
       this._counterWidth = options._counterWidth || 0;
    }
 
    protected _beforeUpdate(newOptions: ISelectedCollectionOptions): void {
       const itemsCount: number = newOptions.items.getCount();
-      this._visibleItems = this._getVisibleItems(newOptions);
+      this._visibleItems = selectedCollectionUtils.getVisibleItems(newOptions);
 
       if (this._isShowCounter(itemsCount, newOptions.multiLine, newOptions.maxVisibleItems)) {
          this._counterWidth = newOptions._counterWidth ||
@@ -160,20 +159,6 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
          this._stickyOpener = new StickyOpener();
       }
       return this._stickyOpener;
-   }
-
-   private _getVisibleItems({items, maxVisibleItems, multiLine, itemsLayout}: ISelectedCollectionOptions): Model[]  {
-      const startIndex = Math.max(maxVisibleItems && multiLine ? items.getCount() - maxVisibleItems : 0, 0);
-      const resultItems = [];
-      const ignoreMaxVisibleItems = multiLine || itemsLayout === 'twoColumns';
-
-      items.each((item, index) => {
-         if (index >= startIndex && (index < maxVisibleItems || ignoreMaxVisibleItems)) {
-            resultItems.push(item);
-         }
-      });
-
-      return resultItems;
    }
 
    private _getCounterWidth(itemsCount: number,
