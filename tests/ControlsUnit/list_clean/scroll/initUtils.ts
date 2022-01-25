@@ -1,4 +1,5 @@
 import jsdom = require('jsdom');
+const { JSDOM } = jsdom;
 import { stub } from 'sinon';
 
 import {Collection, CollectionItem} from 'Controls/display';
@@ -24,7 +25,7 @@ export function getCollection(items: object[]): Collection {
 }
 
 export function getItemsContainer(collection: Collection, customGetItemElement?: TGetItemElement): HTMLElement {
-    const dom = new jsdom.JSDOM(`<div class="${ItemsContainerUniqueClass}"></div>`);
+    const dom = new JSDOM(`<div class="${ItemsContainerUniqueClass}"></div>`);
 
     const itemsContainer: HTMLElement = dom.window.document.querySelector(`.${ItemsContainerUniqueClass}`);
 
@@ -37,7 +38,7 @@ export function getItemsContainer(collection: Collection, customGetItemElement?:
 }
 
 export function getListContainer(collection: Collection, customGetItemElement?: TGetItemElement): HTMLElement {
-    const dom = new jsdom.JSDOM(`<div class="${ListContainerUniqueClass}"></div>`);
+    const dom = new JSDOM(`<div class="${ListContainerUniqueClass}"></div>`);
 
     const listContainer: HTMLElement = dom.window.document.querySelector(`.${ListContainerUniqueClass}`);
 
@@ -55,7 +56,7 @@ export function getListContainer(collection: Collection, customGetItemElement?: 
 }
 
 export function getListContainerWithNestedList(collection: Collection, nestedCollection: Collection): HTMLElement {
-    const dom = new jsdom.JSDOM('');
+    const dom = new JSDOM('');
 
     const customGetItemElement: TGetItemElement = (item) => {
         const itemElement: HTMLElement = dom.window.document.createElement('div');
@@ -76,7 +77,7 @@ export function getListControl(): BaseControl {
 }
 
 function getItemElement(item: CollectionItem): HTMLElement {
-    const dom = new jsdom.JSDOM('');
+    const dom = new JSDOM('');
 
     const itemElement: HTMLElement = dom.window.document.createElement('div');
 
@@ -98,7 +99,7 @@ function getItemElement(item: CollectionItem): HTMLElement {
 }
 
 function getTriggerElement(): HTMLElement {
-    const dom = new jsdom.JSDOM('');
+    const dom = new JSDOM('');
 
     const triggerElement: HTMLElement = dom.window.document.createElement('div');
     triggerElement.className = TriggerClass;
@@ -106,7 +107,7 @@ function getTriggerElement(): HTMLElement {
 }
 
 function getIndicatorElement(): HTMLElement {
-    const dom = new jsdom.JSDOM('');
+    const dom = new JSDOM('');
 
     const indicatorElement: HTMLElement = dom.window.document.createElement('div');
     indicatorElement.className = IndicatorClass;

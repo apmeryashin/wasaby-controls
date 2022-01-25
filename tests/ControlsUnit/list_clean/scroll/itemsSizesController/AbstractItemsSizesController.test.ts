@@ -1,10 +1,8 @@
 import jsdom = require('jsdom');
+const { JSDOM } = jsdom;
 import { assert } from 'chai';
 import { stub } from 'sinon';
 
-import {
-    IItemsSizesControllerOptions as ControllerOptions
-} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
 import {
     getCollection, getItemsContainer,
     getListContainer,
@@ -15,26 +13,10 @@ import {
 import { ItemsSizeController } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
 import { Collection } from 'Controls/display';
 
-function getDefaultControllerOptions(): ControllerOptions {
-    return {
-        listContainer: null,
-        itemsContainer: null,
-        itemsQuerySelector: `.${ItemsContainerUniqueClass} > .${ItemClass}`,
-        totalCount: 0
-    };
-}
-
-function getController(options: Partial<ControllerOptions>): ItemsSizeController {
-    return new ItemsSizeController({
-        ...getDefaultControllerOptions(),
-        ...options
-    });
-}
-
 function getScrollContainerWithList(collection: Collection, beforeListContent?: HTMLElement): HTMLElement {
     const listContainer = getListContainer(collection);
 
-    const dom = new jsdom.JSDOM('<div class="controls-Scroll-ContainerBase__content"></div>');
+    const dom = new JSDOM('<div class="controls-Scroll-ContainerBase__content"></div>');
     const scrollContainer: HTMLElement = dom.window.document.querySelector('.controls-Scroll-ContainerBase__content');
     const itemsContainer = listContainer.querySelector(`.${ItemsContainerUniqueClass}`) as HTMLElement;
 
@@ -81,7 +63,7 @@ function getScrollContainerWithList(collection: Collection, beforeListContent?: 
 }
 
 function getBeforeListContent(): HTMLElement {
-    const dom = new jsdom.JSDOM('<div class="beforeListContent"></div>');
+    const dom = new JSDOM('<div class="beforeListContent"></div>');
     const beforeListContent: HTMLElement = dom.window.document.querySelector('.beforeListContent');
 
     stub(beforeListContent, 'getBoundingClientRect').callsFake(() => {
@@ -98,67 +80,71 @@ function getBeforeListContent(): HTMLElement {
     return beforeListContent;
 }
 
+const EMPTY_SIZE = {size: 0, offset: 0};
+
 describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
+    let collection;
+    let controller: ItemsSizeController;
+    let scrollContainer: HTMLElement;
+    let listContainer: HTMLElement;
+    let itemsContainer: HTMLElement;
+
     before(() => {
-        window = new jsdom.JSDOM('').window;
+        window = new JSDOM('').window;
     });
 
     after(() => {
         window = {};
     });
 
-    describe('constructor', () => {
-        it('default', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
-            });
+    beforeEach(() => {
+        collection = getCollection([
+            {key: 1, height: 15},
+            {key: 2, height: 20},
+            {key: 3, height: 30}
+        ]);
 
-            assert.equal(controller.getItemsSizes().length, 3);
-            assert.deepEqual(controller.getItemsSizes()[0], {size: 0, offset: 0});
-            assert.deepEqual(controller.getItemsSizes()[1], {size: 0, offset: 0});
-            assert.deepEqual(controller.getItemsSizes()[2], {size: 0, offset: 0});
+        scrollContainer = getScrollContainerWithList(collection);
+        itemsContainer = scrollContainer.querySelector(`.${ItemsContainerUniqueClass}`) as HTMLElement;
+        listContainer = scrollContainer.querySelector(`.${ListContainerUniqueClass}`) as HTMLElement;
+
+        controller = new ItemsSizeController({
+            itemsContainer,
+            listContainer,
+            itemsQuerySelector: `.${ItemsContainerUniqueClass} > .${ItemClass}`,
+            totalCount: collection.getCount()
+        });
+    });
+
+    afterEach(() => {
+        collection = null;
+        controller = null;
+        scrollContainer = null;
+        listContainer = null;
+        itemsContainer = null;
+    });
+
+    describe('constructor', () => {
+        it('should init itemsSizes and fill it empty values', () => {
+            const itemsSizes = controller.getItemsSizes();
+            assert.equal(itemsSizes.length, 3);
+            assert.deepEqual(itemsSizes, [EMPTY_SIZE, EMPTY_SIZE, EMPTY_SIZE]);
         });
     });
 
     describe('updateItemsSizes', () => {
         it('should update sizes in range', () => {
-            const collection = getCollection([
-                {key: 1, height: 15},
-                {key: 2, height: 20},
-                {key: 3, height: 30},
-                {key: 4, height: 20}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 4
-            });
-
-            controller.updateItemsSizes({startIndex: 0, endIndex: 4});
-            assert.equal(controller.getItemsSizes().length, 4);
-            assert.deepEqual(controller.getItemsSizes()[0], {size: 15, offset: 0});
-            assert.deepEqual(controller.getItemsSizes()[1], {size: 20, offset: 15});
-            assert.deepEqual(controller.getItemsSizes()[2], {size: 30, offset: 35});
-            assert.deepEqual(controller.getItemsSizes()[3], {size: 20, offset: 65});
+            const itemsSizes = controller.updateItemsSizes({startIndex: 0, endIndex: 3});
+            assert.equal(itemsSizes.length, 3);
+            assert.deepEqual(
+                itemsSizes,
+                [{size: 15, offset: 0}, {size: 20, offset: 15}, {size: 30, offset: 35}]
+            );
         });
     });
 
     describe('getElement', () => {
         it('should return element by key', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
-            });
             const element = controller.getElement(2);
             assert.isOk(element);
             assert.equal(element.getAttribute('item-key'), '2');
@@ -167,291 +153,155 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
 
     describe('getContentSizeBeforeItems', () => {
        it('not has content', () => {
-           const collection = getCollection([
-               {key: 1, height: '15px'},
-               {key: 2, height: '20px'},
-               {key: 3, height: '30px'}
-           ]);
-           const scrollContainer = getScrollContainerWithList(collection);
-           const itemsContainer = scrollContainer.querySelector(`.${ItemsContainerUniqueClass}`) as HTMLElement;
-           const controller = getController({
-               itemsContainer,
-               totalCount: 3
-           });
            assert.equal(controller.getContentSizeBeforeItems(), 0);
        });
 
        it('before items displayed indicator', () => {
-           const collection = getCollection([
-               {key: 1, height: '15px'},
-               {key: 2, height: '20px'},
-               {key: 3, height: '30px'}
-           ]);
            collection.displayIndicator('top', 'loading');
-           const scrollContainer = getScrollContainerWithList(collection);
-           const itemsContainer = scrollContainer.querySelector(`.${ItemsContainerUniqueClass}`) as HTMLElement;
-           const controller = getController({
-               itemsContainer,
-               totalCount: 3
-           });
            assert.equal(controller.getContentSizeBeforeItems(), 48);
        });
     });
 
     describe('getContentSizeBeforeList', () => {
        it('not has content', () => {
-           const collection = getCollection([
-               {key: 1, height: '15px'},
-               {key: 2, height: '20px'},
-               {key: 3, height: '30px'}
-           ]);
-           const scrollContainer = getScrollContainerWithList(collection);
-           const itemsContainer = scrollContainer.querySelector(`.${ItemsContainerUniqueClass}`) as HTMLElement;
-           const listContainer = scrollContainer.querySelector(`.${ListContainerUniqueClass}`) as HTMLElement;
-           const controller = getController({
-               itemsContainer,
-               listContainer,
-               totalCount: 3
-           });
+           assert.equal(controller.getContentSizeBeforeList(), 0);
+       });
+
+       it('not calc content before items', () => {
+           collection.displayIndicator('top', 'loading');
            assert.equal(controller.getContentSizeBeforeList(), 0);
        });
 
        it('has content before list', () => {
-           const collection = getCollection([
-               {key: 1, height: '15px'},
-               {key: 2, height: '20px'},
-               {key: 3, height: '30px'}
-           ]);
-           collection.displayIndicator('top', 'loading');
-
            const scrollContainer = getScrollContainerWithList(collection, getBeforeListContent());
-           const itemsContainer = scrollContainer.querySelector(`.${ItemsContainerUniqueClass}`) as HTMLElement;
-           const listContainer = scrollContainer.querySelector(`.${ListContainerUniqueClass}`) as HTMLElement;
-           const controller = getController({
-               itemsContainer,
-               listContainer,
-               totalCount: 3
-           });
+           const listContainer = scrollContainer.querySelector(`.${ListContainerUniqueClass}`);
+           controller.setListContainer(listContainer as HTMLElement);
            assert.equal(controller.getContentSizeBeforeList(), 200);
        });
     });
 
     describe('setItemsContainer', () => {
         it('should change items container', () => {
-            const collection = getCollection([
-                {key: 1, height: 15},
-                {key: 2, height: 20},
-                {key: 3, height: 30}
-            ]);
-            const controller = getController({ totalCount: 3 });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-            assert.deepEqual(controller.getItemsSizes()[0], {size: 0, offset: 0});
-            assert.deepEqual(controller.getItemsSizes()[1], {size: 0, offset: 0});
-            assert.deepEqual(controller.getItemsSizes()[2], {size: 0, offset: 0});
-
+            collection.at(0).contents.set('height', 30);
+            collection.at(1).contents.set('height', 30);
+            collection.at(2).contents.set('height', 30);
             controller.setItemsContainer(getItemsContainer(collection));
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-            assert.deepEqual(controller.getItemsSizes()[0], {size: 15, offset: 0});
-            assert.deepEqual(controller.getItemsSizes()[1], {size: 20, offset: 15});
-            assert.deepEqual(controller.getItemsSizes()[2], {size: 30, offset: 35});
+
+            assert.deepEqual(controller.getItemsSizes(), [EMPTY_SIZE, EMPTY_SIZE, EMPTY_SIZE]);
+
+            const itemsSizes = controller.updateItemsSizes({startIndex: 0, endIndex: 3});
+            assert.deepEqual(
+                itemsSizes,
+                [{size: 30, offset: 0}, {size: 30, offset: 30}, {size: 30, offset: 60}]
+            );
         });
     });
 
     describe('setListContainer', () => {
         it('should change list container', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            collection.displayIndicator('top', 'loading');
+            assert.equal(controller.getContentSizeBeforeList(), 0);
 
             const scrollContainer = getScrollContainerWithList(collection, getBeforeListContent());
-            const itemsContainer = scrollContainer.querySelector(`.${ItemsContainerUniqueClass}`) as HTMLElement;
-            const listContainer = scrollContainer.querySelector(`.${ListContainerUniqueClass}`) as HTMLElement;
-            const controller = getController({
-                itemsContainer,
-                totalCount: 3
-            });
-            assert.equal(controller.getContentSizeBeforeList(), null);
-
-            controller.setListContainer(listContainer);
+            const listContainer = scrollContainer.querySelector(`.${ListContainerUniqueClass}`);
+            controller.setListContainer(listContainer as HTMLElement);
             assert.equal(controller.getContentSizeBeforeList(), 200);
         });
     });
 
-    describe('addItems', () => {
-        it('add to start', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
-            });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-
-            controller.addItems(0, 1);
-            assert.equal(controller.getItemsSizes().length, 4);
-            assert.deepEqual(controller.getItemsSizes()[0], {size: 0, offset: 0});
-        });
-
-        it('add to middle', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
-            });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-
-            controller.addItems(1, 1);
-            assert.equal(controller.getItemsSizes().length, 4);
-            assert.deepEqual(controller.getItemsSizes()[1], {size: 0, offset: 0});
-        });
-
-        it('add to end', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
-            });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-
-            controller.addItems(3, 1);
-            assert.equal(controller.getItemsSizes().length, 4);
-            assert.deepEqual(controller.getItemsSizes()[3], {size: 0, offset: 0});
-        });
-
-        it('add two items', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
-            });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-
-            controller.addItems(0, 2);
-            assert.equal(controller.getItemsSizes().length, 5);
-            assert.deepEqual(controller.getItemsSizes()[0], {size: 0, offset: 0});
-            assert.deepEqual(controller.getItemsSizes()[1], {size: 0, offset: 0});
+    describe('setItemsQuerySelector', () => {
+        it('should change items selector', () => {
+            assert.isOk(controller.getElement(2));
+            controller.setItemsQuerySelector('.newItemSelector');
+            assert.isNotOk(controller.getElement(2));
         });
     });
 
-    describe('moveItems', () => {
-        it('should move items sizes', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
-            });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-
-            controller.moveItems(0, 1, 3, 1);
-            assert.equal(controller.getItemsSizes().length, 3);
-        });
-    });
-
-    describe('removeItems', () => {
-        it('remove from start', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
-            });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-
-            controller.removeItems(0, 1);
-            assert.equal(controller.getItemsSizes().length, 2);
+    describe('onCollectionChange', () => {
+        beforeEach(() => {
+           controller.updateItemsSizes({startIndex: 0, endIndex: 3});
         });
 
-        it('remove from middle', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
+        describe('addItems', () => {
+            it('add to start', () => {
+                const itemsSizes = controller.addItems(0, 1);
+                assert.equal(itemsSizes.length, 4);
+                assert.deepEqual(
+                    itemsSizes,
+                    [EMPTY_SIZE, {size: 15, offset: 0}, {size: 20, offset: 15}, {size: 30, offset: 35}]
+                );
             });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
 
-            controller.removeItems(1, 1);
-            assert.equal(controller.getItemsSizes().length, 2);
+            it('add to middle', () => {
+                const itemsSizes = controller.addItems(1, 1);
+                assert.equal(itemsSizes.length, 4);
+                assert.deepEqual(
+                    itemsSizes,
+                    [{size: 15, offset: 0}, EMPTY_SIZE, {size: 20, offset: 15}, {size: 30, offset: 35}]
+                );
+            });
+
+            it('add to end', () => {
+                const itemsSizes = controller.addItems(3, 1);
+                assert.equal(itemsSizes.length, 4);
+                assert.deepEqual(
+                    itemsSizes,
+                    [{size: 15, offset: 0}, {size: 20, offset: 15}, {size: 30, offset: 35}, EMPTY_SIZE]
+                );
+            });
+
+            it('add two items to start', () => {
+                const itemsSizes = controller.addItems(0, 2);
+                assert.equal(itemsSizes.length, 5);
+                assert.deepEqual(
+                    itemsSizes,
+                    [EMPTY_SIZE, EMPTY_SIZE, {size: 15, offset: 0}, {size: 20, offset: 15}, {size: 30, offset: 35}]
+                );
+            });
         });
 
-        it('remove from end', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
+        describe('moveItems', () => {
+            it('should move items sizes', () => {
+                const itemsSizes = controller.moveItems(0, 1, 2, 1);
+                assert.equal(itemsSizes.length, 3);
+                assert.deepEqual(
+                    itemsSizes,
+                    [EMPTY_SIZE, {size: 15, offset: 0}, {size: 30, offset: 35}]
+                );
             });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-
-            controller.removeItems(2, 1);
-            assert.equal(controller.getItemsSizes().length, 2);
         });
 
-        it('remove two items', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
+        describe('removeItems', () => {
+            it('remove from start', () => {
+                const itemsSizes = controller.removeItems(0, 1);
+                assert.equal(itemsSizes.length, 2);
+                assert.deepEqual(itemsSizes, [{size: 20, offset: 15}, {size: 30, offset: 35}]);
             });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
 
-            controller.removeItems(0, 2);
-            assert.equal(controller.getItemsSizes().length, 1);
+            it('remove from middle', () => {
+                const itemsSizes = controller.removeItems(1, 1);
+                assert.equal(controller.getItemsSizes().length, 2);
+                assert.deepEqual(itemsSizes, [{size: 15, offset: 0}, {size: 30, offset: 35}]);
+            });
+
+            it('remove from end', () => {
+                const itemsSizes = controller.removeItems(2, 1);
+                assert.equal(controller.getItemsSizes().length, 2);
+                assert.deepEqual(itemsSizes, [{size: 15, offset: 0}, {size: 20, offset: 15}]);
+            });
+
+            it('remove two items from start', () => {
+                const itemsSizes = controller.removeItems(0, 2);
+                assert.equal(controller.getItemsSizes().length, 1);
+                assert.deepEqual(itemsSizes, [{size: 30, offset: 35}]);
+            });
         });
-    });
 
-    describe('resetItems', () => {
-        it('should create array from empty sizes', () => {
-            const collection = getCollection([
-                {key: 1, height: '15px'},
-                {key: 2, height: '20px'},
-                {key: 3, height: '30px'}
-            ]);
-            const controller = getController({
-                itemsContainer: getItemsContainer(collection),
-                totalCount: 3
+        describe('resetItems', () => {
+            it('should create array from empty sizes', () => {
+                const itemsSizes = controller.resetItems(2);
+                assert.equal(itemsSizes.length, 2);
+                assert.deepEqual(itemsSizes, [EMPTY_SIZE, EMPTY_SIZE]);
             });
-            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
-
-            controller.resetItems(2);
-            assert.equal(controller.getItemsSizes().length, 2);
-            assert.deepEqual(controller.getItemsSizes()[0], {size: 0, offset: 0});
-            assert.deepEqual(controller.getItemsSizes()[1], {size: 0, offset: 0});
         });
     });
 });
