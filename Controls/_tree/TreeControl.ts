@@ -184,8 +184,6 @@ const _private = {
                     self._notify('collapsedItemsChanged', [expandController.getCollapsedItems()]);
                     self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [item]);
                     //endregion
-
-                    self._loadItemsToNode = false;
                 });
         }
 
@@ -203,9 +201,7 @@ const _private = {
             );
         }
 
-        if (expanded) {
-            self._loadItemsToNode = true;
-        }
+        self._collectionChangeCauseByNode = true;
 
         // TODO: Переписать
         //  https://online.sbis.ru/opendoc.html?guid=974ac162-4ee4-48b5-a2b7-4ff75dccb49c
@@ -272,9 +268,8 @@ const _private = {
         const sourceController = self.getSourceController();
 
         self._displayGlobalIndicator();
-        self._loadItemsToNode = true;
+        self._collectionChangeCauseByNode = true;
         return sourceController.load(direction, nodeKey).then((list) => {
-            self._loadItemsToNode = false;
             return list;
         }).catch((error) => {
             return error;
@@ -1095,10 +1090,15 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         removedItems: TreeItem[],
         removedItemsIndex: number
     ) {
-        // Если подгрузили записи в узел, то скролл нужно восстанавливать относительно первой полностью видимой записи.
-        if (action === IObservable.ACTION_ADD && this._loadItemsToNode) {
+        // Если развернули или свернули узел,
+        // то скролл нужно восстанавливать относительно первой полностью видимой записи.
+        if (
+            (action === IObservable.ACTION_ADD || action === IObservable.ACTION_REMOVE)
+            && this._collectionChangeCauseByNode
+        ) {
             this._listVirtualScrollController.setPredicatedRestoreDirection('backward');
         }
+        this._collectionChangeCauseByNode = false;
         super._onCollectionChangedScroll(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     }
 
