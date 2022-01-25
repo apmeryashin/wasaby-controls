@@ -404,7 +404,7 @@ define([
             assert.strictEqual(instance._viewMode, 'tile');
          });
 
-         it('async change view mode', async () => {
+         xit('async change view mode', async () => {
             const cfg = {
                viewMode: 'view1',
                columns: [{}, {}, {}],
@@ -1190,50 +1190,6 @@ define([
       });
 
       describe('restore position navigation when going back', () => {
-         it('_private::isCursorNavigation', () => {
-            assert.isFalse(GlobalView._isCursorNavigation({}));
-            assert.isFalse(GlobalView._isCursorNavigation({}));
-            assert.isFalse(GlobalView._isCursorNavigation({
-               source: 'page'
-            }));
-
-            assert.isTrue(GlobalView._isCursorNavigation({
-               source: 'position'
-            }));
-         });
-
-         it('_private::getCursorPositionFor', () => {
-            const item = new entityLib.Model({
-               keyProperty: 'id',
-               rawData: {
-                  id: 12,
-                  title: 'Title'
-               }
-            });
-            const navigation = {
-               sourceConfig: {
-                  field: 'id'
-               }
-            };
-
-            assert.deepEqual(
-                GlobalView._getCursorValue(item, navigation),
-               [12]
-            );
-
-            navigation.sourceConfig.field = ['id'];
-            assert.deepEqual(
-                GlobalView._getCursorValue(item, navigation),
-               [12]
-            );
-
-            navigation.sourceConfig.field = ['id', 'title'];
-            assert.deepEqual(
-                GlobalView._getCursorValue(item, navigation),
-               [12, 'Title']
-            );
-         });
-
          it('step back', () => {
             const root = new entityLib.Model({
                keyProperty: 'id',

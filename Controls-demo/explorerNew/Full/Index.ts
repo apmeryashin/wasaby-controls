@@ -22,13 +22,33 @@ export default class Index extends Control {
     protected _viewSource: HierarchicalMemory = new HierarchicalMemory({
         keyProperty: 'id',
         parentProperty: 'parent',
-        data: Gadgets.getData()
+        data: Gadgets.getData(),
+        filter: (item, query: {searchStr: string}) => {
+            if (query.searchStr) {
+                return item.get('title').toLowerCase().includes(query.searchStr.toLowerCase());
+            }
+
+            return true;
+        }
     });
 
-    protected _searchValue: string = '';
+    protected _searchStr: string = '';
+    protected get _searchValue(): string {
+        return this._searchStr;
+    }
+    protected set _searchValue(value: string) {
+        this._searchStr = value;
 
-    protected _viewMode: TExplorerViewMode = 'table';
+        if (this._onClearSearchHandlers.length) {
+            this._onClearSearchHandlers.forEach((callback) => callback());
+            this._onClearSearchHandlers = [];
+        }
+    }
+    private _onClearSearchHandlers: Function[] = [];
+
     protected _useColumns: boolean = false;
+    protected _viewModeChangeStatus: string = '';
+    protected _viewMode: TExplorerViewMode = 'table';
 
     // Источник данные для выбора режима отображения списка
     protected _viewModeSource: Memory = new Memory({
@@ -49,14 +69,28 @@ export default class Index extends Control {
     //region toolbar handlers
     /**
      * Обработчик пользовательской смены viewMode.
-     * Если {@link _viewColumnsCount} > 1, то будет отрендерено представление Controls.columns:View
+     * Если задана строка поиска, то viewMode будет применен после её очистки.
+     * Если {@link _viewColumnsCount} > 1, то будет отрендерено представление Controls.columns:View.
      */
-    protected _onViewModeChange(event: SyntheticEvent, newViewMode: string): void {
-        this._viewMode = newViewMode as TExplorerViewMode;
+    protected _onViewModeChange(event: SyntheticEvent, newViewMode: TExplorerViewMode): void {
+        if (this._searchValue) {
+            this._viewModeChangeStatus = `the view mode will be changed to ${newViewMode} after resetting the search string`;
+            this._onClearSearchHandlers.push(() => {
+                this._viewModeChangeStatus = '';
+                this._changeViewMode(newViewMode);
+            });
+            return;
+        }
+
+        this._changeViewMode(newViewMode);
+    }
+    //endregion
+
+    private _changeViewMode(newViewMode: TExplorerViewMode): void {
+        this._viewMode = newViewMode;
 
         if (this._viewMode === 'list') {
             this._useColumns = this._viewColumnsCount > 1;
         }
     }
-    //endregion
 }

@@ -4,44 +4,52 @@ import * as template from 'wml!Controls/_explorer/View/View';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as cInstance from 'Core/core-instance';
 import {EventUtils} from 'UI/Events';
-import { addPageDeps } from 'UICommon/Deps';
+import {addPageDeps, executeSyncOrAsync} from 'UICommon/Deps';
 import * as randomId from 'Core/helpers/Number/randomId';
 import {constants} from 'Env/Env';
-import {Logger} from 'UI/Utils';
 import {descriptor, Model} from 'Types/entity';
-import {IItemPadding, IList, IReloadItemOptions, ListView} from 'Controls/list';
-import {SingleColumnStrategy, MultiColumnStrategy} from 'Controls/marker';
+import {IEditableList, IList, IReloadItemOptions, ListView} from 'Controls/list';
+import {MultiColumnStrategy, SingleColumnStrategy} from 'Controls/marker';
 import {isEqual} from 'Types/object';
 import {CrudEntityKey, DataSet, ICrudPlus, LOCAL_MOVE_POSITION} from 'Types/source';
 import {
-    IBasePageSourceConfig, IBaseSourceConfig,
-    IDraggableOptions, IFilterOptions,
+    IBaseSourceConfig,
+    IDraggableOptions,
+    IFilterOptions,
     IHierarchyOptions,
     INavigationOptions,
     INavigationOptionValue,
-    INavigationPageSourceConfig,
-    ISelectionObject, ISortingOptions, ISourceOptions,
+    INavigationPositionSourceConfig,
+    INavigationSourceConfig,
+    ISelectionObject,
+    ISortingOptions,
+    ISourceOptions,
     TKey,
-    INavigationPositionSourceConfig, TTextTransform
+    TTextTransform
 } from 'Controls/interface';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {RecordSet} from 'Types/collection';
 import {NewSourceController, Path} from 'Controls/dataSource';
 import {SearchView, SearchViewTable} from 'Controls/searchBreadcrumbsGrid';
-import {TreeGridView, TreeGridViewTable } from 'Controls/treeGrid';
+import {TreeGridView, TreeGridViewTable} from 'Controls/treeGrid';
 import {SyntheticEvent} from 'UI/Vdom';
 import {IDragObject} from 'Controls/_dragnDrop/Container';
 import {ItemsEntity} from 'Controls/dragnDrop';
 import {TBreadcrumbsVisibility, TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
 import {TreeControl} from 'Controls/tree';
-import {IEditableList} from 'Controls/list';
 import 'css!Controls/explorer';
-import { isFullGridSupport } from 'Controls/display';
+import {isFullGridSupport} from 'Controls/display';
 import PathController from 'Controls/_explorer/PathController';
 import {Object as EventObject} from 'Env/Event';
-import {IColumn, IGridControl, IHeaderCell} from 'Controls/grid';
-import { executeSyncOrAsync } from 'UICommon/Deps';
-import {getHeaderVisibility} from './utils';
+import {IGridControl} from 'Controls/grid';
+import {
+    getCursorValue,
+    getHeaderVisibility,
+    isCursorNavigation,
+    needRecreateCollection,
+    resolveViewMode
+} from './utils';
+import OptionsTransit from 'Controls/_explorer/OptionsTransit';
 
 const HOT_KEYS = {
     _backByPath: constants.key.backspace
@@ -115,7 +123,7 @@ interface IExplorerOptions
         IDraggableOptions,
         IList,
         IEditableListOptions,
-        INavigationOptions<IBasePageSourceConfig>,
+        INavigationOptions<INavigationSourceConfig>,
         IGridControl,
         ISourceOptions,
         IFilterOptions,
@@ -160,6 +168,9 @@ interface IExplorerOptions
      * в блоке с хлебными крошками.
      */
     pathButtonSource?: ICrudPlus;
+    dragControlId?: string;
+    _navigation?: INavigationOptionValue<INavigationSourceConfig>;
+    expandedItems?: TKey[];
 }
 
 interface IMarkedKeysStore {
@@ -169,24 +180,24 @@ interface IMarkedKeysStore {
 export default class Explorer extends Control<IExplorerOptions> {
     //region protected fields
     protected _template: TemplateFunction = template;
-    // не видит WebStorm _options у базового контрола
-    protected _options: IExplorerOptions;
     protected _viewName: string;
     protected _markerStrategy: string;
     protected _viewMode: TExplorerViewMode;
     protected _viewModelConstructor: string;
     private _navigation: INavigationOptionValue<any>;
-    protected _itemTemplate: TemplateFunction;
-    protected _groupTemplate: string | TemplateFunction;
     protected _notifyHandler: typeof EventUtils.tmplNotify = EventUtils.tmplNotify;
-    protected _backgroundStyle: string;
     protected _itemsReadyCallback: Function;
     protected _itemsSetCallback: Function;
-    protected _itemPadding: object;
     protected _dragOnBreadCrumbs: boolean = false;
     protected _needSetMarkerCallback: (item: Model, domEvent: Event) => boolean;
     protected _breadCrumbsDragHighlighter: Function;
     protected _canStartDragNDrop: Function;
+    /**
+     * Флаг позволяет сказать TreeControl что он должен пропускать обработку вызова метода _beforeUpdate.
+     * Иначе на время заморозки опций dirty checking может запустить _beforeUpdate на TreeControl и он
+     * перерисуется по новым данным, которые уже будут в sourceController.
+     */
+    protected _skipUpdate: boolean = false;
     /**
      * Флаг идентифицирует нужно или нет пересоздавать коллекцию для списка.
      * Прокидывается в TreeControl (BaseControl).
@@ -194,44 +205,17 @@ export default class Explorer extends Control<IExplorerOptions> {
     protected _recreateCollection: boolean = false;
 
     /**
-     * Текущее применяемое значение строки поиска
-     */
-    protected _searchValue: string = '';
-    /**
-     * Новое значение строки поиска, которое будет применено после загрузки данных и
-     * смены viewMode
-     */
-    private _newSearchValue: string;
-
-    /**
-     * Текущая применяемая конфигурация колонок
-     */
-    protected _columns: IColumn[];
-    /**
-     * Новая конфигурация колонок, которую мы задерживаем до выполнения асинхронной операции.
-     */
-    protected _newColumns: IColumn[];
-
-    /**
-     * Текущая применяемая конфигурация заголовков колонок
-     */
-    protected _header: IHeaderCell[];
-    /**
-     * Новая конфигурация заголовков колонок, которую мы задерживаем до выполнения асинхронной операции.
-     */
-    protected _newHeader: IHeaderCell[];
-    /**
      * Конфигурация видимости заголовка, которую мы задерживаем до выполнения
      * асинхронной операции
      */
     protected _headerVisibility: string;
 
-    protected _itemActionsPosition: string;
     protected _searchInitialBreadCrumbsMode: 'row' | 'cell';
 
     protected _children: {
         treeControl: TreeControl,
-        pathController: PathController
+        pathController: PathController,
+        optionsTransit: OptionsTransit
     };
 
     protected _itemsSelector: string = '.controls-ListView__itemV';
@@ -256,10 +240,6 @@ export default class Explorer extends Control<IExplorerOptions> {
     private _isMounted: boolean = false;
     private _restoredMarkedKeys: IMarkedKeysStore = {};
     private _potentialMarkedKey: TKey;
-    private _newItemPadding: IItemPadding;
-    private _newItemActionsPosition: string;
-    private _newItemTemplate: TemplateFunction;
-    private _newBackgroundStyle: string;
     private _isGoingBack: boolean;
     // Восстановленное значение курсора при возврате назад по хлебным крошкам
     private _restoredCursor: unknown;
@@ -271,36 +251,6 @@ export default class Explorer extends Control<IExplorerOptions> {
     //endregion
 
     protected _beforeMount(cfg: IExplorerOptions): Promise<void> | void {
-        if (cfg.itemPadding) {
-            this._itemPadding = cfg.itemPadding;
-        }
-        if (cfg.itemTemplate) {
-            this._itemTemplate = cfg.itemTemplate;
-        }
-        if (cfg.groupTemplate) {
-            this._groupTemplate = cfg.groupTemplate;
-        }
-        if (cfg.backgroundStyle) {
-            this._backgroundStyle = cfg.backgroundStyle;
-        }
-        if (cfg.header) {
-            // нужно проставить и _header и _newHeader иначе здесь ниже в _setViewMode
-            // при _applyNewVisualOptions проставится this._newHeader в _header, т.к.
-            // они сейчас сравниваются на равенство
-            // TODO: Нужно отрефакторить эту логику. Сейчас заголовок нужен только
-            //  при viewMode === 'search' || 'table' + на него завязана проверка видимости
-            //  шапки с хлебными крошками в PathWrapper, но эту проверку можно также на viewMode сделать
-            this._newHeader = this._header = cfg.viewMode === 'tile' ? undefined : cfg.header;
-        }
-        if (cfg.columns) {
-            this._columns = this._newColumns = cfg.columns;
-        }
-        if (cfg.searchValue) {
-            this._searchValue = cfg.searchValue;
-        }
-
-        this._itemActionsPosition = cfg.itemActionsPosition;
-
         this._itemsReadyCallback = this._itemsReadyCallbackFunc.bind(this);
         this._itemsSetCallback = this._itemsSetCallbackFunc.bind(this);
         this._canStartDragNDrop = this._canStartDragNDropFunc.bind(this);
@@ -322,11 +272,6 @@ export default class Explorer extends Control<IExplorerOptions> {
             cfg.headerVisibility,
             cfg.breadcrumbsVisibility
         );
-
-        // TODO: для 20.5100. в 20.6000 можно удалить
-        if (cfg.displayMode) {
-            Logger.error(`${this._moduleName}: Для задания многоуровневых хлебных крошек вместо displayMode используйте опцию breadcrumbsDisplayMode`, this);
-        }
 
         // Это нужно для попадания стилей плитки в bundle на сервере
         // https://online.sbis.ru/opendoc.html?guid=f9cf5faa-15cf-4286-9721-a2e4439c0b5d
@@ -354,7 +299,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         // Т.к. у списка и таблицы заданы одинаковые коллекции, то изменение набора колонок
         // с прикладной стороны в режиме list не приводит к прокидыванию новых колонок в модель
         // и в итоге таблица разъезжается при переключении в режим таблицы
-        this._recreateCollection = this._needRecreateCollection(this._options.viewMode, cfg.viewMode, cfg.useColumns);
+        this._recreateCollection = needRecreateCollection(this._options.viewMode, cfg.viewMode, cfg.useColumns);
 
         // Мы не должны ставить маркер до проваливания, т.к. это лишняя синхронизация.
         // Но если отменили проваливание, то нужно поставить маркер.
@@ -380,37 +325,6 @@ export default class Explorer extends Control<IExplorerOptions> {
                 cfg.headerVisibility,
                 cfg.breadcrumbsVisibility
             );
-        }
-
-        if (!isEqual(cfg.itemPadding, this._options.itemPadding)) {
-            this._newItemPadding = cfg.itemPadding;
-        }
-
-        if (cfg.itemTemplate !== this._options.itemTemplate) {
-            this._newItemTemplate = cfg.itemTemplate;
-        }
-
-        if (cfg.backgroundStyle !== this._options.backgroundStyle) {
-            this._newBackgroundStyle = cfg.backgroundStyle;
-        }
-
-        if (cfg.header !== this._options.header || isViewModeChanged) {
-            this._newHeader = cfg.viewMode === 'tile' ? undefined : cfg.header;
-        }
-
-        if (cfg.columns !== this._options.columns) {
-            this._newColumns = cfg.columns;
-        }
-
-        if (cfg.searchValue !== this._options.searchValue) {
-            this._newSearchValue = cfg.searchValue || '';
-        }
-
-        if (cfg.itemActionsPosition !== this._options.itemActionsPosition) {
-            /* Нужно задерживать itemActionsPosition, потому что добавляется дополнительная колонка в гриде
-               Если сменить таблицу на плитку, то на время загрузки вьюхи таблица разъедется
-            */
-            this._newItemActionsPosition = cfg.itemActionsPosition;
         }
 
         const navigationChanged = !isEqual(cfg.navigation, this._options.navigation);
@@ -459,16 +373,11 @@ export default class Explorer extends Control<IExplorerOptions> {
             } else {
                 this._setViewModeSync(this._pendingViewMode, cfg);
             }
-        } else if (VIEW_MODEL_CONSTRUCTORS[cfg.viewMode]) {
-            // Применяем опции только если уже загружен текущий viewMode, иначе в момент попадания в данную точку
-            // мы уже загружаем viewMode и _applyNewVisualOptions будет вызван в каллбеке после его загрузки
-            // https://online.sbis.ru/opendoc.html?guid=2785c4f9-f339-4536-b531-b59e0890d894
-            this._applyNewVisualOptions();
         }
     }
 
     protected _beforeRender(): void {
-        // Сбрасываем скролл при режима отображения
+        // Сбрасываем скролл при смене режима отображения
         // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
         if (this._resetScrollAfterViewModeChange) {
             this._notify('doScroll', ['top'], {bubbling: true});
@@ -537,7 +446,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         reason: string
     ): void {
         // После получения данных обновим видимость заголовка т.к. мы не можем это сделать на
-        // beforeUpdate в следствии того, что между сменой root и получением данных есть задержка
+        // beforeUpdate вследствие того, что между сменой root и получением данных есть задержка
         // и в противном случае перерисовка будет в два этапа, сначала обновится видимость заголовка,
         // а потом придут и отрисуются данные
         if (reason === 'assign') {
@@ -571,12 +480,15 @@ export default class Explorer extends Control<IExplorerOptions> {
 
     protected _onItemClick(
         event: SyntheticEvent,
-        item: Model|Model[],
+        items: Model|Model[],
         clickEvent: SyntheticEvent,
         columnIndex?: number
     ): boolean {
-        if (item instanceof Array) {
-            item = item[item.length - 1];
+        let item: Model;
+        if (items instanceof Array) {
+            item = items[items.length - 1];
+        } else {
+            item = items;
         }
 
         const res = this._notify('itemClick', [item, clickEvent, columnIndex]) as boolean;
@@ -585,8 +497,8 @@ export default class Explorer extends Control<IExplorerOptions> {
         const changeRoot = () => {
             // Перед проваливанием запомним значение курсора записи, т.к. в крошках могут его не прислать
             const currRootInfo = this._restoredMarkedKeys[this._getRoot(this._options.root)];
-            if (currRootInfo && this._isCursorNavigation(this._navigation)) {
-                const cursorValue = this._getCursorValue(item as Model, this._navigation);
+            if (currRootInfo && isCursorNavigation(this._navigation)) {
+                const cursorValue = getCursorValue(item, this._navigation);
                 if (cursorValue) {
                     currRootInfo.cursorPosition = cursorValue;
                 }
@@ -595,7 +507,7 @@ export default class Explorer extends Control<IExplorerOptions> {
             // При проваливании нужно сбросить восстановленное значение курсора
             // иначе данные загрузятся не корректные
             if (
-                this._isCursorNavigation(this._navigation) &&
+                isCursorNavigation(this._navigation) &&
                 this._restoredCursor === this._navigation.sourceConfig.position
             ) {
                 this._navigation.sourceConfig.position = null;
@@ -615,7 +527,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         //    https://online.sbis.ru/opendoc.html?guid=f91b2f96-d6e7-45d0-b929-a0030f0a2788
         const isNodeEditable = () => {
             const hasEditOnClick = !!this._options.editingConfig && !!this._options.editingConfig.editOnClick;
-            return hasEditOnClick && !clickEvent.target.closest(`.${EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE}`);
+            return hasEditOnClick && !(clickEvent.target as HTMLElement).closest(`.${EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE}`);
         };
 
         const shouldHandleClick = res !== false && !isNodeEditable();
@@ -684,7 +596,7 @@ export default class Explorer extends Control<IExplorerOptions> {
             this._topRoot,
             breadcrumbs,
             parentProperty,
-            this._options.navigation
+            this._options.navigation as INavigationOptionValue<INavigationPositionSourceConfig>
         );
     }
 
@@ -730,16 +642,16 @@ export default class Explorer extends Control<IExplorerOptions> {
          * смешаны опции курсорной и постраничной навигаций.
          */
         // Если загрузка данных осуществляется снаружи explorer и включена навигация по курсору,
-        // то нужно восстановить курсор что бы тот, кто грузит данные сверху выполнил запрос с
+        // то нужно восстановить курсор, что бы тот, кто грузит данные сверху выполнил запрос с
         // корректным значением курсора
-        if (this._isCursorNavigation(this._options.navigation)) {
+        if (isCursorNavigation(this._options.navigation)) {
             this._restoredCursor = this._restorePositionNavigation(root);
         }
     }
 
     protected _onExternalKeyDown(event: SyntheticEvent): void {
         this._onExplorerKeyDown(event);
-        if (!event.stopped && event._bubbling !== false) {
+        if (!event.isStopped() && event.isBubbling()) {
             this._children.treeControl.handleKeyDown(event);
         }
     }
@@ -747,8 +659,8 @@ export default class Explorer extends Control<IExplorerOptions> {
     protected _onExplorerKeyDown(event: SyntheticEvent): void {
         // Хитрая система обработки нажатия клавиш.
         // В данном случае обрабатываем только Backspace, вызывая наш метод _backByPath,
-        // в который первым аргументом придет null (4й аргумент ф-ии keysHandler),
-        // а вторым объект события (1й аргумент ф-ии keysHandler)
+        // в который первым аргументом придет null (4-й аргумент ф-ии keysHandler),
+        // а вторым объект события (1-й аргумент ф-ии keysHandler)
         EventUtils.keysHandler(event, HOT_KEYS, this, null, false);
     }
 
@@ -758,11 +670,6 @@ export default class Explorer extends Control<IExplorerOptions> {
      */
     protected _backByPath(scope: unknown, event: Event): void {
         this._children.pathController.goBack(event);
-    }
-
-    protected _onArrowClick(e: SyntheticEvent): void {
-        const item = this._children.treeControl.getViewModel().getMarkedItem().getContents();
-        this._notifyHandler(e, 'arrowClick', item);
     }
 
     //region proxy methods to TreeControl
@@ -890,7 +797,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
 
         if (this._isMounted) {
-            result = this._notify('rootChanged', [root]);
+            result = this._notify('rootChanged', [root]) as boolean;
         }
 
         this._forceUpdate();
@@ -902,7 +809,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         topRoot: TKey,
         breadcrumbs: Path,
         parentProperty: string,
-        navigation: INavigationOptionValue<INavigationPageSourceConfig>
+        navigation: INavigationOptionValue<INavigationPositionSourceConfig>
     ): void {
 
         const store = this._restoredMarkedKeys;
@@ -938,8 +845,8 @@ export default class Explorer extends Control<IExplorerOptions> {
             if (store[parentKey]) {
                 store[parentKey].markedKey = crumbKey;
 
-                if (this._isCursorNavigation(navigation)) {
-                    const cursorValue = this._getCursorValue(crumb, navigation);
+                if (isCursorNavigation(navigation)) {
+                    const cursorValue = getCursorValue(crumb, navigation);
                     if (cursorValue) {
                         store[parentKey].cursorPosition = cursorValue;
                     }
@@ -959,26 +866,6 @@ export default class Explorer extends Control<IExplorerOptions> {
         this._restoredMarkedKeys = store;
     }
 
-    private _needRecreateCollection(
-        oldViewMode: TExplorerViewMode,
-        newViewMode: TExplorerViewMode,
-        useColumns: boolean
-    ): boolean {
-        if (useColumns) {
-            return false;
-        }
-
-        if (oldViewMode === 'list' && newViewMode === 'table') {
-            return true;
-        }
-
-        if (oldViewMode === 'table' && newViewMode === 'list') {
-            return true;
-        }
-
-        return false;
-    }
-
     private _itemsReadyCallbackFunc(items: RecordSet): void {
         if (this._items) {
             this._unsubscribeOnCollectionChange();
@@ -991,7 +878,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
     }
 
-    private _itemsSetCallbackFunc(items: RecordSet, newOptions: IExplorerOptions): void {
+    private _itemsSetCallbackFunc(): void {
         if (this._isGoingBack) {
             if (this._potentialMarkedKey) {
                 this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
@@ -1004,7 +891,7 @@ export default class Explorer extends Control<IExplorerOptions> {
             }
 
             if (
-                this._isCursorNavigation(this._navigation) &&
+                isCursorNavigation(this._navigation) &&
                 this._restoredCursor === this._navigation.sourceConfig.position
             ) {
                 this._navigation.sourceConfig.position = null;
@@ -1024,8 +911,8 @@ export default class Explorer extends Control<IExplorerOptions> {
             // маркера - null (в itemsSetCallback от эксплорера).
             // 5. update доходит до BaseControl'a и ключ маркера устанавливается по новым опциям
             // (ключ папки в которую вошли).
-            // [ ключ папки -> обновление бинда -> цикл -> treeControl: ключ null (itemsSetCallback) ->
-            // baseControl: ключ по бинду ]
+            // [ключ папки -> обновление бинда -> цикл -> treeControl: ключ null (itemsSetCallback) ->
+            // baseControl: ключ по бинду]
 
             // При проваливании в папку маркер нужно сбрасывать
             this._children.treeControl.setMarkedKey(null);
@@ -1041,12 +928,8 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
     }
 
-    private _resolveViewMode(viewMode: TExplorerViewMode, useColumns: boolean): TExplorerViewMode | 'columns' {
-        return viewMode === 'list' && useColumns ? 'columns' : viewMode;
-    }
-
     private _setViewConfig(viewMode: TExplorerViewMode, useColumns: boolean): void {
-        const resolvedViewMode = this._resolveViewMode(viewMode, useColumns);
+        const resolvedViewMode = resolveViewMode(viewMode, useColumns);
 
         if (isFullGridSupport()) {
             this._viewName = VIEW_NAMES[resolvedViewMode];
@@ -1064,7 +947,6 @@ export default class Explorer extends Control<IExplorerOptions> {
     private _setViewModeSync(viewMode: TExplorerViewMode, cfg: IExplorerOptions): void {
         this._viewMode = viewMode;
         this._setViewConfig(this._viewMode, cfg.useColumns);
-        this._applyNewVisualOptions();
 
         if (this._isMounted) {
             this._notify('viewModeChanged', [viewMode]);
@@ -1077,12 +959,16 @@ export default class Explorer extends Control<IExplorerOptions> {
         }
         let action: Promise<void> | void;
 
-        const resolvedViewMode = this._resolveViewMode(viewMode, cfg.useColumns);
+        const resolvedViewMode = resolveViewMode(viewMode, cfg.useColumns);
 
         if (!VIEW_MODEL_CONSTRUCTORS[resolvedViewMode]) {
             if (resolvedViewMode === 'columns') {
+                this._skipUpdate = true;
+                this._children.optionsTransit?.lock();
                 action = this._loadColumnsViewMode();
             } else {
+                this._skipUpdate = true;
+                this._children.optionsTransit?.lock();
                 action = this._loadTileViewMode();
             }
         } else {
@@ -1092,47 +978,14 @@ export default class Explorer extends Control<IExplorerOptions> {
         if (action instanceof Promise) {
             return action.then(() => {
                 this._setViewModeSync(viewMode, cfg);
+                this._skipUpdate = false;
+                this._children.optionsTransit?.unlock();
             });
         }
 
-        return this._setViewModeSync(viewMode, cfg);
-    }
-
-    private _applyNewVisualOptions(): void {
-        if (this._newItemPadding) {
-            this._itemPadding = this._newItemPadding;
-            this._newItemPadding = null;
-        }
-        if (this._newItemTemplate) {
-            this._itemTemplate = this._newItemTemplate;
-            this._newItemTemplate = null;
-        }
-        if (this._newBackgroundStyle) {
-            this._backgroundStyle = this._newBackgroundStyle;
-            this._newBackgroundStyle = null;
-        }
-
-        // _newHeader может измениться на undefined при смене с табличного представления
-        if (this._newHeader !== this._header) {
-            this._header = this._newHeader;
-            // Не надо занулять this._newHeader иначе при следующем вызове
-            // _applyNewVisualOptions это может вызвать сброс шапки
-            /*this._newHeader = null;*/
-        }
-
-        if (this._newColumns !== this._columns) {
-            this._columns = this._newColumns;
-        }
-
-        if (this._newItemActionsPosition) {
-            this._itemActionsPosition = this._newItemActionsPosition;
-            this._newItemActionsPosition = null;
-        }
-
-        if (this._newSearchValue !== undefined) {
-            this._searchValue = this._newSearchValue;
-            this._newSearchValue = undefined;
-        }
+        this._setViewModeSync(viewMode, cfg);
+        this._skipUpdate = false;
+        this._children.optionsTransit?.unlock();
     }
 
     protected _getItemTemplate(
@@ -1140,7 +993,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         itemTemplate: TemplateFunction,
         listItemTemplate: TemplateFunction,
         tileItemTemplate: TemplateFunction
-    ) {
+    ): TemplateFunction {
         if (viewMode === 'tile') {
             return tileItemTemplate;
         } else if (viewMode === 'list') {
@@ -1153,7 +1006,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         viewMode: string,
         emptyTemplate: TemplateFunction,
         listEmptyTemplate: TemplateFunction
-    ) {
+    ): TemplateFunction {
         if (viewMode === 'list' && listEmptyTemplate) {
             return listEmptyTemplate;
         }
@@ -1220,51 +1073,14 @@ export default class Explorer extends Control<IExplorerOptions> {
     private _checkedChangeViewMode(viewMode: TExplorerViewMode, cfg: IExplorerOptions): void {
         Promise.resolve(this._setViewMode(viewMode, cfg)).then(() => { //
             // Обрабатываем searchNavigationMode только после того как
-            // проставится setViewMode, т.к. он может проставится асинхронно
-            // а код ниже вызывает изменение версии модели что приводит к лишней
+            // проставится setViewMode, т.к. он может проставится асинхронно,
+            // а код ниже вызывает изменение версии модели, что приводит к лишней
             // перерисовке до изменения viewMode
             const isAllExpanded = cfg.expandedItems && cfg.expandedItems[0] === null;
             if (cfg.searchNavigationMode !== 'expand' && !isAllExpanded) {
                 this._children.treeControl.resetExpandedItems();
             }
         });
-    }
-
-    /**
-     * На основании настроек навигации определяет используется ли навигация по курсору.
-     */
-    private _isCursorNavigation(navigation: INavigationOptionValue<unknown>): boolean {
-        return !!navigation && navigation.source === 'position';
-    }
-
-    /**
-     * Собирает курсор для навигации относительно заданной записи.
-     * @param item - запись, для которой нужно "собрать" курсор
-     * @param navigation - конфигурация курсорной навигации
-     */
-    private _getCursorValue(
-        item: Model,
-        navigation: INavigationOptionValue<INavigationPositionSourceConfig>
-    ): unknown[] {
-
-        const position: unknown[] = [];
-        const optField = navigation.sourceConfig.field;
-        const fields: string[] = (optField instanceof Array) ? optField : [optField];
-
-        let noData = true;
-        fields.forEach((field) => {
-            const fieldValue = item.get(field);
-
-            position.push(fieldValue);
-            noData = noData && fieldValue === undefined;
-        });
-
-        // Если все поля курсора undefined, значит курсора нет
-        if (noData) {
-            return undefined;
-        }
-
-        return position;
     }
 
     /**
@@ -1284,7 +1100,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         if (typeof rootInfo?.cursorPosition !== 'undefined') {
             cursor = rootInfo.cursorPosition;
         } else {
-            cursor = this._options._navigation?.sourceConfig?.position;
+            cursor = (this._options._navigation?.sourceConfig as INavigationPositionSourceConfig)?.position;
         }
 
         this._navigation.sourceConfig.position = cursor || null;
@@ -1574,7 +1390,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
 
 /**
  * @typedef {String} Controls/_explorer/View/TBreadCrumbsMode
- * @description Допустимые зачения для опции {@link breadCrumbsMode}.
+ * @description Допустимые значения для опции {@link breadCrumbsMode}.
  * @variant row Все ячейки строки с хлебными крошками объединяются в одну ячейку, в которой выводятся хлебные крошки.
  * @variant cell Ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек строки с хлебными крошками.
  */

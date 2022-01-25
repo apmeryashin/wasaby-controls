@@ -1,6 +1,7 @@
-import {TKey} from 'Controls/interface';
+import {Model} from 'Types/entity';
 import {IHeaderCell, THeaderVisibility} from 'Controls/grid';
-import {TBreadcrumbsVisibility} from './interface/IExplorer';
+import {TBreadcrumbsVisibility, TExplorerViewMode} from './interface/IExplorer';
+import {INavigationOptionValue, INavigationPositionSourceConfig, TKey} from 'Controls/interface';
 
 /**
  * Вычисляет итоговую видимость заголовка таблицы:
@@ -67,4 +68,66 @@ export function needBackButtonInHeader(
         !(firstHeaderCell.title || firstHeaderCell.caption);
 
     return breadcrumbsVisibility !== 'hidden' && firsHeaderCellIsEmpty;
+}
+
+/**
+ * На основании настроек навигации определяет используется ли навигация по курсору.
+ */
+export function isCursorNavigation(navigation: INavigationOptionValue<unknown>): boolean {
+    return !!navigation && navigation.source === 'position';
+}
+
+export function resolveViewMode(viewMode: TExplorerViewMode, useColumns: boolean): TExplorerViewMode | 'columns' {
+    return viewMode === 'list' && useColumns ? 'columns' : viewMode;
+}
+
+export function needRecreateCollection(
+    oldViewMode: TExplorerViewMode,
+    newViewMode: TExplorerViewMode,
+    useColumns: boolean
+): boolean {
+    if (useColumns) {
+        return false;
+    }
+
+    if (oldViewMode === 'list' && newViewMode === 'table') {
+        return true;
+    }
+
+    // noinspection RedundantIfStatementJS
+    if (oldViewMode === 'table' && newViewMode === 'list') {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Собирает курсор для навигации относительно заданной записи.
+ * @param item - запись, для которой нужно "собрать" курсор
+ * @param navigation - конфигурация курсорной навигации
+ */
+export function getCursorValue(
+    item: Model,
+    navigation: INavigationOptionValue<INavigationPositionSourceConfig>
+): unknown[] {
+
+    const position: unknown[] = [];
+    const optField = navigation.sourceConfig.field;
+    const fields: string[] = (optField instanceof Array) ? optField : [optField];
+
+    let noData = true;
+    fields.forEach((field) => {
+        const fieldValue = item.get(field);
+
+        position.push(fieldValue);
+        noData = noData && fieldValue === undefined;
+    });
+
+    // Если все поля курсора undefined, значит курсора нет
+    if (noData) {
+        return undefined;
+    }
+
+    return position;
 }

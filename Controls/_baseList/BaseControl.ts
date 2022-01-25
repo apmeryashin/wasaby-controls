@@ -2820,6 +2820,10 @@ export interface IBaseControlOptions extends IControlOptions, ISourceOptions, II
     items?: RecordSet;
     searchValue?: string;
     hasItemWithImage: boolean;
+    /**
+     * При значении true метод _beforeUpdate ничего не делает
+     */
+    _skipUpdate?: boolean;
 }
 
 export default class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOptions>
@@ -3810,6 +3814,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _beforeUpdate(newOptions: TOptions) {
+        if (newOptions._skipUpdate) {
+            return;
+        }
+
         this._startBeforeUpdate(newOptions);
         if (newOptions.propStorageId && !isEqual(newOptions.sorting, this._options.sorting)) {
             saveConfig(newOptions.propStorageId, ['sorting'], newOptions);

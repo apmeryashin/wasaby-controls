@@ -2,14 +2,22 @@
    <div>
       <div>
          <Controls.browser:Browser
-            bind:root="_root"
             source="{{_viewSource}}"
+
             keyProperty="id"
+            searchParam="searchStr"
             nodeProperty="parent@"
             displayProperty="title"
             parentProperty="parent"
+
+            bind:root="_root"
+            bind:searchValue="_searchValue"
          >
             <div>
+               <Controls.search:InputContainer>
+                  <Controls.search:Input/>
+               </Controls.search:InputContainer>
+
                <Controls.list:Container>
                   <Controls.explorer:View
                      columns="{{_columns}}"
@@ -35,6 +43,10 @@
                />
             </div>
          </div>
+         <ws:if data="{{_viewModeChangeStatus}}">
+            <div class="controls-text-label">{{_viewModeChangeStatus}}</div>
+         </ws:if>
+
          <div class="field">
             <div class="field__caption">view columns count</div>
             <div class="field__editor">
