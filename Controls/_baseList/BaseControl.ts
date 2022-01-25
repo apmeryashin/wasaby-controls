@@ -388,6 +388,7 @@ const _private = {
             if (hasItems) {
                 self._onItemsReady(options, items);
             }
+
             if (options.collection) {
                 self._listViewModel = options.collection;
             } else {
@@ -1592,6 +1593,14 @@ const _private = {
             model.subscribe('onCollectionChange', self._onCollectionChanged);
             model.subscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
             model.subscribe('indexesChanged', self._onIndexesChanged);
+        }
+    },
+
+    deleteListViewModelHandler(self, model) {
+        if (model) {
+            model.unsubscribe('onCollectionChange', self._onCollectionChanged);
+            model.unsubscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
+            model.unsubscribe('indexesChanged', self._onIndexesChanged);
         }
     },
 
@@ -3875,6 +3884,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
+            _private.deleteListViewModelHandler(this, this._listViewModel);
             if (!newOptions.collection) {
                 this._listViewModel.destroy();
             }
@@ -3943,6 +3953,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 if (!this._listViewModel || !this._listViewModel.getCount()) {
+                    _private.deleteListViewModelHandler(this, this._listViewModel);
                     if (this._listViewModel && !this._listViewModel.destroyed && !newOptions.collection) {
                         this._listViewModel.destroy();
                     }
@@ -4351,9 +4362,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._listViewModel) {
-            this._listViewModel.unsubscribe('onCollectionChange', this._onCollectionChanged);
-            this._listViewModel.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChanged);
-            this._listViewModel.unsubscribe('indexesChanged', this._onIndexesChanged);
+            _private.deleteListViewModelHandler(this, this._listViewModel);
             // коллекцию дестроим только, если она была создана в BaseControl(не передана в опциях)
             if (!this._options.collection) {
                 this._listViewModel.destroy();
