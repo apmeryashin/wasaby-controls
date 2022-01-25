@@ -131,7 +131,10 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
         }
     }
 
-    for (idx = params.stopIndex - 1; idx >= params.startIndex; idx--) {
+    // В коллекции нет события replace. Вместо него срабатывают два события: add и remove.
+    // Это приводит к тому, что пересчету по еще неокончательным индексам
+    const lastIndex = Math.min(params.stopIndex - 1, params.display.getCount() - 1);
+    for (idx = lastIndex; idx >= params.startIndex; idx--) {
         const current = getValidCurrent({display: params.display, index: idx});
         const dispItem = current.item;
         item = dispItem.getContents();
