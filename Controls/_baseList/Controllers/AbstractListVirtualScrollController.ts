@@ -254,6 +254,19 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
+    beforeUnmountListControl(): void {
+        this._updatePlaceholdersUtil({
+            forward: 0,
+            backward: 0
+        });
+        if (this._updateVirtualNavigationUtil) {
+            this._updateVirtualNavigationUtil({
+                forward: false,
+                backward: false
+            });
+        }
+    }
+
     endBeforeUpdateListControl(): void {
         // Нужно проставлять именно тут этот флаг. Например, если нам прокинутт 2 опции, одна из которых будет source.
         // То индексы могут посчитаться где-то между beforeUpdate и beforeRender.

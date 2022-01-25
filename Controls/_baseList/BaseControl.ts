@@ -4322,6 +4322,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
         this._destroyIndicatorsController();
+        this._listVirtualScrollController?.beforeUnmountListControl();
         if (this._itemActionsController) {
             this._itemActionsController.destroy();
             this._itemActionsController = null;
