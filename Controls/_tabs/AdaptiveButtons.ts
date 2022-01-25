@@ -227,7 +227,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         const rawData = [];
         rawData.push(clonedItems[currentItemIndex]);
         const minWidth = MIN_WIDTH + MARGIN * COUNT_OF_MARGIN;
-        for (let i = 0; i <= arrWidth.length; i++) {
+        for (let i = 0; i <= arrWidth.length - 1; i++) {
              if (containerWidth - currentContainerWidth > minWidth) {
                  if (i !== currentItemIndex) {
                      const add = !afterMenuSelection || currentContainerWidth + arrWidth[i] < containerWidth;
