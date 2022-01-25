@@ -70,13 +70,15 @@
             <Controls._newBrowser.context.Consumer>
                 <Controls.list:Container id="detail">
                     <Controls.list:HotKeysContainer>
-                        <Controls.expandedCompositeTree:View
-                                name="detailList"
-                                scope="{{_detailExplorerOptions}}"
-                                itemTemplate="{{ _detailExplorerOptions.compositeItemTemplate }}"
-                                on:activeElementChanged="_detailActiveElementChanged()"
-                                on:itemClick="_onDetailItemClick()"
-                                attr:class="controls-newBrowser__detail-list"/>
+                        <Controls.Container.Async templateName="Controls/expandedCompositeTree:View">
+                            <ws:partial template="{{content.resolvedTemplate}}"
+                                        name="detailList"
+                                        scope="{{_detailExplorerOptions}}"
+                                        itemTemplate="{{ _detailExplorerOptions.compositeItemTemplate }}"
+                                        on:activeElementChanged="_detailActiveElementChanged()"
+                                        on:itemClick="_onDetailItemClick()"
+                                        attr:class="controls-newBrowser__detail-list"/>
+                        </Controls.Container.Async>
                     </Controls.list:HotKeysContainer>
                 </Controls.list:Container>
             </Controls._newBrowser.context.Consumer>
