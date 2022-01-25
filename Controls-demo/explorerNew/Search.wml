@@ -1,4 +1,4 @@
-<div class="ControlsDemo-Explorer-Search__optionWrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth1100">
    <div>Demo Controls/Explorer</div>
    <div class="demo-Explorer__options">
       <div>
@@ -20,7 +20,7 @@
                  attr:class="demo-Search__multiselectVisibility"/>
       </div>
    </div>
-   <Controls.scroll:Container attr:class="controlsDemo_fixedWidth800">
+   <Controls.scroll:Container>
       <Controls.browser:Browser source="{{_viewSource}}" keyProperty="id" bind:filter="_filter"
                                 searchParam="title" minSearchLength="{{3}}" startingWith="{{_searchStartingWith}}" parentProperty="parent"
                                 bind:root="_root">
