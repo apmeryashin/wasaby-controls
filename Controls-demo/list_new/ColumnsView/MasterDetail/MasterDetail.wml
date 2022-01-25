@@ -19,6 +19,7 @@
                                    on:dragStart="_dragStartMaster()"
                                    on:dragEnd="_dragEndMaster()"
                                    on:dragEnter="_dragEnterMaster()"
+                                   on:itemClick="_masterItemClick()"
                                    parentProperty="Раздел"
                                    style="master"
                                    markerVisibility='visible'
