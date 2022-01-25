@@ -899,11 +899,19 @@
    justify-content: center;
 }
 
-// min-height - минимальная возможная высота плитки - высота SmallTemplate
+// Рисуем настоящий контент плитки, чтобы задать высоту для кнопки добавления и скрываем его.
+.controls-TileView__addTile_hideContent {
+   visibility: hidden;
+}
+
 .controls-TileView__addTile_image {
-   min-height: var(--inline_height_3xl);
    height: 100%;
    width: 100%;
+}
+
+
+.controls-TileView__addTile_icon {
+   position: absolute;
 }
 
 //TODO: Выписана задача. чтобы унести стили из плитки https://online.sbis.ru/opendoc.html?guid=f1421bfc-67dd-4aa5-bf13-28df0a9ab79b

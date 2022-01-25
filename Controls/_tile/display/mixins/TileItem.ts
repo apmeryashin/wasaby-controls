@@ -1561,10 +1561,6 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TemplateFunction} contentTemplate Прикладной темплейт контента
      */
     getContentTemplate(itemType: TTileItem = 'default', contentTemplate?: TemplateFunction): TemplateFunction {
-        if (this['[Controls/_tile/display/mixins/AddItem]']) {
-            return AddContent;
-        }
-
         if (contentTemplate) {
             return contentTemplate;
         }
@@ -1579,6 +1575,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 return RichContent;
             case 'preview':
                 return PreviewContent;
+            case 'adding':
+                return AddContent;
         }
     }
 
