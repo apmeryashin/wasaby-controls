@@ -37,7 +37,8 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
          };
 
          collection._stickyOpener = {
-            isOpened: () => false
+            isOpened: () => false,
+            close: () => {}
          };
 
          collection._beforeUpdate({
