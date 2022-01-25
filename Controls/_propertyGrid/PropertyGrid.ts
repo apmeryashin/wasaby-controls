@@ -500,6 +500,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             collection: listModel,
             itemActions,
             editingToolbarVisible: !!editingItem,
+            contextMenuConfig: options.contextMenuConfig,
             editingItem,
             visibilityCallback: options.itemActionVisibilityCallback,
             style: 'default',
