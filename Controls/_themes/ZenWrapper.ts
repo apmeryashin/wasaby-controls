@@ -15,7 +15,7 @@ export interface IZenWrapperOptions extends IControlOptions {
  * Контейнер для стилизации элементов, лежащих на фоне некоторого изображения. Цвета элементов рассчитываются исходя из доминантного цвета изображения и комплементарного к нему.
  * @class Controls/_themes/ZenWrapper
  * @extends UI/Base:Control
- * @author Клепиков И.А.
+ * @author Мочалов М.А.
  * @public
  * @demo Controls-demo/themes/ZenWrapper/Index
  * @remark Доминантный и комплементарный цвет изображения должны быть заранее вычислены и переданы в опции контрола.
