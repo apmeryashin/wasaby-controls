@@ -1,8 +1,8 @@
 import {getWidth} from 'Controls/sizeUtils';
 import {detection} from 'Env/Env';
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
-
-const LAST_IE_VERSION = 11;
+import {Model} from 'Types/entity';
+import {ISelectedCollectionOptions} from 'Controls/_lookup/SelectedCollection';
 
 export = {
     getCounterWidth(itemsCount: number, theme: string, fontSize: string): number {
@@ -48,5 +48,19 @@ export = {
             return isStaticCounter ? visibleItemsCount + 1 : visibleItemsCount - index;
         }
         return index;
+    },
+
+    getVisibleItems({items, maxVisibleItems, multiLine, itemsLayout}: Partial<ISelectedCollectionOptions>): Model[] {
+        const startIndex = Math.max(maxVisibleItems && multiLine ? items.getCount() - maxVisibleItems : 0, 0);
+        const resultItems = [];
+        const ignoreMaxVisibleItems = multiLine || itemsLayout === 'twoColumns' || maxVisibleItems === undefined;
+
+        items.each((item, index) => {
+            if (index >= startIndex && (index < maxVisibleItems || ignoreMaxVisibleItems)) {
+                resultItems.push(item);
+            }
+        });
+
+        return resultItems;
     }
 };
