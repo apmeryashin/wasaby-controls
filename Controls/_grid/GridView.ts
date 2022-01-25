@@ -356,8 +356,9 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             classes += ` controls-Grid_support-ladder ${this._ladderOffsetSelector}`;
         }
 
-        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту
-        if (options.needShowEmptyTemplate) {
+        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту.
+        // Для IE растягивать ничего не надо, там нельзя настроить сетку строк, как в grid.
+        if (options.needShowEmptyTemplate && options.isFullGridSupport) {
             classes += ' controls-Grid__empty';
         }
 
@@ -388,7 +389,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         // В случае отображения пустого представления надо растянуть ячейку
         // с пустым представлением на всю высоту таблицы.
         // Это можно сделать при помощи grid-template-rows.
-        if (options.needShowEmptyTemplate) {
+        if (options.needShowEmptyTemplate && options.isFullGridSupport) {
             styles += this._getGridEmptyTemplateRows(options);
         }
         return styles;
