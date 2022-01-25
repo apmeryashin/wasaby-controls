@@ -10,7 +10,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 import {SyntheticEvent} from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
 import {RecordSet} from 'Types/collection';
-import { Sticky, IStickyPopupOptions } from 'Controls/popup';
+import { IStickyPopupOptions, StickyOpener } from 'Controls/popup';
 import { ILookupOptions } from 'Controls/_lookup/Lookup';
 import 'css!Controls/lookup';
 
@@ -59,7 +59,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _crossTemplate: TemplateFunction = CrossTemplate;
    protected _counterTemplate: TemplateFunction = CounterTemplate;
    protected _children: ISelectedCollectionChildren;
-   protected _infoBoxStickyId: string = null;
+   protected _stickyOpener: StickyOpener = null;
 
    protected _beforeMount(options: ISelectedCollectionOptions): void {
       this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
@@ -146,17 +146,20 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
             onClose: () => {
                if (!this._destroyed) {
                   this._notify('closeInfoBox', []);
-                  this._infoBoxStickyId = null;
                }
             }
          }
       };
 
       this._notify('openInfoBox', [config]);
+      this._getStickyOpener().open(config);
+   }
 
-      return Sticky.openPopup(config).then((popupId) => {
-         this._infoBoxStickyId = popupId;
-      });
+   private _getStickyOpener(): StickyOpener {
+      if (!this._stickyOpener) {
+         this._stickyOpener = new StickyOpener();
+      }
+      return this._stickyOpener;
    }
 
    private _getVisibleItems({items, maxVisibleItems, multiLine, itemsLayout}: ISelectedCollectionOptions): Model[]  {
@@ -192,9 +195,10 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    }
 
    private _closeInfobox(): void {
-      if (this._infoBoxStickyId) {
+      const stickyOpener = this._getStickyOpener();
+      if (stickyOpener.isOpened()) {
          this._notify('closeInfoBox');
-         Sticky.closePopup(this._infoBoxStickyId);
+         stickyOpener.close();
       }
    }
 
