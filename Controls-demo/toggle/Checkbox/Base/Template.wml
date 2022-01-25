@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div>
         <div class="controlsDemo__cell demo-checkboxBase__default">
             <div class="controls-text-label">default checkbox</div>
