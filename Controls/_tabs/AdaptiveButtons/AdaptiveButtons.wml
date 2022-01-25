@@ -51,12 +51,12 @@
                                 iconStyle="{{itemRightTemplate.item.iconStyle}}"
                     />
                 </ws:if>
-                <ws:if data="{{_lastIndex <= _items.getCount() - 1 && itemRightTemplate.index === _visibleItems.getCount() - 1 && _options.align === 'left'}}">
+                <ws:if data="{{_lastIndex < _items.getCount() - 1 && itemRightTemplate.index === _visibleItems.getCount() - 1 && _options.align === 'left'}}">
                     <ws:partial template="templateMore" />
                 </ws:if>
             </ws:itemRightTemplate>
             <ws:itemLeftTemplate>
-                <ws:if data="{{_lastIndex <= _items.getCount() - 1 && itemLeftTemplate.index === 0 && _options.align === 'right'}}">
+                <ws:if data="{{_lastIndex < _items.getCount() - 1 && itemLeftTemplate.index === 0 && _options.align === 'right'}}">
                     <ws:partial template="templateMore" />
                 </ws:if>
             </ws:itemLeftTemplate>
