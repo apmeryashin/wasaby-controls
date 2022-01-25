@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
     <div class="controlsDemo__cell demo-checkboxTriState__default">
         <div class="controls-text-label">default checkbox</div>
         <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value1"></Controls.toggle:Checkbox>
