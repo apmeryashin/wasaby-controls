@@ -1,7 +1,8 @@
 <Controls._filterPanel.BaseEditor scope="{{_options}}"
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
-                                  extendedCaption="{{_options.extendedCaption}}">
+                                  extendedCaption="{{_options.extendedCaption}}"
+                                  attr:class="controls-fontsize-{{_options.fontSize}}">
     <ws:editorTemplate>
-        <div class="controls-FilterViewPanel__basicEditor-cloud"> {{_options.extendedCaption}} </div>
+        <div class="controls-FilterViewPanel__basicEditor-cloud controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}"> {{_options.extendedCaption}} </div>
     </ws:editorTemplate>
 </Controls._filterPanel.BaseEditor>

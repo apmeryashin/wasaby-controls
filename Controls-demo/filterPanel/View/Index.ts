@@ -62,39 +62,15 @@ export default class extends Control {
                 }
             },
             {
-                name: 'owner',
-                caption: '',
-                resetValue: [],
-                value: [],
-                expanderVisible: true,
-                textValue: '',
-                editorTemplateName: 'Controls/filterPanel:ListEditor',
+                caption: null,
+                name: 'booleanEditor',
+                editorTemplateName: 'Controls/filterPanel:TextEditor',
+                resetValue: false,
+                viewMode: 'extended',
+                value: false,
                 editorOptions: {
-                    imageProperty: 'sourceImage',
-                    multiSelect: true,
-                    navigation: {
-                        source: 'page',
-                        view: 'page',
-                        sourceConfig: {
-                            pageSize: 3,
-                            page: 0,
-                            hasMore: false
-                        }
-                    },
-                    keyProperty: 'owner',
-                    additionalTextProperty: 'id',
-                    displayProperty: 'title',
-                    selectorTemplate: {
-                        templateName: 'Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate',
-                        templateOptions: {items: filterItems},
-                        popupOptions: {
-                            width: 500
-                        }
-                    },
-                    source: new Memory({
-                        data: filterItems,
-                        keyProperty: 'owner'
-                    })
+                    filterValue: true,
+                    extendedCaption: 'Без рабочих групп'
                 }
             }
         ];

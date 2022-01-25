@@ -60,6 +60,7 @@ export interface IViewPanelOptions {
     useStore?: boolean;
     style?: string;
     orientation: string;
+    editorsViewMode: string;
 }
 
 export default class View extends Control<IViewPanelOptions> {
@@ -171,7 +172,8 @@ Object.defineProperty(View, 'defaultProps', {
             backgroundStyle: 'default',
             viewMode: 'default',
             style: 'default',
-            orientation: 'vertical'
+            orientation: 'vertical',
+            editorsViewMode: 'default'
         };
     }
 });

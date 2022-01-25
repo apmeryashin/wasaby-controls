@@ -1,6 +1,7 @@
 <Controls._filterPanel.BaseEditor scope="{{_options}}"
                                   on:extendedCaptionClick="_extendedCaptionClickHandler()"
-                                  extendedCaption="{{_options.extendedCaption}}">
+                                  extendedCaption="{{_options.extendedCaption}}"
+                                  attr:class="controls-fontsize-{{_options.fontSize}}">
    <ws:editorTemplate>
        <Controls.Container.Async templateName="Controls/toggle:Tumbler">
            <ws:partial template="{{content.resolvedTemplate}}"
