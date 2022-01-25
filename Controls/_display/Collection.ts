@@ -2472,23 +2472,23 @@ export default class Collection<
             this._getItems().forEach((item: CollectionItem<S>) => {
                 // Обновление разделитей первой, не единственной записи
                 if (item === firstItem && item !== lastItem) {
-                    item.setTopSeparatorEnabled(this._shouldAddListTopSeparator(), true);
-                    item.setBottomSeparatorEnabled(false, true);
+                    item.setTopSeparatorEnabled(this._shouldAddListTopSeparator());
+                    item.setBottomSeparatorEnabled(false);
 
                 // Обновление разделитей последней, не единственной записи
                 } else if (item === lastItem && item !== firstItem) {
-                    item.setTopSeparatorEnabled(rowSeparatorVisibility !== 'edges', true);
-                    item.setBottomSeparatorEnabled(this._shouldAddListBottomSeparator(), true);
+                    item.setTopSeparatorEnabled(rowSeparatorVisibility !== 'edges');
+                    item.setBottomSeparatorEnabled(this._shouldAddListBottomSeparator());
 
                 // Обновление разделитей единственной записи
                 } else if (item === lastItem && item === firstItem) {
-                    item.setTopSeparatorEnabled(this._shouldAddListTopSeparator(), true);
-                    item.setBottomSeparatorEnabled(this._shouldAddListBottomSeparator(), true);
+                    item.setTopSeparatorEnabled(this._shouldAddListTopSeparator());
+                    item.setBottomSeparatorEnabled(this._shouldAddListBottomSeparator());
 
                 // Обновление разделитей всех хаписей, кроме первой и последней
                 } else {
-                    item.setTopSeparatorEnabled(rowSeparatorVisibility !== 'edges', true);
-                    item.setBottomSeparatorEnabled(false, true);
+                    item.setTopSeparatorEnabled(rowSeparatorVisibility !== 'edges');
+                    item.setBottomSeparatorEnabled(false);
                 }
             });
             this._nextVersion();
