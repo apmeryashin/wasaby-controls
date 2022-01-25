@@ -1,7 +1,7 @@
 <div class="{{ gridColumn.getContentClasses(backgroundColorStyle, cursor, highlightOnHover) }}">
     <Controls.Container.Async templateName="Controls/breadcrumbs:Path">
         <ws:partial template="{{ content.resolvedTemplate }}"
-                    attr:class="controls-Grid__breadCrumbs"
+                    attr:class="{{ gridColumn.getBreadcrumbsClasses() }}"
                     items="{{gridColumn.getContents()}}"
                     backgroundStyle="{{_options.backgroundStyle}}"
                     breadCrumbsItemClickCallback="{{ _onBreadcrumbItemClick }}"

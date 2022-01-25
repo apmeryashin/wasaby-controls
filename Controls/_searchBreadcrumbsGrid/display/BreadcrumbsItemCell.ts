@@ -82,6 +82,21 @@ export default class BreadcrumbsItemCell<S extends Model, TOwner extends Breadcr
       }
    }
 
+   getBreadcrumbsClasses(): string {
+      let classes = 'controls-Grid__breadCrumbs';
+
+      if (this.getBreadCrumbsMode() === 'row') {
+         classes += ' controls-SearchView_colspanedBreadcrumbs';
+         const leftPadding = this._$owner.getLeftPadding();
+         const rightPadding = this._$owner.getRightPadding();
+
+         classes += ` controls-SearchView_colspanedBreadcrumbs__leftPadding_${leftPadding}`;
+         classes += ` controls-SearchView_colspanedBreadcrumbs__rightPadding_${rightPadding}`;
+      }
+
+      return classes;
+   }
+
    shouldDisplayEditArrow(contentTemplate?: TemplateFunction): boolean {
       if (!!contentTemplate || this.getColumnIndex() > 0) {
          return false;

@@ -5,6 +5,7 @@ import { Model } from 'Types/entity';
 import BreadcrumbsItemRow from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItemRow';
 import 'Controls/decorator';
 import SearchGridCollection from 'Controls/_searchBreadcrumbsGrid/display/SearchGridCollection';
+import 'css!Controls/searchBreadcrumbsGrid';
 
 export default class SearchView extends TreeGridView {
    private _itemClickNotifiedByPathClick: boolean = false;
