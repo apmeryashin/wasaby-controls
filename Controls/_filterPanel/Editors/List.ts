@@ -70,7 +70,7 @@ export interface IListEditorOptions extends
 
 /**
  * @typedef {object} ListSourceItem
- * @property {string} additionalTextStyleProperty Цвет текста дополнительного столбца записи.
+ * @property {string} additionalTextStyleProperty Поле записи, содержащее цвет текста дополнительного столбца записи.
  */
 
 /**
