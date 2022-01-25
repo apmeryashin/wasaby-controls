@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div class="controlsDemo__cell demo-checkboxIcon__default">
         <div class="controls-text-label">checkbox icon="icon-Info" iconSize="s" iconStyle="secondary"</div>
         <Controls.toggle:Checkbox bind:value="_value1" icon="icon-Info" iconSize="s" iconStyle="secondary"></Controls.toggle:Checkbox>
