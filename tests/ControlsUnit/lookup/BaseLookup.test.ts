@@ -148,8 +148,15 @@ describe('Controls/lookup:Input', () => {
                     selectedKeys: [1]
                 });
                 const stub = sinon.stub(lookup, '_notify');
-                const lookupOptions = getLookupOptions();
+                let lookupOptions = getLookupOptions();
                 lookupOptions.selectedKeys = ['test'];
+                await lookup._beforeUpdate(lookupOptions);
+                stub.notCalledWith('selectedKeysChanged');
+                stub.calledOnceWith('itemsChanged');
+
+                lookupOptions = {...lookupOptions};
+                lookupOptions.selectedKeys = [];
+                stub.reset();
                 await lookup._beforeUpdate(lookupOptions);
                 stub.notCalledWith('selectedKeysChanged');
                 stub.calledOnceWith('itemsChanged');
