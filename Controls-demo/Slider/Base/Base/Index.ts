@@ -1,24 +1,43 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Template = require('wml!Controls-demo/Slider/Base/Base/Template');
 import 'css!Controls-demo/Controls-demo';
+import {SyntheticEvent} from 'Vdom/Vdom';
+
+const BASE_VALUES = {
+    MAX: 100,
+    MIN: 0
+};
 
 class Base extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
-    protected _value: number;
+    protected _value: number = 30;
+    protected _middleValue: number = 30;
 
-    protected _beforeMount(): void {
-        this._value = 30;
+    protected _setDataOnSlider(): void {
+        this._middleValue = this._value;
     }
 
-    protected _changedHandler(event: Event, value: string): void {
-        const resValue = Number(value);
-        if (resValue <= 0) {
-            this._value = 0;
-        } else if (resValue > 100) {
-            this._value = 100;
-        } else {
-            this._value = resValue;
+    protected _deactivatedHandler(): void {
+        this._convertValue();
+        this._setDataOnSlider();
+    }
+
+    protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
+        if (event.nativeEvent.keyCode === 13) {
+            this._deactivatedHandler();
         }
+    }
+
+    protected _convertValue(): void {
+        if (this._value <= BASE_VALUES.MIN) {
+            this._value = BASE_VALUES.MIN;
+        } else if (this._value > BASE_VALUES.MAX) {
+            this._value = BASE_VALUES.MAX;
+        }
+    }
+
+    protected _changeSliderHandler(event: SyntheticEvent, value: number): void {
+        this._value = value;
     }
 }
 
