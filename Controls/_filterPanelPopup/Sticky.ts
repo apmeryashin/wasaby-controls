@@ -38,6 +38,12 @@ interface IStickyPopup extends IControlOptions {
  */
 
 /**
+ * @name Controls/_filterPanelPopup/Sticky#width
+ * @cfg {String} Размер панели фильтров. Поддерживается стандартная линейка размеров диалоговых окон.
+ * @demo Controls-demo/filterPanelPopup/Width/Index
+ */
+
+/**
  * @name Controls/_filterPanelPopup/Sticky#headingCaption
  * @cfg {String} Текст шапки окна панели фильтров.
  */
