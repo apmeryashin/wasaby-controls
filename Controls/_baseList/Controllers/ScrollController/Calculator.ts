@@ -174,7 +174,7 @@ export class Calculator {
         return this._getEdgeVisibleItem(params);
     }
 
-    getScrollPositionToEdgeItem(edgeItem: IEdgeItem, contentSizeBeforeList: number): number {
+    getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
         let scrollPosition = 0;
 
         const item = this._itemsSizes[edgeItem.index];
@@ -190,11 +190,7 @@ export class Calculator {
             scrollPosition = itemOffset + edgeItem.borderDistance - viewportSize;
         }
 
-        const maxScrollPosition = Math.max(this._contentSize + contentSizeBeforeList - this._viewportSize, 0);
-        return Math.min(
-            Math.max(scrollPosition, 0),
-            maxScrollPosition
-        );
+        return Math.max(scrollPosition, 0);
     }
 
     private _getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
@@ -204,8 +200,17 @@ export class Calculator {
         const range = params.range || this._range;
         const placeholders = params.placeholders || this._placeholders;
         const itemsSizes = this._itemsSizes;
-        let edgeItem: IEdgeItem = null;
 
+        // Возможен кейс, что после resetItems записи не успели отрисоваться
+        // и в этот же _beforeUpdate изменили коллекцию. Допустим свернули узлы.
+        // Это вызовет removeItems, который запланирует восстановление скролла.
+        // Но скролл восстанавливать нельзя, т.к. записи еще не были отрисованы.
+        const itemsIsRendered = itemsSizes.some((it) => it.size);
+        if (!itemsIsRendered) {
+            return null;
+        }
+
+        let edgeItem: IEdgeItem = null;
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
             const nextItem = itemsSizes[index + 1];
