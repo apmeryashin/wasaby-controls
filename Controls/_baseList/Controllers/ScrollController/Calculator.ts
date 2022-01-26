@@ -204,8 +204,17 @@ export class Calculator {
         const range = params.range || this._range;
         const placeholders = params.placeholders || this._placeholders;
         const itemsSizes = this._itemsSizes;
-        let edgeItem: IEdgeItem = null;
 
+        // Возможен кейс, что после resetItems записи не успели отрисоваться
+        // и в этот же _beforeUpdate изменили коллекцию. Допустим свернули узлы.
+        // Это вызовет removeItems, который запланирует восстановление скролла.
+        // Но скролл восстанавливать нельзя, т.к. записи еще не были отрисованы.
+        const itemsIsRendered = itemsSizes.some((it) => it.size);
+        if (!itemsIsRendered) {
+            return null;
+        }
+
+        let edgeItem: IEdgeItem = null;
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
             const nextItem = itemsSizes[index + 1];
