@@ -238,7 +238,7 @@ export interface IPropertyGridOptions extends
      * @demo Controls-demo/PropertyGridNew/CaptionColumnOptions/Index
      */
     captionColumnOptions?: IPropertyGridColumnOptions;
-    withoutLevelPadding?: boolean;
+    levelPadding?: boolean;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#multiSelectAccessibilityProperty
      * @cfg {Controls/display:MultiSelectAccessibility} Имя поля записи, в котором хранится состояние видимости чекбокса.
