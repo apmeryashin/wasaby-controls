@@ -86,13 +86,14 @@
             </thead>
         </ws:if>
 
-        <!--Top loading indicator-->
         <tbody>
+            <!--Top loading indicator-->
             <ws:partial if="{{ _listModel.getTopIndicator() }}"
                         template="{{_listModel.getTopIndicator().getTemplate()}}"
                         item="{{_listModel.getTopIndicator()}}"
                         colspan="{{ _listModel.getIndicatorColspan() }}"
                         on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
+
             <!--Top loading trigger-->
             <tr>
                 <td colspan="{{ _listModel.getIndicatorColspan() }}">
@@ -116,9 +117,8 @@
 
         <!-- Items -->
         <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container">
-
-        <!-- TODO избавиться от прокидывания _onBreadcrumbClick https://online.sbis.ru/doc/0649e69a-d507-4024-9f99-c70205f535ef-->
-        <ws:partial
+            <!-- TODO избавиться от прокидывания _onBreadcrumbClick https://online.sbis.ru/doc/0649e69a-d507-4024-9f99-c70205f535ef-->
+            <ws:partial
                 template="Controls/baseList:ForTemplate"
                 itemTemplate="{{ _itemTemplate }}"
                 collection="{{ _listModel }}"
@@ -153,8 +153,8 @@
                         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
         </ws:if>
 
-        <!--Bottom loading trigger-->
         <tbody>
+            <!--Bottom loading trigger-->
             <tr>
                 <td colspan="{{ _listModel.getIndicatorColspan() }}">
                     <div class="controls-BaseControl__loadingTrigger">
