@@ -487,22 +487,29 @@ export class Calculator {
     removeItems(position: number, count: number): ICalculatorResult {
         const oldState = this._getState();
         const direction = position <= this._range.startIndex ? 'backward' : 'forward';
+        // Всегда смещаем диапазон, если удалили записи в начале и пересчитываем при удалении после startIndex,
+        // только если за пределами диапазона недостаточно записей для заполнения pageSize, в противном случае
+        // записи за пределами диапазона сами попадут в текущий диапазон из-за удаления записей.
+        const enoughItemsToForward = this._totalCount - this._range.endIndex >= count;
+        const shouldShiftRange = direction === 'backward' || !enoughItemsToForward;
 
         this._totalCount -= count;
 
-        this._range = shiftRangeBySegment({
-            currentRange: this._range,
-            direction,
-            pageSize: this._virtualScrollConfig.pageSize,
-            segmentSize: count,
-            totalCount: this._totalCount,
-            viewportSize: this._viewportSize,
-            contentSize: this._contentSize,
-            triggersOffsets: this._triggersOffsets,
-            itemsSizes: this._itemsSizes,
-            placeholders: this._placeholders,
-            calcMode: 'shift'
-        });
+        if (shouldShiftRange) {
+            this._range = shiftRangeBySegment({
+                currentRange: this._range,
+                direction,
+                pageSize: this._virtualScrollConfig.pageSize,
+                segmentSize: count,
+                totalCount: this._totalCount,
+                viewportSize: this._viewportSize,
+                contentSize: this._contentSize,
+                triggersOffsets: this._triggersOffsets,
+                itemsSizes: this._itemsSizes,
+                placeholders: this._placeholders,
+                calcMode: 'shift'
+            });
+        }
 
         this._placeholders = getPlaceholdersByRange({
             range: this._range,
