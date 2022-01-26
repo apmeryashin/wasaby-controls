@@ -74,11 +74,11 @@ export default class Selector extends BaseSelector<IDateSelectorOptions> {
     }
 
     protected _getPopupOptions(): IStickyPopupOptions {
-        const container = this._children.linkView.getPopupTarget() as Element;
+        const button = this._children.linkView.getPopupTarget() as Element;
         const value = PopupUtil.getFormattedSingleSelectionValue(this._options.value);
         return {
-            ...PopupUtil.getCommonOptions(this, container),
-            target: container,
+            ...PopupUtil.getCommonOptions(this, button),
+            target: button,
             template: getDatePopupName(this._options.datePopupType),
             className: this._getPopupClassName(),
             templateOptions: {
