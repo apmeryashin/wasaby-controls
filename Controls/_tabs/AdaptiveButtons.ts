@@ -162,15 +162,9 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
 
     private _menuItemClickHandler(event: SyntheticEvent<Event>, keys: number[]|string[]): void {
         const item: Model<object> = this._items.getRecordById(keys[0]);
-        item.set('canShrink', true);
-        /*Выбрав один из пунктов меню пользователь активирует соответствующую вкладку.
-        Выбранная в меню вкладка заменяет собой прежнюю крайнюю на экране вкладку*/
         this._selectedKeyHandler(event, item.get(this._keyProperty));
-        this._visibleItems.replace(item, this._position);
-        // для вызова перерисовки Controls.tabs:Buttons необходимо передать новые items
-        this._visibleItems = this._visibleItems.clone();
-        this._updateFilter(this._options);
         this._calcVisibleItems(this._items, this._options, keys[0], true);
+        this._updateFilter(this._options, keys[0]);
     }
 
     // при нажатии на кнопку еще останавливаем событие для того, чтобы вкладка не выбралась.
@@ -196,14 +190,22 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             data: this._items.getRawData()
         });
     }
-    private _updateFilter(options: ITabsAdaptiveButtonsOptions): void {
+    private _updateFilter(options: ITabsAdaptiveButtonsOptions, key?: TSelectedKey): void {
         const arrIdOfInvisibleItems = [];
         const filter = {};
+        const selectedKey = key || options.selectedKey;
         const keyPropertyOfLastItem = this._visibleItems.at(this._position).get(this._keyProperty);
-        // фильтруем названия неуместившихся вкладок, а так же ту которая в данный момент размещена на экране последней
+        // Фильтруем названия не уместившихся вкладок, а так же ту которая в данный момент размещена на экране
+        // последней, при условии, что она выбрана.
         this._items.each((item) => {
-            if (this._visibleItems.getIndexByValue(this._keyProperty, item.get(this._keyProperty)) === -1
-            || item.get(this._keyProperty) === keyPropertyOfLastItem) {
+            if
+            (
+                this._visibleItems.getIndexByValue(this._keyProperty, item.get(this._keyProperty)) === -1 ||
+                (
+                    item.get(this._keyProperty) === keyPropertyOfLastItem &&
+                    item.get(this._keyProperty) === selectedKey
+                )
+            ) {
                 arrIdOfInvisibleItems.push(item.get(this._keyProperty));
             }
         });
@@ -220,25 +222,22 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         const arrWidth = this._getItemsWidth(items, options.displayProperty);
         const containerWidth = options.containerWidth;
         const clonedItems = items.clone().getRawData();
-        if (options.align === 'right') {
-            clonedItems.reverse();
-            arrWidth.reverse();
-        }
         const currentItemIndex =
                            clonedItems.findIndex((item) => item[this._keyProperty] === key);
         let currentContainerWidth = this._moreButtonWidth + PADDING_OF_MORE_BUTTON + arrWidth[currentItemIndex];
         const rawData = [];
+        const aboutSelection = [];
         rawData.push(clonedItems[currentItemIndex]);
         const minWidth = MIN_WIDTH + MARGIN * COUNT_OF_MARGIN;
         for (let i = 0; i <= arrWidth.length - 1; i++) {
              if (containerWidth - currentContainerWidth > minWidth) {
                  if (i !== currentItemIndex) {
                      const add = !afterMenuSelection || currentContainerWidth + arrWidth[i] < containerWidth;
-                     const leftPosition = afterMenuSelection ? options.align === 'right' : i < currentItemIndex;
+                     const leftPosition = afterMenuSelection ? options.align === 'left' : i < currentItemIndex;
                      if (add) {
                          currentContainerWidth += arrWidth[i];
                          if (leftPosition) {
-                             rawData.unshift(clonedItems[i]);
+                             aboutSelection.push(clonedItems[i]);
                          } else {
                              rawData.push(clonedItems[i]);
                          }
@@ -248,14 +247,13 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
                  break;
              }
         }
-        if (afterMenuSelection && options.align === 'left') {
-            rawData[rawData.length - 1] = rawData.shift();
-        }
-        this._lastIndex = rawData.length - 1;
-        rawData.forEach((item) => item.canShrink = false);
+        let concatPosition = 0;
         if (options.align === 'right') {
-            rawData.reverse();
+            concatPosition = rawData.length;
         }
+        rawData.splice(concatPosition, 0, ...aboutSelection);
+        rawData.forEach((item) => item.canShrink = false);
+        this._lastIndex = rawData.length - 1;
         // Чтобы ужималась последняя вкладка.
         const indexCanShrinkElement = options.align === 'right' ? 0 : rawData.length - 1;
         rawData[indexCanShrinkElement].canShrink = true;

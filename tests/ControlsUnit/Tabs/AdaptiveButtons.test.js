@@ -71,8 +71,8 @@ define([
                 key: 'someKey2'
             }, {
                 canShrink: false,
-                caption: 'Третий',
-                key: 'someKey3'
+                caption: 'Первый',
+                key: 'someKey1'
             }
             ]);
 
@@ -144,6 +144,67 @@ define([
             maxWidth = adaptiveButtons._getTextWidth('text');
             assert.equal(maxWidth, 32);
             sandbox.restore();
+        });
+        it('_updateFilter', function() {
+            const adaptiveBtn = new tabsMod.AdaptiveButtons();
+            adaptiveBtn._position = 3;
+            adaptiveBtn._keyProperty = 'id';
+            adaptiveBtn._visibleItems = new collection.RecordSet({
+                keyProperty: 'id',
+                rawData: [
+                    {
+                        id: 1,
+                        title: 'Первый'
+                    },
+                    {
+                        id: 2,
+                        title: 'Второй'
+                    },
+                    {
+                        id: 3,
+                        title: 'Третий'
+                    },
+                    {
+                        id: 4,
+                        title: 'Четвертый'
+                    }
+                ]
+            });
+            adaptiveBtn._items = new collection.RecordSet({
+                keyProperty: 'id',
+                rawData: [
+                    {
+                        id: 1,
+                        title: 'Первый'
+                    },
+                    {
+                        id: 2,
+                        title: 'Второй'
+                    },
+                    {
+                        id: 3,
+                        title: 'Третий'
+                    },
+                    {
+                        id: 4,
+                        title: 'Четвертый'
+                    },
+                    {
+                        id: 5,
+                        title: 'Пятый'
+                    },
+                    {
+                        id: 6,
+                        title: 'Шестой'
+                    }
+                ]
+            });
+            const options4 = { selectedKey: 1};
+            adaptiveBtn._updateFilter(options4);
+            assert.deepEqual(adaptiveBtn._filter, { id: [5, 6] });
+            options4.selectedKey = 4;
+            adaptiveBtn._updateFilter(options4);
+            assert.deepEqual(adaptiveBtn._filter, { id: [4, 5, 6] });
         });
     });
 });
