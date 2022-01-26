@@ -49,7 +49,7 @@ describe('Controls/_lookup/BaseLookupView', () => {
 
       options = {selectedKeys: [], readOnly: false, multiSelect: true};
       lookup._inheritorBeforeMount(options);
-      strictEqual(lookup._maxVisibleItems, 0);
+      strictEqual(lookup._maxVisibleItems, 5);
 
       options = {selectedKeys: [], readOnly: true};
       lookup._inheritorBeforeMount(options);
