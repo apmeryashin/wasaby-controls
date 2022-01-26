@@ -120,9 +120,17 @@ export default class LookupBaseControllerClass {
 
     setItems(items: SelectedItems): void {
         const selectedKeys = [];
+        const selectedKeysMap = {};
 
         items.each((item) => {
-            selectedKeys.push(item.get(this._options.keyProperty));
+            const key = item.get(this._options.keyProperty);
+
+            if (!selectedKeysMap[key]) {
+                selectedKeys.push(key);
+                selectedKeysMap[key] = true;
+            } else {
+                Logger.error('Controls/lookup: встречены записи с одинаковыми ключами. Проверьте ответ метода БЛ, выполняющего загрузку записей для lookup');
+            }
         });
 
         this._setItems(items);
