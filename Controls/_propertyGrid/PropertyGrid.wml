@@ -12,7 +12,7 @@
     captionColumnOptions="{{_options.captionColumnOptions}}"
     editorColumnOptions="{{_options.editorColumnOptions}}"
     itemTemplate="{{_options.itemTemplate}}"
-    withoutLevelPadding="{{_options.withoutLevelPadding}}"
+    levelPadding="{{_options.levelPadding}}"
     listModel="{{_listModel}}"
     collapsedGroups="{{_collapsedGroups}}"
     editingObject="{{_options.editingObject}}"
