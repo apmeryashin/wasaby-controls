@@ -44,7 +44,7 @@ define([
                close: sinon.fake()
             };
             sandbox.stub(component, '_notify');
-
+            sandbox.stub(component, '_setFocusOnButton');
             component._onResult(null, value);
 
             sinon.assert.calledWith(component._notify, 'valueChanged');

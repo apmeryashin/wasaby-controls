@@ -194,6 +194,7 @@ define([
                close: sinon.fake()
             };
             sandbox.stub(component, '_notify');
+            sandbox.stub(component, '_setFocusOnButton');
 
             component._onResult(startValue, endValue);
 

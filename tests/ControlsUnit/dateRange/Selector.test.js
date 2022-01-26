@@ -46,6 +46,8 @@ define([
 
                sandbox.stub(component._rangeModel, 'setRange');
                const stubClosePopup = sandbox.stub(component, 'closePopup');
+               sandbox.stub(component, '_setFocusOnButton');
+
                component._onResult(test.startValue);
 
                assert.equal(stubClosePopup.called, test.result);
