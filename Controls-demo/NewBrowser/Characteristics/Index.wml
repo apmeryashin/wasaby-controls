@@ -80,6 +80,7 @@
                                     imagePosition="{{itemTemplate.listCfg.imagePosition}}"
                                     imageViewMode="{{itemTemplate.listCfg.imageViewMode}}"
                                     imageProperty="{{itemTemplate.listCfg.imageProperty}}"
+                                    characteristics="{{itemTemplate.itemData.item.characteristics}}"
                             >
                                 <ws:captionTemplate>
                                     <Controls.heading:Title
