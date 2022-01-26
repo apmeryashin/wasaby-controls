@@ -11,7 +11,7 @@ import 'css!Controls/columns';
 export default class Columns extends View { /** @lends Controls/_list/List.prototype */
     protected _viewName: TemplateFunction = Render;
     protected _markerStrategy: new (options: IMarkerStrategyOptions) => MultiColumnStrategy = MultiColumnStrategy;
-    protected _itemsSelector: string = '.controls-ColumnsView_column > .controls-ListView__itemV';
+    protected _itemsSelector: string = Render.itemsSelector;
     protected _itemContainerGetter: ItemContainerGetter = ItemContainerGetter;
     protected _plainItemsContainer: boolean = false;
 

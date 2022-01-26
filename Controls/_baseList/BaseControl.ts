@@ -4221,6 +4221,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._updateBaseControlModel(newOptions);
 
+        if (this._options.itemsSelector !== newOptions.itemsSelector) {
+            this._listVirtualScrollController.setItemsQuerySelector(newOptions.itemsSelector);
+        }
+
         this._endBeforeUpdate(newOptions);
         this._listVirtualScrollController.endBeforeUpdateListControl();
     }
