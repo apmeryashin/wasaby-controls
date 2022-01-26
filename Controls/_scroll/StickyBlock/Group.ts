@@ -9,7 +9,8 @@ import {
     isStickySupport,
     MODE,
     POSITION,
-    SHADOW_VISIBILITY_BY_CONTROLLER
+    SHADOW_VISIBILITY_BY_CONTROLLER,
+    IPositionOrientation
 } from 'Controls/_scroll/StickyBlock/Utils';
 import {SHADOW_VISIBILITY} from './Utils';
 import fastUpdate from './FastUpdate';
@@ -365,7 +366,8 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             index = this._headersStack[position].indexOf(id);
             if (index !== -1) {
                 this._headersStack[position].splice(index, 1);
-                isUpdated = true;
+                // Обновляем смещения только у стикнутых по горизонтали заголовков.
+                isUpdated = position === POSITION.left || position === POSITION.right;
             }
         }
 
@@ -416,7 +418,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                 this._isRegistry = true;
             }
         } else {
-            this._removeFromStack(data.id, this._headersStack);
+            this._removeFromStack(data.id);
             delete this._headers[data.id];
             const index = this._delayedHeaders.indexOf(data.id);
             if (index > -1) {
