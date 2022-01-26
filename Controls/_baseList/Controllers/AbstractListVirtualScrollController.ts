@@ -265,6 +265,7 @@ export abstract class AbstractListVirtualScrollController<
                 backward: false
             });
         }
+        this._scrollController.destroy();
     }
 
     endBeforeUpdateListControl(): void {
