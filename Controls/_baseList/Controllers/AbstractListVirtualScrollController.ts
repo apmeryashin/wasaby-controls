@@ -45,7 +45,7 @@ import { TVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll'
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
 export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement' | 'doScroll'
-    | 'applyScrollPosition';
+    | 'applyScrollPosition' | 'scrollToItem';
 
 export interface IScheduledScrollToElementParams {
     key: CrudEntityKey;
@@ -400,10 +400,29 @@ export abstract class AbstractListVirtualScrollController<
         this._shouldResetScrollPosition = !this._keepScrollPosition && !!this._scrollPosition;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
-        const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
+        const activeIndex = this._activeElementKey ? this._collection.getIndexByKey(this._activeElementKey) : 0;
+
+        // Инициализируем диапазон, начиная:
+        // с текущего startIndex, если собираемся оставить прежнюю позицию скролла,
+        // с индекса активного элемента, если он задан
+        // с нуля в остальных случаях
+        const startIndex = this._keepScrollPosition
+            ? this._collection.getStartIndex()
+            : (activeIndex !== -1 ? activeIndex : 0);
         this._scrollController.resetItems(totalCount, startIndex);
         if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
-            this.scrollToItem(this._activeElementKey, 'top', true);
+            if (this._renderInProgress) {
+                this._scheduleScroll({
+                    type: 'scrollToItem',
+                    params: {
+                        key: this._activeElementKey,
+                        position: 'top',
+                        force: true
+                    }
+                });
+            } else {
+                this.scrollToItem(this._activeElementKey, 'top', true);
+            }
         }
     }
 
@@ -601,14 +620,16 @@ export abstract class AbstractListVirtualScrollController<
                     ? this._predicatedRestoreDirection
                     : params.shiftDirection;
                 this._predicatedRestoreDirection = null;
-                this._scheduleScroll({
-                    type: 'calculateRestoreScrollParams',
-                    params: {
-                        direction: restoreDirection,
-                        range: params.oldRange,
-                        placeholders: params.oldPlaceholders
-                    } as IEdgeItemCalculatingParams
-                });
+                if (this._scheduledScrollParams?.type !== 'scrollToElement') {
+                    this._scheduleScroll({
+                        type: 'calculateRestoreScrollParams',
+                        params: {
+                            direction: restoreDirection,
+                            range: params.oldRange,
+                            placeholders: params.oldPlaceholders
+                        } as IEdgeItemCalculatingParams
+                    });
+                }
             }
         });
     }
@@ -754,6 +775,18 @@ export abstract class AbstractListVirtualScrollController<
                         scrollToElementParams.force
                     );
                     this._scheduledScrollParams = null;
+                    break;
+                case 'scrollToItem':
+                    const scrollToItemParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
+                    this._scheduledScrollParams = null;
+                    this._scheduleScroll({
+                        type: 'scrollToElement',
+                        params: {
+                            key: scrollToItemParams.key,
+                            position: scrollToItemParams.position,
+                            force: scrollToItemParams.force
+                        }
+                    });
                     break;
                 case 'doScroll':
                     const doScrollParams = this._scheduledScrollParams.params as IDoScrollParams;
