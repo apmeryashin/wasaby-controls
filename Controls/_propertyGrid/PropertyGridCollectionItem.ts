@@ -120,11 +120,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
 
     getPropertyLevel(): number {
         const currentLevel = this.getLevel();
-        if (this.isNode()) {
-            return currentLevel;
-        } else {
-            return currentLevel - 1;
-        }
+        return currentLevel;
     }
 
     getValidateTemplateOptions(): Record<string, unknown> {
