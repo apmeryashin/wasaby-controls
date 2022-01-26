@@ -34,6 +34,15 @@ export default class BaseSelector<T extends IBaseSelectorOptions> extends Contro
             this.closePopup();
             this._notifyValueChanged(value);
         }
+        this._setFocusOnButton();
+    }
+
+    protected _setFocusOnButton(): void {
+        // После закрытия попапа ставим фокус на кнопку.
+        // Это нужно для корректной работы обводки выбранного контрола в form:FocusWithEnter
+        // TODO: Можно удалить когда закроем задачу
+        //  https://online.sbis.ru/opendoc.html?guid=26a58570-957a-4dda-ad4d-06d9918ef196
+        this._children.linkView.getPopupTarget().activate();
     }
 
     shiftPeriod(delta: number): void {

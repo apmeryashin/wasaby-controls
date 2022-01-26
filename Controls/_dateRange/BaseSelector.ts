@@ -34,6 +34,7 @@ export default class DateRangeBaseSelector extends BaseSelector<IBaseSelectorOpt
             this._rangeModel.setRange(startValue, endValue);
             this.closePopup();
         }
+        this._setFocusOnButton();
     }
 
     protected _getPopupOptions(): IStickyPopupOptions {
