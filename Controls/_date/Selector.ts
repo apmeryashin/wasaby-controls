@@ -77,7 +77,7 @@ export default class Selector extends BaseSelector<IDateSelectorOptions> {
         const container = this._children.linkView.getPopupTarget() as Element;
         const value = PopupUtil.getFormattedSingleSelectionValue(this._options.value);
         return {
-            ...PopupUtil.getCommonOptions(this),
+            ...PopupUtil.getCommonOptions(this, container),
             target: container,
             template: getDatePopupName(this._options.datePopupType),
             className: this._getPopupClassName(),

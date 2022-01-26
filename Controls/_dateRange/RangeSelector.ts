@@ -188,7 +188,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             value = PopupUtil.getFormattedSingleSelectionValue(this._rangeModel.startValue || this._startValue);
         }
         return {
-            ...PopupUtil.getCommonOptions(this),
+            ...PopupUtil.getCommonOptions(this, container),
             target: container,
             template: getDatePopupName(this._options.datePopupType),
             className: this._getPopupClassName(),
