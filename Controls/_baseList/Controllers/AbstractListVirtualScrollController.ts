@@ -391,7 +391,14 @@ export abstract class AbstractListVirtualScrollController<
     // region CollectionChanges
 
     addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
-        this._scrollController.addItems(position, count, scrollMode, calcMode);
+        const range = this._scrollController.addItems(position, count, scrollMode, calcMode);
+
+        // Если мы не пересчитываем индексы, то это значит что запись добавлена внутрь диапазона
+        // и она должна собой выместить старые записи из диапазона. В режиме hide нужно применить индексы,
+        // чтобы для новых элементов проставить состояние setRendered, т.к. они внутри диапазона.
+        if (calcMode === 'nothing' && this._virtualScrollMode === 'hide') {
+            this._applyIndexes(range.startIndex, range.endIndex, null);
+        }
     }
 
     moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): void {

@@ -297,7 +297,7 @@ export class ScrollController {
      * @param scrollMode Режим скролла
      * @param calcMode Режим пересчета записей
      */
-    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
+    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): IItemsRange {
         const itemsSizes = this._itemsSizesController.addItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
@@ -311,6 +311,7 @@ export class ScrollController {
         this._calculator.setTriggerOffsets(triggersOffsets);
 
         this._processCalculatorResult(result, scrollMode);
+        return result.range;
     }
 
     /**
