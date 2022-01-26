@@ -113,7 +113,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
 
     static getDefaultOptions(): IDialogTemplateOptions {
         return {
-            headingFontColorStyle: 'secondary',
+            headingFontColorStyle: 'default',
             headerBackgroundStyle: 'default',
             headerBorderVisible: false,
             backgroundStyle: 'default',
