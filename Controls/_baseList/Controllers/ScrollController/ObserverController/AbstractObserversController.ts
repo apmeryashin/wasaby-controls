@@ -117,6 +117,13 @@ export abstract class AbstractObserversController {
         }
     }
 
+    destroy(): void {
+        if (this._observer) {
+            this._observer.destroy();
+            this._observer = null;
+        }
+    }
+
     setListContainer(newListContainer: HTMLElement): void {
         this._listContainer = newListContainer;
         if (this._observer) {
