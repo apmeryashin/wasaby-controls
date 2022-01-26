@@ -9,7 +9,8 @@
                                headingCaption="{{_options.headingCaption || _headingCaption}}"
                                attr:class="controls-FilterPanelPopup
                                            controls-FilterPanelPopup-uppercase
-                                           controls-FilterPanelPopup-{{_options.orientation}}-{{_options.width}}
+                                           {{_options.width !== 'default' ? 'controls-FilterPanelPopup_width-' + _options.width :
+                                           'controls-FilterPanelPopup-' + _options.orientation + '-' + _options.width}}
                                            controls_filterPanelPopup_theme-{{_options.theme}}
                                            controls_filterPanel_theme-{{_options.theme}}">
     <ws:headerContentTemplate>
