@@ -392,8 +392,7 @@ export class ScrollController {
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        const contentSizeBeforeList = this._itemsSizesController.getContentSizeBeforeList();
-        return this._calculator.getScrollPositionToEdgeItem(edgeItem, contentSizeBeforeList);
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
     }
 
     /**
