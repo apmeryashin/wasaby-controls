@@ -74,10 +74,12 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     protected _filter: object;
     protected _itemTemplate: string = 'Controls/tabs:buttonsItemTemplate';
     protected _position: number;
+    protected _keyProperty: string;
 
     protected _beforeMount(options?: ITabsAdaptiveButtonsOptions,
                            contexts?: object,
                            receivedState?: IReceivedState): Promise<IReceivedState> | void {
+        this._keyProperty = options.keyProperty || options.items.getKeyProperty();
         if (options.containerWidth === undefined || isNaN(options.containerWidth)) {
             Logger.error('Не задана обязательная опция containerWidth. Вкладки не будут построены.', this);
         }
@@ -93,7 +95,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             if (this._lastIndex < 0) {
                 return;
             }
-            this._menuSource = this._createMemoryForMenu(options.keyProperty);
+            this._menuSource = this._createMemoryForMenu(this._keyProperty);
             this._updateFilter(options);
         } else {
             return new Promise((resolve) => {
@@ -163,7 +165,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         item.set('canShrink', true);
         /*Выбрав один из пунктов меню пользователь активирует соответствующую вкладку.
         Выбранная в меню вкладка заменяет собой прежнюю крайнюю на экране вкладку*/
-        this._selectedKeyHandler(event, item.get(this._options.keyProperty));
+        this._selectedKeyHandler(event, item.get(this._keyProperty));
         this._visibleItems.replace(item, this._position);
         // для вызова перерисовки Controls.tabs:Buttons необходимо передать новые items
         this._visibleItems = this._visibleItems.clone();
@@ -184,7 +186,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         if (this._lastIndex < 0) {
             return;
         }
-        this._menuSource = this._createMemoryForMenu(options.keyProperty);
+        this._menuSource = this._createMemoryForMenu(this._keyProperty);
         this._updateFilter(options);
     }
 
@@ -197,15 +199,15 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     private _updateFilter(options: ITabsAdaptiveButtonsOptions): void {
         const arrIdOfInvisibleItems = [];
         const filter = {};
-        const keyPropertyOfLastItem = this._visibleItems.at(this._position).get(options.keyProperty);
+        const keyPropertyOfLastItem = this._visibleItems.at(this._position).get(this._keyProperty);
         // фильтруем названия неуместившихся вкладок, а так же ту которая в данный момент размещена на экране последней
         this._items.each((item) => {
-            if (this._visibleItems.getIndexByValue(options.keyProperty, item.get(options.keyProperty)) === -1
-            || item.get(options.keyProperty) === keyPropertyOfLastItem) {
-                arrIdOfInvisibleItems.push(item.get(options.keyProperty));
+            if (this._visibleItems.getIndexByValue(this._keyProperty, item.get(this._keyProperty)) === -1
+            || item.get(this._keyProperty) === keyPropertyOfLastItem) {
+                arrIdOfInvisibleItems.push(item.get(this._keyProperty));
             }
         });
-        filter[options.keyProperty] = arrIdOfInvisibleItems;
+        filter[this._keyProperty] = arrIdOfInvisibleItems;
         this._filter = filter;
     }
 
@@ -222,7 +224,8 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             clonedItems.reverse();
             arrWidth.reverse();
         }
-        const currentItemIndex = clonedItems.findIndex((item) => item.id === key);
+        const currentItemIndex =
+                           clonedItems.findIndex((item) => item[this._keyProperty] === key);
         let currentContainerWidth = this._moreButtonWidth + PADDING_OF_MORE_BUTTON + arrWidth[currentItemIndex];
         const rawData = [];
         rawData.push(clonedItems[currentItemIndex]);
