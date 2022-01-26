@@ -9,6 +9,7 @@
                         template="Controls/list:GroupTemplate"
                         scope="{{ _options }}"
                         fontSize="m"
+                        fontWeight="bold"
                         fontColorStyle="secondary"
                         iconStyle="secondary"/>
             </ws:groupTemplate>
