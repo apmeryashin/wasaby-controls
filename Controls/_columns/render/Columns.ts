@@ -135,6 +135,8 @@ export default class Columns extends ListView {
                + `-ms-grid-column: ${index + 1};`;
     }
 
+    static readonly itemsSelector: string = '.controls-ColumnsView_column > .controls-ListView__itemV';
+
     static getDefaultOptions(): Partial<IColumnsRenderOptions> {
         return {
             itemTemplate: defaultItemTemplate,

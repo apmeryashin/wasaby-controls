@@ -418,7 +418,7 @@ export default class ColumnScrollController {
         // Горизонтальный скролл передвигает всю таблицу, но компенсирует скролл для некоторых ячеек, например для
         // зафиксированных ячеек
 
-        if (options.useAnimation && options.animationState === 'begin') {
+        if (isFullGridSupport && options.useAnimation && options.animationState === 'begin') {
             const ANIMATION_DURATION = '0.4s';
             const scrollAnimationId = 'scrollAnimation';
             const compensationAnimationId = 'compensationAnimation';
