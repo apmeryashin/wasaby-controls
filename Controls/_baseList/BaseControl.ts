@@ -3990,7 +3990,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // TODO удалить когда полностью откажемся от старой модели
                 //  Если Items были обновлены, то в старой модели переинициализировался display
                 //  и этот параметр сбросился
-                this._itemActionsController?.setActionsAssigned(isActionsAssigned);
+                if (this._itemActionsController) {
+                    this._itemActionsController.setActionsAssigned(isActionsAssigned);
+                }
                 _private.initVisibleItemActions(this, newOptions);
 
                 if (loadedBySourceController) {

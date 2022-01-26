@@ -54,7 +54,6 @@ function mockCollection(item: IItemActionsItem): IItemActionsCollection {
             each: (callback) => callback(item, 0)
         }),
         find: () => item,
-        setActionsAssigned: () => {/* FIXME: sinon mock */},
         setActiveItem: () => {/* FIXME: sinon mock */},
         getItemBySourceKey: () => item,
         isEditing: () => false,

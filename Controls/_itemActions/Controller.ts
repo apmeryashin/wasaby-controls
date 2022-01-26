@@ -465,10 +465,22 @@ export class Controller {
         this._dependenciesTimer?.stop();
     }
 
+    /**
+     * Установить состояние флага "Опции записи заданы для элементов коллекции"
+     * @param {Boolean} assigned Состояние флага "Опции записи заданы для элементов коллекции"
+     * @function
+     * @public
+     */
     setActionsAssigned(assigned: boolean): void {
         this._actionsAssigned = assigned;
     }
 
+    /**
+     * Получить состояние флага "Опции записи заданы для элементов коллекции"
+     * @function
+     * @public
+     * @return {Boolean} Состояние флага "Опции записи заданы для элементов коллекции"
+     */
     isActionsAssigned(): boolean {
         return this._actionsAssigned;
     }
@@ -590,7 +602,7 @@ export class Controller {
         if (!this._collection.isEventRaising()) {
             this._collection.setEventRaising(true, true);
         }
-        this._collection.setActionsAssigned(true);
+        this.setActionsAssigned(true);
 
         if (hasChanges) {
             // Если поменялась видимость ItemActions через VisibilityCallback, то надо обновить конфиг свайпа
