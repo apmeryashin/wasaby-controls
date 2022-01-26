@@ -9,7 +9,8 @@ import * as sinon from 'sinon';
 function getLookupOptions(): Partial<ILookupOptions> {
     return {
         source: getSource(),
-        selectedKeys: []
+        selectedKeys: [],
+        keyProperty: 'id'
     };
 }
 
@@ -46,7 +47,13 @@ function getData(): object[] {
 function getSource(): Memory {
     return new Memory({
         data: getData(),
-        keyProperty: 'id'
+        keyProperty: 'id',
+        filter: (item, filter) => {
+            if (filter.id) {
+                return item.get('id') === filter.id || filter.id?.includes(item.get('id'));
+            }
+            return true;
+        }
     });
 }
 
@@ -90,6 +97,7 @@ describe('Controls/lookup:Input', () => {
                 source: null,
                 selectedKeys: [],
                 multiSelect: true,
+                keyProperty: 'id',
                 items: new RecordSet({
                     rawData: data,
                     keyProperty: 'id'
