@@ -2374,11 +2374,13 @@ define([
             ctrl.saveOptions(cfg);
 
             ctrl._itemActionsController = {
+               _isActionsAssigned: false,
                update: () => ([1,2,3]),
                deactivateSwipe: () => {
                   deactivateSwipeCalled = true;
                },
-               getSwipeItem: () => ({ id: 1 })
+               getSwipeItem: () => ({ id: 1 }),
+               isActionsAssigned() { return this._isActionsAssigned; }
             };
             ctrl._selectionController = {
                stopItemAnimation: () => {
@@ -2387,10 +2389,8 @@ define([
                getAnimatedItem: () => ({ id: 1 })
             };
             ctrl._listViewModel = {
-               _isActionsAssigned: false,
                nextVersion: () => null,
-               getEditingConfig: () => null,
-               isActionsAssigned() { return this._isActionsAssigned; }
+               getEditingConfig: () => null
             };
          });
 

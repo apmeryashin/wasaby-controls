@@ -208,6 +208,11 @@ export class Controller {
     private _isSwiped: boolean;
 
     /**
+     * Флаг, что опции были уже один раз установлены
+     */
+    private _actionsAssigned: boolean;
+
+    /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
      * TODO Когда мы перестанем использовать старую listViewModel,
@@ -311,16 +316,6 @@ export class Controller {
         const actions = item.getActions();
         const visibleActions = getActions(actions, this._iconSize, null, containerWidth);
         item.setActions(this._fixActionsDisplayOptions(visibleActions), true);
-    }
-
-    /**
-     * Получить состояние флага "Опции записи заданы для элементов коллекции"
-     * @function
-     * @public
-     * @return {Boolean} Состояние флага "Опции записи заданы для элементов коллекции"
-     */
-    isActionsAssigned(): boolean {
-        return this._collection.isActionsAssigned();
     }
 
     /**
@@ -470,13 +465,12 @@ export class Controller {
         this._dependenciesTimer?.stop();
     }
 
-    destroy(): void {
-        // Коллекцию могут пробросить в список сверху, нужно на ней сбросить состояние что actions инициализированы
-        // Чтобы при переиспользовании этой коллекции, контроллер правильно обновился
-        // TODO https://online.sbis.ru/opendoc.html?guid=f955f40c-b84d-4f71-9bbd-b557e4548ddd
-        if (this._collection) {
-            this._collection.setActionsAssigned(false);
-        }
+    setActionsAssigned(assigned: boolean): void {
+        this._actionsAssigned = assigned;
+    }
+
+    isActionsAssigned(): boolean {
+        return this._actionsAssigned;
     }
 
     /**
