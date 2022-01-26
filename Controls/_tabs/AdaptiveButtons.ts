@@ -160,15 +160,9 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
 
     private _menuItemClickHandler(event: SyntheticEvent<Event>, keys: number[]|string[]): void {
         const item: Model<object> = this._items.getRecordById(keys[0]);
-        item.set('canShrink', true);
-        /*Выбрав один из пунктов меню пользователь активирует соответствующую вкладку.
-        Выбранная в меню вкладка заменяет собой прежнюю крайнюю на экране вкладку*/
         this._selectedKeyHandler(event, item.get(this._options.keyProperty));
-        this._visibleItems.replace(item, this._position);
-        // для вызова перерисовки Controls.tabs:Buttons необходимо передать новые items
-        this._visibleItems = this._visibleItems.clone();
-        this._updateFilter(this._options);
         this._calcVisibleItems(this._items, this._options, keys[0], true);
+        this._updateFilter(this._options);
     }
 
     // при нажатии на кнопку еще останавливаем событие для того, чтобы вкладка не выбралась.
@@ -198,10 +192,17 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         const arrIdOfInvisibleItems = [];
         const filter = {};
         const keyPropertyOfLastItem = this._visibleItems.at(this._position).get(options.keyProperty);
-        // фильтруем названия неуместившихся вкладок, а так же ту которая в данный момент размещена на экране последней
+        // Фильтруем названия не уместившихся вкладок, а так же ту которая в данный момент размещена на экране
+        // последней, при условии, что она не выбрана.
         this._items.each((item) => {
-            if (this._visibleItems.getIndexByValue(options.keyProperty, item.get(options.keyProperty)) === -1
-            || item.get(options.keyProperty) === keyPropertyOfLastItem) {
+            if
+            (
+                this._visibleItems.getIndexByValue(options.keyProperty, item.get(options.keyProperty)) === -1 ||
+                (
+                    item.get(options.keyProperty) === keyPropertyOfLastItem &&
+                    item.get(options.keyProperty) === options.selectedKey
+                )
+            ) {
                 arrIdOfInvisibleItems.push(item.get(options.keyProperty));
             }
         });
