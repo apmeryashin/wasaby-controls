@@ -118,15 +118,6 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         return '';
     }
 
-    getPropertyLevel(): number {
-        const currentLevel = this.getLevel();
-        if (this.isNode()) {
-            return currentLevel;
-        } else {
-            return currentLevel - 1;
-        }
-    }
-
     getValidateTemplateOptions(): Record<string, unknown> {
         return this.getContents().get('validateTemplateOptions') || {};
     }
