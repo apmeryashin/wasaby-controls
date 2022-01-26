@@ -165,6 +165,10 @@ export class ScrollController {
         });
     }
 
+    destroy(): void {
+        this._observersController.destroy();
+    }
+
     viewportResized(viewportSize: number): boolean {
         const changed = this._viewportSize !== viewportSize;
         if (changed) {
