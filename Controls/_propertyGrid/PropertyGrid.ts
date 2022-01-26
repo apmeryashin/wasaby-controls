@@ -1380,7 +1380,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     static defaultProps: Partial<IPropertyGridOptions> = {
         keyProperty: 'name',
         groupProperty: PROPERTY_GROUP_FIELD,
-        withoutLevelPadding: true,
+        levelPadding: false,
         itemsContainerPadding: {
             top: 'm',
             bottom: 'm',
