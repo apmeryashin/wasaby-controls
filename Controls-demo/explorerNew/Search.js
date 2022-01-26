@@ -152,7 +152,7 @@ define('Controls-demo/explorerNew/Search', [
          }
       });
 
-   ModuleClass._styles = ['Controls-demo/explorerNew/Search'];
+   ModuleClass._styles = ['Controls-demo/explorerNew/Search', 'Controls-demo/Controls-demo'];
 
    return ModuleClass;
 });
