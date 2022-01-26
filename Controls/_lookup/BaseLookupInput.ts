@@ -79,8 +79,6 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
             this._maxVisibleItems = 1;
         } else if (options.multiLine) {
             this._maxVisibleItems = options.maxVisibleItems;
-        } else if (options.multiSelect && itemsCount > 1 && !options.readOnly) {
-            this._maxVisibleItems = 0;
         } else {
             this._maxVisibleItems = itemsCount;
         }
