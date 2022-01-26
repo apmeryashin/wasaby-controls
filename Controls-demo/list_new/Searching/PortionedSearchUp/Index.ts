@@ -4,6 +4,10 @@ import PortionedSearchMemory from './PortionedSearchMemory';
 import {SyntheticEvent} from 'UI/Vdom';
 import {Memory} from 'Types/source';
 
+// Необходимо для автотестов
+import { SetTimeoutMocker } from 'Controls-demo/Utils/SetTimeoutMocker';
+SetTimeoutMocker.initialize();
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: PortionedSearchMemory = null;
