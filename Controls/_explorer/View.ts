@@ -53,12 +53,23 @@ const ITEM_TYPES = {
 };
 const DEFAULT_VIEW_MODE = 'table';
 
+// Тип, описывающий возможные внутренние значения viewMode
+type TInnerViewMode = TExplorerViewMode | 'columns';
+
 const VIEW_NAMES = {
     search: SearchView,
     tile: null,
     table: TreeGridView,
     list: ListView,
     columns: null
+};
+
+const ITEMS_SELECTOR: {[k in TInnerViewMode]: string} = {
+    columns: null,
+    list: '.controls-ListView__itemV',
+    tile: '.controls-ListView__itemV',
+    table: '.controls-ListView__itemV',
+    search: '.controls-ListView__itemV'
 };
 
 const MARKER_STRATEGY = {
@@ -1047,6 +1058,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         this._markerStrategy = MARKER_STRATEGY[resolvedViewMode];
         this._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[resolvedViewMode];
         this._itemContainerGetter = ITEM_GETTER[resolvedViewMode];
+        this._itemsSelector = ITEMS_SELECTOR[resolvedViewMode];
     }
 
     private _setViewModeSync(viewMode: TExplorerViewMode, cfg: IExplorerOptions): void {
@@ -1197,6 +1209,7 @@ export default class Explorer extends Control<IExplorerOptions> {
             VIEW_TABLE_NAMES.columns = columns.ViewTemplate;
             ITEM_GETTER.columns = columns.ItemContainerGetter;
             VIEW_MODEL_CONSTRUCTORS.columns = 'Controls/columns:ColumnsCollection';
+            ITEMS_SELECTOR.columns = columns.ViewTemplate.itemsSelector;
         });
     }
 
