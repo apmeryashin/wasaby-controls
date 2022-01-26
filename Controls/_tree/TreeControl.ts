@@ -34,7 +34,7 @@ import 'css!Controls/itemActions';
 import 'css!Controls/CommonClasses';
 import 'css!Controls/treeGrid';
 import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
-import {ExpandController} from 'Controls/expandCollapse';
+import {ExpandController, ALL_EXPANDED_VALUE} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
 import {
     applyReloadedNodes,
@@ -679,9 +679,13 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             expandedItemsFromSourceCtrl && !expandedItemsFromSourceCtrl.length &&
             currentExpandedItems && currentExpandedItems.length;
 
+        // Если выполняется поиск и нет развернутых элементов, то развернем все узлы
+        const newExpandedItems = newOptions.searchValue && !newOptions.expandedItems.length ?
+            [ALL_EXPANDED_VALUE] : newOptions.expandedItems;
+
         if (wasResetExpandedItems) {
             _private.resetExpandedItems(this);
-        } else if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, currentExpandedItems)) {
+        } else if (newExpandedItems && !isEqual(newExpandedItems, currentExpandedItems)) {
             if (
                 (newOptions.source === this._options.source || newOptions.sourceController) &&
                 !isSourceControllerLoading ||
@@ -691,14 +695,14 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     // Отключаем загрузку данных контроллером, т.к. все данные уже загружены
                     // нужно только проставить новое состояние в контроллер
                     this._expandController.disableLoader();
-                    this._expandController.setExpandedItems(newOptions.expandedItems);
+                    this._expandController.setExpandedItems(newExpandedItems);
                     this._expandController.enableLoader();
 
                     const expandedItems = _private.getExpandedItems(
                         this,
                         newOptions,
                         viewModel.getCollection(),
-                        newOptions.expandedItems
+                        newExpandedItems
                     );
 
                     // Проставляем hasMoreStorage до простановки expandedItems,
@@ -716,8 +720,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                 this._updateExpandedItemsAfterReload = true;
             }
 
-            if (sourceController && !isEqual(newOptions.expandedItems, sourceController.getExpandedItems())) {
-                sourceController.setExpandedItems(newOptions.expandedItems);
+            if (sourceController && !isEqual(newExpandedItems, sourceController.getExpandedItems())) {
+                sourceController.setExpandedItems(newExpandedItems);
             }
         }
 
