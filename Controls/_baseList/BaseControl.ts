@@ -6023,8 +6023,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (itemData.ItemActionsItem) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
-
-            if (_private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
+            const actions = itemData.getActions();
+            // Не надо делать фриз, если ItemActions пустые (например, их отрезали по visibilityCallback)
+            if (actions?.showed?.length && _private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
                 if (!_private.hasHoverFreezeController(this)) {
                     _private.initHoverFreezeController(this);
                 }
