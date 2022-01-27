@@ -160,8 +160,8 @@ export abstract class AbstractItemsSizesController {
 
     private static _getEmptyItemSize(): IItemSize {
         return {
-            offset: 0,
-            size: 0
+            size: 0,
+            offset: 0
         };
     }
 
