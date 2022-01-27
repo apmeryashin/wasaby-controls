@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth800">
     <div class="controlsDemo__cell" data-qa="controlsDemo-ButtonStyle__ContrastBackgroundTrue">
         <div class="controls-text-label">viewMode=button, contrastBackground=true</div>
         <ws:for data="buttonStyle in _buttonStyles">
