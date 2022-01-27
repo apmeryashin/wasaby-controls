@@ -11,7 +11,6 @@ import { Model } from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import { IStickyPopupOptions, StickyOpener } from 'Controls/popup';
 import { ILookupOptions } from 'Controls/_lookup/Lookup';
-import {isEqual} from 'Types/object';
 import 'css!Controls/lookup';
 
 const JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption';
