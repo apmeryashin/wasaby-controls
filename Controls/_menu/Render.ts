@@ -85,6 +85,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             nodeProperty: this._options.nodeProperty,
             multiSelectTpl,
             itemClassList: this._getClassList(treeItem),
+            hasPinIcon: this._hasPinIcon(treeItem),
             getPropValue: (itemContents, field) => {
                 if (!(itemContents instanceof Object)) {
                     return itemContents;
@@ -159,6 +160,12 @@ class MenuRender extends Control<IMenuRenderOptions> {
             classes += ` controls-Menu__row_state_${readOnly ? 'readOnly' : 'default'}` +
                 `${!readOnly ? ` controls-Menu__row_hoverBackgroundStyle-${this._options.hoverBackgroundStyle}` : ''}`;
 
+            if (item.get(this._options.nodeProperty) || this._hasPinIcon(treeItem)) {
+                classes += ' controls-ListView__item-rightPadding_s';
+            } else {
+                classes += ` controls-ListView__item-rightPadding_${this._options.itemPadding.right || 's'}`;
+            }
+
             if (!treeItem.isLastItem()) {
                 classes += ` controls-margin_bottom-${this._options.itemsSpacing}`;
             }
@@ -219,6 +226,20 @@ class MenuRender extends Control<IMenuRenderOptions> {
             isFixed = !item.has('HistoryId') && !!item.get('pinned');
         }
         return isFixed;
+    }
+
+    private _hasPinIcon(treeItem: TreeItem<Model>): boolean {
+        const item = treeItem.getContents();
+        if (item instanceof Model) {
+            const root = item.get(this._options.parentProperty);
+            const isNode = item.get(this._options.nodeProperty);
+            const needSaveToHistory = !item.get('doNotSaveToHistory');
+            return this._options.allowPin && needSaveToHistory && item.has('pinned') && !isNode &&
+                (item.get('pinned') !== true ||
+                    root === this._options.historyRoot || this._options.searchValue) &&
+                (!this._options.historyRoot || root);
+        }
+        return false;
     }
 
     private _isGroupNext(treeItem: TreeItem<Model>): boolean {

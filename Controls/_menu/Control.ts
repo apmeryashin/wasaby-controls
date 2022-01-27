@@ -912,7 +912,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             topPadding: 'null',
             bottomPadding: 'menu-default',
             leftPadding: this._getLeftPadding(options),
-            rightPadding: this._getRightPadding(options)
+            // для каждого пункта должен быть свой отступ справа
+            rightPadding: ''
         };
         let listModel: Search<Model> | Collection<Model>;
 
@@ -1002,17 +1003,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             leftSpacing = options.itemPadding.left;
         }
         return leftSpacing;
-    }
-
-    private _getRightPadding(options: IMenuControlOptions): string {
-        let rightSpacing = 's';
-        if (options.itemPadding.right) {
-            rightSpacing = options.itemPadding.right;
-            if (options.multiSelect) {
-                rightSpacing += '-multiSelect';
-            }
-        }
-        return rightSpacing;
     }
 
     private _groupMethod(options: IMenuControlOptions, item: Model): string {
