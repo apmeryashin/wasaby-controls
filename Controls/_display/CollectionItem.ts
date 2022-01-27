@@ -802,6 +802,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         this._$faded = faded;
         this._nextVersion();
+        this._notifyItemChangeToOwner('faded');
     }
 
     isFaded(): boolean {

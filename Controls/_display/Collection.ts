@@ -50,7 +50,7 @@ const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = [
-    'editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'
+    'editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected', 'faded'
 ];
 const REBUILD_ITEM_PROPERTIES = ['expanded', 'contents'];
 
