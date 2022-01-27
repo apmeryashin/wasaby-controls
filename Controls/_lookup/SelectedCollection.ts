@@ -11,6 +11,7 @@ import { Model } from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import { IStickyPopupOptions, StickyOpener } from 'Controls/popup';
 import { ILookupOptions } from 'Controls/_lookup/Lookup';
+import {isEqual} from 'Types/object';
 import 'css!Controls/lookup';
 
 const JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption';
@@ -69,9 +70,14 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
    protected _beforeUpdate(newOptions: ISelectedCollectionOptions): void {
       const itemsCount: number = newOptions.items.getCount();
+      const currentVisibleItems = this._visibleItems;
       this._visibleItems = selectedCollectionUtils.getVisibleItems(newOptions);
 
-      if (this._isShowCounter(itemsCount, newOptions.multiLine, newOptions.maxVisibleItems)) {
+      if (!isEqual(currentVisibleItems, this._visibleItems) || this._options.multiLine !== newOptions.multiLine ||
+          this._options.maxVisibleItems !== newOptions.maxVisibleItems) {
+         this._needShowCounter = this._isShowCounter(itemsCount, newOptions.multiLine, newOptions.maxVisibleItems);
+      }
+      if (this._needShowCounter) {
          this._counterWidth = newOptions._counterWidth ||
                               this._getCounterWidth(itemsCount, newOptions);
       } else {
@@ -81,9 +87,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
    protected _afterMount(): void {
       const itemsCount: number = this._options.items.getCount();
-
-      if (this._isShowCounter(itemsCount,
-                              this._options.multiLine, this._options.maxVisibleItems) && !this._counterWidth) {
+      this._needShowCounter = this._isShowCounter(itemsCount, this._options.multiLine, this._options.maxVisibleItems);
+      if (this._needShowCounter && !this._counterWidth) {
          this._counterWidth = this._counterWidth ||
                               this._getCounterWidth(itemsCount, this._options);
          if (this._counterWidth) {
@@ -177,8 +182,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    }
 
    private _isShowCounter(itemsCount: number, multiline: boolean, maxVisibleItems?: number): boolean {
-      this._needShowCounter = multiline ? itemsCount > maxVisibleItems : itemsCount > 1;
-      return this._needShowCounter;
+      return multiline ? itemsCount > maxVisibleItems : itemsCount > 1;
    }
 
    private _closeInfobox(): void {
