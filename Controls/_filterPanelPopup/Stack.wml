@@ -25,6 +25,7 @@
                                          caption="{{rk('Сбросить')}}"
                                          fontColorStyle="label"
                                          fontSize="xs"
+                                         attr:class="controls-FilterViewPanel_header__resetButton"
                                          on:click="_resetFilter()"/>
             </ws:if>
         </div>
