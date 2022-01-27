@@ -14,11 +14,19 @@ export default class MultiColumnMarkerStrategy extends AbstractStrategy {
         if (!markedItem && this._model.getColumnsMode() !== 'fixed') {
             resIndex -= 1;
         }
-        return this.getMarkedKeyByDirection(resIndex, 'Right');
+        if (resIndex >= 0) {
+            return this.getMarkedKeyByDirection(resIndex, 'Right');
+        } else {
+            return null;
+        }
     }
 
     getPrevMarkedKey(index: number): CrudEntityKey | void {
-        return this.getMarkedKeyByDirection(index, 'Left');
+        if (index > 0) {
+            return this.getMarkedKeyByDirection(index, 'Left');
+        } else {
+            return null;
+        }
     }
 
     shouldMoveMarkerOnScrollPaging(): boolean {
