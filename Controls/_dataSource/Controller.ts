@@ -984,7 +984,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
                 this.setExpandedItems(expandedItems);
                 resultFilter = {...initialFilter};
                 const isLoadToDirectionWithExpandedItems = direction && this._options.deepScrollLoad;
-                const isDeepReload = (!direction || this._options.deepReload || isLoadToDirectionWithExpandedItems)
+                const isDeepReload = (!direction || isLoadToDirectionWithExpandedItems)
                                      && root === this._root;
 
                 // Набираем все раскрытые узлы
