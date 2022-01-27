@@ -45,6 +45,7 @@
                                      backgroundStyle="{{_getPopupBackgroundStyle()}}"
                                      headingFontColorStyle="{{_options.headingStyle}}"
                                      headingFontSize="{{_options.headingFontSize}}"
+                                     closeButtonViewMode="toolButton"
                                      attr:class="controls_filterPopup_theme-{{_options.theme}}
                                                  controls_filter_theme-{{_options.theme}}
                                                  controls-PanelFilter
