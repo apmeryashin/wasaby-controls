@@ -1,5 +1,5 @@
 <div class="ws-flexbox ws-align-self-baseline">
-    <div class="controls-Tabs_margin-{{horizontalPadding ? horizontalPadding : 'left'}} controls-Tabs_itemClickableArea-caption">{{item.caption}}</div>
+    <div title="{{item.tooltip}}" class="controls-Tabs_margin-{{horizontalPadding ? horizontalPadding : 'left'}} controls-Tabs_itemClickableArea-caption">{{item.caption}}</div>
     <ws:if data="{{item.icon}}">
         <ws:partial template="wml!Controls/_tabs/Buttons/templates/IconTemplate"
                     icon="{{item.icon}}"
