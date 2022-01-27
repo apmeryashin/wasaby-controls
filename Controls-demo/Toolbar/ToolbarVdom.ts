@@ -1,7 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Toolbar/ToolbarVdom');
-import itemTemplate = require('wml!Controls-demo/Toolbar/resources/itemTemplate');
-import itemTemplateContent = require('wml!Controls-demo/Toolbar/resources/itemTemplateContent');
 import {showType} from 'Controls/toolbars';
 import {Memory} from 'Types/source';
 
