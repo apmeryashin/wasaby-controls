@@ -20,7 +20,7 @@ export default {
     '--primary_same_background-color': '#fff1eb',
     '--primary_hover_same_background-color': '#ffe6db',
     '--primary_active_same_background-color': '#ffdbcc',
-    '--primary_contrast_background-color': '#f6733c',
+    '--primary_contrast_background-color': '#a6733c',
     '--primary_hover_contrast_background-color': '#e4662f',
     '--primary_active_contrast_background-color': '#d6551f',
     '--marker_color': '#ff7033',
