@@ -293,7 +293,7 @@ describe('Controls/_itemActions/Controller', () => {
 
         // T1.6. После установки набора операций у коллекции устанавливается параметр actionsAssigned
         it('should set actionsAssigned value as true', () => {
-            assert.isTrue(collection.isActionsAssigned());
+            assert.isTrue(itemActionsController.isActionsAssigned());
         });
 
         // T1.8. В список showed операций изначально попадают операции, у которых нет родителя
