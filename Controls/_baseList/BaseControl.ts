@@ -4482,6 +4482,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shouldUpdateActionsAfterRender = false;
         }
 
+        if (this._applySelectedPage && this._shouldNotifyOnDrawItems) {
+            this._applySelectedPage();
+        }
         this._updateInProgress = false;
         this._notifyOnDrawItems();
         this._loadedBySourceController = false;
@@ -4652,7 +4655,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // если нельзя проскроллить, проверяем, хватает ли загруженных данных для сдвига диапазона
                 // или нужно подгружать еще.
                 if (this._hasEnoughData(page)) {
-                    // TODO SCROLL нужно сместить диапазон???
+                    this._applySelectedPage = null;
+                    this._listVirtualScrollController.scrollToPage(direction === 'up' ? 'backward' : 'forward');
                 } else {
                     this._loadMore(direction);
                 }
