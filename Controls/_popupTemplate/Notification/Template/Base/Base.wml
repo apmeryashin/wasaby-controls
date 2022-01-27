@@ -1,4 +1,4 @@
-<Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
+<Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()" on:touchmove="_touchMoveHandler()">
    <div class="controls_popupTemplate_theme-{{_options.theme}} controls-Notification controls-Notification__{{_borderStyle}} controls-Popup__isolatedFocusingContext"
         on:mousedown="_onMouseDown()"
         on:touchstart="_onMouseDown()">
