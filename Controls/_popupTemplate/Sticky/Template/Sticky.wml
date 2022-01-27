@@ -19,6 +19,7 @@
                         close="{{close}}"
                         verticalDirection="{{_options.verticalDirection || _verticalDirection}}"
                         closeBtnPosition="{{_closeBtnPosition}}"
+                        closeButtonVisible="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}"
                         stickyOptions="{{_options}}"
                         attr:class="{{_getRoundedClass(_options, 'header')}}"
                         on:mouseenter="_proxyEvent('headerMouseEnter')"
