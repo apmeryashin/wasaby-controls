@@ -9,7 +9,8 @@ import * as sinon from 'sinon';
 function getLookupOptions(): Partial<ILookupOptions> {
     return {
         source: getSource(),
-        selectedKeys: []
+        selectedKeys: [],
+        keyProperty: 'id'
     };
 }
 
@@ -46,7 +47,13 @@ function getData(): object[] {
 function getSource(): Memory {
     return new Memory({
         data: getData(),
-        keyProperty: 'id'
+        keyProperty: 'id',
+        filter: (item, filter) => {
+            if (filter.id) {
+                return item.get('id') === filter.id || filter.id?.includes(item.get('id'));
+            }
+            return true;
+        }
     });
 }
 
@@ -90,6 +97,7 @@ describe('Controls/lookup:Input', () => {
                 source: null,
                 selectedKeys: [],
                 multiSelect: true,
+                keyProperty: 'id',
                 items: new RecordSet({
                     rawData: data,
                     keyProperty: 'id'
@@ -148,8 +156,15 @@ describe('Controls/lookup:Input', () => {
                     selectedKeys: [1]
                 });
                 const stub = sinon.stub(lookup, '_notify');
-                const lookupOptions = getLookupOptions();
+                let lookupOptions = getLookupOptions();
                 lookupOptions.selectedKeys = ['test'];
+                await lookup._beforeUpdate(lookupOptions);
+                stub.notCalledWith('selectedKeysChanged');
+                stub.calledOnceWith('itemsChanged');
+
+                lookupOptions = {...lookupOptions};
+                lookupOptions.selectedKeys = [];
+                stub.reset();
                 await lookup._beforeUpdate(lookupOptions);
                 stub.notCalledWith('selectedKeysChanged');
                 stub.calledOnceWith('itemsChanged');

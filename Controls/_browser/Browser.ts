@@ -143,6 +143,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                            receivedState?: TReceivedState): void | Promise<TReceivedState | Error | void> {
         this._initStates(options, receivedState);
         this._dataLoader = new DataLoader(this._getDataLoaderOptions(options, receivedState));
+        this._operationsPanelOpen = this._operationsPanelOpen.bind(this);
 
         return this._loadDependencies<TReceivedState | Error | void>(options, () => {
             return this._beforeMountInternal(options, undefined, receivedState);
@@ -703,7 +704,13 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     protected _rootChanged(event: SyntheticEvent, root: Key, id?: string): void {
-        const currentRoot = this._root;
+        let currentRoot;
+
+        if (id && this._getListOptionsById(id)?.root !== undefined) {
+            currentRoot = this._getListOptionsById(id)?.root;
+        } else {
+            currentRoot = this._root;
+        }
 
         if (!Browser._hasRootInOptions(this._options)) {
             this._setRoot(root, id);

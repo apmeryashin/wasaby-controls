@@ -2,14 +2,13 @@ import IPropertyGridProperty from './IProperty';
 import {IControlOptions, Control} from 'UI/Base';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
-import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
+import {IItemAction, TItemActionVisibilityCallback, IContextMenuConfig} from 'Controls/itemActions';
 import {IEditingPropertyGrid} from 'Controls/_propertyGrid/interface/IEditingPropertyGrid';
 import {
     IPromiseSelectableOptions,
     ISelectionTypeOptions,
     IItemPaddingOptions,
     TKey,
-    IItemsContainerPaddingOption,
     TFontSize
 } from 'Controls/interface';
 
@@ -239,7 +238,7 @@ export interface IPropertyGridOptions extends
      * @demo Controls-demo/PropertyGridNew/CaptionColumnOptions/Index
      */
     captionColumnOptions?: IPropertyGridColumnOptions;
-    withoutLevelPadding?: boolean;
+    levelPadding?: boolean;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#multiSelectAccessibilityProperty
      * @cfg {Controls/display:MultiSelectAccessibility} Имя поля записи, в котором хранится состояние видимости чекбокса.
@@ -281,6 +280,14 @@ export interface IPropertyGridOptions extends
      */
     captionFontSize: TFontSize;
     captionPosition?: TCaptionPosition;
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#contextMenuConfig
+     * @cfg {Controls/itemActions:IItemAction#contextMenuConfig} Конфигурация контекстного меню.
+     * @demo Controls-demo/PropertyGridNew/ItemActions/Index
+     * @see itemActionVisibilityCallback
+     * @see itemActions
+     */
+    contextMenuConfig?: IContextMenuConfig;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#toggledEditors
      * @cfg {Array.<String>} Список идентификаторов скрытых редакторов.

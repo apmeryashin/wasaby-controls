@@ -1,7 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_lookup/SelectedCollection/SelectedCollection');
 import ItemTemplate = require('wml!Controls/_lookup/SelectedCollection/ItemTemplate');
-import chain = require('Types/chain');
 import {EventUtils} from 'UI/Events';
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
@@ -10,13 +9,12 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 import {SyntheticEvent} from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
 import {RecordSet} from 'Types/collection';
-import { Sticky, IStickyPopupOptions } from 'Controls/popup';
+import { IStickyPopupOptions, StickyOpener } from 'Controls/popup';
 import { ILookupOptions } from 'Controls/_lookup/Lookup';
 import 'css!Controls/lookup';
 
 const JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption';
 const JS_CLASS_CROSS_ITEM = '.js-controls-SelectedCollection__item__cross';
-const MAX_VISIBLE_ITEMS_SINGLE_LINE = 15;
 
 export interface ISelectedCollectionOptions extends IControlOptions, ILookupOptions {
    displayProperty: string;
@@ -60,19 +58,19 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _crossTemplate: TemplateFunction = CrossTemplate;
    protected _counterTemplate: TemplateFunction = CounterTemplate;
    protected _children: ISelectedCollectionChildren;
-   protected _infoBoxStickyId: string = null;
+   protected _stickyOpener: StickyOpener = null;
 
    protected _beforeMount(options: ISelectedCollectionOptions): void {
       this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
-      this._visibleItems = this._getVisibleItems(options);
+      this._visibleItems = selectedCollectionUtils.getVisibleItems(options);
       this._counterWidth = options._counterWidth || 0;
    }
 
    protected _beforeUpdate(newOptions: ISelectedCollectionOptions): void {
       const itemsCount: number = newOptions.items.getCount();
-      this._visibleItems = this._getVisibleItems(newOptions);
+      this._visibleItems = selectedCollectionUtils.getVisibleItems(newOptions);
 
-      if (this._isShowCounter(itemsCount, newOptions.maxVisibleItems)) {
+      if (this._isShowCounter(itemsCount, newOptions.multiLine, newOptions.maxVisibleItems)) {
          this._counterWidth = newOptions._counterWidth ||
                               this._getCounterWidth(itemsCount, newOptions);
       } else {
@@ -83,7 +81,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _afterMount(): void {
       const itemsCount: number = this._options.items.getCount();
 
-      if (this._isShowCounter(itemsCount, this._options.maxVisibleItems) && !this._counterWidth) {
+      if (this._isShowCounter(itemsCount,
+                              this._options.multiLine, this._options.maxVisibleItems) && !this._counterWidth) {
          this._counterWidth = this._counterWidth ||
                               this._getCounterWidth(itemsCount, this._options);
          if (this._counterWidth) {
@@ -146,30 +145,20 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
             onClose: () => {
                if (!this._destroyed) {
                   this._notify('closeInfoBox', []);
-                  this._infoBoxStickyId = null;
                }
             }
          }
       };
 
       this._notify('openInfoBox', [config]);
-
-      return Sticky.openPopup(config).then((popupId) => {
-         this._infoBoxStickyId = popupId;
-      });
+      this._getStickyOpener().open(config);
    }
 
-   private _getVisibleItems({items, maxVisibleItems, multiLine}: ISelectedCollectionOptions): Model[]  {
-      const startIndex = Math.max(maxVisibleItems && multiLine ? items.getCount() - maxVisibleItems : 0, 0);
-      const resultItems = [];
-
-      items.each((item, index) => {
-         if (index >= startIndex && (index < MAX_VISIBLE_ITEMS_SINGLE_LINE || multiLine)) {
-            resultItems.push(item);
-         }
-      });
-
-      return resultItems;
+   private _getStickyOpener(): StickyOpener {
+      if (!this._stickyOpener) {
+         this._stickyOpener = new StickyOpener();
+      }
+      return this._stickyOpener;
    }
 
    private _getCounterWidth(itemsCount: number,
@@ -186,14 +175,15 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme, fontSize);
    }
 
-   private _isShowCounter(itemsCount: number, maxVisibleItems: number): boolean {
-      return itemsCount > maxVisibleItems;
+   private _isShowCounter(itemsCount: number, multiline: boolean, maxVisibleItems?: number): boolean {
+      return multiline ? itemsCount > maxVisibleItems : itemsCount > 1;
    }
 
    private _closeInfobox(): void {
-      if (this._infoBoxStickyId) {
+      const stickyOpener = this._getStickyOpener();
+      if (stickyOpener.isOpened()) {
          this._notify('closeInfoBox');
-         Sticky.closePopup(this._infoBoxStickyId);
+         stickyOpener.close();
       }
    }
 

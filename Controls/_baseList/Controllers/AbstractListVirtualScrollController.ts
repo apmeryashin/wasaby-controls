@@ -148,6 +148,7 @@ export abstract class AbstractListVirtualScrollController<
     private _activeElementKey: CrudEntityKey;
     private readonly _itemsContainerUniqueSelector: string;
     private _keepScrollPosition: boolean = false;
+    private _scrollPosition: number;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     protected readonly _doScrollUtil: IDoScrollUtil;
@@ -240,11 +241,31 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterMountListControl(): void {
+        this._renderNewIndexes = false;
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
-            this.scrollToItem(this._activeElementKey, 'top', true);
+            const activeElementIndex = this._collection.getIndexByKey(this._activeElementKey);
+            // Если активный элемент находится в начале, то на маунт он и так виден, поэтому не скроллим к нему.
+            // Если вызвать скролл, то ничего не произойдет, но при наличии графической шапки она сожмется.
+            if (activeElementIndex !== 0) {
+                this.scrollToItem(this._activeElementKey, 'top', true);
+            }
         }
+    }
+
+    beforeUnmountListControl(): void {
+        this._updatePlaceholdersUtil({
+            forward: 0,
+            backward: 0
+        });
+        if (this._updateVirtualNavigationUtil) {
+            this._updateVirtualNavigationUtil({
+                forward: false,
+                backward: false
+            });
+        }
+        this._scrollController.destroy();
     }
 
     endBeforeUpdateListControl(): void {
@@ -331,6 +352,7 @@ export abstract class AbstractListVirtualScrollController<
             this._inertialScrolling.scrollStarted();
         }
 
+        this._scrollPosition = position;
         this._scrollController.scrollPositionChange(position);
     }
 
@@ -369,7 +391,14 @@ export abstract class AbstractListVirtualScrollController<
     // region CollectionChanges
 
     addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
-        this._scrollController.addItems(position, count, scrollMode, calcMode);
+        const range = this._scrollController.addItems(position, count, scrollMode, calcMode);
+
+        // Если мы не пересчитываем индексы, то это значит что запись добавлена внутрь диапазона
+        // и она должна собой выместить старые записи из диапазона. В режиме hide нужно применить индексы,
+        // чтобы для новых элементов проставить состояние setRendered, т.к. они внутри диапазона.
+        if (calcMode === 'nothing' && this._virtualScrollMode === 'hide') {
+            this._applyIndexes(range.startIndex, range.endIndex, null);
+        }
     }
 
     moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): void {
@@ -387,7 +416,9 @@ export abstract class AbstractListVirtualScrollController<
 
     resetItems(): void {
         // смотри комментарий в beforeRenderListControl
-        this._shouldResetScrollPosition = !this._keepScrollPosition;
+        // Не нужно сбрасывать скролл, если список не был проскроллен.
+        // Т.к. из-за вызова скролла сжимается графическая шапка.
+        this._shouldResetScrollPosition = !this._keepScrollPosition && !!this._scrollPosition;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
         const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
@@ -409,7 +440,7 @@ export abstract class AbstractListVirtualScrollController<
 
         const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
-        if (rangeChanged || this._scheduledScrollParams) {
+        if (rangeChanged || this._scheduledScrollParams || this._renderNewIndexes) {
             this._scheduleScroll({
                 type: 'scrollToElement',
                 params: { key, position, force }
@@ -776,10 +807,9 @@ export abstract class AbstractListVirtualScrollController<
                     this._scrollToElementCompletedCallback();
                 }
             } else {
-                /* TODO SCROLL починить юниты
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
                     'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
-                    'Промис scrollToItem не отстрельнет, возможны ошибки.');*/
+                    'Промис scrollToItem не отстрельнет, возможны ошибки.');
             }
         });
     }

@@ -10,4 +10,16 @@
          />
       </div>
    </div>
+   <div class="ws-flexbox ws-align-items-baseline">
+      <div class="controls-text-label">Readonly:&nbsp;</div>
+      <div style="width: 250px">
+         <Controls.breadcrumbs:Path
+            fontSize="m"
+            keyPropery="id"
+            readOnly="{{true}}"
+            parentProperty="parent"
+            items="{{_breadcrumbs}}"
+         />
+      </div>
+   </div>
 </div>

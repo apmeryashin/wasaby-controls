@@ -165,6 +165,10 @@ export class ScrollController {
         });
     }
 
+    destroy(): void {
+        this._observersController.destroy();
+    }
+
     viewportResized(viewportSize: number): boolean {
         const changed = this._viewportSize !== viewportSize;
         if (changed) {
@@ -258,6 +262,7 @@ export class ScrollController {
      */
     setListContainer(newListContainer: HTMLElement): void {
         this._observersController.setListContainer(newListContainer);
+        this._itemsSizesController.setListContainer(newListContainer);
     }
 
     /**
@@ -292,7 +297,7 @@ export class ScrollController {
      * @param scrollMode Режим скролла
      * @param calcMode Режим пересчета записей
      */
-    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
+    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): IItemsRange {
         const itemsSizes = this._itemsSizesController.addItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
@@ -306,6 +311,7 @@ export class ScrollController {
         this._calculator.setTriggerOffsets(triggersOffsets);
 
         this._processCalculatorResult(result, scrollMode);
+        return result.range;
     }
 
     /**

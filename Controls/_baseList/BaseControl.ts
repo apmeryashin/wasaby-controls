@@ -388,6 +388,7 @@ const _private = {
             if (hasItems) {
                 self._onItemsReady(options, items);
             }
+
             if (options.collection) {
                 self._listViewModel = options.collection;
             } else {
@@ -1263,6 +1264,7 @@ const _private = {
         if (_private.hasHoverFreezeController(self) && _private.isAllowedHoverFreeze(self)) {
             self._hoverFreezeController.unfreezeHover();
         }
+        self._scrollPageLocked = false;
     },
 
     getTopOffsetForItemsContainer(self, itemsContainer) {
@@ -1571,14 +1573,11 @@ const _private = {
                 self._changeMarkedKey(newMarkedKey);
             }
         }
-        // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
-        // for example if Controls.explorer:View is switched from list to tile mode. The controller
-        // will keep firing `indexesChanged` events, but we should not mark items as changed while
-        // virtual scrolling is disabled.
+
         if (changesType === 'collectionChanged' || newModelChanged) {
             self._itemsChanged = true;
-            if (!!self._itemActionsController && !self._shouldUpdateActionsAfterCollectionChange) {
-                self._shouldUpdateActionsAfterCollectionChange = self._itemActionsController
+            if (!!self._itemActionsController && !self._shouldUpdateActionsAfterRender) {
+                self._shouldUpdateActionsAfterRender = self._itemActionsController
                     .shouldUpdateOnCollectionChange(action, newItems, removedItems);
             }
         }
@@ -1594,6 +1593,14 @@ const _private = {
             model.subscribe('onCollectionChange', self._onCollectionChanged);
             model.subscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
             model.subscribe('indexesChanged', self._onIndexesChanged);
+        }
+    },
+
+    deleteListViewModelHandler(self, model) {
+        if (model) {
+            model.unsubscribe('onCollectionChange', self._onCollectionChanged);
+            model.unsubscribe('onAfterCollectionChange', self._onAfterCollectionChanged);
+            model.unsubscribe('indexesChanged', self._onIndexesChanged);
         }
     },
 
@@ -2944,8 +2951,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _itemsChanged: boolean;
 
-    // Флаг, устанавливающий, что после изменения коллекции надо обновить ItemActions
-    private _shouldUpdateActionsAfterCollectionChange: boolean;
+    // Флаг, устанавливающий, что после рендера надо обновить ItemActions
+    private _shouldUpdateActionsAfterRender: boolean;
 
     _keyProperty = null;
 
@@ -3174,11 +3181,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._listVirtualScrollController && this._removedItems.length && this._removedItemsIndex !== null) {
             this._listVirtualScrollController.removeItems(this._removedItemsIndex, this._removedItems.length);
         }
-        if (this._itemActionsController && this._shouldUpdateActionsAfterCollectionChange) {
-            _private.updateInitializedItemActions(this, this._options);
-        }
         this._removedItemsIndex = null;
-        this._shouldUpdateActionsAfterCollectionChange = false;
         this._removedItems = [];
     }
 
@@ -3874,6 +3877,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
+            _private.deleteListViewModelHandler(this, this._listViewModel);
             if (!newOptions.collection) {
                 this._listViewModel.destroy();
             }
@@ -3942,6 +3946,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 if (!this._listViewModel || !this._listViewModel.getCount()) {
+                    _private.deleteListViewModelHandler(this, this._listViewModel);
                     if (this._listViewModel && !this._listViewModel.destroyed && !newOptions.collection) {
                         this._listViewModel.destroy();
                     }
@@ -4216,6 +4221,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._updateBaseControlModel(newOptions);
 
+        if (this._options.itemsSelector !== newOptions.itemsSelector) {
+            this._listVirtualScrollController.setItemsQuerySelector(newOptions.itemsSelector);
+        }
+
         this._endBeforeUpdate(newOptions);
         this._listVirtualScrollController.endBeforeUpdateListControl();
     }
@@ -4317,6 +4326,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
         this._destroyIndicatorsController();
+        if (this._listVirtualScrollController) {
+            this._listVirtualScrollController.beforeUnmountListControl();
+            this._listVirtualScrollController = null;
+        }
         if (this._itemActionsController) {
             this._itemActionsController.destroy();
             this._itemActionsController = null;
@@ -4350,9 +4363,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._listViewModel) {
-            this._listViewModel.unsubscribe('onCollectionChange', this._onCollectionChanged);
-            this._listViewModel.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChanged);
-            this._listViewModel.unsubscribe('indexesChanged', this._onIndexesChanged);
+            _private.deleteListViewModelHandler(this, this._listViewModel);
             // коллекцию дестроим только, если она была создана в BaseControl(не передана в опциях)
             if (!this._options.collection) {
                 this._listViewModel.destroy();
@@ -4462,6 +4473,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             !this._editInPlaceController.isEndEditProcessing()
         ) {
             _private.activateEditingRow(this);
+        }
+
+        // При изменении коллекции на beforeUpdate индексы раставляются отложенно.
+        // Поэтому вызывать обновление itemActions можно только на _afterRender.
+        if (this._itemActionsController && this._shouldUpdateActionsAfterRender) {
+            _private.updateInitializedItemActions(this, this._options);
+            this._shouldUpdateActionsAfterRender = false;
         }
 
         this._updateInProgress = false;
@@ -5213,7 +5231,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.removeShowActionsClass(this);
-        _private.updateItemActions(this, this._options);
+        // Этот код страбатывает асинхронно. Может оказаться, что индексы ещё не расставлены.
+        // Гарантированно можно обновить itemActions только на afterRender
+        this._shouldUpdateActionsAfterRender = true;
     }
 
     _resetValidation() {

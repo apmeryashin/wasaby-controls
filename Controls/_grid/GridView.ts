@@ -254,6 +254,38 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         );
     },
 
+    _getGridEmptyTemplateRows(options: IGridOptions): string {
+        let styles = 'grid-template-rows:';
+        const hasHeader = !!this._listModel.getHeader();
+        const hasResults = !!this._listModel.getResults();
+        const resultsPosition = this._listModel.getResultsPosition();
+
+        // Пустое представление таблицы растягивается на 100% по высоте
+        // В результате, каждая из существующих строк таблицы:
+        // (Заголовок, результаты, полоса скролла, строка с ширинами колонок для скролла,
+        // сам контент пустого представления и футер) занимают одинаковое место по вертикали.
+        // Правки ниже добавляют для пустого представления жёстко заданную сетку строк,
+        // определяя, что строки заголовок, результаты, полоса скролла, строка с ширинами колонок для скролла и футер
+        // занимают по высоте ровно столько, сколько есть в их контенте,
+        // а строка контента пустого представления растягивается максимально,
+        // заполняя собой всё пространство между результатами и футером.
+        if (hasHeader) {
+            styles += ' auto';
+        }
+        if (hasResults && resultsPosition === 'top') {
+            styles += ' auto';
+        }
+
+        // Две строки, т.к. ScrollBar + RelativeColumns
+        if (options.columnScroll) {
+            styles += ' auto auto';
+        }
+
+        // Сама строка пустого представления должна максимально растягиваться
+        styles += ' 1fr; ';
+        return styles;
+    },
+
     _hasItemActionsCell(options): boolean {
         return Boolean(
             options.isFullGridSupport && (
@@ -324,8 +356,9 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             classes += ` controls-Grid_support-ladder ${this._ladderOffsetSelector}`;
         }
 
-        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту
-        if (options.needShowEmptyTemplate) {
+        // Если нужно отобразить пустое представление, растягиваем grid на всю высоту.
+        // Для IE растягивать ничего не надо, там нельзя настроить сетку строк, как в grid.
+        if (options.needShowEmptyTemplate && options.isFullGridSupport) {
             classes += ' controls-Grid__empty';
         }
 
@@ -352,7 +385,14 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     },
 
     _getGridViewStyles(options: IGridOptions): string {
-        return this._getGridTemplateColumns(options);
+        let styles = this._getGridTemplateColumns(options);
+        // В случае отображения пустого представления надо растянуть ячейку
+        // с пустым представлением на всю высоту таблицы.
+        // Это можно сделать при помощи grid-template-rows.
+        if (options.needShowEmptyTemplate && options.isFullGridSupport) {
+            styles += this._getGridEmptyTemplateRows(options);
+        }
+        return styles;
     },
 
     reset(params: { keepScroll?: boolean } = {}): void {
@@ -422,7 +462,14 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             this._listModel.isEditing() &&
             (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')
         ) {
-            this._columnScrollScrollIntoView(target);
+            // Подскроливаем к ячейке с полем ввода, чтобы она была полностью видна перед активацией.
+            // Если ячейка заколспанена, скролим к полю ввода, т.к. она может быть шире всей видимой области.
+            const isCellColspaned = !!target.closest('.js-controls-Grid__cell_colspaned');
+            this._columnScrollScrollIntoView(
+                isCellColspaned ?
+                    target.closest('.js-controls-Render') || target :
+                    target.closest('.controls-Grid__row-cell') || target
+            );
         }
     },
 
@@ -532,7 +579,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
      * Логика подскрола к полю ввода в уже редактируемой строке реализована в GridView._onFocusIn
      */
     beforeRowActivated(target: HTMLElement): void {
-        this._columnScrollScrollIntoView(target);
+        this._columnScrollScrollIntoView(target.closest('.controls-Grid__row-cell') || target);
     }
 });
 

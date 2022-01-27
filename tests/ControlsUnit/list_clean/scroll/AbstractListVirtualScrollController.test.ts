@@ -43,6 +43,7 @@ function getController(options: Partial<ControllerOptions>): ListVirtualScrollCo
 describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', () => {
     before(() => {
         window = new jsdom.JSDOM('').window;
+        window.requestAnimationFrame = (callback: Function) => callback();
     });
 
     after(() => {
@@ -71,14 +72,14 @@ describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', (
 
     describe('scroll to active element', () => {
         it('after mount', () => {
-            const collection = getCollection([{key: 1}]);
+            const collection = getCollection([{key: 1}, {key: 2}]);
             const itemsContainer = getItemsContainer(collection);
             const scrollToElementUtil = spy(() => null);
             const controller = getController({
                 collection,
                 scrollToElementUtil,
                 itemsContainer,
-                activeElementKey: 1
+                activeElementKey: 2
             });
             controller.afterMountListControl();
             assert.isTrue(scrollToElementUtil.calledOnce);
@@ -95,6 +96,24 @@ describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', (
                 activeElementKey: 1
             });
             controller.resetItems();
+            controller.afterRenderListControl();
+            assert.isTrue(scrollToElementUtil.calledOnce);
+        });
+    });
+
+    describe('scroll to item', () => {
+        it('scroll after render new indexes', () => {
+            const collection = getCollection([{key: 1}]);
+            const itemsContainer = getItemsContainer(collection);
+            const scrollToElementUtil = spy(() => null);
+            const controller = getController({
+                collection,
+                scrollToElementUtil,
+                itemsContainer
+            });
+            controller.resetItems();
+            controller.scrollToItem(1);
+            controller.afterRenderListControl();
             assert.isTrue(scrollToElementUtil.calledOnce);
         });
     });

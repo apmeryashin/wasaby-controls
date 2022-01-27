@@ -17,6 +17,7 @@ define('Controls-demo/resources/Images', [
          sport: Env.constants.resourceRoot + 'Controls-demo/resources/images/sport.png',
          standards: Env.constants.resourceRoot + 'Controls-demo/resources/images/standards.png',
          development: Env.constants.resourceRoot + 'Controls-demo/resources/images/development.png',
+         green_development: Env.constants.resourceRoot + 'Controls-demo/resources/images/green_development.png',
          release: Env.constants.resourceRoot + 'Controls-demo/resources/images/release.png',
          sbis: Env.constants.resourceRoot + 'Controls-demo/resources/images/sbis.png',
          mili: Env.constants.resourceRoot + 'Controls-demo/resources/images/mili.png'

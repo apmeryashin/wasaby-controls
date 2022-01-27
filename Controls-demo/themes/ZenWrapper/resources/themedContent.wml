@@ -87,6 +87,12 @@
         <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
             <Controls.input:Text placeholder="Placeholder"/>
         </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.search:Input placeholder="Placeholder"/>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.search:Input placeholder="Placeholder" contrastBackground="{{true}}"/>
+        </div>
         <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
         </div>
     </div>

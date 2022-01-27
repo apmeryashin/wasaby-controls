@@ -4,6 +4,7 @@ import { CrudEntityKey } from 'Types/source';
 
 export interface IAbstractItemsSizesControllerOptions {
     itemsContainer?: HTMLElement;
+    listContainer?: HTMLElement;
     itemsQuerySelector: string;
     totalCount: number;
 }
@@ -22,9 +23,11 @@ export abstract class AbstractItemsSizesController {
     private _itemsQuerySelector: string;
     private _itemsContainer: HTMLElement;
     private _itemsSizes: IItemsSizes = [];
+    private _listContainer: HTMLElement;
 
     constructor(options: IAbstractItemsSizesControllerOptions) {
         this._itemsContainer = options.itemsContainer;
+        this._listContainer = options.listContainer;
         this._itemsQuerySelector = options.itemsQuerySelector;
         this.resetItems(options.totalCount);
     }
@@ -44,7 +47,7 @@ export abstract class AbstractItemsSizesController {
     }
 
     /**
-     * Возвращает размер контента, расположенного в этом же ScrollContainer-е до списка.
+     * Возвращает размер контента, расположенного в этом же ScrollContainer-е до элементов списка.
      */
     getContentSizeBeforeItems(): number {
         if (!this._itemsContainer) {
@@ -52,13 +55,29 @@ export abstract class AbstractItemsSizesController {
         }
 
         const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
-        return this._getContentSizeBeforeItems(this._itemsContainer, scrollContent);
+        return this._getContentSizeBeforeContainer(this._itemsContainer, scrollContent);
+    }
+
+    /**
+     * Возвращает размер контента, расположенного в этом же ScrollContainer-е до списка.
+     */
+    getContentSizeBeforeList(): number {
+        if (!this._listContainer) {
+            return null;
+        }
+
+        const scrollContent = this._listContainer.closest('.controls-Scroll-ContainerBase__content');
+        return this._getContentSizeBeforeContainer(this._listContainer, scrollContent);
     }
 
     // region on DOM references update
 
     setItemsContainer(newItemsContainer: HTMLElement): void {
         this._itemsContainer = newItemsContainer;
+    }
+
+    setListContainer(newListContainer: HTMLElement): void {
+        this._listContainer = newListContainer;
     }
 
     setItemsQuerySelector(newItemsQuerySelector: string): void {
@@ -161,7 +180,7 @@ export abstract class AbstractItemsSizesController {
     private _domElementsMatchToRange(itemsRange: IItemsRange, itemsElements: NodeListOf<Element>): boolean {
         const itemsRangeLength = itemsRange.endIndex - itemsRange.startIndex;
         let domElementsMatchToRange = itemsRangeLength === itemsElements.length;
-        if (!domElementsMatchToRange) {
+        if (!domElementsMatchToRange && itemsElements.length) {
             // Если ДОМ-элементы не соответствуют диапазону, то стоит проверить ситуацию, когда в ДОМ-е
             // сохранился застиканный элемент вне диапазона.
             let offsetByStickedItems = 0;
@@ -177,7 +196,13 @@ export abstract class AbstractItemsSizesController {
         return domElementsMatchToRange;
     }
 
-    protected abstract _getContentSizeBeforeItems(itemsContainer: HTMLElement, scrollContent: Element): number;
+    /**
+     * Возвращает размер контента, который находится в scrollContent, но до container.
+     * @param container
+     * @param scrollContent
+     * @protected
+     */
+    protected abstract _getContentSizeBeforeContainer(container: HTMLElement, scrollContent: Element): number;
 
     protected abstract _getItemSize(element: HTMLElement): number;
 

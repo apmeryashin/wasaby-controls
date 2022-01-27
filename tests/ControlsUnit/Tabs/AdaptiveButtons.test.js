@@ -20,63 +20,65 @@ define([
                 title: 'Третий'
             }
         ];
+
+        const data2 = [
+            {
+                key: 'someKey1',
+                caption: 'Первый'
+            },
+            {
+                key: 'someKey2',
+                caption: 'Второй'
+            },
+            {
+                key: 'someKey3',
+                caption: 'Третий'
+            }
+        ];
         const items = new collection.RecordSet({
             keyProperty: 'id', rawData: data
         });
-        const adaptiveButtons = new tabsMod.AdaptiveButtons();
-        it('_getLastTabIndex', function() {
-            adaptiveButtons._getItemsWidth = () => {
-                return [50, 50, 50];
-            };
-            adaptiveButtons._getMinWidth = () => {
-                return 20;
-            };
-            adaptiveButtons._moreButtonWidth = 10;
-            const options = {
-                align: 'left',
-                displayProperty: 'title',
-                containerWidth: 200
-            };
-
-          // 1 случай все вкладки уместились
-           const lastIndex = adaptiveButtons._getLastTabIndex(items, options);
-           assert.equal(lastIndex, 2);
-
-           //2 случай, поместились все вкладки, 3 сократилась.
-            options.containerWidth = 147;
-            // ширина двух вкладок 50 + 50 + мин.ширина последней вкладки 20 + отступы 13*2 = 146
-            const lastIndex2 = adaptiveButtons._getLastTabIndex(items, options);
-            assert.equal(lastIndex2, 2);
-
-            //3 случай, поместились 2 вкладки из 3
-            options.containerWidth = 120;
-            // ширина первой вкладки 50 + кнопка еще 10 + отступы 26 + паддинг 6 + мин.высота второй вкладки 20 = 112
-            const lastIndex3 = adaptiveButtons._getLastTabIndex(items, options);
-            assert.equal(lastIndex3, 1);
-
-            //поместилась 1 вкладка
-            options.containerWidth = 100;
-            // ширина первой вкладки 50 + кнопка еще 10 + отступы 26 + паддинг 6 + мин.высота второй вкладки 20 = 112 - не поместилось
-            // мин.ширина первой вкладки 20 + кнопка еще 10 + 26 + 6 = 62
-            const lastIndex4 = adaptiveButtons._getLastTabIndex(items, options);
-            assert.equal(lastIndex4, 0);
+        const items2 = new collection.RecordSet({
+            keyProperty: 'key', rawData: data2
         });
+        const adaptiveButtons = new tabsMod.AdaptiveButtons();
         it('_calcVisibleItems', function () {
             adaptiveButtons._getItemsWidth = () => {
                 return [50, 50, 50];
-            };
-            adaptiveButtons._getMinWidth = () => {
-                return 20;
             };
             adaptiveButtons._moreButtonWidth = 10;
             const options = {
                 align: 'left',
                 displayProperty: 'title',
                 containerWidth: 120,
-                selectedKey: 1
+                selectedKey: 1,
+                keyProperty: 'id'
+            };
+            const options2 = {
+                align: 'right',
+                displayProperty: 'caption',
+                containerWidth: 120,
+                selectedKey: 'someKey2',
+                keyProperty: 'key'
             };
 
-            adaptiveButtons._calcVisibleItems(items, options);
+            adaptiveButtons._keyProperty = 'key';
+
+            adaptiveButtons._calcVisibleItems(items2, options2, options2.selectedKey);
+            assert.deepEqual(adaptiveButtons._visibleItems.getRawData(), [{
+                canShrink: true,
+                caption: 'Второй',
+                key: 'someKey2'
+            }, {
+                canShrink: false,
+                caption: 'Третий',
+                key: 'someKey3'
+            }
+            ]);
+
+            adaptiveButtons._keyProperty = 'id';
+
+            adaptiveButtons._calcVisibleItems(items, options, options.selectedKey);
             assert.deepEqual(adaptiveButtons._visibleItems.getRawData(), [{
                 canShrink: false,
                 id: 1,
@@ -88,8 +90,9 @@ define([
             }
             ]);
 
+            adaptiveButtons._keyProperty = 'id';
             options.selectedKey = 3;
-            adaptiveButtons._calcVisibleItems(items, options);
+            adaptiveButtons._calcVisibleItems(items, options, options.selectedKey);
             assert.deepEqual(adaptiveButtons._visibleItems.getRawData(), [{
                 canShrink: false,
                 id: 1,
@@ -121,6 +124,8 @@ define([
             buttons._position = 0;
             buttons._updateFilter = () => {};
             buttons._items = items;
+            buttons._getTextWidth = () => 30;
+            buttons._keyProperty = 'id';
 
 
             buttons._menuItemClickHandler(event1, [1]);

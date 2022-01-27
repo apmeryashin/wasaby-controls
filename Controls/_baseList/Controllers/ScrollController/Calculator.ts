@@ -190,11 +190,7 @@ export class Calculator {
             scrollPosition = itemOffset + edgeItem.borderDistance - viewportSize;
         }
 
-        const maxScrollPosition = Math.max(this._contentSize - this._viewportSize, 0);
-        return Math.min(
-            Math.max(scrollPosition, 0),
-            maxScrollPosition
-        );
+        return Math.max(scrollPosition, 0);
     }
 
     private _getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
@@ -204,8 +200,17 @@ export class Calculator {
         const range = params.range || this._range;
         const placeholders = params.placeholders || this._placeholders;
         const itemsSizes = this._itemsSizes;
-        let edgeItem: IEdgeItem = null;
 
+        // Возможен кейс, что после resetItems записи не успели отрисоваться
+        // и в этот же _beforeUpdate изменили коллекцию. Допустим свернули узлы.
+        // Это вызовет removeItems, который запланирует восстановление скролла.
+        // Но скролл восстанавливать нельзя, т.к. записи еще не были отрисованы.
+        const itemsIsRendered = itemsSizes.some((it) => it.size);
+        if (!itemsIsRendered) {
+            return null;
+        }
+
+        let edgeItem: IEdgeItem = null;
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
             const nextItem = itemsSizes[index + 1];
@@ -435,7 +440,7 @@ export class Calculator {
         const direction = this._calcAddDirection(position, count);
 
         // Корректируем старый диапазон. Т.к. записи добавились  в начало, то все индексы сместятся на count
-        if (position === 0 && calcMode === 'shift') {
+        if (position === 0 && calcMode !== 'nothing') {
             this._range.startIndex = Math.min(this._totalCount, this._range.startIndex + count);
             this._range.endIndex = Math.min(this._totalCount, this._range.endIndex + count);
         }
@@ -482,22 +487,29 @@ export class Calculator {
     removeItems(position: number, count: number): ICalculatorResult {
         const oldState = this._getState();
         const direction = position <= this._range.startIndex ? 'backward' : 'forward';
+        // Всегда смещаем диапазон, если удалили записи в начале и пересчитываем при удалении после startIndex,
+        // только если за пределами диапазона недостаточно записей для заполнения pageSize, в противном случае
+        // записи за пределами диапазона сами попадут в текущий диапазон из-за удаления записей.
+        const enoughItemsToForward = this._totalCount - this._range.endIndex >= count;
+        const shouldShiftRange = direction === 'backward' || !enoughItemsToForward;
 
         this._totalCount -= count;
 
-        this._range = shiftRangeBySegment({
-            currentRange: this._range,
-            direction,
-            pageSize: this._virtualScrollConfig.pageSize,
-            segmentSize: count,
-            totalCount: this._totalCount,
-            viewportSize: this._viewportSize,
-            contentSize: this._contentSize,
-            triggersOffsets: this._triggersOffsets,
-            itemsSizes: this._itemsSizes,
-            placeholders: this._placeholders,
-            calcMode: 'shift'
-        });
+        if (shouldShiftRange) {
+            this._range = shiftRangeBySegment({
+                currentRange: this._range,
+                direction,
+                pageSize: this._virtualScrollConfig.pageSize,
+                segmentSize: count,
+                totalCount: this._totalCount,
+                viewportSize: this._viewportSize,
+                contentSize: this._contentSize,
+                triggersOffsets: this._triggersOffsets,
+                itemsSizes: this._itemsSizes,
+                placeholders: this._placeholders,
+                calcMode: 'shift'
+            });
+        }
 
         this._placeholders = getPlaceholdersByRange({
             range: this._range,

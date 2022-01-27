@@ -1,33 +1,19 @@
-import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import TreeItem from '../TreeItem';
-import Tree, { TNodeFooterVisibilityCallback } from '../Tree';
-import {Model} from 'Types/entity';
-import {TemplateFunction} from 'UI/Base';
+import { Model } from 'Types/entity';
+import ExtraNodeItem, {
+    ISortOptions as IBaseSortOptions,
+    IInsertExtraItemIndexParams,
+    TExtraItemVisibilityCallback
+} from './ExtraNodeItem';
 
-interface IOptions<S, T extends TreeItem<S>> {
-    source: IItemsStrategy<S, T>;
-    display: Tree<S, T>;
-    nodeFooterModule?: string;
-    nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
+export interface ISortOptions extends IBaseSortOptions {
+    hasNodeFooterViewConfig?: boolean;
 }
 
-interface ISortOptions<S, T extends TreeItem<S>> {
-    display: Tree<S, T>;
-    nodeFooterModule?: string;
-    nodeFooters: T[];
-    hasNodeFooterViewConfig: boolean;
-    nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
-}
-
-/**
- * Определяет нужно или нет выводить кастомным шаблоном футера узла.
- * Выводить нужно если он передан и нет данных для загрузки (в этом случае показывается кнопка "Ещё")
- * и ф-ия nodeFooterVisibilityCallback не указана или указана и вернула true.
- */
 export function shouldDisplayNodeFooterTemplate(
     item: TreeItem,
     hasNodeFooterViewConfig: boolean,
-    nodeFooterVisibilityCallback: TNodeFooterVisibilityCallback
+    extraItemVisibilityCallback: TExtraItemVisibilityCallback
 ): boolean {
     // если темплейт не задан, то мы точно его не будем отображать. А если есть данные еще,
     // то в первую очередь отображается кнопка Еще
@@ -36,199 +22,33 @@ export function shouldDisplayNodeFooterTemplate(
     }
 
     // если колбэк не задан, то всегда отображаем темплейт
-    return !nodeFooterVisibilityCallback || nodeFooterVisibilityCallback(item.getContents());
+    return !extraItemVisibilityCallback || extraItemVisibilityCallback(item.getContents());
 }
 
-export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>>
-    implements IItemsStrategy<S, T> {
-    readonly '[Controls/_display/IItemsStrategy]': boolean;
+export default class NodeFooter <S extends Model = Model, T extends TreeItem<S> = TreeItem<S>>
+    extends ExtraNodeItem {
 
-    protected _count: number;
-    protected _items: T[];
-    protected _options: IOptions<S, T>;
-    protected _source: IItemsStrategy<S, T>;
-
-    /**
-     * Группы
-     */
-    protected _nodeFooters: T[] = [];
-
-    /**
-     * Индекс в стратегии -> оригинальный индекс
-     */
-    protected _itemsOrder: number[];
-
-    constructor(options: IOptions<S, T>) {
-        this._options = options;
+    protected _getExtraItemContent(item: T): string {
+        return 'node-footer-' + item.getContents().getKey();
     }
 
-    get options(): IOptions<S, T> {
-        return this._options;
+    protected _setExtraItem(item: T, extraItem: T): void {
+        item.setNodeFooter(extraItem);
     }
 
-    get source(): IItemsStrategy<S, T> {
-        return this.options.source;
+    protected _shouldAddExtraItem(item: T, options: ISortOptions): boolean {
+        return item.hasMoreStorage('forward') ||
+            shouldDisplayNodeFooterTemplate(item, options.hasNodeFooterViewConfig, options.extraItemVisibilityCallback);
     }
 
-    get count(): number {
-        return this._getItemsOrder().length;
+    protected _getSortItemsOptions(): ISortOptions {
+        return {
+            ...super._getSortItemsOptions(),
+            hasNodeFooterViewConfig: !!this._options.display.getNodeFooterTemplate()
+        };
     }
 
-    get items(): T[] {
-        const itemsOrder = this._getItemsOrder();
-        const items = this._getItems();
-        return itemsOrder.map((index) => items[index]);
-    }
-
-    at(index: number): T {
-        const itemsOrder = this._getItemsOrder();
-        const itemIndex = itemsOrder[index];
-
-        if (itemIndex === undefined) {
-            throw new ReferenceError(`Index ${index} is out of bounds.`);
-        }
-
-        return this._getItems()[itemIndex];
-    }
-
-    getCollectionIndex(index: number): number {
-        const itemsOrder = this._getItemsOrder();
-        const overallIndex = itemsOrder[index];
-        let sourceIndex = overallIndex - this._nodeFooters.length;
-
-        sourceIndex = sourceIndex >= 0 ? this.source.getCollectionIndex(sourceIndex) : -1;
-
-        return sourceIndex;
-    }
-
-    getDisplayIndex(index: number): number {
-        const itemsOrder = this._getItemsOrder();
-        const sourceIndex = this.source.getDisplayIndex(index);
-        const overallIndex = sourceIndex + this._nodeFooters.length;
-        const itemIndex = itemsOrder.indexOf(overallIndex);
-
-        return itemIndex === -1 ? itemsOrder.length : itemIndex;
-    }
-
-    invalidate(): void {
-        this._itemsOrder = null;
-        return this.source.invalidate();
-    }
-
-    reset(): void {
-        this._itemsOrder = null;
-        this._nodeFooters = [];
-        return this.source.reset();
-    }
-
-    splice(start: number, deleteCount: number, added?: S[]): T[] {
-        this._itemsOrder = null;
-        const removedItems = this.source.splice(
-            start,
-            deleteCount,
-            added
-        );
-
-        this._removeNodeFooters(removedItems);
-
-        return removedItems;
-    }
-
-    private _removeNodeFooters(removedItems: T[]): void {
-        removedItems.forEach((item) => {
-            const index = this._nodeFooters.findIndex((footer: T) => footer.getNode() === item);
-            if (index !== -1) {
-                this._nodeFooters.splice(index, 1);
-                item.setNodeFooter(null);
-            }
-        });
-    }
-
-    /**
-     * Возвращает подвалы узлов + элементы оригинальной стратегии
-     * @protected
-     */
-    protected _getItems(): T[] {
-        return (this._nodeFooters as any[] as T[]).concat(this.source.items);
-    }
-
-    /**
-     * Возвращает соответствие индексов в стратегии оригинальным индексам
-     * @protected
-     */
-    protected _getItemsOrder(): number[] {
-        if (!this._itemsOrder) {
-            this._itemsOrder = this._createItemsOrder();
-        }
-
-        return this._itemsOrder;
-    }
-
-    /**
-     * Создает соответствие индексов в стратегии оригинальным оригинальный индексам
-     * @protected
-     */
-    protected _createItemsOrder(): number[] {
-        return NodeFooter.sortItems<S, T>(this.source.items, {
-            display: this.options.display,
-            nodeFooterModule: this.options.nodeFooterModule,
-            nodeFooters: this._nodeFooters,
-            hasNodeFooterViewConfig: this._hasNodeFooterViewConfig(this.options),
-            nodeFooterVisibilityCallback: this.options.nodeFooterVisibilityCallback
-        });
-    }
-
-    protected _hasNodeFooterViewConfig(options: IOptions): boolean {
-        return !!options.display.getNodeFooterTemplate();
-    }
-
-    /**
-     * Создает индекс сортировки в порядке группировки
-     * @param items Элементы проекции.
-     * @param options Опции
-     */
-    static sortItems<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>>(
-        items: T[],
-        options: ISortOptions<S, T>
-    ): number[] {
-        const nodeFooterContents = options.nodeFooters.map((it) => it.getContents());
-
-        // считаем новый список футеров
-        const nodesWithFooters = NodeFooter._countNodesWithFooters(
-            items, options.nodeFooterVisibilityCallback, options.hasNodeFooterViewConfig
-        );
-        const newNodeFooterContents = nodesWithFooters.map((it) => NodeFooter._getNodeFooterContent(it));
-
-        // удаляем из текущего списка футеров уже не нужные футеры
-        nodeFooterContents.forEach((nodeFooterContent) => {
-            if (newNodeFooterContents.indexOf(nodeFooterContent) === -1) {
-                const index = options.nodeFooters.findIndex((it) => it.contents === nodeFooterContent);
-                const removedNodeFooter = options.nodeFooters.splice(index, 1)[0];
-                const node = removedNodeFooter.getNode();
-                node.setNodeFooter(null);
-            }
-        });
-
-        // добавляем в текущий список футеров новые футеры
-        newNodeFooterContents.forEach((nodeFooterContent, index) => {
-            if (nodeFooterContents.indexOf(nodeFooterContent) === -1) {
-                const item = nodesWithFooters[index];
-                const nodeFooter = options.display.createItem({
-                    itemModule: options.nodeFooterModule,
-                    contents: nodeFooterContent,
-                    parent: item,
-                    hasMore: item.getHasMoreStorage(),
-                    moreFontColorStyle: options.display.getMoreFontColorStyle(),
-                    moreCaption: options.display.getNodeMoreCaption()
-                });
-                options.nodeFooters.splice(index, 0, nodeFooter);
-                item.setNodeFooter(nodeFooter);
-            }
-        });
-
-        // обновляем ссылки в футерах и в узлах, т.к. элементы могут пересоздаться.
-        NodeFooter._updateNodesInNodeFooters(items, options.nodeFooters);
-
+    protected _insertExtraItemIndex(params: IInsertExtraItemIndexParams): void {
         const getItemsCount = (node) => {
             const oneOfParentsIsEqualNode = (item) => {
                 if (!item || !item.getParent) {
@@ -245,7 +65,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             let count = 0;
             items.forEach((item) => {
                 // TODO: Убрать в константу или определить getLevel для группы дерева
-                //  https://online.sbis.ru/opendoc.html?guid=ca34d365-26db-453d-b05a-eb6c708c59ee
+                // https://online.sbis.ru/opendoc.html?guid=ca34d365-26db-453d-b05a-eb6c708c59ee
                 if (
                     (item['[Controls/_display/GroupItem]'] ? 1 : item.getLevel()) > node.getLevel() &&
                     oneOfParentsIsEqualNode(item)
@@ -256,75 +76,22 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             return count;
         };
 
-        const countNodeFooters = options.nodeFooters.length;
-        const itemsOrder = items.map((it, index) => index + countNodeFooters);
-        options.nodeFooters.forEach((footer) => {
-            const node = footer.getNode();
-            const sourceNodeIndex = items.indexOf(node);
-            // По мере добавления футеров индекс изменяется
-            const currentNodeIndex = itemsOrder.indexOf(sourceNodeIndex + countNodeFooters);
-            const footerIndex = options.nodeFooters.indexOf(footer);
+        const { extraItem, extraItems, itemsOrder, items } = params;
+        const node = extraItem.getNode();
+        const sourceNodeIndex = items.indexOf(node);
+        const countExtraItems = extraItems.length;
+        // По мере добавления дополнительных элементов, индекс изменяется
+        const currentNodeIndex = itemsOrder.indexOf(sourceNodeIndex + countExtraItems);
+        const extraItemIndex = extraItems.indexOf(extraItem);
 
-            // TODO здесь должен быть вызов TreeItem::getChildren,
-            //  но он вызывает все стратегии и происходит зацикливание
-            const countChildren = getItemsCount(node);
-            // вставляем индекс футера в конец узла
-            itemsOrder.splice(currentNodeIndex + countChildren + 1, 0, footerIndex);
-        });
-
-        return itemsOrder;
-    }
-
-    private static _getNodeFooterContent(item: TreeItem): string {
-        return 'node-footer-' + item.getContents().getKey();
-    }
-
-    private static _countNodesWithFooters(
-        items: TreeItem[], nodeFooterVisibilityCallback: TNodeFooterVisibilityCallback, hasNodeFooterViewConfig: boolean
-    ): TreeItem[] {
-        const nodesWithFooter = [];
-
-        for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
-            const item = items[itemIndex];
-
-            // Проверяем, что запись это узел и он развернут
-            if (
-                !item['[Controls/_display/TreeItem]'] || item['[Controls/treeGrid:TreeGridNodeFooterRow]']
-                || item.isNode() === null || !item.isExpanded()
-            ) {
-                continue;
-            }
-
-            // Проверяем что в узле есть еще записи или определен футер темплейт и прикладники разрешили его показывать
-            // nodeFooterVisibilityCallback вызываем только когда будем отображать прикладной темплейт,
-            // если отображаем Еще, то всегда показываем nodeFooter
-            if (
-                item.hasMoreStorage('forward') ||
-                shouldDisplayNodeFooterTemplate(item, hasNodeFooterViewConfig, nodeFooterVisibilityCallback)
-            ) {
-                nodesWithFooter.push(item);
-            }
-        }
-
-        return nodesWithFooter;
-    }
-
-    private static _updateNodesInNodeFooters(items: TreeItem[], nodeFooters: TreeItem[]): void {
-        nodeFooters.forEach((footer) => {
-            const nodeKey = footer.getNode().getContents().getKey();
-            const newNode = items.find((it) => it.key === nodeKey);
-            if (newNode) {
-                footer.setParent(newNode);
-                newNode.setNodeFooter(footer);
-            }
-        });
+        // TODO здесь нужно вызывать TreeItem::getChildren, но он вызывает все стратегии и происходит зацикливание
+        const countChildren = getItemsCount(node);
+        // вставляем индекс футера в конец узла
+        itemsOrder.splice(currentNodeIndex + countChildren + 1, 0, extraItemIndex);
     }
 }
 
 Object.assign(NodeFooter.prototype, {
-    '[Controls/_display/IItemsStrategy]': true,
     '[Controls/_display/itemsStrategy/NodeFooter]': true,
-    _moduleName: 'Controls/display:itemsStrategy.NodeFooter',
-    _groups: null,
-    _itemsOrder: null
+    _moduleName: 'Controls/display:itemsStrategy.NodeFooter'
 });

@@ -51,7 +51,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
          out = markupGenerator.joinElements([markupGenerator.createTag('span', {
             'attributes': {
                'class': mainClass,
-               'title': tooltip
+               'title': thelpers.wrapUndef(markupGenerator.escape(tooltip))
             },
             'events': {},
             'key': key + '0_'
