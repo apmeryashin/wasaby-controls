@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/ItemActions/Base/Base';
 import {Memory} from 'Types/source';
-import {getActionsForContacts as getItemActions} from '../../DemoHelpers/ItemActionsCatalog';
+import {getActionsWithSVG as getItemActions} from '../../DemoHelpers/ItemActionsCatalog';
 import { IItemAction } from 'Controls/itemActions';
 import {getContactsCatalog} from '../../DemoHelpers/DataCatalog';
 

@@ -31,6 +31,7 @@ import {getActions} from './measurers/ItemActionMeasurer';
 import {TItemActionsVisibility} from './interface/IItemActionsOptions';
 import {TButtonStyle} from 'Controls/buttons';
 import {TIconStyle} from 'Controls/interface';
+import {getIcon, isSVGIcon} from 'Controls/Utils/Icon';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -753,8 +754,15 @@ export class Controller {
         this._collection.setActionsTemplateConfig(actionsTemplateConfig);
         Controller._setItemActions(item, swipeConfig.itemActions, this._actionMode);
 
+        const visibleActions = swipeConfig.itemActions.showed;
+        swipeConfig.itemActions.showed = visibleActions.map((originalAction) => {
+            const action = {...originalAction};
+            action.isSVGIcon = isSVGIcon(action.icon);
+            action.icon = getIcon(action.icon);
+            return action;
+        });
+
         if (swipeConfig.twoColumns) {
-            const visibleActions = swipeConfig.itemActions.showed;
             swipeConfig.twoColumnsActions = [
                 [visibleActions[0], visibleActions[1]],
                 [visibleActions[2], visibleActions[3]]
@@ -926,8 +934,9 @@ export class Controller {
             viewMode: action.viewMode || 'link',
             iconSize: action.iconSize || this._iconSize,
             fontSize: 'm',
-            icon: hasIcon ? action.icon : null,
-            caption: Controller._needShowTitle(action) ? action.title : null
+            icon: hasIcon ? getIcon(action.icon) : null,
+            caption: Controller._needShowTitle(action) ? action.title : null,
+            isSVGIcon: isSVGIcon(action.icon)
         };
 
         if (shownAction.viewMode && shownAction.viewMode !== 'link' && shownAction.viewMode !== 'functionalButton') {
