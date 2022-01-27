@@ -63,7 +63,8 @@ export default class History extends Control<IHistoryOptions> {
 
     protected _handleHistoryItemClick(event: SyntheticEvent, filter: IFilterItem): void {
         const historyObject = this._getHistoryObject(filter);
-        chain.factory(historyObject).each((elem) => {
+        const historyItems = (historyObject.items || historyObject) as IFilterItem[];
+        chain.factory(historyItems).each((elem) => {
             const name = getPropValue(elem, 'name');
             const textValue = getPropValue(elem, 'textValue');
             const value = getPropValue(elem, 'value');
@@ -92,8 +93,9 @@ export default class History extends Control<IHistoryOptions> {
 
     private _getItemText(filterItem: IFilterItem): string {
         const historyObject = this._getHistoryObject(filterItem);
+        const historyItems = (historyObject.items || historyObject) as IFilterItem[];
         const textArr = [];
-        chain.factory(historyObject).each((elem) => {
+        chain.factory(historyItems).each((elem) => {
             const sourceItem = this._getSourceItemByName(this._options.source, getPropValue(elem, 'name'));
             const value = getPropValue(elem, 'value');
             const textValue = getPropValue(elem, 'textValue');
