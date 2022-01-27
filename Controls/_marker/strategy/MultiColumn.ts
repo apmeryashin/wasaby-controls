@@ -22,7 +22,11 @@ export default class MultiColumnMarkerStrategy extends AbstractStrategy {
     }
 
     getPrevMarkedKey(index: number): CrudEntityKey | void {
-        return this.getMarkedKeyByDirection(index, 'Left');
+        if (index > 0) {
+            return this.getMarkedKeyByDirection(index, 'Left');
+        } else {
+            return null;
+        }
     }
 
     shouldMoveMarkerOnScrollPaging(): boolean {
