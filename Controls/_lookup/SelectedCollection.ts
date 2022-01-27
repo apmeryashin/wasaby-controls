@@ -73,7 +73,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       const currentVisibleItems = this._visibleItems;
       this._visibleItems = selectedCollectionUtils.getVisibleItems(newOptions);
 
-      if (!isEqual(currentVisibleItems, this._visibleItems) || this._options.multiLine !== newOptions.multiLine ||
+      if (this._visibleItems.length !== currentVisibleItems.length
+          || this._options.multiLine !== newOptions.multiLine ||
           this._options.maxVisibleItems !== newOptions.maxVisibleItems) {
          this._needShowCounter = this._isShowCounter(itemsCount, newOptions.multiLine, newOptions.maxVisibleItems);
       }
