@@ -13,7 +13,8 @@ describe('Controls/_baseList/BaseControl/HoverFreezeController', () => {
     };
     const itemData = {
         ItemActionsItem: true,
-        getContents: () => record
+        getContents: () => record,
+        getActions: () => ([])
     };
 
     beforeEach(() => {
