@@ -398,23 +398,25 @@ export class Calculator {
     /**
      * Изменение позиции скролла. Пересчитывает индекс активного элемента от текущей позиции скролла
      * @param scrollPosition Позиция скролла
+     * @param updateActiveElement Нужно ли обновлять активный эелемент
      */
-    scrollPositionChange(scrollPosition: number): IActiveElementIndexChanged {
+    scrollPositionChange(scrollPosition: number, updateActiveElement: boolean): IActiveElementIndexChanged {
         const oldActiveElementIndex = this._activeElementIndex;
 
         if (this._scrollPosition !== scrollPosition) {
             this._scrollPosition = scrollPosition;
-
-            this._activeElementIndex = getActiveElementIndexByScrollPosition({
-                contentSize: this._contentSize,
-                viewportSize: this._viewportSize,
-                itemsSizes: this._itemsSizes,
-                currentRange: this._range,
-                placeholders: this._placeholders,
-                scrollPosition,
-                totalCount: this._totalCount,
-                feature1183225611: this._feature1183225611
-            });
+            if (updateActiveElement) {
+                this._activeElementIndex = getActiveElementIndexByScrollPosition({
+                    contentSize: this._contentSize,
+                    viewportSize: this._viewportSize,
+                    itemsSizes: this._itemsSizes,
+                    currentRange: this._range,
+                    placeholders: this._placeholders,
+                    scrollPosition,
+                    totalCount: this._totalCount,
+                    feature1183225611: this._feature1183225611
+                });
+            }
         }
 
         return {
