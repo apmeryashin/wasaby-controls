@@ -12,7 +12,7 @@
    <div on:swipe="_itemSwipe(item)"
       class="controls-HistoryList__itemWrapper controls-HistoryList_{{_options.orientation}}__itemWrapper" data-qa="HistoryList__item">
       <div class="controls-HistoryList__item controls-HistoryList_{{_options.orientation}}__item {{item.get('pinned') || item.get('client') ? 'controls-HistoryList__item_pinned'}}"
-           on:click="_clickHandler(item)" title="{{text}}">{{text}}</div>
+           on:click="_clickHandler(item)" title="{{text}} data-qa="HistoryList__item-title">{{text}}</div>
       <ws:partial
          attr:class="{{item === _swipeItem ? 'controls-HistoryList__iconSwipe'}}"
          template="{{iconTemplate}}"
