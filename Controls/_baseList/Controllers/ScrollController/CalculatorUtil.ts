@@ -114,7 +114,9 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
             endIndex = Math.min(pageSize, totalCount);
         }
 
-        if (calcMode === 'shift') {
+        // При добавлении в пустой список у нас получится диапазон [1, 1].
+        // Поэтому нужно принудительно в этом случае пересчитать startIndex.
+        if (calcMode === 'shift' || startIndex === endIndex) {
             startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
         }
     }
