@@ -14,6 +14,7 @@
                                 expanderAlign="right"
                                 fontColorStyle="secondary"
                                 fontSize="m"
+                                fontWeight="bold"
                                 iconStyle="secondary"/>
                 </ws:groupTemplate>
             </Controls.grid:View>
