@@ -3,6 +3,7 @@ import {BaseControl, IBaseControlOptions} from 'Controls/list';
 import {RecordSet} from 'Types/collection';
 import {CollectionItem} from 'Controls/display';
 import {Model} from 'Types/entity';
+import {IItemActionsObject} from 'Controls/itemActions';
 
 describe('Controls/_baseList/BaseControl/HoverFreezeController', () => {
     let baseControl: BaseControl;
@@ -14,7 +15,12 @@ describe('Controls/_baseList/BaseControl/HoverFreezeController', () => {
     const itemData = {
         ItemActionsItem: true,
         getContents: () => record,
-        getActions: () => ([])
+        getActions(): IItemActionsObject {
+            return {
+                showed: [{id: 0}],
+                all: []
+            };
+        }
     };
 
     beforeEach(() => {
