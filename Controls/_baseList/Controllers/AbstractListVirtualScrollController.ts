@@ -179,7 +179,7 @@ export abstract class AbstractListVirtualScrollController<
      * Нужно для того, чтобы не менять индексы уже во время отрисовки.
      * @private
      */
-    private _renderInProgress: boolean;
+    private _renderInProgress: boolean = true;
 
     /**
      * Стейт, который определяет что сейчас выполняется отрисовка новых индексов.
@@ -241,6 +241,7 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterMountListControl(): void {
+        this._renderInProgress = false;
         this._renderNewIndexes = false;
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
