@@ -152,7 +152,6 @@ describe('Controls/_listRender/View', () => {
                 getViewIterator: (): any => ({
                     each: (callback) => callback(item, 0)
                 }),
-                setActionsAssigned: (val) => null,
                 setActiveItem(_item: any): void {
                     this._$activeItem = _item;
                 },
