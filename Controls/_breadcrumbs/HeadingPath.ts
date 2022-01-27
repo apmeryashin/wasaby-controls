@@ -71,8 +71,8 @@ class BreadCrumbsPath extends Control<IHeadingPath, IReceivedState> {
     protected _backButtonClass: string = '';
     protected _breadCrumbsWrapperClass: string = '';
     protected _breadCrumbsClass: string = '';
-    private _crumbsWidth: number;
-    private _backButtonWidth: number;
+    private _crumbsWidth: number = null;
+    private _backButtonWidth: number = null;
     protected _notifyHandler: Function = EventUtils.tmplNotify;
     protected _applyHighlighter: Function = applyHighlighter;
     protected _getRootModel: Function = Common.getRootModel;
@@ -252,7 +252,7 @@ class BreadCrumbsPath extends Control<IHeadingPath, IReceivedState> {
     private _updateBreadCrumbsClasses(options: IHeadingPath,
                                       receivedState?: IReceivedState,
                                       getTextWidth: Function = this._getTextWidth): void {
-        if (receivedState) {
+        if (receivedState && receivedState.breadCrumbsWidth && receivedState.backButtonWidth) {
             this._crumbsWidth = receivedState.breadCrumbsWidth;
             this._backButtonWidth = receivedState.backButtonWidth;
         } else {
