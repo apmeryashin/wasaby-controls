@@ -395,6 +395,19 @@ const _private = {
       return item;
    },
 
+   getHistoryParams(data) {
+      const historyParams = _private.getHistoryParamsItems(data.items);
+      if (historyParams) {
+         for (const historyId in historyParams) {
+            if (historyParams.hasOwnProperty(historyId)) {
+               historyParams[historyId].data =
+                   JSON.stringify(historyParams[historyId].data, _private.getSerialize().serialize);
+            }
+         }
+      }
+      return historyParams;
+   },
+
    // Serializer при сериализации кэширует инстансы по идентификаторам,
    // и при десериализации, если идентификатор есть в кэше, берёт инстанс оттуда
    // Поэтому, когда применяем фильтр из истории,
@@ -493,8 +506,8 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       }
       if (meta.hasOwnProperty('$_addFromData')) {
          let historyParams;
-         if (data.items) {
-            historyParams = _private.getHistoryParamsItems(data.items);
+         if (data.items && this.historySource.getHistoryIds()) {
+            historyParams = _private.getHistoryParams(data);
             data.items = data.items.filter((item) => !item.historyId);
          }
 
@@ -506,14 +519,6 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
             _private.updateRecent(this, item);
             _private.getSourceByMeta(this, meta).update(item, meta);
             return Deferred.success(item.getId());
-         }
-         if (historyParams) {
-            for (const historyId in historyParams) {
-               if (historyParams.hasOwnProperty(historyId)) {
-                  historyParams[historyId].data =
-                      JSON.stringify(historyParams[historyId].data, _private.getSerialize().serialize);
-               }
-            }
          }
 
          serData = JSON.stringify(data, _private.getSerialize().serialize);
