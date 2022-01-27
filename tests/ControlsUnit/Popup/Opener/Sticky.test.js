@@ -829,6 +829,9 @@ define(
                   vertical: 'top',
                   horizontal: 'left'
                },
+               offset: {
+                  horizontal: 10
+               },
                sizes: {
                   width: 15,
                   height: 25
@@ -845,7 +848,7 @@ define(
                bottom: -20
             };
             result = StrategyInstance._checkOverflow(popupCfg, targetCoords, position, 'horizontal');
-            assert.strictEqual(result, -85); // Влезло
+            assert.strictEqual(result, -95); // Влезло
             result = StrategyInstance._checkOverflow(popupCfg, targetCoords, position, 'vertical');
             assert.strictEqual(result, -175); // влезло
 
