@@ -181,15 +181,15 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
     }
 
     protected _getPopupOptions(): IStickyPopupOptions {
-        const container = this._children.linkView.getPopupTarget();
+        const button = this._children.linkView.getPopupTarget();
 
         let value = {};
         if (this._options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
             value = PopupUtil.getFormattedSingleSelectionValue(this._rangeModel.startValue || this._startValue);
         }
         return {
-            ...PopupUtil.getCommonOptions(this),
-            target: container,
+            ...PopupUtil.getCommonOptions(this, button),
+            target: button,
             template: getDatePopupName(this._options.datePopupType),
             className: this._getPopupClassName(),
             ...this._getAdditionalPopupOptions(),
