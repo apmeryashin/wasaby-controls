@@ -71,7 +71,8 @@
 
 //PropertyGrid block
 .controls-FilterPanel__PropertyGrid {
-   padding: var(--basic_content_padding-top_filterPanel) var(--basic_content_padding-right_filterPanel) var(--offset_l) 0;
+   padding-top: var(--basic_content_padding-top_filterPanel);
+   padding-right: var(--basic_content_padding-right_filterPanel);
    margin-left: var(--offset_l);
 }
 
@@ -85,6 +86,12 @@
 .controls-HistoryList__vertical {
    padding: var(--offset_m) var(--offset_l);
    background-color: var(--history_background-color_filterPanel);
+}
+
+.controls-FilterPanel__content-vertical {
+   .controls-FilterPanel__PropertyGrid {
+      padding-bottom: var(--offset_l);
+   }
 }
 
 .controls-HistoryList__horizontal {
