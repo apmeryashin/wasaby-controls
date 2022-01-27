@@ -59,6 +59,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _counterTemplate: TemplateFunction = CounterTemplate;
    protected _children: ISelectedCollectionChildren;
    protected _stickyOpener: StickyOpener = null;
+   protected _needShowCounter: boolean = false;
 
    protected _beforeMount(options: ISelectedCollectionOptions): void {
       this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
@@ -176,7 +177,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    }
 
    private _isShowCounter(itemsCount: number, multiline: boolean, maxVisibleItems?: number): boolean {
-      return multiline ? itemsCount > maxVisibleItems : itemsCount > 1;
+      this._needShowCounter = multiline ? itemsCount > maxVisibleItems : itemsCount > 1;
+      return this._needShowCounter;
    }
 
    private _closeInfobox(): void {
