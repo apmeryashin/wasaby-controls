@@ -22,7 +22,7 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
  * @extends UI/Base:Control
  * @implements Controls/interface:IExpandable
  * @demo Controls-demo/OperationsPanelNew/PanelWithList/Default/Index
- * @author Авраменко А.С.
+ * @author Михайлов С.Е.
  * @public
  *
  */
@@ -35,7 +35,7 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
  * @extends UI/Base:Control
  * @implements Controls/interface:IExpandable
  *
- * @author Авраменко А.С.
+ * @author Михайлов С.Е.
  * @public
  *
  */
