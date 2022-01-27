@@ -376,19 +376,6 @@ define(
             assert.equal(classList, expectedClassList);
 
             options.hasApplyButton = true;
-            expectedClassList = 'controls-SimplePanel-List__row_state_default ' +
-               'controls-SimplePanel-List__item-leftPadding_s controls-SimplePanel-List__item-rightPadding_multiSelect';
-            classList = DropdownViewModel._private.getClassList(options, itemData, hasHierarchy);
-            assert.equal(classList, expectedClassList);
-
-            options.hasApplyButton = true;
-            itemData = { item: { get: () => false } };
-            expectedClassList = 'controls-SimplePanel-List__row_state_default ' +
-               'controls-SimplePanel-List__item-leftPadding_s controls-SimplePanel-List__item-rightPadding_multiSelect';
-            classList = DropdownViewModel._private.getClassList(options, itemData, false);
-            assert.equal(classList, expectedClassList);
-
-            options.hasApplyButton = true;
             itemData = { item: { get: () => false }, index: 1 };
             expectedClassList = 'controls-SimplePanel-List__row_state_default ' +
                'controls-SimplePanel-List__item-leftPadding_s controls-SimplePanel-List__item-rightPadding_default';
