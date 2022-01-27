@@ -184,4 +184,54 @@ describe('Controls/_dateRange/Controllers/RangeSelectionController', () => {
             });
         });
     });
+    describe('_itemMouseEnter', () => {
+        [{
+            displayedStartValue: new Date(2020, 0, 1),
+            item: new Date(2019, 11, 1),
+            options: {
+                selectionType: 'quantum'
+            }
+        }, {
+            displayedEndValue: new Date(2020, 0, 1),
+            item: new Date(2022, 0, 1),
+            options: {
+                selectionType: 'quantum'
+            }
+        }, {
+            displayedStartValue: new Date(2020, 0, 1),
+            item: new Date(2019, 11, 1),
+            options: {
+                rangeSelectedCallback: () => {
+                    return;
+                }
+            }
+        }, {
+            displayedEndValue: new Date(2020, 0, 1),
+            item: new Date(2022, 0, 1),
+            options: {
+                rangeSelectedCallback: () => {
+                    return;
+                }
+            }
+        }].forEach((test) => {
+            it('should set hovered value as startValue or endValue if selectionType is quantum or there is rangeSelectedCallback', () => {
+                const component: RangeSelectionController =
+                    calendarTestUtils.createComponent(RangeSelectionController, test.options);
+                component._selectionProcessing = true;
+
+                component._selectionBaseValue = new Date(2020, 0, 1);
+                component._displayedStartValue = test.displayedStartValue;
+                component._displayedEndValue = test.displayedEndValue;
+
+                sinon.stub(component, '_updateDisplayedRange').returns(true);
+                component._itemMouseEnter(test.item);
+                if (test.displayedStartValue) {
+                    assert.equal(test.displayedStartValue, component._selectionHoveredValue);
+                } else {
+                    assert.equal(test.displayedEndValue, component._selectionHoveredValue);
+                }
+                sinon.restore();
+            });
+        });
+    });
 });
