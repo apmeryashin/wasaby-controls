@@ -7,7 +7,8 @@ describe('Controls/_display/controllers/VirtualScrollHide', () => {
         const item = {
             _$rendered: false,
             isRendered: () => item._$rendered,
-            setRendered: (rendered) => item._$rendered = rendered
+            setRendered: (rendered) => item._$rendered = rendered,
+            setRenderedOutsideRange: () => null
         };
         return item;
     }
@@ -33,8 +34,9 @@ describe('Controls/_display/controllers/VirtualScrollHide', () => {
             _$version: 0,
             nextVersion: () => collection._$version++,
             _$items: Array.from({ length: 100 }).map((_) => ({
-                                                    StickableItem: true,
-                                                    isSticked: () => false
+                StickableItem: true,
+                isSticked: () => false,
+                setRenderedOutsideRange: () => null
             })),
             _$count: 100,
             getCount: () => collection._$count,

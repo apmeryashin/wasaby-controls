@@ -1,10 +1,12 @@
 import * as VirtualScroll from './VirtualScroll';
 import { EnumeratorCallback } from 'Types/collection';
+import {getStartIndex, getStopIndex} from './VirtualScroll';
 
 export interface IVirtualScrollHideItem {
     setRendered(rendered: boolean): void;
     isRendered(): boolean;
     isSticked(): boolean;
+    setRenderedOutsideRange(state: boolean): void;
 }
 
 export interface IVirtualScrollHideEnumerator extends VirtualScroll.IVirtualScrollEnumerator {
@@ -48,13 +50,20 @@ export function each(
     context?: object
 ): void {
     const enumerator = collection.getEnumerator();
+    const startIndex = getStartIndex(collection);
+    const stopIndex = getStopIndex(collection);
 
     enumerator.setPosition(-1);
 
     while (enumerator.moveNext()) {
         const item = enumerator.getCurrent();
+        const index = enumerator.getCurrentIndex();
         if (item.isRendered()) {
-            callback.call(context, item, enumerator.getCurrentIndex());
+            callback.call(context, item, index);
+        }
+
+        if (index >= startIndex && index < stopIndex) {
+            item.setRenderedOutsideRange(false);
         }
     }
 }
@@ -78,6 +87,7 @@ export function isItemAtIndexHidden(
         while (tempIndex < start) {
             tempItem = collection.at(tempIndex);
             if (shouldStayInCollection(tempItem)) {
+                current.setRenderedOutsideRange(false);
                 return true;
             }
             tempIndex++;
@@ -86,11 +96,14 @@ export function isItemAtIndexHidden(
         while (tempIndex >= stop) {
             tempItem = collection.at(tempIndex);
             if (shouldStayInCollection(tempItem)) {
+                current.setRenderedOutsideRange(false);
                 return true;
             }
             tempIndex--;
         }
-
+        if (index < start || index >= stop) {
+            current.setRenderedOutsideRange(true);
+        }
         return false;
     }
 
