@@ -422,6 +422,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _scrollToLeafOnDrawItems: boolean = false;
     protected _plainItemsContainer: boolean = true;
 
+    /**
+     * Флаг, означающий что изменение коллекции было спровоцировано изменением узла(развернули/свернули)
+     * @private
+     */
+    private _collectionChangeCauseByNode: boolean = false;
+
     private _timeoutForExpandOnDrag: number = null;
     private _loadedRoot: TKey;
 
@@ -1096,9 +1102,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             (action === IObservable.ACTION_ADD || action === IObservable.ACTION_REMOVE)
             && this._collectionChangeCauseByNode
         ) {
+            this._collectionChangeCauseByNode = false;
             this._listVirtualScrollController.setPredicatedRestoreDirection('backward');
         }
-        this._collectionChangeCauseByNode = false;
         super._onCollectionChangedScroll(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     }
 
