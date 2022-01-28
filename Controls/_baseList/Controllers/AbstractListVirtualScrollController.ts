@@ -193,7 +193,7 @@ export abstract class AbstractListVirtualScrollController<
      * По этому колбэку резолвится промис, который возвращается из метода scrollToItem
      * @private
      */
-    private _scrollToElementCompletedCallback: () => void;
+    private _scrollCompletedCallback: () => void;
 
     /**
      * Колбэк, который вызывается, когда завершился подскролл.
@@ -354,6 +354,9 @@ export abstract class AbstractListVirtualScrollController<
 
         this._scrollPosition = position;
         this._scrollController.scrollPositionChange(position);
+        if (this._scrollCompletedCallback) {
+            this._scrollCompletedCallback();
+        }
     }
 
     enableKeepScrollPosition(): void {
@@ -431,7 +434,7 @@ export abstract class AbstractListVirtualScrollController<
             return Promise.resolve();
         }
 
-        const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
+        const promise = new Promise<void>((resolver) => this._scrollCompletedCallback = resolver);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
         if (rangeChanged || this._scheduledScrollParams || this._renderNewIndexes) {
             this._scheduleScroll({
@@ -460,8 +463,9 @@ export abstract class AbstractListVirtualScrollController<
             const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
             return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());
         } else {
+            const promise = new Promise<void>((resolver) => this._scrollCompletedCallback = resolver);
             this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
-            return Promise.resolve(this._getFirstVisibleItemKey());
+            return promise.then(() => this._getFirstVisibleItemKey());
         }
     }
 
@@ -788,12 +792,7 @@ export abstract class AbstractListVirtualScrollController<
         this._inertialScrolling.callAfterScrollStopped(() => {
             const element = this._scrollController.getElement(key);
             if (element) {
-                const result = this._scrollToElementUtil(element, position, force);
-                if (result instanceof Promise) {
-                    result.then(() => this._scrollToElementCompletedCallback());
-                } else {
-                    this._scrollToElementCompletedCallback();
-                }
+                this._scrollToElementUtil(element, position, force);
             } else {
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
                     'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
