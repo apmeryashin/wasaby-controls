@@ -18,6 +18,7 @@ export interface IMasterWidth {
     masterWidth: number | string;
     masterMinWidth: number | string;
     masterMaxWidth: number | string;
+    initialMasterWidth: string;
 }
 
 interface IMasterDetail extends IControlOptions, IPropStorageOptions, IMasterWidth {
@@ -84,6 +85,12 @@ class Base extends Control<IMasterDetail, string> {
      * @cfg {Number|String} Ширина контентной области {@link master} при построении контрола.
      * @remark
      * Значение можно задавать как в пикселях, так и в процентах.
+     */
+
+    /**
+     * @name Controls/_masterDetail/Base#initialMasterWidth
+     * @cfg {String} Начальная ширина контентной области {@link master} при построении контрола.
+     * @see propStorageId
      */
 
     /**
@@ -208,7 +215,8 @@ class Base extends Control<IMasterDetail, string> {
     protected _newDesign: boolean = false;
     private _savedWidth: number; // Защита от множ. вызова БЛ
 
-    protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<string> | void {
+    protected _beforeMount(options: IMasterDetail, context: object,
+                           receivedState: string): Promise<string> | string | void {
         this._updateOffsetDebounced = debounce(this._updateOffsetDebounced.bind(this), RESIZE_DELAY);
         this._canResizing = this._isCanResizing(options);
         this._masterFixed = this._isMasterFixed(options);
@@ -218,6 +226,10 @@ class Base extends Control<IMasterDetail, string> {
             this._currentWidth = receivedState;
             this._savedWidth = parseInt(receivedState, 10);
         } else if (options.propStorageId) {
+            if (options.initialMasterWidth) {
+                this.initCurrentWidth(options.initialMasterWidth);
+                return this._currentWidth;
+            }
             return new Promise((resolve) => {
                 this._getSettings(options).then((storage) => {
                     this._updateSizesByPropStorageId(storage, options);
