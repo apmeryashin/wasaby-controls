@@ -241,6 +241,7 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterMountListControl(): void {
+        this._renderInProgress = false;
         this._renderNewIndexes = false;
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
@@ -252,6 +253,13 @@ export abstract class AbstractListVirtualScrollController<
                 this.scrollToItem(this._activeElementKey, 'top', true);
             }
         }
+    }
+
+    endBeforeMountListControl(): void {
+        // Устанавливаем _renderInProgress именно после маунта списка, т.к. нужно дождаться завершения:
+        // - инициализации начальных индексов коллекции;
+        // - инициализации строки добавления по месту.
+        this._renderInProgress = true;
     }
 
     beforeUnmountListControl(): void {

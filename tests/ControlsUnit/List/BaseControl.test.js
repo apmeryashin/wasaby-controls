@@ -5108,6 +5108,7 @@ define([
             const event = {
                preventDefault: () => preventDefaultCalled = true
             };
+            const originalScrollToItem = lists.BaseControl._private.scrollToItem;
 
             beforeEach(() => {
                baseControl._mounted = true;
@@ -5115,11 +5116,13 @@ define([
                   children: [],
                   querySelectorAll: () => []
                });
+               lists.BaseControl._private.scrollToItem = () => Promise.resolve();
                baseControl.activate = () => activateCalled = true;
                return baseControl.setMarkedKey(2);
             });
 
             afterEach(() => {
+               lists.BaseControl._private.scrollToItem = originalScrollToItem;
                activateCalled = false;
                preventDefaultCalled = false;
             });
@@ -5381,6 +5384,7 @@ define([
             source
          });
          let baseControl, viewModel;
+         const originalScrollToItem = lists.BaseControl._private.scrollToItem;
 
          beforeEach(() => {
             baseControl = new lists.BaseControl();
@@ -5389,7 +5393,12 @@ define([
                children: [],
                querySelectorAll: () => []
             });
+            lists.BaseControl._private.scrollToItem = () => Promise.resolve();
             return (baseControl._beforeMount(cfg) || Promise.resolve()).then(() => viewModel = baseControl.getViewModel());
+         });
+
+         afterEach(() => {
+            lists.BaseControl._private.scrollToItem = originalScrollToItem;
          });
 
          describe('mount', () => {
