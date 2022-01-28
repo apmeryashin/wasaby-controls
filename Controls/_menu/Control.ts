@@ -509,13 +509,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _subMenuResult(event: SyntheticEvent<MouseEvent>,
                              eventName: string,
-                             eventResult: Model|HTMLElement,
+                             eventResult: unknown,
                              nativeEvent: SyntheticEvent<MouseEvent>): void {
         if (eventName === 'menuOpened') {
             if (this._subDropdownItem.isFirstItem()) {
-                this._notify('closeButtonVisibilityChanged', [false]);
+                this._notify('closeButtonVisibilityChanged', [false, eventResult.position]);
             }
-            this._subMenu = eventResult as HTMLElement;
+            this._subMenu = eventResult.container as HTMLElement;
         } else if (eventName === 'menuClosed') {
             this._notify('closeButtonVisibilityChanged', [true]);
         } else if (eventName === 'subMenuMouseenter') {
