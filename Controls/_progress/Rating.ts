@@ -193,7 +193,7 @@ Object.defineProperty(Rating, 'defaultProps', {
  * @variant dynamic звезды закрашиваются в зависимости от количества заполненных
  * @see iconSize
  * @see iconPadding
- * @demo Controls-demo/progress/Rating/iconColorMode/Index
+ * @demo Controls-demo/progress/Rating/IconColorMode/Index
  */
 
 /**

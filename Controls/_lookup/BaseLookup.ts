@@ -53,7 +53,8 @@ export default abstract class
     protected _beforeUpdate(newOptions: ILookupOptions): Promise<SelectedItems>|void|boolean {
         const updateResult = this._lookupController.update(newOptions);
         const updateResultCallback = () => {
-            this._afterItemsChanged(newOptions);
+            this._itemsChanged(this._items = this._lookupController.getItems());
+            this._notifyOnItemsChanged();
         };
 
         if (updateResult instanceof Promise) {
@@ -70,7 +71,7 @@ export default abstract class
 
     protected _afterMount(): void {
         if (this._options.items && this._options.hasOwnProperty('selectedKeys')) {
-            this._notifySelectedKeysAndTextValueChanged(this._lookupController.getSelectedKeys());
+            this._notifyChanges(this._options);
         }
     }
 
@@ -146,19 +147,23 @@ export default abstract class
         this._lookupController.setItems(items);
     }
 
-    private _notifyChanges(options?: ILookupOptions): void {
-        const controller = this._lookupController;
-        this._notifySelectedKeysAndTextValueChanged(controller.getSelectedKeys(), options);
-        this._notify('itemsChanged', [this._lookupController.getItems()]);
+    protected _notifyChanges(
+        options?: ILookupOptions,
+        newSelectedKeys: TKey[] = this._lookupController.getSelectedKeys()
+    ): void {
+        const lookupOptions = options || this._options;
+        const {added, removed} =
+            ArrayUtil.getArrayDifference(this._getSelectedKeys(lookupOptions), newSelectedKeys);
+        if (lookupOptions.selectedKeys === undefined || (added?.length || removed?.length)) {
+            this._notify('selectedKeysChanged', [newSelectedKeys, added, removed]);
+            this._notifyOnItemsChanged();
+        }
     }
 
-    protected _notifySelectedKeysAndTextValueChanged(newSelectedKeys: TKey[], options?: ILookupOptions): void {
-        const {added, removed} =
-            ArrayUtil.getArrayDifference(this._getSelectedKeys(options ?? this._options), newSelectedKeys);
-        if (added?.length || removed?.length) {
-            this._notify('selectedKeysChanged', [newSelectedKeys, added, removed]);
-            this._notify('textValueChanged', [this._lookupController.getTextValue()]);
-        }
+    protected _notifyOnItemsChanged(): void {
+        const controller = this._lookupController;
+        this._notify('itemsChanged', [controller.getItems()]);
+        this._notify('textValueChanged', [controller.getTextValue()]);
     }
 
     abstract showSelector(popupOptions?: IStackPopupOptions): void;
