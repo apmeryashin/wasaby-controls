@@ -1,6 +1,5 @@
 import { TreeControl } from 'Controls/_tree/TreeControl';
-import { ITreeControlOptions } from 'Controls/_tree/interface/ITreeControlOptions';
-import ITree, { IOptions } from 'Controls/_tree/interface/ITree';
+import ITree, { IOptions as ITreeControlOptions } from 'Controls/_tree/interface/ITree';
 import { default as ItemsView } from 'Controls/_tree/ItemsTree';
 import TreeCollection from 'Controls/_tree/display/TreeCollection';
 import TreeNodeFooterItem from 'Controls/_tree/display/TreeNodeFooterItem';
@@ -29,7 +28,6 @@ export {
     TreeControl,
     ITreeControlOptions,
     ITree,
-    IOptions,
     ItemsView,
     TreeCollection,
     TreeItem,

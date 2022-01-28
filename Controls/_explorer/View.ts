@@ -1388,7 +1388,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
@@ -1425,7 +1425,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/list:IList
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
@@ -1603,4 +1603,13 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @name Controls/_explorer/View#arrowClick
  * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка скрыта.
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/**
+ * @name Controls/_explorer/View#itemPadding
+ * @cfg {Controls/_tile/interface/ITile/TileItemPadding.typedef|Controls/_interface/IItemPadding/ItemPadding.typedef} Отступы элементов.
+ * @description
+ * Поведение реестра при настройке этой опции зависит от {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/view-mode/ режима отображения}.
+ * В режиме плитки эта опция повлияет на отступы между записями и принимает объект {@link Controls/_tile/interface/ITile/TileItemPadding.typedef TileItemPadding}.
+ * В прочих режимах эта опция повлияет на отступы внутри записи и принимает объект {@link Controls/_interface/IItemPadding/ItemPadding.typedef ItemPadding}.
  */
