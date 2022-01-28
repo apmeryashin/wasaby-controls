@@ -10,14 +10,26 @@
             </div>
         </ws:if>
         <ws:else data="{{item.contents[column.config.displayProperty] !== undefined}}">
-            <div class="controls-EditorList__additional-column controls-text-{{item.contents['additionalTextStyleProperty'] || 'label'}}">
-                <Controls.Container.Async templateName="Controls/decorator:Number">
-                    <ws:partial template="{{ content.resolvedTemplate }}"
-                                value="{{item.contents[column.config.displayProperty]}}"
-                                precision="{{3}}"
-                                fontSize="m"/>
-                </Controls.Container.Async>
-            </div>
+            <ws:if data="{{_options.counterTemplate}}">
+                <ws:if data="{{(_options.counterTemplate.charAt)}}">
+                    <Controls.Container.Async templateName="{{_options.counterTemplate}}">
+                        <ws:partial template="{{ content.resolvedTemplate }}" scope="{{ _options }}"/>
+                    </Controls.Container.Async>
+                </ws:if>
+                <ws:else>
+                    <ws:partial template="{{ _options.counterTemplate }}" scope="{{ _options }}"/>
+                </ws:else>
+            </ws:if>
+            <ws:else>
+                <div class="controls-EditorList__additional-column controls-text-{{item.contents['additionalTextStyleProperty'] || 'label'}}">
+                    <Controls.Container.Async templateName="Controls/decorator:Number">
+                        <ws:partial template="{{ content.resolvedTemplate }}"
+                                    value="{{item.contents[column.config.displayProperty]}}"
+                                    precision="{{3}}"
+                                    fontSize="m"/>
+                    </Controls.Container.Async>
+                </div>
+            </ws:else>
         </ws:else>
     </ws:contentTemplate>
 </ws:partial>
