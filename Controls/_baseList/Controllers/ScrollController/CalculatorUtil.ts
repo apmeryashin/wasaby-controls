@@ -317,7 +317,7 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
     if (feature1183225611) {
         let activeElementIndex;
         for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
-            if (params.itemsSizes[i].offset <= fixedScrollPosition) {
+            if (params.itemsSizes[i].offset - placeholders.backward <= fixedScrollPosition) {
                 activeElementIndex = i;
             } else {
                 break;
