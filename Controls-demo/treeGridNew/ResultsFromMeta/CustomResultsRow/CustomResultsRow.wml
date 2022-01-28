@@ -12,6 +12,7 @@
                 nodeProperty="type"
                 header="{{_header}}"
                 columns="{{_columns}}"
+                itemsReadyCallback="{{ _itemsReadyCallback }}"
                 dataLoadCallback="{{ _dataLoadCallback }}"
                 resultsPosition="top">
             <ws:resultsTemplate>
