@@ -6,7 +6,7 @@ import {default as MenuControl} from 'Controls/_menu/Control';
 import {default as searchHeaderTemplate} from 'Controls/_menu/Popup/searchHeaderTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {default as headerTemplate} from 'Controls/_menu/Popup/headerTemplate';
-import {Controller as ManagerController, IStickyPopupOptions} from 'Controls/popup';
+import {Controller as ManagerController, IStickyPopupOptions, IStickyPosition} from 'Controls/popup';
 import {RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
 import {Model} from 'Types/entity';
@@ -47,6 +47,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         menuControl: MenuControl
     };
     protected _template: TemplateFunction = PopupTemplate;
+    protected _paddingClassName: string;
     protected _headerVisible: boolean = true;
     protected _hasHeader: boolean;
     protected _headerTemplate: TemplateFunction;
@@ -61,6 +62,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _applyButtonVisible: boolean = false;
     protected _selectedItems: Model[] = null;
     protected _calmTimer: CalmTimer = null;
+    private _stickyPositionFixed: boolean = false;
 
     protected _beforeMount(options: IMenuPopupOptions): Promise<void>|void {
         this._headerTheme = this._getTheme();
@@ -68,6 +70,9 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         this._dataLoadErrback = this._dataLoadErrback.bind(this, options);
 
         this._setCloseButtonVisibility(options);
+        if (this._closeButtonVisibility) {
+            this._paddingClassName = 'controls-Menu__popup_with-closeButton';
+        }
         this._prepareHeaderConfig(options);
         this._setItemPadding(options);
 
@@ -97,11 +102,19 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _beforeUpdate(newOptions: IMenuPopupOptions): void {
         this._headerTheme = this._getTheme();
 
-        if (newOptions.stickyPosition && newOptions.stickyPosition.direction &&
-            this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
-            this._verticalDirection = newOptions.footerContentTemplate || newOptions.searchParam ? 'bottom' :
-                newOptions.stickyPosition.direction.vertical;
-            this._horizontalDirection = newOptions.stickyPosition.direction.horizontal;
+        if (newOptions.stickyPosition && newOptions.stickyPosition.direction) {
+            if (this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
+                this._verticalDirection = newOptions.footerContentTemplate || newOptions.searchParam ? 'bottom' :
+                    newOptions.stickyPosition.direction.vertical;
+                this._horizontalDirection = newOptions.stickyPosition.direction.horizontal;
+            }
+            if (newOptions.root && !this._stickyPositionFixed) {
+                this._stickyPositionFixed = true;
+                this._notify('sendResult', ['menuOpened', {
+                    container: this._container,
+                    position: newOptions.stickyPosition
+                }], {bubbling: true});
+            }
         }
 
         if (this._options.itemPadding !== newOptions.itemPadding) {
@@ -123,10 +136,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         // Чтобы подменю не закрывалось после клика на пункт
         // https://wi.sbis.ru/docs/js/Controls/menu/Control/events/itemClick/
         return false;
-    }
-
-    protected _afterMount(options?: IMenuPopupOptions): void {
-        this._notify('sendResult', ['menuOpened', this._container], {bubbling: true});
     }
 
     protected _beforeUnmount(): void {
@@ -211,9 +220,11 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         }
     }
 
-    protected _updateCloseButtonState(event: SyntheticEvent<MouseEvent>, state: boolean): void {
+    protected _updateCloseButtonState(event: SyntheticEvent<MouseEvent>,
+                                      state: boolean,
+                                      position: {direction: IStickyPosition}): void {
         if (!this._hasHeader && this._closeButtonVisibility !== state) {
-            if (!state) {
+            if (!state && position.direction.horizontal === 'right') {
                 this._closeButtonVisibility = false;
             } else {
                 this._setCloseButtonVisibility(this._options);
