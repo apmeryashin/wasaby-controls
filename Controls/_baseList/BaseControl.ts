@@ -1070,16 +1070,16 @@ const _private = {
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
 
+        // если есть Еще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
+        const hasMoreData = {
+            up: self._hasMoreData('up'),
+            down: self._hasMoreData('down')
+        };
+
         // если мы для списка раз вычислили, что нужен пэйджинг, то возвращаем этот статус
         // это нужно для ситуации, если первая пачка данных вернула естьЕще (в этом случае пэйджинг нужен)
         // а вторая вернула мало записей и суммарный объем менее двух вьюпортов, пэйджинг не должен исчезнуть
         if (self._sourceController) {
-
-            // если есть Еще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
-            const hasMoreData = {
-                up: self._hasMoreData('up'),
-                down: self._hasMoreData('down')
-            };
 
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
@@ -1093,9 +1093,6 @@ const _private = {
                 self._cachedPagingState = true;
             } else if (hasMoreData.up || hasMoreData.down) {
                 self._recalcPagingVisible = true;
-            }
-            if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, hasMoreData);
             }
         }
 
@@ -1136,6 +1133,9 @@ const _private = {
             result = true;
         }
 
+        if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
+            _private.createScrollPagingController(self, hasMoreData);
+        }
         return result;
     },
 
