@@ -680,9 +680,15 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             currentExpandedItems && currentExpandedItems.length;
 
         // Если выполняется поиск и нет развернутых элементов, то развернем все узлы
-        const newExpandedItems = newOptions.searchValue &&
-        (!newOptions.expandedItems || !newOptions.expandedItems.length) ?
-            [ALL_EXPANDED_VALUE] : newOptions.expandedItems;
+        let newExpandedItems;
+        if (newOptions.searchValue && (!newOptions.expandedItems || !newOptions.expandedItems.length)) {
+            newExpandedItems = [ALL_EXPANDED_VALUE];
+        } else if (newOptions.expandedItems) {
+            newExpandedItems = newOptions.expandedItems;
+        // Если поиск был сброшен, нужно очистить свернутые узлы
+        } else if (!newOptions.searchValue && newOptions.searchValue !== this._options.searchValue) {
+            newExpandedItems = [];
+        }
 
         if (wasResetExpandedItems) {
             _private.resetExpandedItems(this);
