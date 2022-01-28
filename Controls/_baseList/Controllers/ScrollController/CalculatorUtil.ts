@@ -67,6 +67,7 @@ export interface IGetFirstVisibleItemIndexParams {
     scrollPosition: number;
     placeholders: IPlaceholders;
     currentRange: IItemsRange;
+    contentSizeBeforeItems: number;
 }
 
 /**
@@ -414,7 +415,7 @@ export function getFirstVisibleItemIndex(params: IGetFirstVisibleItemIndexParams
     const backwardPlaceholder = params.placeholders.backward;
     let itemIndex = params.currentRange.startIndex;
 
-    while (itemsSizes[itemIndex].offset - backwardPlaceholder < params.scrollPosition) {
+    while (itemsSizes[itemIndex].offset - backwardPlaceholder - params.contentSizeBeforeItems < params.scrollPosition) {
         itemIndex++;
     }
 

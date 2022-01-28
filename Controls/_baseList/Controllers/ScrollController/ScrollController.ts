@@ -197,7 +197,8 @@ export class ScrollController {
     }
 
     getFirstVisibleItemIndex(): number {
-        return this._calculator.getFirstVisibleItemIndex();
+        const contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        return this._calculator.getFirstVisibleItemIndex(contentSizeBeforeItems);
     }
 
     // region Triggers

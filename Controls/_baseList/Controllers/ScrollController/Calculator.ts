@@ -154,12 +154,13 @@ export class Calculator {
     /**
      * Возвращает индекс первой полностью видимой записи
      */
-    getFirstVisibleItemIndex(): number {
+    getFirstVisibleItemIndex(contentSizeBeforeItems: number): number {
         return getFirstVisibleItemIndex({
             itemsSizes: this._itemsSizes,
             currentRange: this._range,
             scrollPosition: this._scrollPosition,
-            placeholders: this._placeholders
+            placeholders: this._placeholders,
+            contentSizeBeforeItems
         });
     }
 
