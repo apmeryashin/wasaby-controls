@@ -20,7 +20,7 @@ import TreeTileView from 'Controls/_treeTile/TreeTileView';
  * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
  * @implements Controls/list:IClickableView
