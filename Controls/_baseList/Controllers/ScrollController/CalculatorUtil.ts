@@ -113,7 +113,7 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
             endIndex = Math.min(pageSize, totalCount);
         }
 
-        if (calcMode === 'shift') {
+        if (calcMode === 'shift' || startIndex === endIndex) {
             startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
         }
     }

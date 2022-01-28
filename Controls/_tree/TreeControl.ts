@@ -1109,9 +1109,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             (action === IObservable.ACTION_ADD || action === IObservable.ACTION_REMOVE)
             && this._collectionChangeCauseByNode
         ) {
+            this._collectionChangeCauseByNode = false;
             this._listVirtualScrollController.setPredicatedRestoreDirection('backward');
         }
-        this._collectionChangeCauseByNode = false;
         super._onCollectionChangedScroll(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     }
 
