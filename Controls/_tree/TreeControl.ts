@@ -683,8 +683,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         let newExpandedItems;
         if (newOptions.searchValue && (!newOptions.expandedItems || !newOptions.expandedItems.length)) {
             newExpandedItems = [ALL_EXPANDED_VALUE];
-        } else if (newOptions.expandedItems) {
-            newExpandedItems = newOptions.expandedItems;
+        } else if (newOptions.expandedItems || currentExpandedItems) {
+            newExpandedItems = newOptions.expandedItems || currentExpandedItems;
         // Если поиск был сброшен, нужно очистить свернутые узлы
         } else if (!newOptions.searchValue && newOptions.searchValue !== this._options.searchValue) {
             newExpandedItems = [];
