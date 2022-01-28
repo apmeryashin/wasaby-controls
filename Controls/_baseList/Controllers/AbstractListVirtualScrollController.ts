@@ -218,10 +218,6 @@ export abstract class AbstractListVirtualScrollController<
 
         this._initCollection(options.collection);
         this._createScrollController(options);
-
-        // Устанавливаем _renderInProgress именно после выполнения всего кода конструктора, т.к. в нём
-        // инициализируется начальный диапазон для коллекции.
-        this._renderInProgress = true;
     }
 
     protected abstract _getItemsSizeControllerConstructor(): IAbstractItemsSizesControllerConstructor;
@@ -257,6 +253,13 @@ export abstract class AbstractListVirtualScrollController<
                 this.scrollToItem(this._activeElementKey, 'top', true);
             }
         }
+    }
+
+    endBeforeMountListControl(): void {
+        // Устанавливаем _renderInProgress именно после маунта списка, т.к. нужно дождаться завершения:
+        // - инициализации начальных индексов коллекции;
+        // - инициализации строки добавления по месту.
+        this._renderInProgress = true;
     }
 
     beforeUnmountListControl(): void {
