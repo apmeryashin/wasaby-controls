@@ -6,6 +6,7 @@ import { TemplateFunction } from 'UI/Base';
 import { IOptions as IGridOptions } from './display/mixins/Grid';
 import {Logger} from 'UICommon/Utils';
 import {GridControl} from './GridControl';
+import 'Controls/_baseList/ScrollContextConsumer';
 
 /**
  * Контрол "Таблица" позволяет отображать данные из различных источников в виде таблицы.
@@ -75,11 +76,11 @@ import {GridControl} from './GridControl';
 export default class Grid<TControl extends GridControl = GridControl> extends List<GridControl> {
     protected _viewName: TemplateFunction = null;
     protected _viewTemplate: TControl = GridControl;
-    private _useScrollContextConsumer: boolean = false;
+    private _useScrollContexts: boolean = false;
 
     _beforeMount(options: IGridOptions): Promise<void>|void {
         const superResult = super._beforeMount(options);
-        this._useScrollContextConsumer = !!options.newColumnScroll;
+        this._useScrollContexts = !!options.newColumnScroll;
         this._viewName = isFullGridSupport() ? GridView : GridViewTable;
         return superResult;
     }

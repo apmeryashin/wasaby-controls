@@ -148,7 +148,7 @@ export abstract class AbstractListVirtualScrollController<
     private _activeElementKey: CrudEntityKey;
     private readonly _itemsContainerUniqueSelector: string;
     private _keepScrollPosition: boolean = false;
-    private _scrollPosition: number;
+    protected _scrollPosition: number;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     protected readonly _doScrollUtil: IDoScrollUtil;
