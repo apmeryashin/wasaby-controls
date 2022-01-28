@@ -14,18 +14,20 @@ export default class extends Control {
     protected _columns: IColumn[] = Flat.getColumns();
     private _fullResultsIndex: number = 0;
     private _partialResultsIndex: number = 0;
-
-    constructor() {
-        super({});
-        this._dataLoadCallback = this._dataLoadCallback.bind(this);
-    }
+    private _items: RecordSet;
 
     protected _beforeMount(): void {
+        this._dataLoadCallback = this._dataLoadCallback.bind(this);
+        this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'key',
             parentProperty: 'parent',
             data: Flat.getData()
         });
+    }
+
+    protected _itemsReadyCallback(items: RecordSet): void {
+        this._items = items;
     }
 
     private _dataLoadCallback(items: RecordSet): void {
@@ -40,16 +42,14 @@ export default class extends Control {
     }
 
     private _setMeta(): void {
-        const items = this._children.tree._children.listControl.getViewModel().getItems();
-        items.setMetaData({
-            ...items.getMetaData(),
-            results: this._generateResults(items)
+        this._items.setMetaData({
+            ...this._items.getMetaData(),
+            results: this._generateResults(this._items)
         });
     }
 
     private _setResultRow(): void {
-        const results = this._children.tree._children.listControl
-            .getViewModel().getItems().getMetaData().results;
+        const results = this._items.getMetaData().results;
         results.set('price', Flat.getResults().partial[this._partialResultsIndex]);
         this._fullResultsIndex = ++this._partialResultsIndex % Flat.getResults().partial.length;
     }
