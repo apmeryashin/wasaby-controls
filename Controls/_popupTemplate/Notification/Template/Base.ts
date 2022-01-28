@@ -44,6 +44,10 @@ class Notification extends Control<INotificationBaseOptions> {
         this._notify('close', []);
     }
 
+    protected _touchMoveHandler(event: Event): void {
+        event.preventDefault();
+    }
+
     protected _onDragEnd(): void {
         this._notify('popupDragEnd', [], {bubbling: true});
     }
