@@ -175,22 +175,23 @@ export class Calculator {
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        let scrollPosition = 0;
+        let scrollPositionOffset = 0;
 
         const item = this._itemsSizes[edgeItem.index];
-        const itemOffset = item.offset - this._placeholders.backward;
+        // https://jsfiddle.net/alex111089/oj8bL0mq/ нативная демка про восстановление скролла
+        // Вычитаем scrollPosition, чтобы привести координаты в единую систему, до и после отрисовки.
+        const itemOffset = item.offset - this._scrollPosition - this._placeholders.backward;
         if (edgeItem.direction === 'backward') {
             if (edgeItem.border === 'forward') {
-                scrollPosition = itemOffset + (item.size - edgeItem.borderDistance);
+                scrollPositionOffset = itemOffset + (item.size - edgeItem.borderDistance);
             } else {
-                scrollPosition = itemOffset + edgeItem.borderDistance;
+                scrollPositionOffset = itemOffset + edgeItem.borderDistance;
             }
         } else {
-            const viewportSize = this._viewportSize;
-            scrollPosition = itemOffset + edgeItem.borderDistance - viewportSize;
+            scrollPositionOffset = itemOffset - this._viewportSize + edgeItem.borderDistance;
         }
 
-        return Math.max(scrollPosition, 0);
+        return Math.max(this._scrollPosition + scrollPositionOffset, 0);
     }
 
     private _getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
@@ -214,11 +215,11 @@ export class Calculator {
         for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
             const item = itemsSizes[index];
             const nextItem = itemsSizes[index + 1];
-            const itemOffset = item.offset - placeholders.backward;
+            const itemOffset = item.offset - placeholders.backward - scrollPosition;
             const itemBorderBottom = Math.round(itemOffset) + Math.round(item.size);
 
             // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
-            let viewportBorderPosition = scrollPosition;
+            let viewportBorderPosition = 0;
             // при скроле вниз - на границе тот элемент, нижняя граница которого больше scrollTop + viewportSize
             if (direction === 'forward') {
                 // нижняя граница - это верхняя + размер viewPort
