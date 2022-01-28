@@ -6,12 +6,6 @@
  */
 
 /**
- * @typedef {Object} SourceConfig
- * @description Конфигурация навигации ({@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#cursor по курсору} или {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#page постраничная}).
- * Также, в конфигурации можно передать опцию multiNavigation, если метод БЛ поддерживает работу с {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/node/managing-node-expand/#multi-navigation множественной навигацией}.
- */
-
-/**
  * Перезагружает данные из {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных}.
  * @markdown
  * @remark
@@ -21,7 +15,7 @@
  * @function
  * @name Controls/_list/interface/IReloadableList#reload
  * @param {Boolean} [keepNavigation=false] Сохранить ли позицию скролла и состояние навигации после перезагрузки.
- * @param {SourceConfig} [sourceConfig=undefined] Конфигурация навигации источника данных (например, размер и номер страницы для постраничной навигации), которую можно передать при вызове reload, чтобы перезагрузка произошла с этими параметрами.
+ * @param {Controls/_interface/INavigation/IBaseSourceConfig.typedef} [sourceConfig=undefined] Конфигурация навигации источника данных (например, размер и номер страницы для постраничной навигации), которую можно передать при вызове reload, чтобы перезагрузка произошла с этими параметрами.
  * По умолчанию перезагрузка происходит с параметрами, переданными в опции {@link Controls/interface:INavigation#navigation navigation}.
  * @returns {Promise<void>} Возвращает Promise, завершение которого означает окончание процесса перезагрузки.
  * @example

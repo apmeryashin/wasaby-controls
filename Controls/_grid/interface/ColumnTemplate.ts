@@ -1,5 +1,3 @@
-import {TMarkerClassName} from 'Controls/display';
-
 /**
  * @typedef {String} TCursor
  * @description Значения для типа курсора, отображаемого при наведении на ячейку.
@@ -239,12 +237,6 @@ export default interface IColumnTemplateOptions {
      * @variant secondary
      */
     tagStyle?: 'info' | 'danger' | 'primary' | 'success' | 'secondary';
-
-    /**
-     * @cfg {Controls/_display/interface/ICollectionItem/TMarkerClassName.typedef} Размер маркера.
-     * @default default
-     */
-    markerClassName?: TMarkerClassName;
 
     /**
      * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
