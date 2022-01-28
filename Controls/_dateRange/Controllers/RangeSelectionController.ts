@@ -157,7 +157,8 @@ export default class RangeSelectionController extends Control<IRangeSelectionCon
          if (this._updateDisplayedRange()) {
             // Если выбор периода происходит через кванты, то мы должны выделить весь период целиком,
             // а не только до того элемента, на который мы наводим в данный момент.
-            if (this._options.selectionType === 'quantum') {
+            // Тоже самое и для rangeSelectedCallback.
+            if (this._options.selectionType === 'quantum' || this._options.rangeSelectedCallback) {
                if (item.getTime() < this._selectionBaseValue.getTime()) {
                   this._selectionHoveredValue = this._displayedStartValue;
                } else {
