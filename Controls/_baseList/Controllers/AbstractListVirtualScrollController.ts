@@ -45,7 +45,7 @@ import { TVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll'
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
 export type IScheduledScrollType = 'restoreScroll' | 'calculateRestoreScrollParams' | 'scrollToElement' | 'doScroll'
-    | 'applyScrollPosition' | 'scrollToItem';
+    | 'applyScrollPosition';
 
 export interface IScheduledScrollToElementParams {
     key: CrudEntityKey;
@@ -447,7 +447,7 @@ export abstract class AbstractListVirtualScrollController<
         if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
             if (this._renderInProgress) {
                 this._scheduleScroll({
-                    type: 'scrollToItem',
+                    type: 'scrollToElement',
                     params: {
                         key: this._activeElementKey,
                         position: 'top',
@@ -802,6 +802,9 @@ export abstract class AbstractListVirtualScrollController<
                     this._scheduledScrollParams = null;
                     break;
                 case 'scrollToElement':
+                    if (this._handleChangedIndexesAfterSynchronizationCallback) {
+                        break;
+                    }
                     const scrollToElementParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
                     this._scrollToElement(
                         scrollToElementParams.key,
@@ -809,18 +812,6 @@ export abstract class AbstractListVirtualScrollController<
                         scrollToElementParams.force
                     );
                     this._scheduledScrollParams = null;
-                    break;
-                case 'scrollToItem':
-                    const scrollToItemParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
-                    this._scheduledScrollParams = null;
-                    this._scheduleScroll({
-                        type: 'scrollToElement',
-                        params: {
-                            key: scrollToItemParams.key,
-                            position: scrollToItemParams.position,
-                            force: scrollToItemParams.force
-                        }
-                    });
                     break;
                 case 'doScroll':
                     const doScrollParams = this._scheduledScrollParams.params as IDoScrollParams;
