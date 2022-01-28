@@ -1293,7 +1293,7 @@ define(
                const data = { container: 'subMenu' };
                menuControl._subDropdownItem = {isFirstItem: () => false};
                menuControl._subMenuResult('click', 'menuOpened', data);
-               assert.deepEqual(menuControl._subMenu, data);
+               assert.deepEqual(menuControl._subMenu, data.container);
             });
             it('pinClick event', function() {
                menuControl._subMenuResult('click', 'pinClick', { item: 'item1' });
