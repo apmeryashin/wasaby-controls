@@ -46,7 +46,7 @@ export default class FocusWithEnter extends Control<IControlOptions> {
 
             // Не переводим фокус, если не нашли элемент за приемлемое количество попыток
             if (target && index !== maxFindAttemptNumber) {
-                focusNextElement(false, current, {enableScrollToElement: true});
+                focusNextElement(false, current, {enableScrollToElement: 'vertical'});
             }
         }
     }
