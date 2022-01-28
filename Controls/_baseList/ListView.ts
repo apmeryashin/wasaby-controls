@@ -73,6 +73,7 @@ const ListView = Control.extend(
         _callbackAfterReload: null,
         _callbackAfterUpdate: null,
         _forTemplate: null,
+        _modelChanged: false,
 
         constructor() {
             ListView.superclass.constructor.apply(this, arguments);
@@ -188,6 +189,7 @@ const ListView = Control.extend(
             this._updateInProgress = true;
             this._waitingComponentDidUpdate = true;
             if (newOptions.listModel && (this._listModel !== newOptions.listModel)) {
+                this._modelChanged = true;
                 if (this._listModel && !this._listModel.destroyed) {
                     this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
                     this._listModel.unsubscribe('indexesChanged', this._onIndexesChanged);
@@ -279,6 +281,13 @@ const ListView = Control.extend(
                 this.onViewResized();
             }
             this._pendingRedraw = false;
+
+            if (this._modelChanged) {
+                this._modelChanged = false;
+                if (this._listModel) {
+                    this._notify('itemsContainerReady', [this.getItemsContainer.bind(this)]);
+                }
+            }
         },
 
         getItemsContainer() {
