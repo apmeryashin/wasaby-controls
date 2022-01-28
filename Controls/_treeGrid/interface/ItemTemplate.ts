@@ -44,7 +44,7 @@ export default interface IItemTemplateOptions extends ITreeItemTemplateOptions {
      */
     expanderIcon?: string;
     /**
-     * @cfg {Controls/_tree/interface/ITreeControl/TOffset.typedef} Размер области, который отведён под иконку узла или скрытого узла.
+     * @cfg {Controls/_tree/interface/ITree/TOffset.typedef} Размер области, который отведён под иконку узла или скрытого узла.
      * @default s
      * @see expanderIcon
      * @remark
@@ -53,7 +53,7 @@ export default interface IItemTemplateOptions extends ITreeItemTemplateOptions {
      */
     expanderSize?: string;
     /**
-     * @cfg {Controls/_tree/interface/ITreeControl/TOffset.typedef} Размер структурного отступа для элементов иерархии.
+     * @cfg {Controls/_tree/interface/ITree/TOffset.typedef} Размер структурного отступа для элементов иерархии.
      * @default s
      * @see withoutLevelPadding
      * @remark
