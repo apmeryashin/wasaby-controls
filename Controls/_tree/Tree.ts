@@ -6,7 +6,7 @@ import { Model } from 'Types/entity';
 
 import { View as List } from 'Controls/baseList';
 import TreeControl from 'Controls/_tree/TreeControl';
-import ITree, { IOptions as ITreeOptions } from 'Controls/_tree/interface/ITree';
+import ITree, {IOptions as ITreeOptions} from 'Controls/_tree/interface/ITree';
 import TreeView from 'Controls/_tree/TreeView';
 
 import 'css!Controls/treeGrid';
@@ -30,7 +30,7 @@ import 'css!Controls/treeGrid';
  * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
  * @implements Controls/grid:IPropStorage
- * @implements Controls/_tree/interface/ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/itemActions:IItemActions
  *
  * @public
