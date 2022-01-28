@@ -65,7 +65,7 @@ const ROOT_KEY = 3141592653589793;
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/interface:ISource
  * @implements Controls/grid:IGridControl
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/list:IList
  * @implements Controls/interface:IItemPadding
  * @implements Controls/explorer:IExplorer
