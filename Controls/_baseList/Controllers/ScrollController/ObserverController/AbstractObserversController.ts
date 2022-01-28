@@ -117,6 +117,13 @@ export abstract class AbstractObserversController {
         }
     }
 
+    destroy(): void {
+        if (this._observer) {
+            this._observer.destroy();
+            this._observer = null;
+        }
+    }
+
     setListContainer(newListContainer: HTMLElement): void {
         this._listContainer = newListContainer;
         if (this._observer) {
@@ -335,14 +342,15 @@ export abstract class AbstractObserversController {
      * @private
      */
     private _getTriggers(): HTMLElement[] {
-        const backwardTrigger = this._listContainer.querySelector(this._triggersQuerySelector);
-        const siblingItems = Array.from(backwardTrigger.parentNode.children);
-        const triggers = siblingItems.filter((it) => it.matches(this._triggersQuerySelector)) as HTMLElement[];
-        if (triggers.length !== COUNT_TRIGGERS) {
+        const allTriggers = Array.from(this._listContainer.querySelectorAll(this._triggersQuerySelector));
+        // Исключаем триггеры из вложенных списков. Триггеры текущего списка будут находиться в начале и в конце всегда,
+        // т.к. элементы, которые могут содержать списки, находятся между триггерами.
+        const triggersOfThisList = [allTriggers.shift(), allTriggers.pop()].filter((it) => !!it) as HTMLElement[];
+        if (triggersOfThisList.length !== COUNT_TRIGGERS) {
             Logger.error('Неверное кол-во триггеров в списке.'
                 + ` Убедитесь, что на всех триггерах есть класс: ${this._triggersQuerySelector}`);
         }
-        return triggers;
+        return triggersOfThisList;
     }
 
     private _isTriggerVisible(direction: IDirection): boolean {

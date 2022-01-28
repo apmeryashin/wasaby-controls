@@ -53,14 +53,14 @@ export default abstract class
     protected _beforeUpdate(newOptions: ILookupOptions): Promise<SelectedItems>|void|boolean {
         const updateResult = this._lookupController.update(newOptions);
         const updateResultCallback = () => {
-            this._afterItemsChanged(newOptions);
+            this._itemsChanged(this._items = this._lookupController.getItems());
+            this._notifyOnItemsChanged();
         };
 
         if (updateResult instanceof Promise) {
             updateResult.then((items) => {
                 this._lookupController.setItems(items);
                 updateResultCallback();
-                this._notifyOnItemsChanged();
             });
         } else if (updateResult) {
             updateResultCallback();

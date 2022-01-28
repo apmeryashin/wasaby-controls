@@ -165,6 +165,10 @@ export class ScrollController {
         });
     }
 
+    destroy(): void {
+        this._observersController.destroy();
+    }
+
     viewportResized(viewportSize: number): boolean {
         const changed = this._viewportSize !== viewportSize;
         if (changed) {
@@ -194,6 +198,10 @@ export class ScrollController {
 
     getFirstVisibleItemIndex(): number {
         return this._calculator.getFirstVisibleItemIndex();
+    }
+
+    setCountItemsRenderedOutsideRange(count: number): void {
+        this._itemsSizesController.setCountItemsRenderedOutsideRange(count);
     }
 
     // region Triggers
@@ -293,7 +301,7 @@ export class ScrollController {
      * @param scrollMode Режим скролла
      * @param calcMode Режим пересчета записей
      */
-    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
+    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): IItemsRange {
         const itemsSizes = this._itemsSizesController.addItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
@@ -307,6 +315,7 @@ export class ScrollController {
         this._calculator.setTriggerOffsets(triggersOffsets);
 
         this._processCalculatorResult(result, scrollMode);
+        return result.range;
     }
 
     /**
@@ -387,8 +396,7 @@ export class ScrollController {
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        const contentSizeBeforeList = this._itemsSizesController.getContentSizeBeforeList();
-        return this._calculator.getScrollPositionToEdgeItem(edgeItem, contentSizeBeforeList);
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
     }
 
     /**

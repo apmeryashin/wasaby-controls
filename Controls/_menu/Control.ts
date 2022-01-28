@@ -488,13 +488,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _subMenuResult(event: SyntheticEvent<MouseEvent>,
                              eventName: string,
-                             eventResult: Model|HTMLElement,
+                             eventResult: unknown,
                              nativeEvent: SyntheticEvent<MouseEvent>): void {
         if (eventName === 'menuOpened') {
             if (this._subDropdownItem.isFirstItem()) {
-                this._notify('closeButtonVisibilityChanged', [false]);
+                this._notify('closeButtonVisibilityChanged', [false, eventResult.position]);
             }
-            this._subMenu = eventResult as HTMLElement;
+            this._subMenu = eventResult.container as HTMLElement;
         } else if (eventName === 'menuClosed') {
             this._notify('closeButtonVisibilityChanged', [true]);
         } else if (eventName === 'subMenuMouseenter') {
@@ -885,7 +885,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             topPadding: 'null',
             bottomPadding: 'menu-default',
             leftPadding: this._getLeftPadding(options),
-            rightPadding: this._getRightPadding(options)
+            // для каждого пункта должен быть свой отступ справа
+            rightPadding: ''
         };
         let listModel: Search<Model> | Collection<Model>;
 
@@ -975,17 +976,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             leftSpacing = options.itemPadding.left;
         }
         return leftSpacing;
-    }
-
-    private _getRightPadding(options: IMenuControlOptions): string {
-        let rightSpacing = 's';
-        if (options.itemPadding.right) {
-            rightSpacing = options.itemPadding.right;
-            if (options.multiSelect) {
-                rightSpacing += '-multiSelect';
-            }
-        }
-        return rightSpacing;
     }
 
     private _groupMethod(options: IMenuControlOptions, item: Model): string {

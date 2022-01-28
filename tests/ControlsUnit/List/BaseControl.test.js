@@ -1620,7 +1620,7 @@ define([
             ctrl._itemActionsController.deactivateSwipe = () => {
                isDeactivateSwipeCalled = true;
             };
-            ctrl._listViewModel.setActionsAssigned(true);
+            ctrl._itemActionsController.setActionsAssigned(true);
             ctrl._onItemClick(event, ctrl._listViewModel.getCollection().at(2), originalEvent);
             assert.isTrue(isDeactivateSwipeCalled);
          });
@@ -2374,11 +2374,14 @@ define([
             ctrl.saveOptions(cfg);
 
             ctrl._itemActionsController = {
+               _isActionsAssigned: false,
                update: () => ([1,2,3]),
                deactivateSwipe: () => {
                   deactivateSwipeCalled = true;
                },
-               getSwipeItem: () => ({ id: 1 })
+               getSwipeItem: () => ({ id: 1 }),
+               isActionsAssigned() { return this._isActionsAssigned; },
+               setActionsAssigned(isActionsAssigned) { this._isActionsAssigned = isActionsAssigned}
             };
             ctrl._selectionController = {
                stopItemAnimation: () => {
@@ -2387,10 +2390,8 @@ define([
                getAnimatedItem: () => ({ id: 1 })
             };
             ctrl._listViewModel = {
-               _isActionsAssigned: false,
                nextVersion: () => null,
-               getEditingConfig: () => null,
-               isActionsAssigned() { return this._isActionsAssigned; }
+               getEditingConfig: () => null
             };
          });
 
@@ -3286,7 +3287,6 @@ define([
             const spyUpdateItemActions = sinon.spy(lists.BaseControl._private, 'updateItemActions');
             const spyOpenItemActionsMenu = sinon.spy(lists.BaseControl._private, 'openItemActionsMenu');
             const fakeEvent = initFakeEvent();
-            instance._listViewModel.setActionsAssigned(false);
             instance._itemActionsController = undefined;
             instance._onItemLongTap(null, item, fakeEvent);
             sinon.assert.called(spyOpenContextMenu);
@@ -3840,6 +3840,9 @@ define([
             instance._viewModelConstructor = cfg.viewModelConstructor;
             instance._listViewModel = new display.Collection(cfg.viewModelConfig);
             instance._itemActionsController = {
+               _isActionsAssigned: false,
+               isActionsAssigned() { return this._isActionsAssigned; },
+               setActionsAssigned(isActionsAssigned) { this._isActionsAssigned = isActionsAssigned },
                deactivateSwipe: () => {
                   isDeactivateSwipeCalled = true;
                }
@@ -3855,7 +3858,7 @@ define([
 
          // Необходимо вызывать updateItemActions при изменении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
          it('should call updateItemActions when visibilityCallback has changed', async () => {
-            instance._listViewModel.setActionsAssigned(true);
+            instance._itemActionsController.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
                updateItemActionsCalled = true;
             });
@@ -3871,7 +3874,7 @@ define([
 
          // Необходимо вызывать updateItemActions при изиенении самих ItemActions
          it('should call updateItemActions when ItemActions have changed', async () => {
-            instance._listViewModel.setActionsAssigned(true);
+            instance._itemActionsController.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
                updateItemActionsCalled = true;
             });
@@ -3890,7 +3893,7 @@ define([
 
          // Надо сбрасывать свайп, если изменились ItemActions. Иначе после их изменения свайп будет оставаться поверх записи
          it('should deactivate swipe if it is activated and itemActions have changed', async () => {
-            instance._listViewModel.setActionsAssigned(true);
+            instance._itemActionsController.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {});
             await instance._beforeUpdate({
                ...cfg,
@@ -3907,7 +3910,7 @@ define([
 
          // при неидентичности source необходимо перезапрашивать данные этого source и затем вызывать updateItemActions
          it('should call updateItemActions when data was reloaded', async () => {
-            instance._listViewModel.setActionsAssigned(true);
+            instance._itemActionsController.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
                updateItemActionsCalled = true;
             });
@@ -3925,7 +3928,7 @@ define([
 
          // при смене значения свойства readOnly необходимо вызывать updateItemAction
          it('should call updateItemActions when readOnly option has been changed', () => {
-            instance._listViewModel.setActionsAssigned(true);
+            instance._itemActionsController.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
                updateItemActionsCalled = true;
             });
@@ -3939,7 +3942,7 @@ define([
 
          // при смене значения свойства itemActionsPosition необходимо вызывать updateItemAction
          it('should call updateItemActions when itemActionsPosition option has been changed', () => {
-            instance._listViewModel.setActionsAssigned(true);
+            instance._itemActionsController.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
                updateItemActionsCalled = true;
             });
@@ -3963,7 +3966,7 @@ define([
                adapter: 'adapter.sbis'
             });
             sourceController.setItems(items);
-            instance._listViewModel.setActionsAssigned(true);
+            instance._itemActionsController.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
                updateItemActionsCalled = true;
             });
@@ -5105,6 +5108,7 @@ define([
             const event = {
                preventDefault: () => preventDefaultCalled = true
             };
+            const originalScrollToItem = lists.BaseControl._private.scrollToItem;
 
             beforeEach(() => {
                baseControl._mounted = true;
@@ -5112,11 +5116,13 @@ define([
                   children: [],
                   querySelectorAll: () => []
                });
+               lists.BaseControl._private.scrollToItem = () => Promise.resolve();
                baseControl.activate = () => activateCalled = true;
                return baseControl.setMarkedKey(2);
             });
 
             afterEach(() => {
+               lists.BaseControl._private.scrollToItem = originalScrollToItem;
                activateCalled = false;
                preventDefaultCalled = false;
             });
@@ -5378,6 +5384,7 @@ define([
             source
          });
          let baseControl, viewModel;
+         const originalScrollToItem = lists.BaseControl._private.scrollToItem;
 
          beforeEach(() => {
             baseControl = new lists.BaseControl();
@@ -5386,7 +5393,12 @@ define([
                children: [],
                querySelectorAll: () => []
             });
+            lists.BaseControl._private.scrollToItem = () => Promise.resolve();
             return (baseControl._beforeMount(cfg) || Promise.resolve()).then(() => viewModel = baseControl.getViewModel());
+         });
+
+         afterEach(() => {
+            lists.BaseControl._private.scrollToItem = originalScrollToItem;
          });
 
          describe('mount', () => {

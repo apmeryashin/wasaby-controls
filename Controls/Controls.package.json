@@ -36,6 +36,7 @@
     "Controls/Store",
     "Controls/dataSource",
     "Controls/Context/WorkByKeyboardContext",
+    "Controls/Context/ListScrollContext",
     "Controls/themes"
   ],
   "includePackages": [

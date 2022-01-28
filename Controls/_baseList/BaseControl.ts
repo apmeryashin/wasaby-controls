@@ -1070,16 +1070,16 @@ const _private = {
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
 
+        // если есть Еще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
+        const hasMoreData = {
+            up: self._hasMoreData('up'),
+            down: self._hasMoreData('down')
+        };
+
         // если мы для списка раз вычислили, что нужен пэйджинг, то возвращаем этот статус
         // это нужно для ситуации, если первая пачка данных вернула естьЕще (в этом случае пэйджинг нужен)
         // а вторая вернула мало записей и суммарный объем менее двух вьюпортов, пэйджинг не должен исчезнуть
         if (self._sourceController) {
-
-            // если есть Еще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
-            const hasMoreData = {
-                up: self._hasMoreData('up'),
-                down: self._hasMoreData('down')
-            };
 
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
@@ -1093,9 +1093,6 @@ const _private = {
                 self._cachedPagingState = true;
             } else if (hasMoreData.up || hasMoreData.down) {
                 self._recalcPagingVisible = true;
-            }
-            if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, hasMoreData);
             }
         }
 
@@ -1136,6 +1133,9 @@ const _private = {
             result = true;
         }
 
+        if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
+            _private.createScrollPagingController(self, hasMoreData);
+        }
         return result;
     },
 
@@ -1481,9 +1481,6 @@ const _private = {
             // и выполнять обработку selection для всех удалённых записей.
             if (action === IObservable.ACTION_REMOVE) {
                 self._removedItems.push(...removedItems);
-                if (self._removedItemsIndex === null) {
-                    self._removedItemsIndex = removedItemsIndex;
-                }
             }
 
             // Тут вызывается nextVersion на коллекции, и это приводит к вызову итератора.
@@ -2309,7 +2306,7 @@ const _private = {
         }
 
         const editingConfig = self._listViewModel.getEditingConfig();
-        const isActionsAssigned = self._listViewModel.isActionsAssigned();
+        const isActionsAssigned = itemActionsController.isActionsAssigned();
         let editArrowAction: IItemAction;
         if (options.showEditArrow) {
             editArrowAction = {
@@ -2368,7 +2365,7 @@ const _private = {
         if (
             self._listViewModel &&
             self._options.itemActionsVisibility !== 'visible' &&
-            !self._listViewModel.isActionsAssigned()
+            !self._itemActionsController?.isActionsAssigned()
         ) {
             _private.updateItemActions(self, options);
         }
@@ -2381,7 +2378,7 @@ const _private = {
      * @private
      */
     updateInitializedItemActions(self, options: any): void {
-        if (self._listViewModel && self._listViewModel.isActionsAssigned()) {
+        if (self._listViewModel && self._itemActionsController?.isActionsAssigned()) {
             _private.updateItemActions(self, options);
         }
     },
@@ -2391,7 +2388,7 @@ const _private = {
      * @param self
      */
     closeSwipe(self): void {
-        if (!self._listViewModel?.destroyed && self._listViewModel?.isActionsAssigned()) {
+        if (!self._listViewModel?.destroyed && self._itemActionsController?.isActionsAssigned()) {
             _private.getItemActionsController(self, self._options).deactivateSwipe();
         }
     },
@@ -2945,9 +2942,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _draggedKey: CrudEntityKey = null;
     _validateController = null;
 
-    _removedItems = [];
-
-    private _removedItemsIndex: number = null;
+    private _removedItems: CollectionItem[] = [];
 
     private _itemsChanged: boolean;
 
@@ -3178,10 +3173,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const newSelection = _private.getSelectionController(this).onCollectionRemove(this._removedItems);
             _private.changeSelection(this, newSelection);
         }
-        if (this._listVirtualScrollController && this._removedItems.length && this._removedItemsIndex !== null) {
-            this._listVirtualScrollController.removeItems(this._removedItemsIndex, this._removedItems.length);
-        }
-        this._removedItemsIndex = null;
         this._removedItems = [];
     }
 
@@ -3611,6 +3602,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     getCalcMode(params)
                 );
                 break;
+            case IObservable.ACTION_REMOVE:
+                this._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
+                break;
             case IObservable.ACTION_MOVE:
                 this._listVirtualScrollController.moveItems(
                     newItemsIndex,
@@ -3974,7 +3968,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     }
                 }
 
-                const isActionsAssigned = this._listViewModel.isActionsAssigned();
+                const isActionsAssigned = this._itemActionsController?.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
                 isItemsResetFromSourceController = true;
 
@@ -3990,7 +3984,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // TODO удалить когда полностью откажемся от старой модели
                 //  Если Items были обновлены, то в старой модели переинициализировался display
                 //  и этот параметр сбросился
-                this._listViewModel.setActionsAssigned(isActionsAssigned);
+                if (this._itemActionsController) {
+                    this._itemActionsController.setActionsAssigned(isActionsAssigned);
+                }
                 _private.initVisibleItemActions(this, newOptions);
 
                 if (loadedBySourceController) {
@@ -4221,6 +4217,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._updateBaseControlModel(newOptions);
 
+        if (this._options.itemsSelector !== newOptions.itemsSelector) {
+            this._listVirtualScrollController.setItemsQuerySelector(newOptions.itemsSelector);
+        }
+
         this._endBeforeUpdate(newOptions);
         this._listVirtualScrollController.endBeforeUpdateListControl();
     }
@@ -4322,8 +4322,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
         this._destroyIndicatorsController();
+        if (this._listVirtualScrollController) {
+            this._listVirtualScrollController.beforeUnmountListControl();
+            this._listVirtualScrollController = null;
+        }
         if (this._itemActionsController) {
-            this._itemActionsController.destroy();
             this._itemActionsController = null;
         }
         if (this._options.itemsDragNDrop) {
@@ -4474,6 +4477,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shouldUpdateActionsAfterRender = false;
         }
 
+        if (this._applySelectedPage && this._shouldNotifyOnDrawItems) {
+            this._applySelectedPage();
+        }
         this._updateInProgress = false;
         this._notifyOnDrawItems();
         this._loadedBySourceController = false;
@@ -4644,7 +4650,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // если нельзя проскроллить, проверяем, хватает ли загруженных данных для сдвига диапазона
                 // или нужно подгружать еще.
                 if (this._hasEnoughData(page)) {
-                    // TODO SCROLL нужно сместить диапазон???
+                    this._applySelectedPage = null;
+                    this._listVirtualScrollController.scrollToPage(direction === 'up' ? 'backward' : 'forward');
                 } else {
                     this._loadMore(direction);
                 }
@@ -6015,8 +6022,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (itemData.ItemActionsItem) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
-
-            if (_private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
+            const actions = itemData.getActions();
+            // Не надо делать фриз, если ItemActions пустые (например, их отрезали по visibilityCallback)
+            if (actions?.showed?.length && _private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
                 if (!_private.hasHoverFreezeController(this)) {
                     _private.initHoverFreezeController(this);
                 }
@@ -6321,7 +6329,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
         event.stopImmediatePropagation();
         // Если в модели поменялся набор записей до перерисовки контрола, не нужно обрабатывать событие
-        if (this._listViewModel.isActionsAssigned() && !this._itemsChanged) {
+        if (this._itemActionsController?.isActionsAssigned() && !this._itemsChanged) {
             const itemActionsController = _private.getItemActionsController(this);
             itemActionsController.updateItemActions(itemKey, itemWidth);
         }

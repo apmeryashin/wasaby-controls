@@ -1,6 +1,6 @@
 <ws:template name="levelPadding">
-    <ws:if data="{{collectionItem.shouldDisplayLevelPadding(withoutLevelPadding) }}">
-        <ws:for data="i in collectionItem.getPropertyLevel() - 1">
+    <ws:if data="{{collectionItem.shouldDisplayLevelPadding(!_options.levelPadding) }}">
+        <ws:for data="i in collectionItem.getLevel() - 1">
             <div class="{{collectionItem.getLevelIndentClasses()}}"></div>
         </ws:for>
     </ws:if>

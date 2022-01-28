@@ -241,6 +241,7 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     afterMountListControl(): void {
+        this._renderInProgress = false;
         this._renderNewIndexes = false;
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
@@ -252,6 +253,27 @@ export abstract class AbstractListVirtualScrollController<
                 this.scrollToItem(this._activeElementKey, 'top', true);
             }
         }
+    }
+
+    endBeforeMountListControl(): void {
+        // Устанавливаем _renderInProgress именно после маунта списка, т.к. нужно дождаться завершения:
+        // - инициализации начальных индексов коллекции;
+        // - инициализации строки добавления по месту.
+        this._renderInProgress = true;
+    }
+
+    beforeUnmountListControl(): void {
+        this._updatePlaceholdersUtil({
+            forward: 0,
+            backward: 0
+        });
+        if (this._updateVirtualNavigationUtil) {
+            this._updateVirtualNavigationUtil({
+                forward: false,
+                backward: false
+            });
+        }
+        this._scrollController.destroy();
     }
 
     endBeforeUpdateListControl(): void {
@@ -285,6 +307,11 @@ export abstract class AbstractListVirtualScrollController<
 
     afterRenderListControl(): void {
         this._renderNewIndexes = false;
+
+        const countItemsRenderedOutsideRange = this._collection.getItems()
+            .filter((it) => it.isRenderedOutsideRange())
+            .length;
+        this._scrollController.setCountItemsRenderedOutsideRange(countItemsRenderedOutsideRange);
 
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
@@ -377,7 +404,14 @@ export abstract class AbstractListVirtualScrollController<
     // region CollectionChanges
 
     addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
-        this._scrollController.addItems(position, count, scrollMode, calcMode);
+        const range = this._scrollController.addItems(position, count, scrollMode, calcMode);
+
+        // Если мы не пересчитываем индексы, то это значит что запись добавлена внутрь диапазона
+        // и она должна собой выместить старые записи из диапазона. В режиме hide нужно применить индексы,
+        // чтобы для новых элементов проставить состояние setRendered, т.к. они внутри диапазона.
+        if (calcMode === 'nothing' && this._virtualScrollMode === 'hide') {
+            this._applyIndexes(range.startIndex, range.endIndex, null);
+        }
     }
 
     moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): void {

@@ -42,7 +42,7 @@
    background-color: var(--background-color_closeButton_toolButton);
    border-color: var(--border-color_closeButton_toolButton);
    border-width: var(--border-thickness_closeButton_toolButton);
-   border-radius: var(--border-radius_closeButton_toolButton);
+   border-radius: var(--border-radius_closeButton);
    box-shadow: var(--box-shadow_closeButton_toolButton);
 }
 
@@ -51,7 +51,7 @@
    height: var(--inline_height_l);
    margin-right: var(--margin-right_closeButton_functionalButton);
    border-width: var(--border-thickness_closeButton_functionalButton);
-   border-radius: var(--border-radius_button_functionalButton);
+   border-radius: var(--border-radius_closeButton);
    box-shadow: var(--box-shadow_closeButton_functionalButton);
    background-color: var(--pale_contrast_background-color);
 }
@@ -60,13 +60,13 @@
 .controls-Button__close_externalWide {
    height: var(--inline_height_l);
    border-width: var(--border-thickness_closeButton_functionalButton);
-   border-radius: var(--border-radius_button);
    background-color: var(--unaccented_contrast_background-color);
    backdrop-filter: blur(var(--translucent_backdrop-filter-blur_button));
 }
 
 .controls-Button__close_external {
    width: var(--width_closeButton_functionalButton);
+   border-radius: var(--border-radius_closeButton);
 }
 
 .controls-Button__close_externalWide {
@@ -76,6 +76,7 @@
    justify-content: flex-end;
    align-items: center;
    padding-right: calc((var(--width_closeButton_functionalButton) - var(--icon-size_closeButton_toolButton)) / 2);
+   border-radius: var(--border-radius_button);
 }
 
 .controls-Button__close_toolButton,

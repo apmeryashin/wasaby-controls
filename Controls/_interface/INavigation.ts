@@ -199,6 +199,7 @@ export type INavigationSourceConfig = INavigationPositionSourceConfig | INavigat
  * Конфигурация источника данных для навигации. Может быть объектом, реализующим один из двух интерфейсов:
  * * {@link Controls/interface:IBasePositionSourceConfig Конфигурация при курсорной навингации}.
  * * {@link Controls/interface:IBasePageSourceConfig Конфигурация c фиксированным количеством загружаемых записей}.
+ * Также, в конфигурации можно передать опцию multiNavigation, если метод БЛ поддерживает работу с {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/node/managing-node-expand/#multi-navigation множественной навигацией}.
  */
 export type IBaseSourceConfig = IBasePositionSourceConfig | IBasePageSourceConfig;
 

@@ -1,7 +1,6 @@
 import cClone = require('Core/core-clone');
 
 import {SyntheticEvent} from 'UI/Vdom';
-import {TemplateFunction} from 'UI/Base';
 import {EventUtils} from 'UI/Events';
 
 import {constants} from 'Env/Env';
@@ -14,15 +13,13 @@ import {Model} from 'Types/entity';
 import {
     Direction,
     IBaseSourceConfig,
-    IFilterOptions,
-    IHierarchyOptions,
     ISelectionObject,
     TKey
 } from 'Controls/interface';
 import {
     BaseControl,
     checkReloadItemArgs,
-    IBaseControlOptions, IDirection,
+    IDirection,
     IReloadItemOptions,
     ISiblingStrategy
 } from 'Controls/baseList';
@@ -43,6 +40,7 @@ import {
 } from 'Controls/_tree/utils';
 import {IHasMoreStorage} from 'Controls/_display/Tree';
 import {IDragObject} from 'Controls/dragnDrop';
+import {IOptions as ITreeControlOptions} from './interface/ITree';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -51,32 +49,6 @@ const HOT_KEYS = {
 
 const EXPAND_ON_DRAG_DELAY = 1000;
 const DEFAULT_COLUMNS_VALUE = [];
-
-type TNodeFooterVisibilityCallback = (item: Model) => boolean;
-type TNodeLoadCallback = (list: RecordSet, nodeKey: number | string) => void;
-
-export interface ITreeControlOptions extends IBaseControlOptions, IHierarchyOptions, IFilterOptions {
-    parentProperty: string;
-    markerMoveMode?: string;
-    root?: TKey;
-    expandByItemClick?: boolean;
-    expandedItems?: Array<number | string>;
-    collapsedItems?: Array<number | string>;
-    nodeFooterTemplate?: TemplateFunction;
-    nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
-    hasChildrenProperty?: string;
-    searchBreadCrumbsItemTemplate?: TemplateFunction;
-    expanderVisibility?: 'visible'|'hasChildren'|'hasChildrenOrHover';
-    nodeLoadCallback?: TNodeLoadCallback;
-    deepReload?: boolean;
-    selectAncestors?: boolean;
-    selectDescendants?: boolean;
-    markItemByExpanderClick?: boolean;
-    expanderSize?: 's'|'m'|'l'|'xl';
-    markedLeafChangeCallback: Function;
-    singleExpand?: boolean;
-    supportExpand?: boolean;
-}
 
 const _private = {
     expandMarkedItem(self: TreeControl): void {
@@ -421,6 +393,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _scrollToLeaf: boolean = null;
     private _scrollToLeafOnDrawItems: boolean = false;
     protected _plainItemsContainer: boolean = true;
+
+    /**
+     * Флаг, означающий что изменение коллекции было спровоцировано изменением узла(развернули/свернули)
+     * @private
+     */
+    private _collectionChangeCauseByNode: boolean = false;
 
     private _timeoutForExpandOnDrag: number = null;
     private _loadedRoot: TKey;
@@ -1096,9 +1074,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             (action === IObservable.ACTION_ADD || action === IObservable.ACTION_REMOVE)
             && this._collectionChangeCauseByNode
         ) {
+            this._collectionChangeCauseByNode = false;
             this._listVirtualScrollController.setPredicatedRestoreDirection('backward');
         }
-        this._collectionChangeCauseByNode = false;
         super._onCollectionChangedScroll(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     }
 

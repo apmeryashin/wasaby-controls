@@ -15,7 +15,7 @@ export default interface IItemTemplateOptions {
 
 /**
  * @name Controls/_tree/interface/ItemTemplate#expanderSize
- * @cfg {Controls/_tree/interface/ITreeControl/TOffset.typedef} Размер области, который отведён под иконку узла или скрытого узла.
+ * @cfg {Controls/_tree/interface/ITree/TOffset.typedef} Размер области, который отведён под иконку узла или скрытого узла.
  * @default s
  * @remark
  * Опции expanderSize на контроле и {@link Controls/treeGrid:ItemTemplate#expanderSize expanderSize на шаблоне элемента} не являются взаимоисключающими.
@@ -45,12 +45,12 @@ export default interface IItemTemplateOptions {
 
 /**
  * @name Controls/_tree/interface/ItemTemplate#expanderIconSize
- * @cfg {Controls/_display/interface/ITree/TExpanderIconSize.typedef} Размер иконки разворота узла дерева
+ * @cfg {Controls/display:TExpanderIconSize.typedef} Размер иконки разворота узла дерева
  * @default default
  */
 
 /**
  * @name Controls/_tree/interface/ItemTemplate#expanderIconStyle
- * @cfg {Controls/_display/interface/ITree/TExpanderIconStyle.typedef} Стиль цвета иконки разворота узла дерева
+ * @cfg {Controls/display:TExpanderIconStyle.typedef} Стиль цвета иконки разворота узла дерева
  * @default default
  */
