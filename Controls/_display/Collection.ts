@@ -36,7 +36,7 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import { ICollection, ISourceCollection, IItemPadding } from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
-import {INavigationOptionValue, INavigationSourceConfig, IRoundBorder} from 'Controls/interface';
+import {INavigationOptionValue, INavigationSourceConfig, IRoundBorder, TOffsetSize} from 'Controls/interface';
 import {Footer, IOptions as IFooterOptions} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
@@ -143,6 +143,7 @@ export interface IOptions<
     multiSelectVisibility?: string;
     multiSelectPosition?: 'default' | 'custom';
     itemPadding?: IItemPadding;
+    itemsSpacing?: TOffsetSize;
     emptyTemplate?: TemplateFunction;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
@@ -727,6 +728,8 @@ export default class Collection<
 
     protected _$bottomPadding: string;
 
+    protected _$itemsSpacing: TOffsetSize;
+
     protected _$roundBorder: IRoundBorder;
 
     protected _emptyTemplateItem: EmptyTemplateItem;
@@ -1023,6 +1026,10 @@ export default class Collection<
 
         if (options.itemPadding) {
             this._setItemPadding(options.itemPadding, true);
+        }
+
+        if (options.itemsSpacing) {
+            this._setItemsSpacing(options.itemsSpacing, true);
         }
 
         if (this._isGrouped()) {
@@ -2517,6 +2524,16 @@ export default class Collection<
         this._nextVersion();
     }
 
+    setItemsSpacing(itemsSpacing: TOffsetSize): void {
+        this._setItemsSpacing(itemsSpacing);
+        this._nextVersion();
+    }
+
+    protected _setItemsSpacing(itemsSpacing: TOffsetSize, silent?: boolean): void {
+        this._$itemsSpacing = itemsSpacing;
+        this._updateItemsProperty('setItemsSpacing', itemsSpacing, 'setItemPadding', silent);
+    }
+
     setMarkedKey(key: string|number, status: boolean): void {
         const item = this.getItemBySourceKey(key);
         if (item && item.Markable) {
@@ -3570,7 +3587,7 @@ export default class Collection<
     }
 
     /**
-     * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента
+     * Возвращает служебный энумератор для поиска по свойствам и поиска следующего или предыдущего элемента
      * относительно заданного
      * @protected
      */
@@ -3605,7 +3622,7 @@ export default class Collection<
     }
 
     /**
-     * Возвращает индекс в коллекци по индексу в проекции
+     * Возвращает индекс в коллекции по индексу в проекции
      * @param index Индекс в проекции
      * @protected
      */
@@ -4276,6 +4293,7 @@ Object.assign(Collection.prototype, {
     _$rightPadding: 'default',
     _$topPadding: 'default',
     _$bottomPadding: 'default',
+    _$itemsSpacing: null,
     _$stickyMarkedItem: true,
     _$searchValue: '',
     _$editingConfig: null,

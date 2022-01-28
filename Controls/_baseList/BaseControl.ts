@@ -41,7 +41,7 @@ import {
     ISelectionObject,
     ISourceOptions,
     TKey,
-    TNavigationButtonView
+    TNavigationButtonView, TOffsetSize
 } from 'Controls/interface';
 import {isLeftMouseButton, Sticky} from 'Controls/popup';
 import {process} from 'Controls/error';
@@ -2820,6 +2820,7 @@ export interface IBaseControlOptions extends IControlOptions, ISourceOptions, II
     items?: RecordSet;
     searchValue?: string;
     hasItemWithImage: boolean;
+    itemsSpacing?: TOffsetSize;
 }
 
 export default class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOptions>
@@ -3767,6 +3768,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
             this._listViewModel.setItemPadding(newOptions.itemPadding);
+        }
+
+        if (this._options.itemsSpacing !== newOptions.itemsSpacing) {
+            this._listViewModel.setItemsSpacing(newOptions.itemsSpacing);
         }
 
         if (groupPropertyChanged) {

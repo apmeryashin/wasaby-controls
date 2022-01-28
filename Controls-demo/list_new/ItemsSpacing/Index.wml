@@ -1,0 +1,12 @@
+<div class="controlsDemo__wrapper">
+   <Controls.toggle:Tumbler
+      keyProperty="id"
+      displayProperty="id"
+      items="{{_itemsSpacingSource}}"
+      bind:selectedKey="_itemsSpacing"
+   />
+   <Controls.list:View
+      source="{{_viewSource}}"
+      itemsSpacing="{{_itemsSpacing}}"
+   />
+</div>
