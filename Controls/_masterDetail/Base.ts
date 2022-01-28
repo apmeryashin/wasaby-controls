@@ -18,7 +18,7 @@ export interface IMasterWidth {
     masterWidth: number | string;
     masterMinWidth: number | string;
     masterMaxWidth: number | string;
-    masterStorageWidth: string;
+    initialWidth: string;
 }
 
 interface IMasterDetail extends IControlOptions, IPropStorageOptions, IMasterWidth {
@@ -88,8 +88,8 @@ class Base extends Control<IMasterDetail, string> {
      */
 
     /**
-     * @name Controls/_masterDetail/Base#masterStorageWidth
-     * @cfg {String} Ширина контентной области {@link master} полученная из хранилища данных.
+     * @name Controls/_masterDetail/Base#initialWidth
+     * @cfg {String} Начальная ширина контентной области {@link master} при построении контрола.
      * @see propStorageId
      */
 
@@ -226,8 +226,8 @@ class Base extends Control<IMasterDetail, string> {
             this._currentWidth = receivedState;
             this._savedWidth = parseInt(receivedState, 10);
         } else if (options.propStorageId) {
-            if (options.masterStorageWidth) {
-                this.initCurrentWidth(options.masterStorageWidth);
+            if (options.initialWidth) {
+                this.initCurrentWidth(options.initialWidth);
                 return this._currentWidth;
             }
             return new Promise((resolve) => {
