@@ -4,11 +4,13 @@
             bind:endValue="_endValue1"
             displayedRanges="{{ _displayedRanges1 }}"
             _date="{{ _date }}"
+            attr:data-qa="long_period"
     />
     <Controls.compactDatePicker:View
             bind:startValue="_startValue2"
             bind:endValue="_endValue2"
             displayedRanges="{{ _displayedRanges2 }}"
             _date="{{ _date }}"
+            attr:data-qa="short_period"
     />
 </div>
