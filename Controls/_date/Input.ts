@@ -117,6 +117,11 @@ class Input extends Control<IDateInput> {
         this._state = state;
     }
 
+    protected _clickHandler(event: Event): void {
+        event.stopPropagation();
+        this.openPopup();
+    }
+
     _onResultWS3(event: Event, startValue: Date): void {
         this._onResult(startValue);
     }
