@@ -77,6 +77,8 @@ export function each(
         const current = enumerator.getCurrent() as any;
         if (shouldStayInCollection(current)) {
             stickyItemBefore = { current, index: enumerator.getCurrentIndex() };
+        } else {
+            current.setRenderedOutsideRange(false);
         }
     }
     enumerator.setPosition(stopIndex - 1);
@@ -85,10 +87,13 @@ export function each(
         if (shouldStayInCollection(current)) {
             stickyItemAfter = { current, index: enumerator.getCurrentIndex() };
             break;
+        } else {
+            current.setRenderedOutsideRange(false);
         }
     }
 
     if (stickyItemBefore) {
+        stickyItemBefore.current.setRenderedOutsideRange(true);
         callback.call(
             context,
             stickyItemBefore.current,
@@ -101,14 +106,17 @@ export function each(
     enumerator.setPosition(startIndex - 1 + startIndexOffset);
 
     while (enumerator.moveNext() && enumerator.getCurrentIndex() < stopIndex - (stickyItemAfter ? 1 : 0)) {
+        const current = enumerator.getCurrent();
+        current.setRenderedOutsideRange(false);
         callback.call(
             context,
-            enumerator.getCurrent(),
+            current,
             enumerator.getCurrentIndex()
         );
     }
 
     if (stickyItemAfter) {
+        stickyItemAfter.current.setRenderedOutsideRange(true);
         callback.call(
             context,
             stickyItemAfter.current,
