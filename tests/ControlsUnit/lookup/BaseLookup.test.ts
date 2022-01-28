@@ -117,7 +117,13 @@ describe('Controls/lookup:Input', () => {
             };
 
             const lookup = await getBaseLookup(options as unknown as ILookupOptions);
+            const stub = sinon.stub(lookup, '_notify');
+            sinon.replace(lookup, '_calculateSizes', () => void 0);
+
             assert.deepStrictEqual(lookup._items.getCount(), data.length);
+
+            lookup._afterMount(options);
+            stub.calledOnceWith('selectedKeysChanged');
         });
 
         it('with dataLoadCallback', async () => {
@@ -142,10 +148,18 @@ describe('Controls/lookup:Input', () => {
                     selectedKeys: [1]
                 });
                 const stub = sinon.stub(lookup, '_notify');
-                const lookupOptions = getLookupOptions();
+                let lookupOptions = getLookupOptions();
                 lookupOptions.selectedKeys = ['test'];
                 await lookup._beforeUpdate(lookupOptions);
                 stub.notCalledWith('selectedKeysChanged');
+                stub.calledOnceWith('itemsChanged');
+
+                lookupOptions = {...lookupOptions};
+                lookupOptions.selectedKeys = [];
+                stub.reset();
+                await lookup._beforeUpdate(lookupOptions);
+                stub.notCalledWith('selectedKeysChanged');
+                stub.calledOnceWith('itemsChanged');
             });
         });
     });
