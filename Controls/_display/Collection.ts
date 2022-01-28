@@ -49,7 +49,7 @@ const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = [
-    'editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'
+    'editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected', 'faded'
 ];
 const REBUILD_ITEM_PROPERTIES = ['expanded', 'contents'];
 
@@ -889,7 +889,6 @@ export default class Collection<
 
     protected _viewIterator: IViewIterator;
 
-    protected _actionsAssigned: boolean;
     protected _actionsMenuConfig: any;
     protected _actionsTemplateConfig: IItemActionsTemplateConfig;
     protected _swipeConfig: ISwipeConfig;
@@ -2890,14 +2889,6 @@ export default class Collection<
         this._nextVersion();
     }
 
-    setActionsAssigned(assigned: boolean): void {
-        this._actionsAssigned = assigned;
-    }
-
-    isActionsAssigned(): boolean {
-        return this._actionsAssigned;
-    }
-
     getActionsMenuConfig(): any {
         return this._actionsMenuConfig;
     }
@@ -4321,7 +4312,6 @@ Object.assign(Collection.prototype, {
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
     _viewIterator: null,
-    _actionsAssigned: false,
     _actionsMenuConfig: null,
     _actionsTemplateConfig: null,
     _swipeConfig: null,

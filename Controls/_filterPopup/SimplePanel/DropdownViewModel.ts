@@ -66,9 +66,7 @@ const _private = {
 
          getRightPadding(options, rightPadding, itemData, hasHierarchy, hasApplyButton) {
             let result = rightPadding || 'default';
-            if (hasApplyButton && (itemData.emptyText || !options.emptyText && !itemData.index)) {
-               result = 'multiSelect';
-            } else if (itemData.hasPinned) {
+            if (itemData.hasPinned) {
                result = 'history';
             } else if (itemData.hasClose) {
                result = 'close';

@@ -2309,7 +2309,7 @@ const _private = {
         }
 
         const editingConfig = self._listViewModel.getEditingConfig();
-        const isActionsAssigned = self._listViewModel.isActionsAssigned();
+        const isActionsAssigned = itemActionsController.isActionsAssigned();
         let editArrowAction: IItemAction;
         if (options.showEditArrow) {
             editArrowAction = {
@@ -2368,7 +2368,7 @@ const _private = {
         if (
             self._listViewModel &&
             self._options.itemActionsVisibility !== 'visible' &&
-            !self._listViewModel.isActionsAssigned()
+            !self._itemActionsController?.isActionsAssigned()
         ) {
             _private.updateItemActions(self, options);
         }
@@ -2381,7 +2381,7 @@ const _private = {
      * @private
      */
     updateInitializedItemActions(self, options: any): void {
-        if (self._listViewModel && self._listViewModel.isActionsAssigned()) {
+        if (self._listViewModel && self._itemActionsController?.isActionsAssigned()) {
             _private.updateItemActions(self, options);
         }
     },
@@ -2391,7 +2391,7 @@ const _private = {
      * @param self
      */
     closeSwipe(self): void {
-        if (!self._listViewModel?.destroyed && self._listViewModel?.isActionsAssigned()) {
+        if (!self._listViewModel?.destroyed && self._itemActionsController?.isActionsAssigned()) {
             _private.getItemActionsController(self, self._options).deactivateSwipe();
         }
     },
@@ -3974,7 +3974,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     }
                 }
 
-                const isActionsAssigned = this._listViewModel.isActionsAssigned();
+                const isActionsAssigned = this._itemActionsController?.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
                 isItemsResetFromSourceController = true;
 
@@ -3990,7 +3990,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // TODO удалить когда полностью откажемся от старой модели
                 //  Если Items были обновлены, то в старой модели переинициализировался display
                 //  и этот параметр сбросился
-                this._listViewModel.setActionsAssigned(isActionsAssigned);
+                if (this._itemActionsController) {
+                    this._itemActionsController.setActionsAssigned(isActionsAssigned);
+                }
                 _private.initVisibleItemActions(this, newOptions);
 
                 if (loadedBySourceController) {
@@ -4331,7 +4333,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._listVirtualScrollController = null;
         }
         if (this._itemActionsController) {
-            this._itemActionsController.destroy();
             this._itemActionsController = null;
         }
         if (this._options.itemsDragNDrop) {
@@ -4482,6 +4483,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shouldUpdateActionsAfterRender = false;
         }
 
+        if (this._applySelectedPage && this._shouldNotifyOnDrawItems) {
+            this._applySelectedPage();
+        }
         this._updateInProgress = false;
         this._notifyOnDrawItems();
         this._loadedBySourceController = false;
@@ -4652,7 +4656,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // если нельзя проскроллить, проверяем, хватает ли загруженных данных для сдвига диапазона
                 // или нужно подгружать еще.
                 if (this._hasEnoughData(page)) {
-                    // TODO SCROLL нужно сместить диапазон???
+                    this._applySelectedPage = null;
+                    this._listVirtualScrollController.scrollToPage(direction === 'up' ? 'backward' : 'forward');
                 } else {
                     this._loadMore(direction);
                 }
@@ -6023,8 +6028,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (itemData.ItemActionsItem) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
-
-            if (_private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
+            const actions = itemData.getActions();
+            // Не надо делать фриз, если ItemActions пустые (например, их отрезали по visibilityCallback)
+            if (actions?.showed?.length && _private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
                 if (!_private.hasHoverFreezeController(this)) {
                     _private.initHoverFreezeController(this);
                 }
@@ -6329,7 +6335,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
         event.stopImmediatePropagation();
         // Если в модели поменялся набор записей до перерисовки контрола, не нужно обрабатывать событие
-        if (this._listViewModel.isActionsAssigned() && !this._itemsChanged) {
+        if (this._itemActionsController?.isActionsAssigned() && !this._itemsChanged) {
             const itemActionsController = _private.getItemActionsController(this);
             itemActionsController.updateItemActions(itemKey, itemWidth);
         }
