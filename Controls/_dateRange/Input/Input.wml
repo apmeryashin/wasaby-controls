@@ -77,6 +77,7 @@
    <ws:if data="{{_options.calendarButtonVisible}}">
       <span class="controls-Input-DateRange__buttonWrapper"
             attr:tabindex="-1"
+            on:click="_clickHandler()"
             on:mousedown="openPopup()"
             on:mouseenter="_mouseEnterHandler()"
             on:mouseleave="_mouseLeaveHandler()">
