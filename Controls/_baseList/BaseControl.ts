@@ -1479,9 +1479,6 @@ const _private = {
             // и выполнять обработку selection для всех удалённых записей.
             if (action === IObservable.ACTION_REMOVE) {
                 self._removedItems.push(...removedItems);
-                if (self._removedItemsIndex === null) {
-                    self._removedItemsIndex = removedItemsIndex;
-                }
             }
 
             // Тут вызывается nextVersion на коллекции, и это приводит к вызову итератора.
@@ -2934,8 +2931,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _removedItems = [];
 
-    private _removedItemsIndex: number = null;
-
     private _itemsChanged: boolean;
 
     // Флаг, устанавливающий, что после рендера надо обновить ItemActions
@@ -3165,10 +3160,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const newSelection = _private.getSelectionController(this).onCollectionRemove(this._removedItems);
             _private.changeSelection(this, newSelection);
         }
-        if (this._listVirtualScrollController && this._removedItems.length && this._removedItemsIndex !== null) {
-            this._listVirtualScrollController.removeItems(this._removedItemsIndex, this._removedItems.length);
-        }
-        this._removedItemsIndex = null;
         this._removedItems = [];
     }
 
@@ -3594,6 +3585,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     getScrollMode(params),
                     getCalcMode(params)
                 );
+                break;
+            case IObservable.ACTION_REMOVE:
+                this._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
                 break;
             case IObservable.ACTION_MOVE:
                 this._listVirtualScrollController.moveItems(
