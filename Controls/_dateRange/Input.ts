@@ -161,6 +161,10 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         this._children.opener.open(cfg);
     }
 
+    protected _clickHandler(event: Event): void {
+        event.stopPropagation();
+    }
+
     protected _mouseEnterHandler(): void {
         if (!this._dependenciesTimer) {
             this._dependenciesTimer = new DependencyTimer();
