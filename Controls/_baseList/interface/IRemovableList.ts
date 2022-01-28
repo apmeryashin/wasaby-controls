@@ -11,7 +11,7 @@ export interface IRemovableList {
     /**
      * Удаляет элементы из источника данных по идентификаторам элементов коллекции.
      * @function Controls/_list/interface/IRemovableList#removeItems
-     * @param {Controls/interface:ISelectionObject} items Массив элементов для удаления.
+     * @param {Controls/interface:ISelectionObject} selection Объект, содержащий список ключей записей для удаления и список ключей записей, которые необходимо исключить при удалении.
      * @remark Если удаление состоялось, возвращаемый Promise содержит строку 'fullReload'
      * @returns {Promise<String | void>}
      */
@@ -19,16 +19,16 @@ export interface IRemovableList {
     /*
      * Removes items from the data source by identifiers of the items in the collection.
      * @function Controls/_list/interface/IRemovableList#removeItems
-     * @param {Controls/interface:ISelectionObject} items Array of items to be removed.
+     * @param {Controls/interface:ISelectionObject} selection Object containing a list of selected records for remove and a list of records, which must be excluded from removal.
      * @remark if one or more records were removed promise contains string result with 'fullReload' value
      * @returns {Promise<String | void>}
      */
-    removeItems(items: ISelectionObject): Promise<void | string>;
+    removeItems(selection: ISelectionObject): Promise<void | string>;
 
     /**
      * Удаляет с подтверждением элементы из источника данных по идентификаторам элементов коллекции.
      * @function Controls/_list/interface/IRemovableList#removeItemsWithConfirmation
-     * @param {Controls/interface:ISelectionObject} items Массив элементов для удаления.
+     * @param {Controls/interface:ISelectionObject} selection Объект, содержащий список ключей записей для удаления и список ключей записей, которые необходимо исключить при удалении.
      * @remark Если удаление состоялось, возвращаемый Promise содержит строку 'fullReload'
      * @returns {Promise<String | void>}
      */
@@ -36,9 +36,9 @@ export interface IRemovableList {
     /*
      * Removes items with confirmation from the data source by identifiers of the items in the collection.
      * @function Controls/_list/interface/IRemovableList#removeItemsWithConfirmation
-     * @param {Controls/interface:ISelectionObject} items Array of items to be removed.
+     * @param {Controls/interface:ISelectionObject} selection Object containing a list of selected records for remove and a list of records, which must be excluded from removal.
      * @remark if one or more records were removed promise contains string result with 'fullReload' value
      * @returns {Promise<String | void>}
      */
-    removeItemsWithConfirmation(items: ISelectionObject): Promise<void | string>;
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void | string>;
 }
