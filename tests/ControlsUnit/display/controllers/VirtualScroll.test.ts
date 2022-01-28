@@ -104,7 +104,8 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
                     enumerator._$position === 15) {
                     return {
                         StickableItem: true,
-                        isSticked: () => true
+                        isSticked: () => true,
+                        setRenderedOutsideRange: () => null
                     };
                 }
             };
@@ -130,7 +131,8 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
                     return {
                         StickableItem: false,
                         EditableItem: true,
-                        isEditing: () => true
+                        isEditing: () => true,
+                        setRenderedOutsideRange: () => null
                     };
                 }
             };
@@ -156,7 +158,8 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
                     return {
                         '[Controls/_display/GroupItem]': true,
                         StickableItem: true,
-                        isSticked: () => true
+                        isSticked: () => true,
+                        setRenderedOutsideRange: () => null
                     };
                 }
             };
