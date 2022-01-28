@@ -24,7 +24,7 @@ import TileView from './TileView';
  * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
  * @implements Controls/list:IClickableView
@@ -54,7 +54,7 @@ import TileView from './TileView';
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
  * @implements Controls/interface:IHierarchy
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/interface:IDraggable
  * @mixes Controls/List/interface/ITile
  * @implements Controls/list:IClickableView

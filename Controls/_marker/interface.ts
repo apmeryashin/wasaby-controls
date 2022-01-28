@@ -71,7 +71,7 @@ export interface IMarkerListOptions {
     * @remark
     * Если сделан bind на эту опцию, но она передана изначально в значении undefined,
     * то установка маркера работает аналогично тому, как если бы bind не был задан (по внутреннему состоянию контрола).
-    * @demo Controls-demo/list_new/Marker/Visible/Index
+    * @demo Controls-demo/list_new/Marker/OnMarkedKeyChanged/Index
     * @see markerVisibility
     * @see markedKeyChanged
     * @see beforeMarkedKeyChanged

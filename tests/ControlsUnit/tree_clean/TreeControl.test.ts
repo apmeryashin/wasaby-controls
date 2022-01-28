@@ -4,7 +4,7 @@ import {TreeControl} from 'Controls/tree';
 import {NewSourceController} from 'Controls/dataSource';
 import { RecordSet } from 'Types/collection';
 import {Memory} from 'Types/source';
-import { ITreeControlOptions } from 'Controls/_tree/TreeControl';
+import { ITreeControlOptions } from 'Controls/tree';
 
 /*
 * 1
