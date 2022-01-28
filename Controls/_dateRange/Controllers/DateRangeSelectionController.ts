@@ -109,7 +109,7 @@ export default class DateRangeSelectionController extends RangeSelectionControll
             range = super._getDisplayedRangeEdges(item);
         }
         if (this._rangeSelectedCallback) {
-            range = this._rangeSelectedCallback(range[0], range[1]);
+            range = this._rangeSelectedCallback(range[0], range[1], this.getSelectionBaseValue());
         }
         return range;
     }
