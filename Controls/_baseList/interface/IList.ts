@@ -1,7 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { IItemActionsOptions } from 'Controls/itemActions';
 import { IMarkerListOptions } from 'Controls/marker';
-import { IItemPaddingOptions } from 'Controls/interface';
+import { IItemPaddingOptions, TOffsetSize } from 'Controls/interface';
 import {Direction, IFontColorStyle, IItemTemplateOptions} from 'Controls/interface';
 import {IMovableOptions} from './IMovableList';
 import {RecordSet} from 'Types/collection';
@@ -54,6 +54,7 @@ export interface IList extends
     stickyHeader?: boolean;
     stickyGroup?: boolean;
     stickyResults?: boolean;
+    itemsSpacing?: TOffsetSize;
 }
 
 /**
@@ -559,6 +560,12 @@ export interface IReloadItemOptions {
  * @name Controls/_list/interface/IList#stickyFooter
  * @cfg {Boolean} Закрепляет {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ подвал} списка.
  * @default false
+ */
+
+/**
+ * @name Controls/_list/interface/IList#itemsSpacing
+ * @cfg {TOffsetSize} Размер отступа между записями списка
+ * @default undefined
  */
 
 /**

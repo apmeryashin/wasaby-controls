@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder, TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
+import {IRoundBorder, TFontColorStyle, TFontSize, TFontWeight, TOffsetSize} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -47,6 +47,7 @@ export interface IOptions<T extends Model = Model> {
     rightPadding?: string;
     topPadding?: string;
     bottomPadding?: string;
+    itemsSpacing?: TOffsetSize;
     markerPosition?: string;
     isLastItem?: boolean;
     isFirstItem?: boolean;
@@ -201,6 +202,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     protected _$topPadding: string;
 
     protected _$bottomPadding: string;
+
+    protected _$itemsSpacing: TOffsetSize;
 
     protected _$markerPosition: 'left' | 'right';
 
@@ -957,6 +960,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             wrapperClasses += ' ' + this.getRoundBorderClasses();
         }
 
+        wrapperClasses += this._getItemSpacingClasses();
+
         return wrapperClasses;
     }
 
@@ -1253,6 +1258,27 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     // endregion ItemPadding
 
+    //region items spacing
+    setItemsSpacing(itemsSpacing: TOffsetSize, silent?: boolean): void {
+        this._$itemsSpacing = itemsSpacing;
+        if (!silent) {
+            this._nextVersion();
+        }
+    }
+
+    /**
+     * При необходимости возвращает строку с CSS классом, который регулирует отступ между записями
+     */
+    protected _getItemSpacingClasses(): string {
+        // Если расстояние между итемами не задано или это первый итем, то отступ не нужен
+        if (!this._$itemsSpacing || this.isFirstItem()) {
+            return '';
+        }
+
+        return ` controls-ListView__item-spacing_${this._$itemsSpacing.toLowerCase()}`;
+    }
+    //endregion
+
     protected _getSpacingClasses(): string {
         let classes = '';
 
@@ -1398,6 +1424,7 @@ Object.assign(CollectionItem.prototype, {
     _$rightPadding: 'default',
     _$topPadding: 'default',
     _$bottomPadding: 'default',
+    _$itemsSpacing: null,
     _$markerPosition: undefined,
     _$hasMoreDataUp: false,
     _$isFirstStickedItem: false,
