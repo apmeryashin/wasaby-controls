@@ -179,7 +179,7 @@ export abstract class AbstractListVirtualScrollController<
      * Нужно для того, чтобы не менять индексы уже во время отрисовки.
      * @private
      */
-    private _renderInProgress: boolean = true;
+    private _renderInProgress: boolean;
 
     /**
      * Стейт, который определяет что сейчас выполняется отрисовка новых индексов.
@@ -218,6 +218,10 @@ export abstract class AbstractListVirtualScrollController<
 
         this._initCollection(options.collection);
         this._createScrollController(options);
+
+        // Устанавливаем _renderInProgress именно после выполнения всего кода конструктора, т.к. в нём
+        // инициализируется начальный диапазон для коллекции.
+        this._renderInProgress = true;
     }
 
     protected abstract _getItemsSizeControllerConstructor(): IAbstractItemsSizesControllerConstructor;
