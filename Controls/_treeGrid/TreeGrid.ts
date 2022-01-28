@@ -38,7 +38,7 @@ import 'css!Controls/treeGrid';
  * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
  * @implements Controls/grid:IPropStorage
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/_treeGrid/interface/ITreeGrid
  * @implements Controls/error:IErrorControllerOptions
