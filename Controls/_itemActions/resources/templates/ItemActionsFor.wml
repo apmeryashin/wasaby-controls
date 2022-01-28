@@ -21,6 +21,7 @@
             _stringCaption="{{ true }}"
             _iconStyle="{{ action.showType === 3 ? action.iconStyle : (iconStyle || action.iconStyle) }}"
             _height="{{ action.inlineHeight }}"
+            _isSVGIcon="{{ action.isSVGIcon }}"
             _captionPosition="right"
             readOnly="{{ false }}"
             attr:class="controls-itemActionsV__Button_iconSize_{{ action.iconSize }}"

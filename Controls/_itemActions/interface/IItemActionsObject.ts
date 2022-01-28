@@ -38,6 +38,11 @@ export interface IShownItemAction extends IItemAction {
      * Размер шрифта для выравнивания иконки
      */
     fontSize?: string;
+
+    /**
+     * Рассчитанный флаг, означающий, что иконка передана в формате SVG
+     */
+    isSVGIcon?: boolean;
 }
 
 export interface IItemActionsObject {
