@@ -308,6 +308,11 @@ export abstract class AbstractListVirtualScrollController<
     afterRenderListControl(): void {
         this._renderNewIndexes = false;
 
+        const countItemsRenderedOutsideRange = this._collection.getItems()
+            .filter((it) => it.isRenderedOutsideRange())
+            .length;
+        this._scrollController.setCountItemsRenderedOutsideRange(countItemsRenderedOutsideRange);
+
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll();

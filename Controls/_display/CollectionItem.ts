@@ -175,6 +175,12 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$rendered: boolean;
 
+    /**
+     * Флаг означает, что запись отрисована за пределами текущего диапазона
+     * @private
+     */
+    private _renderedOutsideRange: boolean = false;
+
     protected _$multiSelectVisibility: string = 'hidden';
 
     // Фон застиканных записей и лесенки
@@ -781,6 +787,14 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     setRendered(state: boolean): void {
         this._$rendered = state;
+    }
+
+    isRenderedOutsideRange(): boolean {
+        return this._renderedOutsideRange;
+    }
+
+    setRenderedOutsideRange(state: boolean): void {
+        this._renderedOutsideRange = state;
     }
 
     setBackgroundStyle(backgroundStyle: string): void {
