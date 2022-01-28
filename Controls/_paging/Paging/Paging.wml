@@ -77,7 +77,7 @@
                 <i class="controls-Paging_icon-Next{{_isDigit() ? '_digits'}} controls-Paging__icon"></i>
              </span>
            </ws:if>
-           <ws:if data="{{_getArrowStateVisibility('end') !== 'hidden'}}">
+           <ws:if data="{{_options.pagingMode === 'edges' || _getArrowStateVisibility('end') !== 'hidden'}}">
             <span class="controls-Paging__btn controls-Paging__btn-End
                            {{!_options.showDigits ? ' controls-Paging__btn_separated ' }}
                            controls-Paging__arrow
