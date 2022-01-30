@@ -5,6 +5,7 @@ import {Body as PageBody, Head as PageHead} from 'Application/Page';
 
 import * as cBodyClasses from 'Core/BodyClasses';
 import * as getResourceUrl from 'Core/helpers/getResourceUrl';
+import * as escapeHtml from 'Core/helpers/String/escapeHtml';
 import {constants, detection, IoC} from 'Env/Env';
 import {TouchDetect} from 'Env/Touch';
 import {Bus} from 'Env/Event';
@@ -458,7 +459,8 @@ export default class Application extends Control<IApplication> {
    private _updateThemeClass(options: IApplication): void {
       this._updateBodyClasses({
          themeClass: 'Application-body',
-         bodyThemeClass: `controls_theme-${options.theme}`
+         /** Имя темы может прилететь вот таким 'default\\" onload=\\"console.log(\'XSS\')\\"' */
+         bodyThemeClass: `controls_theme-${escapeHtml(options.theme)}`
       });
    }
 

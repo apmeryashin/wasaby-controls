@@ -2,8 +2,9 @@
  * Created by dv.zuev on 27.12.2017.
  */
 define([
-   'Controls/Application'
-], function(Application) {
+   'Controls/Application',
+   'Core/helpers/String/escapeHtml'
+], function(Application, escapeHtml) {
    describe('Controls.Application', function() {
       it('_tplConfig init', function(done) {
          /* Пока не ясно, как мокать контексты */
@@ -18,6 +19,17 @@ define([
             assert.equal(ctrl.templateConfig, cfg.templateConfig, 'Property templateConfig is incorrect before mounting');
             done();
          });
+      });
+      describe('Theme class', function() {
+         it('XSS in theme', function(){
+            var application = new Application.default();
+            var inputClass = 'default\\" onload=\\"console.log(\'XSS\')\\"';
+            var outputClass = 'controls_theme-' + escapeHtml(input);
+
+            application._updateThemeClass({theme: inputClass});
+
+            assert.equal(application._bodyClasses.bodyThemeClass, outputClass);
+         })
       });
       describe('Classes touch, drag and hover.', function() {
          var application;
