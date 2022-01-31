@@ -30,7 +30,7 @@ const enum ORIENTATION {
  * @extends UI/Base:Control
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/ResizingLine/Index
  */
 class ResizingLine extends ResizingBase<IResizingLine> {

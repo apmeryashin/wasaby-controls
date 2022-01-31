@@ -47,7 +47,7 @@ export interface ITabButtonItem extends IIconCounterTabTemplate {
 /**
  * Интерфейс для опций контрола вкладок.
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface ITabsButtons {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean;

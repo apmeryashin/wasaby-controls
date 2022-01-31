@@ -25,7 +25,7 @@ export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions
  * @implements Controls/interface:IFontSize
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/Heading/Counters/Index
  */
@@ -41,7 +41,7 @@ export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/Heading/Counters/Index
  */

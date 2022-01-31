@@ -32,7 +32,7 @@ export type NativeInputType = 'insertText' | 'insertCompositionText' | 'insertFr
  * Область выделения текста в поле ввода.
  * Если значения {@link start} и {@link end} равны, то текст не выделяется, но значение указывает на положение каретки внутри поля.
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 export interface ISelection {

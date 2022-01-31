@@ -81,7 +81,7 @@ const MIN_IE_VERSION: number = 12;
  * @implements Controls/input:IFieldTemplate
  * @implements Controls/interface:IInputPlaceholder
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBaseInputOptions> {
