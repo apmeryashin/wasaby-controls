@@ -1,7 +1,7 @@
 <Controls._popupConfirmation.Template
         on:keydown="_keyDown()"
         on:keyup="_keyPressed()" ws-tab-cycling="true"
-        ws-delegates-tabfocus="true" style="{{_options.style}}"
+        ws-delegates-tabfocus="true" borderStyle="{{_options.style || _options.borderStyle}}"
         closeButtonVisible="{{false}}" size="{{_getSize()}}">
     <ws:bodyContentTemplate>
         <ws:partial

@@ -1,6 +1,6 @@
 <ws:partial template="Controls/_popupTemplate/Notification/Template/Base"
             closeButtonVisible="{{_options.closeButtonVisibility !== undefined ? _options.closeButtonVisibility : _options.closeButtonVisible}}"
-            style="{{_options.style}}">
+            borderStyle="{{_options.style || _options.borderStyle}}">
     <ws:bodyContentTemplate>
         <div class="controls-Notification__simpleTemplate" on:mousedown="_mousedownHandler()">
             <ws:if data="{{_options.icon}}">

@@ -58,7 +58,7 @@ define('Controls-demo/Confirmation/Confirmation',
                   cfg: {
                      message: MESSAGE,
                      details: DETAILS,
-                     style: 'default'
+                     borderStyle: 'default'
                   }
                }, {
                   caption: 'SUCCESS',
@@ -67,7 +67,7 @@ define('Controls-demo/Confirmation/Confirmation',
                   cfg: {
                      message: MESSAGE,
                      details: DETAILS,
-                     style: 'success'
+                     borderStyle: 'success'
                   }
                }, {
                   caption: 'ERROR',
@@ -76,7 +76,7 @@ define('Controls-demo/Confirmation/Confirmation',
                   cfg: {
                      message: MESSAGE,
                      details: DETAILS,
-                     style: 'danger'
+                     borderStyle: 'danger'
                   }
                }, {
                   caption: 'PRIMARY',
@@ -85,7 +85,7 @@ define('Controls-demo/Confirmation/Confirmation',
                   cfg: {
                      message: MESSAGE,
                      details: DETAILS,
-                     style: 'primary'
+                     borderStyle: 'primary'
                   }
                }]
             },
