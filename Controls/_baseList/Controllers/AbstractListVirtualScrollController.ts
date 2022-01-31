@@ -416,8 +416,8 @@ export abstract class AbstractListVirtualScrollController<
         );
     }
 
-    removeItems(position: number, count: number): void {
-        this._scrollController.removeItems(position, count);
+    removeItems(position: number, count: number, scrollMode: IScrollMode): void {
+        this._scrollController.removeItems(position, count, scrollMode);
     }
 
     resetItems(): void {
