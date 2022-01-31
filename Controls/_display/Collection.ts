@@ -4232,6 +4232,7 @@ export default class Collection<
         // тоже должны перерисоваться при изменении видимости чекбоксов
         this._updateItemsProperty('setMultiSelectVisibility', this._$multiSelectVisibility, 'setMultiSelectVisibility');
         this._updateEdgeItems();
+        this.getViewIterator().setIndices(this.getStartIndex(), this.getStopIndex());
     }
 
     protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {
