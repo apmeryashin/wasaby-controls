@@ -197,7 +197,9 @@ export class ScrollController {
     }
 
     getFirstVisibleItemIndex(): number {
-        return this._calculator.getFirstVisibleItemIndex();
+        const contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        const fixedContentSize = this._itemsSizesController.getFixedContentSizeBeforeItems();
+        return this._calculator.getFirstVisibleItemIndex(contentSizeBeforeItems - fixedContentSize);
     }
 
     setCountItemsRenderedOutsideRange(count: number): void {
@@ -401,7 +403,9 @@ export class ScrollController {
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
+        const contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        const fixedContentSize = this._itemsSizesController.getFixedContentSizeBeforeItems();
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem, contentSizeBeforeItems - fixedContentSize);
     }
 
     /**

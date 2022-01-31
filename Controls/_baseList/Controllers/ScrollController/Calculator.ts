@@ -154,11 +154,11 @@ export class Calculator {
     /**
      * Возвращает индекс первой полностью видимой записи
      */
-    getFirstVisibleItemIndex(): number {
+    getFirstVisibleItemIndex(correction: number): number {
         return getFirstVisibleItemIndex({
             itemsSizes: this._itemsSizes,
             currentRange: this._range,
-            scrollPosition: this._scrollPosition,
+            scrollPosition: this._scrollPosition - correction,
             placeholders: this._placeholders
         });
     }
@@ -174,13 +174,13 @@ export class Calculator {
         return this._getEdgeVisibleItem(params);
     }
 
-    getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
+    getScrollPositionToEdgeItem(edgeItem: IEdgeItem, correction: number = 0): number {
         let scrollPositionOffset = 0;
 
         const item = this._itemsSizes[edgeItem.index];
         // https://jsfiddle.net/alex111089/oj8bL0mq/ нативная демка про восстановление скролла
         // Вычитаем scrollPosition, чтобы привести координаты в единую систему, до и после отрисовки.
-        const itemOffset = item.offset - this._scrollPosition - this._placeholders.backward;
+        const itemOffset = item.offset - this._scrollPosition - this._placeholders.backward + correction;
         if (edgeItem.direction === 'backward') {
             if (edgeItem.border === 'forward') {
                 scrollPositionOffset = itemOffset + (item.size - edgeItem.borderDistance);
