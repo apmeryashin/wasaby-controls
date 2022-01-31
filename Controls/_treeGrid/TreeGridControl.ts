@@ -14,21 +14,36 @@ export interface ITreeGridControlOptions extends ITreeControlOptions, IGridContr
 
 export class TreeGridControl extends TreeControl<ITreeGridControlOptions> {
     private _listVirtualColumnScrollController?: ListVirtualColumnScrollController;
+    private _contentWidth: number = 0;
+    private _fixedColumnsWidth: number = 0;
+
+    constructor(...args: unknown[]) {
+        super(...args);
+        this._doScrollUtil = this._doScrollUtil.bind(this);
+    }
 
     protected _prepareItemsOnMount(self: this, newOptions: ITreeGridControlOptions): Promise<void> {
         super._prepareItemsOnMount(self, newOptions);
-        if (newOptions.newColumnScroll && newOptions.virtualColumnScrollConfig) {
+        if (newOptions.newColumnScroll) {
             newOptions.setScrollContainerViewMode('custom');
             return import('Controls/horizontalScroll').then((lib) => {
-                this._createColumnScrollController(lib.Controller, newOptions);
+                this._createColumnScrollController(lib.Controller, {
+                    ...newOptions,
+                    virtualColumnScrollConfig: newOptions.virtualColumnScrollConfig || {
+                        pageSize: newOptions.columns.length
+                    }
+                });
             });
         }
     }
 
     protected _afterMount(...args): void {
         super._afterMount(...args);
-        this._listVirtualColumnScrollController?.setItemsContainer(this._getItemsContainer());
-        this._listVirtualColumnScrollController?.setListContainer(this._container);
+        if (this._listVirtualColumnScrollController) {
+            this._updateFixedColumnsWidth();
+            this._listVirtualColumnScrollController.setItemsContainer(this._getItemsContainer());
+            this._listVirtualColumnScrollController.setListContainer(this._container);
+        }
     }
 
     _beforeRender(...args): void {
@@ -114,8 +129,12 @@ export class TreeGridControl extends TreeControl<ITreeGridControlOptions> {
         }
     }
 
+    private _doScrollUtil(position: number): void {
+        this._notify('doHorizontalScroll', [position, true], {bubbling: true});
+    }
+
     private _createColumnScrollController(controllerCtor: ListVirtualColumnScrollControllerCtor,
-                                          options: IGridControlOptions): void {
+                                          options: ITreeGridControlOptions): void {
         this._listVirtualColumnScrollController = new controllerCtor({
             ...options,
             listControl: this,
@@ -133,9 +152,7 @@ export class TreeGridControl extends TreeControl<ITreeGridControlOptions> {
                 backward: true,
                 forward: true
             },
-            doScrollUtil: (position) => {
-                this._notify('doHorizontalScroll', [position, true], {bubbling: true});
-            },
+            doScrollUtil: this._doScrollUtil,
             updatePlaceholdersUtil: (placeholders) => {
                 const convertedPlaceholders = {
                     left: placeholders.backward,
@@ -147,7 +164,22 @@ export class TreeGridControl extends TreeControl<ITreeGridControlOptions> {
     }
 
     _onContentResized(width: number, height: number): void {
-        this._listVirtualColumnScrollController?.contentResized(width);
+        if (this._contentWidth !== width) {
+            this._contentWidth = width;
+            if (this._listVirtualColumnScrollController) {
+                this._updateFixedColumnsWidth();
+                this._listVirtualColumnScrollController.contentResized(width);
+            }
+        }
+    }
+
+    private _updateFixedColumnsWidth(options: ITreeGridControlOptions = this._options): void {
+        if (!this.__needShowEmptyTemplate(options)) {
+            const cellSelector = '.js-controls-Grid__virtualColumnScroll__fake-scrollable-cell-to-recalc-width_fixed';
+            this._fixedColumnsWidth = Array.from(this._container.querySelectorAll(cellSelector)).reduce((acc, cell) => {
+                return acc + cell.getBoundingClientRect().width;
+            }, 0);
+        }
     }
 
     static getDefaultOptions(): Partial<ITreeGridControlOptions> {
