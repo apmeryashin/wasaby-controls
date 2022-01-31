@@ -79,6 +79,7 @@
 
 <ws:template name="viewTpl">
     <div class="controls-BaseControl__viewContainer
+     			{{ _getViewClasses(_addShowActionsClass, _addHoverEnabledClass, _uniqueId) }}
                 {{ __needShowEmptyTemplate() ? 'controls-BaseControl__viewContainer_empty' }}"
          name="viewContainer">
        <!-- render _viewName -->
@@ -176,9 +177,23 @@
 
     <style name="itemActionsOutsideStyle" data-vdom-ignore="true"></style>
 
-    <ws:partial template="viewTpl"
-                name="listView"
-                attr:class="{{ _getViewClasses(_addShowActionsClass, _addHoverEnabledClass, _uniqueId) }}"/>
+	<ws:if data="{{ _options.useScrollContexts }}">
+		<ws:partial template="{{ 'Controls/horizontalScroll:ControllerAndScrollBarConnectorContextProvider' }}"
+					name="controllerAndScrollBarConnectorContextProvider"
+					controller="{{ _listVirtualColumnScrollController }}"
+					doScrollUtil="{{ _doScrollUtil }}"
+					contentWidth="{{ _contentWidth }}"
+					viewportWidth="{{ _viewportWidth }}"
+					fixedColumnsWidth="{{ _fixedColumnsWidth }}"
+		>
+			<ws:partial template="{{ 'Controls/horizontalScroll:ControllerAndScrollBarConnectorContextConsumer' }}">
+				<ws:partial template="viewTpl" name="listView"/>
+			</ws:partial>
+		</ws:partial>
+	</ws:if>
+	<ws:else>
+		<ws:partial template="viewTpl" name="listView"/>
+	</ws:else>
 
     <ws:if data="{{_pagingVisible}}">
         <!-- Не отображаем разделитель для ipad, так как из-за разделителя появляется пустая строка после последней записи.
