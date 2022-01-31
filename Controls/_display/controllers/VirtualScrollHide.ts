@@ -29,6 +29,14 @@ export function setup(collection: IVirtualScrollHideCollection): void {
     collection.nextVersion();
 }
 
+export function applyRenderedItems(collection: IVirtualScrollHideCollection): void {
+    const renderedStart = VirtualScroll.getStartIndex(collection);
+    const renderedStop = VirtualScroll.getStopIndex(collection);
+    for (let i = renderedStart; i < renderedStop; i++) {
+        collection.at(i).setRendered(true);
+    }
+}
+
 export function setIndices(
     collection: IVirtualScrollHideCollection,
     startIndex: number,
@@ -39,7 +47,7 @@ export function setIndices(
         startIndex,
         stopIndex
     );
-    _applyRenderedItems(collection);
+    applyRenderedItems(collection);
     collection.nextVersion();
     return indicesChanged;
 }
@@ -108,12 +116,4 @@ export function isItemAtIndexHidden(
     }
 
     return ( index < start || index >= stop );
-}
-
-function _applyRenderedItems(collection: IVirtualScrollHideCollection): void {
-    const renderedStart = VirtualScroll.getStartIndex(collection);
-    const renderedStop = VirtualScroll.getStopIndex(collection);
-    for (let i = renderedStart; i < renderedStop; i++) {
-        collection.at(i).setRendered(true);
-    }
 }
