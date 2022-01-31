@@ -876,9 +876,11 @@ export class Controller {
         }
 
         if (actionsToShowOnHover.length > 0) {
-            // Если есть хоть одна видимая операция для показа в меню или в конфигурации
+            // Если единственная видимая операция для показа в меню отсутствует в показанных по ховеру,
+            // Или есть более одной видимой операции для показа в меню, или в конфигурации
             // меню указано, что надо показать подвал или шапку меню, то показываем кнопку с тремя точками.
-            if (actionsToShowInMenu.length > 0 || this._hasMenuHeaderOrFooter()) {
+            if ((actionsToShowInMenu.length === 0 && actionsToShowOnHover.indexOf(actionsToShowInMenu[0]) === -1) ||
+                actionsToShowInMenu.length > 1 || this._hasMenuHeaderOrFooter()) {
                 actionsToShowOnHover.push(this._getMenuItemAction());
             }
             if (this._feature1183020440) {
