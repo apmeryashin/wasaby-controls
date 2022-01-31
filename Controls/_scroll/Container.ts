@@ -1,6 +1,7 @@
 import {compatibility, constants, detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {TemplateFunction, AsyncIndicatorName} from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
+import {AsyncIndicatorName} from 'UICore/Base';
 import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
 import Observer from './IntersectionObserver/Observer';
 import ShadowsModel from './Container/ShadowsModel';
