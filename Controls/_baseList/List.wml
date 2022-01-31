@@ -9,6 +9,7 @@
 			plainItemsContainer="{{_plainItemsContainer}}"
 			itemContainerGetter="{{_itemContainerGetter}}"
 			viewModelConstructor="{{_viewModelConstructor}}"
+			useScrollContexts="{{ _useScrollContexts }}"
 			attr:class="{{_getItemsContainerPadding(_options) ?
 						(' controls-padding_top-' + (_getItemsContainerPadding(_options).top === 'default' ? 'listDefault' : _getItemsContainerPadding(_options).top) +
 						 ' controls-padding_bottom-' + _getItemsContainerPadding(_options).bottom +
@@ -19,8 +20,8 @@
 </ws:template>
 
 
-<ws:if data="{{ _useScrollContextConsumer }}">
-	<ws:partial template="Controls/_baseList/ScrollContextConsumer">
+<ws:if data="{{ _useScrollContexts }}">
+	<ws:partial template="{{ 'Controls/_baseList/ScrollContextConsumer' }}">
 		<ws:partial template="list"/>
 	</ws:partial>
 </ws:if>
