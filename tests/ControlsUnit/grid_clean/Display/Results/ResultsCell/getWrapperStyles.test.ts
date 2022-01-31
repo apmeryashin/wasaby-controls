@@ -8,6 +8,7 @@ describe('Controls/grid_clean/Display/Results/ResultsCell/getWrapperStyles', () 
         hasMultiSelectColumn: () => false,
         isFullGridSupport: () => true,
         hasColumnScroll: () => hasColumnScroll,
+        hasNewColumnScroll: () => false,
         getColumnIndex: () => 0
     } as undefined as GridRow<any>;
 
