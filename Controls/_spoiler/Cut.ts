@@ -21,7 +21,7 @@ import 'css!Controls/spoiler';
  * @public
  * @demo Controls-demo/Spoiler/Cut/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable {
     protected _lines: number | null = null;

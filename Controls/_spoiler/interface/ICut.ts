@@ -67,7 +67,7 @@ export interface ICutOptions extends ICutButton, IBackgroundStyleOptions, IExpan
  * @implements Controls/interface:IHeight
  * @implements Controls/interface:IContrastBackground
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export default interface ICut {
     readonly '[Controls/_spoiler/interface/ICut]': boolean;

@@ -3,7 +3,7 @@ import {TimeInterval} from 'Types/entity';
 /**
  * Интерфейс для поля ввода временного интервала с маской.
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface ITimeInterval {
     readonly '[Controls/_input/interface/ITimeInterval]': boolean;

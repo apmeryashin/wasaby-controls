@@ -3,7 +3,7 @@ import * as rk from 'i18n!Controls';
  * Функция проверяет наличие булевого значения в контейнере.
  * @class Controls/_toggle/isRequired
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @remark
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  *

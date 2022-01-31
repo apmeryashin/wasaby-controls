@@ -17,7 +17,7 @@ const maxPercentValue = 100;
  * Интерфейс опций для конфигурации категорий.
  * @interface Controls/progress:IIndicatorCategory
  * @public
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 export interface IIndicatorCategory {
    /**
@@ -48,7 +48,7 @@ export interface IIndicatorCategory {
  * Интерфейс опций для {@link Controls/progress:StateIndicator}.
  * @interface Controls/progress:IStateIndicator
  * @public
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 export interface IStateIndicatorOptions extends IControlOptions {
    /**
@@ -111,7 +111,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  *
  * @extends UI/Base:Control
  * @implements Controls/progress:IStateIndicator
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  *
  * @public
  * @demo Controls-demo/progress/StateIndicator/Base/Index
@@ -122,7 +122,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * {@link /materials/Controls-demo/app/Controls-demo%2fprogress%2fStateIndicator%2fIndex демо-пример}.
  * @class Controls/_progress/StateIndicator
  * @extends UI/Base:Control
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  *
  * @public
  * @demo Controls-demo/progress/StateIndicator/Base/Index.ts

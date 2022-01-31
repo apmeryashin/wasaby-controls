@@ -8,7 +8,7 @@
  * @includes Separator Controls/_heading/Separator
  * @includes Counter Controls/_heading/Counter
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -19,7 +19,7 @@
  * @includes Separator Controls/_heading/Separator
  * @includes Counter Controls/_heading/Counter
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 export {default as Title} from './_heading/Heading';

@@ -28,7 +28,7 @@ export interface IBorderVisibility {
  * Интерфейс для контролов, которые поддерживают разное количество видимых границ.
  * @interface Controls/_input/interface/IBorderVisibility
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /**

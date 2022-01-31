@@ -43,7 +43,7 @@ export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlO
  * @mixes Controls/toggle:IButtonGroupOptions
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 class ButtonGroupBase<TOptions extends IButtonGroupOptions = IButtonGroupOptions> extends Control<TOptions> {

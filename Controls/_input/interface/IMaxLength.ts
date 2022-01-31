@@ -6,7 +6,7 @@ export interface IMaxLengthOptions {
  * Интерфейс контролов, с вводом определенного количества символов.
  * @interface Controls/_input/interface/IMaxLength
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /**
