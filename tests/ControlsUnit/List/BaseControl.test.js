@@ -2084,7 +2084,7 @@ define([
                ctrl.beginEdit = () => {
                   isEditingRestarted = true;
                };
-               return ctrl._onEditingRowKeyDown({}, {keyCode: 38}).then(() => {
+               return ctrl._onEditingRowKeyDown({ stopPropagation: () => {} }, {keyCode: 38}).then(() => {
                   assert.isFalse(isEditingRestarted);
                });
             });
