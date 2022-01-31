@@ -472,7 +472,7 @@ const ListView = Control.extend(
             return result;
         },
 
-        activateEditingRow(enableScrollToElement?: boolean): boolean {
+        activateEditingRow(enableScrollToElement?: 'vertical' | false): boolean {
             if (this._children.editingRow) {
                 this._children.editingRow.activate({ enableScrollToElement });
                 return true;
