@@ -197,7 +197,7 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
 
     getZIndex(): number {
         let zIndex;
-        if (this._$owner.hasColumnScroll()) {
+        if (this._$owner.hasColumnScroll() || this._$owner.hasNewColumnScroll()) {
             const hasStickyLadder = this._$owner.getStickyLadderCellsCount() ? 1 : 0;
             zIndex = this._$isFixed ? (FIXED_HEADER_Z_INDEX + hasStickyLadder) : STICKY_HEADER_Z_INDEX;
         } else {
