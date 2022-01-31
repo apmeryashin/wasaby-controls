@@ -172,14 +172,15 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
                             {
                                readOnly,
                                itemsLayout,
-                               fontSize
+                               fontSize,
+                               counterAlignment
                             }: ISelectedCollectionOptions): number {
       // in mode read only and single line, counter does not affect the collection
       if (readOnly && itemsLayout === 'oneRow') {
          return 0;
       }
 
-      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme, fontSize);
+      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme, fontSize, counterAlignment);
    }
 
    private _isShowCounter(itemsCount: number, multiline: boolean, maxVisibleItems?: number): boolean {
