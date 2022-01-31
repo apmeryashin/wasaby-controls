@@ -627,6 +627,10 @@ describe('Controls/dataSource:SourceController', () => {
             controllerOptions = {...controllerOptions};
             controllerOptions.sorting = {testField: 'ASC'};
             ok(controller.updateOptions(controllerOptions));
+
+            controllerOptions = {...controllerOptions};
+            delete controllerOptions.sorting;
+            ok(!controller.updateOptions(controllerOptions));
         });
 
         it('updateOptions with new filter',  async () => {
