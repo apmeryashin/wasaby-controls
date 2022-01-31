@@ -135,7 +135,7 @@ class ResultsCell extends Cell<null, ResultsRow> {
 
     getZIndex(): number {
         let zIndex;
-        if (this._$owner.hasColumnScroll()) {
+        if (this._$owner.hasColumnScroll() || this._$owner.hasNewColumnScroll()) {
             zIndex = this._$isFixed ? FIXED_RESULTS_Z_INDEX : STICKY_RESULTS_Z_INDEX;
         } else {
             zIndex = FIXED_RESULTS_Z_INDEX;
