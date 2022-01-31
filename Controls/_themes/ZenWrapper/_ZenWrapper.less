@@ -21,7 +21,10 @@
    background: var(--dominant-color_zen);
 }
 
-.controls-ZenWrapper {
+// При использовании старой страницы, может возникнуть ситуация, когда zen переменные загрузятся раньше основных.
+// Из-за чего тема не будет работать, поэтому увеличиваем вес селектора
+// https://online.sbis.ru/opendoc.html?guid=0d5ee84b-9eb9-4760-8a32-5d76af2bd754
+.controls-ZenWrapper.controls_themes__wrapper {
    --text-color: rgba(var(--mono_zen_rgb), 0.8);
    --unaccented_background-color: rgba(var(--mono_zen_rgb), 0.1);
    --icon-color: rgba(var(--mono_zen_rgb), 0.8);
