@@ -223,7 +223,8 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _updateCloseButtonState(event: SyntheticEvent<MouseEvent>,
                                       state: boolean,
                                       position: {direction: IStickyPosition}): void {
-        if (!this._hasHeader && this._closeButtonVisibility !== state) {
+        if ((!this._hasHeader || this._verticalDirection === 'top') &&
+            this._closeButtonVisibility !== state) {
             if (!state && position.direction.horizontal === 'right') {
                 this._closeButtonVisibility = false;
             } else {
