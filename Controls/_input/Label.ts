@@ -38,7 +38,7 @@ export interface ILabelOptions extends IControlOptions,
  * @public
  * @demo Controls-demo/Input/Label/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 class Label extends Control<ILabelOptions> implements ICaption, IFontSize, IHref {
     protected _template: TemplateFunction = LabelTemplate;

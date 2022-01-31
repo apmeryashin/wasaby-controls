@@ -6,7 +6,7 @@ import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext
  * Контрол-обертка для связи управления с клавиатуры и подсветки контролов, на который приходит фокус.
  * @extends UI/Base:Control
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 export default class ContextProvider extends Control<IControlOptions> {

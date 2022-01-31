@@ -31,7 +31,7 @@ type ValidResult = boolean|null|Promise<boolean>|string[];
  * @demo Controls-demo/Validate/withTimeout/Index
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /**

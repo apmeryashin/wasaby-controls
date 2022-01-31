@@ -19,7 +19,7 @@ import {IDragObject} from './Container';
  * @extends UI/Base:Control
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -32,7 +32,7 @@ import {IDragObject} from './Container';
  * @extends UI/Base:Control
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 class Controller extends Control<IControlOptions> {
