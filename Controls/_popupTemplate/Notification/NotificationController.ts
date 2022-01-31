@@ -13,6 +13,7 @@ interface INotificationItem extends IPopupItem {
     closeId: number;
     popupOptions: INotificationOptions;
     startPosition: IPopupPosition;
+    container: HTMLElement;
 }
 
 interface INotificationOptions extends IPopupOptions {
@@ -43,6 +44,7 @@ class NotificationController extends BaseController {
     elementCreated(item: INotificationItem, container: HTMLDivElement): boolean {
         item.height = container.offsetHeight;
         item.width = container.offsetWidth;
+        item.container = container;
         this._setNotificationContent(item);
         this._stack.add(item, 0);
         this._calculateDirection(container);
@@ -86,15 +88,6 @@ class NotificationController extends BaseController {
     popupDragStart(item: INotificationItem,
                    container: HTMLElement,
                    offset: IDragOffset): void {
-        // Окна могут быть разной ширины, чтобы окна побольше не выходили за экран, будем делать расчеты по самой
-        // большой ширине
-        let maxWidth = 0;
-        this._stack.each((listItem: INotificationItem) => {
-            if (listItem.width > maxWidth ) {
-                maxWidth = listItem.width;
-            }
-        });
-
         if (!this._startPosition) {
             this._startPosition = {
                 right: this._historyCoords.right,
@@ -104,18 +97,39 @@ class NotificationController extends BaseController {
 
         const horizontalOffset = -offset.x;
         const verticalOffset = -offset.y;
-        let bottomPosition = Math.max(this._startPosition.bottom + verticalOffset, 0);
-        let rightPosition = Math.max(this._startPosition.right + horizontalOffset, 0);
 
-        const windowDimensions = DimensionsMeasurer.getWindowDimensions(container);
-        rightPosition = Math.min(rightPosition, windowDimensions.innerWidth - maxWidth);
-        bottomPosition = Math.min(bottomPosition, windowDimensions.innerHeight - this._stack.at(0).height);
+        const bottomPosition = this._startPosition.bottom + verticalOffset;
+        const rightPosition = this._startPosition.right + horizontalOffset;
 
         this._historyCoords = {
             bottom: bottomPosition,
             right: rightPosition
         };
         this._updatePositions();
+    }
+
+    private _validatePosition(): void {
+        // Окна могут быть разной ширины, чтобы окна побольше не выходили за экран, будем делать расчеты по самой
+        // большой ширине
+        let newBottomPosition = Math.max(this._historyCoords.bottom, 0);
+        let newRightPosition = Math.max(this._historyCoords.right, 0);
+
+        let maxWidth = 0;
+        this._stack.each((listItem: INotificationItem) => {
+            if (listItem.width > maxWidth ) {
+                maxWidth = listItem.width;
+            }
+        });
+
+        const container = this._stack.at(0).container;
+        const windowDimensions = DimensionsMeasurer.getWindowDimensions(container);
+        newRightPosition = Math.min(newRightPosition, windowDimensions.innerWidth - maxWidth);
+        newBottomPosition = Math.min(newBottomPosition, windowDimensions.innerHeight - this._stack.at(0).height);
+
+        this._historyCoords = {
+            bottom: newBottomPosition,
+            right: newRightPosition
+        };
     }
 
     private _calculateDirection(container: HTMLElement): void {
@@ -159,6 +173,7 @@ class NotificationController extends BaseController {
 
     private _updatePositions(): void {
         if (this._stack.getCount()) {
+            this._validatePosition();
             let bottom: number = this._historyCoords.bottom ;
             const right: number = this._historyCoords.right;
 
