@@ -38,6 +38,9 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
     }
 
     getEditorTemplateName(): string {
+        if (this.isNode()) {
+            return null;
+        }
         const itemContents = this.getContents();
         const editorTemplateName = itemContents.get('editorTemplateName');
         const type = itemContents.get('type');
@@ -96,6 +99,10 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         const owner = this.getOwner();
         return `controls-PropertyGrid__editor_spacingTop_${owner.getTopPadding()}
                 controls-PropertyGrid__editor_spacingBottom_${owner.getBottomPadding()}`;
+    }
+
+    isEditable(): boolean {
+        return this.contents.get('isEditable')  && !!(this.getEditorTemplateName() || this.isNode());
     }
 
     getEditorOptions(): object {
