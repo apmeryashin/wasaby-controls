@@ -1,7 +1,7 @@
 /**
  * Интерфейс ответа после валидации.
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
  export default interface IValidateResult {

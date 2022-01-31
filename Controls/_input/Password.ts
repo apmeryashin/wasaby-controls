@@ -21,7 +21,7 @@ export interface IPasswordOptions extends IBaseInputOptions, IMaxLengthOptions {
  * @public
  * @demo Controls-demo/Input/Password/Base/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /**
@@ -43,7 +43,7 @@ export interface IPasswordOptions extends IBaseInputOptions, IMaxLengthOptions {
  * @public
  * @demo Controls-demo/Input/Password/Base/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 class Password extends Base {
     protected _defaultValue: string = '';

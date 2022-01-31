@@ -64,7 +64,7 @@ export interface IToggleButtonOptions extends
  * @implements Controls/interface:ITooltip
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/toggle/Button/ViewModes/Index
  */
@@ -86,7 +86,7 @@ export interface IToggleButtonOptions extends
  * @implements Controls/interface:ITooltip
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/toggle/Button/ViewModes/Index
  */

@@ -17,7 +17,7 @@
  * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
  * @includes switchCircleTemplate Controls/toggle:switchCircleTemplate
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -37,7 +37,7 @@
  * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
  * @includes switchCircleTemplate Controls/toggle:switchCircleTemplate
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 export {default as Button} from './_toggle/Button';

@@ -5,7 +5,7 @@ import {controller as i18Controller} from 'I18n/i18n';
  * Утилита для выполнения транслитерации текста
  * @class Controls/input:transliterate
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /**

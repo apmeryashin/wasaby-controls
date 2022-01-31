@@ -4,14 +4,14 @@
  * @includes ITabsTemplate Controls/_tabs/ITabsTemplate
  * @includes ITabsAdaptiveButtons Controls/_tabs/ITabsAdaptiveButtons
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 /*
  * tabs library
  * @library
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 export {default as Buttons, ITabsTemplate, ITabsTemplateOptions} from 'Controls/_tabs/Buttons';

@@ -4,7 +4,7 @@
  *
  * @interface Controls/_dragnDrop/interface/IResizingBase
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 export interface IResizingBase {
