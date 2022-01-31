@@ -2878,6 +2878,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _notifyPlaceholdersChanged = null;
     _viewSize = null;
     _viewportSize = null;
+    _viewportWidth = null;
     _scrollTop = 0;
     _popupOptions = null;
     protected _listVirtualScrollController: ListVirtualScrollController;
@@ -3293,6 +3294,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
+        this._viewportWidth = viewportRect.width;
 
         this._scrollTop = scrollTop;
         this._listVirtualScrollController.viewportResized(viewportHeight);
