@@ -17,7 +17,7 @@ interface IAreaCutOptions extends IAreaOptions, ICutOptions {}
  * @public
  * @demo Controls-demo/Spoiler/AreaCut/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 class AreaCut extends Cut {

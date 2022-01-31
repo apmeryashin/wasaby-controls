@@ -10,7 +10,7 @@ interface IArgs {
  * Функция проверяет наличие значения в контейнере.
  * @class Controls/_validate/Validators/IsRequired
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @remark
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  *

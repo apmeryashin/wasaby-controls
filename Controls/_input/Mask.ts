@@ -31,7 +31,7 @@ const regExpQuantifiers: RegExp = /\\({.*?}|.)/;
  * @mixes Controls/input:IInputMaskValue
  * @mixes Controls/decorator:IMask
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Input/Masks/Index
  */
 

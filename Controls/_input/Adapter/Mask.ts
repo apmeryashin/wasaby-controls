@@ -16,7 +16,7 @@ import {EventUtils} from 'UI/Events';
  * @public
  * @demo Controls-demo/Input/AdapterMask/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 class Mask extends Control<IControlOptions> {
     protected _notifyHandler = EventUtils.tmplNotify;

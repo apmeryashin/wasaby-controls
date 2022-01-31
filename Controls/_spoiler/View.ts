@@ -31,7 +31,7 @@ export interface IViewOptions extends IHeadingOptions {
  * Интерфейс опций контрола {@link Controls/spoiler:View}.
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IView extends IHeading {
     readonly '[Controls/_spoiler/IView]': boolean;
@@ -51,7 +51,7 @@ export interface IView extends IHeading {
  * @implements Controls/spoiler:IHeading
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Spoiler/View/Index
  */
 class View extends Control<IViewOptions> implements IView {

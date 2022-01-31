@@ -6,7 +6,7 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
       /**
        * @class Controls/_input/Text/ViewModel
        * @private
-       * @author Красильников А.С.
+       * @author Мочалов М.А.
        */
 const _private = {
          updateFormatMaskChars(self, formatMaskChars) {

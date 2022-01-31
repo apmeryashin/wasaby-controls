@@ -14,7 +14,7 @@ export interface IInputDisplayValueOptions {
  *
  * @interface Controls/_input/interface/IInputDisplayValue
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IInputDisplayValue {
     readonly '[Controls/_input/interface/IInputDisplayValue]': boolean;
