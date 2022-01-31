@@ -43,7 +43,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  *
  * @implements Controls/interface:IContrastBackground
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -51,7 +51,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  *
  * @interface Controls/_buttons/interface/IButton
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IButton extends IContrastBackground {
     readonly '[Controls/_buttons/interface/IButton]': boolean;

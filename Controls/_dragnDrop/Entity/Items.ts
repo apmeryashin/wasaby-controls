@@ -10,7 +10,7 @@ interface IItemsOptions {
  * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">здесь</a>.
  * @class Controls/_dragnDrop/Entity/Items
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -19,7 +19,7 @@ interface IItemsOptions {
  * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
  * @class Controls/_dragnDrop/Entity/Items
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export default class Items extends Entity {
     protected _options: IItemsOptions;

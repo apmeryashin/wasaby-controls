@@ -10,7 +10,7 @@ import {INITIALIZING_WAY} from 'Controls/_form/FormController';
  * @interface Controls/form:IFormController
  * @extends Controls/_form/interface/IControllerBase
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 export default interface IFormController extends IControllerBase {

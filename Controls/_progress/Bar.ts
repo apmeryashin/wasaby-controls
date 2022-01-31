@@ -21,7 +21,7 @@ export interface IBarOptions extends IControlOptions {
  *
  * @extends UI/Base:Control
  * @implements Controls/progress:IBar
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  *
  * @public
  *
@@ -33,7 +33,7 @@ export interface IBarOptions extends IControlOptions {
  * Control that renders progress bar
  * @class Controls/_progress:Bar
  * @extends UI/Base:Control
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  *
  * @public
  *

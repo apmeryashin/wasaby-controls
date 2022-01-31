@@ -8,7 +8,7 @@ import 'css!Controls/editableArea';
  * @class Controls/_editableArea/Templates/Buttons
  * @extends UI/Base:Control
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/EditableArea/Buttons/Index
  */
 

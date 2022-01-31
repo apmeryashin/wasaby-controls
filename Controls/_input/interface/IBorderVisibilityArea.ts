@@ -23,7 +23,7 @@ export interface IBorderVisibilityArea {
  * Интерфейс для многострочного поля ввода, которое поддерживают разное количество видимых границ.
  * @interface Controls/_input/interface/IBorderVisibilityArea
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /**
