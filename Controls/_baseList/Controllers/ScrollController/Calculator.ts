@@ -90,7 +90,7 @@ export class Calculator {
     private _scrollPosition: number;
     private _viewportSize: number;
     private _contentSize: number;
-    private _totalCount: number;
+    protected _totalCount: number;
     private _range: IItemsRange = { startIndex: 0, endIndex: 0 };
     private _placeholders: IPlaceholders = { backward: 0, forward: 0 };
     private _activeElementIndex: number;
@@ -556,7 +556,7 @@ export class Calculator {
 
     // endregion HandleCollectionChanges
 
-    private _getRangeChangeResult(oldState: ICalculatorState, shiftDirection: IDirection|null): ICalculatorResult {
+    protected _getRangeChangeResult(oldState: ICalculatorState, shiftDirection: IDirection|null): ICalculatorResult {
         const indexesChanged = oldState.range.startIndex !== this._range.startIndex ||
             oldState.range.endIndex !== this._range.endIndex;
 
@@ -588,7 +588,7 @@ export class Calculator {
         };
     }
 
-    private _getState(): ICalculatorState {
+    protected _getState(): ICalculatorState {
         return {
             range: this._range,
             placeholders: this._placeholders,
