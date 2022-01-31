@@ -4,7 +4,7 @@ import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {RecordSet, List} from 'Types/collection';
 import {ICrudPlus, PrefetchProxy} from 'Types/source';
-import {Collection, CollectionItem, MultiSelectAccessibility, Search} from 'Controls/display';
+import {Collection, CollectionItem, MultiSelectAccessibility, Search, Tree} from 'Controls/display';
 import {getItemParentKey} from 'Controls/_menu/Util';
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
@@ -354,9 +354,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._updateItems(items, this._options);
     }
 
-    private _getSelectionController(): SelectionController {
+    private _getSelectionController(options: IMenuControlOptions): SelectionController {
         if (!this._selectionController) {
-            this._selectionController = this._createSelectionController(this._options);
+            this._selectionController = this._createSelectionController(options);
         }
         return this._selectionController;
     }
@@ -369,7 +369,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _updateSelectionController(newOptions: IMenuControlOptions): void {
-        this._getSelectionController().updateOptions({
+        this._getSelectionController(newOptions).updateOptions({
             ...this._getSelectionControllerOptions(newOptions),
             strategyOptions: this._getSelectionStrategyOptions()
         });
@@ -701,7 +701,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _changeSelection(key: string|number|null): void {
-        const selectionController = this._getSelectionController();
+        const selectionController = this._getSelectionController(this._options);
         const markerController = this._getMarkerController(this._options);
         const markedKey = markerController.getMarkedKey();
         const selectedItem = this._listModel.getItemBySourceKey(markedKey);
@@ -824,7 +824,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         let selectedKeys = [];
 
         if (this._options.multiSelect) {
-            selectedKeys = this._getSelectionController().getSelection().selected;
+            selectedKeys = this._getSelectionController(this._options).getSelection().selected;
         } else {
             selectedKeys = this._options.selectedKeys;
         }
@@ -833,7 +833,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getSelectedItems(): Model[] {
-        const selectedItems = this._getSelectionController().getSelectedItems().map((item) => {
+        const selectedItems = this._getSelectionController(this._options).getSelectedItems().map((item) => {
             return item.getContents();
         }).reverse();
         if (!selectedItems.length) {
@@ -919,7 +919,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         const isSearchModel = options.searchParam && options.searchValue;
         if (isSearchModel) {
-            listModel = new Search({...collectionConfig,
+            listModel = new Search({
+                ...collectionConfig,
                 nodeProperty: options.nodeProperty,
                 parentProperty: options.parentProperty,
                 root: options.root,
@@ -1378,7 +1379,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (item && item.get) {
             const parent = getItemParentKey(options, item);
 
-            isVisible = parent === options.root || MenuControl._isHiddenNode(parent, items, options);
+            isVisible = parent === options.root ||
+                MenuControl._isHiddenNode(parent, items, options);
         }
         return isVisible;
     }

@@ -96,15 +96,22 @@
 .controls-Menu__popup_header_search {
    display: flex;
    align-items: center;
-   margin-right: var(--offset_m);
+   width: 100%;
+   margin-right: var(--offset_2xs);
+}
+
+.controls-Menu__popup_header_searchWrapper {
+   width: 100%;
 }
 
 .controls-Menu__popup_header_search_width_s {
-   width: var(--search_width_s_menuPopup);
+   min-width: var(--search_width_s_menuPopup);
+   max-width: var(--search_width_s_menuPopup);
 }
 
 .controls-Menu__popup_header_search_width_l {
-   width: var(--search_width_l_menuPopup);
+   min-width: var(--search_width_l_menuPopup);
+   max-width: var(--search_width_l_menuPopup);
 }
 
 .controls-MenuButton__popup-header {

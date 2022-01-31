@@ -1,4 +1,5 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import template = require('wml!Controls/_menu/Popup/searchHeaderTemplate');
 import 'css!Controls/menu';
 
@@ -28,9 +29,14 @@ import 'css!Controls/menu';
 
 class SearchHeaderTemplate extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
+    protected _hasValue: boolean;
 
     protected _afterMount(): void {
         this._children.menuSearch.activate();
+    }
+
+    protected _valueChanged(event: SyntheticEvent, value: string): void {
+        this._hasValue = !!value;
     }
 }
 
