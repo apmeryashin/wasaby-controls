@@ -16,6 +16,7 @@ describe('Controls/grid_clean/Display/StickyHeader/ResultsCell/getZIndex', () =>
                 getColumnIndex: () => 0,
                 isStickyHeader: () => true,
                 hasColumnScroll: () => hasColumnsScroll,
+                hasNewColumnScroll: () => false,
                 getMultiSelectVisibility: () => 'hidden',
                 getLeftPadding: () => 's',
                 getRightPadding: () => 's',
