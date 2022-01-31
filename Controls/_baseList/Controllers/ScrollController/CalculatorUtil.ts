@@ -162,7 +162,6 @@ function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): numbe
 function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
     let segmentSize = 0;
     let start = params.currentRange.startIndex;
-    let itemsSizesSum = 0;
     const itemsSizes = params.itemsSizes;
     const backwardPlaceholder = params.placeholders.backward;
     const offsetDistance = params.scrollPosition - params.triggersOffsets.backward;
@@ -175,11 +174,7 @@ function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): numb
     // диапазон [0, 10], добавляют записи в начало, диапазон становится [10,20](смотреть Calculator::addItems)
     // и после этого вызывают смещение диапазона, т.к. текущий диапазон [10,20] мы тут выйдем за пределы списка.
     // В этом кейсе не нужно скрывать записи сверху, т.к. они только были добавлены.
-    while (
-        start < itemsSizes.length &&
-        (itemsSizesSum + itemsSizes[start].size - backwardPlaceholder) < offsetDistance
-    ) {
-        itemsSizesSum += itemsSizes[start].size;
+    while (start < itemsSizes.length && (itemsSizes[start].offset - backwardPlaceholder) < offsetDistance) {
         segmentSize++;
         start++;
     }
