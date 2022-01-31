@@ -551,7 +551,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.displayDrawingIndicator(mockedIndicatorElement, 'top');
             fakeTimer.tick(2001);
             assert.equal(mockedIndicatorElement.style.display, '');
-            assert.equal(mockedIndicatorElement.style.position, 'sticky');
+            assert.equal(mockedIndicatorElement.style.position, 'absolute');
             assert.equal(mockedIndicatorElement.style.top, '0');
         });
 
