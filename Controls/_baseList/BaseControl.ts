@@ -3981,6 +3981,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     }
                 }
 
+                // Если прислали новый рекордсет, то сохраняем позицию скролла
+                if (newOptions.items && newOptions.items !== this._items) {
+                    this._listVirtualScrollController.enableKeepScrollPosition();
+                }
+
                 const isActionsAssigned = this._itemActionsController?.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
                 isItemsResetFromSourceController = true;
