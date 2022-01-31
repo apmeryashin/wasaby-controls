@@ -3029,7 +3029,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.addShowActionsClass(this, newOptions);
 
-        return this._doBeforeMount(newOptions);
+        const result = this._doBeforeMount(newOptions);
+        if (result instanceof Promise) {
+            result.then(() => this._listVirtualScrollController.endBeforeMountListControl());
+        } else {
+            this._listVirtualScrollController.endBeforeMountListControl();
+        }
+        return result;
     }
 
     private _dataLoadCallback(event: EventObject, items: RecordSet, direction: IDirection): Promise<void> | void {
