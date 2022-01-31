@@ -24,7 +24,8 @@ describe('Controls/grid_clean/Display/DataCell', () => {
             isActive: () => true,
             isSticked: () => false,
             hasMultiSelectColumn: () => false,
-            shouldDisplayMarker: () => false
+            shouldDisplayMarker: () => false,
+            _getItemSpacingClasses: () => ''
         };
 
         it('should add background-color class', () => {

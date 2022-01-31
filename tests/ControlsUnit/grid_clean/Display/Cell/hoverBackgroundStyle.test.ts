@@ -32,7 +32,8 @@ describe('Controls/grid/Display/Cell/background/hoverBackgroundStyle', () => {
         isEditing: () => false,
         hasColumnScroll: () => false,
         isMarked: () => false,
-        isSticked: () => false
+        isSticked: () => false,
+        _getItemSpacingClasses: () => ''
     } as undefined as GridRow<Model>;
 
     beforeEach(() => {

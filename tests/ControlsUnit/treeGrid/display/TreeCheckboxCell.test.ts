@@ -30,7 +30,8 @@ describe('Controls/_treeGrid/display/TreeGridNodeExtraItemCell', () => {
             isMarked: () => false,
             shouldDisplayMarker: () => false,
             isDragTargetNode: () => false,
-            isSticked: () => false
+            isSticked: () => false,
+            _getItemSpacingClasses: () => ''
         };
     });
 
