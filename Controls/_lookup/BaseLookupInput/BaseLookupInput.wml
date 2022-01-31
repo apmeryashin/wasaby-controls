@@ -85,7 +85,7 @@
                             fontSize="{{_options.fontSize}}"
                             fontColorStyle="{{_options.fontColorStyle}}"
                             backgroundStyle="{{_options.backgroundStyle}}"
-                            counterAlignment="{{!_options.multiLine ? 'right'}}"
+                            counterAlignment="{{_counterAlignment}}"
                             on:itemClick="_itemClick()"
                             on:crossClick="_crossClick()"
                             on:openInfoBox="_openInfoBox()"

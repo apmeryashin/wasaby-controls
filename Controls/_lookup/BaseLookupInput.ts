@@ -62,6 +62,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     private _subscribedOnResizeEvent: boolean = false;
     protected _horizontalPadding: string;
     protected _maxVisibleItems: number = 0;
+    protected _counterAlignment: string = null;
     protected _listOfDependentOptions: string[] = [];
 
     private _loadSelectorTemplatePromise: Promise<unknown> = null;
@@ -82,6 +83,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         } else {
             this._maxVisibleItems = itemsCount;
         }
+        this._counterAlignment = options.multiLine ? 'left' : 'right';
         this._updateHorizontalPadding(options);
     }
 
@@ -101,6 +103,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         const currentOptions = this._options;
         let isNeedUpdate = !isEqual(newOptions.selectedKeys, this._options.selectedKeys);
         const valueChanged = currentOptions.value !== newOptions.value;
+        const multilineChanged = currentOptions.multiline !== newOptions.multiline;
 
         if (valueChanged) {
             this._setInputValue(newOptions, newOptions.value);
@@ -114,6 +117,10 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
                     isNeedUpdate = true;
                 }
             });
+        }
+
+        if (multilineChanged) {
+            this._counterAlignment = newOptions.multiLine ? 'left' : 'right';
         }
 
         if (isNeedUpdate) {

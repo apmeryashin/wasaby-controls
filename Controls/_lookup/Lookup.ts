@@ -198,7 +198,7 @@ export default class Lookup extends BaseLookupInput {
    }
 
    private _getCounterWidth(itemsCount: number, theme: string, fontSize: string): number {
-      return selectedCollectionUtils.getCounterWidth(itemsCount, theme, fontSize);
+      return selectedCollectionUtils.getCounterWidth(itemsCount, theme, fontSize, this._counterAlignment);
    }
 
    private _getLastSelectedItems(items: SelectedItems, maxVisibleItems: number): Model[] {
