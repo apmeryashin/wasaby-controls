@@ -33,6 +33,7 @@ export default class Demo extends Control<IControlOptions> {
                         placeholder: 'URL',
                         jumpingLabel: true
                     },
+                    editorClass: 'controls-demo-pg-url-editor',
                     type: 'string'
                 },
                 {
