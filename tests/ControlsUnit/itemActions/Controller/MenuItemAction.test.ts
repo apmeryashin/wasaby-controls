@@ -240,7 +240,7 @@ describe('Controls/itemActions/Controller/MenuItemAction', () => {
             const actionsOf1 = collection.getItemBySourceKey(1).getActions();
             assert.isNotNull(actionsOf1, 'actions were not set to item 1');
             assert.isNotTrue(actionsOf1.showed[actionsOf1.showed.length - 1].isMenu, 'should not have menu button');
-            assert.equal(actionsOf1.showed[actionsOf1.showed.length - 1].showType, TItemActionShowType.MENU, 'should be in toolbar');
+            assert.equal(actionsOf1.showed[actionsOf1.showed.length - 1].showType, TItemActionShowType.MENU_TOOLBAR, 'should be in toolbar');
         });
 
         // При наличии contextMenuConfig.headerTemplate надо принудительно
