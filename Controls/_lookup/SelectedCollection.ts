@@ -21,6 +21,7 @@ export interface ISelectedCollectionOptions extends IControlOptions, ILookupOpti
    items: RecordSet;
    maxVisibleItems: number;
    itemTemplate: TemplateFunction;
+   counterAlignment: string;
 }
 
 interface ISelectedCollectionChildren {
@@ -197,7 +198,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
         return {
             itemTemplate: ItemTemplate,
             itemsLayout: 'default',
-            backgroundStyle: 'default'
+            backgroundStyle: 'default',
+            counterAlignment: 'left'
         };
     }
 }
