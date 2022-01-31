@@ -322,6 +322,7 @@ class StickyHeaderController {
             this._updateHeadersFixedPositions(addedHeaders);
             this._updateShadowsVisibility();
         }
+        this._callResizeCallback();
     }
 
     private _changeHeadersStackByHeader(header: StickyBlock, operation: STACK_OPERATION): void {
