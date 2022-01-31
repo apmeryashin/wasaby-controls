@@ -214,7 +214,17 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
             const hasGap = isStickyCell &&
                 array[this.getStickyColumnsCount()] > (array[this.getStickyColumnsCount() - 1] + 1);
 
-            result.push(hasGap ? {} : {className: 'js-controls-Grid__virtualColumnScroll__fake-scrollable-cell-to-recalc-width'});
+            let className = '';
+
+            if (!hasGap) {
+                className += 'js-controls-Grid__virtualColumnScroll__fake-scrollable-cell-to-recalc-width';
+            }
+
+            if (isStickyCell) {
+                className += ' js-controls-Grid__virtualColumnScroll__fake-scrollable-cell-to-recalc-width_fixed';
+            }
+
+            result.push(className ? {className} : {});
         });
 
         if (this.hasMultiSelectColumn()) {
