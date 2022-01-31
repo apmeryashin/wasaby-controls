@@ -293,7 +293,7 @@ export default class IndicatorsController {
             // т.к. браузер занят отрисовкой записей. И если мы вызовем синхронизацию для отрисовки ромашек, то
             // скорее всего эта сихнронизация выполнится уже после того, как отрисовались записи.
             indicatorElement.style.display = '';
-            indicatorElement.style.position = 'sticky';
+            indicatorElement.style.position = 'absolute';
             indicatorElement.style[position] = '0';
         });
     }
