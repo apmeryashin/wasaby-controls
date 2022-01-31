@@ -29,6 +29,7 @@ const source = new RecordSet<IPropertyGridItem>({
         {
             name: 'description',
             caption: 'Описание',
+            isEditable: true,
             editorOptions: {
                 minLines: 3,
                 readOnly: true
@@ -39,28 +40,33 @@ const source = new RecordSet<IPropertyGridItem>({
         },
         {
             name: 'tileView',
+            isEditable: false,
             caption: 'Список плиткой',
             group: 'boolean'
         },
         {
             name: 'showBackgroundImage',
+            isEditable: false,
             caption: 'Показывать изображение',
             group: 'boolean'
         },
         {
             caption: 'URL',
+            isEditable: false,
             name: 'siteUrl',
             group: 'string'
         },
         {
             caption: 'Источник видео',
             name: 'videoSource',
+            isEditable: false,
             validators: [() => true],
             group: 'string'
         },
         {
             caption: 'Тип фона',
             name: 'backgroundType',
+            isEditable: false,
             group: 'enum',
             editorClass: 'controls-demo-pg-enum-editor'
         },
@@ -68,6 +74,7 @@ const source = new RecordSet<IPropertyGridItem>({
             name: 'function',
             caption: '',
             toggleEditorButtonIcon: 'icon-ArrangePreview',
+            isEditable: false,
             type: 'text',
             editorClass: 'controls-demo-pg-text-editor',
             editorOptions: {
@@ -80,6 +87,7 @@ const source = new RecordSet<IPropertyGridItem>({
             name: 'validate',
             caption: '',
             toggleEditorButtonIcon: 'icon-CreateFolder',
+            isEditable: false,
             type: 'text',
             editorClass: 'controls-demo-pg-text-editor',
             editorTemplateName: 'editorTemplate',
@@ -93,6 +101,7 @@ const source = new RecordSet<IPropertyGridItem>({
             name: 'customValidateTemplate',
             caption: '',
             toggleEditorButtonIcon: 'icon-CreateFolder',
+            isEditable: false,
             type: 'text',
             editorClass: 'controls-demo-pg-text-editor',
             validateTemplateName: 'validateTemplate',
@@ -107,6 +116,7 @@ const source = new RecordSet<IPropertyGridItem>({
             name: 'customEditor',
             caption: '',
             toggleEditorButtonIcon: 'icon-CreateFolder',
+            isEditable: false,
             type: 'text',
             editorClass: 'controls-demo-pg-text-editor',
             editorTemplateName: 'editorTemplate',
@@ -127,6 +137,43 @@ const collection = new PropertyGridCollection<Model>({
     root: null
 });
 
+const hierarchySource = new RecordSet<IPropertyGridItem>({
+    rawData: [
+        {
+            name: 'description',
+            caption: 'Описание',
+            isEditable: true,
+            editorOptions: {
+                minLines: 3,
+                readOnly: true
+            },
+            'Раздел@': true,
+            Раздел: null,
+            editorClass: 'controls-demo-pg-text-editor',
+            group: 'text',
+            type: 'text'
+        },
+        {
+            name: 'tileView',
+            isEditable: false,
+            caption: 'Список плиткой',
+            'Раздел@': true,
+            Раздел: null,
+            group: 'boolean'
+        }
+    ],
+    keyProperty: 'name'
+});
+
+const hierarchyCollection = new PropertyGridCollection<Model>({
+    collection: hierarchySource,
+    editingObject,
+    parentProperty: 'Раздел',
+    nodeProperty: 'Раздел@',
+    keyProperty: PROPERTY_NAME_FIELD,
+    root: null
+});
+
 describe('Controls/propertyGrid:CollectionItem', () => {
     describe('getEditorTemplateName', () => {
         it('returns template by type', () => {
@@ -137,6 +184,11 @@ describe('Controls/propertyGrid:CollectionItem', () => {
         it('returns template from editorTemplateName property', () => {
             const template = collection.getItemBySourceKey('customEditor').getEditorTemplateName();
             assert.equal(template, 'editorTemplate');
+        });
+
+        it('node items contains only caption without editor', () => {
+            const node = hierarchyCollection.getItemBySourceKey('tileView');
+            assert.isNull(node.getEditorTemplateName());
         });
     });
 
@@ -200,6 +252,34 @@ describe('Controls/propertyGrid:CollectionItem', () => {
         it('returns padding classes for editor with jumpingLabel', () => {
             const classes = collection.getItemBySourceKey('function').getItemPaddingClasses(2);
             assert.ok(classes.indexOf('controls-PropertyGrid__editor_spacingLeft_default') !== -1);
+        });
+    });
+
+    describe('isEditable', () => {
+        it('editable flat item', () => {
+            const item = collection.getItemBySourceKey('description');
+            assert.isTrue(item.isEditable());
+        });
+
+        it('not editable flat item', () => {
+            const item = collection.getItemBySourceKey('tileView');
+            assert.isFalse(item.isEditable());
+        });
+
+        it('groups is not editable', () => {
+            let isEditable;
+            collection.getViewIterator().each((collectionItem) => {
+                if (collectionItem['[Controls/_display/GroupItem]']) {
+                    isEditable = collectionItem.isEditable();
+                }
+            });
+            assert.isFalse(!!isEditable);
+        });
+
+        it('Node item is editable', () => {
+            const node = hierarchyCollection.getItemBySourceKey('description');
+            assert.isTrue(node.isNode());
+            assert.isTrue(node.isEditable());
         });
     });
 });
