@@ -426,9 +426,10 @@ export class ScrollController {
      * Обрабатывает изменение позиции при скролле.
      * Используется при обычном скролле списка.
      * @param position
+     * @param updateActiveElement Нужно ли обновлять активный эелемент
      */
-    scrollPositionChange(position: number): void {
-        const result = this._calculator.scrollPositionChange(position);
+    scrollPositionChange(position: number, updateActiveElement: boolean): void {
+        const result = this._calculator.scrollPositionChange(position, updateActiveElement);
         this._processActiveElementIndexChanged(result);
         this._observersController.setScrollPosition(position);
     }

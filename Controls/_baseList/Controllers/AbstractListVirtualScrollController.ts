@@ -166,6 +166,16 @@ export abstract class AbstractListVirtualScrollController<
     private _checkTriggersVisibilityTimeout: number;
 
     /**
+     * Стейт используется для отделения внешнего скролла и скролла, который был вызван в служебных целях
+     * самим контроллером. Так, не нужно вычислять активный элемент, после подскролла к записи.
+     * Это нужно из-за того, что подскролл делается так, что целевой эелемент в верху вьюпорта,
+     * а активный элемент не обязятельно.
+     * Можно убрать после https://online.sbis.ru/opendoc.html?guid=075223ea-ed73-4412-9bba-0452cd555736
+     * @private
+     */
+    private _selfScroll: boolean;
+
+    /**
      * Предопределенное направление для восстановления скролла.
      * @remark Используется при подгрузке в узел, т.к. в этом случае обязательно нужно
      * восстанавливать скролл относительно верхней записи. В данном кейсе сделать это через shiftDirection нельзя, т.к.
@@ -366,7 +376,8 @@ export abstract class AbstractListVirtualScrollController<
         }
 
         this._scrollPosition = position;
-        this._scrollController.scrollPositionChange(position);
+        this._scrollController.scrollPositionChange(position, !this._selfScroll);
+        this._selfScroll = false;
     }
 
     enableKeepScrollPosition(): void {
@@ -791,6 +802,7 @@ export abstract class AbstractListVirtualScrollController<
                 case 'restoreScroll':
                     const restoreScrollParams = this._scheduledScrollParams.params as IEdgeItem;
                     const scrollPosition = this._scrollController.getScrollPositionToEdgeItem(restoreScrollParams);
+                    this._selfScroll = true;
                     this._doScrollUtil(scrollPosition);
                     this._scheduledScrollParams = null;
                     break;
@@ -830,6 +842,7 @@ export abstract class AbstractListVirtualScrollController<
         this._inertialScrolling.callAfterScrollStopped(() => {
             const element = this._scrollController.getElement(key);
             if (element) {
+                this._selfScroll = true;
                 const result = this._scrollToElementUtil(element, position, force);
                 if (result instanceof Promise) {
                     result.then(() => this._scrollToElementCompletedCallback());
