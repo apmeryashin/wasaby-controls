@@ -197,7 +197,9 @@ export class ScrollController {
     }
 
     getFirstVisibleItemIndex(): number {
-        return this._calculator.getFirstVisibleItemIndex();
+        const contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        const fixedContentSize = this._itemsSizesController.getFixedContentSizeBeforeItems();
+        return this._calculator.getFirstVisibleItemIndex(contentSizeBeforeItems - fixedContentSize);
     }
 
     setCountItemsRenderedOutsideRange(count: number): void {
@@ -392,11 +394,18 @@ export class ScrollController {
      * @param params
      */
     getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
-        return this._calculator.getEdgeVisibleItem(params);
+        const contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        const fixedContentSize = this._itemsSizesController.getFixedContentSizeBeforeItems();
+        return this._calculator.getEdgeVisibleItem({
+            ...params,
+            correction: contentSizeBeforeItems - fixedContentSize
+        });
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
-        return this._calculator.getScrollPositionToEdgeItem(edgeItem);
+        const contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        const fixedContentSize = this._itemsSizesController.getFixedContentSizeBeforeItems();
+        return this._calculator.getScrollPositionToEdgeItem(edgeItem, contentSizeBeforeItems - fixedContentSize);
     }
 
     /**
@@ -429,7 +438,12 @@ export class ScrollController {
      * @param updateActiveElement Нужно ли обновлять активный эелемент
      */
     scrollPositionChange(position: number, updateActiveElement: boolean): void {
-        const result = this._calculator.scrollPositionChange(position, updateActiveElement);
+        const contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        const fixedContentSize = this._itemsSizesController.getFixedContentSizeBeforeItems();
+        const result = this._calculator.scrollPositionChange(
+            position,
+            contentSizeBeforeItems - fixedContentSize,
+            updateActiveElement);
         this._processActiveElementIndexChanged(result);
         this._observersController.setScrollPosition(position);
     }

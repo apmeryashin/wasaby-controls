@@ -315,9 +315,9 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
     // верхней границы ScrollContainer. Активным является тот, который либо пересек верхнюю
     // границу либо находится вплотную к ней
     if (feature1183225611) {
-        let activeElementIndex;
+        let activeElementIndex = 0;
         for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
-            if (params.itemsSizes[i].offset - placeholders.backward <= fixedScrollPosition) {
+            if (params.itemsSizes[i].offset - placeholders.backward <= scrollPosition) {
                 activeElementIndex = i;
             } else {
                 break;
