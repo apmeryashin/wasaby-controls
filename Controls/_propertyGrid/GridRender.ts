@@ -181,7 +181,7 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
         } else if (item['[Controls/_display/GroupItem]']) {
             this._notify('groupClick', [item, e]);
         } else {
-            this._notify('itemClick', [item.getContents(), e]);
+            this._notify('propertyItemClick', [item.getContents(), e]);
         }
     }
 
