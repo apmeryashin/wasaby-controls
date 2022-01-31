@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {EventUtils} from 'UI/Events';
 import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/List';
 import * as ImageColumn from 'wml!Controls/_filterPanel/Editors/resources/ImageColumn';
 import * as AdditionalColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/AdditionalColumnTemplate';
@@ -176,6 +177,7 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _markedKey: string|number;
     protected _expandedItems: TKey[] = [];
     protected _hiddenItemsCount: number = null;
+    protected _notifyHandler: Function = EventUtils.tmplNotify;
 
     protected _beforeMount(options: IListEditorOptions): void|Promise<RecordSet> {
         const {sourceController} = options;
