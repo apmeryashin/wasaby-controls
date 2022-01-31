@@ -1,6 +1,6 @@
 import {compatibility, constants, detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {TemplateFunction} from 'UI/Base';
+import {TemplateFunction, AsyncIndicatorName} from 'UI/Base';
 import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
 import Observer from './IntersectionObserver/Observer';
 import ShadowsModel from './Container/ShadowsModel';
@@ -283,6 +283,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _scrollHandler(e: SyntheticEvent): void {
+        // в реакте если есть асинхронные дети внутри скролл контейнера
+        // надо дождаться завершения всех асинхронных операций до того как вызывать обработчик скролла
+        if (this.UNSAFE_isReact && this._container.querySelector(`[name="${AsyncIndicatorName}"]`)) {
+            return;
+        }
         super._scrollHandler(e);
         this.initHeaderController();
     }
