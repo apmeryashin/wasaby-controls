@@ -3,7 +3,7 @@ import {TemplateFunction} from 'UI/Base';
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в дополнительном меню {@link Controls/toolbars:View тулбара}.
  * @class Controls/toolbars:ItemTemplate
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @public
  * @see Controls/toolbars:View
  * @see Controls/toolbars

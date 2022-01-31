@@ -21,7 +21,7 @@ interface ITextInputOptions extends IBaseTextInputOptions, IFieldTemplateOptions
  * @public
  * @demo Controls-demo/Input/Text/Base/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export default class Text extends BaseText<ITextInputOptions> {
    static getDefaultTypes(): object {

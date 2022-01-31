@@ -104,7 +104,7 @@ export interface IRenderOptions extends IControlOptions, IHeightOptions, IBorder
  * @mixes Controls/input:IBorderVisibility
  * @implements Controls/interface:IContrastBackground
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @private
  */
 

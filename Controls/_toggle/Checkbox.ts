@@ -62,7 +62,7 @@ const mapBoolState = {true: false, false: true, null: true};
  * @implements Controls/interface:IContrastBackground
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
 
@@ -80,7 +80,7 @@ const mapBoolState = {true: false, false: true, null: true};
  * @implements Controls/interface:IIconSize
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
 class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColorStyle,

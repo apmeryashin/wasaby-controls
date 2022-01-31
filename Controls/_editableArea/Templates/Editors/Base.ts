@@ -26,7 +26,7 @@ interface IBaseOptions extends IFontSizeOptions, IFontWeightOptions, IFontColorS
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IHeight
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @public
  * @see Controls/_editableArea/Templates/Editors/DateTime
  * @demo Controls-demo/EditableArea/ViewContent/Index
