@@ -557,6 +557,7 @@ export default class Cell<
 
         classes += ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
         classes += ` controls-Grid__row-cell_${this.getStyle()}`;
+        classes += ` ${this._$owner._getItemSpacingClasses()}`;
 
         if (!this.isStickied()) {
             classes += ' controls-Grid__row-cell_relative';

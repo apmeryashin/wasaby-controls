@@ -31,7 +31,8 @@ describe('Controls/_grid/display/DataCell', () => {
         isEditing: () => isEditing,
         getEditingConfig: () => ({mode: editingMode}),
         getEditingColumnIndex: () => editingColumnIndex,
-        isSticked: () => false
+        isSticked: () => false,
+        _getItemSpacingClasses: () => ''
     };
 
     describe('shouldDisplayMarker', () => {

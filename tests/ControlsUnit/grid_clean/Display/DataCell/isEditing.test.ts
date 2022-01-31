@@ -22,7 +22,8 @@ describe('Controls/grid_clean/Display/DataCell/isEditing', () => {
             getMultiSelectVisibility: () => 'hidden',
             hasMultiSelectColumn: () => false,
             getFadedClass: () => '',
-            isAnimatedForSelection: () => false
+            isAnimatedForSelection: () => false,
+            _getItemSpacingClasses: () => ''
         };
 
         it('.getContentClasses() for editable', () => {
