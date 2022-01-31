@@ -334,14 +334,15 @@ export class ScrollController {
      * Обрабатывает удаление элементов из коллекции.
      * @param position Индекс первого удаленного элемента.
      * @param count Кол-во удаленных элементов.
+     * @param scrollMode Режим скролла
      */
-    removeItems(position: number, count: number): void {
+    removeItems(position: number, count: number, scrollMode: IScrollMode): void {
         const result = this._calculator.removeItems(position, count);
 
         const itemsSizes = this._itemsSizesController.removeItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        this._processCalculatorResult(result, 'fixed');
+        this._processCalculatorResult(result, scrollMode);
     }
 
     /**

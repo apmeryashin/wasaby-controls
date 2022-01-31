@@ -3575,6 +3575,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return;
         }
 
+        const params = {
+            range: {
+                startIndex: this._listViewModel.getStartIndex(),
+                endIndex: this._listViewModel.getStopIndex()
+            },
+            virtualPageSize: this._options.virtualScrollConfig?.pageSize,
+            scrolledToBackwardEdge: this._scrollTop === 0,
+            scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
+            newItemsIndex,
+            itemsLoadedByTrigger: this._addItemsByLoadToDirection
+        };
+
         switch (action) {
             case IObservable.ACTION_RESET:
                 this._listVirtualScrollController.resetItems();
@@ -3590,17 +3602,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 }
                 break;
             case IObservable.ACTION_ADD:
-                const params = {
-                    range: {
-                        startIndex: this._listViewModel.getStartIndex(),
-                        endIndex: this._listViewModel.getStopIndex()
-                    },
-                    virtualPageSize: this._options.virtualScrollConfig?.pageSize,
-                    scrolledToBackwardEdge: this._scrollTop === 0,
-                    scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
-                    newItemsIndex,
-                    itemsLoadedByTrigger: this._addItemsByLoadToDirection
-                };
                 this._listVirtualScrollController.addItems(
                     newItemsIndex,
                     newItems.length,
@@ -3609,7 +3610,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 );
                 break;
             case IObservable.ACTION_REMOVE:
-                this._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
+                this._listVirtualScrollController.removeItems(
+                    removedItemsIndex,
+                    removedItems.length,
+                    getScrollMode(params)
+                );
                 break;
             case IObservable.ACTION_MOVE:
                 this._listVirtualScrollController.moveItems(
