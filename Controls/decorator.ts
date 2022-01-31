@@ -8,7 +8,7 @@
  * @includes IPhone Controls/_decorator/IPhone
  * @includes IWrapURLs Controls/_decorator/IWrapURLs
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -21,7 +21,7 @@
  * @includes IPhone Controls/_decorator/IPhone
  * @includes IWrapURLs Controls/_decorator/IWrapURLs
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 import * as Formatter from './_decorator/resources/Formatter';

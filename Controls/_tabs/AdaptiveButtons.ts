@@ -44,7 +44,7 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * Интерфейс для опций контрола адаптивных вкладок.
  * @interface Controls/_tabs/ITabsAdaptiveButtons
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /**
@@ -58,7 +58,7 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * @implements Controls/interface:IItems
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Tabs/AdaptiveButtons/Index
  */
 

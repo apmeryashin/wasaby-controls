@@ -23,7 +23,7 @@ export default function({value}: IArgs): boolean | string {
  * Функция проверяет e-mail на валидность.
  * @class Controls/_validate/Validators/IsEmail
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @remark
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  *

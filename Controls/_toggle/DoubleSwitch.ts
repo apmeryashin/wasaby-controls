@@ -33,7 +33,7 @@ const CAPTIONS_LENGTH = 2;
  * @implements Controls/interface:IResetValue
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/toggle/DoubleSwitch/Base/Index
  */
@@ -47,7 +47,7 @@ const CAPTIONS_LENGTH = 2;
  * @implements Controls/interface:ITooltip
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/toggle/DoubleSwitch/Base/Index
  *
