@@ -77,7 +77,7 @@ export interface IBackOptions
  * @implements Controls/heading:IBackOptions
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Heading/Back/SizesAndStyles/Index
  * @demo Controls-demo/Heading/SubCaption/Index
  */

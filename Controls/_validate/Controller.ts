@@ -12,7 +12,7 @@ import IValidateResult from 'Controls/_validate/interfaces/IValidateResult';
  *
  * @public
  * @demo Controls-demo/Input/Validate/FormController
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 class Form extends Control<IControlOptions> {

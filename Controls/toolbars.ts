@@ -4,7 +4,7 @@
  * @includes ItemTemplate Controls/toolbars:ItemTemplate
  * @includes IToolbar Controls/toolbars:IToolbar
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 import ItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');

@@ -74,7 +74,7 @@ const MARKER_ANIMATION_TIMEOUT: number = 100;
  * @mixes Controls/tabs:ITabsTemplate
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Tabs/Buttons
  * @cssModifier controls-Tabs__item-underline Позволяет добавить горизонтальный разделитель к прикладному контенту, чтобы расположить его перед вкладками.
  */

@@ -10,7 +10,7 @@ export interface ISelectionOptions {
  *
  * @interface Controls/_input/interface/ISelection
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface ISelection {
     readonly '[Controls/input/interface:ISelection]': boolean;

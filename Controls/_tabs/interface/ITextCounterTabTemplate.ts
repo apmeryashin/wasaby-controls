@@ -13,7 +13,7 @@
  *       * additionalCaption {String} - Дополнительная подпись вкладки.
  *       * horizontalPadding {String} - Определяет Наличие отступа
  * @class Controls/_tabs/interface/TextCounterTabTemplate
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @example
  * Вкладки с использованием шаблона TextCounterTabTemplate.
  * <pre>

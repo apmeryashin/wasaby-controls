@@ -43,7 +43,7 @@ import 'css!Controls/input';
  *
  * @demo Controls-demo/Input/Area/MinMaxLines/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /**

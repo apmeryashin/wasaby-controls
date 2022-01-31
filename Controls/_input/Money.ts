@@ -29,7 +29,7 @@ interface IMoneyOptions extends IBaseInputOptions, INumberLengthOptions, IOnlyPo
  * @public
  * @demo Controls-demo/Input/Money/Base/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 class Money extends Base<IMoneyOptions> implements INumberLength, IOnlyPositive {

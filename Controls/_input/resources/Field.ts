@@ -44,7 +44,7 @@ export interface IFieldOptions<Value, ModelOptions> extends IControlOptions {
  *
  * @interface Controls/_input/resources/Field
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IField {
     readonly '[Controls/input:IField]': boolean;
@@ -68,7 +68,7 @@ const PROCESSED_KEYS: string[] = [
  *
  * @public
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 class Field<Value, ModelOptions>
     extends Control<IFieldOptions<Value, ModelOptions>>
@@ -301,10 +301,10 @@ class Field<Value, ModelOptions>
     }
 
     //END OF LINE CIRCLE SECTION
-    
+
 
     //BEGIN OF HANDLERS SECTION
-    
+
     protected _inputHandler(event: SyntheticEvent<KeyboardEvent>): void {
         const field = this._getField();
         const model = this._model;
@@ -469,7 +469,7 @@ class Field<Value, ModelOptions>
     }
 
     //END OF HANDLERS SECTION
-    
+
     setValue(value: string): boolean {
         const field: HTMLInputElement = this._getField();
 

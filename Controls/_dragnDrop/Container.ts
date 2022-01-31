@@ -14,7 +14,7 @@ import 'css!Controls/dragnDrop';
 /**
  * @interface Controls/_dragnDrop/Container/IContainerOptions
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 interface IContainerOptions extends IControlOptions {
     resetTextSelection: boolean;
@@ -97,7 +97,7 @@ export interface IDragObject<T = object> {
  * @mixes Controls/_dragnDrop/Container/IContainerOptions
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 class Container extends Control<IContainerOptions> {
     /**

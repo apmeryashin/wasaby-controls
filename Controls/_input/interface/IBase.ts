@@ -53,7 +53,7 @@ export interface IBaseOptions extends IContrastBackgroundOptions, IBorderVisibil
  * @interface Controls/_input/interface/IBase
  * @implements Controls/interface:IContrastBackground
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IBase {
     readonly '[Controls/_input/interface/IBase]': boolean;
