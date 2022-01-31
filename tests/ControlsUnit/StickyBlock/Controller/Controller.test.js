@@ -1210,6 +1210,15 @@ define([
          });
       });
 
+      describe('_headersResizeHandler', () => {
+         it('should call _callResizeCallback if StickyBlock resized', () => {
+            sinon.stub(component, 'resizeHandler');
+            sinon.stub(component, '_callResizeCallback');
+            component._headersResizeHandler([]);
+            sinon.assert.calledOnce(component._callResizeCallback);
+         });
+      });
+
       describe('setShadowVisibility', () => {
          it('should sync update sticky state if there are registered headers ', function() {
             sinon.stub(component, '_updateShadowsVisibility');
