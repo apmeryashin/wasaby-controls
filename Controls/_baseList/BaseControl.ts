@@ -2636,25 +2636,18 @@ const _private = {
         return !!self._editInPlaceController && self._editInPlaceController.isEditing();
     },
 
-    activateEditingRow(self, enableScrollToElement: boolean = self._options.task1184306971 ? 'vertical' : true): void {
+    activateEditingRow(self, enableScrollToElement: 'vertical' | false = 'vertical'): void {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
         // В новом рендере она не нужна
         if (self._children.listView && self._children.listView.activateEditingRow) {
-            // todo Нативный scrollIntoView приводит к прокрутке в том числе и по горизонтали и запретить её никак.
-            // Решением стало отключить прокрутку при видимом горизонтальном скролле.
-            // https://online.sbis.ru/opendoc.html?guid=d07d149e-7eaf-491f-a69a-c87a50596dfe
-            const hasColumnScroll = self._isColumnScrollVisible;
 
             const activator = () => {
-                if (hasColumnScroll && !self._options.task1184306971) {
-                    enableScrollToElement = false;
-                }
                 const rowActivator =
                     self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
                 return rowActivator();
             };
 
-            self._editInPlaceInputHelper.activateInput(activator, hasColumnScroll ? (target) => {
+            self._editInPlaceInputHelper.activateInput(activator, self._isColumnScrollVisible ? (target) => {
                 if (self._children.listView.beforeRowActivated) {
                     self._children.listView.beforeRowActivated(target);
                 }
