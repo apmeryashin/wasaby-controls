@@ -2,7 +2,7 @@
  * Библиотека контролов, которые реализуют содержимое попапа-шторки.
  * @library
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 import 'css!Controls/popupSliding';
 export {default as Controller} from 'Controls/_popupSliding/Controller';

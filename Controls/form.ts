@@ -2,14 +2,14 @@
  * Библиотека контролов для работы с формами.
  * @library
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 /*
  * form library
  * @library
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 export {default as PrimaryAction} from './_form/PrimaryAction';

@@ -6,7 +6,7 @@ import {IResizingBase} from 'Controls/_dragnDrop/interface/IResizingBase';
  *
  * @interface Controls/_dragnDrop/interface/IResizingLine
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 export interface IResizingLine extends IResizingBase {

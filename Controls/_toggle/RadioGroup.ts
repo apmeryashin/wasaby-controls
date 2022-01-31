@@ -45,7 +45,7 @@ export interface IRadioGroupOptions extends IControlOptions,
  * @implements Controls/toggle:IToggleGroup
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/RadioGroup/Base/Index
  */
 
@@ -61,7 +61,7 @@ export interface IRadioGroupOptions extends IControlOptions,
  * @implements Controls/toggle:IToggleGroup
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/RadioGroup/Base/Index
  */
 

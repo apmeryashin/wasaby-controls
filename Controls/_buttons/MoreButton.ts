@@ -31,7 +31,7 @@ export interface IMoreButtonOptions extends IControlOptions, IFontSizeOptions {
  * @implements Controls/buttons:IMoreButtonOptions
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/Buttons/MoreButton/Index
  */

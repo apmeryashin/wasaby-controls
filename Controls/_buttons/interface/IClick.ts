@@ -2,7 +2,7 @@
  * Интерфейс для поддержки клика по элементу.
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -10,7 +10,7 @@
  *
  * @interface Controls/_buttons/interface/IClick
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IClick {
    readonly '[Controls/_buttons/interface/IClick]': boolean;

@@ -8,7 +8,7 @@ export interface INumberLengthOptions {
  *
  * @interface Controls/_input/interface/INumberLength
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface INumberLength {
     readonly '[Controls/_input/interface/INumberLength]': boolean;
