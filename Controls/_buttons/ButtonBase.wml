@@ -8,7 +8,7 @@
         <ws:if data="{{_isSVGIcon}}">
             <svg fill-rule="evenodd" attr:class="controls-Button__icon controls-BaseButton__icon
                         {{_iconSize ? 'controls-icon_size-' + _iconSize : ''}}
-                        {{_iconStyle ? 'controls-icon_style-' + _iconStyle: ''}}">
+                        {{_iconStyle ? 'controls-icon_style-' + _iconStyle: ''}}"tabindex="0">
                 <use xlink:href="{{_icon}}"/>
             </svg>
         </ws:if>
@@ -16,7 +16,7 @@
             <i attr:class="controls-Button__icon controls-BaseButton__icon controls-icon {{_icon}}
                         {{_iconSize ? 'controls-icon_size-' + _iconSize}}
                         {{_iconStyle ? 'controls-icon_style-' + _iconStyle}}
-                        {{(_textAlign === 'left' && _captionPosition === 'left') ? 'controls-Button__icon_position-right'}}"/>
+                        {{(_textAlign === 'left' && _captionPosition === 'left') ? 'controls-Button__icon_position-right'}}" tabindex="0"/>
         </ws:else>
     </ws:if>
         <ws:if data="{{!!_caption}}">
