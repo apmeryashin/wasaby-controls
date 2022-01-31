@@ -7,7 +7,7 @@
  * @includes IStateIndicator Controls/progress:IStateIndicator
  * @includes IRating Controls/progress:IRating
  * @includes IStateBar Controls/progress:IStateBar
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -19,7 +19,7 @@
  * @includes IStateIndicator Controls/progress:IStateIndicator
  * @includes IRating Controls/progress:IRating
  * @includes IStateBar Controls/progress:IStateBar
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 
 export {default as StateIndicator} from './_progress/StateIndicator';

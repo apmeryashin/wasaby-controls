@@ -8,7 +8,7 @@ import {IPasswordOptions} from 'Controls/_input/Password';
  *
  * @private
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 export class ViewModel extends BaseViewModel {

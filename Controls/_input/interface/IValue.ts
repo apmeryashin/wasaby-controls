@@ -1,7 +1,7 @@
 /**
  * Данные, которые возвращаются функцией {@link Controls/_input/interface/IValue#inputCallback inputCallback}.
  * @interface Controls/_input/interface/IFieldData
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @public
  */
 export interface IFieldData {
@@ -18,7 +18,7 @@ export interface IFieldData {
 /**
  * Данные, приходящие в функцию обратного вызова {@link Controls/_input/interface/IValue#inputCallback inputCallback}.
  * @interface Controls/_input/interface/ICallbackData
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @public
  */
 export interface ICallbackData<T> extends IFieldData {
@@ -125,7 +125,7 @@ export interface IValueOptions<T> {
  * Интерфейс управления значением поля ввода.
  *
  * @interface Controls/_input/interface/IValue
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @public
  */
 export interface IValue {

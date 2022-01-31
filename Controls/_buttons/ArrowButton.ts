@@ -18,7 +18,7 @@ export interface IArrowButtonOptions extends IControlOptions, IContrastBackgroun
  * @extends UI/Base:Control
  * @public
  * @implements Controls/interface:IIconSize
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Buttons/ArrowButton/Index
  */
 

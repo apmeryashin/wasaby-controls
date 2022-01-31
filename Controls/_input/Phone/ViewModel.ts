@@ -7,7 +7,7 @@ import {IInputConfig} from 'Controls/_input/Mask/InputProcessor';
 /**
  * @class Controls/_input/Text/ViewModel
  * @private
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 const NOT_PHONE_NUMBER_SYMBOLS_REGEXP = /[^0-9+]/g;
 

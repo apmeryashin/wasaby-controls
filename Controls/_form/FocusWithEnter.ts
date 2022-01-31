@@ -9,7 +9,7 @@ import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext
  * Контроллер, который обрабатывает нажатие клавиши enter и переводит фокус на след. поле ввода.
  * @extends UI/Base:Control
  * @public
- * @author Таранин С.М.
+ * @author Мочалов М.А.
  */
 
 export default class FocusWithEnter extends Control<IControlOptions> {

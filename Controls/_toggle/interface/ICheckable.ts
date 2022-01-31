@@ -7,7 +7,7 @@ export interface ICheckableOptions {
  *
  * @interface Controls/_toggle/interface/ICheckable
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -15,7 +15,7 @@ export interface ICheckableOptions {
  *
  * @interface Controls/_toggle/interface/ICheckable
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface ICheckable {
    readonly '[Controls/_toggle/interface/ICheckable]': boolean;

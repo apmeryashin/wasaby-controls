@@ -19,7 +19,7 @@ import {ITextCounterTabTemplate} from 'Controls/_tabs/interface/ITextCounterTabT
  *                 * tooltip {String} — Значение для тултипа.
  * @class Controls/_tabs/interface/IconCounterTabTemplate
  * @implements Controls/_tabs/interface/TextCounterTabTemplate
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @example
  * Вкладки с использованием шаблона IconCounterTabTemplate.
  * <pre>

@@ -95,7 +95,7 @@ export interface IInputMaskValueOptions {
 /**
  * Интерфейс для ввода текста в поле с маской.
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IInputMaskValue {
     readonly '[Controls/_input/interface/IInputMaskValue]': boolean;
