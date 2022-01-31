@@ -11,6 +11,7 @@
                      multiLine="{{_options.multiLine}}"
                      backgroundStyle="{{_options.backgroundStyle}}"
                      itemsCount="{{_options.items.getCount()}}"
+                     maxVisibleItems="{{_options.maxVisibleItems}}"
                      fontSize="{{_options.fontSize}}"
                      attr:style="{{_counterWidth ? 'width: ' + _counterWidth + 'px;'}}"/>
       </span>

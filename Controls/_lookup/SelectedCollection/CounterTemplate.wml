@@ -1,5 +1,6 @@
 <div class="controls-SelectedCollection__counterItems
             controls-SelectedCollection__counterItems_{{_options.multiLine ? 'multiLine' : 'singleLine'}}
+            {{!_options.multiLine && _options.maxVisibleItems && (itemsCount > _options.maxVisibleItems) ? 'controls-SelectedCollection__counter-visible'}}
             controls-SelectedCollection__counterItems_{{_options.multiLine ? 'multiLine' : 'singleLine'}}_backgroundStyle-{{_options.backgroundStyle}}
             {{!_options.multiLine ? 'controls-background-' + _options.backgroundStyle }}
             controls-SelectedCollection__counterItems-size-{{_options.fontSize || 'default'}}
