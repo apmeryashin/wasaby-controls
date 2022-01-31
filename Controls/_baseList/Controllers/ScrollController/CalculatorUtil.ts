@@ -149,7 +149,8 @@ function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): numbe
     let endIndex = params.currentRange.endIndex - 1;
     const itemsSizes = params.itemsSizes;
     const backwardPlaceholder = params.placeholders.backward;
-    const offsetDistance = params.scrollPosition + params.viewportSize + params.triggersOffsets.forward;
+    const offsetDistance = params.scrollPosition + params.viewportSize +
+        params.triggersOffsets.forward + params.triggersOffsets.backward;
 
     while (itemsSizes[endIndex].offset - backwardPlaceholder > offsetDistance) {
         endIndex--;
