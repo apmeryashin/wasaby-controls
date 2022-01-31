@@ -6,6 +6,7 @@ import {
 } from 'Controls/baseList';
 import {ObserversController, IObserversControllerOptions} from './ObserversController';
 import {ItemsSizeController, IItemsSizesControllerOptions} from './ItemsSizeController';
+import ScrollBar from './scrollBar/ScrollBar';
 import {ColumnsEnumerator} from './displayUtils/ColumnsEnumerator';
 import type {TColumns, GridCollection, THeader} from 'Controls/grid';
 import type {Collection} from 'Controls/display';
@@ -25,6 +26,7 @@ export const HORIZONTAL_LOADING_TRIGGER_SELECTOR = '.controls-BaseControl__loadi
 
 export class Controller extends AbstractListVirtualScrollController<IControllerOptions> {
     protected _collection: Collection & GridCollection;
+    private _scrollBar: ScrollBar;
     private _columns: TColumns;
     private _header?: THeader;
 
@@ -59,6 +61,16 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
 
     protected _applyIndexes(startIndex: number, endIndex: number): void {
         this._collection.getColumnsEnumerator().setIndexes(startIndex, endIndex);
+    }
+
+    scrollPositionChange(position: number): void {
+        super.scrollPositionChange(position);
+        this._scrollBar?.setScrollPosition(position);
+    }
+
+    setScrollBar(scrollBar: ScrollBar): void {
+        this._scrollBar = scrollBar;
+        this._scrollBar.setScrollPosition(this._scrollPosition);
     }
 
     keyDownLeft(): Promise<void> {
