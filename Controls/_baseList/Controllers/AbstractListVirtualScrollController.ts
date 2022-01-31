@@ -64,6 +64,7 @@ export interface IEdgeItemCalculatingParams {
     direction: IDirection;
     range?: IItemsRange;
     placeholders?: IPlaceholders;
+    correction?: number;
 }
 
 export type IScrollParam = number | 'top' | 'bottom' | 'pageUp' | 'pageDown';
@@ -745,7 +746,7 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
-    private _scheduleCheckTriggersVisibility() {
+    private _scheduleCheckTriggersVisibility(): void {
         this._scheduledCheckTriggersVisibility = true;
     }
 
