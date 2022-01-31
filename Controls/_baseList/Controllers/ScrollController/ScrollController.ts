@@ -428,7 +428,9 @@ export class ScrollController {
      * @param position
      */
     scrollPositionChange(position: number): void {
-        const result = this._calculator.scrollPositionChange(position);
+        const contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        const fixedContentSize = this._itemsSizesController.getFixedContentSizeBeforeItems();
+        const result = this._calculator.scrollPositionChange(position, contentSizeBeforeItems - fixedContentSize );
         this._processActiveElementIndexChanged(result);
         this._observersController.setScrollPosition(position);
     }

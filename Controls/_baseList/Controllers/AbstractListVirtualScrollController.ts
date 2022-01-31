@@ -741,7 +741,7 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
-    private _scheduleCheckTriggersVisibility() {
+    private _scheduleCheckTriggersVisibility(): void {
         this._scheduledCheckTriggersVisibility = true;
     }
 

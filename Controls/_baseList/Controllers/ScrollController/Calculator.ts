@@ -399,8 +399,9 @@ export class Calculator {
     /**
      * Изменение позиции скролла. Пересчитывает индекс активного элемента от текущей позиции скролла
      * @param scrollPosition Позиция скролла
+     * @param correction Корректировка для вычисления активного элемента с учетом контента над списком (в т.ч. прилипшего)
      */
-    scrollPositionChange(scrollPosition: number): IActiveElementIndexChanged {
+    scrollPositionChange(scrollPosition: number, correction: number): IActiveElementIndexChanged {
         const oldActiveElementIndex = this._activeElementIndex;
 
         if (this._scrollPosition !== scrollPosition) {
@@ -412,7 +413,7 @@ export class Calculator {
                 itemsSizes: this._itemsSizes,
                 currentRange: this._range,
                 placeholders: this._placeholders,
-                scrollPosition,
+                scrollPosition: scrollPosition - correction,
                 totalCount: this._totalCount,
                 feature1183225611: this._feature1183225611
             });
