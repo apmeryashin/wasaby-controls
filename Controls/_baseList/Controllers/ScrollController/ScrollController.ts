@@ -392,7 +392,12 @@ export class ScrollController {
      * @param params
      */
     getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
-        return this._calculator.getEdgeVisibleItem(params);
+        const contentSizeBeforeItems = this._itemsSizesController.getContentSizeBeforeItems();
+        const fixedContentSize = this._itemsSizesController.getFixedContentSizeBeforeItems();
+        return this._calculator.getEdgeVisibleItem({
+            ...params,
+            correction: contentSizeBeforeItems - fixedContentSize
+        });
     }
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {

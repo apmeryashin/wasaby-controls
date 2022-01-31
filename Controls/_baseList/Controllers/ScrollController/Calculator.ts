@@ -196,7 +196,8 @@ export class Calculator {
 
     private _getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
         const viewportSize = this._viewportSize;
-        const scrollPosition = this._scrollPosition;
+        const correction = params.correction || 0;
+        const scrollPosition = this._scrollPosition - correction;
         const direction = params.direction;
         const range = params.range || this._range;
         const placeholders = params.placeholders || this._placeholders;

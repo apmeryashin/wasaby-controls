@@ -64,6 +64,7 @@ export interface IEdgeItemCalculatingParams {
     direction: IDirection;
     range?: IItemsRange;
     placeholders?: IPlaceholders;
+    correction?: number;
 }
 
 export type IScrollParam = number | 'top' | 'bottom' | 'pageUp' | 'pageDown';
