@@ -154,11 +154,11 @@ export class Calculator {
     /**
      * Возвращает индекс первой полностью видимой записи
      */
-    getFirstVisibleItemIndex(): number {
+    getFirstVisibleItemIndex(correction: number): number {
         return getFirstVisibleItemIndex({
             itemsSizes: this._itemsSizes,
             currentRange: this._range,
-            scrollPosition: this._scrollPosition,
+            scrollPosition: this._scrollPosition - correction,
             placeholders: this._placeholders
         });
     }
@@ -174,13 +174,13 @@ export class Calculator {
         return this._getEdgeVisibleItem(params);
     }
 
-    getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
+    getScrollPositionToEdgeItem(edgeItem: IEdgeItem, correction: number = 0): number {
         let scrollPositionOffset = 0;
 
         const item = this._itemsSizes[edgeItem.index];
         // https://jsfiddle.net/alex111089/oj8bL0mq/ нативная демка про восстановление скролла
         // Вычитаем scrollPosition, чтобы привести координаты в единую систему, до и после отрисовки.
-        const itemOffset = item.offset - this._scrollPosition - this._placeholders.backward;
+        const itemOffset = item.offset - this._scrollPosition - this._placeholders.backward + correction;
         if (edgeItem.direction === 'backward') {
             if (edgeItem.border === 'forward') {
                 scrollPositionOffset = itemOffset + (item.size - edgeItem.borderDistance);
@@ -196,7 +196,8 @@ export class Calculator {
 
     private _getEdgeVisibleItem(params: IEdgeItemCalculatingParams): IEdgeItem {
         const viewportSize = this._viewportSize;
-        const scrollPosition = this._scrollPosition;
+        const correction = params.correction || 0;
+        const scrollPosition = this._scrollPosition - correction;
         const direction = params.direction;
         const range = params.range || this._range;
         const placeholders = params.placeholders || this._placeholders;
@@ -399,9 +400,14 @@ export class Calculator {
     /**
      * Изменение позиции скролла. Пересчитывает индекс активного элемента от текущей позиции скролла
      * @param scrollPosition Позиция скролла
+     * @param correction Корректировка для вычисления активного элемента с учетом контента над списком (в т.ч. прилипшего)
      * @param updateActiveElement Нужно ли обновлять активный эелемент
      */
-    scrollPositionChange(scrollPosition: number, updateActiveElement: boolean): IActiveElementIndexChanged {
+    scrollPositionChange(
+        scrollPosition: number,
+        correction: number,
+        updateActiveElement: boolean
+    ): IActiveElementIndexChanged {
         const oldActiveElementIndex = this._activeElementIndex;
 
         if (this._scrollPosition !== scrollPosition) {
@@ -413,7 +419,7 @@ export class Calculator {
                     itemsSizes: this._itemsSizes,
                     currentRange: this._range,
                     placeholders: this._placeholders,
-                    scrollPosition,
+                    scrollPosition: scrollPosition - correction,
                     totalCount: this._totalCount,
                     feature1183225611: this._feature1183225611
                 });
