@@ -1,7 +1,7 @@
 /**
  * TODO Это копипаста до https://online.sbis.ru/opendoc.html?guid=92d60564-ce8f-4dc3-8faa-6f58e0ab066a.
  *  Надо убрать этот интерфейс, и оставить только в Controls/interfaces
- * @typedef {String} Controls/_interface/TRoundBorderSize
+ * @typedef {String} Controls/_interface/IRoundBorder/TRoundBorderSize
  * @variant null Без скругления.
  * @variant xs Минимальный радиус скругления.
  * @variant s Малый радиус скругления.
@@ -19,22 +19,22 @@ export type TRoundBorderSize = 'null' | 'xs' | 's' | 'm' | 'l' | 'xl' | '3xs' | 
 export interface IRoundBorder {
 
     /**
-     * @name {Controls/_interface/TRoundBorderSize.typedef} tl Левый верхний угол
+     * @name {Controls/_interface/IRoundBorder/TRoundBorderSize.typedef} tl Левый верхний угол
      */
     tl: TRoundBorderSize;
 
     /**
-     * @name {Controls/_interface/TRoundBorderSize.typedef} tr Правый верхний угол.
+     * @name {Controls/_interface/IRoundBorder/TRoundBorderSize.typedef} tr Правый верхний угол.
      */
     tr: TRoundBorderSize;
 
     /**
-     * @name {Controls/_interface/TRoundBorderSize.typedef} bl Левый нижний угол.
+     * @name {Controls/_interface/IRoundBorder/TRoundBorderSize.typedef} bl Левый нижний угол.
      */
     bl: TRoundBorderSize;
 
     /**
-     * @name {Controls/_interface/TRoundBorderSize.typedef} br Правый нижний угол.
+     * @name {Controls/_interface/IRoundBorder/TRoundBorderSize.typedef} br Правый нижний угол.
      */
     br: TRoundBorderSize;
 }

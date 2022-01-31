@@ -1,6 +1,9 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 
+import 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderMultilineDateTime';
+import 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderMultilineName';
+
 import * as Template from 'wml!Controls-demo/gridNew/LadderStickyMultiline/StickyMultiline/StickyMultiline';
 import { MultilineLadder } from 'Controls-demo/gridNew/DemoHelpers/Data/MultilineLadder';
 
