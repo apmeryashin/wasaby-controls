@@ -5435,21 +5435,22 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return this._beginEdit({ item }, { shouldActivateInput, columnIndex });
         };
 
+        // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+        e.stopPropagation();
+
         switch (nativeEvent.keyCode) {
-            case 13: // Enter
+            case constants.key.enter:
                 if (this._getEditingConfig().sequentialEditingMode === 'cell') {
                     return Promise.resolve();
                 } else {
                     return this._editingRowEnterHandler(e);
                 }
-            case 27: // Esc
-                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
-                e.stopPropagation();
+            case constants.key.esc:
                 return this._cancelEdit();
-            case 38: // ArrowUp
+            case constants.key.up:
                 const prev = this._getEditInPlaceController().getPrevEditableItem();
                 return editNext(prev?.contents, EDIT_IN_PLACE_CONSTANTS.GOTOPREV);
-            case 40: // ArrowDown
+            case constants.key.down: // ArrowDown
                 const next = this._getEditInPlaceController().getNextEditableItem();
                 return editNext(next?.contents, EDIT_IN_PLACE_CONSTANTS.GOTONEXT);
         }
