@@ -24,6 +24,11 @@ async function getBaseLookup(options?: Partial<ILookupOptions>, receivedState?: 
     // @ts-ignore
     await lookup._beforeMount(lookupOptions, undefined, receivedState);
     lookup.saveOptions(lookupOptions);
+    lookup._children = {
+        layout: {
+            closeSuggest: () => void 0
+        }
+    };
     return lookup;
 }
 
