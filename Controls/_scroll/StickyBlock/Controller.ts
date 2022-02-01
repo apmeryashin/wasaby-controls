@@ -726,6 +726,11 @@ class StickyHeaderController {
             if (group0 !== null && group1 !== null && group0  === group1) {
                 parentElementOfHeader0 = group0 as HTMLElement;
             }
+
+            // Пройдемся вверх по дереву от второго заголовка, может оказаться что заголовок1 лежит ниже заголовка0.
+            if (parentElementOfHeader0 === document.body) {
+                return this._getGeneralParentNode(header1, header0);
+            }
         }
         return parentElementOfHeader0;
     }
