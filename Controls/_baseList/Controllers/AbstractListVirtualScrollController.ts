@@ -135,6 +135,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
     hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
     feature1183225611: boolean;
+    disableVirtualScroll: boolean;
 }
 
 export abstract class AbstractListVirtualScrollController<
@@ -148,7 +149,7 @@ export abstract class AbstractListVirtualScrollController<
     private _activeElementKey: CrudEntityKey;
     private readonly _itemsContainerUniqueSelector: string;
     private _keepScrollPosition: boolean = false;
-    private _scrollPosition: number;
+    protected _scrollPosition: number;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     protected readonly _doScrollUtil: IDoScrollUtil;
@@ -164,6 +165,16 @@ export abstract class AbstractListVirtualScrollController<
     private _handleChangedIndexesAfterSynchronizationCallback: Function;
 
     private _checkTriggersVisibilityTimeout: number;
+
+    /**
+     * Стейт используется для отделения внешнего скролла и скролла, который был вызван в служебных целях
+     * самим контроллером. Так, не нужно вычислять активный элемент, после подскролла к записи.
+     * Это нужно из-за того, что подскролл делается так, что целевой эелемент в верху вьюпорта,
+     * а активный элемент не обязятельно.
+     * Можно убрать после https://online.sbis.ru/opendoc.html?guid=075223ea-ed73-4412-9bba-0452cd555736
+     * @private
+     */
+    private _selfScroll: boolean;
 
     /**
      * Предопределенное направление для восстановления скролла.
@@ -366,7 +377,8 @@ export abstract class AbstractListVirtualScrollController<
         }
 
         this._scrollPosition = position;
-        this._scrollController.scrollPositionChange(position);
+        this._scrollController.scrollPositionChange(position, !this._selfScroll);
+        this._selfScroll = false;
     }
 
     enableKeepScrollPosition(): void {
@@ -404,14 +416,7 @@ export abstract class AbstractListVirtualScrollController<
     // region CollectionChanges
 
     addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
-        const range = this._scrollController.addItems(position, count, scrollMode, calcMode);
-
-        // Если мы не пересчитываем индексы, то это значит что запись добавлена внутрь диапазона
-        // и она должна собой выместить старые записи из диапазона. В режиме hide нужно применить индексы,
-        // чтобы для новых элементов проставить состояние setRendered, т.к. они внутри диапазона.
-        if (calcMode === 'nothing' && this._virtualScrollMode === 'hide') {
-            this._applyIndexes(range.startIndex, range.endIndex, null);
-        }
+        this._scrollController.addItems(position, count, scrollMode, calcMode);
     }
 
     moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): void {
@@ -423,8 +428,8 @@ export abstract class AbstractListVirtualScrollController<
         );
     }
 
-    removeItems(position: number, count: number): void {
-        this._scrollController.removeItems(position, count);
+    removeItems(position: number, count: number, scrollMode: IScrollMode): void {
+        this._scrollController.removeItems(position, count, scrollMode);
     }
 
     resetItems(): void {
@@ -609,6 +614,7 @@ export abstract class AbstractListVirtualScrollController<
             totalCount: this._collection.getCount(),
             givenItemsSizes: this._getGivenItemsSizes(),
             feature1183225611: options.feature1183225611,
+            disableVirtualScroll: options.disableVirtualScroll,
 
             indexesInitializedCallback: this._indexesInitializedCallback.bind(this),
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
@@ -798,6 +804,7 @@ export abstract class AbstractListVirtualScrollController<
                 case 'restoreScroll':
                     const restoreScrollParams = this._scheduledScrollParams.params as IEdgeItem;
                     const scrollPosition = this._scrollController.getScrollPositionToEdgeItem(restoreScrollParams);
+                    this._selfScroll = true;
                     this._doScrollUtil(scrollPosition);
                     this._scheduledScrollParams = null;
                     break;
@@ -837,11 +844,12 @@ export abstract class AbstractListVirtualScrollController<
         this._inertialScrolling.callAfterScrollStopped(() => {
             const element = this._scrollController.getElement(key);
             if (element) {
+                this._selfScroll = true;
                 const result = this._scrollToElementUtil(element, position, force);
                 if (result instanceof Promise) {
                     result.then(() => this._scrollToElementCompletedCallback());
                 } else {
-                    this._scrollToElementCompletedCallback();
+                    this._scrollToElementCompletedCallback?.();
                 }
             } else {
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +

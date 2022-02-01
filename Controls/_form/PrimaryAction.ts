@@ -7,7 +7,7 @@ import template = require('wml!Controls/_form/PrimaryAction/PrimaryAction');
  * Контроллер, который обрабатывает нажатие комбинации клавиш ctrl+enter (cmd+enter) и запускает событие 'triggered'.
  * @extends UI/Base:Control
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 export default class PrimaryAction extends Control<IControlOptions> {

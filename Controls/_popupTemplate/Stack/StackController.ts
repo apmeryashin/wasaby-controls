@@ -440,7 +440,9 @@ export class StackController extends BaseController {
             if (itemIndex === -1) {
                 this._stack.add(item);
             } else {
-                this._stack.replace(item, itemIndex);
+                // Нельзя заменить сам итем в стэке, иначе он измениться по ссылке
+                const stackItem = this._stack.at(itemIndex);
+                Object.assign(stackItem, item);
             }
             item.position = this._getItemPosition(item);
             if (StackStrategy.isMaximizedPanel(item)) {

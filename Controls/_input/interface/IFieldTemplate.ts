@@ -19,7 +19,7 @@ export interface IFieldTemplateOptions {
 /**
  * Интерфейс для полей ввода, которые поддерживают шаблоны слева и справа от текста.
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IFieldTemplate {
     readonly '[Controls/_input/interface/IFieldTemplate]': boolean;

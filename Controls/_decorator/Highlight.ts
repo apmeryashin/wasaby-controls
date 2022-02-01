@@ -23,8 +23,8 @@ export interface IHighlightOptions extends IControlOptions {
      */
     className: string;
     /**
-     * @name Controls/_decorator/IHighlight#className
-     * @cfg {string} Декорируемый текст.
+     * @name Controls/_decorator/IHighlight#value
+     * @cfg {string | number} Декорируемый текст.
      * @demo Controls-demo/Decorator/Highlight/Value/Index
      */
     value: string | number;

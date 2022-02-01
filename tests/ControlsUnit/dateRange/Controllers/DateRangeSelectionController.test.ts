@@ -114,4 +114,16 @@ describe('Controls/_dateRange/Controllers/DateRangeSelectionController', () => {
             });
         });
     });
+    describe('_itemClickHandler', () => {
+        it('should not start selection if argument is not date', () => {
+            const
+                component: DateRangeSelectionController =
+                    calendarTestUtils.createComponent(DateRangeSelectionController, {selectionType : 'workdays'});
+            const notDate = {};
+            const processSingleSelection = sinon.stub(component, '_processSingleSelection');
+            component._itemClickHandler(null, notDate);
+            sinon.assert.notCalled(processSingleSelection);
+            sinon.restore();
+        });
+    });
 });

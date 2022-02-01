@@ -219,7 +219,7 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, ICo
  * @extends Controls/_toggle/ButtonGroupBase
  * @implements Controls/interface:IContrastBackground
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/Tumbler/Index
  */
 

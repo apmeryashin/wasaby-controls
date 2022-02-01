@@ -9,7 +9,7 @@ export interface ITagOptions {
  *
  * @interface Controls/_input/interface/ITag
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface ITag {
     readonly '[Controls/_input/interface/ITag]': boolean;

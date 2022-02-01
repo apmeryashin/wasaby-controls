@@ -11,6 +11,7 @@ import {
     ITriggerPosition
 } from './ObserverController/AbstractObserversController';
 import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalculatorResult} from './Calculator';
+import CalculatorWithoutVirtualization from 'Controls/_baseList/Controllers/ScrollController/CalculatorWithoutVirtualization';
 import {CrudEntityKey} from 'Types/source';
 import type {IEdgeItemCalculatingParams} from '../AbstractListVirtualScrollController';
 
@@ -93,6 +94,7 @@ export interface IScrollControllerOptions extends
     IAbstractItemsSizesControllerOptions,
     IAbstractObserversControllerBaseOptions,
     ICalculatorBaseOptions {
+    disableVirtualScroll: boolean;
     observerControllerConstructor: new (options: IAbstractObserversControllerOptions) => AbstractObserversController;
     itemsSizeControllerConstructor: new (options: IAbstractItemsSizesControllerOptions) => AbstractItemsSizesController;
     indexesInitializedCallback: IIndexesInitializedCallback;
@@ -152,7 +154,8 @@ export class ScrollController {
             observersCallback: this._observersCallback.bind(this)
         });
 
-        this._calculator = new Calculator({
+        const calculatorConstructor = options.disableVirtualScroll ? CalculatorWithoutVirtualization : Calculator;
+        this._calculator = new calculatorConstructor({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
             scrollPosition: options.scrollPosition,
@@ -301,7 +304,7 @@ export class ScrollController {
      * @param scrollMode Режим скролла
      * @param calcMode Режим пересчета записей
      */
-    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): IItemsRange {
+    addItems(position: number, count: number, scrollMode: IScrollMode, calcMode: ICalcMode): void {
         const itemsSizes = this._itemsSizesController.addItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
@@ -315,7 +318,6 @@ export class ScrollController {
         this._calculator.setTriggerOffsets(triggersOffsets);
 
         this._processCalculatorResult(result, scrollMode);
-        return result.range;
     }
 
     /**
@@ -334,14 +336,15 @@ export class ScrollController {
      * Обрабатывает удаление элементов из коллекции.
      * @param position Индекс первого удаленного элемента.
      * @param count Кол-во удаленных элементов.
+     * @param scrollMode Режим скролла
      */
-    removeItems(position: number, count: number): void {
+    removeItems(position: number, count: number, scrollMode: IScrollMode): void {
         const result = this._calculator.removeItems(position, count);
 
         const itemsSizes = this._itemsSizesController.removeItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        this._processCalculatorResult(result, 'fixed');
+        this._processCalculatorResult(result, scrollMode);
     }
 
     /**
@@ -426,9 +429,10 @@ export class ScrollController {
      * Обрабатывает изменение позиции при скролле.
      * Используется при обычном скролле списка.
      * @param position
+     * @param updateActiveElement Нужно ли обновлять активный эелемент
      */
-    scrollPositionChange(position: number): void {
-        const result = this._calculator.scrollPositionChange(position);
+    scrollPositionChange(position: number, updateActiveElement: boolean): void {
+        const result = this._calculator.scrollPositionChange(position, updateActiveElement);
         this._processActiveElementIndexChanged(result);
         this._observersController.setScrollPosition(position);
     }

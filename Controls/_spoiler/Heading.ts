@@ -58,7 +58,7 @@ export interface IHeadingOptions extends IControlOptions, IExpandableOptions, IF
 /**
  * Интерфейс опций контрола {@link Controls/spoiler:Heading}.
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IHeading extends IExpandable, IFontSize, ITooltip, IFontWeight, IFontColorStyle {
     readonly '[Controls/_spoiler/IHeading]': boolean;
@@ -79,7 +79,7 @@ export interface IHeading extends IExpandable, IFontSize, ITooltip, IFontWeight,
  * @implements Controls/interface:IExpandable
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Spoiler/Heading/Index
  */
 class Heading extends Control<IHeadingOptions> implements IHeading {

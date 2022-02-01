@@ -16,7 +16,7 @@
  * @includes SelectionContainer Controls/_validate/SelectionContainer
  * @includes IValidateResult Controls/_validate/interfaces/IValidateResult
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 import isValidDate from 'Controls/_validate/Validators/IsValidDate';

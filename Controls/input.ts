@@ -8,7 +8,7 @@
  * @includes IBorderVisibility Controls/_input/interface/IBorderVisibility
  * @includes IFieldTemplate Controls/_input/interface/IFieldTemplate
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 // TODO: Устаревшая модель, вместо неё нужно использовать NewBaseViewModel.
@@ -89,7 +89,7 @@ export {__Util};
  * @name Controls/input/InputCallback
  * @cfg {InputCallback} Объект с набором методов для опции {@link Controls/_input/interface/IValue#inputCallback}
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 const InputCallback = {
     hoursFormat,

@@ -85,7 +85,9 @@ export interface IMovableList {
 /**
  * @name Controls/_baseList/interface/IMovableList#moveDialogTemplate
  * @cfg {Controls/list:IMoveDialogTemplate} Параметры диалогового окна выбора целевой записи для перемещения.
- * @demo
+ * @example
+ * <pre class="brush: html; highlight: [6-10]">
+ * <!-- WML -->
  * <Controls.list:View
  *      name="list"
  *      source="{{ _viewSource }}"
@@ -106,5 +108,6 @@ export interface IMovableList {
  *              columns="{{_columns}}"/>
  *      </ws:moveDialogTemplate>
  *  </Controls.list:View>
+ * </pre>
  * @see Controls/moverDialog:Template
  */

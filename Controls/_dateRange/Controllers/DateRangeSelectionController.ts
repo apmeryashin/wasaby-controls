@@ -84,6 +84,10 @@ export default class DateRangeSelectionController extends RangeSelectionControll
     }
 
     protected _itemClickHandler(event: Event, item: Date): void {
+        // Такое же событие может прилететь от списка
+        if (!(item instanceof Date)) {
+            return;
+        }
         if (this._state.selectionType === DateRangeSelectionController.SELECTION_TYPES.workdays) {
             this._processSingleSelection(item);
         }

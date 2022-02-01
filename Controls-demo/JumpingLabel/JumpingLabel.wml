@@ -17,7 +17,7 @@
       </Controls.jumpingLabel:InputContainer>
    </div>
    <div class="controlsDemo__cell">
-      <Controls.jumpingLabel:SelectionContainer attr:class="controlsDemo__input" caption="Enter company name">
+      <Controls.jumpingLabel:SelectionContainer attr:class="controlsDemo__input" attr:data-qa="controlsDemo_JumpingLabel__lookup" caption="Enter company name">
          <Controls.lookup:Input
             source="{{_source}}"
             keyProperty="id"
