@@ -3425,6 +3425,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             virtualScrollConfig: options.virtualScrollConfig || {},
             activeElementKey: options.activeElement,
             initialScrollPosition: options.initialScrollPosition,
+            disableVirtualScroll: options.disableVirtualScroll,
 
             itemsContainer: null,
             listContainer: null,
@@ -3980,6 +3981,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     } else {
                         this._listVirtualScrollController.setBackwardTriggerVisible(true);
                     }
+                }
+
+                // Если прислали новый рекордсет, то сохраняем позицию скролла
+                if (newOptions.items && newOptions.items !== this._items) {
+                    this._listVirtualScrollController.enableKeepScrollPosition();
                 }
 
                 const isActionsAssigned = this._itemActionsController?.isActionsAssigned();

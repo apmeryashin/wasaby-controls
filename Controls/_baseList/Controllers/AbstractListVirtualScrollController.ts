@@ -137,6 +137,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
     hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
 
     feature1183225611: boolean;
+    disableVirtualScroll: boolean;
 }
 
 export abstract class AbstractListVirtualScrollController<
@@ -628,6 +629,7 @@ export abstract class AbstractListVirtualScrollController<
             totalCount: this._collection.getCount(),
             givenItemsSizes: this._getGivenItemsSizes(),
             feature1183225611: options.feature1183225611,
+            disableVirtualScroll: options.disableVirtualScroll,
 
             indexesInitializedCallback: this._indexesInitializedCallback.bind(this),
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
@@ -862,7 +864,7 @@ export abstract class AbstractListVirtualScrollController<
                 if (result instanceof Promise) {
                     result.then(() => this._scrollToElementCompletedCallback());
                 } else {
-                    this._scrollToElementCompletedCallback();
+                    this._scrollToElementCompletedCallback?.();
                 }
             } else {
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
