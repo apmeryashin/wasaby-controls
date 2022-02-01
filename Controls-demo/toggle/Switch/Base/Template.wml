@@ -12,7 +12,17 @@
     </div>
     <div class="controlsDemo__cell demo-switchBase__custom">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">custom caption</div>
-        <Controls.toggle:Switch bind:value="_value3"
-                                caption="{{_caption}}"/>
+        <Controls.toggle:Switch bind:value="_value3">
+            <ws:captionTemplate>
+                <ws:partial template="Controls/toggle:switchCaptionTemplate" scope="{{captionTemplate}}">
+                    <ws:caption>
+                        <span>
+                            <span class="controls-text-secondary">ЕГАИС</span>
+                            <span> - Обмен данными с ЕГАИС по покупке и продаже алкоголя</span>
+                        </span>
+                    </ws:caption>
+                </ws:partial>
+            </ws:captionTemplate>
+        </Controls.toggle:Switch>
     </div>
 </div>
