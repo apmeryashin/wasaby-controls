@@ -73,9 +73,9 @@ function isString(value) {
    }
 
 function isKeyExist(obj: object, find: string = ''): boolean {
-      const keys = Object.keys(obj);
+      const keys = Object.keys(obj).map(key => key.toLowerCase());
       const soughtKey = find.toLowerCase();
-      return keys.includes(soughtKey) ? obj[soughtKey] : false;
+      return keys.includes(soughtKey) ? obj[soughtKey] || obj[find] : false;
    }
 
 function logError(text: string, node?: any[]|string|object) {
