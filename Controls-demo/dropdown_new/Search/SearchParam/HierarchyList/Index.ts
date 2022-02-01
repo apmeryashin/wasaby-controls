@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/dropdown_new/Search/SearchParam/HierarchyList/Index');
 import {Memory} from 'Types/source';
-import SearchMemory from 'Controls-demo/dropdown_new/Search/SearchParam/HierarchyList/SearchMemory';
+import * as ExplorerMemory from 'Controls-demo/Explorer/ExplorerMemory';
 
 class SearchHierarchy extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
@@ -9,7 +9,7 @@ class SearchHierarchy extends Control<IControlOptions> {
     protected _selectedKeys: number[] = ['1'];
 
     protected _beforeMount(): void {
-        this._source = new SearchMemory({
+        this._source = new ExplorerMemory({
             data: [
                 { id: '1', title: 'Task', '@parent': true, parent: null },
                 { id: '2', title: 'Error in the development', '@parent': false, parent: null },

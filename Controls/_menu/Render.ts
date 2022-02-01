@@ -254,9 +254,11 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     private _getLevelPadding(treeItem: TreeItem<Model>): string {
         const item = treeItem.getContents();
-        if (this._options.searchValue) {
-            const level = treeItem.getLevel() - 1;
-            return level > 1 ? `${level}xl` : level === 1 ? 'xl' : '';
+        if (this._options.searchValue && this._options.viewMode === 'search') {
+            const parent = getItemParentKey(this._options, item);
+            if (parent && parent !== this._options.root) {
+                return 'xl';
+            }
         } else if (treeItem.getLevel && treeItem.getLevel() > 1) {
             return 'xl';
         } else if (item instanceof Model) {

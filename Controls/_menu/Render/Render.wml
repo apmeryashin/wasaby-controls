@@ -18,6 +18,7 @@
                itemAlign="{{_options.itemAlign}}"
                historyRoot="{{_options.historyRoot}}"
                width="{{_options.width}}"
+               viewMode="{{_options.searchValue && _options.viewMode === 'list' ? 'list' : 'search'}}"
                scope="{{item.contents['itemTemplateOptions']}}"
                attr:data-target="{{_options.dataName ? _options.dataName + '_item_' + item.contents[_options.keyProperty]}}"
                attr:data-qa="{{item.listElementName}}"

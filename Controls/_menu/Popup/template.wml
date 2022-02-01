@@ -97,6 +97,7 @@
                        emptyText="{{_options.emptyText}}"
                        emptyKey="{{_options.emptyKey}}"
                        searchParam="{{_options.searchParam}}"
+                       viewMode="{{_options.viewMode}}"
                        width="{{_options.width}}"
                        breadCrumbsItemTemplate="{{_options.breadCrumbsItemTemplate}}"
                        multiSelect="{{_options.multiSelect}}"

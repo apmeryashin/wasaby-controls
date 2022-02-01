@@ -254,7 +254,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _isNeedStartOpening(item: CollectionItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): boolean {
         // menu:Control могут положить в пункт меню, от такого пунта открывать подменю не нужно
         // TODO: https://online.sbis.ru/opendoc.html?guid=6fdbc4ca-d19a-46b3-ad68-24fceefa8ed0
-        return item.getContents() instanceof Model && !this._isTouch() &&
+        return !(this._options.viewMode === 'list' && this._options.searchValue) &&
+            item.getContents() instanceof Model && !this._isTouch() &&
             !this._options.isDragging &&
             sourceEvent.target.closest('.controls-menu') === this._container;
     }
@@ -918,7 +919,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         let listModel: Search<Model> | Collection<Model>;
 
         const isSearchModel = options.searchParam && options.searchValue;
-        if (isSearchModel) {
+        if (isSearchModel && options.viewMode === 'search') {
             listModel = new Search({
                 ...collectionConfig,
                 nodeProperty: options.nodeProperty,
@@ -1380,7 +1381,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             const parent = getItemParentKey(options, item);
 
             isVisible = parent === options.root ||
-                MenuControl._isHiddenNode(parent, items, options);
+                MenuControl._isHiddenNode(parent, items, options) || options.searchValue && options.viewMode === 'list';
         }
         return isVisible;
     }

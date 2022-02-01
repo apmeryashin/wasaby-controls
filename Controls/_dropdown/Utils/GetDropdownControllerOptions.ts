@@ -80,6 +80,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         searchDelay: options.searchDelay,
         searchValueTrim: options.searchValueTrim,
         searchPlaceholder: options.searchPlaceholder,
+        viewMode: options.menuViewMode,
         subMenuDirection: options.subMenuDirection,
         dataName: options.menuDataName,
         menuOpenedCallback: options.menuOpenedCallback

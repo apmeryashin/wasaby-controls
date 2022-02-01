@@ -7,7 +7,7 @@
               bind:selectedKeys="_selectedKeys"
               displayProperty="title"
               searchParam="title"
-              searchViewMode="hierarchy"
+              menuViewMode="list"
               parentProperty="parent"
               nodeProperty="@parent"
       />
