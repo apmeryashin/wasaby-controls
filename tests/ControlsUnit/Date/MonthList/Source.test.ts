@@ -335,7 +335,8 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
             const options = {
                 displayedRanges: [
                     [new Date(2018, 0), new Date(2019, 0)]
-                ]
+                ],
+                order: 'asc'
             };
             const source = new MonthsSource(options);
 
@@ -350,15 +351,22 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
         [{
             displayedRanges: [
                 [new Date(2015, 0), new Date(2019, 0)]
-            ]
+            ],
+            order: 'asc'
         }, {
             displayedRanges: [
                 [new Date(2015, 0), new Date(2017, 0)],
                 [new Date(2018, 0), new Date(2019, 0)]
-            ]
+            ],
+            order: 'asc'
+        }, {
+            displayedRanges: [
+                [new Date(2018, 0), null]
+            ],
+            order: 'desc'
         }].forEach((test, index) => {
             it('should return meta data where "before" is true ' + index, () => {
-                const source = new MonthsSource({displayedRanges: test.displayedRanges});
+                const source = new MonthsSource(test);
 
                 const query = (new Query()).where({'id~': monthListUtils.dateToId(new Date(2018, 3))});
 

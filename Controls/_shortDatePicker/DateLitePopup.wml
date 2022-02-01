@@ -104,7 +104,7 @@
          </ws:if>
          <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
             <div class="controls-PeriodLiteDialog__years-next" data-qa="controls-PeriodLiteDialog__years-next">
-               <Controls.buttons:ArrowButton direction="up" attr:title="{[Предыдущий год]}"
+               <Controls.buttons:ArrowButton direction="up" attr:title="{[Следующий год]}"
                                              on:click="_changeYear(1)"
                                              readOnly="{{ _nextArrowButtonReadOnly }}"
                                              attr:class="controls-PeriodLiteDialog__arrowUp"/>
@@ -143,7 +143,7 @@
                </ws:yearTemplate>
             </Controls.calendar:MonthList>
             <div class="controls-PeriodLiteDialog__years-prev" data-qa="controls-PeriodLiteDialog__years-prev">
-               <Controls.buttons:ArrowButton direction="down" attr:title="{[Следующий год]}"
+               <Controls.buttons:ArrowButton direction="down" attr:title="{[Предыдущий год]}"
                                              on:click="_changeYear(-1)"
                                              readOnly="{{ _prevArrowButtonReadOnly }}"
                                              attr:class="controls-PeriodLiteDialog__arrowDown"
