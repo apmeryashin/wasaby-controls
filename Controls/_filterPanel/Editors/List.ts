@@ -56,6 +56,7 @@ export interface IListEditorOptions extends
     sourceController?: SourceController;
     expandedItems?: TKey[];
     itemActions?: IItemAction[];
+    editArrowClickCallback?: Function;
 }
 
 /**
@@ -167,6 +168,11 @@ export interface IListEditorOptions extends
  * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
  * Используется для установки фильтрации по всем доступным значениям для данного параметра.
  * @remark При активации снимает отметку чекбоксами со всех записей в списке
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#editArrowClickCallback
+ * @cfg {Function} Функция обратного вызова, вызывается при клике на "шеврон" элемента.
  */
 
 class ListEditor extends Control<IListEditorOptions> {
@@ -436,6 +442,10 @@ class ListEditor extends Control<IListEditorOptions> {
         if (event.type === 'register' && type === 'selectedTypeChanged') {
             event.stopPropagation();
         }
+    }
+
+    protected _handleEditArrowClick(event: SyntheticEvent, item: Model): void {
+        this._options.editArrowClickCallback(item);
     }
 
     private _getTextValue(selectedKeys: number[]|string[]): string {
