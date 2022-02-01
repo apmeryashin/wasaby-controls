@@ -9,7 +9,7 @@
  *
  * @class Controls/_dragnDrop/Entity
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -18,7 +18,7 @@
     * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
     * @class Controls/_dragnDrop/Entity
     * @public
-    * @author Красильников А.С.
+    * @author Мочалов М.А.
 */
 
 export default class Entity {

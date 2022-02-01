@@ -1,37 +1,40 @@
 <ws:template name="propertyGrid">
     <ws:if data="{{_viewModel.hasBasicItems()}}">
-        <Controls.propertyGrid:PropertyGrid
-                editingObject="{{_viewModel.getEditingObject()}}"
-                typeDescription="{{_viewModel.getBasicFilterItems()}}"
-                collapsedGroups="{{_viewModel.getCollapsedGroups()}}"
-                itemPadding="{{_itemPadding}}"
-                groupProperty="name"
-                on:editingObjectChanged="_editingObjectChanged()"
-                on:groupClick="_groupClick()"
-                attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}
-                              controls-FilterViewPanel__propertyGrid_viewMode-{{_options.viewMode}}">
-            <ws:itemsContainerPadding top="null" left="xl" right="xl" bottom="m"/>
-            <ws:itemTemplate>
-                <ws:partial template="Controls/propertyGrid:ItemTemplate"
-                            attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
+        <div class="controls-FilterViewPanel__horizontal-padding-{{_options.viewMode}}">
+            <Controls.propertyGrid:PropertyGrid
+                    editingObject="{{_viewModel.getEditingObject()}}"
+                    typeDescription="{{_viewModel.getBasicFilterItems()}}"
+                    collapsedGroups="{{_viewModel.getCollapsedGroups()}}"
+                    itemPadding="{{_itemPadding}}"
+                    groupProperty="name"
+                    on:editingObjectChanged="_editingObjectChanged()"
+                    on:groupClick="_groupClick()"
+                    attr:class="controls-FilterViewPanel__propertyGrid">
+                <ws:itemsContainerPadding top="null" left="null" right="xl" bottom="l"/>
+                <ws:itemTemplate>
+                    <ws:partial template="Controls/propertyGrid:ItemTemplate"
+                                attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
                                            controls-FilterViewPanel__propertyGrid_itemTemplate_style-{{_options.style}}"/>
-            </ws:itemTemplate>
-            <ws:groupTemplate>
-                <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate"
-                            scope="{{groupTemplate}}"
-                            viewMode="{{_options.viewMode}}"
-                            resetCaption="{{_resetCaption}}"
-                            style="{{_options.style}}"
-                            groupItems="{{_viewModel.getGroupItems()}}"/>
-            </ws:groupTemplate>
-        </Controls.propertyGrid:PropertyGrid>
+                </ws:itemTemplate>
+                <ws:groupTemplate>
+                    <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate"
+                                scope="{{groupTemplate}}"
+                                editorsViewMode="{{_options.editorsViewMode}}"
+                                resetCaption="{{_resetCaption}}"
+                                style="{{_options.style}}"
+                                groupItems="{{_viewModel.getGroupItems()}}"/>
+                </ws:groupTemplate>
+            </Controls.propertyGrid:PropertyGrid>
+        </div>
     </ws:if>
 </ws:template>
 
 <ws:template name="extendedItems">
     <ws:if data="{{_viewModel.hasExtendedItems()}}">
         <Controls._filterPanel.ExtendedItems viewModel="{{_viewModel}}"
-                                             on:extendedItemsChanged="_handleExtendedItemsChanged()"/>
+                                             viewMode="{{_options.viewMode}}"
+                                             on:extendedItemsChanged="_handleExtendedItemsChanged()"
+                                             attr:class="controls-FilterViewPanel__horizontal-padding-{{_options.viewMode}}"/>
     </ws:if>
 </ws:template>
 
@@ -39,15 +42,22 @@
     <ws:if data="{{_options.historyId}}">
         <Controls._filterPanel.History historyId="{{_options.historyId}}"
                                        source="{{_viewModel.getSource()}}"
-                                       on:historyItemClick="_handleHistoryItemClick()"/>
+                                       on:historyItemClick="_handleHistoryItemClick()"
+                                       attr:class="controls-FilterViewPanel__horizontal-padding-{{_options.viewMode}}"/>
     </ws:if>
 </ws:template>
 
 <div class="controls_filterPanel_theme-{{_options.theme}}
             controls_filter_theme-{{_options.theme}} controls-FilterViewPanel">
     <ws:if data="{{_options.orientation === 'vertical'}}">
-        <Controls.scroll:Container backgroundStyle="{{_options.style || 'default'}}" attr:class="controls-FilterViewPanel__scroll controls-FilterViewPanel__scroll-{{_options.viewMode}}">
+        <Controls.scroll:Container backgroundStyle="{{_options.style || 'default'}}"
+                                   attr:class="controls-FilterViewPanel__scroll
+                                               controls-FilterViewPanel__scroll-{{_options.viewMode}}
+                                               controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}">
             <ws:partial template="propertyGrid"/>
+            <ws:if data="{{_options.viewMode === 'default' && _viewModel.hasExtendedItems()}}">
+                <div class="controls_filterPanel-horizontal__separator"></div>
+            </ws:if>
             <ws:partial template="extendedItems" attr:class="controls-FilterPanelPopup__extendedItems-vertical"/>
             <ws:partial template="historyItems"/>
         </Controls.scroll:Container>
@@ -59,7 +69,7 @@
                 <ws:partial template="extendedItems"/>
             </div>
             <ws:if data="{{_options.historyId}}">
-                <div class="controls_filterPanel-horizontal__separator"></div>
+                <div class="controls_filterPanel-vertical__separator"></div>
             </ws:if>
             <div class="controls_filterPanel-horizontal__column">
                 <ws:partial template="historyItems"/>

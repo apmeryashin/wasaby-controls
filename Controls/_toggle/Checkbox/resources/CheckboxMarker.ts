@@ -17,7 +17,7 @@ export interface ICheckboxMarkerOptions extends IControlOptions {
  * @extends UI/Base:Control
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/CheckboxMarker/Index
  */
 

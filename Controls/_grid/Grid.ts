@@ -6,6 +6,7 @@ import { TemplateFunction } from 'UI/Base';
 import { IOptions as IGridOptions } from './display/mixins/Grid';
 import {Logger} from 'UICommon/Utils';
 import {GridControl} from './GridControl';
+import 'Controls/_baseList/ScrollContextConsumer';
 
 /**
  * Контрол "Таблица" позволяет отображать данные из различных источников в виде таблицы.
@@ -75,11 +76,11 @@ import {GridControl} from './GridControl';
 export default class Grid<TControl extends GridControl = GridControl> extends List<GridControl> {
     protected _viewName: TemplateFunction = null;
     protected _viewTemplate: TControl = GridControl;
-    private _useScrollContextConsumer: boolean = false;
+    private _useScrollContexts: boolean = false;
 
     _beforeMount(options: IGridOptions): Promise<void>|void {
         const superResult = super._beforeMount(options);
-        this._useScrollContextConsumer = !!options.newColumnScroll;
+        this._useScrollContexts = !!options.newColumnScroll;
         this._viewName = isFullGridSupport() ? GridView : GridViewTable;
         return superResult;
     }
@@ -146,4 +147,33 @@ Object.defineProperty(Grid, 'defaultProps', {
  * @name Controls/_grid/Grid#multiSelectPosition
  * @cfg
  * @demo Controls-demo/gridNew/Multiselect/CustomPosition/Index
+ */
+
+/**
+ * @name Controls/_grid/Grid#emptyTemplate
+ * @cfg {TemplateFunction|String} Пользовательский шаблон отображения контрола без элементов.
+ * @demo Controls-demo/gridNew/EmptyGrid/WithHeader/Index
+ * @default undefined
+ * @example
+ * В следующем примере показана настройка шаблона отображения для пустого плоского списка.
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.grid:View source="{{_viewSource}}" columns="{{_columns}}">
+ *     <ws:emptyTemplate>
+ *         <ws:partial template="Controls/grid:EmptyTemplate" topSpacing="xl" bottomSpacing="m">
+ *             <ws:contentTemplate>No data available!</ws:contentTemplate>
+ *         </ws:partial>
+ *     </ws:emptyTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * @remark
+ * Подробнее о настройка контрола без элементов читайте в соответствующих статьях для:
+ *
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/list/empty/ плоского списка}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty/ таблицы}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/empty/ дерева}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/empty/ дерева c колонками}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tile/empty/ плитки}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/empty/ иерархического проводника}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/extends/help-system/pages/ подсказки на пустых страницах}
  */

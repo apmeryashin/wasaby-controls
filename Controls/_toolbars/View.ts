@@ -148,7 +148,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * Интерфейс опций контрола {@link Controls/toolbars:View}.
  * @interface Controls/toolbars:IToolbar
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @implements Controls/interface:IHierarchy
  * @implements Controls/interface:IIconSize
  * @implements Controls/interface/IItemTemplate
@@ -171,7 +171,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * @implements Controls/toolbars:IToolbar
  * @implements Controls/interface:IItems
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Toolbar/Base/Index
  */
 

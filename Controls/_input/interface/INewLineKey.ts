@@ -6,7 +6,7 @@ export interface INewLineKeyOptions {
  * Интерфейс контролов, с вводом многострочного текста и возможностью настроить комбинацию клавиш для перевода каретки на новую строку.
  * @interface Controls/_input/interface/INewLineKey
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface INewLineKey {
     readonly '[Controls/_input/interface/INewLineKey]': boolean;

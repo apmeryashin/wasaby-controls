@@ -31,7 +31,7 @@ export interface ISliderOptions {
  *
  * @interface Controls/_slider/interface/ISlider
  * @public
- * @author Колесова П.C.
+ * @author Мочалов М.А.
  */
 
 export interface ISlider {

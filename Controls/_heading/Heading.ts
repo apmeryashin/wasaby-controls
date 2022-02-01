@@ -42,7 +42,7 @@ export interface IHeadingOptions
  * @implements Controls/interface:IFontWeight
  * @implements Controls/interface:ITextTransform
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
  * @demo Controls-demo/Heading/Group/Index

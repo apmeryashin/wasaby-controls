@@ -28,6 +28,10 @@ export default class PropertyGridGroupItem<T> extends GroupItem<PropertyGridColl
         }
     }
 
+    isEditable(): boolean {
+        return this.EditableItem;
+    }
+
     getUid(): string {
         return `group-${this.getContents()}`;
     }

@@ -23,7 +23,7 @@ export interface ISeparatorOptions extends IControlOptions {
  * @extends UI/Base:Control
  * @implements Controls/interface:ICaption
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/Heading/Separators/Index
  */
@@ -38,7 +38,7 @@ export interface ISeparatorOptions extends IControlOptions {
  * @extends UI/Base:Control
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/Heading/Separators/Index
  */

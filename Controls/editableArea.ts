@@ -7,7 +7,7 @@
  * @includes Buttons Controls/_editableArea/Templates/Buttons
  * @includes IView Controls/_editableArea/interface/IView
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -17,7 +17,7 @@
  * @includes Base Controls/_editableArea/Templates/Editors/Base
  * @includes DateTime Controls/_editableArea/Templates/Editors/DateTime
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 export {default as View} from './_editableArea/View';

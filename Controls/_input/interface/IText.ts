@@ -13,7 +13,7 @@ export interface ITextOptions extends IMaxLengthOptions {
  * @interface Controls/_input/interface/IText
  * @implements Controls/input:IMaxLength
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IText {
     readonly '[Controls/_input/interface/IText]': boolean;

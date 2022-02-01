@@ -7,6 +7,10 @@ import {Record} from 'Types/entity';
 import * as Template from 'wml!Controls-demo/gridNew/Ladder/Sticky/Sticky';
 import * as ResultsTpl from 'wml!Controls-demo/gridNew/Ladder/Sticky/ResultsCell';
 
+import 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderTasksPhoto';
+import 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderTasksDescription';
+import 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderTasksReceived';
+
 import {ListItems} from 'Controls/dragnDrop';
 import {Tasks} from 'Controls-demo/gridNew/DemoHelpers/Data/Tasks';
 
