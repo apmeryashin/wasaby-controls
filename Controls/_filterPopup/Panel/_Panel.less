@@ -78,13 +78,13 @@
 
 //AdditionalParams
 .controls-FilterPanel__AdditionalParams {
-   padding: var(--offset_l) 0 0 var(--offset_l);
+   padding: var(--offset_l) var(--offset_l) 0 var(--offset_l);
    background-color: var(--history_background-color_filterPanel);
 }
 
 //History
 .controls-HistoryList__vertical {
-   padding: var(--offset_m) var(--offset_l);
+   padding: var(--offset_m) var(--offset_l) var(--offset_s);
    background-color: var(--history_background-color_filterPanel);
 }
 
@@ -132,8 +132,8 @@
 }
 
 .controls-FilterButton-popup-orientation-right {
-   margin-top: var(--popup_offset-vertical_filterPanel);
-   margin-left: calc(-1 * (var(--popup_offset-horizontal_filterPanel) + var(--border-thickness_dialog)));
+   margin-top: calc(-1 * ((var(--header-min-height_dialog) - var(--height_filterButton_filterView)) / 2 + var(--border-thickness_dialog)));
+   margin-left: calc(-1 * (var(--offset_xs) + var(--border-thickness_dialog) - (var(--width_filterButton_filterView) - var(--icon-size_2xs)) / 2));
 }
 
 .controls-FilterPanel__DateRange {
