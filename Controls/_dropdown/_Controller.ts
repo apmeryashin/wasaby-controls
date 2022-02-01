@@ -779,7 +779,8 @@ export default class Controller implements IDropdownController {
              (this.target[0] || this.target).offsetWidth :
              undefined,
          hasMoreButton: this._sourceController?.hasMoreData('down'),
-         draggable: this._options.menuDraggable
+         draggable: this._options.menuDraggable,
+         focusable: false
       };
       const config = {
          templateOptions: {...baseConfig, ...templateOptions},

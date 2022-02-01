@@ -1,8 +1,11 @@
-<Controls.scroll:ScrollContextProvider pagingVisible="{{ false }}">
+<Controls.scroll:ScrollContextProvider
+        on:keydown="_handleKeyDown()"
+        pagingVisible="{{ false }}">
    <Controls.dataSource:error.Container viewConfig="{{_errorConfig}}">
       <div class="controls_breadcrumbs_theme-{{_options.theme}} controls_dropdownPopup_theme-{{_options.theme}} controls-menu"
            attr:data-name="{{_options.dataName ? _dataName}}"
-           attr:data-index="{{_options.subMenuLevel}}" attr:ws-no-focus="true">
+           attr:data-index="{{_options.subMenuLevel}}"
+           attr:ws-no-focus="{{!_options.focusable}}">
          <ws:if data="{{_listModel}}">
             <Controls.scroll:Container attr:class="controls-ScrollContainer__flex
                                                 controls-Menu__scroll"
