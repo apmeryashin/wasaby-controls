@@ -1,5 +1,6 @@
 <div class="controls_filterPopup_theme-{{_options.theme}} controls-FilterDropdown">
    <Controls.dropdown:Selector
+           name="selector"
            scope="{{_options}}"
            attr:class="controls-FilterDropdown__content"
            on:selectedKeysChanged="_selectedKeysChangedHandler()"
