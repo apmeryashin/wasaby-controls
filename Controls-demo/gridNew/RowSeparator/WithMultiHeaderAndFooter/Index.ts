@@ -8,13 +8,13 @@ import { MultiHeader } from 'Controls-demo/gridNew/DemoHelpers/Data/MultiHeader'
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: IColumn[] = Countries.getColumnsWithFixedWidths();
+    protected _columns: IColumn[] = Countries.getColumnsWithFixedLargeWidths();
     protected _header: IHeaderCell[] = MultiHeader.getHeader1();
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'key',
-            data: Countries.getData()
+            data: Countries.getData(5)
         });
     }
 
