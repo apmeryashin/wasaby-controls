@@ -3562,8 +3562,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _setMarkedKeyAfterPaging(key: CrudEntityKey): void {
-        if (_private.getMarkerController(this).shouldMoveMarkerOnScrollPaging()) {
-            this._changeMarkedKey(key);
+        const markerController = _private.getMarkerController(this);
+        if (markerController.shouldMoveMarkerOnScrollPaging()) {
+            const record = this._listViewModel.getCollection().getRecordById(key);
+            const item = this._listViewModel.getItemBySourceKey(key);
+            const suitableKey = record
+                ? key
+                : item && markerController.getSuitableMarkedKey(item);
+            this._changeMarkedKey(suitableKey || key);
         }
     }
 

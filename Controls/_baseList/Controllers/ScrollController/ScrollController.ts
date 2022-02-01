@@ -78,6 +78,8 @@ export interface IHasItemsOutRange {
 
 export type IDirection = 'backward' | 'forward';
 
+export type IScrollToPageMode = 'edgeItem' | 'viewport';
+
 export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
 
 export type IActiveElementChangedChangedCallback = (activeElementIndex: number) => void;
@@ -400,6 +402,21 @@ export class ScrollController {
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
         return this._calculator.getScrollPositionToEdgeItem(edgeItem);
+    }
+
+    /**
+     * Возвращает способ скролла к следующей/предыдущей страницы в зависимости от размера крайней записи
+     */
+    getScrollToPageMode(edgeItemIndex: number): IScrollToPageMode {
+        // Если запись меньше трети вьюпорта, то скроллим к ней на pageUp|pageDown, чтобы не разбивать мелкие записи.
+        // Иначе, скроллим как обычно, на высоту вьюпорта
+        const MAX_SCROLL_TO_EDGE_ITEM_RELATION = 3;
+        const itemSize = this._itemsSizesController.getItemsSizes()[edgeItemIndex].size;
+        if (itemSize * MAX_SCROLL_TO_EDGE_ITEM_RELATION > this._viewportSize) {
+            return 'viewport';
+        } else {
+            return 'edgeItem';
+        }
     }
 
     /**
