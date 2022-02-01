@@ -36,6 +36,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     headingCaptionProperty?: string;
     itemsSpacing?: string;
     multiSelectAccessibilityProperty?: string;
+    focusable?: boolean;
 }
 
 /**
