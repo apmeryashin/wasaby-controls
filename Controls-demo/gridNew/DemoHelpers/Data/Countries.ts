@@ -364,6 +364,32 @@ export const Countries = {
             width: '120px'
         }
     ].slice(0, count || undefined),
+    getColumnsWithFixedLargeWidths: (count?: number): IColumn[] => [
+        {
+            displayProperty: 'number',
+            width: '50px'
+        },
+        {
+            displayProperty: 'country',
+            width: '300px'
+        },
+        {
+            displayProperty: 'capital',
+            width: '170px'
+        },
+        {
+            displayProperty: 'population',
+            width: '170px'
+        },
+        {
+            displayProperty: 'square',
+            width: '150px'
+        },
+        {
+            displayProperty: 'populationDensity',
+            width: '120px'
+        }
+    ].slice(0, count || undefined),
     getColumnsWithWidths: (setCompatibleWidths: boolean = true): IColumnRes[] => [
         {
             displayProperty: 'number',
