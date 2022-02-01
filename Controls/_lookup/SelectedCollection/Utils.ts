@@ -5,11 +5,12 @@ import {Model} from 'Types/entity';
 import {ISelectedCollectionOptions} from 'Controls/_lookup/SelectedCollection';
 
 export = {
-    getCounterWidth(itemsCount: number, theme: string, fontSize: string): number {
+    getCounterWidth(itemsCount: number, theme: string, fontSize: string, counterAlignment?: string): number {
         return itemsCount && getWidth(CounterTemplate({
             itemsCount,
             theme,
-            fontSize
+            fontSize,
+            counterAlignment
         }));
     },
 
