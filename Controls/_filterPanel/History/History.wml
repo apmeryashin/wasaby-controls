@@ -31,3 +31,6 @@
       </div>
    </div>
 </ws:if>
+<ws:else>
+   <invisible-node />
+</ws:else>
