@@ -5,6 +5,7 @@
                 <Controls.Container.Async templateName="Controls/toggle:Button">
                     <ws:partial template="{{ content.resolvedTemplate }}"
                                 icons="{{[toggleableItem.get('toggleEditorButtonIcon')]}}"
+                                tooltip="{{toggleableItem.get('toggleEditorButtonTooltip')}}"
                                 fontColorStyle="primary"
                                 viewMode="pushButton"
                                 buttonStyle="secondary"
