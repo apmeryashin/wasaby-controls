@@ -11,6 +11,7 @@ import {
     ITriggerPosition
 } from './ObserverController/AbstractObserversController';
 import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalculatorResult} from './Calculator';
+import CalculatorWithoutVirtualization from 'Controls/_baseList/Controllers/ScrollController/CalculatorWithoutVirtualization';
 import {CrudEntityKey} from 'Types/source';
 import type {IEdgeItemCalculatingParams} from '../AbstractListVirtualScrollController';
 
@@ -93,6 +94,7 @@ export interface IScrollControllerOptions extends
     IAbstractItemsSizesControllerOptions,
     IAbstractObserversControllerBaseOptions,
     ICalculatorBaseOptions {
+    disableVirtualScroll: boolean;
     observerControllerConstructor: new (options: IAbstractObserversControllerOptions) => AbstractObserversController;
     itemsSizeControllerConstructor: new (options: IAbstractItemsSizesControllerOptions) => AbstractItemsSizesController;
     indexesInitializedCallback: IIndexesInitializedCallback;
@@ -152,7 +154,8 @@ export class ScrollController {
             observersCallback: this._observersCallback.bind(this)
         });
 
-        this._calculator = new Calculator({
+        const calculatorConstructor = options.disableVirtualScroll ? CalculatorWithoutVirtualization : Calculator;
+        this._calculator = new calculatorConstructor({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
             scrollPosition: options.scrollPosition,
