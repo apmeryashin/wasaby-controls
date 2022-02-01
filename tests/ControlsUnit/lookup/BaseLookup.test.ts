@@ -24,6 +24,11 @@ async function getBaseLookup(options?: Partial<ILookupOptions>, receivedState?: 
     // @ts-ignore
     await lookup._beforeMount(lookupOptions, undefined, receivedState);
     lookup.saveOptions(lookupOptions);
+    lookup._children = {
+        layout: {
+            closeSuggest: () => void 0
+        }
+    };
     return lookup;
 }
 
@@ -150,25 +155,25 @@ describe('Controls/lookup:Input', () => {
     });
 
     describe('_beforeUpdate', () => {
-        it('selectedKeys changed in new options', () => {
-            it('selectedKeys changed in options', async () => {
-                const lookup = await getBaseLookup({
-                    selectedKeys: [1]
-                });
-                const stub = sinon.stub(lookup, '_notify');
-                let lookupOptions = getLookupOptions();
-                lookupOptions.selectedKeys = ['test'];
-                await lookup._beforeUpdate(lookupOptions);
-                stub.notCalledWith('selectedKeysChanged');
-                stub.calledOnceWith('itemsChanged');
+        it('selectedKeys changed in new options', async () => {
+            const sandbox = sinon.createSandbox();
+            let lookupOptions = {
+                ...getLookupOptions(),
+                selectedKeys: [1]
+            };
+            const lookup = await getBaseLookup(lookupOptions);
+            const spy = sandbox.spy(lookup, '_notify');
 
-                lookupOptions = {...lookupOptions};
-                lookupOptions.selectedKeys = [];
-                stub.reset();
-                await lookup._beforeUpdate(lookupOptions);
-                stub.notCalledWith('selectedKeysChanged');
-                stub.calledOnceWith('itemsChanged');
-            });
+            lookupOptions = {...lookupOptions};
+            lookupOptions.selectedKeys = [2];
+            await lookup._beforeUpdate(lookupOptions);
+            assert.ok(spy.withArgs('itemsChanged').calledOnce);
+
+            lookupOptions = {...lookupOptions};
+            lookupOptions.selectedKeys = [];
+            spy.resetHistory();
+            await lookup._beforeUpdate(lookupOptions);
+            assert.ok(spy.withArgs('itemsChanged').calledOnce);
         });
     });
 
