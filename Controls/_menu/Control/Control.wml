@@ -5,7 +5,6 @@
       <div class="controls_breadcrumbs_theme-{{_options.theme}} controls_dropdownPopup_theme-{{_options.theme}} controls-menu"
            attr:data-name="{{_options.dataName ? _dataName}}"
            attr:data-index="{{_options.subMenuLevel}}"
-           attr:ws-autofocus="{{_options.focusable}}"
            attr:ws-no-focus="{{!_options.focusable}}">
          <ws:if data="{{_listModel}}">
             <Controls.scroll:Container attr:class="controls-ScrollContainer__flex

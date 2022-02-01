@@ -79,6 +79,7 @@
                        name="menuControl"
                        focusable="{{_options.focusable}}"
                        attr:class="controls-Menu__popup-list"
+                       attr:ws-autofocus="{{_options.focusable}}"
                        isDragging="{{_options.isDragging}}"
                        dropdownClassName="{{_options.dropdownClassName}}"
                        selectorOpenCallback="{{_options.selectorOpenCallback}}"
