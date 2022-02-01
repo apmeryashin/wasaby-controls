@@ -847,7 +847,7 @@ export abstract class AbstractListVirtualScrollController<
                 if (result instanceof Promise) {
                     result.then(() => this._scrollToElementCompletedCallback());
                 } else {
-                    this._scrollToElementCompletedCallback();
+                    this._scrollToElementCompletedCallback?.();
                 }
             } else {
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
