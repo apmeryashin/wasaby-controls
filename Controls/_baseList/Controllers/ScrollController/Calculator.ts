@@ -91,7 +91,7 @@ export class Calculator {
     private _viewportSize: number;
     private _contentSize: number;
     protected _totalCount: number;
-    private _range: IItemsRange = { startIndex: 0, endIndex: 0 };
+    protected _range: IItemsRange = { startIndex: 0, endIndex: 0 };
     private _placeholders: IPlaceholders = { backward: 0, forward: 0 };
     private _activeElementIndex: number;
 
@@ -471,7 +471,7 @@ export class Calculator {
         return this._getRangeChangeResult(oldState, direction);
     }
 
-    private _calcAddDirection(position: number, count: number): IDirection {
+    protected _calcAddDirection(position: number, count: number): IDirection {
         // Если изначально не было элементов, то direction === 'forward'
         if (this._totalCount === count) {
             return 'forward';

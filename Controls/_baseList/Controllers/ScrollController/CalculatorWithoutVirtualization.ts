@@ -17,12 +17,13 @@ export default class CalculatorWithoutVirtualization extends Calculator {
     addItems(position: number, count: number, calcMode: ICalcMode): ICalculatorResult {
         const oldState = this._getState();
         this.resetItems(this._totalCount + count, 0);
-        return this._getRangeChangeResult(oldState, null);
+        return this._getRangeChangeResult(oldState, this._calcAddDirection(position, count));
     }
 
     removeItems(position: number, count: number): ICalculatorResult {
+        const direction = position <= this._range.startIndex ? 'backward' : 'forward';
         const oldState = this._getState();
         this.resetItems(this._totalCount - count, 0);
-        return this._getRangeChangeResult(oldState, null);
+        return this._getRangeChangeResult(oldState, direction);
     }
 }
