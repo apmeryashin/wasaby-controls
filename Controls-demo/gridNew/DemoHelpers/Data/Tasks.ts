@@ -159,6 +159,20 @@ export const Tasks = {
             width: '100px'
         }
     ],
+    getDefaultColumnsLargeWidths: (): IColumn[] => [
+        {
+            displayProperty: 'key',
+            width: '50px'
+        },
+        {
+            displayProperty: 'state',
+            width: '300px'
+        },
+        {
+            displayProperty: 'date',
+            width: '200px'
+        }
+    ],
     getDefaultWithEditingColumns: (): IColumn[] => [
         {
             displayProperty: 'key',

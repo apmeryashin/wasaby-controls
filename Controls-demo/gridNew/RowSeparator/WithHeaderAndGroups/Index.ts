@@ -7,7 +7,7 @@ import { Tasks } from 'Controls-demo/gridNew/DemoHelpers/Data/Tasks';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: IColumn[] = Tasks.getDefaultColumns();
+    protected _columns: IColumn[] = Tasks.getDefaultColumnsLargeWidths();
     protected _header: IHeaderCell[] = Tasks.getHeader();
 
     protected _beforeMount(): void {
