@@ -28,7 +28,7 @@
                                 {{_options.markerStyle !== 'primary' ? 'controls-EditorList_secondaryFilter'}}"
                     on:itemClick="_handleItemClick()"
                     on:register="_registerHandler()"
-                    on:editArrowClick="_notifyHandler('editArrowClick')"
+                    on:editArrowClick="_handleEditArrowClick()"
                     markedKey="{{_markedKey}}"
                     selectedKeys="{{_selectedKeys}}">
             <ws:itemTemplate>

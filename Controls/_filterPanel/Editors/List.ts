@@ -1,6 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {EventUtils} from 'UI/Events';
 import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/List';
 import * as ImageColumn from 'wml!Controls/_filterPanel/Editors/resources/ImageColumn';
 import * as AdditionalColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/AdditionalColumnTemplate';
@@ -56,6 +55,7 @@ export interface IListEditorOptions extends
     resetValue?: number[]|string[];
     sourceController?: SourceController;
     expandedItems?: TKey[];
+    editArrowClickCallback?: Function;
 }
 
 /**
@@ -161,6 +161,11 @@ export interface IListEditorOptions extends
  * @remark При активации снимает отметку чекбоксами со всех записей в списке
  */
 
+/**
+ * @name Controls/_filterPanel/Editors/List#editArrowClickCallback
+ * @cfg {Function} Функция обратного вызова, вызывается при клике на "шеврон" элемента.
+ */
+
 class ListEditor extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = ListTemplate;
     protected _columns: object[] = null;
@@ -177,7 +182,6 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _markedKey: string|number;
     protected _expandedItems: TKey[] = [];
     protected _hiddenItemsCount: number = null;
-    protected _notifyHandler: Function = EventUtils.tmplNotify;
 
     protected _beforeMount(options: IListEditorOptions): void|Promise<RecordSet> {
         const {sourceController} = options;
@@ -429,6 +433,10 @@ class ListEditor extends Control<IListEditorOptions> {
         if (event.type === 'register' && type === 'selectedTypeChanged') {
             event.stopPropagation();
         }
+    }
+
+    protected _handleEditArrowClick(event: SyntheticEvent, item: Model): void {
+        this._options.editArrowClickCallback(item);
     }
 
     private _getTextValue(selectedKeys: number[]|string[]): string {
