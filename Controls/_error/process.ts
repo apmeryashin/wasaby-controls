@@ -80,7 +80,7 @@ export interface IProcessOptions {
  * @example
  * <pre class="brush: js">
  * // TypeScript
- * import {process} from 'Controls/error';;
+ * import {process} from 'Controls/error';
  *
  * // Функция вызывает БЛ через Types/source:SbisService, возвращает результат метода call().
  * declare callMethod(): Promise<object>;
