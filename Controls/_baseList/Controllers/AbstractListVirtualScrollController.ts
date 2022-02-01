@@ -41,6 +41,7 @@ import {
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
 import { TVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll';
+import type { IInitialScrollPosition } from 'Controls/scroll';
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
@@ -110,6 +111,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
 
     virtualScrollConfig: IVirtualScrollConfig;
     activeElementKey: CrudEntityKey;
+    initialScrollPosition: IInitialScrollPosition;
 
     listContainer: HTMLElement;
     itemsContainer: HTMLElement;
@@ -147,6 +149,7 @@ export abstract class AbstractListVirtualScrollController<
     private _itemSizeProperty: string;
     private _virtualScrollMode: TVirtualScrollMode;
     private _activeElementKey: CrudEntityKey;
+    private _initialScrollPosition: IInitialScrollPosition;
     private readonly _itemsContainerUniqueSelector: string;
     private _keepScrollPosition: boolean = false;
     protected _scrollPosition: number;
@@ -217,6 +220,7 @@ export abstract class AbstractListVirtualScrollController<
     constructor(options: TOptions) {
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
         this._virtualScrollMode = options.virtualScrollConfig.mode;
+        this._initialScrollPosition = options.initialScrollPosition;
         this.setActiveElementKey(options.activeElementKey);
         this._itemsContainerUniqueSelector = options.itemsContainerUniqueSelector;
 
@@ -263,6 +267,17 @@ export abstract class AbstractListVirtualScrollController<
             if (activeElementIndex !== 0) {
                 this.scrollToItem(this._activeElementKey, 'top', true);
             }
+        }
+
+        // Если изначальная позиция ScrollContainer-а была задана end,
+        // то contentSizeBeforeItems будет посчитан неправильно.
+        // Поэтому планируем обновление размеров элементов на момент,
+        // когда ScrollContainer уже будет отрисован правильно и размеры будут считаться правильно.
+        if (this._initialScrollPosition?.vertical === 'end' || this._initialScrollPosition?.horizontal === 'end') {
+            this._scheduleUpdateItemsSizes({
+                startIndex: this._collection.getStartIndex(),
+                endIndex: this._collection.getStopIndex()
+            });
         }
     }
 
