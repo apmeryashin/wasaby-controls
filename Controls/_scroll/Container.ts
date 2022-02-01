@@ -1,6 +1,7 @@
 import {compatibility, constants, detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TemplateFunction} from 'UI/Base';
+import {AsyncIndicatorName} from 'UICore/Base';
 import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
 import Observer from './IntersectionObserver/Observer';
 import ShadowsModel from './Container/ShadowsModel';
@@ -108,6 +109,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     private _containerLoadedResolve: Function;
     private _containerLoaded: Promise<void> | boolean;
+
+    // в реакте надо откладывать обработчик нативного скрола до завершения маунта всех асинхронных детей
+    private _$ReactDelayScrollEvent = null;
 
     get containerLoaded(): Promise<void> | boolean {
         return this._containerLoaded;
@@ -231,6 +235,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _afterUpdate() {
+        if (this._$ReactDelayScrollEvent) {
+            this._scrollHandler(this._$ReactDelayScrollEvent);
+            this._$ReactDelayScrollEvent = null;
+        }
         super._afterUpdate(...arguments);
         this._stickyHeaderController.updateContainer(this._children.content);
     }
@@ -283,6 +291,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _scrollHandler(e: SyntheticEvent): void {
+        // в реакте если есть асинхронные дети внутри скролл контейнера
+        // надо дождаться завершения всех асинхронных операций до того как вызывать обработчик скролла
+        if (this.UNSAFE_isReact && this._container.querySelector(`[name="${AsyncIndicatorName}"]`)) {
+            this._$ReactDelayScrollEvent = e;
+            return;
+        }
         super._scrollHandler(e);
         this.initHeaderController();
     }
