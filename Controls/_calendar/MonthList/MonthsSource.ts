@@ -75,7 +75,7 @@ export default class MonthsSource extends Memory {
             // Проверяем, что месяц непоследний отображаемый, иначе нужно указать в items, что сверху данных больше нет.
             // Заголовок - это отдельный элемент, поэтому если он есть - месяц не является последним элементом.
             const monthBefore = new Date(month.getFullYear(), month.getMonth() - 1);
-            if (!this._isDisplayed(monthBefore) && !this._hasHeader) {
+            if (this._order === 'asc' && !this._isDisplayed(monthBefore) && !this._hasHeader) {
                 const hiddenPeriod = this._getHiddenPeriod(monthBefore);
                 if (hiddenPeriod[0] === null) {
                     before = false;
