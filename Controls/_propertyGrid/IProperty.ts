@@ -276,6 +276,32 @@ export default interface IProperty {
      */
     toggleEditorButtonIcon?: string;
     /**
+     * @cfg {String} Задаёт подсказку для кнопки скрытия/отображения редактора.
+     * @example
+     * <pre class="brush: js; highlight: [13]">
+     * // JavaScript
+     * _beforeMount() {
+     *    this._editingObject = {
+     *       description: 'This is http://mysite.com'
+     *    };
+     *
+     *    this._source = [
+     *       {
+     *          name: 'description',
+     *          caption: 'Описание',
+     *          type: 'text',
+     *          toggleEditorButtonIcon: 'icon-done',
+     *          toggleEditorButtonTooltip: 'Описание'
+     *       }
+     *    ]
+     * }
+     * </pre>
+     * @see toggledEditors
+     * @see toggleEditorButtonIcon
+     * @demo Controls-demo/PropertyGridNew/Source/ToggleEditorButtonIcon/Index
+     */
+    toggleEditorButtonTooltip?: string;
+    /**
      * @typedef {String} TValidateTemplate
      * @description Шаблоны для валидации значения.
      * @variant Controls/validate:SelectionContainer
