@@ -454,7 +454,10 @@ export abstract class AbstractListVirtualScrollController<
         // смотри комментарий в beforeRenderListControl
         // Не нужно сбрасывать скролл, если список не был проскроллен.
         // Т.к. из-за вызова скролла сжимается графическая шапка.
-        this._shouldResetScrollPosition = !this._keepScrollPosition && !!this._scrollPosition;
+        // Не нужно сбрасывать скролл, если будем скроллить к активному элементу.
+        this._shouldResetScrollPosition = !this._keepScrollPosition
+            && !!this._scrollPosition
+            && !this._activeElementKey;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
         const activeIndex = this._activeElementKey ? this._collection.getIndexByKey(this._activeElementKey) : 0;
