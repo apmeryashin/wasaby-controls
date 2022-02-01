@@ -33,7 +33,7 @@ export function applyRenderedItems(collection: IVirtualScrollHideCollection): vo
     const renderedStart = VirtualScroll.getStartIndex(collection);
     const renderedStop = VirtualScroll.getStopIndex(collection);
     for (let i = renderedStart; i < renderedStop; i++) {
-        collection.at(i).setRendered(true);
+        collection.at(i)?.setRendered(true);
     }
 }
 
