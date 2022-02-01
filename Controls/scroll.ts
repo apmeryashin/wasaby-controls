@@ -32,7 +32,7 @@ import IntersectionObserverContainer from 'Controls/_scroll/IntersectionObserver
 import EdgeIntersectionObserver from 'Controls/_scroll/IntersectionObserver/EdgeIntersectionObserver';
 import EdgeIntersectionObserverContainer from 'Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer';
 import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObserver/SyntheticEntry';
-import _ContainerBase from 'Controls/_scroll/ContainerBase';
+import _ContainerBase, { IInitialScrollPosition } from 'Controls/_scroll/ContainerBase';
 import VirtualScrollContainer from 'Controls/_scroll/VirtualScrollContainer';
 import {SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
 
@@ -61,5 +61,6 @@ export {
    VirtualScrollContainer,
    _ContainerBase,
    SHADOW_VISIBILITY,
-   IFixedEventData
+   IFixedEventData,
+   IInitialScrollPosition
 };
