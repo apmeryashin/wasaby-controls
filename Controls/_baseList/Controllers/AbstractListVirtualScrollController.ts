@@ -203,7 +203,7 @@ export abstract class AbstractListVirtualScrollController<
      * По этому колбэку резолвится промис, который возвращается из метода scrollToItem
      * @private
      */
-    private _scrollToElementCompletedCallback: () => void;
+    private _scrollCompletedCallback: () => void;
 
     /**
      * Колбэк, который вызывается, когда завершился подскролл.
@@ -378,6 +378,9 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollPosition = position;
         this._scrollController.scrollPositionChange(position, !this._selfScroll);
         this._selfScroll = false;
+        if (this._scrollCompletedCallback) {
+            this._scrollCompletedCallback();
+        }
     }
 
     enableKeepScrollPosition(): void {
@@ -474,7 +477,7 @@ export abstract class AbstractListVirtualScrollController<
             return Promise.resolve();
         }
 
-        const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
+        const promise = new Promise<void>((resolver) => this._scrollCompletedCallback = resolver);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
         if (rangeChanged || this._scheduledScrollParams || this._renderNewIndexes) {
             this._scheduleScroll({
@@ -496,21 +499,17 @@ export abstract class AbstractListVirtualScrollController<
      * @private
      */
     scrollToPage(direction: IDirection): Promise<CrudEntityKey> {
-        this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
-        return Promise.resolve(this._getFirstVisibleItemKey());
-
-        // TODO SCROLL по идее нужно скролить к EdgeItem, чтобы не терялся контекст.
-        //  Но нужно сперва завести новый скролл на текущих тестах.
-        /*const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
-        // TODO SCROLL юниты
-        if (!edgeItem) {
-            return Promise.resolve(null);
+        const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
+        if (edgeItem && this._scrollController.getScrollToPageMode(edgeItem.index) === 'edgeItem') {
+            const item = this._collection.at(edgeItem.index);
+            const itemKey = item.getContents().getKey();
+            const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
+            return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());
+        } else {
+            const promise = new Promise<void>((resolver) => this._scrollCompletedCallback = resolver);
+            this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
+            return promise.then(() => this._getFirstVisibleItemKey());
         }
-
-        const item = this._collection.at(edgeItem.index);
-        const itemKey = item.getContents().getKey();
-        const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
-        return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());*/
     }
 
     /**
@@ -845,9 +844,9 @@ export abstract class AbstractListVirtualScrollController<
                 this._selfScroll = true;
                 const result = this._scrollToElementUtil(element, position, force);
                 if (result instanceof Promise) {
-                    result.then(() => this._scrollToElementCompletedCallback());
+                    result.then(() => this._scrollCompletedCallback());
                 } else {
-                    this._scrollToElementCompletedCallback();
+                    this._scrollCompletedCallback();
                 }
             } else {
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +
