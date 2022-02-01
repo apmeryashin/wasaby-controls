@@ -22,7 +22,7 @@ import {Entity} from 'Controls/dragnDrop';
 import {Logger} from 'UICommon/Utils';
 import 'css!Controls/scroll';
 
-interface IInitialScrollPosition {
+export interface IInitialScrollPosition {
     vertical: SCROLL_POSITION.START | SCROLL_POSITION.END;
     horizontal: SCROLL_POSITION.START | SCROLL_POSITION.END;
 }
