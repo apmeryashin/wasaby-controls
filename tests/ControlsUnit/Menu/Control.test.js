@@ -360,51 +360,6 @@ define(
             assert.equal(leftSpacing, 's');
          });
 
-         it('_getRightPadding', function() {
-            let menuRender = getMenu();
-            let menuOptions = {
-               itemPadding: {},
-               nodeProperty: 'node'
-            };
-            const items = new collection.RecordSet({
-               rawData: defaultItems,
-               keyProperty: 'key'
-            });
-
-            let rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 's');
-
-            items.at(0).set('node', true);
-            rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 's');
-
-            menuOptions.itemPadding.right = 'xs';
-            rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 'xs');
-
-            menuOptions.itemPadding.right = null;
-            menuOptions.multiSelect = true;
-            rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 's');
-
-            menuOptions.itemPadding.right = 'menu-close';
-            menuOptions.multiSelect = true;
-            rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 'menu-close-multiSelect');
-
-            menuOptions.itemPadding.right = 'menu-close';
-            menuOptions.itemAlign = 'left';
-            menuOptions.multiSelect = false;
-            rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 'menu-close');
-
-            menuOptions.itemPadding.right = null;
-            menuOptions.itemAlign = 'left';
-            menuOptions.multiSelect = true;
-            rightSpacing = menuRender._getRightPadding(menuOptions, items);
-            assert.equal(rightSpacing, 's');
-         });
-
          describe('_addEmptyItem', function() {
             let menuRender, menuOptions, items;
             beforeEach(function() {
@@ -1343,7 +1298,7 @@ define(
                const data = { container: 'subMenu' };
                menuControl._subDropdownItem = {isFirstItem: () => false};
                menuControl._subMenuResult('click', 'menuOpened', data);
-               assert.deepEqual(menuControl._subMenu, data);
+               assert.deepEqual(menuControl._subMenu, data.container);
             });
             it('pinClick event', function() {
                menuControl._subMenuResult('click', 'pinClick', { item: 'item1' });

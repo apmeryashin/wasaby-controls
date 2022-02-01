@@ -22,7 +22,7 @@ import {Entity} from 'Controls/dragnDrop';
 import {Logger} from 'UICommon/Utils';
 import 'css!Controls/scroll';
 
-interface IInitialScrollPosition {
+export interface IInitialScrollPosition {
     vertical: SCROLL_POSITION.START | SCROLL_POSITION.END;
     horizontal: SCROLL_POSITION.START | SCROLL_POSITION.END;
 }
@@ -886,7 +886,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         } else {
             const headersHeight = getHeadersHeight(this._container, 'top', 'allFixed') || 0;
             const clientHeight = this._scrollModel.clientHeight - headersHeight;
-            const scrollHeight = this._scrollModel.scrollHeight;
+            const scrollHeight = this._scrollModel.scrollHeight + (this._isVirtualPlaceholderMode() ?
+                this._topPlaceholderSize :
+                0);
             const currentScrollTop = this._scrollModel.scrollTop + (this._isVirtualPlaceholderMode() ?
                 this._topPlaceholderSize :
                 0);

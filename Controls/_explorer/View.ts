@@ -53,12 +53,23 @@ const ITEM_TYPES = {
 };
 const DEFAULT_VIEW_MODE = 'table';
 
+// Тип, описывающий возможные внутренние значения viewMode
+type TInnerViewMode = TExplorerViewMode | 'columns';
+
 const VIEW_NAMES = {
     search: SearchView,
     tile: null,
     table: TreeGridView,
     list: ListView,
     columns: null
+};
+
+const ITEMS_SELECTOR: {[k in TInnerViewMode]: string} = {
+    columns: null,
+    list: '.controls-ListView__itemV',
+    tile: '.controls-ListView__itemV',
+    table: '.controls-ListView__itemV',
+    search: '.controls-ListView__itemV'
 };
 
 const MARKER_STRATEGY = {
@@ -1047,6 +1058,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         this._markerStrategy = MARKER_STRATEGY[resolvedViewMode];
         this._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[resolvedViewMode];
         this._itemContainerGetter = ITEM_GETTER[resolvedViewMode];
+        this._itemsSelector = ITEMS_SELECTOR[resolvedViewMode];
     }
 
     private _setViewModeSync(viewMode: TExplorerViewMode, cfg: IExplorerOptions): void {
@@ -1197,6 +1209,7 @@ export default class Explorer extends Control<IExplorerOptions> {
             VIEW_TABLE_NAMES.columns = columns.ViewTemplate;
             ITEM_GETTER.columns = columns.ItemContainerGetter;
             VIEW_MODEL_CONSTRUCTORS.columns = 'Controls/columns:ColumnsCollection';
+            ITEMS_SELECTOR.columns = columns.ViewTemplate.itemsSelector;
         });
     }
 
@@ -1375,7 +1388,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
@@ -1412,7 +1425,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/list:IList
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
@@ -1590,4 +1603,13 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @name Controls/_explorer/View#arrowClick
  * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка скрыта.
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/**
+ * @name Controls/_explorer/View#itemPadding
+ * @cfg {Controls/_tile/interface/ITile/TileItemPadding.typedef|Controls/_interface/IItemPadding/ItemPadding.typedef} Отступы элементов.
+ * @description
+ * Поведение реестра при настройке этой опции зависит от {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/view-mode/ режима отображения}.
+ * В режиме плитки эта опция повлияет на отступы между записями и принимает объект {@link Controls/_tile/interface/ITile/TileItemPadding.typedef TileItemPadding}.
+ * В прочих режимах эта опция повлияет на отступы внутри записи и принимает объект {@link Controls/_interface/IItemPadding/ItemPadding.typedef ItemPadding}.
  */

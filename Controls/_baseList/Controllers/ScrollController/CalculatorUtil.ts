@@ -114,7 +114,9 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
             endIndex = Math.min(pageSize, totalCount);
         }
 
-        if (calcMode === 'shift') {
+        // При добавлении в пустой список у нас получится диапазон [1, 1].
+        // Поэтому нужно принудительно в этом случае пересчитать startIndex.
+        if (calcMode === 'shift' || startIndex === endIndex) {
             startIndex = Math.min(startIndex + segmentSizeToHide, Math.max(endIndex - pageSize, 0));
         }
     }
@@ -315,7 +317,7 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
     if (feature1183225611) {
         let activeElementIndex;
         for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
-            if (params.itemsSizes[i].offset <= fixedScrollPosition) {
+            if (params.itemsSizes[i].offset - placeholders.backward <= fixedScrollPosition) {
                 activeElementIndex = i;
             } else {
                 break;

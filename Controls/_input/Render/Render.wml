@@ -25,6 +25,7 @@
                   on:focusout="_setContentActive(false)"
                   attr:data-qa="controls-Render__field"
                   attr:class="controls-Render__field controls-Render__field_textAlign_{{_options.textAlign}}
+                                 {{!_options.multiline ? 'ws-ellipsis'}}
                                 {{_isFieldZIndex ? 'controls-Render__field_zIndex'}}
                                 {{!_options.footerTemplate && _options.minLines > 1 ? 'controls-Render__fullHeight'}}">
          <ws:placeholderTemplate>

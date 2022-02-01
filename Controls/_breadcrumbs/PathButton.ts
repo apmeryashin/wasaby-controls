@@ -17,7 +17,7 @@ import * as template from 'wml!Controls/_breadcrumbs/PathButton/PathButton';
  * @implements Controls/interface:ISource
  * @implements Controls/interface:IHierarchy
  * @implements Controls/interface:IFilter
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  *
  * @ignoreOptions dataLoadCallback
  * @ignoreOptions dataLoadErrback

@@ -39,7 +39,7 @@ interface IRatingOptions extends IControlOptions {
  * @class Controls/progress:Rating
  * @extends UI/Base:Control
  * @implements Controls/progress:IRating
- * @author Нигматуллина Л.Э.
+ * @author Мочалов М.А.
  * @public
  *
  * @demo Controls-demo/progress/Rating/Base/Index
@@ -50,7 +50,7 @@ interface IRatingOptions extends IControlOptions {
  * Render highlighted stars depending on the rating
  * @class Controls/progress:Rating
  * @extends UI/Base:Control
- * @author Nigmatullina L.E.
+ * @author Мочалов М.А.
  * @public
  *
  * @demo Controls-demo/progress/Rating/Index
@@ -193,7 +193,7 @@ Object.defineProperty(Rating, 'defaultProps', {
  * @variant dynamic звезды закрашиваются в зависимости от количества заполненных
  * @see iconSize
  * @see iconPadding
- * @demo Controls-demo/progress/Rating/iconColorMode/Index
+ * @demo Controls-demo/progress/Rating/IconColorMode/Index
  */
 
 /**

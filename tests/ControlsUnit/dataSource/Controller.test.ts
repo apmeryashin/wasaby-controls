@@ -328,6 +328,9 @@ describe('Controls/dataSource:SourceController', () => {
 
             await controller.load(null, 0);
             ok(controller.getItems().getCount() === 2);
+
+            await controller.load('down');
+            ok(controller.getItems().getCount() === 3);
         });
 
         it('load with multiNavigation',  async () => {
@@ -624,6 +627,10 @@ describe('Controls/dataSource:SourceController', () => {
             controllerOptions = {...controllerOptions};
             controllerOptions.sorting = {testField: 'ASC'};
             ok(controller.updateOptions(controllerOptions));
+
+            controllerOptions = {...controllerOptions};
+            delete controllerOptions.sorting;
+            ok(!controller.updateOptions(controllerOptions));
         });
 
         it('updateOptions with new filter',  async () => {

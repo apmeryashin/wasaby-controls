@@ -21,6 +21,7 @@ export interface ISelectedCollectionOptions extends IControlOptions, ILookupOpti
    items: RecordSet;
    maxVisibleItems: number;
    itemTemplate: TemplateFunction;
+   counterAlignment: string;
 }
 
 interface ISelectedCollectionChildren {
@@ -59,6 +60,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _counterTemplate: TemplateFunction = CounterTemplate;
    protected _children: ISelectedCollectionChildren;
    protected _stickyOpener: StickyOpener = null;
+   protected _needShowCounter: boolean = false;
 
    protected _beforeMount(options: ISelectedCollectionOptions): void {
       this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
@@ -68,9 +70,15 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
    protected _beforeUpdate(newOptions: ISelectedCollectionOptions): void {
       const itemsCount: number = newOptions.items.getCount();
+      const currentVisibleItems = this._visibleItems;
       this._visibleItems = selectedCollectionUtils.getVisibleItems(newOptions);
 
-      if (this._isShowCounter(itemsCount, newOptions.multiLine, newOptions.maxVisibleItems)) {
+      if (this._visibleItems.length !== currentVisibleItems.length
+          || this._options.multiLine !== newOptions.multiLine ||
+          this._options.maxVisibleItems !== newOptions.maxVisibleItems) {
+         this._needShowCounter = this._isShowCounter(itemsCount, newOptions.multiLine, newOptions.maxVisibleItems);
+      }
+      if (this._needShowCounter) {
          this._counterWidth = newOptions._counterWidth ||
                               this._getCounterWidth(itemsCount, newOptions);
       } else {
@@ -80,9 +88,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
    protected _afterMount(): void {
       const itemsCount: number = this._options.items.getCount();
-
-      if (this._isShowCounter(itemsCount,
-                              this._options.multiLine, this._options.maxVisibleItems) && !this._counterWidth) {
+      this._needShowCounter = this._isShowCounter(itemsCount, this._options.multiLine, this._options.maxVisibleItems);
+      if (this._needShowCounter && !this._counterWidth) {
          this._counterWidth = this._counterWidth ||
                               this._getCounterWidth(itemsCount, this._options);
          if (this._counterWidth) {
@@ -165,14 +172,15 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
                             {
                                readOnly,
                                itemsLayout,
-                               fontSize
+                               fontSize,
+                               counterAlignment
                             }: ISelectedCollectionOptions): number {
       // in mode read only and single line, counter does not affect the collection
       if (readOnly && itemsLayout === 'oneRow') {
          return 0;
       }
 
-      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme, fontSize);
+      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme, fontSize, counterAlignment);
    }
 
    private _isShowCounter(itemsCount: number, multiline: boolean, maxVisibleItems?: number): boolean {
@@ -191,7 +199,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
         return {
             itemTemplate: ItemTemplate,
             itemsLayout: 'default',
-            backgroundStyle: 'default'
+            backgroundStyle: 'default',
+            counterAlignment: 'left'
         };
     }
 }

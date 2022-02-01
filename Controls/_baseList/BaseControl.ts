@@ -1070,16 +1070,16 @@ const _private = {
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
 
+        // если есть Еще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
+        const hasMoreData = {
+            up: self._hasMoreData('up'),
+            down: self._hasMoreData('down')
+        };
+
         // если мы для списка раз вычислили, что нужен пэйджинг, то возвращаем этот статус
         // это нужно для ситуации, если первая пачка данных вернула естьЕще (в этом случае пэйджинг нужен)
         // а вторая вернула мало записей и суммарный объем менее двух вьюпортов, пэйджинг не должен исчезнуть
         if (self._sourceController) {
-
-            // если есть Еще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
-            const hasMoreData = {
-                up: self._hasMoreData('up'),
-                down: self._hasMoreData('down')
-            };
 
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
@@ -1093,9 +1093,6 @@ const _private = {
                 self._cachedPagingState = true;
             } else if (hasMoreData.up || hasMoreData.down) {
                 self._recalcPagingVisible = true;
-            }
-            if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, hasMoreData);
             }
         }
 
@@ -1136,6 +1133,9 @@ const _private = {
             result = true;
         }
 
+        if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
+            _private.createScrollPagingController(self, hasMoreData);
+        }
         return result;
     },
 
@@ -1481,9 +1481,6 @@ const _private = {
             // и выполнять обработку selection для всех удалённых записей.
             if (action === IObservable.ACTION_REMOVE) {
                 self._removedItems.push(...removedItems);
-                if (self._removedItemsIndex === null) {
-                    self._removedItemsIndex = removedItemsIndex;
-                }
             }
 
             // Тут вызывается nextVersion на коллекции, и это приводит к вызову итератора.
@@ -2309,7 +2306,7 @@ const _private = {
         }
 
         const editingConfig = self._listViewModel.getEditingConfig();
-        const isActionsAssigned = self._listViewModel.isActionsAssigned();
+        const isActionsAssigned = itemActionsController.isActionsAssigned();
         let editArrowAction: IItemAction;
         if (options.showEditArrow) {
             editArrowAction = {
@@ -2368,7 +2365,7 @@ const _private = {
         if (
             self._listViewModel &&
             self._options.itemActionsVisibility !== 'visible' &&
-            !self._listViewModel.isActionsAssigned()
+            !self._itemActionsController?.isActionsAssigned()
         ) {
             _private.updateItemActions(self, options);
         }
@@ -2381,7 +2378,7 @@ const _private = {
      * @private
      */
     updateInitializedItemActions(self, options: any): void {
-        if (self._listViewModel && self._listViewModel.isActionsAssigned()) {
+        if (self._listViewModel && self._itemActionsController?.isActionsAssigned()) {
             _private.updateItemActions(self, options);
         }
     },
@@ -2391,7 +2388,7 @@ const _private = {
      * @param self
      */
     closeSwipe(self): void {
-        if (!self._listViewModel?.destroyed && self._listViewModel?.isActionsAssigned()) {
+        if (!self._listViewModel?.destroyed && self._itemActionsController?.isActionsAssigned()) {
             _private.getItemActionsController(self, self._options).deactivateSwipe();
         }
     },
@@ -2881,6 +2878,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _notifyPlaceholdersChanged = null;
     _viewSize = null;
     _viewportSize = null;
+    _viewportWidth = null;
     _scrollTop = 0;
     _popupOptions = null;
     protected _listVirtualScrollController: ListVirtualScrollController;
@@ -2945,9 +2943,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _draggedKey: CrudEntityKey = null;
     _validateController = null;
 
-    _removedItems = [];
-
-    private _removedItemsIndex: number = null;
+    private _removedItems: CollectionItem[] = [];
 
     private _itemsChanged: boolean;
 
@@ -3034,7 +3030,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.addShowActionsClass(this, newOptions);
 
-        return this._doBeforeMount(newOptions);
+        const result = this._doBeforeMount(newOptions);
+        if (result instanceof Promise) {
+            result.then(() => this._listVirtualScrollController.endBeforeMountListControl());
+        } else {
+            this._listVirtualScrollController.endBeforeMountListControl();
+        }
+        return result;
     }
 
     private _dataLoadCallback(event: EventObject, items: RecordSet, direction: IDirection): Promise<void> | void {
@@ -3178,10 +3180,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const newSelection = _private.getSelectionController(this).onCollectionRemove(this._removedItems);
             _private.changeSelection(this, newSelection);
         }
-        if (this._listVirtualScrollController && this._removedItems.length && this._removedItemsIndex !== null) {
-            this._listVirtualScrollController.removeItems(this._removedItemsIndex, this._removedItems.length);
-        }
-        this._removedItemsIndex = null;
         this._removedItems = [];
     }
 
@@ -3299,6 +3297,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
+        this._viewportWidth = viewportRect.width;
 
         this._scrollTop = scrollTop;
         this._listVirtualScrollController.viewportResized(viewportHeight);
@@ -3428,6 +3427,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             listControl: this,
             virtualScrollConfig: options.virtualScrollConfig || {},
             activeElementKey: options.activeElement,
+            initialScrollPosition: options.initialScrollPosition,
+            disableVirtualScroll: options.disableVirtualScroll,
 
             itemsContainer: null,
             listContainer: null,
@@ -3564,8 +3565,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _setMarkedKeyAfterPaging(key: CrudEntityKey): void {
-        if (_private.getMarkerController(this).shouldMoveMarkerOnScrollPaging()) {
-            this._changeMarkedKey(key);
+        const markerController = _private.getMarkerController(this);
+        if (markerController.shouldMoveMarkerOnScrollPaging()) {
+            const record = this._listViewModel.getCollection().getRecordById(key);
+            const item = this._listViewModel.getItemBySourceKey(key);
+            const suitableKey = record
+                ? key
+                : item && markerController.getSuitableMarkedKey(item);
+            this._changeMarkedKey(suitableKey || key);
         }
     }
 
@@ -3580,6 +3587,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!this._listVirtualScrollController) {
             return;
         }
+
+        const params = {
+            range: {
+                startIndex: this._listViewModel.getStartIndex(),
+                endIndex: this._listViewModel.getStopIndex()
+            },
+            virtualPageSize: this._options.virtualScrollConfig?.pageSize,
+            scrolledToBackwardEdge: this._scrollTop === 0,
+            scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
+            newItemsIndex,
+            itemsLoadedByTrigger: this._addItemsByLoadToDirection
+        };
 
         switch (action) {
             case IObservable.ACTION_RESET:
@@ -3596,22 +3615,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 }
                 break;
             case IObservable.ACTION_ADD:
-                const params = {
-                    range: {
-                        startIndex: this._listViewModel.getStartIndex(),
-                        endIndex: this._listViewModel.getStopIndex()
-                    },
-                    virtualPageSize: this._options.virtualScrollConfig?.pageSize,
-                    scrolledToBackwardEdge: this._scrollTop === 0,
-                    scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
-                    newItemsIndex,
-                    itemsLoadedByTrigger: this._addItemsByLoadToDirection
-                };
                 this._listVirtualScrollController.addItems(
                     newItemsIndex,
                     newItems.length,
                     getScrollMode(params),
                     getCalcMode(params)
+                );
+                break;
+            case IObservable.ACTION_REMOVE:
+                this._listVirtualScrollController.removeItems(
+                    removedItemsIndex,
+                    removedItems.length,
+                    getScrollMode(params)
                 );
                 break;
             case IObservable.ACTION_MOVE:
@@ -3981,7 +3996,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     }
                 }
 
-                const isActionsAssigned = this._listViewModel.isActionsAssigned();
+                // Если прислали новый рекордсет, то сохраняем позицию скролла
+                if (newOptions.items && newOptions.items !== this._items) {
+                    this._listVirtualScrollController.enableKeepScrollPosition();
+                }
+
+                const isActionsAssigned = this._itemActionsController?.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
                 isItemsResetFromSourceController = true;
 
@@ -3997,7 +4017,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // TODO удалить когда полностью откажемся от старой модели
                 //  Если Items были обновлены, то в старой модели переинициализировался display
                 //  и этот параметр сбросился
-                this._listViewModel.setActionsAssigned(isActionsAssigned);
+                if (this._itemActionsController) {
+                    this._itemActionsController.setActionsAssigned(isActionsAssigned);
+                }
                 _private.initVisibleItemActions(this, newOptions);
 
                 if (loadedBySourceController) {
@@ -4228,6 +4250,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._updateBaseControlModel(newOptions);
 
+        if (this._options.itemsSelector !== newOptions.itemsSelector) {
+            this._listVirtualScrollController.setItemsQuerySelector(newOptions.itemsSelector);
+        }
+
         this._endBeforeUpdate(newOptions);
         this._listVirtualScrollController.endBeforeUpdateListControl();
     }
@@ -4334,7 +4360,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._listVirtualScrollController = null;
         }
         if (this._itemActionsController) {
-            this._itemActionsController.destroy();
             this._itemActionsController = null;
         }
         if (this._options.itemsDragNDrop) {
@@ -4485,6 +4510,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shouldUpdateActionsAfterRender = false;
         }
 
+        if (this._applySelectedPage && this._shouldNotifyOnDrawItems) {
+            this._applySelectedPage();
+        }
         this._updateInProgress = false;
         this._notifyOnDrawItems();
         this._loadedBySourceController = false;
@@ -4655,7 +4683,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // если нельзя проскроллить, проверяем, хватает ли загруженных данных для сдвига диапазона
                 // или нужно подгружать еще.
                 if (this._hasEnoughData(page)) {
-                    // TODO SCROLL нужно сместить диапазон???
+                    this._applySelectedPage = null;
+                    this._listVirtualScrollController.scrollToPage(direction === 'up' ? 'backward' : 'forward');
                 } else {
                     this._loadMore(direction);
                 }
@@ -5426,21 +5455,22 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return this._beginEdit({ item }, { shouldActivateInput, columnIndex });
         };
 
+        // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+        e.stopPropagation();
+
         switch (nativeEvent.keyCode) {
-            case 13: // Enter
+            case constants.key.enter:
                 if (this._getEditingConfig().sequentialEditingMode === 'cell') {
                     return Promise.resolve();
                 } else {
                     return this._editingRowEnterHandler(e);
                 }
-            case 27: // Esc
-                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
-                e.stopPropagation();
+            case constants.key.esc:
                 return this._cancelEdit();
-            case 38: // ArrowUp
+            case constants.key.up:
                 const prev = this._getEditInPlaceController().getPrevEditableItem();
                 return editNext(prev?.contents, EDIT_IN_PLACE_CONSTANTS.GOTOPREV);
-            case 40: // ArrowDown
+            case constants.key.down: // ArrowDown
                 const next = this._getEditInPlaceController().getNextEditableItem();
                 return editNext(next?.contents, EDIT_IN_PLACE_CONSTANTS.GOTONEXT);
         }
@@ -6026,8 +6056,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (itemData.ItemActionsItem) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
-
-            if (_private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
+            const actions = itemData.getActions();
+            // Не надо делать фриз, если ItemActions пустые (например, их отрезали по visibilityCallback)
+            if (actions?.showed?.length && _private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
                 if (!_private.hasHoverFreezeController(this)) {
                     _private.initHoverFreezeController(this);
                 }
@@ -6332,7 +6363,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
         event.stopImmediatePropagation();
         // Если в модели поменялся набор записей до перерисовки контрола, не нужно обрабатывать событие
-        if (this._listViewModel.isActionsAssigned() && !this._itemsChanged) {
+        if (this._itemActionsController?.isActionsAssigned() && !this._itemsChanged) {
             const itemActionsController = _private.getItemActionsController(this);
             itemActionsController.updateItemActions(itemKey, itemWidth);
         }

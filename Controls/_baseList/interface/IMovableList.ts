@@ -84,7 +84,30 @@ export interface IMovableList {
 
 /**
  * @name Controls/_baseList/interface/IMovableList#moveDialogTemplate
- * @cfg {Controls/list:IMoveDialogTemplate} Шаблон диалогового окна выбора целевой записи для перемещения.
- * Рекомендуется использовать стандартный шаблон {@link Controls/moverDialog:Template}.
+ * @cfg {Controls/list:IMoveDialogTemplate} Параметры диалогового окна выбора целевой записи для перемещения.
+ * @example
+ * <pre class="brush: html; highlight: [6-10]">
+ * <!-- WML -->
+ * <Controls.list:View
+ *      name="list"
+ *      source="{{ _viewSource }}"
+ *      multiSelectVisibility="visible">
+ *      <ws:moveDialogTemplate templateName="Controls/moverDialog:Template">
+ *          <ws:templateOptions
+ *              root="{{null}}"
+ *              rootVisible="{{true}}"
+ *              rootTitle="Каталог"
+ *              rootLabelVisible="{{false}}"
+ *              keyProperty="key"
+ *              parentProperty="parent"
+ *              displayProperty="title"
+ *              hasChildrenProperty="hasChild"
+ *              searchParam="title"
+ *              nodeProperty="type"
+ *              source="{{_moverDataSource}}"
+ *              columns="{{_columns}}"/>
+ *      </ws:moveDialogTemplate>
+ *  </Controls.list:View>
+ * </pre>
  * @see Controls/moverDialog:Template
  */

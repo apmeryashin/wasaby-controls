@@ -1,5 +1,5 @@
 /**
- * @typedef {String} Controls/_interface/TRoundBorderSize
+ * @typedef {String} Controls/_interface/IRoundBorder/TRoundBorderSize
  * @variant null Без скругления.
  * @variant xs Минимальный радиус скругления.
  * @variant s Малый радиус скругления.

@@ -149,7 +149,7 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#icon
-     * @cfg {String} Имя иконки для {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
+     * @cfg {String} Имя иконки или путь SVG-иконки для {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
      * @see iconStyle
      */
     /*

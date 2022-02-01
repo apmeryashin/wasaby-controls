@@ -115,6 +115,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _collapsedGroupsChanged: boolean = false;
     private _editingObject: TEditingObject = null;
     private _dndController: DndController;
+    private _draggedKey: CrudEntityKey = null;
     private _editInPlaceController: EditInPlaceController;
     private _editInPlaceInputHelper: EditInPlaceInputHelper;
     private _isPendingDeferredSubmit: boolean;
@@ -654,7 +655,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             return;
         }
 
-        if (this._insideDragging) {
+        if (this._insideDragging && this._draggedKey !== null) {
             this._dragStart(dragObject, this._draggedKey);
         }
         this._documentDragging = true;
@@ -1184,9 +1185,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _itemClick(e: SyntheticEvent, item: Model, originalEvent: SyntheticEvent): void {
-        const canEditByClick = !this._options.readOnly &&
-                               item.get('isEditable') &&
-                               this._listModel.getItemBySourceItem(item).getEditorTemplateName();
+        const collectionItem = this._listModel.getItemBySourceItem(item);
+        const canEditByClick = !this._options.readOnly && collectionItem.isEditable();
         if (canEditByClick) {
             e.stopPropagation();
 

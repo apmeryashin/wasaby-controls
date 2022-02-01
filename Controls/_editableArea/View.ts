@@ -16,7 +16,7 @@ import 'css!Controls/list';
  * @class Controls/_editableArea/View
  * @extends UI/Base:Control
  * @mixes Controls/editableArea:IView
- * @author Красильников А.С
+ * @author Мочалов М.А.
  * @public
  *
  * @remark

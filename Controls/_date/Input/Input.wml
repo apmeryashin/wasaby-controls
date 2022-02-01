@@ -39,7 +39,7 @@
     </ws:if>
     <ws:if data="{{ _options.calendarButtonVisible }}">
         <span class="controls-Input-DatePicker__buttonWrapper" attr:tabindex="-1">
-            <span class="ws-flexbox ws-align-items-center controls-Input-DatePicker__buttonBaseLine" on:click="openPopup()">
+            <span class="ws-flexbox ws-align-items-center controls-Input-DatePicker__buttonBaseLine" on:click="_clickHandler()" on:mousedown="openPopup()">
                 <Controls.icon:Icon icon="Controls-icons/common:icon-Burger"
                                     attr:class="controls-Input-DatePicker__button controls-icon
                             controls-icon_style-unaccented"/>

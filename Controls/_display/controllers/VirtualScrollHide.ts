@@ -1,10 +1,12 @@
 import * as VirtualScroll from './VirtualScroll';
 import { EnumeratorCallback } from 'Types/collection';
+import {getStartIndex, getStopIndex} from './VirtualScroll';
 
 export interface IVirtualScrollHideItem {
     setRendered(rendered: boolean): void;
     isRendered(): boolean;
     isSticked(): boolean;
+    setRenderedOutsideRange(state: boolean): void;
 }
 
 export interface IVirtualScrollHideEnumerator extends VirtualScroll.IVirtualScrollEnumerator {
@@ -27,6 +29,14 @@ export function setup(collection: IVirtualScrollHideCollection): void {
     collection.nextVersion();
 }
 
+export function applyRenderedItems(collection: IVirtualScrollHideCollection): void {
+    const renderedStart = VirtualScroll.getStartIndex(collection);
+    const renderedStop = VirtualScroll.getStopIndex(collection);
+    for (let i = renderedStart; i < renderedStop; i++) {
+        collection.at(i)?.setRendered(true);
+    }
+}
+
 export function setIndices(
     collection: IVirtualScrollHideCollection,
     startIndex: number,
@@ -37,7 +47,7 @@ export function setIndices(
         startIndex,
         stopIndex
     );
-    _applyRenderedItems(collection);
+    applyRenderedItems(collection);
     collection.nextVersion();
     return indicesChanged;
 }
@@ -48,13 +58,20 @@ export function each(
     context?: object
 ): void {
     const enumerator = collection.getEnumerator();
+    const startIndex = getStartIndex(collection);
+    const stopIndex = getStopIndex(collection);
 
     enumerator.setPosition(-1);
 
     while (enumerator.moveNext()) {
         const item = enumerator.getCurrent();
+        const index = enumerator.getCurrentIndex();
         if (item.isRendered()) {
-            callback.call(context, item, enumerator.getCurrentIndex());
+            callback.call(context, item, index);
+        }
+
+        if (index >= startIndex && index < stopIndex) {
+            item.setRenderedOutsideRange(false);
         }
     }
 }
@@ -78,6 +95,7 @@ export function isItemAtIndexHidden(
         while (tempIndex < start) {
             tempItem = collection.at(tempIndex);
             if (shouldStayInCollection(tempItem)) {
+                current.setRenderedOutsideRange(false);
                 return true;
             }
             tempIndex++;
@@ -86,21 +104,16 @@ export function isItemAtIndexHidden(
         while (tempIndex >= stop) {
             tempItem = collection.at(tempIndex);
             if (shouldStayInCollection(tempItem)) {
+                current.setRenderedOutsideRange(false);
                 return true;
             }
             tempIndex--;
         }
-
+        if (index < start || index >= stop) {
+            current.setRenderedOutsideRange(true);
+        }
         return false;
     }
 
     return ( index < start || index >= stop );
-}
-
-function _applyRenderedItems(collection: IVirtualScrollHideCollection): void {
-    const renderedStart = VirtualScroll.getStartIndex(collection);
-    const renderedStop = VirtualScroll.getStopIndex(collection);
-    for (let i = renderedStart; i < renderedStop; i++) {
-        collection.at(i).setRendered(true);
-    }
 }

@@ -1,4 +1,4 @@
-import { ITree, IOptions as ITreeOptions } from 'Controls/tree';
+import { ITree, ITreeControlOptions } from 'Controls/tree';
 import { IGridControl } from 'Controls/grid';
 
 /**
@@ -9,7 +9,7 @@ import { IGridControl } from 'Controls/grid';
  */
 export type TGroupNodeVisibility = 'hasdata' | 'visible';
 
-export interface IOptions extends ITreeOptions {
+export interface IOptions extends ITreeControlOptions {
     groupNodeVisibility?: TGroupNodeVisibility;
     deepScrollLoad?: boolean;
 }

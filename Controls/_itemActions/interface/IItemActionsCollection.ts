@@ -21,22 +21,6 @@ export interface IItemActionsCollection extends IBaseCollection<Model, IItemActi
     // '[Controls/_itemActions/interface/IItemActionsCollection]': true;
 
     /**
-     * Установить состояние флага "Опции записи заданы для элементов коллекции"
-     * @param {Boolean} assigned Состояние флага "Опции записи заданы для элементов коллекции"
-     * @function
-     * @public
-     */
-    setActionsAssigned(assigned: boolean): void;
-
-    /**
-     * Получить состояние флага "Опции записи заданы для элементов коллекции"
-     * @function
-     * @public
-     * @return {Boolean} Состояние флага "Опции записи заданы для элементов коллекции"
-     */
-    isActionsAssigned(): boolean;
-
-    /**
      * Установить в модель текущий активный элемент
      * @param {Controls/_itemActions/interface/IItemActionsItem} item Текущий активный элемент
      * @function

@@ -8,7 +8,8 @@
                 <ws:content>
                     <Controls.input:Text
                         attr:class="controlsDemo-Markup__control"
-                        maxLength="{{10}}"/>
+                        maxLength="{{10}}"
+                        attr:data-qa="{{inputControl.id}}"/>
                 </ws:content>
             </Controls-demo.Decorators.Markup.WithControls.WrapperControl>
         </ws:inputControl>

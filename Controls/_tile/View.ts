@@ -24,7 +24,7 @@ import TileView from './TileView';
  * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/interface:IDraggable
  * @implements Controls/tile:ITile
  * @implements Controls/list:IClickableView
@@ -54,7 +54,7 @@ import TileView from './TileView';
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
  * @implements Controls/interface:IHierarchy
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/interface:IDraggable
  * @mixes Controls/List/interface/ITile
  * @implements Controls/list:IClickableView
@@ -132,4 +132,24 @@ Object.defineProperty(View, 'defaultProps', {
  * @name Controls/_tile/View#addButtonClick
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @see Controls/_tile/View#addButtonVisible
+ */
+
+/**
+ * @cfg {Controls/_tile/interface/ITile/TileItemPadding.typedef}  Конфигурация отступов между элементами плитки.
+ * @name Controls/_tile/View#itemPadding
+ * @demo Controls-demo/tileNew/ItemPadding/Index
+ * @example
+ * <pre class="brush: html; highlight: [4-8]">
+ * <!-- WML -->
+ * <Controls.tile:View source="{{_viewSource}}" imageProperty="image">
+ *    <ws:itemPadding
+ *       top="l"
+ *       bottom="l"
+ *       left="l"
+ *       right="l"/>
+ * </Controls.tile:View>
+ * </pre>
+ * @remark
+ * Полезные ссылки:
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tile/paddings/#item-padding руководство разработчика}
  */

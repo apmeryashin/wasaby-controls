@@ -322,7 +322,7 @@ export default interface IBaseDropdown {
 /**
  * Открывает выпадающий список.
  * @function Controls/_dropdown/interface/IBaseDropdown#openMenu
- * @param {Object} popupOptions Конфигурация прилипающего блока {@link /docs/js/Controls/popup/IStickyPopupOptions/ popupOptions}
+ * @param {Object} popupOptions Конфигурация прилипающего блока {@link /docs/js/Controls/popup/IStickyOpener/typedefs/PopupOptions/ popupOptions}
  * @param {String} key Идентификатор элемента, для которого необходимо открыть подменю.
  * Подменю может быть открыто только в случае, если предыдущий уровень уже открыт.
  * @demo Controls-demo/dropdown_new/Button/OpenFromCode/Index

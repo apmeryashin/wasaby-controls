@@ -75,7 +75,7 @@ const DELAYED_INITIALIZING_WAYS = [
  * @implements Controls/interface:ISource
  * @implements Controls/form:IFormController
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/Popup/Edit/Opener
  */
@@ -90,7 +90,7 @@ const DELAYED_INITIALIZING_WAYS = [
  * @demo Controls-demo/Popup/Edit/Opener
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 class FormController extends ControllerBase<IFormController> {

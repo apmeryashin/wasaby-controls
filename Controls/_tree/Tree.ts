@@ -6,7 +6,7 @@ import { Model } from 'Types/entity';
 
 import { View as List } from 'Controls/baseList';
 import TreeControl from 'Controls/_tree/TreeControl';
-import ITree, { IOptions as ITreeOptions } from 'Controls/_tree/interface/ITree';
+import ITree, {IOptions as ITreeOptions} from 'Controls/_tree/interface/ITree';
 import TreeView from 'Controls/_tree/TreeView';
 
 import 'css!Controls/treeGrid';
@@ -30,7 +30,7 @@ import 'css!Controls/treeGrid';
  * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
  * @implements Controls/grid:IPropStorage
- * @implements Controls/_tree/interface/ITreeControl
+ * @implements Controls/tree:ITree
  * @implements Controls/itemActions:IItemActions
  *
  * @public
@@ -88,3 +88,37 @@ export default class Tree extends List implements ITree {
         };
     }
 }
+
+/**
+ * @name Controls/_tree/Tree#itemTemplate
+ * @cfg {TemplateFunction|String} Шаблон элемента списка.
+ * @remark
+ * По умолчанию используется шаблон "{@link Controls/tree:ItemTemplate Controls/tree:ItemTemplate}".
+ *
+ * Базовый шаблон itemTemplate поддерживает следующие параметры:
+ * - contentTemplate {Function} — Шаблон содержимого элемента;
+ * - highlightOnHover {Boolean} — Выделять элемент при наведении на него курсора мыши.
+ * - checkboxReadOnly {Boolean} — Флаг, позволяющий установить у checkbox в multiSelect режим "только для чтения".
+ * - cursor {TCursor} — Устанавливает вид {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора мыши} при наведении на строку.
+ *
+ * В области видимости шаблона доступен объект item, позволяющий получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
+ * Подробнее о работе с шаблоном читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/tree/item/">руководстве разработчика</a>.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.tree:View keyProperty="key"
+ *                     source="{{_viewSource}}"
+ *                     parentProperty="parent"
+ *                     multiSelectVisibility="visible"
+ *                     nodeProperty="type">
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/tree:ItemTemplate" scope="{{itemTemplate}}">
+ *          <ws:contentTemplate>
+ *             <span>{{contentTemplate.item.contents.description}}</span>
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.tree:View>
+ * </pre>
+ * @see Controls/tree:ItemTemplate
+ */

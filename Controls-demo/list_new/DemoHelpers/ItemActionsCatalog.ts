@@ -49,6 +49,19 @@ function getActionsForContacts(): IItemAction[] {
         }
     ];
 }
+
+function getActionsWithSVG(): IItemAction[] {
+    return [
+        {
+            id: 8,
+            icon: 'Controls-demo/icons:icon-Successful',
+            title: 'Успешно',
+            showType: TItemActionShowType.MENU_TOOLBAR
+        },
+        ...getActionsForContacts()
+    ];
+}
+
 function getActionsWithDisplayMode(): IItemAction[] {
     return [
         {
@@ -147,5 +160,6 @@ export {
     getActionsForContacts,
     getActionsWithDisplayMode,
     getMoreActions,
-    getActionsWithViewMode
+    getActionsWithViewMode,
+    getActionsWithSVG
 };

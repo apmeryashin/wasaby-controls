@@ -1,8 +1,9 @@
 import {Control, IControlOptions} from 'UI/Base';
 
-export function getCommonOptions(self: Control<IControlOptions, unknown>): object {
+export function getCommonOptions(self: Control<IControlOptions, unknown>,
+                                 opener?: Control<IControlOptions, unknown> | HTMLElement): object {
     return {
-        opener: self,
+        opener: opener || self,
         direction: {horizontal: 'right'},
         targetPoint: {horizontal: 'left'},
         fittingMode: 'overflow',

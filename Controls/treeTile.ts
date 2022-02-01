@@ -1,8 +1,8 @@
 /**
  * Библиотека контролов, которые реализуют иерархический список, отображающийся в виде плитки.
- * @library
+ * @library Controls/treeTile
  * @includes ITreeTile Controls/_treeTile/interface/ITreeTile
- * @includes FolderTemplate Controls/_treeTile/interface/FolderIcon
+ * @includes FolderTemplate Controls/_treeTile/interface/FolderTemplate
  * @public
  * @author Панихин К.А.
  */

@@ -18,7 +18,7 @@ import {ViewModel} from 'Controls/_input/Phone/ViewModel';
  * @public
  * @demo Controls-demo/Input/Phone/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -34,7 +34,7 @@ import {ViewModel} from 'Controls/_input/Phone/ViewModel';
  * @public
  * @demo Controls-demo/Input/Phone/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 class Phone extends Base {
     protected _defaultValue: string = '';

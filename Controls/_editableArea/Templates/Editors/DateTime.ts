@@ -8,7 +8,7 @@ import {date as format} from 'Types/formatter';
  * @class Controls/_editableArea/Templates/Editors/DateTime
  * @extends Controls/editableArea:Base
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @see @class Controls/_editableArea/Templates/Editors/Base
  * @demo Controls-demo/EditableArea/ViewContent/Index
  */

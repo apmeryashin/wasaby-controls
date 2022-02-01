@@ -17,6 +17,7 @@ import {IIconCounterTabTemplate} from 'Controls/_tabs/interface/IIconCounterTabT
  * @property {Number|String} [item.maxWidth] Максимальная ширина вкладки. Может принимать числовое значение(в пикселях) или в процентах(Например: '20%')
  * @property {Number|String} [item.minWidth] Минимальная ширина вкладки. Может принимать числовое значение(в пикселях) или в процентах(Например: '20%')
  * @property {Number|String} [item.width] Фиксированная ширина вкладки.
+ * @property {String} [item.tooltip] Текст всплывающей подсказки, отображаемой при наведении указателя мыши на вкладку.
  * Может принимать числовое значение(в пикселях) или в процентах(Например: '20%')
  * При задании фиксированной ширины задание minWidth и maxWidth не имеет смысла, т.к. ширина зафиксируется.
  * @property {Boolean} [item.isMainTab] Определяет, является ли вкладка главной. Главная вкладка визуально выделяется относительно других вкладок. Поддерживается визуальное оформление только для первой вкладки слева.
@@ -38,7 +39,8 @@ import {IIconCounterTabTemplate} from 'Controls/_tabs/interface/IIconCounterTabT
 export interface ITabButtonItem extends IIconCounterTabTemplate {
     isMainTab?: boolean;
     align?: 'left' | 'right';
-    title?: 'string';
+    title?: string;
+    tooltip?: string;
     minWidth?: string | number;
     width?: string | number;
     maxWidth?: string | number;
@@ -47,7 +49,7 @@ export interface ITabButtonItem extends IIconCounterTabTemplate {
 /**
  * Интерфейс для опций контрола вкладок.
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface ITabsButtons {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean;

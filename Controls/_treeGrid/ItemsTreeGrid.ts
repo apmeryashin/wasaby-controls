@@ -37,7 +37,7 @@ export interface IItemsTreeGridOptions extends IItemsViewOptions, ITreeGridOptio
  * @implements Controls/marker:IMarkerList
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/grid:IGridControl
- * @implements Controls/tree:ITreeControl
+ * @implements Controls/tree:ITree
  *
  * @public
  * @author Уфимцев Д.Ю.

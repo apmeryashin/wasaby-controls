@@ -8,7 +8,7 @@ import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroup
  * @class Controls/_toggle/ButtonGroup
  * @extends Controls/_toggle/ButtonGroupBase
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/ButtonGroup/Index
  */
 

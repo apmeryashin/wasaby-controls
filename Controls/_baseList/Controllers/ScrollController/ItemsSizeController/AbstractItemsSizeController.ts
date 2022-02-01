@@ -25,6 +25,12 @@ export abstract class AbstractItemsSizesController {
     private _itemsSizes: IItemsSizes = [];
     private _listContainer: HTMLElement;
 
+    /**
+     * Кол-во элементов, которые были отрисованы за пределами текущего диапазона(например, застиканные записи)
+     * @private
+     */
+    private _countItemsRenderedOutsideRange: number = 0;
+
     constructor(options: IAbstractItemsSizesControllerOptions) {
         this._itemsContainer = options.itemsContainer;
         this._listContainer = options.listContainer;
@@ -68,6 +74,10 @@ export abstract class AbstractItemsSizesController {
 
         const scrollContent = this._listContainer.closest('.controls-Scroll-ContainerBase__content');
         return this._getContentSizeBeforeContainer(this._listContainer, scrollContent);
+    }
+
+    setCountItemsRenderedOutsideRange(count: number): void {
+        this._countItemsRenderedOutsideRange = count;
     }
 
     // region on DOM references update
@@ -179,21 +189,9 @@ export abstract class AbstractItemsSizesController {
      */
     private _domElementsMatchToRange(itemsRange: IItemsRange, itemsElements: NodeListOf<Element>): boolean {
         const itemsRangeLength = itemsRange.endIndex - itemsRange.startIndex;
-        let domElementsMatchToRange = itemsRangeLength === itemsElements.length;
-        if (!domElementsMatchToRange && itemsElements.length) {
-            // Если ДОМ-элементы не соответствуют диапазону, то стоит проверить ситуацию, когда в ДОМ-е
-            // сохранился застиканный элемент вне диапазона.
-            let offsetByStickedItems = 0;
-            if (itemsElements[0].querySelector('.controls-StickyHeader')) {
-                offsetByStickedItems++;
-            }
-            if (itemsElements[itemsElements.length - 1].querySelector('.controls-StickyHeader')) {
-                offsetByStickedItems++;
-            }
-            domElementsMatchToRange = itemsRangeLength === (itemsElements.length - offsetByStickedItems);
-        }
-
-        return domElementsMatchToRange;
+        const renderedItemsCount = itemsElements.length;
+        const renderedItemsCountFromRange = renderedItemsCount - this._countItemsRenderedOutsideRange;
+        return renderedItemsCountFromRange === itemsRangeLength;
     }
 
     /**
@@ -208,8 +206,8 @@ export abstract class AbstractItemsSizesController {
 
     private static _getEmptyItemSize(): IItemSize {
         return {
-            offset: 0,
-            size: 0
+            size: 0,
+            offset: 0
         };
     }
 

@@ -13,6 +13,9 @@ interface IItem {
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
+    protected _initialScrollPosition = {
+        vertical: 'end'
+    };
 
     private dataArray: IItem[] = generateData({
         keyProperty: 'key',

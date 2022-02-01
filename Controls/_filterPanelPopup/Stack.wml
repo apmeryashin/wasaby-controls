@@ -25,6 +25,7 @@
                                          caption="{{rk('Сбросить')}}"
                                          fontColorStyle="label"
                                          fontSize="xs"
+                                         attr:class="controls-FilterViewPanel_header__resetButton"
                                          on:click="_resetFilter()"/>
             </ws:if>
         </div>
@@ -33,7 +34,7 @@
         <Controls.filterPanel:View name="filterPanel"
                                    source="{{_options.items}}"
                                    backgroundStyle="contrast"
-                                   viewMode="filterPanelStack"
+                                   viewMode="popup"
                                    collapsedGroups="{{_options.collapsedGroups}}"
                                    on:collapsedGroupsChanged="_collapsedGroupsChanged()"
                                    on:sourceChanged="_sourceChangedHandler()"

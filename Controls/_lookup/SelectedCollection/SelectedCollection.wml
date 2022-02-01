@@ -1,5 +1,6 @@
 <ws:template name="counterTemplate">
-   <ws:if data="{{(!_options.multiLine && _options.itemsLayout === 'oneRow' || _options.items.getCount() > _options.maxVisibleItems) && _options.counterVisibility !== 'hidden'}}">
+   <ws:if data="{{(!_options.multiLine && _options.itemsLayout === 'oneRow' || _options.items.getCount() > _options.maxVisibleItems) &&
+                _options.counterVisibility !== 'hidden' && _needShowCounter}}">
       <span name="infoBoxLink"
             style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout, !(_options.readOnly && !_options.maxVisibleItems))}}"
             class="controls-SelectedCollection__InfoBox
@@ -11,6 +12,7 @@
                      backgroundStyle="{{_options.backgroundStyle}}"
                      itemsCount="{{_options.items.getCount()}}"
                      fontSize="{{_options.fontSize}}"
+                     counterAlignment="{{_options.counterAlignment}}"
                      attr:style="{{_counterWidth ? 'width: ' + _counterWidth + 'px;'}}"/>
       </span>
    </ws:if>
@@ -24,7 +26,7 @@
                 controls-SelectedCollection__collection_{{_options.itemsLayout !== 'oneRow' ? 'multiLine' : 'singleLine'}}
                 controls-SelectedCollection__collection_{{_options.itemsLayout !== 'oneRow' ? 'multiLine' : 'singleLine'}}_fontSize-{{_options.fontSize || 'm'}}
                 controls-SelectedCollection__collection-{{_options.itemsLayout}}">
-        <ws:if data="{{_options.multiLine}}">
+        <ws:if data="{{_options.counterAlignment === 'left'}}">
             <ws:partial template="counterTemplate"/>
         </ws:if>
         <ws:for data="index, item in _visibleItems">
@@ -49,7 +51,7 @@
          </ws:partial>
       </ws:for>
     </div>
-    <ws:if data="{{!_options.multiLine}}">
+    <ws:if data="{{_options.counterAlignment === 'right'}}">
         <ws:partial template="counterTemplate" attr:class="controls-SelectedCollection__counter-singleLine"/>
     </ws:if>
 </div>
