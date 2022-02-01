@@ -38,6 +38,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     itemAlign?: TItemAlign;
     headingCaptionProperty?: string;
     itemsSpacing?: string;
+    focusable?: boolean;
 }
 
 /**
