@@ -68,12 +68,20 @@ export default class History extends Control<IHistoryOptions> {
             const name = getPropValue(elem, 'name');
             const textValue = getPropValue(elem, 'textValue');
             const value = getPropValue(elem, 'value');
+            const resetValue = getPropValue(elem, 'resetValue');
+            const visibility = getPropValue(elem, 'visibility');
             const editorValue = {
                 value,
                 textValue
             };
 
-            this._notify('historyItemClick', [{editorValue, name}]);
+            if (
+                !isEqual(value, resetValue) &&
+                (visibility === undefined || visibility) &&
+                textValue
+            ) {
+                this._notify('historyItemClick', [{editorValue, name}]);
+            }
         });
     }
 
