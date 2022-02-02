@@ -61,6 +61,7 @@ export interface IGetSizesByRangeParams {
     range: IItemsRange;
     itemsSizes: IItemsSizes;
     totalCount: number;
+    itemsRenderedOutsideRange: number[];
 }
 
 export interface IGetFirstVisibleItemIndexParams {
@@ -376,17 +377,15 @@ function isRangeOnEdge(edge: IDirection, range: IItemsRange, totalCount: number)
  * @param {IGetSizesByRangeParams} params
  */
 export function getPlaceholdersByRange(params: IGetSizesByRangeParams): IPlaceholders {
-    const { range, itemsSizes, totalCount } = params;
+    const { range, totalCount } = params;
 
     const backward = getItemsSizesSum({
-        range: { startIndex: 0, endIndex: range.startIndex },
-        itemsSizes,
-        totalCount
+        ...params,
+        range: { startIndex: 0, endIndex: range.startIndex }
     });
     const forward = getItemsSizesSum({
-        range: { startIndex: range.endIndex, endIndex: totalCount },
-        itemsSizes,
-        totalCount
+        ...params,
+        range: { startIndex: range.endIndex, endIndex: totalCount }
     });
 
     return { backward, forward };
@@ -397,14 +396,18 @@ export function getPlaceholdersByRange(params: IGetSizesByRangeParams): IPlaceho
  * @param {IGetSizesByRangeParams} params
  */
 function getItemsSizesSum(params: IGetSizesByRangeParams): number {
-    const { range, itemsSizes, totalCount } = params;
+    const { range, itemsSizes, totalCount, itemsRenderedOutsideRange } = params;
     const fixedStartIndex = Math.max(range.startIndex, 0);
     const fixedEndIndex = Math.min(range.endIndex, totalCount);
 
     let result = 0;
 
-    for (let idx = fixedStartIndex; idx < fixedEndIndex; idx++) {
-        result += itemsSizes[idx]?.size || 0;
+    for (let index = fixedStartIndex; index < fixedEndIndex; index++) {
+        // Не учитываем в placeholder элементы, отрисованные за пределами диапазона.
+        if (itemsRenderedOutsideRange.includes(index)) {
+            continue;
+        }
+        result += itemsSizes[index]?.size || 0;
     }
 
     return result;

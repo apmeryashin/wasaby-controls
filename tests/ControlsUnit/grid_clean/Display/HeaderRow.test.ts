@@ -20,7 +20,8 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
                 hasNewColumnScroll: () => false,
-                isSticked: () => false
+                isSticked: () => false,
+                isFullGridSupport: () => true
             };
 
             const mockedHeaderModel = {
@@ -83,7 +84,8 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
                 hasNewColumnScroll: () => false,
-                isSticked: () => false
+                isSticked: () => false,
+                isFullGridSupport: () => true
             };
 
             const mockedHeaderModel = {
@@ -130,7 +132,8 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
                 hasNewColumnScroll: () => false,
-                isSticked: () => false
+                isSticked: () => false,
+                isFullGridSupport: () => true
             };
 
             const mockedHeaderModel = {
@@ -188,7 +191,8 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
                 hasNewColumnScroll: () => false,
-                isSticked: () => false
+                isSticked: () => false,
+                isFullGridSupport: () => true
             };
 
             const mockedHeaderModel = {
@@ -247,7 +251,8 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
                 hasNewColumnScroll: () => false,
-                isSticked: () => false
+                isSticked: () => false,
+                isFullGridSupport: () => true
             };
 
             const mockedHeaderModel = {
@@ -307,7 +312,8 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
                 hasNewColumnScroll: () => false,
-                isSticked: () => false
+                isSticked: () => false,
+                isFullGridSupport: () => true
             };
 
             const mockedHeaderModel = {
@@ -366,7 +372,8 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                     getRightPadding: () => 's',
                     isStickyHeader: () => false,
                     hasColumnScroll: () => false,
-                    hasNewColumnScroll: () => false
+                    hasNewColumnScroll: () => false,
+                    isFullGridSupport: () => true
                 };
 
                 const mockedHeaderModel = {
