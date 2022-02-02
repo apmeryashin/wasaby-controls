@@ -15,6 +15,7 @@ import {TNavigationSource, IBaseSourceConfig, INavigationSourceConfig, TNavigati
 import {IHashMap} from 'Types/declarations';
 import {applied, Record as EntityRecord, Model, relation} from 'Types/entity';
 import {isEqual} from 'Types/object';
+import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
 
 /**
  * Вспомогательный интерфейс для определения типа typeof object.
@@ -184,7 +185,7 @@ export default class NavigationController {
         const processStoreItem = (storeItem: INavigationStoresListItem) => {
             const store = storeItem.store;
 
-            if (!ids || !ids.length || ids.includes(storeItem.id)) {
+            if (!ids || !ids.length || ArrayUtil.invertTypeIndexOf(ids, storeItem.id) !== -1) {
                 addQueryParamsArray.push({
                     id: storeItem.id,
                     addParams: calculator.getQueryParams(
@@ -332,7 +333,7 @@ export default class NavigationController {
     private _deleteUnprocessedStores(processedStores: TKey[]): void {
         const storesToDelete = [];
         this._navigationStores.forEach(({id}) => {
-            if (!processedStores.includes(id)) {
+            if (ArrayUtil.invertTypeIndexOf(processedStores, id) === -1) {
                 storesToDelete.push(id);
             }
         });
