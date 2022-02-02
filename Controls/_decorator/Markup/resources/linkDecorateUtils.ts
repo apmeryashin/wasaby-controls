@@ -44,6 +44,7 @@ const linkPattern = `(${linkPrefixPattern}(?:[^\\s\\ud800-\\udfff]{0,2048}))`;
 const emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]{1,2048}@[^\\s@()\\ud800-\\udfff]{1,2048}\\.([\\wа-яёА-ЯЁ]{1,2048}))';
 const endingPattern = '([^.,:\\s()\\ud800-\\udfff\"\'])';
 const characterRegExp = /[\wа-яёА-ЯЁ]/;
+const folderPath = /([a-zA-Z]:)?(\\{1,2}[^\.\?\<\>\|\s:\*\"\\\/]+(\.[^\.\?\<\>\|\s:\*\"\\\/]+)*)+/g;
 export const linkParseRegExp = new RegExp(`(?:(?:${emailPattern}|${linkPattern})${endingPattern})|(.|\\s)`, 'g');
 
 const needDecorateParentNodeSet: Set<Array<any[]|string>> = new Set();
@@ -116,6 +117,28 @@ function createLinkObject(href: string, text: string = href, position: number, i
       href: newHref,
       text,
       position
+   };
+}
+
+function createLinkToFolderNode(href: string, text: string = href) {
+   const tagName = 'a';
+   const attributes = {
+      class: 'asLink',
+      target: '_blank',
+      'data-open-file': href
+   };
+   return [tagName, attributes, text];
+}
+
+function createLinkToFolderObject(text: string, position: number) {
+   return {
+      text,
+      position,
+      attributes: {
+         class: 'asLink',
+         target: '_blank',
+         'data-open-file': text
+      }
    };
 }
 
@@ -408,7 +431,7 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
 
 export function parseLinks(stringNode: string, needToCreateLinkNode: boolean): [any[] | string, boolean] {
    let linkParseExec = linkParseRegExp.exec(stringNode);
-   const result: any[]|string = [];
+   let result: any[]|string = [];
    let hasAnyLink: boolean = false;
    result.push([]);
 
@@ -460,7 +483,53 @@ export function parseLinks(stringNode: string, needToCreateLinkNode: boolean): [
       }
    }
 
+   [result, hasAnyLink] = parseFolderLinks(result, needToCreateLinkNode, hasAnyLink);
+
    return [result, hasAnyLink];
+}
+
+function parseFolderLinks(elements, needToCreateLinkNode: boolean, hasAnyLink: boolean): [any[] | string, boolean] {
+   let newHasAnyLink = hasAnyLink;
+   let result;
+
+   if (Array.isArray(elements)) {
+      result = [];
+      elements.forEach((item) => {
+         if (typeof item === 'string') {
+            let folderParseExec = folderPath.exec(item);
+            if (folderParseExec !== null) {
+                  let linkIndex = 0;
+                  newHasAnyLink = true;
+                  while (folderParseExec !== null) {
+                     const position = folderParseExec.index;
+                     const link = needToCreateLinkNode ? createLinkToFolderNode(folderParseExec[0]) :
+                                  createLinkToFolderObject(folderParseExec[0], position);
+                     const text = item.slice(linkIndex, position);
+                     if (text.length) {
+                        result.push(text);
+                     }
+                     result.push(link);
+                     linkIndex = position + folderParseExec[0].length;
+                     folderParseExec = folderPath.exec(item);
+                  }
+
+                  const textAfterLastLink = item.slice(linkIndex, item.length);
+
+                  if (textAfterLastLink) {
+                     result.push(textAfterLastLink);
+                  }
+               } else {
+                  result.push(item);
+               }
+         } else {
+            result.push(item);
+         }
+      });
+   } else if (typeof result === 'string') {
+      result = elements;
+   }
+
+   return [result, newHasAnyLink];
 }
 
 /**
