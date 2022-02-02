@@ -71,8 +71,8 @@ define([
                 key: 'someKey2'
             }, {
                 canShrink: false,
-                caption: 'Первый',
-                key: 'someKey1'
+                caption: 'Третий',
+                key: 'someKey3'
             }
             ]);
 
