@@ -11,6 +11,7 @@ import 'css!Controls/baseList';
 import { Collection, CollectionItem } from 'Controls/display';
 import {IRoundBorder} from 'Controls/interface';
 import { Model } from 'Types/entity';
+import {constants} from 'Env/Env';
 
 export interface IListViewOptions {
     listModel: Collection;
@@ -500,7 +501,7 @@ const ListView = Control.extend(
             } else {
                 cssVariableName = '--offset_' + topPadding;
             }
-            if (this._container) {
+            if (constants.isBrowserPlatform) {
                 return parseInt(getComputedStyle(this._container).getPropertyValue(cssVariableName), 10);
             } else {
                 return 0;
