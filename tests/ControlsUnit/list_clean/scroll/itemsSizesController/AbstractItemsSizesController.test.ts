@@ -138,7 +138,11 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
             assert.equal(itemsSizes.length, 3);
             assert.deepEqual(
                 itemsSizes,
-                [{size: 15, offset: 0}, {size: 20, offset: 15}, {size: 30, offset: 35}]
+                [
+                    {size: 15, offset: 0, key: '1'},
+                    {size: 20, offset: 15, key: '2'},
+                    {size: 30, offset: 35, key: '3'}
+                ]
             );
         });
     });
@@ -192,7 +196,11 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
             const itemsSizes = controller.updateItemsSizes({startIndex: 0, endIndex: 3});
             assert.deepEqual(
                 itemsSizes,
-                [{size: 30, offset: 0}, {size: 30, offset: 30}, {size: 30, offset: 60}]
+                [
+                    {size: 30, offset: 0, key: '1'},
+                    {size: 30, offset: 30, key: '2'},
+                    {size: 30, offset: 60, key: '3'}
+                ]
             );
         });
     });
@@ -227,7 +235,12 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
                 assert.equal(itemsSizes.length, 4);
                 assert.deepEqual(
                     itemsSizes,
-                    [EMPTY_SIZE, {size: 15, offset: 0}, {size: 20, offset: 15}, {size: 30, offset: 35}]
+                    [
+                        EMPTY_SIZE,
+                        {size: 15, offset: 0, key: '1'},
+                        {size: 20, offset: 15, key: '2'},
+                        {size: 30, offset: 35, key: '3'}
+                    ]
                 );
             });
 
@@ -236,7 +249,12 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
                 assert.equal(itemsSizes.length, 4);
                 assert.deepEqual(
                     itemsSizes,
-                    [{size: 15, offset: 0}, EMPTY_SIZE, {size: 20, offset: 15}, {size: 30, offset: 35}]
+                    [
+                        {size: 15, offset: 0, key: '1'},
+                        EMPTY_SIZE,
+                        {size: 20, offset: 15, key: '2'},
+                        {size: 30, offset: 35, key: '3'}
+                    ]
                 );
             });
 
@@ -245,7 +263,12 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
                 assert.equal(itemsSizes.length, 4);
                 assert.deepEqual(
                     itemsSizes,
-                    [{size: 15, offset: 0}, {size: 20, offset: 15}, {size: 30, offset: 35}, EMPTY_SIZE]
+                    [
+                        {size: 15, offset: 0, key: '1'},
+                        {size: 20, offset: 15, key: '2'},
+                        {size: 30, offset: 35, key: '3'},
+                        EMPTY_SIZE
+                    ]
                 );
             });
 
@@ -254,7 +277,13 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
                 assert.equal(itemsSizes.length, 5);
                 assert.deepEqual(
                     itemsSizes,
-                    [EMPTY_SIZE, EMPTY_SIZE, {size: 15, offset: 0}, {size: 20, offset: 15}, {size: 30, offset: 35}]
+                    [
+                        EMPTY_SIZE,
+                        EMPTY_SIZE,
+                        {size: 15, offset: 0, key: '1'},
+                        {size: 20, offset: 15, key: '2'},
+                        {size: 30, offset: 35, key: '3'}
+                    ]
                 );
             });
         });
@@ -265,7 +294,11 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
                 assert.equal(itemsSizes.length, 3);
                 assert.deepEqual(
                     itemsSizes,
-                    [EMPTY_SIZE, {size: 15, offset: 0}, {size: 30, offset: 35}]
+                    [
+                        EMPTY_SIZE,
+                        {size: 15, offset: 0, key: '1'},
+                        {size: 30, offset: 35, key: '3'}
+                    ]
                 );
             });
         });
@@ -274,25 +307,25 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
             it('remove from start', () => {
                 const itemsSizes = controller.removeItems(0, 1);
                 assert.equal(itemsSizes.length, 2);
-                assert.deepEqual(itemsSizes, [{size: 20, offset: 15}, {size: 30, offset: 35}]);
+                assert.deepEqual(itemsSizes, [{size: 20, offset: 15, key: '2'}, {size: 30, offset: 35, key: '3'}]);
             });
 
             it('remove from middle', () => {
                 const itemsSizes = controller.removeItems(1, 1);
                 assert.equal(controller.getItemsSizes().length, 2);
-                assert.deepEqual(itemsSizes, [{size: 15, offset: 0}, {size: 30, offset: 35}]);
+                assert.deepEqual(itemsSizes, [{size: 15, offset: 0, key: '1'}, {size: 30, offset: 35, key: '3'}]);
             });
 
             it('remove from end', () => {
                 const itemsSizes = controller.removeItems(2, 1);
                 assert.equal(controller.getItemsSizes().length, 2);
-                assert.deepEqual(itemsSizes, [{size: 15, offset: 0}, {size: 20, offset: 15}]);
+                assert.deepEqual(itemsSizes, [{size: 15, offset: 0, key: '1'}, {size: 20, offset: 15, key: '2'}]);
             });
 
             it('remove two items from start', () => {
                 const itemsSizes = controller.removeItems(0, 2);
                 assert.equal(controller.getItemsSizes().length, 1);
-                assert.deepEqual(itemsSizes, [{size: 30, offset: 35}]);
+                assert.deepEqual(itemsSizes, [{size: 30, offset: 35, key: '3'}]);
             });
         });
 

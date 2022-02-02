@@ -10,6 +10,7 @@ export interface IAbstractItemsSizesControllerOptions {
 }
 
 export interface IItemSize {
+    key?: string;
     size: number;
     offset: number;
 }
@@ -169,7 +170,8 @@ export abstract class AbstractItemsSizesController {
                     }
                     this._itemsSizes[position] = {
                         size: this._getItemSize(element),
-                        offset
+                        offset,
+                        key: element.getAttribute('item-key')
                     };
                     position++;
                 });

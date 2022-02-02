@@ -60,7 +60,7 @@ export interface IActiveElementIndex {
 }
 
 export interface IEdgeItem {
-    index: number;
+    key: string;
     direction: IDirection;
     border: IDirection;
     borderDistance: number;
@@ -86,7 +86,7 @@ export type IActiveElementChangedChangedCallback = (activeElementIndex: number) 
 
 export type IItemsEndedCallback = (direction: IDirection) => void;
 
-export type IIndexesInitializedCallback = (range: IItemsRange) => void;
+export type IIndexesInitializedCallback = (range: IIndexesChangedParams) => void;
 
 export type IHasItemsOutRangeChangedCallback = (hasItems: IHasItemsOutRange) => void;
 
@@ -355,20 +355,10 @@ export class ScrollController {
      * @param startIndex Начальный индекс диапазона отображаемых записей
      */
     resetItems(totalCount: number, startIndex: number): void {
-        // Если начальный индекс не 0, то это значит что мы должны сохранить текущую позицию.
-        if (startIndex === 0) {
-            // Сбрасываем состояние контроллера.
-            this.scrollPositionChange(0);
-        }
-        this.contentResized(0);
-
         const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
-        const itemsSizes = this._itemsSizesController.resetItems(totalCount);
-        this._calculator.updateItemsSizes(itemsSizes);
-
-        this._calculator.resetItems(totalCount, startIndex);
+        const result = this._calculator.resetItems(totalCount, startIndex);
 
         const hasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),
@@ -385,7 +375,7 @@ export class ScrollController {
             this.setForwardTriggerPosition('offset');
         }
 
-        this._handleInitializingResult();
+        this._handleInitializingResult(result);
     }
 
     // endregion Collection changes
@@ -543,8 +533,13 @@ export class ScrollController {
         }
     }
 
-    private _handleInitializingResult(): void {
-        this._indexesInitializedCallback(this._calculator.getRange());
+    private _handleInitializingResult(result: ICalculatorResult): void {
+        this._indexesInitializedCallback({
+            range: result.range,
+            oldRange: result.oldRange,
+            oldPlaceholders: result.oldPlaceholders,
+            shiftDirection: result.shiftDirection
+        });
 
         const hasItemsOutRange: IHasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),

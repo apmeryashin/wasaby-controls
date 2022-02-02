@@ -69,6 +69,8 @@ export interface IEdgeItemCalculatingParams {
 
 export type IScrollParam = number | 'top' | 'bottom' | 'pageUp' | 'pageDown';
 
+export type IScrollOnReset = 'reset' | 'keep' | 'restore';
+
 export interface IDoScrollParams {
     scrollParam: IScrollParam;
 }
@@ -151,7 +153,7 @@ export abstract class AbstractListVirtualScrollController<
     private _activeElementKey: CrudEntityKey;
     private _initialScrollPosition: IInitialScrollPosition;
     private readonly _itemsContainerUniqueSelector: string;
-    private _keepScrollPosition: boolean = false;
+    private _scrollOnReset: IScrollOnReset = 'reset';
     protected _scrollPosition: number;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
@@ -400,11 +402,23 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     enableKeepScrollPosition(): void {
-        this._keepScrollPosition = true;
+        this._scrollOnReset = 'keep';
     }
 
     disableKeepScrollPosition(): void {
-        this._keepScrollPosition = false;
+        if (this._scrollOnReset === 'keep') {
+            this._scrollOnReset = 'reset';
+        }
+    }
+
+    enableRestoreScrollPosition(): void {
+        this._scrollOnReset = 'restore';
+    }
+
+    disableRestoreScrollPosition(): void {
+        if (this._scrollOnReset === 'restore') {
+            this._scrollOnReset = 'reset';
+        }
     }
 
     contentResized(contentSize: number): void {
@@ -455,7 +469,7 @@ export abstract class AbstractListVirtualScrollController<
         // Не нужно сбрасывать скролл, если список не был проскроллен.
         // Т.к. из-за вызова скролла сжимается графическая шапка.
         // Не нужно сбрасывать скролл, если будем скроллить к активному элементу.
-        this._shouldResetScrollPosition = !this._keepScrollPosition
+        this._shouldResetScrollPosition = this._scrollOnReset === 'reset'
             && !!this._scrollPosition
             && !this._activeElementKey;
         const totalCount = this._collection.getCount();
@@ -466,7 +480,7 @@ export abstract class AbstractListVirtualScrollController<
         // с текущего startIndex, если собираемся оставить прежнюю позицию скролла,
         // с индекса активного элемента, если он задан
         // с нуля в остальных случаях
-        const startIndex = this._keepScrollPosition
+        const startIndex = this._scrollOnReset === 'keep'
             ? this._collection.getStartIndex()
             : (activeIndex !== -1 ? activeIndex : 0);
         this._scrollController.resetItems(totalCount, startIndex);
@@ -662,8 +676,20 @@ export abstract class AbstractListVirtualScrollController<
         };
     }
 
-    private _indexesInitializedCallback(range: IItemsRange): void {
-        this._handleChangedIndexes(range, null);
+    private _indexesInitializedCallback(params: IIndexesChangedParams): void {
+        this._handleChangedIndexes(params.range, null, () => {
+            if (this._scrollOnReset === 'restore') {
+                this._scheduleScroll({
+                    type: 'calculateRestoreScrollParams',
+                    params: {
+                        range: params.oldRange,
+                        placeholders: params.oldPlaceholders,
+                        direction: 'backward'
+                    }
+                });
+                this.disableRestoreScrollPosition();
+            }
+        });
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
@@ -903,7 +929,8 @@ export abstract class AbstractListVirtualScrollController<
             .map((it) => {
                 const itemSize = {
                     size: it.getContents().get(this._itemSizeProperty),
-                    offset: 0
+                    offset: 0,
+                    key: it.itemKeyAttribute
                 };
 
                 if (!itemSize.size) {
