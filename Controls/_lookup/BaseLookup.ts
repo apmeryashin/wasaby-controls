@@ -12,6 +12,7 @@ import {getDefaultBorderVisibilityOptions} from 'Controls/input';
 import 'css!Controls/lookup';
 import 'css!Controls/CommonClasses';
 import {ICrud, ICrudPlus, IData, PrefetchProxy} from 'Types/source';
+import {isEqual} from 'Types/object';
 
 type LookupReceivedState = SelectedItems|null;
 
@@ -54,18 +55,28 @@ export default abstract class
     }
 
     protected _beforeUpdate(newOptions: ILookupOptions): Promise<SelectedItems>|void|boolean {
+        const lookupController = this._lookupController;
+
         if (newOptions.source !== this._options.source) {
             this._source = newOptions.source;
         }
-        const updateResult = this._lookupController.update(this._getLookupControllerOptions(newOptions));
+        const updateResult = lookupController.update(this._getLookupControllerOptions(newOptions));
         const updateResultCallback = () => {
-            this._itemsChanged(this._items = this._lookupController.getItems());
-            this._notifyOnItemsChanged();
+            this._itemsChanged(this._items = lookupController.getItems());
+
+            // Защита от зацикливания, если метод не вернул записей
+            // или вернул больше/меньше записей, чем запрашивали
+            if (newOptions.selectedKeys !== undefined &&
+                !isEqual(lookupController.getSelectedKeys(), newOptions.selectedKeys)) {
+                this._notifyChanges(newOptions, lookupController.getSelectedKeys());
+            } else {
+                this._notifyOnItemsChanged();
+            }
         };
 
         if (updateResult instanceof Promise) {
             updateResult.then((items) => {
-                this._lookupController.setItems(items);
+                lookupController.setItems(items);
                 updateResultCallback();
             });
         } else if (updateResult) {
