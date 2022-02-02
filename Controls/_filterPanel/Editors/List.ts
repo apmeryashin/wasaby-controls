@@ -203,10 +203,11 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _beforeUpdate(options: IListEditorOptions): void {
         const {propertyValue, sourceController, filter, additionalTextProperty, displayProperty, source} = options;
+        const currentFilter = this._filter;
         const valueChanged =
             !isEqual(propertyValue, this._options.propertyValue) &&
             !isEqual(propertyValue, this._selectedKeys);
-        const filterChanged = !isEqual(filter, this._options.filter);
+        let filterChanged = !isEqual(filter, this._options.filter);
         const displayPropertyChanged = displayProperty !== this._options.displayProperty;
         const additionalDataChanged = additionalTextProperty !== this._options.additionalTextProperty;
         const sourceChanged = source !== this._options.source;
@@ -222,7 +223,7 @@ class ListEditor extends Control<IListEditorOptions> {
         if (valueChanged) {
             this._setMarkedKey(this._selectedKeys, options);
         }
-
+        filterChanged = !isEqual(currentFilter, this._filter);
         if (sourceController && (filterChanged || sourceChanged)) {
             sourceController.updateOptions({
                 ...options,
