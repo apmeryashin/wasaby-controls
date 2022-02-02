@@ -114,7 +114,7 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
             const iteratedIndices = [];
             VirtualScrollController.each(collection, (_item, index) => iteratedIndices.push(index));
 
-            assert.deepEqual(iteratedIndices, [1, 6, 7, 8, 15]);
+            assert.deepEqual(iteratedIndices, [1, 5, 6, 7, 8, 9, 15]);
         });
         it('iterates over each item once with correct indices with editing item', () => {
             const collection = makeCollection();
@@ -141,7 +141,7 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
             const iteratedIndices = [];
             VirtualScrollController.each(collection, (_item, index) => iteratedIndices.push(index));
 
-            assert.deepEqual(iteratedIndices, [1, 6, 7, 8, 9]);
+            assert.deepEqual(iteratedIndices, [1, 5, 6, 7, 8, 9]);
         });
         it('iterates over each item once with correct indices with sticky group', () => {
             const collection = makeCollection();
