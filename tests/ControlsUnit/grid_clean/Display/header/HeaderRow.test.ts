@@ -10,7 +10,8 @@ describe('Controls/grid_clean/Display/header/HeaderRow', () => {
         getStickyColumnsCount: () => 1,
         getGridColumnsConfig: () => columns,
         hasMultiSelectColumn: () => true,
-        hasItemActionsSeparatedCell: () => false
+        hasItemActionsSeparatedCell: () => false,
+        hasNewColumnScroll: () => false
     } as undefined as GridCollection<Model>;
 
     const headerModel = {

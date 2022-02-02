@@ -16,6 +16,7 @@ describe('Controls/grid_clean/Display/Ladder/HeaderRow/initializeColumns', () =>
             getRightPadding: () => 's',
             isStickyHeader: () => false,
             hasColumnScroll: () => false,
+            hasNewColumnScroll: () => false,
             isSticked: () => false
         };
 

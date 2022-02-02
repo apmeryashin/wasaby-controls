@@ -19,6 +19,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false
             };
 
@@ -81,6 +82,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false
             };
 
@@ -127,6 +129,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 'default',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false
             };
 
@@ -184,6 +187,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false
             };
 
@@ -242,6 +246,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false
             };
 
@@ -301,6 +306,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false
             };
 
@@ -359,7 +365,8 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                     getLeftPadding: () => 's',
                     getRightPadding: () => 's',
                     isStickyHeader: () => false,
-                    hasColumnScroll: () => false
+                    hasColumnScroll: () => false,
+                    hasNewColumnScroll: () => false
                 };
 
                 const mockedHeaderModel = {

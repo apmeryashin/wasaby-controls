@@ -13,8 +13,10 @@ export default class ListScrollContextProvider extends Control<IOptions> {
         this._scrollContext = new ListScrollContext(options);
     }
 
-    protected _beforeUpdate(options: IOptions): void {
+    protected _shouldUpdate(options: IOptions): boolean {
+        const shouldUpdateConsumers = this._scrollContext.shouldUpdateConsumers(options);
         this._scrollContext.updateOptions(options);
+        return shouldUpdateConsumers;
     }
 
     _getChildContext(): object {
