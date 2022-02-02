@@ -10,21 +10,21 @@
         <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-Confirm__yesno"
                                                    name="Confirm3"
                                                    message="Сохранить изменения?"
-                                                   style = "success"
+                                                   borderStyle = "success"
                                                    type="yesno">
         </Controls.popupTemplate:ConfirmationDialog>
 
         <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-Confirm__yesnocancel"
                                                    name="Confirm1"
                                                    message="Вы уверены?"
-                                                   style="danger"
+                                                   borderStyle="danger"
                                                    type="yesnocancel">
         </Controls.popupTemplate:ConfirmationDialog>
 
         <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-Confirm__captionButton"
                                                    name="Confirm2"
                                                    message="Are you sure you want to delete?"
-                                                   style="primary"
+                                                   borderStyle="primary"
                                                    type="yesnocancel"
                                                    primaryAction="no"
                                                    yesCaption="Yes"
@@ -36,7 +36,7 @@
     <div class="controlsDemo__wrapper ws-flexbox ws-flex-column" style="align-items: center;">
         <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-ConfirmSize__yesnocancel"
                                                    name="ConfirmSize1"
-                                                   style="secondary"
+                                                   borderStyle="secondary"
                                                    message="Advertisers study how people learn so that they can ‘teach’ them to respond to their advertising"
                                                    details="If advertisements are to he learned, there is a need for lots of repetition."
                                                    type="yesnocancel">

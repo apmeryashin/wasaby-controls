@@ -43,7 +43,7 @@ export interface IInfoBoxOptions extends IControlOptions {
     */
     alignment?: string;
     /**
-     * @name Controls/_popup/interface/IInfoBox#style
+     * @name Controls/_popup/interface/IInfoBox#borderStyle
      * @cfg {String} Внешний вид всплывающей подсказки.
      * @variant default
      * @variant danger
@@ -56,7 +56,7 @@ export interface IInfoBoxOptions extends IControlOptions {
      */
 
     /*
-    * @name Controls/_popup/interface/IInfoBox#style
+    * @name Controls/_popup/interface/IInfoBox#borderStyle
     * @cfg {String} Infobox display style.
     * @variant default
     * @variant danger
@@ -66,7 +66,7 @@ export interface IInfoBoxOptions extends IControlOptions {
     * @variant success
     * @variant primary
     */
-    style?: string;
+    borderStyle?: string;
     /**
      * @name Controls/_popup/interface/IInfoBox#trigger
      * @cfg {String} Определяет, какое событие будет иницировать открытие и закрытие всплывающей подсказки.

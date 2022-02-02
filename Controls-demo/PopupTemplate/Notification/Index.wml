@@ -2,35 +2,35 @@
         <div class="Controls-demo_NotificationTemplateOpenerClass">
                 <Controls.popupTemplate:NotificationSimple name="myOpenerDanger"
                                                            text="DANGER"
-                                                           style="danger"
+                                                           borderStyle="danger"
                                                            icon="icon-Subscribe"
 														   attr:class="controlsDemo-Notification__danger">
                 </Controls.popupTemplate:NotificationSimple>
 
                 <Controls.popupTemplate:NotificationSimple name="myOpenerWarning"
                                                            text="WARNING"
-                                                           style="warning"
+                                                           borderStyle="warning"
                                                            icon="icon-Attach"
 														   attr:class="controlsDemo-Notification__warning">
                 </Controls.popupTemplate:NotificationSimple>
 
                 <Controls.popupTemplate:NotificationSimple name="myOpenerSuccess"
                                                            text="Success"
-                                                           style="success"
+                                                           borderStyle="success"
                                                            icon="icon-Vacation"
 														   attr:class="controlsDemo-Notification__success">
                 </Controls.popupTemplate:NotificationSimple>
 
                 <Controls.popupTemplate:NotificationSimple name="myOpenerSecondary"
                                                            text="Secondary"
-                                                           style="secondary"
+                                                           borderStyle="secondary"
                                                            icon="icon-AdminInfo"
 														   attr:class="controlsDemo-Notification__primary">
                 </Controls.popupTemplate:NotificationSimple>
 
                 <Controls.popupTemplate:NotificationSimple name="myOpenerDanger1"
                                                            text="NotificationSimple- no closeButton"
-                                                           style="danger"
+                                                           borderStyle="danger"
                                                            closeButtonVisible="{{false}}"
                                                            icon="icon-Subscribe"
 														   attr:class="controlsDemo-Notification__noClose">
@@ -38,27 +38,27 @@
 
                 <Controls.popupTemplate:NotificationSimple name="myOpenerWarning1"
                                                            text="NotificationSimple- no icon"
-                                                           style="warning"
+                                                           borderStyle="warning"
 														   attr:class="controlsDemo-Notification__noIcon">
                 </Controls.popupTemplate:NotificationSimple>
 
                 <Controls.popupTemplate:NotificationSimple name="myOpenerSuccess1"
                                                            text="NotificationSimple- no closeButton, no icon"
-                                                           style="success"
+                                                           borderStyle="success"
                                                            closeButtonVisible="{{false}}"
 														   attr:class="controlsDemo-Notification__noCloseIcon">
                 </Controls.popupTemplate:NotificationSimple>
 
                 <Controls.popupTemplate:Notification name="myOpenerDanger2"
                                                      bodyContentTemplate = "Notification - with closeButton"
-                                                     style="danger"
+                                                     borderStyle="danger"
                                                      closeButtonVisible="{{true}}"
 													 attr:class="controlsDemo-Notification__closeButton">
                 </Controls.popupTemplate:Notification>
 
                 <Controls.popupTemplate:Notification name="myOpenerPrimary1"
                                                      bodyContentTemplate="Notification"
-                                                     style="primary"
+                                                     borderStyle="primary"
 													 attr:class="controlsDemo-Notification__primaryNoIcon">
                 </Controls.popupTemplate:Notification>
         </div>
