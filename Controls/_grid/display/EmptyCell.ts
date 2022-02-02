@@ -44,8 +44,7 @@ class EmptyCell extends mixin<
 
     getContentClasses(topSpacing: string = 'default',
                       bottomSpacing: string = 'default',
-                      align: TContentAlign = 'center',
-                      valign: TVerticalAlign = 'center'): string {
+                      align: TContentAlign = 'center'): string {
         let classes;
 
         // todo https://online.sbis.ru/opendoc.html?guid=024784a6-cc47-4d1a-9179-08c897edcf72
@@ -61,8 +60,7 @@ class EmptyCell extends mixin<
             // Если пустое представление тянется (по умолчанию), то мы используем выравнивание контента флексом
             if (this._$column.templateOptions.height !== 'auto') {
                 classes += ' controls-GridView__emptyTemplate_stretch'
-                        + ` controls-GridView__emptyTemplate_stretch_align_${align}`
-                        + ` controls-GridView__emptyTemplate_stretch_verticalAlign_${valign}`;
+                        + ` controls-GridView__emptyTemplate_stretch_align_${align}`;
             }
 
         } else if (this.isMultiSelectColumn()) {
