@@ -8,7 +8,6 @@ import {ToSourceModel} from 'Controls/_lookup/resources/ToSourceModel';
 import {isEqual} from 'Types/object';
 import {object} from 'Types/util';
 import { constants } from 'Env/Constants';
-import {IData} from 'Types/source';
 
 type Key = string|number|null;
 export type SelectedItems = RecordSet|List<Model>|List<void>;
