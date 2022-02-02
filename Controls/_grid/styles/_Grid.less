@@ -25,10 +25,34 @@
    height: 100%;
 }
 
-.controls-GridView__emptyTemplate__contentWrapper {
+.controls-GridView__emptyTemplate_stretch {
    display: flex;
+   height: 100%;
+   box-sizing: border-box;
+}
+
+.controls-GridView__emptyTemplate_stretch_align_center {
    justify-content: center;
+}
+
+.controls-GridView__emptyTemplate_stretch_stretch_align_start {
+   justify-content: left;
+}
+
+.controls-GridView__emptyTemplate_stretch_align_end {
+   justify-content: right;
+}
+
+.controls-GridView__emptyTemplate_stretch_verticalAlign_center {
    align-items: center;
+}
+
+.controls-GridView__emptyTemplate_stretch_verticalAlign_start {
+   align-items: start;
+}
+
+.controls-GridView__emptyTemplate_stretch_verticalAlign_end {
+   align-items: end;
 }
 
 .controls-GridView__emptyTemplate {

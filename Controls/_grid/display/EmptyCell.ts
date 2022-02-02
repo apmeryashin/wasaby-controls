@@ -4,6 +4,7 @@ import Cell, {IOptions as IBaseCellOptions} from './Cell';
 import CellCompatibility from './compatibility/DataCell';
 
 type TContentAlign = 'center' | 'start' | 'end';
+type TVerticalAlign = 'center' | 'start' | 'end';
 
 /**
  * Ячейка строки пустого представления таблицы
@@ -26,7 +27,6 @@ class EmptyCell extends mixin<
 
         if (this._$isSingleColspanedCell && hasRowTemplate) {
             classes = columnScrollClasses;
-            classes += ' controls-GridView__emptyTemplate__contentWrapper';
         } else if (this.isMultiSelectColumn()) {
             classes = 'controls-GridView__emptyTemplate__checkBoxCell '
                 + 'controls-Grid__row-cell-editing '
@@ -44,7 +44,8 @@ class EmptyCell extends mixin<
 
     getContentClasses(topSpacing: string = 'default',
                       bottomSpacing: string = 'default',
-                      align: TContentAlign = 'center'): string {
+                      align: TContentAlign = 'center',
+                      valign: TVerticalAlign = 'center'): string {
         let classes;
 
         // todo https://online.sbis.ru/opendoc.html?guid=024784a6-cc47-4d1a-9179-08c897edcf72
@@ -56,6 +57,14 @@ class EmptyCell extends mixin<
                 + ` controls-ListView__empty-textAlign_${align}`
                 + ` controls-ListView__empty_topSpacing_${topSpacing}`
                 + ` controls-ListView__empty_bottomSpacing_${bottomSpacing}`;
+
+            // Если пустое представление тянется (по умолчанию), то мы используем выравнивание контента флексом
+            if (this._$column.templateOptions.height !== 'auto') {
+                classes += ' controls-GridView__emptyTemplate_stretch'
+                        + ` controls-GridView__emptyTemplate_stretch_align_${align}`
+                        + ` controls-GridView__emptyTemplate_stretch_verticalAlign_${valign}`;
+            }
+
         } else if (this.isMultiSelectColumn()) {
             classes = '';
         } else {
