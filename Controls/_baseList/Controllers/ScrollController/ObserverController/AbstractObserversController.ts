@@ -5,6 +5,7 @@ import { Logger } from 'UI/Utils';
 import {isEqual} from 'Types/object';
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/ScrollController/ObserversController/AbstractObserversController';
+const COUNT_TRIGGERS = 2;
 
 export type TIntersectionEvent = 'bottomIn' | 'bottomOut' | 'topIn' | 'topOut';
 
@@ -113,6 +114,13 @@ export abstract class AbstractObserversController {
         }
         if (this._listContainer) {
             this._updateTriggers();
+        }
+    }
+
+    destroy(): void {
+        if (this._observer) {
+            this._observer.destroy();
+            this._observer = null;
         }
     }
 
@@ -310,9 +318,7 @@ export abstract class AbstractObserversController {
             return;
         }
 
-        this._triggers = Array.from(
-            this._listContainer.querySelectorAll(this._triggersQuerySelector)
-        );
+        this._triggers = this._getTriggers();
 
         this._triggers[0].style.display = this._triggersVisibility.backward ? '' : 'none';
         this._triggers[1].style.display = this._triggersVisibility.forward ? '' : 'none';
@@ -324,6 +330,27 @@ export abstract class AbstractObserversController {
             this._intersectionObserverHandler.bind(this),
             ...this._triggers
         );
+    }
+
+    /**
+     * Возвращает DOM-элементы триггеров.
+     * @remark
+     * Возвращает триггеры только из текущего списка, исключая триггеры вложенных списков.
+     * Для этого сперва получает только первый триггер, который точно находится в этом списке,
+     * т.к. лежит до itemsContainer. И уже получает все сестринские элементы к первому триггера
+     * и из них выбирает только триггеры.
+     * @private
+     */
+    private _getTriggers(): HTMLElement[] {
+        const allTriggers = Array.from(this._listContainer.querySelectorAll(this._triggersQuerySelector));
+        // Исключаем триггеры из вложенных списков. Триггеры текущего списка будут находиться в начале и в конце всегда,
+        // т.к. элементы, которые могут содержать списки, находятся между триггерами.
+        const triggersOfThisList = [allTriggers.shift(), allTriggers.pop()].filter((it) => !!it) as HTMLElement[];
+        if (triggersOfThisList.length !== COUNT_TRIGGERS) {
+            Logger.error('Неверное кол-во триггеров в списке.'
+                + ` Убедитесь, что на всех триггерах есть класс: ${this._triggersQuerySelector}`);
+        }
+        return triggersOfThisList;
     }
 
     private _isTriggerVisible(direction: IDirection): boolean {

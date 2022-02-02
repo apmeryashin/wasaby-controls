@@ -11,6 +11,7 @@ import {
     ITriggerPosition
 } from './ObserverController/AbstractObserversController';
 import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalculatorResult} from './Calculator';
+import CalculatorWithoutVirtualization from 'Controls/_baseList/Controllers/ScrollController/CalculatorWithoutVirtualization';
 import {CrudEntityKey} from 'Types/source';
 import type {IEdgeItemCalculatingParams} from '../AbstractListVirtualScrollController';
 
@@ -77,6 +78,8 @@ export interface IHasItemsOutRange {
 
 export type IDirection = 'backward' | 'forward';
 
+export type IScrollToPageMode = 'edgeItem' | 'viewport';
+
 export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
 
 export type IActiveElementChangedChangedCallback = (activeElementIndex: number) => void;
@@ -93,6 +96,7 @@ export interface IScrollControllerOptions extends
     IAbstractItemsSizesControllerOptions,
     IAbstractObserversControllerBaseOptions,
     ICalculatorBaseOptions {
+    disableVirtualScroll: boolean;
     observerControllerConstructor: new (options: IAbstractObserversControllerOptions) => AbstractObserversController;
     itemsSizeControllerConstructor: new (options: IAbstractItemsSizesControllerOptions) => AbstractItemsSizesController;
     indexesInitializedCallback: IIndexesInitializedCallback;
@@ -152,7 +156,8 @@ export class ScrollController {
             observersCallback: this._observersCallback.bind(this)
         });
 
-        this._calculator = new Calculator({
+        const calculatorConstructor = options.disableVirtualScroll ? CalculatorWithoutVirtualization : Calculator;
+        this._calculator = new calculatorConstructor({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
             scrollPosition: options.scrollPosition,
@@ -160,8 +165,13 @@ export class ScrollController {
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
             contentSize: options.contentSize,
-            givenItemsSizes: options.givenItemsSizes
+            givenItemsSizes: options.givenItemsSizes,
+            feature1183225611: options.feature1183225611
         });
+    }
+
+    destroy(): void {
+        this._observersController.destroy();
     }
 
     viewportResized(viewportSize: number): boolean {
@@ -193,6 +203,10 @@ export class ScrollController {
 
     getFirstVisibleItemIndex(): number {
         return this._calculator.getFirstVisibleItemIndex();
+    }
+
+    setCountItemsRenderedOutsideRange(count: number): void {
+        this._itemsSizesController.setCountItemsRenderedOutsideRange(count);
     }
 
     // region Triggers
@@ -257,6 +271,7 @@ export class ScrollController {
      */
     setListContainer(newListContainer: HTMLElement): void {
         this._observersController.setListContainer(newListContainer);
+        this._itemsSizesController.setListContainer(newListContainer);
     }
 
     /**
@@ -323,14 +338,15 @@ export class ScrollController {
      * Обрабатывает удаление элементов из коллекции.
      * @param position Индекс первого удаленного элемента.
      * @param count Кол-во удаленных элементов.
+     * @param scrollMode Режим скролла
      */
-    removeItems(position: number, count: number): void {
+    removeItems(position: number, count: number, scrollMode: IScrollMode): void {
         const result = this._calculator.removeItems(position, count);
 
         const itemsSizes = this._itemsSizesController.removeItems(position, count);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        this._processCalculatorResult(result, 'fixed');
+        this._processCalculatorResult(result, scrollMode);
     }
 
     /**
@@ -339,13 +355,6 @@ export class ScrollController {
      * @param startIndex Начальный индекс диапазона отображаемых записей
      */
     resetItems(totalCount: number, startIndex: number): void {
-        // Если начальный индекс не 0, то это значит что мы должны сохранить текущую позицию.
-        if (startIndex === 0) {
-            // Сбрасываем состояние контроллера.
-            this.scrollPositionChange(0);
-        }
-        this.contentResized(0);
-
         const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
@@ -389,6 +398,21 @@ export class ScrollController {
     }
 
     /**
+     * Возвращает способ скролла к следующей/предыдущей страницы в зависимости от размера крайней записи
+     */
+    getScrollToPageMode(edgeItemIndex: number): IScrollToPageMode {
+        // Если запись меньше трети вьюпорта, то скроллим к ней на pageUp|pageDown, чтобы не разбивать мелкие записи.
+        // Иначе, скроллим как обычно, на высоту вьюпорта
+        const MAX_SCROLL_TO_EDGE_ITEM_RELATION = 3;
+        const itemSize = this._itemsSizesController.getItemsSizes()[edgeItemIndex].size;
+        if (itemSize * MAX_SCROLL_TO_EDGE_ITEM_RELATION > this._viewportSize) {
+            return 'viewport';
+        } else {
+            return 'edgeItem';
+        }
+    }
+
+    /**
      * Скроллит к элементу по переданному индексу.
      * При необходимости смещает диапазон.
      * @param itemIndex Индекс элемента, к которому нужно проскроллить.
@@ -415,9 +439,10 @@ export class ScrollController {
      * Обрабатывает изменение позиции при скролле.
      * Используется при обычном скролле списка.
      * @param position
+     * @param updateActiveElement Нужно ли обновлять активный эелемент
      */
-    scrollPositionChange(position: number): void {
-        const result = this._calculator.scrollPositionChange(position);
+    scrollPositionChange(position: number, updateActiveElement: boolean): void {
+        const result = this._calculator.scrollPositionChange(position, updateActiveElement);
         this._processActiveElementIndexChanged(result);
         this._observersController.setScrollPosition(position);
     }
