@@ -8,14 +8,14 @@
                     fontWeight="default"
                     scope="{{_options}}"
                     on:rangeChanged="_handleRangeChanged()"
-                    attr:class="controls-FilterViewPanel__dateRangeEditor controls-FilterViewPanel__basicEditor-cloud
-                                controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}"/>
+                    attr:class="controls-FilterViewPanel__dateRangeEditor"/>
     </Controls.Container.Async>
 </ws:template>
 
 <Controls._filterPanel.BaseEditor scope="{{_options}}">
     <ws:editorTemplate>
-        <ws:partial template="date"/>
+        <ws:partial template="date" attr:class="controls-FilterViewPanel__basicEditor-cloud
+                                                controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}"/>
     </ws:editorTemplate>
 
     <ws:extendedTemplate>
