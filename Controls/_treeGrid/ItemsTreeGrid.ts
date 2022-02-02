@@ -1,11 +1,12 @@
 import {Logger} from 'UI/Utils';
+import {CrudEntityKey} from 'Types/source';
 import {IItemsViewOptions} from 'Controls/baseList';
 import {isFullGridSupport} from 'Controls/display';
 import {ItemsView as ItemsGrid} from 'Controls/grid';
 import { TreeGridControl } from './TreeGridControl';
 import TreeGridView from 'Controls/_treeGrid/TreeGridView';
 import TreeGridViewTable from 'Controls/_treeGrid/TreeGridViewTable';
-import {default as ITreeGrid, IOptions as ITreeGridOptions} from 'Controls/_treeGrid/interface/ITreeGrid';
+import {IOptions as ITreeGridOptions} from 'Controls/_treeGrid/interface/ITreeGrid';
 
 /**
  * Опции для контрола {@link Controls/treeGrid:ItemsView}
@@ -42,7 +43,7 @@ export interface IItemsTreeGridOptions extends IItemsViewOptions, ITreeGridOptio
  * @public
  * @author Уфимцев Д.Ю.
  */
-export default class ItemsTreeGrid extends ItemsGrid<IItemsTreeGridOptions> implements ITreeGrid {
+export default class ItemsTreeGrid extends ItemsGrid<IItemsTreeGridOptions, TreeGridControl> {
     //region override base template props
     protected _viewName: Function = null;
     protected _viewTemplate: Function = TreeGridControl;
@@ -54,7 +55,7 @@ export default class ItemsTreeGrid extends ItemsGrid<IItemsTreeGridOptions> impl
     //endregion
 
     //region life circle hooks
-    _beforeMount(options: IItemsTreeGridOptions): void | Promise<void> {
+    protected _beforeMount(options: IItemsTreeGridOptions): void | Promise<void> {
         if (options.groupProperty && options.nodeTypeProperty) {
             Logger.error('Нельзя одновременно задавать группировку через ' +
                 'groupProperty и через nodeTypeProperty.', this);
@@ -64,6 +65,12 @@ export default class ItemsTreeGrid extends ItemsGrid<IItemsTreeGridOptions> impl
         this._viewName = isFullGridSupport() ? TreeGridView : TreeGridViewTable;
 
         return superResult;
+    }
+    //endregion
+
+    //region proxy methods to list control
+    toggleExpanded(key: CrudEntityKey): void {
+        this._listControl.toggleExpanded(key).then();
     }
     //endregion
 

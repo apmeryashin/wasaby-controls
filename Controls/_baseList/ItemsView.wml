@@ -1,4 +1,5 @@
 <ws:partial
+   name="listControl"
    scope="{{_options}}"
    template="{{_viewTemplate}}"
    attachLoadTopTriggerToNull="{{ false }}"

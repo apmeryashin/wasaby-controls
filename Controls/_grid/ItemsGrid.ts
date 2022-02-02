@@ -1,7 +1,12 @@
 import {isFullGridSupport} from 'Controls/display';
 import * as GridView from 'Controls/_grid/GridView';
 import GridViewTable from 'Controls/_grid/GridViewTable';
-import {IItemsViewOptions, ItemsView as ListItemsView, ListControl as viewTemplate} from 'Controls/baseList';
+import {
+    BaseControl,
+    IItemsViewOptions,
+    ItemsView as ListItemsView,
+    ListControl as viewTemplate
+} from 'Controls/baseList';
 
 /**
  * Контрол плоской {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ таблицы}, который умеет работать без {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных}.
@@ -28,14 +33,17 @@ import {IItemsViewOptions, ItemsView as ListItemsView, ListControl as viewTempla
  * @public
  * @author Уфимцев Д.Ю.
  */
-export default class ItemsGrid<TOptions extends IItemsViewOptions = IItemsViewOptions> extends ListItemsView<TOptions> {
+export default class ItemsGrid<
+    TOptions extends IItemsViewOptions = IItemsViewOptions,
+    TListControl extends BaseControl = BaseControl
+> extends ListItemsView<TOptions, TListControl> {
     //region override base template props
     protected _viewName: Function = null;
     protected _viewTemplate: Function = viewTemplate;
     protected _viewModelConstructor: string = 'Controls/grid:GridCollection';
     //endregion
 
-    _beforeMount(options: TOptions): void | Promise<void> {
+    protected _beforeMount(options: TOptions): void | Promise<void> {
         const superResult = super._beforeMount(options);
         this._viewName = isFullGridSupport() ? GridView : GridViewTable;
         return superResult;

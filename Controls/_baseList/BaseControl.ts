@@ -4350,7 +4350,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return 0;
     }
 
-    _beforeUnmount() {
+    protected _beforeUnmount(): void {
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
@@ -4560,7 +4560,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _afterUpdate(oldOptions): void {
+    protected _afterUpdate(oldOptions: TOptions): void {
         if (!this._sourceController?.getLoadError()) {
             if (!this._observerRegistered) {
                 this._registerObserver();

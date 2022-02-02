@@ -46,7 +46,11 @@ export interface IItemsViewOptions extends IControlOptions {
  * @public
  * @author Уфимцев Д.Ю.
  */
-export default class ItemsView<TOptions extends IItemsViewOptions = IItemsViewOptions> extends Control<TOptions> {
+export default class ItemsView<
+    TOptions extends IItemsViewOptions = IItemsViewOptions,
+    TListControl extends BaseControl = BaseControl
+> extends Control<TOptions> {
+
     //region base control props
     protected _template: TemplateFunction = template;
     //endregion
@@ -66,6 +70,16 @@ export default class ItemsView<TOptions extends IItemsViewOptions = IItemsViewOp
      * Обработчик который используется в шаблоне для проксирования событий логическому родителю.
      */
     protected _notifyHandler: typeof EventUtils.tmplNotify = EventUtils.tmplNotify;
+    //endregion
+
+    //region props
+    /**
+     * Возвращает инстанс контроллера списка. Для обычных списков тут будет BaseControl,
+     * для деревьев - TreeControl.
+     */
+    protected get _listControl(): TListControl {
+        return this._children.listControl as TListControl;
+    }
     //endregion
 
     static defaultProps: object = {
