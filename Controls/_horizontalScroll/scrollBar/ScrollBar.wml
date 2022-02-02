@@ -1,15 +1,17 @@
 <Controls.scroll:Group>
 	<div style="display: contents;">
 		<Controls.scroll:StickyBlock mode="stackable"
-									 attr:style="left:{{_options.fixedWidth}}px; grid-column: 1 / {{ _options.stickyColumnsCount + 1}};"
+									 attr:style="z-index: 5; left:{{_options.fixedWidth}}px; grid-column: 1 / {{ _options.stickyColumnsCount + 1}};"
 									 backgroundStyle="{{ _options.backgroundStyle }}"
 									 fixedZIndex="{{5}}"
 									 position="{{ {'horizontal': 'left', 'vertical': 'top'} }}"
 									 shadowVisibility="hidden">
-			<div style="width: {{_options.scrollableWidth}}px;">
-				<Controls.scroll:_Scrollbar attr:style="position: absolute; top: 0; left: 0; right: 0; z-index: 6; width: inherit;"
+			<div style="width: {{_options.scrollableWidth}}px; position: absolute;">
+				<Controls.scroll:_Scrollbar name="scrollBar"
+											attr:style="position: absolute; top: 0; left: 0; right: 0; z-index: 6; width: inherit;"
+											attr:class="{{ !_options.canHorizontalScroll ? 'ws-hidden'}}"
 											bind:position="_position"
-											contentSize="{{_options.contentWidth}}"
+											contentSize="{{_options.contentWidth - _options.fixedWidth}}"
 											direction="horizontal"
 											shouldSetMarginTop="{{ true }}"
 											trackVisible="{{ true }}"

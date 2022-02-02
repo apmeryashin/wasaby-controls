@@ -1,1 +1,3 @@
-<ws:partial template="{{ _options.content }}" setScrollContainerViewMode="{{ _setScrollContainerViewMode }}"/>
+<ws:partial template="{{ _options.content }}"
+			setScrollContainerViewMode="{{ _setScrollContainerViewMode }}"
+			canHorizontalScroll="{{ _canHorizontalScroll }}"/>

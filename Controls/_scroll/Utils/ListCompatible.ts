@@ -49,7 +49,9 @@ export class ListCompatible extends DestroyableMixin {
 
         if (scrollModel.clientWidth !== oldScrollState.clientWidth) {
             this.sendByListScrollRegistrar(listScroll, 'horizontalViewportResize', {
+                scrollHeight: scrollModel.scrollHeight,
                 scrollWidth: scrollModel.scrollWidth,
+                scrollTop: scrollModel.scrollTop,
                 scrollLeft: scrollModel.scrollLeft,
                 clientWidth: scrollModel.clientWidth,
                 rect: scrollModel.viewPortRect
@@ -141,7 +143,9 @@ export class ListCompatible extends DestroyableMixin {
             component,
             'horizontalViewportResize',
             {
+                scrollHeight: scrollModel.scrollHeight,
                 scrollWidth: scrollModel.scrollWidth,
+                scrollTop: scrollModel.scrollTop,
                 scrollLeft: scrollModel.scrollLeft,
                 clientWidth: scrollModel.clientWidth,
                 rect: scrollModel.viewPortRect

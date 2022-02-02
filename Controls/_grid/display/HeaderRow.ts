@@ -106,7 +106,9 @@ export default class HeaderRow extends Row<null> {
             this._$columnItems = [];
             const factory = this.getColumnsFactory();
             let totalColspan = 0;
-            this._$columnItems = this._$columnsConfig.map((column, index) => {
+
+            this._$columnItems = this._$owner.getColumnsEnumerator().getIndexes(true).map((index) => {
+                const column = this._$columnsConfig[index];
                 const isFixed =
                     (this.isMultiline() ? (column.startColumn - 1) : totalColspan) < this.getStickyColumnsCount();
                 totalColspan += (column.endColumn - column.startColumn) || 1;
