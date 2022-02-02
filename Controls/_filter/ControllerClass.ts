@@ -526,6 +526,15 @@ export default class FilterControllerClass extends mixin<
             let historyData;
             if (this._updateMeta) {
                 historyData = this._updateMeta.item;
+                if (historyData && prefetchParams) {
+                    const historyItems = JSON.parse(historyData.get('ObjectData'));
+                    const currentSessionId = historyItems.prefetchParams.PrefetchSessionId;
+                    const newSessionId = prefetchParams?.PrefetchSessionId;
+                    if (newSessionId && currentSessionId !== newSessionId) {
+                        historyItems.prefetchParams.PrefetchSessionId = newSessionId;
+                        historyData.set('ObjectData', JSON.stringify(historyItems));
+                    }
+                }
             } else {
                 historyData = this._getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
                 if (this._options.historySaveCallback instanceof Function) {

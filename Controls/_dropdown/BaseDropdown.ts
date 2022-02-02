@@ -27,13 +27,23 @@ export abstract class BaseDropdown extends Control<IControlOptions, IDropdownRec
 
     abstract openMenu(popupOptions?: IStickyPopupOptions): void;
 
-    protected _handleKeyDown(event): void {
-        if (event.nativeEvent.keyCode === constants.key.esc && this._isOpened) {
+    protected _handleKeyDown(event: SyntheticEvent<KeyboardEvent>): void {
+        const code = event.nativeEvent.keyCode;
+        const autofocusConfig = {
+            autofocus: true,
+            templateOptions: {
+                focusable: true
+            }
+        };
+        if (code === constants.key.esc && this._isOpened) {
             this._controller.closeMenu();
-            event.stopPropagation();
-        } else if (event.nativeEvent.keyCode === constants.key.space && !this._isOpened) {
-            this.openMenu();
-            event.stopPropagation();
+            this._stopEvent(event);
+        } else if (code === constants.key.space && !this._isOpened) {
+            this.openMenu(autofocusConfig);
+            this._stopEvent(event);
+        } else if ((code === constants.key.down || code === constants.key.up) && this._isOpened) {
+            this.openMenu(autofocusConfig);
+            this._stopEvent(event);
         }
     }
 
@@ -100,5 +110,10 @@ export abstract class BaseDropdown extends Control<IControlOptions, IDropdownRec
         this._controller.loadDependencies().catch((error) => {
             return error;
         });
+    }
+
+    private _stopEvent(event: SyntheticEvent): void {
+        event.stopPropagation();
+        event.preventDefault();
     }
 }

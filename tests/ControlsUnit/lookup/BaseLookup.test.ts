@@ -1,7 +1,7 @@
 import {default as Lookup} from 'Controls/_lookup/Lookup';
 import {ILookupOptions} from 'Controls/_lookup/BaseLookup';
 import {assert} from 'chai';
-import {Memory} from 'Types/source';
+import {Memory, PrefetchProxy} from 'Types/source';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import * as sinon from 'sinon';
@@ -24,6 +24,11 @@ async function getBaseLookup(options?: Partial<ILookupOptions>, receivedState?: 
     // @ts-ignore
     await lookup._beforeMount(lookupOptions, undefined, receivedState);
     lookup.saveOptions(lookupOptions);
+    lookup._children = {
+        layout: {
+            closeSuggest: () => void 0
+        }
+    };
     return lookup;
 }
 
@@ -150,25 +155,58 @@ describe('Controls/lookup:Input', () => {
     });
 
     describe('_beforeUpdate', () => {
-        it('selectedKeys changed in new options', () => {
-            it('selectedKeys changed in options', async () => {
-                const lookup = await getBaseLookup({
-                    selectedKeys: [1]
-                });
-                const stub = sinon.stub(lookup, '_notify');
-                let lookupOptions = getLookupOptions();
-                lookupOptions.selectedKeys = ['test'];
-                await lookup._beforeUpdate(lookupOptions);
-                stub.notCalledWith('selectedKeysChanged');
-                stub.calledOnceWith('itemsChanged');
+        it('selectedKeys changed in new options', async () => {
+            const sandbox = sinon.createSandbox();
+            let lookupOptions = {
+                ...getLookupOptions(),
+                selectedKeys: [1]
+            };
+            const lookup = await getBaseLookup(lookupOptions);
+            const spy = sandbox.spy(lookup, '_notify');
 
-                lookupOptions = {...lookupOptions};
-                lookupOptions.selectedKeys = [];
-                stub.reset();
-                await lookup._beforeUpdate(lookupOptions);
-                stub.notCalledWith('selectedKeysChanged');
-                stub.calledOnceWith('itemsChanged');
+            lookupOptions = {...lookupOptions};
+            lookupOptions.selectedKeys = [2];
+            await lookup._beforeUpdate(lookupOptions);
+            assert.ok(spy.withArgs('itemsChanged').calledOnce);
+
+            lookupOptions = {...lookupOptions};
+            lookupOptions.selectedKeys = [];
+            spy.resetHistory();
+            await lookup._beforeUpdate(lookupOptions);
+            assert.ok(spy.withArgs('itemsChanged').calledOnce);
+        });
+
+        it('mount with receivedState then update with new selectedKeys', async () => {
+            const items = new RecordSet({
+                rawData: [getData()[0]],
+                keyProperty: 'id'
             });
+            const source = getSource();
+            const prefetchSource = new PrefetchProxy({
+                target: source,
+                data: {
+                    query: items
+                }
+            });
+            let lookupOptions = {
+                ...getLookupOptions(),
+                selectedKeys: [1],
+                source: prefetchSource
+            };
+            let itemsFromEvent;
+            const lookup = await getBaseLookup(lookupOptions, items);
+
+            lookup._notify = function mockNotify(eventName: string, res: unknown[]): void {
+                if (eventName === 'itemsChanged') {
+                    itemsFromEvent = res[0];
+                }
+            };
+
+            lookupOptions = {...lookupOptions};
+            lookupOptions.selectedKeys = [2];
+            await lookup._beforeUpdate(lookupOptions);
+            assert.ok(itemsFromEvent);
+            assert.ok(itemsFromEvent !== items);
         });
     });
 
