@@ -714,25 +714,31 @@ class StickyHeaderController {
     }
 
     private _getGeneralParentNode(header0: IRegisterEventData, header1: IRegisterEventData): Node {
-        let parentElementOfHeader0 = header0.inst.getHeaderContainer().parentElement;
-        const parentElementOfHeader1 = header1.inst.getHeaderContainer().parentElement;
-        while (parentElementOfHeader0 !== parentElementOfHeader1 && parentElementOfHeader0 !== document.body) {
-            parentElementOfHeader0 = parentElementOfHeader0.parentElement;
-        }
-
-        if (parentElementOfHeader0 === document.body) {
-            const group0 = header0.inst.getHeaderContainer().closest('.controls-StickyHeader__isolatedGroup');
-            const group1 = header1.inst.getHeaderContainer().closest('.controls-StickyHeader__isolatedGroup');
-            if (group0 !== null && group1 !== null && group0  === group1) {
-                parentElementOfHeader0 = group0 as HTMLElement;
+        const getGeneralParentNode = (container0: IRegisterEventData, container1: IRegisterEventData) => {
+            let parentElementOfContainer0 = container0.inst.getHeaderContainer().parentElement;
+            const parentElementOfContainer1 = container1.inst.getHeaderContainer().parentElement;
+            while (parentElementOfContainer0 !== parentElementOfContainer1 &&
+                   parentElementOfContainer0 !== document.body) {
+                parentElementOfContainer0 = parentElementOfContainer0.parentElement;
             }
 
-            // Пройдемся вверх по дереву от второго заголовка, может оказаться что заголовок1 лежит ниже заголовка0.
-            if (parentElementOfHeader0 === document.body) {
-                return this._getGeneralParentNode(header1, header0);
+            if (parentElementOfContainer0 === document.body) {
+                const group0 = container0.inst.getHeaderContainer().closest('.controls-StickyHeader__isolatedGroup');
+                const group1 = container1.inst.getHeaderContainer().closest('.controls-StickyHeader__isolatedGroup');
+                if (group0 !== null && group1 !== null && group0  === group1) {
+                    parentElementOfContainer0 = group0 as HTMLElement;
+                }
             }
+            return parentElementOfContainer0;
+        };
+
+        let parentElement = getGeneralParentNode(header0, header1);
+        // Если общий родитель body, то пройдемся вверх по дереву от второго заголовка, может оказаться что заголовок1
+        // лежит ниже заголовка0.
+        if (parentElement === document.body) {
+            parentElement = getGeneralParentNode(header1, header0);
         }
-        return parentElementOfHeader0;
+        return parentElement;
     }
 
     private _updateTopBottomDelayed(): void {
