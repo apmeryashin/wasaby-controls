@@ -261,10 +261,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _updateSelectedItemKeyboard(event: SyntheticEvent, direction: string): void {
         let newItem;
+        let markedItem = this._listModel.getHoveredItem();
+        if (!markedItem) {
+            markedItem = this._getMarkedItem(this._options.selectedKeys, this._options);
+        }
         if (direction === 'previous') {
-            newItem = this._listModel.getPrevious(this._listModel.getHoveredItem());
+            newItem = this._listModel.getPrevious(markedItem);
         } else if (direction === 'next') {
-            newItem = this._listModel.getNext(this._listModel.getHoveredItem());
+            newItem = this._listModel.getNext(markedItem);
         }
         if (newItem) {
             this._updateKeyboardItem(newItem);
@@ -794,7 +798,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._setButtonVisibleState(items, options);
         this._createViewModel(items, options);
         if (options.focusable && !this._listModel.getHoveredItem()) {
-            this._updateKeyboardItem(this._listModel.getNext(null));
+            const item = this._getMarkedItem(options.selectedKeys, options);
+            this._updateKeyboardItem(item || this._listModel.getNext(item));
         }
         this._needStickyHistoryItems = this._checkStickyHistoryItems(options);
     }
@@ -828,6 +833,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._markerController = new MarkerController(this._getMarkerControllerConfig(options, markedKey));
         }
         return this._markerController;
+    }
+
+    private _getMarkedItem(selectedKeys: TSelectedKeys, options: IMenuControlOptions): CollectionItem<Model> {
+        const markedKey = this._getMarkedKey(selectedKeys, options);
+        return this._listModel.getItemBySourceKey(markedKey);
     }
 
     private _getMarkedKey(selectedKeys: TSelectedKeys,
