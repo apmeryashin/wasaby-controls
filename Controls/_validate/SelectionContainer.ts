@@ -11,7 +11,7 @@ import template = require('wml!Controls/_validate/SelectionContainer');
  * @extends Controls/_validate/Container
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 class Selection extends Container {

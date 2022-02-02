@@ -4,7 +4,7 @@
  * @includes View Controls/_switchableArea/View
  * @includes itemTemplate Controls/switchableArea:itemTemplate
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -13,7 +13,7 @@
  * @includes View Controls/_switchableArea/View
  * @includes itemTemplate Controls/switchableArea:itemTemplate
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 import itemTemplate from 'Controls/_switchableArea/ItemTpl';

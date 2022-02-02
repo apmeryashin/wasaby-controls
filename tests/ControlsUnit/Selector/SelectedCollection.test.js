@@ -42,6 +42,9 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
          };
 
          collection._visibleItems = [];
+         collection.saveOptions({
+            items: getItems(1)
+         });
          collection._beforeUpdate({
             items: getItems(1),
             maxVisibleItems: 1

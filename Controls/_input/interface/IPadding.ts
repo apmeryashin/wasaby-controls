@@ -25,7 +25,7 @@ export function getOptionPaddingTypes(): object {
  *
  * @interface Controls/_input/interface/IPadding
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export interface IPadding {
     readonly '[Controls/interface/IPadding]': boolean;

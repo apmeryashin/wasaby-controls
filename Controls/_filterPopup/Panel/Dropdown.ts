@@ -3,7 +3,9 @@ import template = require('wml!Controls/_filterPopup/Panel/Dropdown/Dropdown');
 import {List} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {Selector} from 'Controls/dropdown';
 import 'css!Controls/filterPopup';
+import {IStickyPopupOptions} from 'Controls/popup';
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки и используется на панели фильтров.
@@ -23,6 +25,17 @@ import 'css!Controls/filterPopup';
 
 class FilterDropdown extends Control<IControlOptions> {
       protected _template: TemplateFunction = template;
+      protected _children: {
+          selector: Selector;
+      };
+
+      openMenu(popupOptions?: IStickyPopupOptions): void {
+          this._children.selector.openMenu(popupOptions);
+      }
+
+     closeMenu(): void {
+          this._children.selector.closeMenu();
+      }
 
       protected _selectedKeysChangedHandler(event: SyntheticEvent, keys: any[]): Boolean|undefined {
          return this._notify('selectedKeysChanged', [keys]);

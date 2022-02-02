@@ -2878,6 +2878,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _notifyPlaceholdersChanged = null;
     _viewSize = null;
     _viewportSize = null;
+    _viewportWidth = null;
     _scrollTop = 0;
     _popupOptions = null;
     protected _listVirtualScrollController: ListVirtualScrollController;
@@ -3029,7 +3030,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.addShowActionsClass(this, newOptions);
 
-        return this._doBeforeMount(newOptions);
+        const result = this._doBeforeMount(newOptions);
+        if (result instanceof Promise) {
+            result.then(() => this._listVirtualScrollController.endBeforeMountListControl());
+        } else {
+            this._listVirtualScrollController.endBeforeMountListControl();
+        }
+        return result;
     }
 
     private _dataLoadCallback(event: EventObject, items: RecordSet, direction: IDirection): Promise<void> | void {
@@ -3287,6 +3294,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
+        this._viewportWidth = viewportRect.width;
 
         this._scrollTop = scrollTop;
         this._listVirtualScrollController.viewportResized(viewportHeight);
@@ -3416,6 +3424,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             listControl: this,
             virtualScrollConfig: options.virtualScrollConfig || {},
             activeElementKey: options.activeElement,
+            initialScrollPosition: options.initialScrollPosition,
+            disableVirtualScroll: options.disableVirtualScroll,
 
             itemsContainer: null,
             listContainer: null,
@@ -3552,8 +3562,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _setMarkedKeyAfterPaging(key: CrudEntityKey): void {
-        if (_private.getMarkerController(this).shouldMoveMarkerOnScrollPaging()) {
-            this._changeMarkedKey(key);
+        const markerController = _private.getMarkerController(this);
+        if (markerController.shouldMoveMarkerOnScrollPaging()) {
+            const record = this._listViewModel.getCollection().getRecordById(key);
+            const item = this._listViewModel.getItemBySourceKey(key);
+            const suitableKey = record
+                ? key
+                : item && markerController.getSuitableMarkedKey(item);
+            this._changeMarkedKey(suitableKey || key);
         }
     }
 
@@ -3568,6 +3584,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!this._listVirtualScrollController) {
             return;
         }
+
+        const params = {
+            range: {
+                startIndex: this._listViewModel.getStartIndex(),
+                endIndex: this._listViewModel.getStopIndex()
+            },
+            virtualPageSize: this._options.virtualScrollConfig?.pageSize,
+            scrolledToBackwardEdge: this._scrollTop === 0,
+            scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
+            newItemsIndex,
+            itemsLoadedByTrigger: this._addItemsByLoadToDirection
+        };
 
         switch (action) {
             case IObservable.ACTION_RESET:
@@ -3584,17 +3612,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 }
                 break;
             case IObservable.ACTION_ADD:
-                const params = {
-                    range: {
-                        startIndex: this._listViewModel.getStartIndex(),
-                        endIndex: this._listViewModel.getStopIndex()
-                    },
-                    virtualPageSize: this._options.virtualScrollConfig?.pageSize,
-                    scrolledToBackwardEdge: this._scrollTop === 0,
-                    scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
-                    newItemsIndex,
-                    itemsLoadedByTrigger: this._addItemsByLoadToDirection
-                };
                 this._listVirtualScrollController.addItems(
                     newItemsIndex,
                     newItems.length,
@@ -3603,7 +3620,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 );
                 break;
             case IObservable.ACTION_REMOVE:
-                this._listVirtualScrollController.removeItems(removedItemsIndex, removedItems.length);
+                this._listVirtualScrollController.removeItems(
+                    removedItemsIndex,
+                    removedItems.length,
+                    getScrollMode(params)
+                );
                 break;
             case IObservable.ACTION_MOVE:
                 this._listVirtualScrollController.moveItems(
@@ -3966,6 +3987,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     } else {
                         this._listVirtualScrollController.setBackwardTriggerVisible(true);
                     }
+                }
+
+                // Если прислали новый рекордсет, то сохраняем позицию скролла
+                if (newOptions.items && newOptions.items !== this._items) {
+                    this._listVirtualScrollController.enableKeepScrollPosition();
                 }
 
                 const isActionsAssigned = this._itemActionsController?.isActionsAssigned();
@@ -4407,7 +4433,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._listVirtualScrollController.beforeRenderListControl();
         const hasNotRenderedChanges = this._hasItemWithImageChanged ||
             this._indicatorsController.hasNotRenderedChanges();
-        if (hasNotRenderedChanges && !this._loadedBySourceController) {
+        if (hasNotRenderedChanges && !this._loadedBySourceController && !!this._scrollTop) {
             this._listVirtualScrollController.saveScrollPosition();
         }
     }
@@ -5422,21 +5448,22 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return this._beginEdit({ item }, { shouldActivateInput, columnIndex });
         };
 
+        // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+        e.stopPropagation();
+
         switch (nativeEvent.keyCode) {
-            case 13: // Enter
+            case constants.key.enter:
                 if (this._getEditingConfig().sequentialEditingMode === 'cell') {
                     return Promise.resolve();
                 } else {
                     return this._editingRowEnterHandler(e);
                 }
-            case 27: // Esc
-                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
-                e.stopPropagation();
+            case constants.key.esc:
                 return this._cancelEdit();
-            case 38: // ArrowUp
+            case constants.key.up:
                 const prev = this._getEditInPlaceController().getPrevEditableItem();
                 return editNext(prev?.contents, EDIT_IN_PLACE_CONSTANTS.GOTOPREV);
-            case 40: // ArrowDown
+            case constants.key.down: // ArrowDown
                 const next = this._getEditInPlaceController().getNextEditableItem();
                 return editNext(next?.contents, EDIT_IN_PLACE_CONSTANTS.GOTONEXT);
         }

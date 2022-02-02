@@ -3,7 +3,7 @@ import {IControlOptions} from 'UI/Base';
 /**
  * Шаблон, который используется для отображения иконки для {@link Controls/toggle:RadioGroup radioGroup}.
  * @class Controls/toggle:switchCircleTemplate
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @public
  * @see Controls/toggle:RadioGroup
  */

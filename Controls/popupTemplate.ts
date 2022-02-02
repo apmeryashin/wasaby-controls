@@ -3,7 +3,7 @@
  * @library
  * @includes IPopupTemplateBase Controls/_popupTemplate/interface/IPopupTemplateBase
  * @public
- * @author Крайнов Д.О.
+ * @author Мочалов М.А.
  */
 
 export {default as Stack} from 'Controls/_popupTemplate/Stack/Template/Stack';

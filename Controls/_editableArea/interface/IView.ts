@@ -15,7 +15,7 @@ export interface IViewOptions {
  *
  * @interface Controls/_editableArea/interface/IView
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 export interface IView {

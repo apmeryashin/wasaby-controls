@@ -24,7 +24,7 @@ export {default as ITextTransform, ITextTransformOptions, TTextTransform} from '
 export {default as IHeight, IHeightOptions} from './_interface/IHeight';
 export {default as ISingleSelectable, ISingleSelectableOptions, TSelectedKey} from './_interface/ISingleSelectable';
 export {default as IMultiSelectable, IMultiSelectableOptions, TSelectedKeys} from './_interface/IMultiSelectable';
-export {default as ISource, ISourceOptions} from './_interface/ISource';
+export {default as ISource, ISourceOptions, TSourceOption} from './_interface/ISource';
 export {default as IHierarchy, IHierarchyOptions} from './_interface/IHierarchy';
 export {default as INumberFormat, INumberFormatOptions} from './_interface/INumberFormat';
 export {default as IExpandable, IExpandableOptions} from './_interface/IExpandable';
@@ -50,7 +50,7 @@ export {
     TKeysSelection
 } from './_interface/ISelectionType';
 export { ISelectionCountModeOptions, TSelectionCountMode } from './_interface/ISelectionCountMode';
-export {ITileRoundBorder} from './_interface/ITileRoundBorder';
+export {ITileRoundBorder, TTileRoundBorderSize} from './_interface/ITileRoundBorder';
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as IFilter, IFilterOptions, TFilter} from './_interface/IFilter';

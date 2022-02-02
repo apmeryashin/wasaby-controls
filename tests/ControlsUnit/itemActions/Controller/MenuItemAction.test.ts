@@ -180,6 +180,16 @@ describe('Controls/itemActions/Controller/MenuItemAction', () => {
             }
         ];
 
+        // Только одна операция над записью с типом MENU_TOOLBAR
+        const onlyOneItemActionMenuToolbar: IItemAction[] = [
+            {
+                id: 1,
+                icon: 'icon-PhoneNull',
+                title: 'phone',
+                showType: TItemActionShowType.MENU_TOOLBAR
+            }
+        ];
+
         // T1.7. Если требуется добавить кнопку меню, то она добавляется в список showed операций
         it('+actions with different showTypes, =display menu button', () => {
             // @ts-ignore
@@ -207,7 +217,7 @@ describe('Controls/itemActions/Controller/MenuItemAction', () => {
         });
 
         // T1.8.1 При установке только одной опции нужно игнорировать showType и всё показывать как TOOLBAR
-        it('+only one action, =hide menu button', () => {
+        it('+only one action in menu, =hide menu button', () => {
             // @ts-ignore
             itemActionsController.update(initializeControllerOptions({
                 collection,
@@ -218,6 +228,19 @@ describe('Controls/itemActions/Controller/MenuItemAction', () => {
             assert.isNotNull(actionsOf1, 'actions were not set to item 1');
             assert.isNotTrue(actionsOf1.showed[actionsOf1.showed.length - 1].isMenu, 'should not have menu button');
             assert.equal(actionsOf1.showed[actionsOf1.showed.length - 1].showType, TItemActionShowType.MENU, 'should be in toolbar');
+        });
+
+        it('+only one menu_toolbar action, =hide menu button', () => {
+            // @ts-ignore
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions: onlyOneItemActionMenuToolbar,
+                theme: 'default'
+            }));
+            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+            assert.isNotNull(actionsOf1, 'actions were not set to item 1');
+            assert.isNotTrue(actionsOf1.showed[actionsOf1.showed.length - 1].isMenu, 'should not have menu button');
+            assert.equal(actionsOf1.showed[actionsOf1.showed.length - 1].showType, TItemActionShowType.MENU_TOOLBAR, 'should be in toolbar');
         });
 
         // При наличии contextMenuConfig.headerTemplate надо принудительно
@@ -270,7 +293,7 @@ describe('Controls/itemActions/Controller/MenuItemAction', () => {
 
         // При наличии contextMenuConfig.footerTemplate надо принудительно
         // показывать кнопку с многоточием. Если записей несколько
-        it('+only toolbar actions, +contextMenuConfig.headerTemplate, =display menu button', () => {
+        it('+only toolbar actions, +contextMenuConfig.footerTemplate, =display menu button', () => {
             // @ts-ignore
             itemActionsController.update(initializeControllerOptions({
                 collection,

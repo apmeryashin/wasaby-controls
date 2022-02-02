@@ -21,6 +21,7 @@ export interface ISelectedCollectionOptions extends IControlOptions, ILookupOpti
    items: RecordSet;
    maxVisibleItems: number;
    itemTemplate: TemplateFunction;
+   counterAlignment: string;
 }
 
 interface ISelectedCollectionChildren {
@@ -68,12 +69,11 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    }
 
    protected _beforeUpdate(newOptions: ISelectedCollectionOptions): void {
+      const currentItemsCount: number = this._options.items.getCount();
       const itemsCount: number = newOptions.items.getCount();
-      const currentVisibleItems = this._visibleItems;
       this._visibleItems = selectedCollectionUtils.getVisibleItems(newOptions);
 
-      if (this._visibleItems.length !== currentVisibleItems.length
-          || this._options.multiLine !== newOptions.multiLine ||
+      if (itemsCount !== currentItemsCount || this._options.multiLine !== newOptions.multiLine ||
           this._options.maxVisibleItems !== newOptions.maxVisibleItems) {
          this._needShowCounter = this._isShowCounter(itemsCount, newOptions.multiLine, newOptions.maxVisibleItems);
       }
@@ -171,14 +171,15 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
                             {
                                readOnly,
                                itemsLayout,
-                               fontSize
+                               fontSize,
+                               counterAlignment
                             }: ISelectedCollectionOptions): number {
       // in mode read only and single line, counter does not affect the collection
       if (readOnly && itemsLayout === 'oneRow') {
          return 0;
       }
 
-      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme, fontSize);
+      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme, fontSize, counterAlignment);
    }
 
    private _isShowCounter(itemsCount: number, multiline: boolean, maxVisibleItems?: number): boolean {
@@ -197,7 +198,8 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
         return {
             itemTemplate: ItemTemplate,
             itemsLayout: 'default',
-            backgroundStyle: 'default'
+            backgroundStyle: 'default',
+            counterAlignment: 'left'
         };
     }
 }

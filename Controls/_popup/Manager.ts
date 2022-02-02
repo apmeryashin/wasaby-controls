@@ -342,7 +342,6 @@ class Manager {
             childs: []
         } as IPopupItem;
 
-        this._registerPopupLink(popupConfig);
         return popupConfig;
     }
 
@@ -373,6 +372,7 @@ class Manager {
 
     private _addElement(item: IPopupItem): void {
         this._popupItems.add(item);
+        this._registerPopupLink(item);
     }
 
     private _closeChilds(item: IPopupItem): Promise<null> {

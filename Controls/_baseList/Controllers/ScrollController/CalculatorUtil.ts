@@ -34,7 +34,8 @@ interface IGetSegmentSizeToHideParams {
     placeholders: IPlaceholders;
     itemsSizes: IItemsSizes;
     viewportSize: number;
-    contentSize: number;
+    scrollPosition: number;
+    segmentSize: number;
 }
 
 export interface IGetByPositionParams {
@@ -127,14 +128,20 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
 /**
  * Рассчитывает сколько элементов нужно скрыть.
  * Смещение на заданный segmentSize может сразу же вызвать shiftRange по триггеру.
+ * Поэтому считаем такой segmentSize, чтобы скрыть максимальное кол-во записей, но чтобы триггер не стал виден.
  */
 function getSegmentSizeToHide(params: IGetSegmentSizeToHideParams): number {
     const shiftDirection = params.direction;
+
+    let segmentSizeToHide;
     if (shiftDirection === 'forward') {
-        return getSegmentSizeToHideBackward(params);
+        segmentSizeToHide = getSegmentSizeToHideBackward(params);
     } else {
-        return getSegmentSizeToHideForward(params);
+        segmentSizeToHide = getSegmentSizeToHideForward(params);
     }
+
+    // Скрываем не больше, чем задал прикладник
+    return Math.min(segmentSizeToHide, params.segmentSize);
 }
 
 function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): number {
@@ -155,10 +162,9 @@ function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): numbe
 function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
     let segmentSize = 0;
     let start = params.currentRange.startIndex;
-    let itemsSizesSum = 0;
     const itemsSizes = params.itemsSizes;
-    const offsetDistance = params.contentSize - params.viewportSize - params.triggersOffsets.backward
-        - params.triggersOffsets.forward;
+    const backwardPlaceholder = params.placeholders.backward;
+    const offsetDistance = params.scrollPosition - params.triggersOffsets.backward - params.triggersOffsets.forward;
     // Если список не проскроллен, то offsetDistance может получиться меньше 0.
     if (offsetDistance < 0) {
         return 0;
@@ -168,8 +174,7 @@ function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): numb
     // диапазон [0, 10], добавляют записи в начало, диапазон становится [10,20](смотреть Calculator::addItems)
     // и после этого вызывают смещение диапазона, т.к. текущий диапазон [10,20] мы тут выйдем за пределы списка.
     // В этом кейсе не нужно скрывать записи сверху, т.к. они только были добавлены.
-    while (start < itemsSizes.length && itemsSizesSum + itemsSizes[start].size < offsetDistance) {
-        itemsSizesSum += itemsSizes[start].size;
+    while (start < itemsSizes.length && (itemsSizes[start].offset - backwardPlaceholder) < offsetDistance) {
         segmentSize++;
         start++;
     }
