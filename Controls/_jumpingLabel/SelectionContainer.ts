@@ -19,6 +19,7 @@ export interface ISelectionContainerOptions extends IBaseOptions, ISingleSelecta
  *
  * @class Controls/_jumpingLabel/SelectionContainer
  * @extends Controls/jumpingLabel:Abstract
+ * @exclude Base
  *
  * @public
  *

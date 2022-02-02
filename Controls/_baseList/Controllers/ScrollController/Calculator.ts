@@ -94,6 +94,7 @@ export class Calculator {
     protected _range: IItemsRange = { startIndex: 0, endIndex: 0 };
     private _placeholders: IPlaceholders = { backward: 0, forward: 0 };
     private _activeElementIndex: number;
+    private _itemsRenderedOutsideRange: number[] = [];
 
     constructor(options: ICalculatorOptions) {
         this._itemsSizes = options.itemsSizes;
@@ -160,6 +161,20 @@ export class Calculator {
             currentRange: this._range,
             scrollPosition: this._scrollPosition,
             placeholders: this._placeholders
+        });
+    }
+
+    /**
+     * Устанавливает массив индексов элементов, которые отрисовываются за пределами диапазона
+     * @param items
+     */
+    setItemsRenderedOutsideRange(items: number[]): void {
+        this._itemsRenderedOutsideRange = items;
+        this._placeholders = getPlaceholdersByRange({
+            range: this._range,
+            totalCount: this._totalCount,
+            itemsSizes: this._itemsSizes,
+            itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
     }
 
@@ -286,7 +301,7 @@ export class Calculator {
                 segmentSize: this._getSegmentSize(),
                 totalCount: this._totalCount,
                 viewportSize: this._viewportSize,
-                contentSize: this._contentSize,
+                scrollPosition: this._scrollPosition,
                 triggersOffsets: this._triggersOffsets,
                 itemsSizes: this._itemsSizes,
                 placeholders: this._placeholders,
@@ -296,7 +311,8 @@ export class Calculator {
             this._placeholders = getPlaceholdersByRange({
                 range: this._range,
                 totalCount: this._totalCount,
-                itemsSizes: this._itemsSizes
+                itemsSizes: this._itemsSizes,
+                itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
             });
         }
 
@@ -329,7 +345,8 @@ export class Calculator {
             this._placeholders = getPlaceholdersByRange({
                 range: this._range,
                 totalCount: this._totalCount,
-                itemsSizes: this._itemsSizes
+                itemsSizes: this._itemsSizes,
+                itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
             });
         }
 
@@ -382,7 +399,8 @@ export class Calculator {
             this._placeholders = getPlaceholdersByRange({
                 range: this._range,
                 totalCount: this._totalCount,
-                itemsSizes: this._itemsSizes
+                itemsSizes: this._itemsSizes,
+                itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
             });
         }
 
@@ -456,7 +474,7 @@ export class Calculator {
             segmentSize: this._getSegmentSize(),
             totalCount: this._totalCount,
             viewportSize: this._viewportSize,
-            contentSize: this._contentSize,
+            scrollPosition: this._scrollPosition,
             triggersOffsets: this._triggersOffsets,
             itemsSizes: this._itemsSizes,
             placeholders: this._placeholders
@@ -465,7 +483,8 @@ export class Calculator {
         this._placeholders = getPlaceholdersByRange({
             range: this._range,
             totalCount: this._totalCount,
-            itemsSizes: this._itemsSizes
+            itemsSizes: this._itemsSizes,
+            itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
 
         return this._getRangeChangeResult(oldState, direction);
@@ -506,7 +525,7 @@ export class Calculator {
                 segmentSize: count,
                 totalCount: this._totalCount,
                 viewportSize: this._viewportSize,
-                contentSize: this._contentSize,
+                scrollPosition: this._scrollPosition,
                 triggersOffsets: this._triggersOffsets,
                 itemsSizes: this._itemsSizes,
                 placeholders: this._placeholders,
@@ -517,7 +536,8 @@ export class Calculator {
         this._placeholders = getPlaceholdersByRange({
             range: this._range,
             totalCount: this._totalCount,
-            itemsSizes: this._itemsSizes
+            itemsSizes: this._itemsSizes,
+            itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
 
         return this._getRangeChangeResult(oldState, direction);
@@ -550,7 +570,8 @@ export class Calculator {
         this._placeholders = getPlaceholdersByRange({
             range: this._range,
             totalCount: this._totalCount,
-            itemsSizes: this._itemsSizes
+            itemsSizes: this._itemsSizes,
+            itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
     }
 

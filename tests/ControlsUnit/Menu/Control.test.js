@@ -179,7 +179,7 @@ define(
                let isMarkerControllerUpdated = false;
                const menuControl = getMenu();
                menuControl._markerController = 'markerController';
-               menuControl._updateMakerController = () => {
+               menuControl._updateMarkerController = () => {
                   isMarkerControllerUpdated = true;
                };
                const newMenuOptions = { ...defaultOptions };
@@ -697,6 +697,7 @@ define(
             beforeEach(() => {
                sandbox = sinon.createSandbox();
                menuControl = getMenu();
+               menuControl._listModel = getListModel();
                menuControl._container = 'container';
                isTouchStub = sandbox.stub(EnvTouch.TouchDetect.getInstance(), 'isTouch').returns(false);
                handleStub = sandbox.stub(menuControl, '_startOpeningTimeout');

@@ -41,6 +41,8 @@ import {
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/AbstractObserversController';
 import { Logger } from 'UI/Utils';
 import { TVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll';
+import type { IInitialScrollPosition } from 'Controls/scroll';
+import { isEqual } from 'Types/object';
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
@@ -110,6 +112,7 @@ export interface IAbstractListVirtualScrollControllerOptions {
 
     virtualScrollConfig: IVirtualScrollConfig;
     activeElementKey: CrudEntityKey;
+    initialScrollPosition: IInitialScrollPosition;
 
     listContainer: HTMLElement;
     itemsContainer: HTMLElement;
@@ -147,6 +150,7 @@ export abstract class AbstractListVirtualScrollController<
     private _itemSizeProperty: string;
     private _virtualScrollMode: TVirtualScrollMode;
     private _activeElementKey: CrudEntityKey;
+    private _initialScrollPosition: IInitialScrollPosition;
     private readonly _itemsContainerUniqueSelector: string;
     private _keepScrollPosition: boolean = false;
     protected _scrollPosition: number;
@@ -204,7 +208,7 @@ export abstract class AbstractListVirtualScrollController<
      * По этому колбэку резолвится промис, который возвращается из метода scrollToItem
      * @private
      */
-    private _scrollToElementCompletedCallback: () => void;
+    private _scrollCompletedCallback: () => void;
 
     /**
      * Колбэк, который вызывается, когда завершился подскролл.
@@ -214,9 +218,12 @@ export abstract class AbstractListVirtualScrollController<
     private _doScrollCompletedCallback: () => void;
     private _shouldResetScrollPosition: boolean;
 
+    private _itemsRenderedOutsideRange: number[] = [];
+
     constructor(options: TOptions) {
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
         this._virtualScrollMode = options.virtualScrollConfig.mode;
+        this._initialScrollPosition = options.initialScrollPosition;
         this.setActiveElementKey(options.activeElementKey);
         this._itemsContainerUniqueSelector = options.itemsContainerUniqueSelector;
 
@@ -264,6 +271,17 @@ export abstract class AbstractListVirtualScrollController<
                 this.scrollToItem(this._activeElementKey, 'top', true);
             }
         }
+
+        // Если изначальная позиция ScrollContainer-а была задана end,
+        // то contentSizeBeforeItems будет посчитан неправильно.
+        // Поэтому планируем обновление размеров элементов на момент,
+        // когда ScrollContainer уже будет отрисован правильно и размеры будут считаться правильно.
+        if (this._initialScrollPosition?.vertical === 'end' || this._initialScrollPosition?.horizontal === 'end') {
+            this._scheduleUpdateItemsSizes({
+                startIndex: this._collection.getStartIndex(),
+                endIndex: this._collection.getStopIndex()
+            });
+        }
     }
 
     endBeforeMountListControl(): void {
@@ -303,6 +321,20 @@ export abstract class AbstractListVirtualScrollController<
             this._handleScheduledScroll();
         }
 
+        const itemsRenderedOutsideRange = this._collection.getItems()
+            .filter((it) => it.isRenderedOutsideRange())
+            .map((it) => this._collection.getIndex(it));
+        if (!isEqual(this._itemsRenderedOutsideRange, itemsRenderedOutsideRange)) {
+            this._itemsRenderedOutsideRange = itemsRenderedOutsideRange;
+
+            // Если скрылась или отобразилась запись за пределами диапазона, то нужно восстановить скролл
+            if (!this._isScheduledScroll()) {
+                this.saveScrollPosition();
+            }
+
+            this._scrollController.setItemsRenderedOutsideRange(itemsRenderedOutsideRange);
+        }
+
         // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
         // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
         // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
@@ -318,11 +350,6 @@ export abstract class AbstractListVirtualScrollController<
 
     afterRenderListControl(): void {
         this._renderNewIndexes = false;
-
-        const countItemsRenderedOutsideRange = this._collection.getItems()
-            .filter((it) => it.isRenderedOutsideRange())
-            .length;
-        this._scrollController.setCountItemsRenderedOutsideRange(countItemsRenderedOutsideRange);
 
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
@@ -379,6 +406,9 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollPosition = position;
         this._scrollController.scrollPositionChange(position, !this._selfScroll);
         this._selfScroll = false;
+        if (this._scrollCompletedCallback) {
+            this._scrollCompletedCallback();
+        }
     }
 
     enableKeepScrollPosition(): void {
@@ -436,7 +466,10 @@ export abstract class AbstractListVirtualScrollController<
         // смотри комментарий в beforeRenderListControl
         // Не нужно сбрасывать скролл, если список не был проскроллен.
         // Т.к. из-за вызова скролла сжимается графическая шапка.
-        this._shouldResetScrollPosition = !this._keepScrollPosition && !!this._scrollPosition;
+        // Не нужно сбрасывать скролл, если будем скроллить к активному элементу.
+        this._shouldResetScrollPosition = !this._keepScrollPosition
+            && !!this._scrollPosition
+            && !this._activeElementKey;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
         const activeIndex = this._activeElementKey ? this._collection.getIndexByKey(this._activeElementKey) : 0;
@@ -475,7 +508,7 @@ export abstract class AbstractListVirtualScrollController<
             return Promise.resolve();
         }
 
-        const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
+        const promise = new Promise<void>((resolver) => this._scrollCompletedCallback = resolver);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
         if (rangeChanged || this._scheduledScrollParams || this._renderNewIndexes) {
             this._scheduleScroll({
@@ -497,21 +530,17 @@ export abstract class AbstractListVirtualScrollController<
      * @private
      */
     scrollToPage(direction: IDirection): Promise<CrudEntityKey> {
-        this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
-        return Promise.resolve(this._getFirstVisibleItemKey());
-
-        // TODO SCROLL по идее нужно скролить к EdgeItem, чтобы не терялся контекст.
-        //  Но нужно сперва завести новый скролл на текущих тестах.
-        /*const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
-        // TODO SCROLL юниты
-        if (!edgeItem) {
-            return Promise.resolve(null);
+        const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
+        if (edgeItem && this._scrollController.getScrollToPageMode(edgeItem.index) === 'edgeItem') {
+            const item = this._collection.at(edgeItem.index);
+            const itemKey = item.getContents().getKey();
+            const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
+            return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());
+        } else {
+            const promise = new Promise<void>((resolver) => this._scrollCompletedCallback = resolver);
+            this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
+            return promise.then(() => this._getFirstVisibleItemKey());
         }
-
-        const item = this._collection.at(edgeItem.index);
-        const itemKey = item.getContents().getKey();
-        const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
-        return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());*/
     }
 
     /**
@@ -847,9 +876,9 @@ export abstract class AbstractListVirtualScrollController<
                 this._selfScroll = true;
                 const result = this._scrollToElementUtil(element, position, force);
                 if (result instanceof Promise) {
-                    result.then(() => this._scrollToElementCompletedCallback());
+                    result.then(() => this._scrollCompletedCallback());
                 } else {
-                    this._scrollToElementCompletedCallback?.();
+                    this._scrollCompletedCallback?.();
                 }
             } else {
                 Logger.error(`${ERROR_PATH}::_scrollToElement | ` +

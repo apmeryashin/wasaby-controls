@@ -16,7 +16,7 @@
 
 
 <div class="controls-FilterViewPanel__additional-editors-container">
-    <ws:if data="{{_viewModel.hasBasicItems()}}">
+    <ws:if data="{{_viewModel.hasBasicItems() || _options.viewMode === 'default'}}">
         <Controls.heading:Title caption="{{rk('Еще можно отобрать')}}"
                                 fontColorStyle="unaccented"
                                 fontSize="xs"

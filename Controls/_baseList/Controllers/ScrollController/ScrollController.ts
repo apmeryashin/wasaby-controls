@@ -78,6 +78,8 @@ export interface IHasItemsOutRange {
 
 export type IDirection = 'backward' | 'forward';
 
+export type IScrollToPageMode = 'edgeItem' | 'viewport';
+
 export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
 
 export type IActiveElementChangedChangedCallback = (activeElementIndex: number) => void;
@@ -203,8 +205,9 @@ export class ScrollController {
         return this._calculator.getFirstVisibleItemIndex();
     }
 
-    setCountItemsRenderedOutsideRange(count: number): void {
-        this._itemsSizesController.setCountItemsRenderedOutsideRange(count);
+    setItemsRenderedOutsideRange(items: number[]): void {
+        this._itemsSizesController.setCountItemsRenderedOutsideRange(items.length);
+        this._calculator.setItemsRenderedOutsideRange(items);
     }
 
     // region Triggers
@@ -353,13 +356,6 @@ export class ScrollController {
      * @param startIndex Начальный индекс диапазона отображаемых записей
      */
     resetItems(totalCount: number, startIndex: number): void {
-        // Если начальный индекс не 0, то это значит что мы должны сохранить текущую позицию.
-        if (startIndex === 0) {
-            // Сбрасываем состояние контроллера.
-            this.scrollPositionChange(0);
-        }
-        this.contentResized(0);
-
         const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
@@ -400,6 +396,21 @@ export class ScrollController {
 
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
         return this._calculator.getScrollPositionToEdgeItem(edgeItem);
+    }
+
+    /**
+     * Возвращает способ скролла к следующей/предыдущей страницы в зависимости от размера крайней записи
+     */
+    getScrollToPageMode(edgeItemIndex: number): IScrollToPageMode {
+        // Если запись меньше трети вьюпорта, то скроллим к ней на pageUp|pageDown, чтобы не разбивать мелкие записи.
+        // Иначе, скроллим как обычно, на высоту вьюпорта
+        const MAX_SCROLL_TO_EDGE_ITEM_RELATION = 3;
+        const itemSize = this._itemsSizesController.getItemsSizes()[edgeItemIndex].size;
+        if (itemSize * MAX_SCROLL_TO_EDGE_ITEM_RELATION > this._viewportSize) {
+            return 'viewport';
+        } else {
+            return 'edgeItem';
+        }
     }
 
     /**

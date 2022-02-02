@@ -34,7 +34,8 @@ interface IGetSegmentSizeToHideParams {
     placeholders: IPlaceholders;
     itemsSizes: IItemsSizes;
     viewportSize: number;
-    contentSize: number;
+    scrollPosition: number;
+    segmentSize: number;
 }
 
 export interface IGetByPositionParams {
@@ -60,6 +61,7 @@ export interface IGetSizesByRangeParams {
     range: IItemsRange;
     itemsSizes: IItemsSizes;
     totalCount: number;
+    itemsRenderedOutsideRange: number[];
 }
 
 export interface IGetFirstVisibleItemIndexParams {
@@ -127,14 +129,20 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsR
 /**
  * Рассчитывает сколько элементов нужно скрыть.
  * Смещение на заданный segmentSize может сразу же вызвать shiftRange по триггеру.
+ * Поэтому считаем такой segmentSize, чтобы скрыть максимальное кол-во записей, но чтобы триггер не стал виден.
  */
 function getSegmentSizeToHide(params: IGetSegmentSizeToHideParams): number {
     const shiftDirection = params.direction;
+
+    let segmentSizeToHide;
     if (shiftDirection === 'forward') {
-        return getSegmentSizeToHideBackward(params);
+        segmentSizeToHide = getSegmentSizeToHideBackward(params);
     } else {
-        return getSegmentSizeToHideForward(params);
+        segmentSizeToHide = getSegmentSizeToHideForward(params);
     }
+
+    // Скрываем не больше, чем задал прикладник
+    return Math.min(segmentSizeToHide, params.segmentSize);
 }
 
 function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): number {
@@ -155,10 +163,9 @@ function getSegmentSizeToHideForward(params: IGetSegmentSizeToHideParams): numbe
 function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): number {
     let segmentSize = 0;
     let start = params.currentRange.startIndex;
-    let itemsSizesSum = 0;
     const itemsSizes = params.itemsSizes;
-    const offsetDistance = params.contentSize - params.viewportSize - params.triggersOffsets.backward
-        - params.triggersOffsets.forward;
+    const backwardPlaceholder = params.placeholders.backward;
+    const offsetDistance = params.scrollPosition - params.triggersOffsets.backward - params.triggersOffsets.forward;
     // Если список не проскроллен, то offsetDistance может получиться меньше 0.
     if (offsetDistance < 0) {
         return 0;
@@ -168,8 +175,7 @@ function getSegmentSizeToHideBackward(params: IGetSegmentSizeToHideParams): numb
     // диапазон [0, 10], добавляют записи в начало, диапазон становится [10,20](смотреть Calculator::addItems)
     // и после этого вызывают смещение диапазона, т.к. текущий диапазон [10,20] мы тут выйдем за пределы списка.
     // В этом кейсе не нужно скрывать записи сверху, т.к. они только были добавлены.
-    while (start < itemsSizes.length && itemsSizesSum + itemsSizes[start].size < offsetDistance) {
-        itemsSizesSum += itemsSizes[start].size;
+    while (start < itemsSizes.length && (itemsSizes[start].offset - backwardPlaceholder) < offsetDistance) {
         segmentSize++;
         start++;
     }
@@ -371,17 +377,15 @@ function isRangeOnEdge(edge: IDirection, range: IItemsRange, totalCount: number)
  * @param {IGetSizesByRangeParams} params
  */
 export function getPlaceholdersByRange(params: IGetSizesByRangeParams): IPlaceholders {
-    const { range, itemsSizes, totalCount } = params;
+    const { range, totalCount } = params;
 
     const backward = getItemsSizesSum({
-        range: { startIndex: 0, endIndex: range.startIndex },
-        itemsSizes,
-        totalCount
+        ...params,
+        range: { startIndex: 0, endIndex: range.startIndex }
     });
     const forward = getItemsSizesSum({
-        range: { startIndex: range.endIndex, endIndex: totalCount },
-        itemsSizes,
-        totalCount
+        ...params,
+        range: { startIndex: range.endIndex, endIndex: totalCount }
     });
 
     return { backward, forward };
@@ -392,14 +396,18 @@ export function getPlaceholdersByRange(params: IGetSizesByRangeParams): IPlaceho
  * @param {IGetSizesByRangeParams} params
  */
 function getItemsSizesSum(params: IGetSizesByRangeParams): number {
-    const { range, itemsSizes, totalCount } = params;
+    const { range, itemsSizes, totalCount, itemsRenderedOutsideRange } = params;
     const fixedStartIndex = Math.max(range.startIndex, 0);
     const fixedEndIndex = Math.min(range.endIndex, totalCount);
 
     let result = 0;
 
-    for (let idx = fixedStartIndex; idx < fixedEndIndex; idx++) {
-        result += itemsSizes[idx]?.size || 0;
+    for (let index = fixedStartIndex; index < fixedEndIndex; index++) {
+        // Не учитываем в placeholder элементы, отрисованные за пределами диапазона.
+        if (itemsRenderedOutsideRange.includes(index)) {
+            continue;
+        }
+        result += itemsSizes[index]?.size || 0;
     }
 
     return result;

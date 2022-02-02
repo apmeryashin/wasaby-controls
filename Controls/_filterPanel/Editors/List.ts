@@ -56,6 +56,7 @@ export interface IListEditorOptions extends
     sourceController?: SourceController;
     expandedItems?: TKey[];
     itemActions?: IItemAction[];
+    editArrowClickCallback?: Function;
 }
 
 /**
@@ -169,6 +170,11 @@ export interface IListEditorOptions extends
  * @remark При активации снимает отметку чекбоксами со всех записей в списке
  */
 
+/**
+ * @name Controls/_filterPanel/Editors/List#editArrowClickCallback
+ * @cfg {Function} Функция обратного вызова, вызывается при клике на "шеврон" элемента.
+ */
+
 class ListEditor extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = ListTemplate;
     protected _columns: object[] = null;
@@ -215,7 +221,7 @@ class ListEditor extends Control<IListEditorOptions> {
         const valueChanged =
             !isEqual(propertyValue, this._options.propertyValue) &&
             !isEqual(propertyValue, this._selectedKeys);
-        const filterChanged = !isEqual(filter, this._options.filter);
+        let filterChanged = !isEqual(filter, this._options.filter);
         const displayPropertyChanged = displayProperty !== this._options.displayProperty;
         const additionalDataChanged = additionalTextProperty !== this._options.additionalTextProperty;
         const sourceChanged = source !== this._options.source;
@@ -226,7 +232,9 @@ class ListEditor extends Control<IListEditorOptions> {
             this._setHiddenItemsCount(this._selectedKeys);
         }
         if (filterChanged || valueChanged) {
+            const currentFilter = this._filter;
             this._setFilter(valueChanged ? this._selectedKeys : null, options);
+            filterChanged = !isEqual(currentFilter, this._filter);
         }
         if (valueChanged) {
             this._setMarkedKey(this._selectedKeys, options);
@@ -328,8 +336,8 @@ class ListEditor extends Control<IListEditorOptions> {
      */
     protected _addItemsFromSelector(items: RecordSet): void {
         const maxItemsCount = this._getMaxItemsCount();
-        // Выбранные элементы надо добавлять после запиненных записей
-        let addIndex = this._getLastHistoryItemIndex();
+        // Выбранные элементы надо добавлять после запиненных записей и записей для сброса параметра фильтрации
+        let addIndex = this._getLastFixedItemIndex();
         let itemsCount = this._items.getCount();
         let itemIndex;
 
@@ -374,6 +382,14 @@ class ListEditor extends Control<IListEditorOptions> {
             pageSize = navigation.sourceConfig?.pageSize;
         }
         return pageSize;
+    }
+
+    protected _getLastFixedItemIndex(): number {
+        let lastIndex = this._getLastHistoryItemIndex();
+        if (this._options.emptyText || this._options.selectedAllText) {
+            lastIndex++;
+        }
+        return lastIndex;
     }
 
     protected _getLastHistoryItemIndex(): number {
@@ -436,6 +452,10 @@ class ListEditor extends Control<IListEditorOptions> {
         if (event.type === 'register' && type === 'selectedTypeChanged') {
             event.stopPropagation();
         }
+    }
+
+    protected _handleEditArrowClick(event: SyntheticEvent, item: Model): void {
+        this._options.editArrowClickCallback(item);
     }
 
     private _getTextValue(selectedKeys: number[]|string[]): string {

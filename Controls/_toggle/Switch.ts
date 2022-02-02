@@ -111,7 +111,8 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
             captionPosition: EntityDescriptor(String).oneOf([
                 'left',
                 'right'
-            ])
+            ]),
+            caption: EntityDescriptor(String, Number)
         };
     }
 

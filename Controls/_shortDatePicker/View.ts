@@ -34,10 +34,6 @@ const MAX_VISIBLE_YEARS = 14;
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/ShortDatePicker/Index
- * @demo Controls-demo/ShortDatePicker/Source/Index
- * @demo Controls-demo/ShortDatePicker/DisplayedRanges/Index
- * @demo Controls-demo/ShortDatePicker/MonthTemplate/ContentTemplate/Index
- * @demo Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/Index
  */
 
 /*
