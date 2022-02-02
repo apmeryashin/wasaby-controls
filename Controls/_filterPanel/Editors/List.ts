@@ -203,7 +203,6 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _beforeUpdate(options: IListEditorOptions): void {
         const {propertyValue, sourceController, filter, additionalTextProperty, displayProperty, source} = options;
-        const currentFilter = this._filter;
         const valueChanged =
             !isEqual(propertyValue, this._options.propertyValue) &&
             !isEqual(propertyValue, this._selectedKeys);
@@ -218,12 +217,14 @@ class ListEditor extends Control<IListEditorOptions> {
             this._setHiddenItemsCount(this._selectedKeys);
         }
         if (filterChanged || valueChanged) {
+            const currentFilter = this._filter;
             this._setFilter(valueChanged ? this._selectedKeys : null, options);
+            filterChanged = !isEqual(currentFilter, this._filter);
         }
         if (valueChanged) {
             this._setMarkedKey(this._selectedKeys, options);
         }
-        filterChanged = !isEqual(currentFilter, this._filter);
+
         if (sourceController && (filterChanged || sourceChanged)) {
             sourceController.updateOptions({
                 ...options,
