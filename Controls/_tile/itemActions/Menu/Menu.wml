@@ -7,7 +7,9 @@
         closeButtonViewMode="external"
         stickyPosition="{{_options.stickyPosition}}"
         roundBorder="{{_options.roundBorder}}"
-        shadowVisible="{{true}}">
+        shadowVisible="{{true}}"
+        borderVisible="{{ false }}"
+      >
          <ws:bodyContentTemplate>
             <div
                 class="controls-TileView__itemActions__menu_content"

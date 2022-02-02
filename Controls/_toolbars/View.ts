@@ -117,6 +117,14 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      */
     menuSource?: ICrudPlus;
     /**
+     * @name Controls/toolbars:IToolbar#menuLoadCallback
+     * @cfg {Function} Функция, которая вызывается каждый раз непосредственно после загрузки данных в меню из источника.
+     * Функцию можно использовать для изменения данных еще до того, как они будут отображены в контроле.
+     * @see menuSource
+     * @demo Controls-demo/Toolbar/MenuLoadCallback/Index
+     */
+    menuLoadCallback?: (items: RecordSet) => void;
+    /**
      * @name Controls/toolbars:IToolbar#contrastBackground
      * @cfg {Boolean} Определяет наличие подложки у кнопки открытия выпадающего меню тулбара.
      */
@@ -306,6 +314,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 additionalProperty: options.additionalProperty,
                 footerContentTemplate: options.popupFooterTemplate,
                 closeButtonVisibility: true,
+                dataLoadCallback: options.menuLoadCallback,
                 dropdownClassName: `controls-Toolbar-${options.direction}__dropdown`
             },
             target: options.direction === 'vertical' ? this._children.toolbarItems : this._children.menuTarget

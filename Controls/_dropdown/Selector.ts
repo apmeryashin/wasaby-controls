@@ -185,7 +185,8 @@ export default class Selector extends BaseDropdown {
          this._icon = this._isEmptyItem || this._isAllSelectedItem ? null : getPropValue(this._item, 'icon');
          this._text = this._getText(items, options);
          this._hasMoreText = this._getMoreText(items, options.maxVisibleItems);
-         this._tooltip = this._getFullText(items, options.displayProperty);
+         this._tooltip = this._getFullText(items, options.displayProperty,
+             options.parentProperty, options.nodeProperty);
       }
    }
 
@@ -294,11 +295,24 @@ export default class Selector extends BaseDropdown {
       return keys;
    }
 
-   private _getFullText(items: Model[], displayProperty: string, maxVisibleItems?: number): string {
+   private _getFullText(items: Model[],
+                        displayProperty: string,
+                        parentProperty: string,
+                        nodeProperty: string,
+                        maxVisibleItems?: number): string {
       const texts = [];
       factory(items).each((item) => {
+         let text = '';
          if (!maxVisibleItems || texts.length < maxVisibleItems) {
-            texts.push(getPropValue(item, displayProperty));
+            if (parentProperty) {
+               const parentKey = getPropValue(item, parentProperty);
+               const parent = parentKey && this._controller.getItems().getRecordById(parentKey);
+               if (getPropValue(parent, nodeProperty) === false) {
+                  text += `${getPropValue(parent, displayProperty)} `;
+               }
+            }
+            text += getPropValue(item, displayProperty) ?? '';
+            texts.push(text);
          }
       });
       return texts.join(', ');
@@ -309,6 +323,8 @@ export default class Selector extends BaseDropdown {
                      selectedAllKey,
                      emptyText,
                      emptyKey,
+                     parentProperty,
+                     nodeProperty,
                      keyProperty,
                      displayProperty,
                      maxVisibleItems}: Partial<IInputOptions>): string {
@@ -319,7 +335,7 @@ export default class Selector extends BaseDropdown {
       } else if (isSingleSelectionItem(item, emptyText, keyProperty, emptyKey)) {
          text = prepareEmpty(emptyText);
       } else {
-         text = this._getFullText(items, displayProperty, maxVisibleItems);
+         text = this._getFullText(items, displayProperty, parentProperty, nodeProperty, maxVisibleItems);
       }
       return text;
    }
@@ -477,6 +493,38 @@ export default class Selector extends BaseDropdown {
  *    keyProperty: 'id',
  *    data: [
  *       {id: 1, title: 'Yaroslavl'},
+ *       {id: 2, title: 'Moscow'},
+ *       {id: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * this._selectedKeys = [1, 3];
+ * </pre>
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#multiSelectAccessibilityProperty
+ * @cfg {Controls/display:MultiSelectAccessibility} Имя поля записи, в котором хранится состояние видимости чекбокса.
+ * @demo Controls-demo/dropdown_new/Input/MultiSelect/MultiSelectAccessibilityProperty/Index
+ * @example
+ * Множественный выбор установлен.
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:Selector
+ *    bind:selectedKeys="_selectedKeys"
+ *    keyProperty="id"
+ *    displayProperty="title"
+ *    source="{{_source}}"
+ *    multiSelectAccessibilityProperty="checkBoxState"
+ *    multiSelect="{{true}}" />
+ * </pre>
+ * <pre class="brush: js">
+ * // JavaScript
+ * import {MultiSelectAccessibility} from 'Controls/dropdown';
+ *
+ * this._source = new Memory({
+ *    keyProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Yaroslavl', checkBoxState: MultiSelectAccessibility.disabled},
  *       {id: 2, title: 'Moscow'},
  *       {id: 3, title: 'St-Petersburg'}
  *    ]

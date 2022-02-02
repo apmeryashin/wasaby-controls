@@ -76,7 +76,7 @@ export default Form;
 /**
  * Запускает валидацию.
  * @name Controls/_validate/Controller#submit
- * @param {ControllerConfig} Параметры, определяющие поведение при валидации.
+ * @param {Controls/_validate/Controller/ControllerConfig.typedef}  ControllerConfig Параметры, определяющие поведение при валидации.
  * @function
  * @return {Promise<Controls/_validate/interfaces/IValidateResult>}
  * @example

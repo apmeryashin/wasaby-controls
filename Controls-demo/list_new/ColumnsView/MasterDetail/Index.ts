@@ -3,16 +3,14 @@ import template = require('wml!Controls-demo/list_new/ColumnsView/MasterDetail/M
 import columnTemplate = require('wml!Controls-demo/DragNDrop/MasterDetail/itemTemplates/masterItemTemplate');
 import * as data from 'Controls-demo/DragNDrop/MasterDetail/Data';
 import cInstance = require('Core/core-instance');
-import {Memory} from 'Types/source';
-import {ListItems} from 'Controls/dragnDrop';
-import * as TaskEntity from 'Controls-demo/DragNDrop/MasterDetail/TasksEntity';
+import {Memory, CrudEntityKey} from 'Types/source';
+import {ItemsEntity, ListItems} from 'Controls/dragnDrop';
 import { TItemsReadyCallback } from 'Controls-demo/types';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
 import { IColumn } from 'Controls/grid';
-import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+import {INavigationOptionValue, INavigationSourceConfig, ISelectionObject} from 'Controls/interface';
 
 export default class RenderDemo extends Control {
     protected _template: TemplateFunction = template;
@@ -21,96 +19,105 @@ export default class RenderDemo extends Control {
         width: '1fr',
         template: columnTemplate
     }];
-    protected _viewSource: Memory;
     protected _navigation: INavigationOptionValue<INavigationSourceConfig>;
-    protected _selectedKeys: number[];
-    protected _items: [object];
+    protected _selectedKeys: CrudEntityKey[];
     protected _detailSource: Memory;
     protected _masterSource: Memory;
     protected _itemsReadyCallbackMaster: TItemsReadyCallback;
     protected _itemsReadyCallbackDetail: TItemsReadyCallback;
     protected _itemsMaster: RecordSet;
     protected _itemsDetail: RecordSet;
+    private _detailRoot: CrudEntityKey;
 
     protected _dataArray: Array<{key: number, title: string, description: string}>;
 
-    _initSource(): void {
-        this._detailSource = new Memory({
-            keyProperty: 'key',
-            data: data.detail
-        });
-
+    protected _beforeMount(): void {
+        this._detailRoot = '0';
         this._masterSource = new Memory({
-            keyProperty: 'key',
+            keyProperty: 'id',
             data: data.master
         });
-    }
-
-    protected _beforeMount(): void {
-        this._initSource();
+        this._detailSource = new Memory({
+            keyProperty: 'id',
+            data: data.detail,
+            filter: (item, queryFilter) => {
+                const parent = item.get('parent');
+                return parent === this._detailRoot;
+            }
+        });
         this._itemsReadyCallbackMaster = this._itemsReadyMaster.bind(this);
         this._itemsReadyCallbackDetail = this._itemsReadyDetail.bind(this);
     }
-    _afterMount(): void {
-        this._initSource();
+
+    protected _masterItemClick(event: SyntheticEvent, item: Model): void {
+        this._detailRoot = item.getKey();
+        this._children.detailList.reload();
     }
-    _itemsReadyMaster(items: RecordSet): void {
+
+    protected _itemsReadyMaster(items: RecordSet): void {
         this._itemsMaster = items;
     }
 
-    _itemsReadyDetail(items: RecordSet): void {
+    protected _itemsReadyDetail(items: RecordSet): void {
         this._itemsDetail = items;
     }
-    // tslint:disable-next-line
-    _dragEnterMaster(_: SyntheticEvent, entity: any): void {
-        return cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/MasterDetail/TasksEntity');
+
+    protected _dragEnterMaster(_: SyntheticEvent, entity: ItemsEntity): boolean {
+        return cInstance.instanceOfModule(entity, 'Controls/dragnDrop:ListItems');
     }
 
-    // tslint:disable-next-line
-    _dragStartMaster(_: SyntheticEvent, items: RecordSet): any {
+    protected _dragStartMaster(_: SyntheticEvent, items: RecordSet): ListItems {
         const firstItem = this._itemsMaster.getRecordById(items[0]);
         return new ListItems({
             items,
             mainText: firstItem.get('name')
         });
     }
-    // tslint:disable-next-line
-    _dragStartDetail(_: SyntheticEvent, items: RecordSet): any {
+
+    protected _dragStartDetail(_: SyntheticEvent, items: CrudEntityKey[]): ListItems {
         const firstItem = this._itemsDetail.getRecordById(items[0]);
-        return new TaskEntity({
+        return new ListItems({
             items,
             mainText: firstItem.get('name'),
             image: firstItem.get('img'),
-            additionalText: firstItem.get('shortMsg')
+            additionalText: firstItem.get('shortMsg'),
+            detail: true
         });
     }
 
-    // tslint:disable-next-line
-    _dragEndMaster(_: SyntheticEvent, entity: Collection<Model>, target: any, position: string): void {
-        let item = null;
+    protected _dragEndMaster(_: SyntheticEvent, entity: ItemsEntity, target: Model, position: string): void {
         let targetId = null;
         const items = entity.getItems();
 
-        if (cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/MasterDetail/TasksEntity')) {
-            targetId = target.get('key');
-            // tslint:disable-next-line
+        // Пернос из правого реестра
+        if (entity.getOptions().detail) {
+            targetId = target.getKey();
             items.forEach((key: string | number): void => {
-                item = this._itemsDetail.getRecordById(key);
+                const item = this._itemsDetail.getRecordById(key);
                 item.set('parent', targetId);
                 this._detailSource.update(item);
             }, this);
-            // tslint:disable-next-line
             this._children.detailList.reload();
             this._selectedKeys = [];
         } else {
-            // tslint:disable-next-line
-            this._children.masterMover.moveItems(items, target, position);
+            const selection: ISelectionObject = {
+                selected: entity.getItems(),
+                excluded: []
+            };
+            this._children.masterList.moveItems(selection, target.getKey(), position).then(() => {
+                this._children.masterList.reload();
+            });
         }
     }
-    // tslint:disable-next-line
-    _dragEndDetail(_: SyntheticEvent, entity: Collection<Model>, target: any, position: string): void {
-        // tslint:disable-next-line
-        this._children.detailMover.moveItems(entity.getItems(), target, position);
+
+    protected _dragEndDetail(_: SyntheticEvent, entity: ItemsEntity, target: Model, position: string): void {
+        const selection: ISelectionObject = {
+            selected: entity.getItems(),
+            excluded: []
+        };
+        this._children.detailList.moveItems(selection, target.getKey(), position).then(() => {
+            this._children.detailList.reload();
+        });
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/DragNDrop/MasterDetail/MasterDetail'];

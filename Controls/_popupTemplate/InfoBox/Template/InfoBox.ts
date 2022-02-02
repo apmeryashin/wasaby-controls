@@ -11,6 +11,7 @@ type TStyle = 'danger' | 'secondary' | 'warning' | 'success' | 'info' | 'primary
 
 export interface IInfoboxTemplateOptions extends IControlOptions, IInfoBoxOptions, IValidationStatusOptions {
     stickyPosition?: IStickyPopupPosition;
+    backgroundStyle?: string;
 }
 /**
  * Базовый шаблон {@link /doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
@@ -36,7 +37,14 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     protected _horizontalDirection: string;
     protected _beforeMount(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
-        this._borderStyle = InfoboxTemplate._setBorderStyle(newOptions.style as TStyle, newOptions.validationStatus);
+        this._borderStyle = InfoboxTemplate._setBorderStyle(
+            (newOptions.style || newOptions.borderStyle) as TStyle,
+            newOptions.validationStatus);
+
+        if (newOptions.style !== undefined) {
+            Logger.warn(`${this._moduleName}: Используется устаревшая опция style,` +
+                                                                            ' нужно использовать borderStyle', this);
+        }
         if (newOptions.closeButtonVisibility !== undefined) {
             Logger.error('Controls/popupTemplate:Infobox : Используется устаревшая опция closeButtonVisibility' +
                                                                                      ' используйте closeButtonVisible');
@@ -45,7 +53,9 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
 
     protected _beforeUpdate(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
-        this._borderStyle = InfoboxTemplate._setBorderStyle(newOptions.style as TStyle, newOptions.validationStatus);
+        this._borderStyle = InfoboxTemplate._setBorderStyle(
+            (newOptions.style || newOptions.borderStyle) as TStyle,
+            newOptions.validationStatus);
     }
     _setPositionSide(stickyPosition: IStickyPopupPosition): void {
         const {direction} = stickyPosition;
@@ -69,10 +79,20 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
         this._notify('close', [], { bubbling: true });
     }
 
+    protected _getBackgroundStyle(): string {
+        const backgroundStyle = this._options.backgroundStyle;
+        // Добавляем проверку на значение по умолчанию, что бы навесить класс с переменной для возможности темизации.
+        if (backgroundStyle === 'secondary') {
+            return 'controls-InfoBoxTemplate__backgroundStyle-secondary';
+        }
+        return `controls-background-${backgroundStyle}`;
+    }
+
     static defaultProps: Partial<IInfoboxTemplateOptions> = {
         closeButtonVisible: true,
         validationStatus: 'valid',
-        style: 'secondary'
+        borderStyle: 'secondary',
+        backgroundStyle: 'secondary'
     };
 
     private static _getArrowPosition(side: TVertical | THorizontal): TArrowPosition {
@@ -100,7 +120,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
  * @default true
  */
 /**
- * @name Controls/_popupTemplate/InfoBox#style
+ * @name Controls/_popupTemplate/InfoBox#borderStyle
  * @cfg {String} Устанавливает стиль отображения всплывающей подсказки.
  * @default secondary
  * @variant warning
@@ -149,4 +169,13 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
 /**
  * @name Controls/_popupTemplate/InfoBox#content
  * @cfg {function|String} Шаблон, который будет отображать всплывающая подсказка.
+ */
+
+/**
+ * @name Controls/_popupTemplate/InfoBox#backgroundStyle
+ * @cfg {String} Устанавливает фон отображения всплывающей подсказки.
+ * @default secondary
+ * @variant default
+ * @variant secondary
+ * @demo Controls-demo/PopupTemplate/Infobox/BackgroundStyle/Index
  */

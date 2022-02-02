@@ -13,8 +13,6 @@ import {NewSourceController} from 'Controls/dataSource';
 import {default as IBackgroundStyle, IBackgroundStyleOptions} from 'Controls/_interface/IBackgroundStyle';
 import {RecordSet} from 'Types/collection';
 
-export type TKey = string|number|null;
-
 export type TSubMenuDirection = 'bottom' | 'right';
 
 export type TItemAlign = 'left' | 'right';
@@ -24,7 +22,6 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     items?: RecordSet;
     sourceProperty: string;
     nodeFooterTemplate?: TemplateFunction;
-    root?: TKey;
     selectorOpener?: Stack;
     itemActions?: IItemAction[];
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
@@ -38,6 +35,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     itemAlign?: TItemAlign;
     headingCaptionProperty?: string;
     itemsSpacing?: string;
+    multiSelectAccessibilityProperty?: string;
     focusable?: boolean;
 }
 

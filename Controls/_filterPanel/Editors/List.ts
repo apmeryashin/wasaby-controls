@@ -55,6 +55,7 @@ export interface IListEditorOptions extends
     resetValue?: number[]|string[];
     sourceController?: SourceController;
     expandedItems?: TKey[];
+    itemActions?: IItemAction[];
     editArrowClickCallback?: Function;
 }
 
@@ -64,6 +65,7 @@ export interface IListEditorOptions extends
  * @extends Core/Control
  * @implements Controls/grid:IGridControl
  * @implements Controls/interface:INavigation
+ * @implements Controls/itemActions:IItemActions
  * @author Мельникова Е.А.
  * @demo Controls-demo/filterPanel/Base/Index
  * @public
@@ -162,6 +164,13 @@ export interface IListEditorOptions extends
  */
 
 /**
+ * @name Controls/_filterPanel/Editors/List#selectedAllText
+ * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
+ * Используется для установки фильтрации по всем доступным значениям для данного параметра.
+ * @remark При активации снимает отметку чекбоксами со всех записей в списке
+ */
+
+/**
  * @name Controls/_filterPanel/Editors/List#editArrowClickCallback
  * @cfg {Function} Функция обратного вызова, вызывается при клике на "шеврон" элемента.
  */
@@ -195,7 +204,7 @@ class ListEditor extends Control<IListEditorOptions> {
         this._setColumns(options);
         this._setFilter(this._selectedKeys, options);
         this._navigation = this._getNavigation(options);
-        this._itemActions = this._getItemActions(options.historyId);
+        this._itemActions = this._getItemActions(options.historyId, options.itemActions);
 
         if (options.expandedItems) {
             this._expandedItems = options.expandedItems;
@@ -246,9 +255,9 @@ class ListEditor extends Control<IListEditorOptions> {
         const {emptyKey, selectedAllKey} = this._options;
 
         if (item.get('pinned')) {
-            isActionVisible = action.id === 'PinOff';
+            isActionVisible = action.id !== 'PinNull';
         } else {
-            isActionVisible = action.id === 'PinNull';
+            isActionVisible = action.id !== 'PinOff';
         }
         return isActionVisible && itemKey !== emptyKey && itemKey !== selectedAllKey;
     }
@@ -524,27 +533,30 @@ class ListEditor extends Control<IListEditorOptions> {
         this._navigation = this._getNavigation(this._options);
     }
 
-    private _getItemActions(historyId?: string): IItemAction[] {
+    private _getItemActions(historyId?: string, itemActions: IItemAction[]): IItemAction[] {
+        const itemActionsList = itemActions;
         if (historyId) {
-            return [
-                {
-                    id: 'PinOff',
-                    icon: 'icon-PinOff',
-                    iconSize: 's',
-                    tooltip: rk('Открепить'),
-                    showType: TItemActionShowType.TOOLBAR,
-                    handler: this._handlePinClick.bind(this)
-                }, {
-                    id: 'PinNull',
-                    icon: 'icon-PinNull',
-                    iconSize: 's',
-                    tooltip: rk('Закрепить'),
-                    showType: TItemActionShowType.TOOLBAR,
-                    handler: this._handlePinClick.bind(this)
-                }
-            ];
+            itemActionsList.concat(
+                [
+                    {
+                        id: 'PinOff',
+                        icon: 'icon-PinOff',
+                        iconSize: 's',
+                        tooltip: rk('Открепить'),
+                        showType: TItemActionShowType.TOOLBAR,
+                        handler: this._handlePinClick.bind(this)
+                    }, {
+                        id: 'PinNull',
+                        icon: 'icon-PinNull',
+                        iconSize: 's',
+                        tooltip: rk('Закрепить'),
+                        showType: TItemActionShowType.TOOLBAR,
+                        handler: this._handlePinClick.bind(this)
+                    }
+                ]
+            );
         }
-        return [];
+        return itemActionsList;
     }
 
     private _getItemModel(items: RecordSet, keyProperty: string): Model {
@@ -684,7 +696,8 @@ class ListEditor extends Control<IListEditorOptions> {
             style: 'default',
             itemPadding: {
                 right: 'm'
-            }
+            },
+            itemActions: []
         };
     }
 }

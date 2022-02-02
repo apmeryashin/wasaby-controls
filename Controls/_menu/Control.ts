@@ -5,7 +5,8 @@ import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {RecordSet, List} from 'Types/collection';
 import {ICrudPlus, PrefetchProxy} from 'Types/source';
-import {Collection, CollectionItem, Search} from 'Controls/display';
+import {Collection, CollectionItem, MultiSelectAccessibility, Search} from 'Controls/display';
+import {getItemParentKey} from 'Controls/_menu/Util';
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -21,9 +22,14 @@ import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {StickyOpener, StackOpener, IStickyPopupOptions} from 'Controls/popup';
-import {TKey} from 'Controls/_menu/interface/IMenuControl';
+import {TKey} from 'Controls/_menu/interface/IMenuBase';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
-import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOptions} from 'Controls/multiselection';
+import {
+    FlatSelectionStrategy,
+    SelectionController,
+    IFlatSelectionStrategyOptions,
+    ISelectionControllerOptions
+} from 'Controls/multiselection';
 import {create as DiCreate} from 'Types/di';
 import 'css!Controls/menu';
 
@@ -352,6 +358,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         } else if (MenuControl._isRightTemplateClick(sourceEvent.target)) {
             this._rightTemplateClick(event, item);
         } else {
+            if (this._options.multiSelectAccessibilityProperty) {
+                const checkBoxState = item.get(this._options.multiSelectAccessibilityProperty);
+                if (checkBoxState === MultiSelectAccessibility.hidden ||
+                    checkBoxState === MultiSelectAccessibility.disabled) {
+                    return;
+                }
+            }
             if (this._options.multiSelect && this._selectionChanged &&
                 !this._isSingleSelectionItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
                 this._changeSelection(key);
@@ -362,6 +375,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 if (this._isTouch() && item.get(this._options.nodeProperty) && this._subDropdownItem !== treeItem) {
                     this._handleCurrentItem(treeItem, sourceEvent.currentTarget, sourceEvent.nativeEvent);
                 } else {
+                    if (!MenuControl._isItemCurrentRoot(item, this._options)) {
+                        const parent = item.get(this._options.parentProperty);
+                        const parentItem = this._listModel.getCollection().getRecordById(parent);
+                        this._notify('itemClick', [item, sourceEvent, parentItem]);
+                    }
                     this._notify('itemClick', [item, sourceEvent]);
                 }
             }
@@ -381,22 +399,25 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _createSelectionController(options: IMenuControlOptions): SelectionController {
         return new SelectionController({
-            model: this._listModel,
-            selectedKeys: this._getKeysForSelectionController(options),
-            excludedKeys: [],
-            searchValue: options.searchValue,
+            ...this._getSelectionControllerOptions(options),
             strategy: new FlatSelectionStrategy(this._getSelectionStrategyOptions())
         });
     }
 
     private _updateSelectionController(newOptions: IMenuControlOptions): void {
         this._getSelectionController().updateOptions({
-            model: this._listModel,
-            selectedKeys: this._getKeysForSelectionController(newOptions),
-            excludedKeys: [],
-            searchValue: newOptions.searchValue,
+            ...this._getSelectionControllerOptions(newOptions),
             strategyOptions: this._getSelectionStrategyOptions()
         });
+    }
+
+    private _getSelectionControllerOptions(options: IMenuControlOptions): ISelectionControllerOptions {
+        return {
+            model: this._listModel,
+            selectedKeys: this._getKeysForSelectionController(options),
+            excludedKeys: [],
+            searchValue: options.searchValue
+        };
     }
 
     private _updateMarkerController(newOptions: IMenuControlOptions): void {
@@ -790,8 +811,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._markerController.setMarkedKey(markedKey);
         }
         if (options.selectedKeys && options.selectedKeys.length && options.multiSelect) {
-            this._selectionController = this._createSelectionController(options);
+            this._selectionController = this._getSelectionController(options);
             this._selectionController.setSelection(this._selectionController.getSelection());
+            if (options.multiSelectAccessibilityProperty) {
+                this._selectionChanged = this._getSelectedItems().some((item) => {
+                    return item.get(options.multiSelectAccessibilityProperty) === MultiSelectAccessibility.disabled;
+                });
+            }
         }
     }
 
@@ -855,7 +881,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return selectedKeys;
     }
 
-    private _getSelectedItems(): object[] {
+    private _getSelectedItems(): Model[] {
         const selectedItems = this._getSelectionController().getSelectedItems().map((item) => {
             return item.getContents();
         }).reverse();
@@ -931,6 +957,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             collection: items,
             keyProperty: options.keyProperty,
             unique: true,
+            multiSelectAccessibilityProperty: options.multiSelectAccessibilityProperty,
             topPadding: 'null',
             bottomPadding: 'menu-default',
             leftPadding: this._getLeftPadding(options),
@@ -950,7 +977,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             });
         } else {
             const filterFunction = options.parentProperty &&
-                                   options.nodeProperty ? MenuControl._displayFilter.bind(this, options) : null;
+                                   options.nodeProperty ? MenuControl._displayFilter.bind(this, options, items) : null;
             // В дереве не работает группировка,
             // ждем решения по ошибке https://online.sbis.ru/opendoc.html?guid=f4a3be79-5ec5-45d2-b742-2d585c5c069d
             listModel = new Collection({...collectionConfig,
@@ -1382,13 +1409,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             (secondSegmentPointX - firstSegmentPointX) * (firstSegmentPointY - curPointY);
     }
 
-    private static _hasNodesAtLevel(items: RecordSet, options: IMenuControlOptions): boolean {
-        const firstItemAtLevel = factory(items).filter((item) => {
-            return MenuControl._isItemCurrentRoot(item, options) && item.get(options.nodeProperty);
-        }).first();
-        return !!firstItemAtLevel;
-    }
-
     private static _isHistoryItem(item: Model): boolean {
         return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
     }
@@ -1401,23 +1421,22 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return (!item.get || !item.get(options.additionalProperty) || MenuControl._isHistoryItem(item));
     }
 
-    private static _displayFilter(options: IMenuControlOptions, item: Model): boolean {
+    private static _displayFilter(options: IMenuControlOptions,
+                                  items: RecordSet,
+                                  item: Model): boolean {
         let isVisible: boolean = true;
-        const isStringType = typeof options.root === 'string';
         if (item && item.get) {
-            let parent: TKey = item.get(options.parentProperty);
-            if (parent === undefined) {
-                parent = null;
-            }
-            // Для исторических меню keyProperty всегда заменяется на строковый.
-            // Если изначально был указан целочисленный ключ,
-            // то в поле родителя будет лежать также целочисленное значение, а в root будет лежать строка.
-            if (isStringType) {
-                parent = String(parent);
-            }
-            isVisible = parent === options.root;
+            const parent = getItemParentKey(options, item);
+
+            isVisible = parent === options.root || MenuControl._isHiddenNode(parent, items, options);
         }
         return isVisible;
+    }
+
+    private static _isHiddenNode(key: TKey, items: RecordSet<Model>, options: IMenuControlOptions): boolean {
+        const parentItem = items.getRecordById(key);
+        return parentItem && parentItem.get(options.nodeProperty) === false &&
+            getItemParentKey(options, parentItem) === options.root;
     }
 
     private static _searchHistoryDisplayFilter(options: IMenuControlOptions,

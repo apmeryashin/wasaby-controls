@@ -26,6 +26,7 @@ interface IStickyTemplateOptions extends
     borderStyle?: string;
     borderSize?: string;
     roundBorder?: boolean;
+    borderVisible: boolean;
 }
 
 /**
@@ -156,7 +157,8 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             borderStyle: 'default',
             borderSize: 'default',
             roundBorder: true,
-            borderRadius: 's'
+            borderRadius: 's',
+            borderVisible: true
         };
     }
 }
@@ -228,5 +230,10 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @variant success
  * @default default
  * @demo Controls-demo/PopupTemplate/Sticky/backgroundStyle/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#borderVisible
+ * @cfg {Boolean} Определяет видимость бордера
  */
 export default StickyTemplate;

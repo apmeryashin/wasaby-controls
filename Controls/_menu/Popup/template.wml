@@ -102,6 +102,7 @@
                        width="{{_options.width}}"
                        breadCrumbsItemTemplate="{{_options.breadCrumbsItemTemplate}}"
                        multiSelect="{{_options.multiSelect}}"
+                       multiSelectAccessibilityProperty="{{_options.multiSelectAccessibilityProperty}}"
                        markerVisibility="{{_options.markerVisibility}}"
                        emptyTemplate="{{_options.emptyTemplate}}"
                        source="{{_options.source}}"

@@ -1,4 +1,11 @@
-import {Controller as ManagerController, IPopupItem, IPopupPosition, IPopupSizes, IPopupController, IDragOffset} from 'Controls/popup';
+import {
+    Controller as ManagerController,
+    IPopupItem,
+    IPopupPosition,
+    IPopupSizes,
+    IPopupController,
+    IDragOffset
+} from 'Controls/popup';
 import getTargetCoords from 'Controls/_popupTemplate/TargetCoords';
 import {Control} from 'UI/Base';
 import {goUpByControlTree} from 'UI/Focus';

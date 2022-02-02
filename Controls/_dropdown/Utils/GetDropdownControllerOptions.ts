@@ -39,6 +39,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         markerVisibility: options.markerVisibility,
         displayProperty: options.displayProperty,
         multiSelect: options.multiSelect,
+        multiSelectAccessibilityProperty: options.multiSelectAccessibilityProperty,
         typeShadow: options.typeShadow,
         selectorTemplate: options.selectorTemplate,
         headingCaptionProperty: options.headingCaptionProperty,

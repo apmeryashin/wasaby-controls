@@ -27,7 +27,7 @@ const Z_INDEX_STEP = 10;
 
 // Default popup configuration
 const DEFAULT_CONFIG = {
-    style: 'secondary',
+    borderStyle: 'secondary',
     position: 'tl',
     targetSide: 'top',
     alignment: 'start',
@@ -148,7 +148,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
                 template: newCfg.template,
                 templateOptions: newCfg.templateOptions, // for user template: newCfg.template
                 message: newCfg.message,
-                style: newCfg.style || 'secondary',
+                borderStyle: newCfg.style || newCfg.borderStyle || 'secondary',
                 floatCloseButton: newCfg.floatCloseButton,
                 closeButtonVisible: newCfg.closeButtonVisibility !== undefined ?
                                                              newCfg.closeButtonVisibility : newCfg.closeButtonVisible,

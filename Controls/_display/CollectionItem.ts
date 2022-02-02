@@ -1016,10 +1016,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
     // endregion RoundBorder
 
-    getRowSeparatorSize(): string {
-        return this.getOwner().getRowSeparatorSize();
-    }
-
     setBottomSeparatorEnabled(state: boolean, silent?: boolean): void {
         if (this._$isBottomSeparatorEnabled !== state) {
             this._$isBottomSeparatorEnabled = state;
@@ -1207,6 +1203,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     shouldDisplayMultiSelectTemplate(): boolean {
         return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
+    }
+
+    getRowSeparatorSize(): string {
+        return this._$rowSeparatorSize;
     }
 
     setRowSeparatorSize(rowSeparatorSize: string): boolean {

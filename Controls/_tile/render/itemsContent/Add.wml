@@ -1,7 +1,12 @@
 <div attr:class="{{ item.getAddItemClasses(itemType) }} {{ item.getImageWrapperClasses('adding', hasTitle, titleStyle, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem, contentPadding) }}"
      attr:style="{{ item.getImageWrapperStyles(itemType, imageViewMode, imagePosition) }}">
+    <ws:partial template="{{ (item || itemData).getContentTemplate((item || itemData).getItemType(itemType, nodeContentTemplate), contentTemplate, nodeContentTemplate) }}"
+                scope="{{_options}}"
+                attr:class="controls-TileView__addTile_hideContent"
+                itemType="{{ (item || itemData).getItemType(itemType, nodeContentTemplate) }}">
+    </ws:partial>
     <ws:if data="{{ item.shouldDisplayAutoResizer(item.getItemType(itemType, nodeContentTemplate), staticHeight) }}">
         <div style="{{ item.getAutoResizerStyles(item.getItemType(itemType, nodeContentTemplate), width || itemWidth, imageProportion, imagePosition, imageViewMode) }}"></div>
     </ws:if>
-    <Controls.icon:Icon iconSize="s" iconStyle="default" icon="icon-RoundPlus"/>
+    <Controls.icon:Icon iconSize="s" iconStyle="default" icon="icon-RoundPlus" attr:class="controls-TileView__addTile_icon"/>
 </div>

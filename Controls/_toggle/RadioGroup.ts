@@ -26,6 +26,7 @@ export interface IRadioGroupOptions extends IControlOptions,
     IToggleGroupOptions {
     captionPosition: string;
     radioCircleVisible?: boolean;
+    items?: RecordSet;
 }
 
 /**
@@ -84,7 +85,10 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
         this._selectKeyChanged = this._selectKeyChanged.bind(this);
         this._isSelected = this._isSelected.bind(this);
         this._workByKeyboard = context?.workByKeyboard;
-        if (receivedState) {
+        if (options.items) {
+            this._items = options.items;
+            this._sortGroup(options, options.items);
+        } else if (receivedState) {
             this._items = receivedState;
             this._sortGroup(options, receivedState);
         } else {
@@ -99,6 +103,11 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
     protected _beforeUpdate(newOptions: IRadioGroupOptions, context: IWorkByKeyboardContext = {}): Promise<void> {
         if (this._workByKeyboard !== context.workByKeyboard) {
             this._workByKeyboard = context.workByKeyboard;
+        }
+
+        if (newOptions.items && newOptions.items !== this._options.items) {
+            this._items = newOptions.items;
+            this._sortGroup(newOptions, newOptions.items);
         }
 
         if (newOptions.source && newOptions.source !== this._options.source) {
@@ -240,6 +249,12 @@ Object.defineProperty(Radio, 'defaultProps', {
 });
 
 export default Radio;
+
+/**
+ * @name Controls/_toggle/RadioGroup#items
+ * @cfg {RecordSet} Определяет набор записей по которым строится контрол.
+ * @demo Controls-demo/toggle/RadioGroup/Base/Index
+ */
 
 /**
  * @name Controls/_toggle/RadioGroup#direction

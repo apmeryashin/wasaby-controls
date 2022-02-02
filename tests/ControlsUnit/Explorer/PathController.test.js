@@ -103,7 +103,6 @@ define([
                   displayProperty: 'title',
                   backButtonStyle: undefined,
                   backButtonCaption: undefined,
-                  backButtonNewIcon: undefined,
                   backButtonIconStyle: undefined,
                   backButtonFontColorStyle: undefined,
                   backButtonBeforeCaptionTemplate: undefined,
@@ -231,7 +230,6 @@ define([
                   items: items.slice(0, 1),
                   backButtonStyle: undefined,
                   backButtonCaption: undefined,
-                  backButtonNewIcon: undefined,
                   backButtonIconStyle: undefined,
                   backButtonFontColorStyle: undefined,
                   backButtonBeforeCaptionTemplate: undefined,
@@ -304,7 +302,6 @@ define([
                templateOptions: {
                   backButtonStyle: undefined,
                   backButtonCaption: undefined,
-                  backButtonNewIcon: undefined,
                   backButtonIconStyle: undefined,
                   backButtonFontColorStyle: undefined,
                   backButtonBeforeCaptionTemplate: undefined,
@@ -356,7 +353,6 @@ define([
                   templateOptions: {
                      backButtonStyle: undefined,
                      backButtonCaption: undefined,
-                     backButtonNewIcon: undefined,
                      backButtonIconStyle: undefined,
                      backButtonFontColorStyle: undefined,
                      backButtonBeforeCaptionTemplate: undefined,

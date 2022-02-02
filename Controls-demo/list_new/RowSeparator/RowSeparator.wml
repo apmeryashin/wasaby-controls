@@ -17,4 +17,13 @@
         <Controls-demo.list_new.RowSeparator.Wide.Index/>
     </div>
 
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/RowSeparator/RowSeparatorVisibility/Index' }}">
+            <a href="{{content.href}}">Видимость разделителей</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.RowSeparator.RowSeparatorVisibility.Index/>
+    </div>
+
 </div>

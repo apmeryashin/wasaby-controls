@@ -4,6 +4,7 @@ import {INotificationBase} from 'Controls/_popupTemplate/interface/INotification
 import 'css!Controls/popupTemplate';
 import 'css!Controls/CommonClasses';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {Logger} from 'UI/Utils';
 
 /**
  * Базовый шаблон {@link /doc/platform/developmentapl/interface-development/controls/openers/notification/ простого окна уведомления}.
@@ -21,12 +22,19 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @demo Controls-demo/PopupTemplate/Notification/Index
  * @author Красильников А.С.
  */
+
+interface INotificationSimpleOptions extends INotificationBase, IControlOptions {}
+
 class NotificationSimple extends Control<INotificationSimpleOptions> {
     protected _template: TemplateFunction = template;
     protected _iconStyle: String;
 
     protected _beforeMount(options: INotificationSimpleOptions): void {
         this._iconStyle = NotificationSimple._prepareIconStyle(options);
+        if (options.style !== undefined) {
+            Logger.warn(`${this._moduleName}: Используется устаревшая опция style,` +
+                                                                               ' нужно использовать borderStyle', this);
+        }
     }
 
     protected _beforeUpdate(options: INotificationSimpleOptions): void {
@@ -39,7 +47,7 @@ class NotificationSimple extends Control<INotificationSimpleOptions> {
     }
 
     private static _prepareIconStyle(popupOptions: INotificationSimpleOptions): String {
-        switch (popupOptions.style) {
+        switch (popupOptions.style || popupOptions.borderStyle) {
             case 'warning':
                 return 'warning';
             case 'success' :
@@ -53,7 +61,7 @@ class NotificationSimple extends Control<INotificationSimpleOptions> {
 
     static getDefaultOptions(): INotificationSimpleOptions {
         return {
-            style: 'secondary',
+            borderStyle: 'secondary',
             closeButtonVisible: true
         };
     }
@@ -76,5 +84,11 @@ Object.defineProperty(NotificationSimple, 'defaultProps', {
 /**
  * @name Controls/_popupTemplate/Notification/Simple#text
  * @cfg {String} Устанавливает текст уведомления.
+ */
+
+/**
+ * @name Controls/_popupTemplate/Notification/Simple#borderStyle
+ * @cfg {String} Устанавливает стиль отображения окна уведомления.
+ * @remark Данная опция так же устанавливает стиль отображения иконки нотификационного окна.
  */
 export default NotificationSimple;

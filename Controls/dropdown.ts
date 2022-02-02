@@ -6,7 +6,6 @@
  * @includes GroupTemplate Controls/dropdown:GroupTemplate
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
  * @includes inputDefaultContentTemplate Controls/dropdown:inputDefaultContentTemplate
- * @includes IIconSize Controls/_dropdown/interface/IIconSize
  * @includes IButton Controls/dropdown:IButton
  * @public
  * @author Крайнов Д.О.
@@ -20,7 +19,6 @@
  * @includes GroupTemplate Controls/dropdown:GroupTemplate
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
  * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Selector/resources/defaultContentTemplate
- * @includes IIconSize Controls/_dropdown/interface/IIconSize
  * @includes IButton Controls/dropdown:IButton
  * @public
  * @author Крайнов Д.О.
@@ -42,6 +40,7 @@ export {default as IGrouped, IGroupedOptions} from 'Controls/_dropdown/interface
 export {default as IBaseDropdown} from 'Controls/_dropdown/interface/IBaseDropdown';
 export {default as Selector} from 'Controls/_dropdown/Selector';
 export {default as Toggle} from 'Controls/_dropdown/Toggle';
+export {MultiSelectAccessibility} from './display';
 
 export {
     Button,

@@ -13,7 +13,6 @@
  */
 
 import Container from 'Controls/_scroll/ScrollContextConsumer';
-export {default as StickyHeader} from 'Controls/_scroll/StickyBlock';
 export {default as StickyBlock} from 'Controls/_scroll/StickyBlock';
 export {scrollToElement} from 'Controls/_scroll/Utils/scrollToElement';
 export {SCROLL_DIRECTION} from 'Controls/_scroll/Utils/Scroll';

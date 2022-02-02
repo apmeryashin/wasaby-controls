@@ -1,8 +1,0 @@
-<div class="controls_breadcrumbs_theme-{{_options.theme}} controls-BreadCrumbsView__menuItem">
-    <ws:if data="{{itemData.item.indentation}}">
-        <ws:for data="i in itemData.item.indentation">
-            <div class="controls-BreadCrumbsView__indentation {{i === itemData.item.indentation - 1 ? ' icon-Way' : ''}}"></div>
-        </ws:for>
-    </ws:if>
-    <span class="controls-BreadCrumbsView__menuTitle">{{itemData.item.get(itemData.item.displayProperty)}}</span>
-</div>
