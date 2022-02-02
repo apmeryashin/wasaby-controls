@@ -29,19 +29,20 @@ export abstract class BaseDropdown extends Control<IControlOptions, IDropdownRec
 
     protected _handleKeyDown(event: SyntheticEvent<KeyboardEvent>): void {
         const code = event.nativeEvent.keyCode;
+        const autofocusConfig = {
+            autofocus: true,
+            templateOptions: {
+                focusable: true
+            }
+        };
         if (code === constants.key.esc && this._isOpened) {
             this._controller.closeMenu();
             this._stopEvent(event);
         } else if (code === constants.key.space && !this._isOpened) {
-            this.openMenu();
+            this.openMenu(autofocusConfig);
             this._stopEvent(event);
-        } else if (code === constants.key.down && this._isOpened) {
-            this.openMenu({
-                autofocus: true,
-                templateOptions: {
-                    focusable: true
-                }
-            });
+        } else if ((code === constants.key.down || code === constants.key.up) && this._isOpened) {
+            this.openMenu(autofocusConfig);
             this._stopEvent(event);
         }
     }
