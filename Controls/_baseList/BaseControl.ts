@@ -2636,7 +2636,7 @@ const _private = {
         return !!self._editInPlaceController && self._editInPlaceController.isEditing();
     },
 
-    activateEditingRow(self, enableScrollToElement: boolean = true): void {
+    activateEditingRow(self, enableScrollToElement: boolean = self._options.task1184306971 ? 'vertical' : true): void {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
         // В новом рендере она не нужна
         if (self._children.listView && self._children.listView.activateEditingRow) {
@@ -2646,7 +2646,7 @@ const _private = {
             const hasColumnScroll = self._isColumnScrollVisible;
 
             const activator = () => {
-                if (hasColumnScroll) {
+                if (hasColumnScroll && !self._options.task1184306971) {
                     enableScrollToElement = false;
                 }
                 const rowActivator =
