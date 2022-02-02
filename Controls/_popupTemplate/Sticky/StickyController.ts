@@ -79,6 +79,9 @@ export class StickyController extends BaseController {
             item.popupOptions.className += this._getStickyTemplateVisibilityClass(item);
         } else {
             this._printTargetRemovedWarn();
+            // Удалим попап, если он изначально передается без таргета,
+            // т.к. мы не будем знать как его спозиционировать
+            Controller.remove(item.id);
         }
         return true;
     }
