@@ -18,7 +18,6 @@ interface IOptions extends IControlOptions, IGridControl {
     backButtonIconStyle: string;
     backButtonFontColorStyle: string;
     viewMode?: TExplorerViewMode;
-    backButtonNewIcon?: boolean;
     breadcrumbsVisibility?: TBreadcrumbsVisibility;
     backButtonBeforeCaptionTemplate?: string | TemplateFunction;
 }
@@ -114,7 +113,6 @@ export default class PathController extends Control<IOptions> {
                     backButtonFontColorStyle: options.backButtonFontColorStyle,
                     displayProperty: options.displayProperty,
                     backButtonCaption: options.backButtonCaption,
-                    backButtonNewIcon: options.backButtonNewIcon,
                     backButtonBeforeCaptionTemplate: options.backButtonBeforeCaptionTemplate,
                     items
                 },
