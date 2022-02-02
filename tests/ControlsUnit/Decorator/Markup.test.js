@@ -822,6 +822,203 @@ define([
       });
 
       describe('wrapLinksInString', function() {
+         it('correct link on local file - 1', () => {
+            var parentNode = ['p', 'C:\\test'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': 'C:\\test',
+               target: '_blank'
+            }, 'C:\\test']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 2', () => {
+            var parentNode = ['p', 'C:\\\\test'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': 'C:\\\\test',
+               target: '_blank'
+            }, 'C:\\\\test']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 3', () => {
+            var parentNode = ['p', 'C:\\test.html'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': 'C:\\test.html',
+               target: '_blank'
+            }, 'C:\\test.html']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 4', () => {
+            var parentNode = ['p', 'C:\\\\test\\hello.html'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': 'C:\\\\test\\hello.html',
+               target: '_blank'
+            }, 'C:\\\\test\\hello.html']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 5', () => {
+            var parentNode = ['p', 'C:\\test\\hello.html'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': 'C:\\test\\hello.html',
+               target: '_blank'
+            }, 'C:\\test\\hello.html']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 6', () => {
+            var parentNode = ['p', '\\\\test'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': '\\\\test',
+               target: '_blank'
+            }, '\\\\test']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 7', () => {
+            var parentNode = ['p', '\\test'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': '\\test',
+               target: '_blank'
+            }, '\\test']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 8', () => {
+            var parentNode = ['p', '\\\\test\\hello.txt'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': '\\\\test\\hello.txt',
+               target: '_blank'
+            }, '\\\\test\\hello.txt']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 9', () => {
+            var parentNode = ['p', '\\test\\html'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': '\\test\\html',
+               target: '_blank'
+            }, '\\test\\html']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 10', () => {
+            var parentNode = ['p', '\\test.html'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': '\\test.html',
+               target: '_blank'
+            }, '\\test.html']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 11', () => {
+            var parentNode = ['p', 'C:\\test\\test-test.txt'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': 'C:\\test\\test-test.txt',
+               target: '_blank'
+            }, 'C:\\test\\test-test.txt']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 12', () => {
+            var parentNode = ['p', '\\10.1.1.107'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': '\\10.1.1.107',
+               target: '_blank'
+            }, '\\10.1.1.107']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 13', () => {
+            var parentNode = ['p', '\\10.1.1.107\\test.html'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': '\\10.1.1.107\\test.html',
+               target: '_blank'
+            }, '\\10.1.1.107\\test.html']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('correct link on local file - 14', () => {
+            var parentNode = ['p', '\\10.1.1.107\\test\\hello'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': '\\10.1.1.107\\test\\hello',
+               target: '_blank'
+            }, '\\10.1.1.107\\test\\hello']];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('link contains incorrect symbols', () => {
+            var parentNode = ['p', 'C:\\te<st.html C:\\te?st'];
+            var goodResultNode = [[], ['a', {
+               class: 'asLink',
+               'data-open-file': 'C:\\te',
+               target: '_blank'
+            }, 'C:\\te'], '<st.html ', ['a', {
+               class: 'asLink',
+               'data-open-file': 'C:\\te',
+               target: '_blank'
+            }, 'C:\\te'], '?st'];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('no link', () => {
+            var parentNode = ['p', '\test test /test'];
+            var goodResultNode = '\test test /test';
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('multiple links', () => {
+            var parentNode = ['p', 'C:\\test.html text C:\\test\\hello.html text'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  'data-open-file': 'C:\\test.html',
+                  target: '_blank'
+               },
+                  'C:\\test.html'
+               ], ' text ', ['a',
+               {
+                  'class': 'asLink',
+                  'data-open-file': 'C:\\test\\hello.html',
+                  target: '_blank'
+               },
+               'C:\\test\\hello.html'
+            ], ' text'];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
          it('with protocol - 1', function() {
             var parentNode = ['p', 'https://ya.ru'];
             var goodResultNode = [[], ['a',
@@ -883,7 +1080,11 @@ define([
 
          it('with protocol - 5', function() {
             var parentNode = ['p', 'http:\\localhost:1025'];
-            var goodResultNode = 'http:\\localhost:1025';
+            var goodResultNode = [[], 'htt', ['a', {
+               class: 'asLink',
+               'data-open-file': 'p:\\localhost',
+               target: '_blank'
+            }, 'p:\\localhost'], ':1025'];
             var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
             assert.deepEqual(goodResultNode, checkResultNode);
          });
