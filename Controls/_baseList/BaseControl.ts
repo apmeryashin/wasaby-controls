@@ -4433,7 +4433,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._listVirtualScrollController.beforeRenderListControl();
         const hasNotRenderedChanges = this._hasItemWithImageChanged ||
             this._indicatorsController.hasNotRenderedChanges();
-        if (hasNotRenderedChanges && !this._loadedBySourceController) {
+        if (hasNotRenderedChanges && !this._loadedBySourceController && !!this._scrollTop) {
             this._listVirtualScrollController.saveScrollPosition();
         }
     }
