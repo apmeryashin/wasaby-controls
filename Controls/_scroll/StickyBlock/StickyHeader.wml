@@ -31,7 +31,7 @@
                   on:controlResize="_selfResizeHandler()"/>
       <div name="observationTargetRight" class="controls-StickyHeader__observationTargetRight" style="{{ _getObserverStyle('right', 0, _options.shadowVisibility) }}"></div>
       <div name="observationTargetBottomLeft" class="controls-StickyHeader__observationTargetBottomLeft" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
-      <div name="observationTargetBottomRight" class="controls-StickyHeader__observationTargetBottomRight" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
+      <div name="observationTargetBottomRight" class="controls-StickyHeader__observationTargetBottomRight" style="{{ _getObserverStyle('right', _options.offsetTop, _options.shadowVisibility) }}"></div>
 
       <ws:if data="{{_canShadowVisible.right}}">
           <!-- We use visibility style instead of "display: none;" statement to prevent jumps when scrolling on iPad -->
