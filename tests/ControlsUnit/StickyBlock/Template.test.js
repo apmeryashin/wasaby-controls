@@ -119,7 +119,7 @@ define(
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetRight" style="right: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
-                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
+                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="right: -2px;"></div>' +
                         '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                         '</div>');
                 });
@@ -153,7 +153,7 @@ define(
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetRight" style="right: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
-                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
+                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="right: -2px;"></div>' +
                         '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                         '</div>');
                     sandbox.restore();
@@ -180,7 +180,7 @@ define(
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetRight" style="right: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
-                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
+                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="right: -2px;"></div>' +
                         '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                         '</div>');
                 });
@@ -207,7 +207,7 @@ define(
                         '<div class="controls-StickyHeader__observationTargetLeft" style="left: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetRight" style="right: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
-                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
+                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="right: -2px;"></div>' +
                         '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                         '</div>');
                 });
@@ -232,7 +232,7 @@ define(
                         '<div class="controls-StickyHeader__content">testing the template</div>' +
                         '<div class="controls-StickyHeader__observationTargetRight" style="right: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
-                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
+                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="right: -2px;"></div>' +
                         '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                         '</div>');
                 });
@@ -263,7 +263,7 @@ define(
                         '<div class="controls-StickyHeader__content">testing the template</div>' +
                         '<div class="controls-StickyHeader__observationTargetRight" style="right: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
-                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
+                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="right: -2px;"></div>' +
                         '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal"></div>' +
                         '</div>');
                 });
@@ -295,7 +295,7 @@ define(
                         '<div class="controls-StickyHeader__content">testing the template</div>' +
                         '<div class="controls-StickyHeader__observationTargetRight" style="right: -2px;"></div>' +
                         '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
-                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
+                        '<div class="controls-StickyHeader__observationTargetBottomRight" style="right: -2px;"></div>' +
                         '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                         '</div>');
                 });
