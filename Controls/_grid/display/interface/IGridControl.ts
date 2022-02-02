@@ -581,16 +581,21 @@ export interface IGridControl extends IList {
  */
 
 /**
+ * @typedef {Object} Controls/_grid/display/interface/IGridControl/TEmptyTemplateOptions
+ * @description Объект с опциями для настройки пустого представления, сконфигурированного через {@link Controls/_grid/display/interface/IGridControl#emptyTemplate emptyTemplate}.
+ * @property {Controls/_grid/display/interface/IGridControl/TEmptyTemplateHeight.typedef} [height=stretch] настройка высоты пустого представления
+ */
+
+/**
  * @name Controls/_grid/display/interface/IGridControl#emptyTemplateOptions
- * @cfg {Object} Объект с опциями для настройки пустого представления, сконфигурированного через {@link Controls/_grid/display/interface/IGridControl#emptyTemplate emptyTemplate}.
+ * @cfg {Controls/_grid/display/interface/IGridControl/TEmptyTemplateOptions.typedef} Объект с опциями для настройки пустого представления, сконфигурированного через {@link Controls/_grid/display/interface/IGridControl#emptyTemplate emptyTemplate}.
  * @description
  * Позволяет передать дополнительные настройки в шаблон пустого представления, которые будут доступны в области видимости шаблона.
- * Также позволяет задать параметр height для настройки растягивания таблицы по высоте.
+ * Также позволяет задать параметр height для настройки растягивания пустого представления по высоте.
  * @remark
  * По умолчанию при пустом представлении таблица растягивается по высоте родительского контейнера. Пустое представление занимает максимальную высоту. При помощи параметра height можно изменить это поведение.
- * @param {Controls/_grid/display/interface/IGridControl/TEmptyTemplateHeight.typedef} [height=stretch] настройка высоты пустого представления.
  * @example
- * <pre class="brush: html; highlight: [5,12]">
+ * <pre class="brush: html; highlight: [2]">
  * <!-- WML -->
  * <Controls/grid:View source="{{_viewSource}}">
  *     <ws:emptyTemplateOptions height="auto"/>
