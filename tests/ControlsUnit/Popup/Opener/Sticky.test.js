@@ -206,7 +206,7 @@ define(
                isRemoveCalled = true;
             };
             StickyController.elementCreated({});
-            assert.equal(isRemoveCalled, false);
+            assert.equal(isRemoveCalled, true);
 
             popupLib.Controller.remove = ManagerControllerRemove;
             StickyController._isTargetVisible = () => true;

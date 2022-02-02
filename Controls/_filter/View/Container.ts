@@ -93,26 +93,29 @@ class Container extends Control<IControlOptions> {
     }
 
     private _initState(newPreloadedSources, oldPreloadedSources): void {
-        if (newPreloadedSources !== oldPreloadedSources) {
-            if (newPreloadedSources && newPreloadedSources[0]) {
-                const mainSource = newPreloadedSources[0];
-                this._historyId = mainSource.historyId;
-                // если есть предзагруженные данные в истории, то нужно их подмержить в сурс
-                // эта часть аналогична тому что делает _filter/Controller
-                let historyItems = mainSource.historyItems;
-                if (historyItems) {
-                    historyItems = historyItems.items || (Array.isArray(historyItems) ? historyItems : []);
-                }
-                this._source = this._getSourceByHistory(mainSource.filterButtonSource, historyItems);
-            } else {
-                this._source = null;
-            }
-            if (!oldPreloadedSources) {
-                // Изменение поля filterSource слушает Browser.
-                // При изменении filterSource Browser вызывает загрузку данных и сохранение истории фильтров.
-                // Делаем запись только при инициализации фильтров.
-                Store.dispatch('filterSource', this._source);
-            }
+        if (newPreloadedSources === oldPreloadedSources) {
+            return;
+        }
+        if (!newPreloadedSources || !newPreloadedSources[0]) {
+            this._source = null;
+            return;
+        }
+
+        const mainSource = newPreloadedSources[0];
+        this._historyId = mainSource.historyId;
+        // если есть предзагруженные данные в истории, то нужно их подмержить в сурс
+        // эта часть аналогична тому что делает _filter/Controller
+        let historyItems = mainSource.historyItems;
+        if (historyItems) {
+            historyItems = historyItems.items || (Array.isArray(historyItems) ? historyItems : []);
+        }
+        this._source = this._getSourceByHistory(mainSource.filterButtonSource, historyItems);
+
+        if (!oldPreloadedSources) {
+            // Изменение поля filterSource слушает Browser.
+            // При изменении filterSource Browser вызывает загрузку данных и сохранение истории фильтров.
+            // Делаем запись только при инициализации фильтров.
+            Store.dispatch('filterSource', this._source);
         }
     }
 
