@@ -31,7 +31,7 @@ export default abstract class
         context: object,
         receivedState: LookupReceivedState
     ): Promise<LookupReceivedState|Error> | void {
-        this._source = BaseLookup._getSource(options);
+        this._source = BaseLookup._getSource(options, receivedState);
         this._lookupController = new LookupController(this._getLookupControllerOptions(options));
 
         if (receivedState && !isEmpty(receivedState)) {
@@ -187,10 +187,13 @@ export default abstract class
 
     protected abstract _itemsChanged(items: SelectedItems): void;
 
-    private static _getSource(options: ILookupOptions): ICrudPlus | ICrud & ICrudPlus & IData {
+    private static _getSource(
+        options: ILookupOptions,
+        receivedState?: LookupReceivedState
+    ): ICrudPlus | ICrud & ICrudPlus & IData {
         let source;
 
-        if (options.source instanceof PrefetchProxy) {
+        if (options.source instanceof PrefetchProxy && receivedState) {
             source = options.source.getOriginal();
         } else {
             source = options.source;
