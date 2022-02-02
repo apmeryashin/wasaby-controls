@@ -19,11 +19,6 @@
                         <ws:contentTemplate>No data available!</ws:contentTemplate>
                     </ws:partial>
                 </ws:emptyTemplate>
-                <ws:footerTemplate>
-                    <ws:partial template="Controls/grid:FooterTemplate">
-                        <div class="controlsDemo__footer__FooterTemplate__content">Контент подвала таблицы</div>
-                    </ws:partial>
-                </ws:footerTemplate>
             </Controls.grid:View>
         </Controls.scroll:Container>
     </ws:content>
