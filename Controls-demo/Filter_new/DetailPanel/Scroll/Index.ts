@@ -5,7 +5,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Memory} from 'Types/source';
 import {object} from 'Types/util';
 import {constants} from 'Env/Env';
-import 'css!Controls-demo/Filter_new/DetailPanel/Scroll/Scroll';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
