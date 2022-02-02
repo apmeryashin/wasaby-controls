@@ -5,7 +5,9 @@
        <Controls.Container.Async templateName="Controls/date:Input">
            <ws:partial template="{{content.resolvedTemplate}}"
                        bind:value="_value"
-                       on:valueChanged="_valueChangedHandler()"/>
+                       on:valueChanged="_valueChangedHandler()"
+                       attr:class="controls-FilterViewPanel__basicEditor-cloud
+                                                controls-FilterViewPanel__basicEditor-cloud-{{_options.filterViewMode}}"/>
        </Controls.Container.Async>
    </ws:editorTemplate>
 </Controls._filterPanel.BaseEditor>
