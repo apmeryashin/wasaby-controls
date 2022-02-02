@@ -6,6 +6,7 @@
                 <Controls.dateRange:SelectorConsumer
                         bind:startValue="_startValue"
                         bind:endValue="_endValue"
+                        selectionType="workdays"
                 />
                 <Controls.date:ArrowButtonConsumer direction="right"/>
             </div>
