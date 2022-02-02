@@ -325,8 +325,8 @@ class ListEditor extends Control<IListEditorOptions> {
      */
     protected _addItemsFromSelector(items: RecordSet): void {
         const maxItemsCount = this._getMaxItemsCount();
-        // Выбранные элементы надо добавлять после запиненных записей
-        let addIndex = this._getLastHistoryItemIndex();
+        // Выбранные элементы надо добавлять после запиненных записей и записей для сброса параметра фильтрации
+        let addIndex = this._getLastFixedItemIndex();
         let itemsCount = this._items.getCount();
         let itemIndex;
 
@@ -371,6 +371,14 @@ class ListEditor extends Control<IListEditorOptions> {
             pageSize = navigation.sourceConfig?.pageSize;
         }
         return pageSize;
+    }
+
+    protected _getLastFixedItemIndex(): number {
+        let lastIndex = this._getLastHistoryItemIndex();
+        if (this._options.emptyText || this._options.selectedAllText) {
+            lastIndex++;
+        }
+        return lastIndex;
     }
 
     protected _getLastHistoryItemIndex(): number {
