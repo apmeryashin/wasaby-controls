@@ -193,6 +193,19 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
         return !!this._workByKeyboard?.status && !this._options.readOnly;
     }
 
+    protected _getFocusedClass(): string {
+        if (this._highlightedOnFocus()) {
+            let focusedClass = 'controls-focused-item';
+            if (this._options.contrastBackground ||
+                this._viewMode === 'functionalButton' ||
+                this._viewMode === 'toolButton') {
+                focusedClass += '_shadow';
+            }
+            return focusedClass;
+        }
+        return '';
+    }
+
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
         if (e.nativeEvent.keyCode === constants.key.enter && !this._options.readOnly) {
             this._notify('click');
