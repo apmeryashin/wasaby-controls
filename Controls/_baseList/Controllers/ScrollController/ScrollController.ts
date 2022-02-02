@@ -355,13 +355,6 @@ export class ScrollController {
      * @param startIndex Начальный индекс диапазона отображаемых записей
      */
     resetItems(totalCount: number, startIndex: number): void {
-        // Если начальный индекс не 0, то это значит что мы должны сохранить текущую позицию.
-        if (startIndex === 0) {
-            // Сбрасываем состояние контроллера.
-            this.scrollPositionChange(0);
-        }
-        this.contentResized(0);
-
         const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
