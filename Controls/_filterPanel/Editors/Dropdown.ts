@@ -7,6 +7,7 @@ import 'css!Controls/filterPanel';
 interface IDropdownOptions extends IControlOptions {
     propertyValue: number[] | string[];
     keyProperty: string;
+    displayProperty: string;
 }
 
 interface IDropdown {
@@ -39,21 +40,22 @@ class DropdownEditor extends Control<IDropdownOptions> implements IDropdown {
     }
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, value: number[] | string[]): void {
-        this._notifySelectedKeysChanged(value);
+        this._notifySelectedKeysChanged(value, this._textValue);
     }
 
     protected _handleMenuItemActivate(event: SyntheticEvent, value: Model): void {
-        this._notifySelectedKeysChanged([value.get(this._options.keyProperty)]);
+        this._notifySelectedKeysChanged([value.get(this._options.keyProperty)],
+                                        value.get(this._options.displayProperty));
     }
 
     private _handleTextValueChanged(event: SyntheticEvent, value: string): void {
         this._textValue = value;
     }
 
-    private _notifySelectedKeysChanged(value: string[] | number[]): void {
+    private _notifySelectedKeysChanged(value: string[] | number[], textValue: string): void {
         const extendedValue = {
             value,
-            textValue: this._textValue,
+            textValue,
             viewMode: 'basic'
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
