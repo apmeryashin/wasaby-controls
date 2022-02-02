@@ -22,6 +22,7 @@ export interface IInputContainerOptions extends IBaseOptions {
  *
  * @class Controls/_jumpingLabel/InputContainer
  * @extends Controls/jumpingLabel:Abstract
+ * @exclude Base
  *
  * @public
  * @demo Controls-demo/JumpingLabel/Index
