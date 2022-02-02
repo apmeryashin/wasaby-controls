@@ -39,6 +39,13 @@ export default class ConfirmDialog extends Control<IControlOptions> {
 
    _isEscDown: boolean = false;
 
+   protected _beforeMount(options?: IControlOptions): void {
+      if (options.style !== undefined) {
+         Logger.warn(`${this._moduleName}: Используется устаревшая опция style,` +
+                                                                            ' нужно использовать borderStyle', this);
+      }
+   }
+
    protected _sendResultHandler(e, res): void {
       this._sendResult(res);
    }
@@ -116,7 +123,7 @@ export default class ConfirmDialog extends Control<IControlOptions> {
             'yesno',
             'yesnocancel'
          ]),
-         style: descriptor(String).oneOf([
+         borderStyle: descriptor(String).oneOf([
             'default',
             'secondary',
             'success',
@@ -130,7 +137,7 @@ export default class ConfirmDialog extends Control<IControlOptions> {
    static getDefaultOptions(): IControlOptions {
       return {
          type: 'yesno',
-         style: 'default',
+         borderStyle: 'default',
          primaryAction: 'yes',
          yesCaption: rk('Да'),
          noCaption: rk('Нет'),

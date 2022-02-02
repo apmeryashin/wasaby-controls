@@ -4,6 +4,7 @@ import {INotificationBase} from 'Controls/_popupTemplate/interface/INotification
 import 'css!Controls/popupTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDragObject} from 'Controls/dragnDrop';
+import {Logger} from 'UI/Utils';
 
 export interface INotificationBaseOptions extends INotificationBase, IControlOptions {
     bodyContentTemplate?: Control<IControlOptions, void> | TemplateFunction;
@@ -32,6 +33,10 @@ class Notification extends Control<INotificationBaseOptions> {
 
     protected _beforeMount(options: INotificationBaseOptions): void {
         this._borderStyle = Notification._prepareBorderStyle(options);
+        if (options.style !== undefined) {
+            Logger.warn(`${this._moduleName}: Используется устаревшая опция style,` +
+                                                                              ' нужно использовать borderStyle', this);
+        }
     }
 
     protected _beforeUpdate(options: INotificationBaseOptions): void {
@@ -67,7 +72,7 @@ class Notification extends Control<INotificationBaseOptions> {
     }
 
     private static _prepareBorderStyle(popupOptions: INotificationBaseOptions): String {
-        switch (popupOptions.style) {
+        switch (popupOptions.style || popupOptions.borderStyle) {
             case 'warning':
                 return 'warning';
             case 'success' :
@@ -81,7 +86,7 @@ class Notification extends Control<INotificationBaseOptions> {
 
     static getDefaultOptions(): INotificationBaseOptions {
         return {
-            style: 'secondary',
+            borderStyle: 'secondary',
             closeButtonVisible: true
         };
     }

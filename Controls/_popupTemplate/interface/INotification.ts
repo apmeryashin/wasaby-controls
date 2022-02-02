@@ -9,7 +9,7 @@ import {IControlOptions} from 'UI/Base';
  */
 
 /**
- * @name Controls/_popupTemplate/interface/INotification#style
+ * @name Controls/_popupTemplate/interface/INotification#borderStyle
  * @cfg {String} Устанавливает стиль отображения окна уведомления.
  * @default secondary
  * @variant warning
@@ -29,7 +29,7 @@ type TStyle = 'warning' | 'secondary' | 'success' | 'danger';
 
 export interface INotificationBase {
     closeButtonVisible?: Boolean;
-    style?: TStyle;
+    borderStyle?: TStyle;
 }
 
 export interface INotificationOptions extends IControlOptions, INotificationBase {
