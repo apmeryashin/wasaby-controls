@@ -1,7 +1,7 @@
 import {default as Lookup} from 'Controls/_lookup/Lookup';
 import {ILookupOptions} from 'Controls/_lookup/BaseLookup';
 import {assert} from 'chai';
-import {Memory} from 'Types/source';
+import {Memory, PrefetchProxy} from 'Types/source';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import * as sinon from 'sinon';
@@ -174,6 +174,39 @@ describe('Controls/lookup:Input', () => {
             spy.resetHistory();
             await lookup._beforeUpdate(lookupOptions);
             assert.ok(spy.withArgs('itemsChanged').calledOnce);
+        });
+
+        it('mount with receivedState then update with new selectedKeys', async () => {
+            const items = new RecordSet({
+                rawData: [getData()[0]],
+                keyProperty: 'id'
+            });
+            const source = getSource();
+            const prefetchSource = new PrefetchProxy({
+                target: source,
+                data: {
+                    query: items
+                }
+            });
+            let lookupOptions = {
+                ...getLookupOptions(),
+                selectedKeys: [1],
+                source: prefetchSource
+            };
+            let itemsFromEvent;
+            const lookup = await getBaseLookup(lookupOptions, items);
+
+            lookup._notify = function mockNotify(eventName: string, res: unknown[]): void {
+                if (eventName === 'itemsChanged') {
+                    itemsFromEvent = res[0];
+                }
+            };
+
+            lookupOptions = {...lookupOptions};
+            lookupOptions.selectedKeys = [2];
+            await lookup._beforeUpdate(lookupOptions);
+            assert.ok(itemsFromEvent);
+            assert.ok(itemsFromEvent !== items);
         });
     });
 
