@@ -3189,7 +3189,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         endIndex: number,
         shiftDirection: IDirectionNew
     ): void {
-        if (shiftDirection) {
+        if (this._isMounted && shiftDirection) {
             // Если больше нет записей скрытых виртуальным скроллом, мы должны показать индикатор.
             // Проверяем это и если нужно показываем индикатор.
             if (shiftDirection === 'forward' && this._indicatorsController.shouldDisplayBottomIndicator()) {
@@ -3221,7 +3221,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // поэтому не надо делать лишние обновления.
         // Если этот метод сработал при инициализации виртуального скролла на beforeMount,
         // то в this._options ничего нет, поэтому проверяем на this._mounted.
-        if (this._mounted && !!this._itemActionsController && this._options.virtualScrollConfig?.mode !== 'hide') {
+        if (this._isMounted && !!this._itemActionsController && this._options.virtualScrollConfig?.mode !== 'hide') {
             _private.updateInitializedItemActions(this, this._options);
         }
     }
