@@ -48,7 +48,7 @@ export default class View extends Control<IViewControlOptions> {
 
    protected _beforeMount(newOptions: IViewControlOptions): void {
        this._isEditing = newOptions.autoEdit;
-       this._editingObject = newOptions.editingObject || newOptions.editObject;
+       this._editingObject = newOptions.editingObject;
    }
    protected _afterMount(): void {
         this._registerFormOperation();
@@ -56,12 +56,11 @@ export default class View extends Control<IViewControlOptions> {
    protected _beforeUpdate(newOptions: IViewControlOptions): void {
       /* В режиме редактирования создается клон, ссылка остается на старый объект.
       Поэтому при изменении опций копируем ссылку актуального объекта */
-      if (newOptions.editingObject !== this._options.editingObject ||
-          newOptions.editObject !== this._options.editObject) {
+      if (newOptions.editingObject !== this._options.editingObject) {
           if (this._isEditing) {
-              this._cloneeditingObject(newOptions.editingObject || newOptions.editObject);
+              this._cloneeditingObject(newOptions.editingObject);
           } else {
-              this._editingObject = newOptions.editingObject || newOptions.editObject;
+              this._editingObject = newOptions.editingObject;
           }
       }
    }
@@ -121,7 +120,7 @@ export default class View extends Control<IViewControlOptions> {
     }
 
    beginEdit(event: SyntheticEvent<MouseEvent>, res: boolean = false): void {
-      this._cloneeditingObject(this._options.editingObject || this._options.editObject);
+      this._cloneeditingObject(this._options.editingObject);
       // TODO: res - это результат события со старым названием. Снести вместе со старым контролом 3.19.110
       const result = res || this._notify('beforeBeginEdit', [this._editingObject], {
          bubbling: true
@@ -212,14 +211,14 @@ export default class View extends Control<IViewControlOptions> {
       const changedFields = this._editingObject.getChanged();
       if (changedFields) {
          changedFields.forEach((field) => {
-            (this._options.editingObject || this._options.editObject).set(field, this._editingObject.get(field));
+            this._options.editingObject.set(field, this._editingObject.get(field));
          });
       }
 
       /* При старте редактирования в стейт кладется клон
        * Нужно вернуть оригинальную запись, чтобы при изменении в ней изменения отражались в контроле
        */
-      this._editingObject = this._options.editingObject || this._options.editObject;
+      this._editingObject = this._options.editingObject;
    }
 
    static getDefaultOptions(): IViewControlOptions {
