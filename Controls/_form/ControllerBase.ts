@@ -263,8 +263,8 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
         this._validateController.removeValidator(control);
     }
 
-    update(): Promise<void> {
-        const updatePromise = this._startFormOperations('save').then(() => {
+    protected _update(): Promise<void> {
+        return this._startFormOperations('save').then(() => {
             return this.validate().then((results: IValidateResult) => {
                 if (results.hasErrors) {
                     // если были ошибки валидации, уведомим о них
@@ -280,8 +280,28 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
                 return void 0;
             });
         });
-        this._notify('registerPending', [updatePromise, { showLoadingIndicator: false }], { bubbling: true });
-        return updatePromise;
+    }
+
+    update(): Promise<void> {
+        const updateResult = new Deferred();
+        const result = this._notify('requestCustomUpdate', [this._record]);
+
+        if (result && result.then) {
+            this._notify('registerPending', [result, { showLoadingIndicator: false }], { bubbling: true });
+            result.then((defResult) => {
+                updateResult.dependOn(defResult);
+                this._update();
+                return defResult;
+            }, (err) => {
+                updateResult.errback(err);
+                return err;
+            });
+        } else {
+            const updatePromise = this._update();
+            this._notify('registerPending', [updatePromise, { showLoadingIndicator: false }], { bubbling: true });
+            return updatePromise;
+        }
+        return updateResult;
     }
 
     validate(): Promise<IValidateResult | Error> {
