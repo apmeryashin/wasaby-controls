@@ -1,5 +1,10 @@
 import {Calculator, ICalculatorResult} from 'Controls/_baseList/Controllers/ScrollController/Calculator';
 import type { ICalcMode, IDirection } from './ScrollController';
+import {
+    getPlaceholdersByRange,
+    getRangeByIndex,
+    getRangeByItemsSizes
+} from 'Controls/_baseList/Controllers/ScrollController/CalculatorUtil';
 
 export default class CalculatorWithoutVirtualization extends Calculator {
     shiftRangeToDirection(direction: IDirection): ICalculatorResult {
@@ -25,5 +30,15 @@ export default class CalculatorWithoutVirtualization extends Calculator {
         const oldState = this._getState();
         this.resetItems(this._totalCount - count, 0);
         return this._getRangeChangeResult(oldState, direction);
+    }
+
+    resetItems(totalCount: number, startIndex: number): void {
+        this._totalCount = totalCount;
+
+        this._range = getRangeByIndex({
+            pageSize: this._totalCount,
+            start: startIndex,
+            totalCount: this._totalCount
+        });
     }
 }
