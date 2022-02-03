@@ -32,13 +32,16 @@ export default class CalculatorWithoutVirtualization extends Calculator {
         return this._getRangeChangeResult(oldState, direction);
     }
 
-    resetItems(totalCount: number, startIndex: number): void {
+    resetItems(totalCount: number, startIndex: number): ICalculatorResult {
+        const oldState = this._getState();
         this._totalCount = totalCount;
 
         this._range = getRangeByIndex({
-            pageSize: this._totalCount,
+            pageSize: totalCount,
             start: startIndex,
-            totalCount: this._totalCount
+            totalCount
         });
+
+        return this._getRangeChangeResult(oldState, null);
     }
 }
