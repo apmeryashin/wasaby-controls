@@ -3918,7 +3918,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
 
             // После пересоздания модели нужно проинициализировать операции записей.
-            // Старая модель в операциях уже не актуальна.
+            // Старая модель в контроллере операций уже не актуальна.
             if (newOptions.itemActions || newOptions.itemActionsProperty) {
                 _private.updateItemActions(this, newOptions);
             }
