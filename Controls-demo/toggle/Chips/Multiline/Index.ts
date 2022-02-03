@@ -1,12 +1,13 @@
 import {Control, TemplateFunction} from 'UI/Base';
 // @ts-ignore
-import * as Template from 'wml!Controls-demo/toggle/Chips/ManyContent/Template';
+import * as Template from 'wml!Controls-demo/toggle/Chips/Multiline/Template';
 import {RecordSet} from 'Types/collection';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _items: RecordSet;
-    protected _selectedKeys: string[] = ['1'];
+    protected _selectedKeys1: string[] = ['1'];
+    protected _selectedKeys2: string[] = ['2'];
 
     protected _beforeMount(): void {
         this._items = new RecordSet({

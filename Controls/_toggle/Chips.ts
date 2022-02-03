@@ -14,6 +14,7 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
     IItemTemplateOptions, IHeightOptions, IFontSizeOptions {
     direction?: string;
     keyProperty?: string;
+    multiline?: boolean;
 }
 
 /**
@@ -43,6 +44,15 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * <pre>
  *    <Controls.toggle:Chips direction="vertical"/>
  * </pre>
+ */
+
+/**
+ * @name Controls/_toggle/Chips#multiline
+ * @cfg {boolean} Поведение кнопок, если они не умещается.
+ * @variant false Кнопки не переносятся на новую строку.
+ * @variant true Кнопки переносятся на новую строку.
+ * @default true
+ * @demo Controls-demo/toggle/Chips/Multiline/Index
  */
 
 /**
@@ -170,7 +180,8 @@ class Chips extends Control<IChipsOptions> {
         keyProperty: 'id',
         itemTemplate,
         inlineHeight: 'm',
-        direction: 'horizontal'
+        direction: 'horizontal',
+        multiline: true
     };
 }
 
