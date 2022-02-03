@@ -820,9 +820,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const changedPosition = super._draggingItemMouseMove(item, event);
         if (
             !changedPosition ||
+            !item['[Controls/_display/TreeItem]'] ||
             item.isNode() === null ||
-            !this._options.supportExpand ||
-            !item['[Controls/_display/TreeItem]']
+            !this._options.supportExpand
         ) {
             return changedPosition;
         }
