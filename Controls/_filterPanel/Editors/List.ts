@@ -316,6 +316,8 @@ class ListEditor extends Control<IListEditorOptions> {
             });
             sourceController.reload();
         }
+
+        // Будет удалено после перехода всеми прикладными программистами на новую стики панель
         const textValue = this._getTextValueFromSelectorResult(result);
 
         this._processPropertyValueChanged(selectedKeys, textValue);
