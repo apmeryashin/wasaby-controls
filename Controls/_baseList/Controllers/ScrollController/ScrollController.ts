@@ -14,6 +14,7 @@ import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalcula
 import CalculatorWithoutVirtualization from 'Controls/_baseList/Controllers/ScrollController/CalculatorWithoutVirtualization';
 import {CrudEntityKey} from 'Types/source';
 import type {IEdgeItemCalculatingParams} from '../AbstractListVirtualScrollController';
+import ItemsSizeControllerWithoutVirtualization from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeControllerWithoutVirtualization';
 
 export interface IItemsRange {
     startIndex: number;
@@ -138,7 +139,10 @@ export class ScrollController {
         this._viewportSize = options.viewportSize;
         this._contentSize = options.contentSize;
 
-        this._itemsSizesController = new options.itemsSizeControllerConstructor({
+        const itemsSizeControllerConstructor = options.disableVirtualScroll ?
+            ItemsSizeControllerWithoutVirtualization :
+            options.itemsSizeControllerConstructor;
+        this._itemsSizesController = new itemsSizeControllerConstructor({
             itemsContainer: options.itemsContainer,
             itemsQuerySelector: options.itemsQuerySelector,
             totalCount: options.totalCount
@@ -398,11 +402,11 @@ export class ScrollController {
     /**
      * Возвращает способ скролла к следующей/предыдущей страницы в зависимости от размера крайней записи
      */
-    getScrollToPageMode(edgeItemIndex: number): IScrollToPageMode {
+    getScrollToPageMode(edgeItemKey: string): IScrollToPageMode {
         // Если запись меньше трети вьюпорта, то скроллим к ней на pageUp|pageDown, чтобы не разбивать мелкие записи.
         // Иначе, скроллим как обычно, на высоту вьюпорта
         const MAX_SCROLL_TO_EDGE_ITEM_RELATION = 3;
-        const itemSize = this._itemsSizesController.getItemsSizes()[edgeItemIndex].size;
+        const itemSize = this._itemsSizesController.getItemsSizes().find(((item) => item.key === edgeItemKey)).size;
         if (itemSize * MAX_SCROLL_TO_EDGE_ITEM_RELATION > this._viewportSize) {
             return 'viewport';
         } else {

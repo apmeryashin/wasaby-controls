@@ -545,11 +545,9 @@ export abstract class AbstractListVirtualScrollController<
      */
     scrollToPage(direction: IDirection): Promise<CrudEntityKey> {
         const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
-        if (edgeItem && this._scrollController.getScrollToPageMode(edgeItem.index) === 'edgeItem') {
-            const item = this._collection.at(edgeItem.index);
-            const itemKey = item.getContents().getKey();
+        if (edgeItem && this._scrollController.getScrollToPageMode(edgeItem.key) === 'edgeItem') {
             const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
-            return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());
+            return this.scrollToItem(edgeItem.key, scrollPosition, true).then(() => this._getFirstVisibleItemKey());
         } else {
             const promise = new Promise<void>((resolver) => this._scrollCompletedCallback = resolver);
             this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');

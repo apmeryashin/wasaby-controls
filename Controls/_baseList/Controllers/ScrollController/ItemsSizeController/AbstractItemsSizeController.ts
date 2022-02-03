@@ -21,10 +21,10 @@ export type IItemsSizes = IItemSize[];
  * Класс предназначен для получения, хранения и актуализации размеров записей.
  */
 export abstract class AbstractItemsSizesController {
-    private _itemsQuerySelector: string;
-    private _itemsContainer: HTMLElement;
-    private _itemsSizes: IItemsSizes = [];
-    private _listContainer: HTMLElement;
+    protected _itemsQuerySelector: string;
+    protected _itemsContainer: HTMLElement;
+    protected _itemsSizes: IItemsSizes = [];
+    protected _listContainer: HTMLElement;
 
     /**
      * Кол-во элементов, которые были отрисованы за пределами текущего диапазона(например, застиканные записи)
@@ -124,7 +124,7 @@ export abstract class AbstractItemsSizesController {
 
     // endregion
 
-    private _updateItemsSizes(itemsRange: IItemsRange): void {
+    protected _updateItemsSizes(itemsRange: IItemsRange): void {
         if (this._itemsContainer) {
             const itemsElements = this._itemsContainer.querySelectorAll(this._itemsQuerySelector);
             if (!this._domElementsMatchToRange(itemsRange, itemsElements)) {
@@ -189,7 +189,7 @@ export abstract class AbstractItemsSizesController {
      * @param itemsElements
      * @private
      */
-    private _domElementsMatchToRange(itemsRange: IItemsRange, itemsElements: NodeListOf<Element>): boolean {
+    protected _domElementsMatchToRange(itemsRange: IItemsRange, itemsElements: NodeListOf<Element>): boolean {
         const itemsRangeLength = itemsRange.endIndex - itemsRange.startIndex;
         const renderedItemsCount = itemsElements.length;
         const renderedItemsCountFromRange = renderedItemsCount - this._countItemsRenderedOutsideRange;
@@ -206,7 +206,7 @@ export abstract class AbstractItemsSizesController {
 
     protected abstract _getItemSize(element: HTMLElement): number;
 
-    private static _getEmptyItemSize(): IItemSize {
+    protected static _getEmptyItemSize(): IItemSize {
         return {
             size: 0,
             offset: 0
