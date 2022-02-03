@@ -234,10 +234,10 @@ describe('Controls/filterPanel:ListEditor', () => {
         it('navigation is null', () => {
             const listEditor = getEditor();
             const result = new RecordSet({
-                rawData: {
+                rawData: [{
                     id: 1,
                     title: 'Test'
-                },
+                }],
                 keyProperty: 'id'
             });
             listEditor._handleSelectorResult(result);
