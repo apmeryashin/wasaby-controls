@@ -3917,6 +3917,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._listVirtualScrollController.setBackwardTriggerVisible(true);
             }
 
+            // После пересоздания модели нужно проинициализировать операции записей.
+            // Старая модель в контроллере операций уже не актуальна.
+            if (newOptions.itemActions || newOptions.itemActionsProperty) {
+                _private.updateItemActions(this, newOptions);
+            }
+
             this._modelRecreated = true;
 
             _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
@@ -4226,11 +4232,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
             _private.updateInitializedItemActions(this, newOptions);
-        }
-
-        if (
-            ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated)) {
-            _private.updateItemActionsOnce(this, newOptions);
         }
 
         _private.updateFadeController(this, newOptions);
