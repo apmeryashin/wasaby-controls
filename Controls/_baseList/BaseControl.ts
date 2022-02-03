@@ -3215,13 +3215,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._drawingIndicatorDirection
             );
         }
-        // В режиме 'remove' нужно обновлять itemActions, т.к.
-        // они обновляются только в видимом диапазоне виртуального скролла.
-        // В режиме 'hide' виртуальный скролл лишь скрывает через display записи,
-        // поэтому не надо делать лишние обновления.
+        // При смене индексов нужно всегда обновлять itemActions, т.к.
+        // они обновляются только в видимом диапазоне виртуального скролла независимо от режима.
         // Если этот метод сработал при инициализации виртуального скролла на beforeMount,
         // то в this._options ничего нет, поэтому проверяем на this._mounted.
-        if (this._mounted && !!this._itemActionsController && this._options.virtualScrollConfig?.mode !== 'hide') {
+        if (this._mounted && !!this._itemActionsController) {
             _private.updateInitializedItemActions(this, this._options);
         }
     }

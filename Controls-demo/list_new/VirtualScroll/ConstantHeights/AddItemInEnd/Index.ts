@@ -6,6 +6,7 @@ import {Container} from 'Controls/scroll';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 import {Model} from 'Types/entity';
 import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
+import {TVirtualScrollMode} from 'Controls/list';
 
 interface IItem {
     title: string;
@@ -113,7 +114,8 @@ export default class extends Control {
     private _scrollToBottom: boolean = false;
     private _items: RecordSet;
     private _itemsReady: Function;
-    private _itemActions: IItemAction[] = itemActions;
+    protected _itemActions: IItemAction[] = itemActions;
+    protected _virtualScrollMode: TVirtualScrollMode = 'remove';
     protected _children: {
         scroll: Container;
     };
@@ -160,6 +162,10 @@ export default class extends Control {
             this._children.scroll.scrollToBottom();
             this._scrollToBottom = false;
         }
+    }
+
+    protected _toggleVirtualScrollMode(): void {
+        this._virtualScrollMode = this._virtualScrollMode === 'hide' ? 'remove' : 'hide';
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
