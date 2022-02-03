@@ -236,7 +236,8 @@ export class ScrollController {
     }
 
     checkTriggersVisibility(): void {
-        this._observersController.checkTriggersVisibility();
+        const contentSizeBeforeList = this._itemsSizesController.getContentSizeBeforeList();
+        this._observersController.checkTriggersVisibility(contentSizeBeforeList);
     }
 
     // endregion Triggers

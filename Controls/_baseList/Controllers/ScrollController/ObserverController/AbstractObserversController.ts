@@ -198,17 +198,17 @@ export abstract class AbstractObserversController {
         return this._triggersOffsets;
     }
 
-    checkTriggersVisibility(): void {
+    checkTriggersVisibility(contentSizeBeforeList: number): void {
         // если список скрыт, то не нужно проверять видимость триггеров
         if (!this._listContainer || !this._listContainer.offsetParent) {
             return;
         }
 
         // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
-        if (this._isTriggerVisible('forward')) {
+        if (this._isTriggerVisible('forward', contentSizeBeforeList)) {
             this._intersectionObserverHandler('bottomIn');
         }
-        if (this._isTriggerVisible('backward')) {
+        if (this._isTriggerVisible('backward', contentSizeBeforeList)) {
             this._intersectionObserverHandler('topIn');
         }
     }
@@ -358,7 +358,7 @@ export abstract class AbstractObserversController {
         return triggersOfThisList;
     }
 
-    private _isTriggerVisible(direction: IDirection): boolean {
+    private _isTriggerVisible(direction: IDirection, contentSizeBeforeList: number): boolean {
         const scrollPosition = this._scrollPosition;
         const contentSize = this._contentSize;
         const viewportSize = this._viewportSize;
@@ -369,7 +369,7 @@ export abstract class AbstractObserversController {
             return this._triggersVisibility.backward && backwardTriggerPosition >= backwardViewportPosition;
         } else {
             const forwardViewportPosition = scrollPosition + viewportSize;
-            const forwardTriggerPosition = contentSize - this._triggersOffsets.forward;
+            const forwardTriggerPosition = contentSizeBeforeList + contentSize - this._triggersOffsets.forward;
             return this._triggersVisibility.forward && forwardTriggerPosition <= forwardViewportPosition;
         }
     }
