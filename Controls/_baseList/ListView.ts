@@ -74,7 +74,6 @@ const ListView = Control.extend(
         _callbackAfterUpdate: null,
         _forTemplate: null,
         _modelChanged: false,
-        _stickyElementsTopOffset: 0,
 
         constructor() {
             ListView.superclass.constructor.apply(this, arguments);
@@ -391,7 +390,6 @@ const ListView = Control.extend(
 
         _onItemMouseEnter(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
-            this._stickyElementsTopOffset = this._getStickyElementsTopOffset();
             this._debouncedSetHoveredItem(this, itemData, event);
         },
 
@@ -489,18 +487,6 @@ const ListView = Control.extend(
                 this._notify('checkBoxClick', [dispItem, nativeEvent]);
                 return;
             }
-        },
-
-        _getStickyElementsTopOffset(): number {
-            const topPadding = this._options.itemsContainerPadding?.top;
-            let cssVariableName;
-
-            if (topPadding === 'default') {
-                cssVariableName = '--list-content_air';
-            } else {
-                cssVariableName = '--offset_' + topPadding;
-            }
-            return parseInt(getComputedStyle(this._container).getPropertyValue(cssVariableName), 10);
         }
     });
 
