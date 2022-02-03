@@ -82,7 +82,7 @@ describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', (
                 activeElementKey: 2
             });
             controller.afterMountListControl();
-            assert.isTrue(scrollToElementUtil.calledOnce);
+            assert.isFalse(scrollToElementUtil.calledOnce);
         });
 
         it('on reset items', () => {
