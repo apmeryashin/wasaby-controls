@@ -3595,7 +3595,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             scrolledToBackwardEdge: this._scrollTop === 0,
             scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
             newItemsIndex,
-            itemsLoadedByTrigger: this._addItemsByLoadToDirection
+            itemsLoadedByTrigger: this._addItemsByLoadToDirection,
+            portionedLoading: _private.isPortionedLoad(this)
         };
 
         switch (action) {
