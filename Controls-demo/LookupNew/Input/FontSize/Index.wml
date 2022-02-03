@@ -82,6 +82,7 @@
                 searchParam="title"
                 source="{{_source}}"
                 fontSize="3xl"
+                inlineHeight="l"
                 keyProperty="id"
                 multiSelect="{{true}}">
             <ws:itemTemplate>
