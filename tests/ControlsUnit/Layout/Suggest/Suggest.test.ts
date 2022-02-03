@@ -472,7 +472,8 @@ describe('Controls/suggest', () => {
             sandbox.stub(inputContainer, '_getActiveElement').callsFake(() => ({
                classList: {
                   contains: () => false
-               }
+               },
+               closest: () => false
             }));
          }
          inputContainer._getRecentKeys = () => {
@@ -511,7 +512,8 @@ describe('Controls/suggest', () => {
             sandbox.stub(inputContainer, '_getActiveElement').callsFake(() => ({
                classList: {
                   contains: () => false
-               }
+               },
+               closest: () => false
             }));
          }
 
@@ -551,7 +553,8 @@ describe('Controls/suggest', () => {
                      contains: () => {
                         return false;
                      }
-                  }
+                  },
+                  closest: () => false
                };
             };
          }
