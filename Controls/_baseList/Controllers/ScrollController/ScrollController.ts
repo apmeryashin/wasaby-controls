@@ -127,6 +127,8 @@ export class ScrollController {
     private _viewportSize: number = 0;
     private _contentSize: number = 0;
 
+    private _disableVirtualScroll: boolean;
+
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
         this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
@@ -137,6 +139,8 @@ export class ScrollController {
 
         this._viewportSize = options.viewportSize;
         this._contentSize = options.contentSize;
+
+        this._disableVirtualScroll = options.disableVirtualScroll;
 
         this._itemsSizesController = new options.itemsSizeControllerConstructor({
             itemsContainer: options.itemsContainer,
@@ -156,7 +160,7 @@ export class ScrollController {
             observersCallback: this._observersCallback.bind(this)
         });
 
-        const calculatorConstructor = options.disableVirtualScroll ? CalculatorWithoutVirtualization : Calculator;
+        const calculatorConstructor = this._disableVirtualScroll ? CalculatorWithoutVirtualization : Calculator;
         this._calculator = new calculatorConstructor({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
@@ -406,7 +410,7 @@ export class ScrollController {
         // Иначе, скроллим как обычно, на высоту вьюпорта
         const MAX_SCROLL_TO_EDGE_ITEM_RELATION = 3;
         const itemSize = this._itemsSizesController.getItemsSizes()[edgeItemIndex].size;
-        if (itemSize * MAX_SCROLL_TO_EDGE_ITEM_RELATION > this._viewportSize) {
+        if (itemSize * MAX_SCROLL_TO_EDGE_ITEM_RELATION > this._viewportSize || this._disableVirtualScroll) {
             return 'viewport';
         } else {
             return 'edgeItem';
