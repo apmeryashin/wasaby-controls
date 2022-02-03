@@ -326,7 +326,10 @@ class ListEditor extends Control<IListEditorOptions> {
             sourceController.reload();
         }
 
-        this._processPropertyValueChanged(selectedKeys);
+        // Будет удалено после перехода всеми прикладными программистами на новую стики панель
+        const textValue = this._getTextValueFromSelectorResult(result);
+
+        this._processPropertyValueChanged(selectedKeys, textValue);
     }
 
     /**
@@ -430,7 +433,7 @@ class ListEditor extends Control<IListEditorOptions> {
         });
     }
 
-    protected _processPropertyValueChanged(value: string[] | number[]): void {
+    protected _processPropertyValueChanged(value: string[] | number[], textValue?: string): void {
         this._selectedKeys = this._getValue(value);
         if (!this._selectedKeys.length) {
             this._handleResetItems();
@@ -441,7 +444,7 @@ class ListEditor extends Control<IListEditorOptions> {
         const listValue = this._getValue(this._selectedKeys);
         const extendedValue = {
             value: listValue,
-            textValue: this._getTextValue(listValue)
+            textValue: textValue || this._getTextValue(listValue)
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
@@ -466,6 +469,15 @@ class ListEditor extends Control<IListEditorOptions> {
             if (record) {
                 textArray.push(record.get(this._options.displayProperty));
             }
+        });
+        return textArray.join(', ');
+    }
+
+    private _getTextValueFromSelectorResult(items: RecordSet): string {
+        const textArray = [];
+
+        items?.each((item) => {
+            textArray.push(item.get(this._options.displayProperty));
         });
         return textArray.join(', ');
     }
