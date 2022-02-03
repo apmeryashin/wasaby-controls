@@ -12,6 +12,7 @@
                     resultsVisibility="visible"
                     resultsPosition="{{_resultsPosition}}"
                     headerVisibility="visible"
+                    emptyTemplateOptions="{{_emptyTemplateOptions}}"
                     attr:class="controlsDemo__height300">
                 <ws:emptyTemplate>
                     <ws:partial template="Controls/grid:EmptyTemplate" topSpacing="xl" bottomSpacing="m">
@@ -31,6 +32,11 @@
                         <button on:click="_toggleFooter()" style="padding: 3px;">{{!_footerCfg ? 'Включить' : 'Выключить'}} подвал</button>
                     </ws:template>
                 </ws:Object>
+                <ws:Object>
+                    <ws:template>
+                        <button on:click="_toggleHeight()" style="padding: 3px;">{{_emptyTemplateOptions && _emptyTemplateOptions.height === 'auto' ? 'Включить' : 'Выключить'}} растягивание</button>
+                    </ws:template>
+            </ws:Object>
             </ws:Array>
         </ws:items>
     </ws:rightSidebar>

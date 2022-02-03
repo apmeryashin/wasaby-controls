@@ -3215,13 +3215,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._drawingIndicatorDirection
             );
         }
-        // В режиме 'remove' нужно обновлять itemActions, т.к.
-        // они обновляются только в видимом диапазоне виртуального скролла.
-        // В режиме 'hide' виртуальный скролл лишь скрывает через display записи,
-        // поэтому не надо делать лишние обновления.
+        // При смене индексов нужно всегда обновлять itemActions, т.к.
+        // они обновляются только в видимом диапазоне виртуального скролла независимо от режима.
         // Если этот метод сработал при инициализации виртуального скролла на beforeMount,
         // то в this._options ничего нет, поэтому проверяем на this._mounted.
-        if (this._mounted && !!this._itemActionsController && this._options.virtualScrollConfig?.mode !== 'hide') {
+        if (this._mounted && !!this._itemActionsController) {
             _private.updateInitializedItemActions(this, this._options);
         }
     }
@@ -3744,7 +3742,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (emptyTemplateChanged) {
             this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
         }
-        this._listViewModel.setEmptyTemplateOptions({items: this._items, filter: newOptions.filter});
+        this._listViewModel.setEmptyTemplateOptions({
+            ...newOptions.emptyTemplateOptions, items: this._items, filter: newOptions.filter});
 
         if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
@@ -6404,7 +6403,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             ...modelConfig,
             collection: items,
             unique: true,
-            emptyTemplateOptions: {items, filter: modelConfig.filter},
+            emptyTemplateOptions: {...modelConfig.emptyTemplateOptions, items, filter: modelConfig.filter},
             hasMoreData: _private.getHasMoreData(this),
             // Если навигация по скролу то для дерева нужно скрывать кнопку "Ещё" для узла являющегося
             // последней записью коллекции. Т.к. в этом случае подгрузка осуществляется по скролу.

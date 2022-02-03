@@ -24,6 +24,7 @@ export default class extends Control {
     protected _columns: IColumn[] = Countries.getColumns();
     protected _resultsPosition: string;
     protected _footerCfg: unknown[];
+    protected _emptyTemplateOptions: any = {};
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -71,6 +72,13 @@ export default class extends Control {
 
     protected _toggleFooter(): void {
         this._footerCfg = this._footerCfg === undefined ? footerCfg : undefined;
+    }
+
+    protected _toggleHeight(): void {
+        this._emptyTemplateOptions = {
+            ...this._emptyTemplateOptions,
+            height: this._emptyTemplateOptions?.height === 'auto' ? 'stretch' : 'auto'
+        };
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
