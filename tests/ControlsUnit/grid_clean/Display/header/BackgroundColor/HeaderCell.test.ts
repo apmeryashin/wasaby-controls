@@ -25,7 +25,8 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
         isStickyHeader: () => true,
         getGridColumnsConfig: () => ([column]),
         getHeaderConfig: () => ([column]),
-        hasColumnScroll: () => false
+        hasColumnScroll: () => false,
+        isFullGridSupport: () => true
     } as undefined as GridHeaderRow<Model>;
 
     beforeEach(() => {

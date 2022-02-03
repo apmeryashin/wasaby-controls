@@ -205,8 +205,9 @@ export class ScrollController {
         return this._calculator.getFirstVisibleItemIndex();
     }
 
-    setCountItemsRenderedOutsideRange(count: number): void {
-        this._itemsSizesController.setCountItemsRenderedOutsideRange(count);
+    setItemsRenderedOutsideRange(items: number[]): void {
+        this._itemsSizesController.setCountItemsRenderedOutsideRange(items.length);
+        this._calculator.setItemsRenderedOutsideRange(items);
     }
 
     // region Triggers

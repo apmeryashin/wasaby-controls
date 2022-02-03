@@ -42,6 +42,7 @@ import {
 import { Logger } from 'UI/Utils';
 import { TVirtualScrollMode } from 'Controls/_baseList/interface/IVirtualScroll';
 import type { IInitialScrollPosition } from 'Controls/scroll';
+import { isEqual } from 'Types/object';
 
 const ERROR_PATH = 'Controls/_baseList/Controllers/AbstractListVirtualScrollController';
 
@@ -219,6 +220,8 @@ export abstract class AbstractListVirtualScrollController<
     private _doScrollCompletedCallback: () => void;
     private _shouldResetScrollPosition: boolean;
 
+    private _itemsRenderedOutsideRange: number[] = [];
+
     constructor(options: TOptions) {
         this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
         this._virtualScrollMode = options.virtualScrollConfig.mode;
@@ -320,6 +323,20 @@ export abstract class AbstractListVirtualScrollController<
             this._handleScheduledScroll();
         }
 
+        const itemsRenderedOutsideRange = this._collection.getItems()
+            .filter((it) => it.isRenderedOutsideRange())
+            .map((it) => this._collection.getIndex(it));
+        if (!isEqual(this._itemsRenderedOutsideRange, itemsRenderedOutsideRange)) {
+            this._itemsRenderedOutsideRange = itemsRenderedOutsideRange;
+
+            // Если скрылась или отобразилась запись за пределами диапазона, то нужно восстановить скролл
+            if (!this._isScheduledScroll()) {
+                this.saveScrollPosition();
+            }
+
+            this._scrollController.setItemsRenderedOutsideRange(itemsRenderedOutsideRange);
+        }
+
         // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
         // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
         // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
@@ -335,11 +352,6 @@ export abstract class AbstractListVirtualScrollController<
 
     afterRenderListControl(): void {
         this._renderNewIndexes = false;
-
-        const countItemsRenderedOutsideRange = this._collection.getItems()
-            .filter((it) => it.isRenderedOutsideRange())
-            .length;
-        this._scrollController.setCountItemsRenderedOutsideRange(countItemsRenderedOutsideRange);
 
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
