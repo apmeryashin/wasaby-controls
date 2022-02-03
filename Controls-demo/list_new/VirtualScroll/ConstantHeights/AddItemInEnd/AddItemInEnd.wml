@@ -19,5 +19,5 @@
         </ws:content>
     </Controls-demo.list_new.VirtualScroll.NavigationSwitcher.Index>
     <a href="#" class="controls-text-link controlsDemo-addButton-virtual-scroll_autotest" on:click="_addItem()">Добавить запись в конец</a><br/>
-    <a href="#" class="controls-text-link controlsDemo-addButton-virtual-scroll_autotest" on:click="_toggleVirtualScrollMode()">Включить режим виртуального скролла {{_virtualScrollConfig === 'hide' ? 'remove' : 'hide'}}</a>
+    <a href="#" class="controls-text-link controlsDemo-addButton-virtual-scroll_autotest" on:click="_toggleVirtualScrollMode()">Включить режим виртуального скролла {{_virtualScrollMode === 'hide' ? 'remove' : 'hide'}}</a>
 </div>
