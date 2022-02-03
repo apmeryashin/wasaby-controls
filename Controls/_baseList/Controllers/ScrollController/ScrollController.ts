@@ -14,6 +14,7 @@ import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalcula
 import CalculatorWithoutVirtualization from 'Controls/_baseList/Controllers/ScrollController/CalculatorWithoutVirtualization';
 import {CrudEntityKey} from 'Types/source';
 import type {IEdgeItemCalculatingParams} from '../AbstractListVirtualScrollController';
+import ItemsSizeControllerWithoutVirtualization from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeControllerWithoutVirtualization';
 
 export interface IItemsRange {
     startIndex: number;
@@ -60,7 +61,7 @@ export interface IActiveElementIndex {
 }
 
 export interface IEdgeItem {
-    index: number;
+    key: string;
     direction: IDirection;
     border: IDirection;
     borderDistance: number;
@@ -86,7 +87,7 @@ export type IActiveElementChangedChangedCallback = (activeElementIndex: number) 
 
 export type IItemsEndedCallback = (direction: IDirection) => void;
 
-export type IIndexesInitializedCallback = (range: IItemsRange) => void;
+export type IIndexesInitializedCallback = (range: IIndexesChangedParams) => void;
 
 export type IHasItemsOutRangeChangedCallback = (hasItems: IHasItemsOutRange) => void;
 
@@ -141,8 +142,11 @@ export class ScrollController {
         this._contentSize = options.contentSize;
 
         this._disableVirtualScroll = options.disableVirtualScroll;
+        const itemsSizeControllerConstructor = options.disableVirtualScroll ?
+            ItemsSizeControllerWithoutVirtualization :
+            options.itemsSizeControllerConstructor;
 
-        this._itemsSizesController = new options.itemsSizeControllerConstructor({
+        this._itemsSizesController = new itemsSizeControllerConstructor({
             itemsContainer: options.itemsContainer,
             itemsQuerySelector: options.itemsQuerySelector,
             totalCount: options.totalCount
@@ -363,10 +367,7 @@ export class ScrollController {
         const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
-        const itemsSizes = this._itemsSizesController.resetItems(totalCount);
-        this._calculator.updateItemsSizes(itemsSizes);
-
-        this._calculator.resetItems(totalCount, startIndex);
+        const result = this._calculator.resetItems(totalCount, startIndex);
 
         const hasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),
@@ -383,7 +384,7 @@ export class ScrollController {
             this.setForwardTriggerPosition('offset');
         }
 
-        this._handleInitializingResult();
+        this._handleInitializingResult(result);
     }
 
     // endregion Collection changes
@@ -405,11 +406,11 @@ export class ScrollController {
     /**
      * Возвращает способ скролла к следующей/предыдущей страницы в зависимости от размера крайней записи
      */
-    getScrollToPageMode(edgeItemIndex: number): IScrollToPageMode {
+    getScrollToPageMode(edgeItemKey: string): IScrollToPageMode {
         // Если запись меньше трети вьюпорта, то скроллим к ней на pageUp|pageDown, чтобы не разбивать мелкие записи.
         // Иначе, скроллим как обычно, на высоту вьюпорта
         const MAX_SCROLL_TO_EDGE_ITEM_RELATION = 3;
-        const itemSize = this._itemsSizesController.getItemsSizes()[edgeItemIndex].size;
+        const itemSize = this._itemsSizesController.getItemsSizes().find(((item) => item.key === edgeItemKey)).size;
         if (itemSize * MAX_SCROLL_TO_EDGE_ITEM_RELATION > this._viewportSize || this._disableVirtualScroll) {
             return 'viewport';
         } else {
@@ -541,8 +542,13 @@ export class ScrollController {
         }
     }
 
-    private _handleInitializingResult(): void {
-        this._indexesInitializedCallback(this._calculator.getRange());
+    private _handleInitializingResult(result: ICalculatorResult): void {
+        this._indexesInitializedCallback({
+            range: result.range,
+            oldRange: result.oldRange,
+            oldPlaceholders: result.oldPlaceholders,
+            shiftDirection: result.shiftDirection
+        });
 
         const hasItemsOutRange: IHasItemsOutRange = {
             backward: this._calculator.hasItemsOutRange('backward'),
