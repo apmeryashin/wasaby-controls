@@ -3221,7 +3221,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // поэтому не надо делать лишние обновления.
         // Если этот метод сработал при инициализации виртуального скролла на beforeMount,
         // то в this._options ничего нет, поэтому проверяем на this._mounted.
-        if (this._isMounted && !!this._itemActionsController && this._options.virtualScrollConfig?.mode !== 'hide') {
+        if (this._isMounted && !!this._itemActionsController) {
             _private.updateInitializedItemActions(this, this._options);
         }
     }
