@@ -54,6 +54,7 @@ export interface IList extends
     stickyHeader?: boolean;
     stickyGroup?: boolean;
     stickyResults?: boolean;
+    emptyTemplateOptions?: object;
 }
 
 /**
