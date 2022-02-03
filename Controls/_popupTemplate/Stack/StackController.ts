@@ -250,8 +250,8 @@ export class StackController extends BaseController {
 
     getMaximizedState(item: IStackItem): boolean {
         if (constants.isServerSide) {
-            const {width, minWidth, maxWidth} = item.popupOptions;
-            return width - (minWidth + maxWidth) / 2 > 0;
+            const {stackWidth, minWidth, maxWidth} = item.popupOptions;
+            return stackWidth - (minWidth + maxWidth) / 2 > 0;
         }
         const stackParentCoords = this._getStackParentCoords(item);
         const maxPanelWidth = StackStrategy.getMaxPanelWidth(stackParentCoords);
