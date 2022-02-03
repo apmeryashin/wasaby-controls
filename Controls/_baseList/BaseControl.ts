@@ -4758,6 +4758,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     );
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
                 }
+            } else {
+
+                // Если перезагружают на конкретной позиции, это значит, что нужно будет восстановить скролл.
+                if (this._options.navigation.source === 'position' &&
+                    this._options.navigation.sourceConfig.position !== sourceConfig.position) {
+                    this._listVirtualScrollController.enableRestoreScrollPosition();
+                }
             }
         } else {
 
