@@ -28,12 +28,12 @@
 export enum showType {
    /**
     * @name Controls/toolbars:showType#MENU
-    * @cfg {String} Элемент отображается только в меню. Рекомендуем использовать константу toolbar.showType.MENU.
+    * @cfg {String} Элемент отображается только в выпадающем меню. Рекомендуем использовать константу toolbar.showType.MENU.
     */
    MENU,
    /**
     * @name Controls/toolbars:showType#MENU_TOOLBAR
-    * @cfg {String} Элемент отображается в меню и в тулбаре.Рекомендуем использовать константу toolbar.showType.MENU_TOOLBAR.
+    * @cfg {String} Элемент отображается в выпадающем меню и в тулбаре. Рекомендуем использовать константу toolbar.showType.MENU_TOOLBAR.
     */
    MENU_TOOLBAR,
    /**
