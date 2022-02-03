@@ -3744,7 +3744,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (emptyTemplateChanged) {
             this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
         }
-        this._listViewModel.setEmptyTemplateOptions({items: this._items, filter: newOptions.filter});
+        this._listViewModel.setEmptyTemplateOptions({
+            ...newOptions.emptyTemplateOptions, items: this._items, filter: newOptions.filter});
 
         if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
@@ -6397,7 +6398,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             ...modelConfig,
             collection: items,
             unique: true,
-            emptyTemplateOptions: {items, filter: modelConfig.filter},
+            emptyTemplateOptions: {...modelConfig.emptyTemplateOptions, items, filter: modelConfig.filter},
             hasMoreData: _private.getHasMoreData(this),
             // Если навигация по скролу то для дерева нужно скрывать кнопку "Ещё" для узла являющегося
             // последней записью коллекции. Т.к. в этом случае подгрузка осуществляется по скролу.
