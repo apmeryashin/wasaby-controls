@@ -1,7 +1,8 @@
 <div class="controls_filterPopup_theme-{{_options.theme}} controls-FilterPanel__Lookup">
    <ws:if data="{{_caption}}">
       <Controls._filterPopup.Panel.Link
-            attr:class="controls-FilterPanel__Lookup_link"
+            attr:class="controls-FilterPanel__Lookup_link
+                        controls-FilterPanel__Lookup_link_{{_passed || _options.selectedKeys.length  ? 'label' : 'default'}}"
             caption="{{_caption}}"
             on:click="showSelector()"/>
    </ws:if>

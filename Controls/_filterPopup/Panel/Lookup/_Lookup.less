@@ -15,3 +15,15 @@
   display: block;
   width: auto;
 }
+
+
+// Не меняем цвет метки, если поле ввода рядом с меткой не отображается
+.controls-FilterPanel__Lookup .controls-FilterPanel__Lookup_link_default .controls-FilterLink__text {
+  color: var(--item_text-color_filterPanel);
+}
+
+.ws-is-hover {
+  .controls-FilterPanel__Lookup .controls-FilterPanel__Lookup_link_default .controls-FilterLink__text:hover {
+    color: var(--item_hover_text-color_filterPanel);
+  }
+}
