@@ -313,12 +313,18 @@ export class DialogStrategy {
             maxHeight = Math.max(minHeight, maxHeight);
         }
 
-        return {
+        const sizes = {
             minWidth: popupOptions.minWidth,
-            minHeight: Math.min(itemMinHeight, maxHeight),
             maxHeight,
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
         };
+
+        // TODO: https://online.sbis.ru/opendoc.html?guid=749f06a2-eafd-47be-a3d2-4961e3cff130
+        if (!item.popupOptions.ignoreMinHeight) {
+            sizes.minHeight = Math.min(itemMinHeight, maxHeight);
+        }
+
+        return sizes;
     }
 
     private _getMinHeight(item: IDialogItem, windowData: IPopupPosition): number {

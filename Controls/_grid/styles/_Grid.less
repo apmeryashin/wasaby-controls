@@ -25,10 +25,23 @@
    height: 100%;
 }
 
-.controls-GridView__emptyTemplate__contentWrapper {
+.controls-GridView__emptyTemplate_stretch {
    display: flex;
-   justify-content: center;
+   height: 100%;
+   box-sizing: border-box;
    align-items: center;
+}
+
+.controls-GridView__emptyTemplate_stretch_align_center {
+   justify-content: center;
+}
+
+.controls-GridView__emptyTemplate_stretch_align_start {
+   justify-content: left;
+}
+
+.controls-GridView__emptyTemplate_stretch_align_end {
+   justify-content: right;
 }
 
 .controls-GridView__emptyTemplate {
@@ -872,7 +885,9 @@
    display: none;
 }
 
-.controls-GridView__checkbox {
+.controls-GridView__checkbox {}
+
+.controls-GridView__checkbox_relative {
    position: relative;
 }
 

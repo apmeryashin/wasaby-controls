@@ -6,9 +6,10 @@ define(
       'Controls-demo/Popup/TestMaximizedStack',
       'Controls/_popupTemplate/BaseController',
       'Controls/_popupTemplate/Stack/Template/StackContent',
-      'sinon'
+      'sinon',
+       'Env/Env'
    ],
-   (StackStrategyMod, popupMod, popupTemplate, TestMaximizedStack, BaseController, StackContent, sinon) => {
+   (StackStrategyMod, popupMod, popupTemplate, TestMaximizedStack, BaseController, StackContent, sinon, Env) => {
       'use strict';
       var StackStrategyClass = StackStrategyMod.StackStrategy;
       var StackStrategy = popupTemplate.StackStrategy;
@@ -54,6 +55,10 @@ define(
          };
 
          it('Should return correct maximized state', () => {
+            const isServerSide = Env.constants.isServerSide;
+            Env.constants.isServerSide = false;
+
+            sinon.stub(popupTemplate.StackController, '_getStackParentCoords');
             let item = {
                popupOptions: {
                   minimizedWidth: 1,
@@ -62,7 +67,7 @@ define(
                   }
                }
             };
-            let result = popupTemplate.StackController._getMaximizedState(item, StackStrategy.getMaxPanelWidth());
+            let result = popupTemplate.StackController.getMaximizedState(item);
             assert.isFalse(result);
             item = {
                popupOptions: {
@@ -71,7 +76,7 @@ define(
                   stackWidth: 900
                }
             };
-            result = popupTemplate.StackController._getMaximizedState(item, StackStrategy.getMaxPanelWidth());
+            result = popupTemplate.StackController.getMaximizedState(item);
             assert.isTrue(result);
             item = {
                popupOptions: {
@@ -80,8 +85,23 @@ define(
                   stackWidth: 950
                }
             };
-            result = popupTemplate.StackController._getMaximizedState(item, StackStrategy.getMaxPanelWidth());
+            result = popupTemplate.StackController.getMaximizedState(item);
             assert.isTrue(result);
+
+            Env.constants.isServerSide = true;
+
+            item = {
+               popupOptions: {
+                  minWidth: 800,
+                  maxWidth: 900,
+                  stackWidth: 900
+               }
+            };
+            result = popupTemplate.StackController.getMaximizedState(item);
+            assert.isTrue(result);
+
+            Env.constants.isServerSid = isServerSide;
+            sinon.restore();
          });
 
          it('Opener: getConfig', () => {
