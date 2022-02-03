@@ -1,10 +1,11 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import separatorTemplate = require('wml!Controls/_heading/Separator/Separator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import {Logger} from 'UI/Utils';
 import 'css!Controls/heading';
 
 export interface ISeparatorOptions extends IControlOptions {
-    style?: 'primary' | 'secondary';
+    separatorStyle?: 'primary' | 'secondary';
 }
 
 /**
@@ -23,7 +24,7 @@ export interface ISeparatorOptions extends IControlOptions {
  * @extends UI/Base:Control
  * @implements Controls/interface:ICaption
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/Heading/Separators/Index
  */
@@ -38,23 +39,31 @@ export interface ISeparatorOptions extends IControlOptions {
  * @extends UI/Base:Control
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  *
  * @demo Controls-demo/Heading/Separators/Index
  */
 
 class Separator extends Control<ISeparatorOptions> {
     protected _template: TemplateFunction = separatorTemplate;
+    protected _separatorStyle: ISeparatorOptions['separatorStyle'];
 
+    protected _beforeMount(options?: ISeparatorOptions): void {
+        this._separatorStyle =  options.style || options.separatorStyle;
+        if (options.style !== undefined) {
+            Logger.warn(`${this._moduleName}: Используется устаревшая опция style,` +
+                                                                            ' нужно использовать separatorStyle', this);
+        }
+    }
     static getDefaultOptions(): object {
         return {
-            style: 'secondary'
+            separatorStyle: 'secondary'
         };
     }
 
     static getOptionTypes(): object {
         return {
-            style: EntityDescriptor(String).oneOf([
+            separatorStyle: EntityDescriptor(String).oneOf([
                 'secondary',
                 'primary'
             ])
@@ -72,7 +81,7 @@ Object.defineProperty(Separator, 'defaultProps', {
 });
 
 /**
- * @name Controls/_heading/Separator#style
+ * @name Controls/_heading/Separator#separatorStyle
  * @cfg {String} Стиль отображения иконки. В теме онлайна есть только один стиль отображения.
  * @variant primary
  * @variant secondary

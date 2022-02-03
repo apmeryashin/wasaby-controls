@@ -91,11 +91,14 @@ class BreadCrumbsPath extends Control<IHeadingPath, IReceivedState> {
         } else {
             return loadFontWidthConstants().then((getTextWidth: Function) => {
                 this._initStatesBeforeMount(options, receivedState, getTextWidth);
-                return {
-                    items: this._breadCrumbsItems,
-                    breadCrumbsWidth: this._crumbsWidth,
-                    backButtonWidth: this._backButtonWidth
-                };
+                if (this._items) {
+                    return {
+                        items: this._breadCrumbsItems,
+                        breadCrumbsWidth: this._crumbsWidth,
+                        backButtonWidth: this._backButtonWidth
+                    };
+                }
+                return;
             });
         }
     }
@@ -359,13 +362,6 @@ Object.defineProperty(BreadCrumbsPath, 'defaultProps', {
  * @name Controls/_breadcrumbs/HeadingPath#backButtonFontSize
  * @cfg {String} Размер шрифта кнопки "Назад".
  * @demo Controls-demo/BreadCrumbs/backButtonFontSize/Index
- */
-
-/**
- * @name Controls/_breadcrumbs/HeadingPath#backButtonNewIcon
- * @cfg {Boolean} Отображение кнопки "Назад" в новом дизайне.
- * @default false
- * @demo Controls-demo/BreadCrumbs/newIcon/Index
  */
 
 /**

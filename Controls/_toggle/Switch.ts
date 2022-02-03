@@ -41,7 +41,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
  * @implements Controls/interface:IContrastBackground
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/Switch/Base/Index
  */
 
@@ -56,7 +56,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
  * @implements Controls/interface:ITooltip
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/Switch/Base/Index
  */
 
@@ -111,7 +111,8 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
             captionPosition: EntityDescriptor(String).oneOf([
                 'left',
                 'right'
-            ])
+            ]),
+            caption: EntityDescriptor(String, Number)
         };
     }
 

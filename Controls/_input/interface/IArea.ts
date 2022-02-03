@@ -13,7 +13,7 @@ export interface IAreaOptions extends ITextOptions {
  * Интерфейс многострочного поля ввода.
  * @interface Controls/_input/interface/IArea
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 /**

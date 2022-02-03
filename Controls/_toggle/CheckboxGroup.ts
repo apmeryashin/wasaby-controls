@@ -42,7 +42,7 @@ export interface ICheckboxGroupOptions extends IControlOptions,
  * @implements Controls/interface:IValidationStatus
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 
@@ -57,7 +57,7 @@ export interface ICheckboxGroupOptions extends IControlOptions,
  * @implements Controls/toggle:IToggleGroup
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 

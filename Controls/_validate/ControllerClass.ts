@@ -13,7 +13,7 @@ export interface IControllerConfig {
  * @class Controls/_validate/ControllerClass
  * @extends UI/Base:Control
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 
 class ControllerClass {

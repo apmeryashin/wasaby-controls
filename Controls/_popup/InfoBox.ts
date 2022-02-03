@@ -11,6 +11,7 @@ import template = require('wml!Controls/_popup/InfoBox/InfoBox');
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {CalmTimer} from 'Controls/_popup/utils/FastOpen';
 import {detection} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 /**
  * Контрол, отображающий всплывающую подсказку относительно указанного элемента.
@@ -52,6 +53,10 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
             this.close();
             this._forceUpdate();
         });
+        if (options.style !== undefined) {
+            Logger.warn(`${this._moduleName}: Используется устаревшая опция style,` +
+                                                                               ' нужно использовать borderStyle', this);
+        }
     }
 
     protected _beforeUnmount(): void {
@@ -89,7 +94,7 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
             position: this._options.position,
             targetSide: this._options.targetSide,
             alignment: this._options.alignment,
-            style: this._options.style,
+            borderStyle: this._options.style || this._options.borderStyle,
             validationStatus: 'valid',
             horizontalPadding: this._options.horizontalPadding,
             // InfoBox close by outside click only if trigger is set to 'demand' or 'click'.
@@ -227,7 +232,7 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
         return {
             targetSide: 'top',
             alignment: 'start',
-            style: 'secondary',
+            borderStyle: 'secondary',
             trigger: 'hover',
             closeButtonVisible: true
         };

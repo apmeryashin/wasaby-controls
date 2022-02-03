@@ -8,7 +8,7 @@ import 'css!Controls/progress';
  * Интерфейс опций для {@link Controls/progress:Legend}.
  * @interface Controls/progress:ILegend
  * @public
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 export interface ILegendOptions extends IControlOptions {
    /**
@@ -32,7 +32,7 @@ export interface ILegendOptions extends IControlOptions {
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less переменные тем оформления}
  *
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  * @implements Controls/progress:ILegend
  * @public
  */
@@ -40,7 +40,7 @@ export interface ILegendOptions extends IControlOptions {
 /*
  * Legend for StateIndicator
  * @class Controls/_progress/Legend
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 class Legend extends Control<ILegendOptions> {
    protected _template: TemplateFunction = legendTemplate;

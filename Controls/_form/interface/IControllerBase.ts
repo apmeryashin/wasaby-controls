@@ -5,7 +5,7 @@ import {Model} from 'Types/entity';
  * Интерфейс для котрола, реализующего функционал редактирования записи.
  * @interface Controls/form:IControllerBase
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 export default interface IControllerBase extends IControlOptions {
     /**

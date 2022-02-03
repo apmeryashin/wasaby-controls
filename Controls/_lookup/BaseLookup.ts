@@ -4,13 +4,15 @@ import {default as LookupController, ILookupBaseControllerOptions, SelectedItems
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor, Model} from 'Types/entity';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
-import {TKey} from 'Controls/interface';
+import {TKey, TSourceOption} from 'Controls/interface';
 // @ts-ignore
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
 import {getDefaultBorderVisibilityOptions} from 'Controls/input';
 import 'css!Controls/lookup';
 import 'css!Controls/CommonClasses';
+import {ICrud, ICrudPlus, IData, PrefetchProxy} from 'Types/source';
+import {isEqual} from 'Types/object';
 
 type LookupReceivedState = SelectedItems|null;
 
@@ -23,13 +25,15 @@ export default abstract class
     BaseLookup<T extends ILookupOptions> extends Control<T, LookupReceivedState> {
     protected _lookupController: LookupController;
     protected _items: SelectedItems;
+    private _source: TSourceOption;
 
     protected _beforeMount(
         options: ILookupOptions,
         context: object,
         receivedState: LookupReceivedState
     ): Promise<LookupReceivedState|Error> | void {
-        this._lookupController = new LookupController(options);
+        this._source = BaseLookup._getSource(options, receivedState);
+        this._lookupController = new LookupController(this._getLookupControllerOptions(options));
 
         if (receivedState && !isEmpty(receivedState)) {
             options.dataLoadCallback?.(receivedState);
@@ -51,15 +55,28 @@ export default abstract class
     }
 
     protected _beforeUpdate(newOptions: ILookupOptions): Promise<SelectedItems>|void|boolean {
-        const updateResult = this._lookupController.update(newOptions);
+        const lookupController = this._lookupController;
+
+        if (newOptions.source !== this._options.source) {
+            this._source = newOptions.source;
+        }
+        const updateResult = lookupController.update(this._getLookupControllerOptions(newOptions));
         const updateResultCallback = () => {
-            this._itemsChanged(this._items = this._lookupController.getItems());
-            this._notifyOnItemsChanged();
+            this._itemsChanged(this._items = lookupController.getItems());
+
+            // Защита от зацикливания, если метод не вернул записей
+            // или вернул больше/меньше записей, чем запрашивали
+            if (newOptions.selectedKeys !== undefined &&
+                !isEqual(lookupController.getSelectedKeys(), newOptions.selectedKeys)) {
+                this._notifyChanges(newOptions, lookupController.getSelectedKeys());
+            } else {
+                this._notifyOnItemsChanged();
+            }
         };
 
         if (updateResult instanceof Promise) {
             updateResult.then((items) => {
-                this._lookupController.setItems(items);
+                lookupController.setItems(items);
                 updateResultCallback();
             });
         } else if (updateResult) {
@@ -147,6 +164,13 @@ export default abstract class
         this._lookupController.setItems(items);
     }
 
+    private _getLookupControllerOptions(options: ILookupOptions): ILookupBaseControllerOptions {
+        return {
+            ...options,
+            source: this._source
+        };
+    }
+
     protected _notifyChanges(
         options?: ILookupOptions,
         newSelectedKeys: TKey[] = this._lookupController.getSelectedKeys()
@@ -174,6 +198,20 @@ export default abstract class
 
     protected abstract _itemsChanged(items: SelectedItems): void;
 
+    private static _getSource(
+        options: ILookupOptions,
+        receivedState?: LookupReceivedState
+    ): ICrudPlus | ICrud & ICrudPlus & IData {
+        let source;
+
+        if (options.source instanceof PrefetchProxy && receivedState) {
+            source = options.source.getOriginal();
+        } else {
+            source = options.source;
+        }
+
+        return source;
+    }
     static getDefaultOptions(): object {
         return {
             ...getDefaultBorderVisibilityOptions(),

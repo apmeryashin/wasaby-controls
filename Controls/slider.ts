@@ -15,7 +15,7 @@
  * @includes ISlider Controls/_slider/interface/ISlider
  * @includes Base Controls/_slider/Base
  * @includes Range Controls/_slider/Range
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 
 export {default as Base} from './_slider/Base';

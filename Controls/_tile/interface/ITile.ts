@@ -79,26 +79,6 @@
  */
 
 /**
- * @cfg {Controls/_tile/interface/ITile/TileItemPadding.typedef}  Конфигурация отступов между элементами плитки.
- * @name Controls/_tile/interface/ITile#itemPadding
- * @demo Controls-demo/tileNew/ItemPadding/Index
- * @example
- * <pre class="brush: html; highlight: [4-8]">
- * <!-- WML -->
- * <Controls.tile:View source="{{_viewSource}}" imageProperty="image">
- *    <ws:itemPadding
- *       top="l"
- *       bottom="l"
- *       left="l"
- *       right="l"/>
- * </Controls.tile:View>
- * </pre>
- * @remark
- * Полезные ссылки:
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/tile/paddings/#item-padding руководство разработчика}
- */
-
-/**
  * @name Controls/_tile/interface/ITile#tileWidth
  * @cfg {Number} Минимальная ширина элементов, отображаемых в виде плитки.
  * @default 250

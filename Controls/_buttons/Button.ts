@@ -122,7 +122,7 @@ export function getDefaultOptions(): object {
  * @implements Controls/interface:ITooltip
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Buttons/ViewModes/Index
  */
 
@@ -146,7 +146,7 @@ export function getDefaultOptions(): object {
  * @implements Controls/interface:ITooltip
  *
  * @public
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Buttons/ViewModes/Index
  */
 class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize,
@@ -191,6 +191,19 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
 
     protected _highlightedOnFocus(): boolean {
         return !!this._workByKeyboard?.status && !this._options.readOnly;
+    }
+
+    protected _getFocusedClass(): string {
+        if (this._highlightedOnFocus()) {
+            let focusedClass = 'controls-focused-item';
+            if (this._options.contrastBackground ||
+                this._viewMode === 'functionalButton' ||
+                this._viewMode === 'toolButton') {
+                focusedClass += '_shadow';
+            }
+            return focusedClass;
+        }
+        return '';
     }
 
     protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {

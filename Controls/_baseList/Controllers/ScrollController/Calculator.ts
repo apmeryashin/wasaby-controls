@@ -90,10 +90,11 @@ export class Calculator {
     private _scrollPosition: number;
     private _viewportSize: number;
     private _contentSize: number;
-    private _totalCount: number;
-    private _range: IItemsRange = { startIndex: 0, endIndex: 0 };
+    protected _totalCount: number;
+    protected _range: IItemsRange = { startIndex: 0, endIndex: 0 };
     private _placeholders: IPlaceholders = { backward: 0, forward: 0 };
     private _activeElementIndex: number;
+    private _itemsRenderedOutsideRange: number[] = [];
 
     constructor(options: ICalculatorOptions) {
         this._itemsSizes = options.itemsSizes;
@@ -160,6 +161,20 @@ export class Calculator {
             currentRange: this._range,
             scrollPosition: this._scrollPosition,
             placeholders: this._placeholders
+        });
+    }
+
+    /**
+     * Устанавливает массив индексов элементов, которые отрисовываются за пределами диапазона
+     * @param items
+     */
+    setItemsRenderedOutsideRange(items: number[]): void {
+        this._itemsRenderedOutsideRange = items;
+        this._placeholders = getPlaceholdersByRange({
+            range: this._range,
+            totalCount: this._totalCount,
+            itemsSizes: this._itemsSizes,
+            itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
     }
 
@@ -286,7 +301,7 @@ export class Calculator {
                 segmentSize: this._getSegmentSize(),
                 totalCount: this._totalCount,
                 viewportSize: this._viewportSize,
-                contentSize: this._contentSize,
+                scrollPosition: this._scrollPosition,
                 triggersOffsets: this._triggersOffsets,
                 itemsSizes: this._itemsSizes,
                 placeholders: this._placeholders,
@@ -296,7 +311,8 @@ export class Calculator {
             this._placeholders = getPlaceholdersByRange({
                 range: this._range,
                 totalCount: this._totalCount,
-                itemsSizes: this._itemsSizes
+                itemsSizes: this._itemsSizes,
+                itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
             });
         }
 
@@ -329,7 +345,8 @@ export class Calculator {
             this._placeholders = getPlaceholdersByRange({
                 range: this._range,
                 totalCount: this._totalCount,
-                itemsSizes: this._itemsSizes
+                itemsSizes: this._itemsSizes,
+                itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
             });
         }
 
@@ -382,7 +399,8 @@ export class Calculator {
             this._placeholders = getPlaceholdersByRange({
                 range: this._range,
                 totalCount: this._totalCount,
-                itemsSizes: this._itemsSizes
+                itemsSizes: this._itemsSizes,
+                itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
             });
         }
 
@@ -399,23 +417,25 @@ export class Calculator {
     /**
      * Изменение позиции скролла. Пересчитывает индекс активного элемента от текущей позиции скролла
      * @param scrollPosition Позиция скролла
+     * @param updateActiveElement Нужно ли обновлять активный эелемент
      */
-    scrollPositionChange(scrollPosition: number): IActiveElementIndexChanged {
+    scrollPositionChange(scrollPosition: number, updateActiveElement: boolean): IActiveElementIndexChanged {
         const oldActiveElementIndex = this._activeElementIndex;
 
         if (this._scrollPosition !== scrollPosition) {
             this._scrollPosition = scrollPosition;
-
-            this._activeElementIndex = getActiveElementIndexByScrollPosition({
-                contentSize: this._contentSize,
-                viewportSize: this._viewportSize,
-                itemsSizes: this._itemsSizes,
-                currentRange: this._range,
-                placeholders: this._placeholders,
-                scrollPosition,
-                totalCount: this._totalCount,
-                feature1183225611: this._feature1183225611
-            });
+            if (updateActiveElement) {
+                this._activeElementIndex = getActiveElementIndexByScrollPosition({
+                    contentSize: this._contentSize,
+                    viewportSize: this._viewportSize,
+                    itemsSizes: this._itemsSizes,
+                    currentRange: this._range,
+                    placeholders: this._placeholders,
+                    scrollPosition,
+                    totalCount: this._totalCount,
+                    feature1183225611: this._feature1183225611
+                });
+            }
         }
 
         return {
@@ -454,7 +474,7 @@ export class Calculator {
             segmentSize: this._getSegmentSize(),
             totalCount: this._totalCount,
             viewportSize: this._viewportSize,
-            contentSize: this._contentSize,
+            scrollPosition: this._scrollPosition,
             triggersOffsets: this._triggersOffsets,
             itemsSizes: this._itemsSizes,
             placeholders: this._placeholders
@@ -463,13 +483,14 @@ export class Calculator {
         this._placeholders = getPlaceholdersByRange({
             range: this._range,
             totalCount: this._totalCount,
-            itemsSizes: this._itemsSizes
+            itemsSizes: this._itemsSizes,
+            itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
 
         return this._getRangeChangeResult(oldState, direction);
     }
 
-    private _calcAddDirection(position: number, count: number): IDirection {
+    protected _calcAddDirection(position: number, count: number): IDirection {
         // Если изначально не было элементов, то direction === 'forward'
         if (this._totalCount === count) {
             return 'forward';
@@ -504,7 +525,7 @@ export class Calculator {
                 segmentSize: count,
                 totalCount: this._totalCount,
                 viewportSize: this._viewportSize,
-                contentSize: this._contentSize,
+                scrollPosition: this._scrollPosition,
                 triggersOffsets: this._triggersOffsets,
                 itemsSizes: this._itemsSizes,
                 placeholders: this._placeholders,
@@ -515,7 +536,8 @@ export class Calculator {
         this._placeholders = getPlaceholdersByRange({
             range: this._range,
             totalCount: this._totalCount,
-            itemsSizes: this._itemsSizes
+            itemsSizes: this._itemsSizes,
+            itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
 
         return this._getRangeChangeResult(oldState, direction);
@@ -548,13 +570,14 @@ export class Calculator {
         this._placeholders = getPlaceholdersByRange({
             range: this._range,
             totalCount: this._totalCount,
-            itemsSizes: this._itemsSizes
+            itemsSizes: this._itemsSizes,
+            itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
     }
 
     // endregion HandleCollectionChanges
 
-    private _getRangeChangeResult(oldState: ICalculatorState, shiftDirection: IDirection|null): ICalculatorResult {
+    protected _getRangeChangeResult(oldState: ICalculatorState, shiftDirection: IDirection|null): ICalculatorResult {
         const indexesChanged = oldState.range.startIndex !== this._range.startIndex ||
             oldState.range.endIndex !== this._range.endIndex;
 
@@ -586,7 +609,7 @@ export class Calculator {
         };
     }
 
-    private _getState(): ICalculatorState {
+    protected _getState(): ICalculatorState {
         return {
             range: this._range,
             placeholders: this._placeholders,

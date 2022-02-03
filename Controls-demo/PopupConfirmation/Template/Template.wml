@@ -1,6 +1,6 @@
 <div class="wrapper controlsDemo__ml1">
     <div class="controlsDemo__mb1">
-        <Controls.popupConfirmation:Template style="success">
+        <Controls.popupConfirmation:Template borderStyle="success">
             <ws:bodyContentTemplate>
                 <div style="text-align: center">
                     Ссылка для ознакомления<br/>
@@ -15,7 +15,7 @@
         </Controls.popupConfirmation:Template>
     </div>
     <div class="controlsDemo__mb1">
-        <Controls.popupConfirmation:Template style="danger">
+        <Controls.popupConfirmation:Template borderStyle="danger">
             <ws:bodyContentTemplate>
                 <div style="text-align: center">
                     <Controls.heading:Title caption="Подтвердите выбор" fontColorStyle="danger"/>
@@ -27,7 +27,7 @@
         </Controls.popupConfirmation:Template>
     </div>
     <div>
-        <Controls.popupConfirmation:Template style="secondary">
+        <Controls.popupConfirmation:Template borderStyle="secondary">
             <ws:bodyContentTemplate>
                 <div style="text-align: center">
                     <div class="controls-text-secondary controls-fontsize-l">Принять лицензионное соглашение?</div>

@@ -32,7 +32,7 @@ interface INumberInputOptions extends IBaseInputOptions,
  * @public
  * @demo Controls-demo/Input/Number/Base/Index
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
 class NumberInput extends Base<INumberInputOptions> implements IOnlyPositive {

@@ -37,7 +37,14 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     protected _horizontalDirection: string;
     protected _beforeMount(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
-        this._borderStyle = InfoboxTemplate._setBorderStyle(newOptions.style as TStyle, newOptions.validationStatus);
+        this._borderStyle = InfoboxTemplate._setBorderStyle(
+            (newOptions.style || newOptions.borderStyle) as TStyle,
+            newOptions.validationStatus);
+
+        if (newOptions.style !== undefined) {
+            Logger.warn(`${this._moduleName}: Используется устаревшая опция style,` +
+                                                                            ' нужно использовать borderStyle', this);
+        }
         if (newOptions.closeButtonVisibility !== undefined) {
             Logger.error('Controls/popupTemplate:Infobox : Используется устаревшая опция closeButtonVisibility' +
                                                                                      ' используйте closeButtonVisible');
@@ -46,7 +53,9 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
 
     protected _beforeUpdate(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
-        this._borderStyle = InfoboxTemplate._setBorderStyle(newOptions.style as TStyle, newOptions.validationStatus);
+        this._borderStyle = InfoboxTemplate._setBorderStyle(
+            (newOptions.style || newOptions.borderStyle) as TStyle,
+            newOptions.validationStatus);
     }
     _setPositionSide(stickyPosition: IStickyPopupPosition): void {
         const {direction} = stickyPosition;
@@ -82,7 +91,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     static defaultProps: Partial<IInfoboxTemplateOptions> = {
         closeButtonVisible: true,
         validationStatus: 'valid',
-        style: 'secondary',
+        borderStyle: 'secondary',
         backgroundStyle: 'secondary'
     };
 
@@ -111,7 +120,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
  * @default true
  */
 /**
- * @name Controls/_popupTemplate/InfoBox#style
+ * @name Controls/_popupTemplate/InfoBox#borderStyle
  * @cfg {String} Устанавливает стиль отображения всплывающей подсказки.
  * @default secondary
  * @variant warning

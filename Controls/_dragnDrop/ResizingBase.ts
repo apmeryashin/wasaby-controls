@@ -12,7 +12,7 @@ import {detection} from 'Env/Env';
  * @class Controls/_dragnDrop/ResizingBase
  * @extends UI/Base:Control
  *
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  */
 abstract class ResizingBase<T extends IResizingBase> extends Control<IControlOptions, T> {
     protected _children: { dragNDrop: Container };

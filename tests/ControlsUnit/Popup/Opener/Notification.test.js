@@ -33,6 +33,7 @@ define(
                bottom: 0,
                right: 0
             };
+            sinon.stub(popupTemplate.NotificationController, '_validatePosition');
             sinon.stub(popupTemplate.NotificationController, '_calculateDirection');
          });
 
@@ -102,8 +103,8 @@ define(
                   right: 5
                },
                result: {
-                  bottom: 0,
-                  right: 0
+                  bottom: -5,
+                  right: -5
                }
             }, {
                startPosition: {
@@ -111,7 +112,7 @@ define(
                   right: 100
                },
                result: {
-                  bottom: 980,
+                  bottom: 989,
                   right: 90
                }
             }, {
@@ -121,7 +122,7 @@ define(
                },
                result: {
                   bottom: 90,
-                  right: 980
+                  right: 989
                }
             }].forEach((test, index) => {
                it('should not let popup go out of window ' + index, () => {
@@ -288,6 +289,72 @@ define(
                   opener.close();
                   assert.equal(closeId, '123');
                   done();
+               });
+            });
+         });
+         describe('_validatePosition', () => {
+            [{
+               historyCoords: {
+                  bottom: 0,
+                  right: 0
+               },
+               result: {
+                  bottom: 0,
+                  right: 0
+               }
+            }, {
+               historyCoords: {
+                  bottom: 10000,
+                  right: 10000
+               },
+               result: {
+                  bottom: 980,
+                  right: 980
+               }
+            }, {
+               historyCoords: {
+                  bottom: 10000,
+                  right: 500
+               },
+               result: {
+                  bottom: 980,
+                  right: 500
+               }
+            }, {
+               historyCoords: {
+                  bottom: 500,
+                  right: 10000
+               },
+               result: {
+                  bottom: 500,
+                  right: 980
+               }
+            }, {
+               historyCoords: {
+                  bottom: -100,
+                  right: -200
+               },
+               result: {
+                  bottom: 0,
+                  right: 0
+               }
+            }].forEach((test) => {
+               it('should set edges of window if popup does not fit it right', () => {
+                  sinon.restore();
+                  const item1 = {
+                     popupOptions: {}
+                  };
+                  popupTemplate.NotificationController._historyCoords = test.historyCoords;
+                  sinon.stub(sizeUtils.DimensionsMeasurer, 'getWindowDimensions').returns({
+                     innerWidth: 1000,
+                     innerHeight: 1000
+                  });
+                  popupTemplate.NotificationController.elementCreated(item1, containers[1]);
+
+                  popupTemplate.NotificationController._validatePosition();
+
+                  assert.equal(test.result.bottom, popupTemplate.NotificationController._historyCoords.bottom);
+                  assert.equal(test.result.right, popupTemplate.NotificationController._historyCoords.right);
                });
             });
          });

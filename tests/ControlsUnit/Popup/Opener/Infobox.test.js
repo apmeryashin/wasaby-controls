@@ -78,7 +78,7 @@ define(
          it('PopupInfoBox: getConfig', () => {
             let config = {
                floatCloseButton: true,
-               style: 'error',
+               borderStyle: 'error',
                position: 'tl',
                template: popup.PreviewerTemplate,
                showDelay: 300,
@@ -88,7 +88,7 @@ define(
             let newConfig = Infobox._getConfig();
 
             assert.equal(newConfig.floatCloseButton, true);
-            assert.equal(newConfig.style, 'error');
+            assert.equal(newConfig.borderStyle, 'error');
             assert.equal(newConfig.position, 'tl');
             assert.equal(newConfig.template, popup.PreviewerTemplate);
          });

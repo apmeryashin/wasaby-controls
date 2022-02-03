@@ -6,8 +6,7 @@
 
 .controls-FilterViewPanel__additional-caption {
    margin-right: var(--offset_m);
-   margin-left: var(--offset_xl);
-   margin-bottom: var(--offset_xs);
+   margin-bottom: var(--offset_2xs);
    letter-spacing: 0.1em;
    text-transform: uppercase;
 }
@@ -17,7 +16,7 @@
    flex-wrap: wrap;
    width: 100%;
    box-sizing: border-box;
-   padding-left: calc(var(--offset_xl) - var(--additional-editor_horizontal-offset_filterViewPanel));
+   margin-left: calc(-1 * var(--offset_st));
    padding-right: var(--offset_m);
 }
 
@@ -44,15 +43,25 @@
 
 .controls-FilterViewPanel__additional-editor {
    cursor: pointer;
-   height: var(--inline_height_s);
-   padding: var(--offset_3xs) var(--additional-editor_horizontal-offset_filterViewPanel);
+   height: var(--inline_height_m);
+   line-height: var(--inline_height_m);
+   padding: 0 var(--additional-editor_horizontal-offset_filterViewPanel);
    margin-bottom: var(--offset_2xs);
    margin-right: auto;
    border-radius: var(--border-radius_m);
+   box-sizing: border-box;
+}
+
+.controls-FilterViewPanel__additional-editor-default {
+   background: var(--pale_contrast_background-color);
 }
 
 .ws-is-hover {
    .controls-FilterViewPanel__additional-editor:hover {
       background: var(--unaccented_hover_same_background-color);
+   }
+
+   .controls-FilterViewPanel__additional-editor-default:hover {
+      background: var(--pale_hover_contrast_background-color);
    }
 }

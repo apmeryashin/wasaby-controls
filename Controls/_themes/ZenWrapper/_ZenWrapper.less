@@ -21,7 +21,10 @@
    background: var(--dominant-color_zen);
 }
 
-.controls-ZenWrapper {
+// При использовании старой страницы, может возникнуть ситуация, когда zen переменные загрузятся раньше основных.
+// Из-за чего тема не будет работать, поэтому увеличиваем вес селектора
+// https://online.sbis.ru/opendoc.html?guid=0d5ee84b-9eb9-4760-8a32-5d76af2bd754
+.controls-ZenWrapper.controls_themes__wrapper {
    --text-color: rgba(var(--mono_zen_rgb), 0.8);
    --unaccented_background-color: rgba(var(--mono_zen_rgb), 0.1);
    --icon-color: rgba(var(--mono_zen_rgb), 0.8);
@@ -69,6 +72,7 @@
    --readOnly_text-color_decorator_fraction: rgba(var(--mono_zen_rgb), 0.3);
    --node_expander_icon-color_treeGrid: rgb(var(--mono_zen_rgb));
    --marker_color: rgb(var(--complementary_zen_rgb));
+   --text_background-color_decoratorHighlight: rgb(var(--complementary_zen_rgb));
    --item_shadow-color_columns: rgba(var(--mono_zen_rgb), 0.15);
    --item_hover_shadow-color_columns: rgba(var(--mono_zen_rgb), 0.45);
    --primary_hover_text-color_heading: rgba(var(--complementary_zen_rgb), 0.8);
@@ -78,6 +82,7 @@
    --secondary_contrast_toggled_background-color_toggleButton_pushButton: rgba(var(--mono_zen_rgb), 0.2);
    --hover_icon-color_BigSeparator: rgba(var(--mono_zen_rgb), 0.8);
    --border-color_inputText: rgba(var(--mono_zen_rgb), 0.1);
+   --border-color: rgba(var(--mono_zen_rgb), 0.3);
    --border-color_hover_inputText: rgba(var(--mono_zen_rgb), 0.1) rgba(var(--mono_zen_rgb), 0.1) rgba(var(--mono_zen_rgb), 0.3) rgba(var(--mono_zen_rgb), 0.1);
    --border-color_focus_inputText: rgba(var(--mono_zen_rgb), 0.1) rgba(var(--mono_zen_rgb), 0.1) rgba(var(--mono_zen_rgb), 0.3) rgba(var(--mono_zen_rgb), 0.1);
    --border-contrast-color_inputText: rgba(var(--mono_zen_rgb), 0.1);

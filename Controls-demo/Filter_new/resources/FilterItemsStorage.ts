@@ -86,6 +86,8 @@ const defaultItems: IFilterItem[] = [{
         type: 'dateRange',
         itemTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/DateRange',
         editorOptions: {
+            _date: new Date(2022, 0, 30),
+            _displayDate: new Date(2022, 0, 30),
             emptyCaption: 'Весь период',
             editorMode: 'Selector',
             chooseHalfyears: true,

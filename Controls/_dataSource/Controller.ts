@@ -530,7 +530,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             isFilterChanged ||
             isNavigationChanged ||
             isSourceChanged ||
-            !isEqual(newOptions.sorting, this._options.sorting) ||
+            sortingChanged ||
             (this._parentProperty && rootChanged);
 
         const resetExpandedItemsOnDeepReload = newOptions.deepReload && !rootChanged;

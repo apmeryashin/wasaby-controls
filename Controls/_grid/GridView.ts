@@ -24,7 +24,7 @@ import {IOptions as IGridOptions} from './display/mixins/Grid';
  * @class Controls/_grid/GridView
  * @extends Controls/list:ListView
  * @author Авраменко А.С.
- * @public
+ * @private
  */
 const GridView = ListView.extend([ColumnScrollViewMixin], {
     _template: GridTemplate,
