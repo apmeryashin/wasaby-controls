@@ -193,6 +193,9 @@ export class Calculator {
         let scrollPositionOffset = 0;
 
         const item = this._itemsSizes.find((item) => item.key === edgeItem.key );
+        if (!item) {
+            return this._scrollPosition;
+        }
         // https://jsfiddle.net/alex111089/oj8bL0mq/ нативная демка про восстановление скролла
         // Вычитаем scrollPosition, чтобы привести координаты в единую систему, до и после отрисовки.
         const itemOffset = item.offset - this._scrollPosition - this._placeholders.backward;
