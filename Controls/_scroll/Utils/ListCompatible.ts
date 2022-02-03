@@ -54,6 +54,7 @@ export class ListCompatible extends DestroyableMixin {
                 scrollTop: scrollModel.scrollTop,
                 scrollLeft: scrollModel.scrollLeft,
                 clientWidth: scrollModel.clientWidth,
+                clientHeight: scrollModel.clientHeight,
                 rect: scrollModel.viewPortRect
             });
         }
@@ -148,6 +149,7 @@ export class ListCompatible extends DestroyableMixin {
                 scrollTop: scrollModel.scrollTop,
                 scrollLeft: scrollModel.scrollLeft,
                 clientWidth: scrollModel.clientWidth,
+                clientHeight: scrollModel.clientHeight,
                 rect: scrollModel.viewPortRect
             }
         );

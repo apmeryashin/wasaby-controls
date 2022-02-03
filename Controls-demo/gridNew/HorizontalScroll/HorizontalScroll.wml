@@ -9,7 +9,7 @@
 				backgroundStyle="default"
 				newColumnScroll="{{ true }}"
 				virtualColumnScrollConfig="{{ virtualColumnScrollConfig }}"
-				stickyColumnsCount="{{1}}"/>
+				stickyColumnsCount="{{ _stickyColumnsCount }}"/>
 		</Controls.scroll:Container>
 </ws:template>
 

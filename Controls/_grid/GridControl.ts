@@ -84,7 +84,7 @@ export class GridControl extends BaseControl<IGridControlOptions> {
                 this._listVirtualColumnScrollController?.scrollPositionChange(params.scrollLeft);
                 break;
             case 'horizontalViewportResize':
-                this.viewportResizeHandler(params.scrollHeight, params.rect, params.scrollTop);
+                this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
                 break;
         }
     }

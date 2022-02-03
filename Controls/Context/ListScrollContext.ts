@@ -17,25 +17,16 @@ export default class ListScrollContext extends DataContext {
         this._updateOptions(options);
     }
 
-    updateOptions(options: Partial<IListScrollContextOptions>): boolean {
-        return this._updateOptions(options, true);
+    updateOptions(options: Partial<IListScrollContextOptions>): void {
+        this._updateOptions(options, true);
     }
 
-    shouldUpdateConsumers(options: Partial<IListScrollContextOptions>): boolean {
-        const optionChangedInListWithoutEnabledColumnScroll = !(
-            'canHorizontalScroll' in options &&
-            options.canHorizontalScroll !== this.canHorizontalScroll &&
-            this._scrollContainerViewMode !== 'custom'
-        );
-        return optionChangedInListWithoutEnabledColumnScroll;
-    }
-
-    _updateOptions(options: Partial<IListScrollContextOptions>, updateConsumers?: true): boolean {
+    _updateOptions(options: Partial<IListScrollContextOptions>, updateConsumers?: true): void {
         let needUpdate = false;
 
         if ('canHorizontalScroll' in options && options.canHorizontalScroll !== this.canHorizontalScroll) {
             this.canHorizontalScroll = options.canHorizontalScroll;
-            needUpdate = this._scrollContainerViewMode === 'custom';
+            needUpdate = true;
         }
 
         if (
@@ -46,14 +37,12 @@ export default class ListScrollContext extends DataContext {
             needUpdate = true;
         }
 
-        if (needUpdate && updateConsumers) {
+        if (needUpdate && updateConsumers && this._scrollContainerViewMode === 'custom') {
             // Core/DataContext написан на js, в итоге с него не цепляются типы
             // tslint:disable-next-line:ban-ts-ignore
             // @ts-ignore
             this.updateConsumers();
         }
-
-        return needUpdate;
     }
 
     private _setScrollContainerViewModeCallback(cb: IListScrollContextOptions['setScrollContainerViewMode']): void {
