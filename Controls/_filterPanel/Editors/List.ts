@@ -366,7 +366,7 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _getMaxItemsCount(): number|void {
-        const navigation = this._options.navigation;
+        const navigation = this._navigation;
         let pageSize;
 
         if (navigation?.source === 'page') {
