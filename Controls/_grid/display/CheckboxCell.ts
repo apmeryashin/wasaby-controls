@@ -35,6 +35,10 @@ export default class CheckboxCell<
             ' controls-GridView__checkbox_position-default' +
             ' controls-Grid__row-cell-checkbox';
 
+        if (!this.isVerticalStickied()) {
+            wrapperClasses += ' controls-GridView__checkbox_relative';
+        }
+
         if (this.isFirstColumn()) {
             wrapperClasses += ` controls-Grid__row-cell__first-${this.getStyle()}`;
         }
