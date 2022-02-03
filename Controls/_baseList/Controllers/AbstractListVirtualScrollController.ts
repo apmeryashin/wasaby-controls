@@ -245,6 +245,9 @@ export abstract class AbstractListVirtualScrollController<
 
     setCollection(collection: Collection): void {
         this._initCollection(collection);
+        if (this._scrollController && this._collection) {
+            this.resetItems();
+        }
     }
 
     setItemsContainer(itemsContainer: HTMLElement): void {
@@ -622,9 +625,7 @@ export abstract class AbstractListVirtualScrollController<
         const scrollControllerOptions = this._getScrollControllerOptions(options);
         this._scrollController = new ScrollController(scrollControllerOptions);
 
-        const activeElementIndex = this._collection.getIndexByKey(this._activeElementKey);
-        const startIndex = activeElementIndex !== -1 ? activeElementIndex : 0;
-        this._scrollController.resetItems(scrollControllerOptions.totalCount, startIndex);
+        this.resetItems();
     }
 
     protected _getScrollControllerOptions(options: TOptions): IScrollControllerOptions {
@@ -959,11 +960,6 @@ export abstract class AbstractListVirtualScrollController<
 
         this._collection = collection;
         this._setCollectionIterator();
-
-        if (this._scrollController && this._collection) {
-            const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
-            this._scrollController.resetItems(this._collection.getCount(), startIndex);
-        }
     }
 
     protected _setCollectionIterator(): void {

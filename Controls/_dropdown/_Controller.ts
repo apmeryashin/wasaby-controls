@@ -160,7 +160,7 @@ export default class Controller implements IDropdownController {
          newKeys = this._getUnloadedKeys(this._items, newOptions);
       }
       if (
-          !newOptions.sourceController &&
+          !(newOptions.sourceController && newOptions.sourceController.isLoading()) &&
           (newOptions.source && (sourceChanged || !this._sourceController)) ||
           navigationChanged ||
           filterChanged
