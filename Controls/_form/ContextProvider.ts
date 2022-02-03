@@ -11,11 +11,7 @@ import {default as WorkByKeyboardContext} from '../Context/WorkByKeyboardContext
 
 export default class ContextProvider extends Control<IControlOptions> {
     _template: TemplateFunction = template;
-    protected _workByKeyboard: WorkByKeyboardContext;
-
-    private _beforeMount(): void {
-        this._workByKeyboard = new WorkByKeyboardContext();
-    }
+    protected _workByKeyboard: WorkByKeyboardContext = new WorkByKeyboardContext();
 
     _getChildContext(): object {
         return {
