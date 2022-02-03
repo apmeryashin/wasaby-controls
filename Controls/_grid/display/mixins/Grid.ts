@@ -94,6 +94,7 @@ export interface IOptions extends ICollectionOptions {
     sorting?: ISortItem[];
     emptyTemplateColumns?: IGridAbstractColumn[];
     columnSeparatorSize?: TColumnSeparatorSize;
+    emptyTemplateOptions?: object;
 }
 
 /**
