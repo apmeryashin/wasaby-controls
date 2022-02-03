@@ -582,7 +582,7 @@ export class Calculator {
     protected _getRangeChangeResult(
         oldState: ICalculatorState,
         shiftDirection: IDirection|null,
-        forceIndexesChanged?: boolean
+        forceIndexesChanged: boolean = false
     ): ICalculatorResult {
         // TODO избавиться от forceIndexesChanged по
         //  https://online.sbis.ru/opendoc.html?guid=c6c7d72b-6808-4500-b857-7455d0520d53
