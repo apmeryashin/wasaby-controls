@@ -365,7 +365,7 @@ export abstract class AbstractObserversController {
 
         if (direction === 'backward') {
             const backwardViewportPosition = scrollPosition;
-            const backwardTriggerPosition = this._triggersOffsets.backward;
+            const backwardTriggerPosition = contentSizeBeforeList + this._triggersOffsets.backward;
             return this._triggersVisibility.backward && backwardTriggerPosition >= backwardViewportPosition;
         } else {
             const forwardViewportPosition = scrollPosition + viewportSize;
