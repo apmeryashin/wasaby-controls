@@ -500,11 +500,7 @@ const ListView = Control.extend(
             } else {
                 cssVariableName = '--offset_' + topPadding;
             }
-            if (this._container) {
-                return parseInt(getComputedStyle(this._container).getPropertyValue(cssVariableName), 10);
-            } else {
-                return 0;
-            }
+            return parseInt(getComputedStyle(this._container).getPropertyValue(cssVariableName), 10);
         }
     });
 
