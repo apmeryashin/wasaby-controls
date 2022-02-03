@@ -19,7 +19,7 @@
                    {{_overlayIndex > index ? 'controls-Popup__hidden-closeButton'}}
                    {{_popupItems.getCount() - 1 === index ? 'controls-Scroll_webkitOverflowScrollingTouch'}}
                    {{item.popupOptions.className}}
-                   {{(_mountedPopups && _mountedPopups.getIndex(item.id) === -1) || item.position.invisible ? 'ws-invisible'}}
+                   {{(_mountedPopups && _mountedPopups.getIndex(item.id) === -1) || item.position.invisible ? 'controls-Popup__react-hidden'}}
                    {{item.position.hidden ? 'controls-Popup__hidden'}}
                     {{item.position.zoom !== undefined ? 'controls-Zoom'}}"
                                            attr:style="z-index: {{item.currentZIndex}};
