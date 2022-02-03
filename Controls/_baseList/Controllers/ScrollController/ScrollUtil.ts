@@ -59,6 +59,7 @@ export interface IGetModeParams {
     virtualPageSize: number;
     scrolledToBackwardEdge: boolean;
     scrolledToForwardEdge: boolean;
+    portionedLoading: boolean;
 }
 
 export function getCalcMode(params: IGetModeParams): ICalcMode {
@@ -67,7 +68,9 @@ export function getCalcMode(params: IGetModeParams): ICalcMode {
     const addToEnd = params.newItemsIndex >= params.range.endIndex;
 
     let calcMode: ICalcMode;
-    if (params.itemsLoadedByTrigger) {
+    if (params.portionedLoading) {
+        calcMode = virtualPageIsFilled ? 'nothing' : 'shift';
+    } else if (params.itemsLoadedByTrigger) {
         calcMode = 'shift';
     } else if (params.scrolledToBackwardEdge) {
         calcMode = virtualPageIsFilled ? 'nothing' : 'extend';
@@ -75,7 +78,7 @@ export function getCalcMode(params: IGetModeParams): ICalcMode {
         if (addToEnd) {
             calcMode = 'shift';
         } else {
-            calcMode = !virtualPageIsFilled ? 'extend' : 'nothing';
+            calcMode = virtualPageIsFilled ? 'nothing' : 'extend';
         }
     } else {
         // список проскроллен не в начало и не в конец
