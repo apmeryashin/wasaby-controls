@@ -22,6 +22,7 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  headingFontSize: string;
  applyButtonCaption: string;
  applyButtonStyle?: TButtonStyle;
+ removeOutdatedFiltersFromHistory?: boolean;
 }
 
 /**
