@@ -1,5 +1,7 @@
 <ws:template name="scrollTpl">
-	<Controls._scroll.ListScrollContextProvider setScrollContainerViewMode="{{ _setScrollContainerViewMode }}">
+	<Controls._scroll.ListScrollContextProvider setScrollContainerViewMode="{{ _setScrollContainerViewMode }}"
+												scrollContainerViewMode="{{ _scrollContainerViewMode }}"
+												canHorizontalScroll="{{ _canHorizontalScroll() }}">
 		<div class="controls-Scroll-Container controls-Scroll controls_scroll_theme-{{ _options.theme }}">
 			<ws:partial template="{{_baseTemplate}}"
 						scope="{{_options}}"

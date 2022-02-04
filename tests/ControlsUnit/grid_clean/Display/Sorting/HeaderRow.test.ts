@@ -16,7 +16,8 @@ describe('Controls/grid_clean/Display/Sorting/HeaderRow', () => {
             getRightPadding: () => 's',
             isStickyHeader: () => false,
             hasColumnScroll: () => false,
-            isSticked: () => false
+            isSticked: () => false,
+            hasNewColumnScroll: () => false
         };
 
         const mockedHeaderModel = {

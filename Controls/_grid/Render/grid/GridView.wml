@@ -64,6 +64,7 @@
 						fixedWidth="{{ _options.fixedColumnsWidth }}"
 						scrollableWidth="{{ _options.viewportWidth - _options.fixedColumnsWidth }}"
 						contentWidth="{{ _options.contentWidth }}"
+						canHorizontalScroll="{{ _options.canHorizontalScroll }}"
 						stickyColumnsCount="{{ _options.stickyColumnsCount || 1 }}"
 						columnsLength="{{ _listModel.getColumnsEnumerator().getColumns().length }}"
 						scrollPositionChangedCallback="{{ _options.scrollPositionChangedCallback }}"

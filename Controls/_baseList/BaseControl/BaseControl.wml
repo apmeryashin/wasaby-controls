@@ -167,7 +167,8 @@
     </div>
 </ws:template>
 
-<div class="controls-BaseControl controls_list_theme-{{_options.theme}} controls_toggle_theme-{{_options.theme}}"
+<div class="controls-BaseControl controls_list_theme-{{_options.theme}} controls_toggle_theme-{{_options.theme}}
+			{{ _options.newColumnScroll ? 'controls-GridControl_withHorizontalScroll' }}"
      on:sortingChanged="_sortingChanged()"
      on:mouseenter="_mouseEnter()"
      on:mouseleave="_mouseLeave()"
