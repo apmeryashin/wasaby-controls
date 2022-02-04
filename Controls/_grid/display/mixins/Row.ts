@@ -18,6 +18,7 @@ import CheckboxCell from '../CheckboxCell';
 import ItemActionsCell from './../ItemActionsCell';
 import {TColspanCallback, TColspanCallbackResult, TColumnScrollViewMode} from './Grid';
 import {DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
+import {IRoundBorder} from 'Controls/interface';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/grid:ItemTemplate';
 
@@ -25,7 +26,8 @@ export interface IItemTemplateParams {
     highlightOnHover?: boolean;
     cursor?: 'default' | 'pointer';
     showItemActionsOnHover?: boolean;
-    hoverMode?: 'highlight' | 'border' | 'shadow';
+    shadowVisibility: 'visible'|'hidden'|'onhover';
+    borderVisibility: 'visible'|'hidden'|'onhover';
 
     // Deprecated, use cursor
     clickable?: boolean;
@@ -77,6 +79,7 @@ export default abstract class Row<T extends Model = Model> {
     protected _$backgroundStyle: string;
     protected _$isBottomSeparatorEnabled: boolean;
     protected _$isTopSeparatorEnabled: boolean;
+    protected _$roundBorder: IRoundBorder;
     protected _savedColumns: TColumns;
 
     protected constructor(options?: IOptions<T>) {
@@ -134,10 +137,21 @@ export default abstract class Row<T extends Model = Model> {
     getItemClasses(params: IItemTemplateParams): string {
         let itemClasses = `${this._getBaseItemClasses()} `
             + `${this._getCursorClasses(params.cursor, params.clickable)} `
-            + `${this._getHighlightClasses(params.hoverMode, params.highlightOnHover)}`;
+            + `${this._getItemHighlightClasses(params.highlightOnHover)}`;
+
+        if (params.borderVisibility && params.borderVisibility !== 'hidden') {
+            itemClasses += ` controls-Grid__row_border_${params.borderVisibility}`;
+        }
+        if (params.shadowVisibility && params.shadowVisibility !== 'hidden') {
+            itemClasses += ` controls-Grid__row_shadow_${params.shadowVisibility}`;
+        }
 
         if (params.showItemActionsOnHover !== false) {
             itemClasses += ' controls-ListView__item_showActions';
+        }
+
+        if (this._$roundBorder) {
+            itemClasses += ' ' + this.getRoundBorderClasses();
         }
 
         return itemClasses;
@@ -147,12 +161,18 @@ export default abstract class Row<T extends Model = Model> {
         return `controls-ListView__itemV controls-Grid__row controls-Grid__row_${this.getStyle()}`;
     }
 
-    protected _getHighlightClasses(hoverMode: 'highlight' | 'border' | 'shadow' = 'highlight',
-                                   templateHighlightOnHover?: boolean): string {
-        let classes = '';
-        if (templateHighlightOnHover !== false && !this.isEditing()) {
-            classes += ` controls-Grid__row_${hoverMode}OnHover_${this.getStyle()}`;
+    protected _getItemHighlightClasses(highlightOnHover?: boolean): string {
+        if (highlightOnHover !== false && !this.isEditing()) {
+            return `controls-Grid__row_highlightOnHover_${this.getStyle()}`;
         }
+        return '';
+    }
+
+    getRoundBorderClasses(): string {
+        let classes = `controls-Grid__row_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
+        classes += ` controls-Grid__row_roundBorder_topRight_${this.getTopRightRoundBorder()}`;
+        classes += ` controls-Grid__row_roundBorder_bottomLeft_${this.getBottomLeftRoundBorder()}`;
+        classes += ` controls-Grid__row_roundBorder_bottomRight_${this.getBottomRightRoundBorder()}`;
         return classes;
     }
 
@@ -924,6 +944,14 @@ export default abstract class Row<T extends Model = Model> {
     protected abstract _nextVersion(): void;
 
     abstract getFadedClass(): string;
+
+    abstract getTopLeftRoundBorder(): string;
+
+    abstract getBottomLeftRoundBorder(): string;
+
+    abstract getTopRightRoundBorder(): string;
+
+    abstract getBottomRightRoundBorder(): string;
 
     //endregion
 }

@@ -15,6 +15,8 @@ export default class extends Control {
     protected _hoverBackground: string = 'primary';
     protected _hoverMode: string = 'highlight';
     protected _roundBorder: IRoundBorder;
+    protected _shadowVisibility: 'visible' | 'hidden' | 'onhover' = 'hidden';
+    protected _borderVisibility: 'visible' | 'hidden' | 'onhover' = 'hidden';
 
     protected _roundBorderVariants = ['null', 'xs', 's', 'm', 'l', 'xl', '3xs', '2xs'];
 
@@ -32,6 +34,14 @@ export default class extends Control {
 
     protected _setHoverBackground(e: SyntheticEvent, value: string): void {
         this._hoverBackground = value;
+    }
+
+    protected _setShadowVisibility(e: SyntheticEvent, value: string): void {
+        this._shadowVisibility = value;
+    }
+
+    protected _setBorderVisibility(e: SyntheticEvent, value: string): void {
+        this._borderVisibility = value;
     }
 
     protected _setHoverMode(e: SyntheticEvent, value: string): void {

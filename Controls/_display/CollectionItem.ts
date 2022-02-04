@@ -912,7 +912,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @param cursor - курсор мыши
      * @param backgroundColorStyle - стиль background
      * @param showItemActionsOnHover - показывать или нет операции над записью по ховеру
-     * @param hoverMode стиль при наведении на запись
+     * @param shadowVisibility Стиль тени вокруг записи
+     * @param borderVisibility Стиль рамки вокруг записи
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
@@ -920,7 +921,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
                       cursor: string = 'pointer',
                       backgroundColorStyle?: string,
                       showItemActionsOnHover: boolean = true,
-                      hoverMode?: 'highlight' | 'border' | 'shadow'): string {
+                      shadowVisibility: 'visible'|'hidden'|'onhover' = 'hidden',
+                      borderVisibility: 'visible'|'hidden'|'onhover' = 'hidden'): string {
+        const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
         const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
 
         let wrapperClasses = '';
@@ -936,8 +939,15 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         wrapperClasses += ' js-controls-ListView__measurableContainer';
         wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${this.getStyle()}`;
-
-        wrapperClasses += this._getHighlightClasses(hoverMode);
+        if (templateHighlightOnHover && !this.isEditing()) {
+            wrapperClasses += ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}`;
+        }
+        if (borderVisibility && borderVisibility !== 'hidden') {
+            wrapperClasses += ` controls-ListView__item_border_${borderVisibility}`;
+        }
+        if (shadowVisibility && shadowVisibility !== 'hidden') {
+            wrapperClasses +=  ` controls-ListView__item_shadow_${shadowVisibility}`;
+        }
 
         if (this.isEditing()) {
             wrapperClasses += ` controls-ListView__item_editing controls-ListView__item_background-editing_${editingBackgroundStyle}`;
@@ -957,16 +967,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
 
         return wrapperClasses;
-    }
-
-    protected _getHighlightClasses(hoverMode: 'highlight' | 'border' | 'shadow' = 'highlight',
-                                   templateHighlightOnHover?: string): string {
-        let classes = '';
-        if (templateHighlightOnHover && !this.isEditing()) {
-            const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
-            classes += ` controls-ListView__item_${hoverMode}OnHover_${hoverBackgroundStyle}`;
-        }
-        return classes;
     }
 
     /**

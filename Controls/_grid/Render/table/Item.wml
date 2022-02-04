@@ -4,7 +4,8 @@
         'cursor': cursor,
         'clickable': clickable,
         'showItemActionsOnHover': showItemActionsOnHover,
-        'hoverMode': hoverMode
+        'shadowVisibility': shadowVisibility,
+        'borderVisibility': borderVisibility
     }) }}">
     <ws:for data="gridColumn in item.getColumns()">
         <td attr:class="{{ gridColumn.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"

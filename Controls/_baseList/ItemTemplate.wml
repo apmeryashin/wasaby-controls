@@ -60,7 +60,7 @@
     <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
     <Controls.scroll:StickyBlock
             attr:data-qa="{{ (item || itemData).listElementName }}"
-            attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover) }}"
+            attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover, shadowVisibility, borderVisibility) }}"
             position="{{item.getStickyHeaderPosition(stickyCallback)}}"
             backgroundStyle="{{style + '_sticked'}}"
             mode="replaceable"
@@ -70,7 +70,7 @@
 </ws:if>
 <ws:else>
     <div attr:data-qa="{{ (item || itemData).listElementName }}"
-         attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover) }}">
+         attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover, shadowVisibility, borderVisibility) }}">
         <ws:partial template="localItemTemplateContent"/>
     </div>
 </ws:else>
