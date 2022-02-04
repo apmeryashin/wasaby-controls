@@ -11,7 +11,6 @@ import IValueOptions from 'Controls/_date/interface/IValue';
 import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
 import 'css!Controls/dateRange';
 import 'css!Controls/CommonClasses';
-import {EventUtils} from 'UI/Events';
 
 export interface ILinkView extends IControlOptions, IFontColorStyleOptions, ICaptionOptions, IValueOptions {
 }
@@ -20,7 +19,6 @@ class LinkView<T extends ILinkView> extends Control<T> {
     protected _template: TemplateFunction = componentTmpl;
     protected _caption: string = '';
     protected _fontColorStyle: string = null;
-    protected _proxyEvent: Function = EventUtils.tmplNotify;
 
     protected _resetButtonVisible: boolean;
 

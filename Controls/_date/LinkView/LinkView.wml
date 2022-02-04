@@ -1,7 +1,6 @@
 <div class="controls-DateLinkView controls_shortDatePicker_theme-{{_options.theme}}">
     <ws:if data="{{ !_options.readOnly }}">
         <Controls.buttons:Button
-                on:keyDown="_proxyEvent('keyDown')"
                 on:mousedown="_mouseDownHandler()"
                 attr:data-qa="DateLinkView__template"
                 attr:class="controls-DateLinkView__button-value controls-DateLinkView__value_fontWeight-{{ _options.fontWeight }}"
