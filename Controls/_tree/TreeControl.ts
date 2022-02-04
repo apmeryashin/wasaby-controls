@@ -1285,7 +1285,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             const markedRecord = this.getViewModel().getItemBySourceKey(markedKey);
 
             if (markedRecord) {
-                if (markedRecord.isExpanded()) {
+                if (markedRecord.isExpanded && markedRecord.isExpanded()) {
                     // Узел раскрыт.
                     return markedRecord.contents.getKey();
                 } else if (!markedRecord.getParent().isRoot()) {
