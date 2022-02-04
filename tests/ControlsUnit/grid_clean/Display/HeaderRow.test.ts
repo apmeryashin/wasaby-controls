@@ -19,6 +19,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false,
                 isFullGridSupport: () => true
             };
@@ -82,6 +83,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false,
                 isFullGridSupport: () => true
             };
@@ -129,6 +131,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 'default',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false,
                 isFullGridSupport: () => true
             };
@@ -187,6 +190,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false,
                 isFullGridSupport: () => true
             };
@@ -246,6 +250,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false,
                 isFullGridSupport: () => true
             };
@@ -306,6 +311,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                 getRightPadding: () => 's',
                 isStickyHeader: () => false,
                 hasColumnScroll: () => false,
+                hasNewColumnScroll: () => false,
                 isSticked: () => false,
                 isFullGridSupport: () => true
             };
@@ -366,6 +372,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                     getRightPadding: () => 's',
                     isStickyHeader: () => false,
                     hasColumnScroll: () => false,
+                    hasNewColumnScroll: () => false,
                     isFullGridSupport: () => true
                 };
 

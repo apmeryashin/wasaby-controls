@@ -102,11 +102,23 @@ export default class HeaderRow extends Row<null> {
     }
 
     protected _initializeColumns(): void {
+        // TODO: Уйдет при выпиле старого горизонтального скролла, в ХФ никак не меняем старое поведение.
+        const columnsMap = (cb: Function) => {
+            if (this._$owner.hasNewColumnScroll()) {
+                return this._$owner.getColumnsEnumerator().getIndexes(true).map(
+                    (index) => cb(this._$columnsConfig[index], index)
+                );
+            } else {
+                return this._$columnsConfig.map(cb);
+            }
+        };
+
         if (this._$columnsConfig) {
             this._$columnItems = [];
             const factory = this.getColumnsFactory();
             let totalColspan = 0;
-            this._$columnItems = this._$columnsConfig.map((column, index) => {
+
+            this._$columnItems = columnsMap((column, index) => {
                 const isFixed =
                     (this.isMultiline() ? (column.startColumn - 1) : totalColspan) < this.getStickyColumnsCount();
                 totalColspan += (column.endColumn - column.startColumn) || 1;

@@ -78,13 +78,13 @@ export class GridControl extends BaseControl<IGridControlOptions> {
 
     _observeScrollHandler(...args: [SyntheticEvent<Event>, string, IScrollParams]): void {
         super._observeScrollHandler.apply(this, args);
-        if (!this._listVirtualColumnScrollController) {
-            return;
-        }
         const [, eventName, params] = args;
         switch (eventName) {
             case 'horizontalScrollMoveSync':
-                this._listVirtualColumnScrollController.scrollPositionChange(params.scrollLeft);
+                this._listVirtualColumnScrollController?.scrollPositionChange(params.scrollLeft);
+                break;
+            case 'horizontalViewportResize':
+                this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
                 break;
         }
     }
