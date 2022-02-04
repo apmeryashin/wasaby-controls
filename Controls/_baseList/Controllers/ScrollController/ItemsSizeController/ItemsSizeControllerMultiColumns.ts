@@ -29,14 +29,14 @@ export default class ItemsSizeControllerMultiColumns extends ItemsSizeController
         });
 
         // Т.к. мы обновили размеры в начале массива, то у последующих элементов нужно обновить offset
-        if (itemsRange.endIndex < this._itemsSizes.length) {
-                    const lastUpdatedItem = this._itemsSizes[itemsRange.endIndex - 1];
-                    const firstNotUpdatedItem = this._itemsSizes[itemsRange.endIndex];
-                    const updatedItemsOffset = lastUpdatedItem.offset + lastUpdatedItem.size
-                        - firstNotUpdatedItem.offset;
-                    for (let i = itemsRange.endIndex; i < this._itemsSizes.length; i++) {
-                        this._itemsSizes[i].offset += updatedItemsOffset;
-                    }
-                }
+        if (itemsRange.endIndex > 0 && itemsRange.endIndex < this._itemsSizes.length) {
+            const lastUpdatedItem = this._itemsSizes[itemsRange.endIndex - 1];
+            const firstNotUpdatedItem = this._itemsSizes[itemsRange.endIndex];
+            const updatedItemsOffset = lastUpdatedItem.offset + lastUpdatedItem.size
+                - firstNotUpdatedItem.offset;
+            for (let i = itemsRange.endIndex; i < this._itemsSizes.length; i++) {
+                this._itemsSizes[i].offset += updatedItemsOffset;
+            }
+        }
     }
 }
