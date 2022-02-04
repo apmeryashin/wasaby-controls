@@ -3995,8 +3995,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     }
                 }
 
-                // Если прислали новый рекордсет, то сохраняем позицию скролла
-                if (newOptions.items && newOptions.items !== this._items) {
+                // Если прислали новый рекордсет, то сохраняем позицию скролла.
+                // Пока что от прикладников в ItemsView было желание только сохранять скролл.
+                // Видимо придется добавить опцию, когда потребуется другое поведение.
+                if (newOptions.items && newOptions.items !== this._items && !newOptions.source) {
                     this._listVirtualScrollController.enableKeepScrollPosition();
                 }
 
