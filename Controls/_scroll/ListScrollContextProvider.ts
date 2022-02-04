@@ -6,10 +6,15 @@ interface IOptions extends IControlOptions, IListScrollContextOptions {
 }
 
 export default class ListScrollContextProvider extends Control<IOptions> {
-    _template: TemplateFunction = template;
+    protected _template: TemplateFunction = template;
+    private _scrollContext: ListScrollContext;
 
     protected _beforeMount(options: IOptions): void {
         this._scrollContext = new ListScrollContext(options);
+    }
+
+    protected _beforeUpdate(options?: IOptions): void {
+        this._scrollContext.updateOptions(options);
     }
 
     _getChildContext(): object {
