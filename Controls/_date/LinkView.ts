@@ -1,12 +1,10 @@
 import IDateLinkView from 'Controls/_date/interface/ILinkView';
 import componentTmpl = require('wml!Controls/_date/LinkView/LinkView');
-import {Logger} from 'UI/Utils';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFontColorStyleOptions} from 'Controls/interface';
 import {isLeftMouseButton} from 'Controls/popup';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from 'Types/entity';
-import dateControlsUtils from '../_date/Utils';
 import {Range as dateRangeUtils} from 'Controls/dateUtils';
 import ICaptionOptions from 'Controls/_date/interface/ICaption';
 import IValueOptions from 'Controls/_date/interface/IValue';

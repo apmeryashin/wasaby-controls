@@ -2,6 +2,7 @@
         name="linkView"
         scope="{{_options}}"
         value="{{ _options.value }}"
+        on:keyDown="_keyDownHandler()"
         on:linkClick="openPopup()"
         on:valueChanged="_rangeChangedHandler()"
         on:mouseenter="_mouseEnterHandler()"
