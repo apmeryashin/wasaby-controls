@@ -13,6 +13,7 @@ export default class extends Control {
         this._multiplyColumns(Countries.getHeader(), 20, 'pseudo', headerTemplate);
     protected _columns: IColumn[] =
         this._multiplyColumns(Countries.getColumnsWithWidths(), 20, 'pseudo', columnTemplate);
+    protected _stickyColumnsCount: number = 1;
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({

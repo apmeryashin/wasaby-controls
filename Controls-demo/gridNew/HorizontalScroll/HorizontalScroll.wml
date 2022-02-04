@@ -1,14 +1,28 @@
+<ws:template name="grid">
+		<Controls.scroll:Container attr:style="width: 600px; height: 400px"
+								   scrollOrientation="verticalHorizontal">
+			<Controls.grid:View
+				keyProperty="key"
+				source="{{_viewSource}}"
+				header="{{_header}}"
+				columns="{{_columns}}"
+				backgroundStyle="default"
+				newColumnScroll="{{ true }}"
+				virtualColumnScrollConfig="{{ virtualColumnScrollConfig }}"
+				stickyColumnsCount="{{ _stickyColumnsCount }}"/>
+		</Controls.scroll:Container>
+</ws:template>
+
 <div class="controlsDemo__wrapper">
-    <Controls.scroll:Container attr:style="width: 600px; height: 400px"
-							   scrollOrientation="verticalHorizontal">
-        <Controls.grid:View
-                keyProperty="key"
-                source="{{_viewSource}}"
-                columns="{{_columns}}"
-                backgroundStyle="default"
-                newColumnScroll="{{ true }}"
-                stickyColumnsCount="{{1}}">
-            <ws:virtualColumnScrollConfig pageSize="{{ 30 }}"/>
-        </Controls.grid:View>
-    </Controls.scroll:Container>
+	<div class="controlsDemo__flexRow">
+		<div>
+			<div class="controls-text-label">Без виртуализации</div>
+			<ws:partial template="grid" attr:class="controlsDemo__mr4" />
+		</div>
+
+		<div>
+			<div class="controls-text-label">С виртуализацией</div>
+			<ws:partial template="grid" virtualColumnScrollConfig="{{ {'pageSize': 30} }}" />
+		</div>
+	</div>
 </div>
