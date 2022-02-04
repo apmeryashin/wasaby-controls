@@ -67,7 +67,7 @@ export {SearchSeparator};
 export {ANIMATION_STATE, IItemPadding} from './_display/interface/ICollection';
 export {IEditableCollection} from './_display/interface/IEditableCollection';
 export {IEditableCollectionItem} from './_display/interface/IEditableCollectionItem';
-export {ICollectionItem, TMarkerClassName, TRowSeparatorVisibility} from './_display/interface/ICollectionItem';
+export {ICollectionItem, TMarkerClassName, TRowSeparatorVisibility, TBorderVisibility, TShadowVisibility} from './_display/interface/ICollectionItem';
 export {IBaseCollection, TItemKey} from './_display/interface';
 
 import * as GridLadderUtil from './_display/utils/GridLadderUtil';

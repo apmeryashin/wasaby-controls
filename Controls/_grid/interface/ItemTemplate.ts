@@ -44,3 +44,17 @@
  * @remark
  * {@link Controls/_grid/display/interface/IColumn#fontWeight Насыщенность шрифта ячейки} имеет больший приоритет, чем Насыщенность шрифта записи.
  */
+
+/**
+ * @name Controls/_grid/interface/ItemTemplate#borderVisibility
+ * @cfg {Controls/display:TBorderVisibility.typedef} Видимость рамки вокруг записи.
+ * @remark применяется в списках с отступами между записями.
+ * @default "hidden"
+ */
+
+/**
+ * @name Controls/_grid/interface/ItemTemplate#shadowVisibility
+ * @cfg {Controls/display:TShadowVisibility.typedef} Видимость тени вокруг записи.
+ * @remark применяется в списках с отступами между записями.
+ * @default "hidden"
+ */

@@ -852,6 +852,10 @@
    }
 }
 
+.controls-ListView__item_border_onhover {
+   border: 1px solid var(--border-color);
+}
+
 .controls-ListView__item_border_visible,
 .ws-is-hover .controls-ListView__item_border_onhover:hover {
    border: 1px solid var(--border-color);
@@ -859,7 +863,7 @@
 
 .controls-ListView__item_shadow_visible,
 .ws-is-hover .controls-ListView__item_shadow_onhover:hover {
-   box-shadow: 0 2px 6px 0 rgb(0, 0, 0 / 0.24);
+   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.24);
 }
 
 //TODO это должно уехать в BaseControl после задачи https://online.sbis.ru/opendoc.html?guid=92bedbf7-6038-4c1f-826e-b096b4cddd6d

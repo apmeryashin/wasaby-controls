@@ -5,6 +5,7 @@ import { IColumn } from 'Controls/grid';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 import {IRoundBorder, TRoundBorderSize} from 'Controls/interface';
+import {TBorderVisibility, TShadowVisibility} from 'Controls/display';
 
 const MAXINDEX = 5;
 
@@ -15,8 +16,8 @@ export default class extends Control {
     protected _hoverBackground: string = 'primary';
     protected _hoverMode: string = 'highlight';
     protected _roundBorder: IRoundBorder;
-    protected _shadowVisibility: 'visible' | 'hidden' | 'onhover' = 'hidden';
-    protected _borderVisibility: 'visible' | 'hidden' | 'onhover' = 'hidden';
+    protected _shadowVisibility: TShadowVisibility = 'hidden';
+    protected _borderVisibility: TBorderVisibility = 'hidden';
 
     protected _roundBorderVariants = ['null', 'xs', 's', 'm', 'l', 'xl', '3xs', '2xs'];
 

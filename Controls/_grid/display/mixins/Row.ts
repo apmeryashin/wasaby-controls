@@ -8,8 +8,8 @@ import {
     Collection,
     ICollectionItemOptions as IBaseOptions, IEditingConfig, IItemPadding,
     ILadderConfig,
-    IStickyLadderConfig,
-    TLadderElement, TMarkerClassName
+    IStickyLadderConfig, TBorderVisibility,
+    TLadderElement, TMarkerClassName, TShadowVisibility
 } from 'Controls/display';
 import Cell, {IOptions as ICellOptions} from '../Cell';
 import {TResultsPosition} from '../ResultsRow';
@@ -26,8 +26,8 @@ export interface IItemTemplateParams {
     highlightOnHover?: boolean;
     cursor?: 'default' | 'pointer';
     showItemActionsOnHover?: boolean;
-    shadowVisibility: 'visible'|'hidden'|'onhover';
-    borderVisibility: 'visible'|'hidden'|'onhover';
+    shadowVisibility: TShadowVisibility;
+    borderVisibility: TBorderVisibility;
 
     // Deprecated, use cursor
     clickable?: boolean;

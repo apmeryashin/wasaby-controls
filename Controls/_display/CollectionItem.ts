@@ -15,7 +15,7 @@ import {isEqual} from 'Types/object';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 import {ANIMATION_STATE, ICollection, ISourceCollection, IItemPadding} from './interface/ICollection';
-import {ICollectionItem, TMarkerClassName} from './interface/ICollectionItem';
+import {ICollectionItem, TBorderVisibility, TMarkerClassName, TShadowVisibility} from './interface/ICollectionItem';
 import IMarkable from './interface/IMarkable';
 import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
@@ -921,8 +921,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
                       cursor: string = 'pointer',
                       backgroundColorStyle?: string,
                       showItemActionsOnHover: boolean = true,
-                      shadowVisibility: 'visible'|'hidden'|'onhover' = 'hidden',
-                      borderVisibility: 'visible'|'hidden'|'onhover' = 'hidden'): string {
+                      shadowVisibility: TShadowVisibility = 'hidden',
+                      borderVisibility: TBorderVisibility = 'hidden'): string {
         const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
         const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
 

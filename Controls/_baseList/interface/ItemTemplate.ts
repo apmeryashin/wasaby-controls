@@ -1,4 +1,4 @@
-import {TItemBaseLine} from 'Controls/display';
+import {TBorderVisibility, TItemBaseLine, TShadowVisibility} from 'Controls/display';
 
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/list:View плоском списке}.
@@ -47,4 +47,20 @@ export default interface IItemTemplateOptions {
     * @default none
     */
    baseline?: TItemBaseLine;
+
+   /**
+    * @name Controls/_list/interface/ItemTemplate#borderVisibility
+    * @cfg {Controls/display:TBorderVisibility.typedef} Видимость рамки вокруг записи.
+    * @remark применяется в списках с отступами между записями.
+    * @default "hidden"
+    */
+   borderVisibility?: TBorderVisibility;
+
+   /**
+    * @name Controls/_list/interface/ItemTemplate#shadowVisibility
+    * @cfg {Controls/display:TShadowVisibility.typedef} Видимость тени вокруг записи.
+    * @remark применяется в списках с отступами между записями.
+    * @default "hidden"
+    */
+   shadowVisibility?: TShadowVisibility;
 }

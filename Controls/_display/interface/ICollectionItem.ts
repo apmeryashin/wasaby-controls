@@ -11,6 +11,24 @@ import {ICollection} from './ICollection';
 export type TRowSeparatorVisibility = 'all'|'items'|'edges';
 
 /**
+ * @typedef {String} Controls/display:TBorderVisibility
+ * Варианты значений для опции видимочти рамки вокруг записи (borderVisibility)
+ * @variant hidden рамка скрыта
+ * @variant visible рамка показана всегда
+ * @variant onhover рамка показывается по ховеру на запись
+ */
+export type TBorderVisibility = 'hidden'|'visible'|'onhover';
+
+/**
+ * @typedef {String} Controls/display:TShadowVisibility
+ * Варианты значений для опции видимочти тени вокруг записи (shadowVisibility)
+ * @variant hidden тень скрыта
+ * @variant visible тень показана всегда
+ * @variant onhover тень показывается по ховеру на запись
+ */
+export type TShadowVisibility = 'hidden'|'visible'|'onhover';
+
+/**
  * Варианты настройки размеров маркера
  * @typedef {String} Controls/_display/interface/ICollectionItem/TMarkerClassName
  * @variant default Маркер по высоте растягивается на весь контейнер записи.
