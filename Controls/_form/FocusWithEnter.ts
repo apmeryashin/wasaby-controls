@@ -16,7 +16,11 @@ export default class FocusWithEnter extends Control<IControlOptions> {
     _template: TemplateFunction = template;
 
     protected _beforeMount(options: IControlOptions, context: object): void {
-        if (context.workByKeyboard) {
+        // Есть проблема, когда передается не класс, а инстанс класса. С чем это связано не понятно.
+        // Поэтому на всякий случай делаем дополнительную проверку
+        // todo удалить после перехода на реакт
+        // https://online.sbis.ru/opendoc.html?guid=f0b77590-36da-435c-81e6-a71ee6dc4f95
+        if (context.workByKeyboard && typeof context.workByKeyboard !== 'function') {
             context.workByKeyboard.setStatus(true);
         }
     }

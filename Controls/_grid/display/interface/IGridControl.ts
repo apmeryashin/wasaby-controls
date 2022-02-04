@@ -574,6 +574,43 @@ export interface IGridControl extends IList {
  */
 
 /**
+ * @typedef {String} Controls/_grid/display/interface/IGridControl/TEmptyTemplateHeight
+ * @description Допустимые значения для опции {@link height}.
+ * @variant auto Пустое представление занимает столько места, сколько занимает его содержимое.
+ * @variant stretch Строка таблицы с пустым представлением принудительно растягивается на максимальную высоту.
+ */
+
+/**
+ * @typedef {Object} Controls/_grid/display/interface/IGridControl/TEmptyTemplateOptions
+ * @description Объект с опциями для настройки пустого представления, сконфигурированного через {@link Controls/_grid/display/interface/IGridControl#emptyTemplate emptyTemplate}.
+ * @property {Controls/_grid/display/interface/IGridControl/TEmptyTemplateHeight.typedef} [height=stretch] настройка высоты пустого представления
+ */
+
+/**
+ * @name Controls/_grid/display/interface/IGridControl#emptyTemplateOptions
+ * @cfg {Controls/_grid/display/interface/IGridControl/TEmptyTemplateOptions.typedef} Объект с опциями для настройки пустого представления, сконфигурированного через {@link Controls/_grid/display/interface/IGridControl#emptyTemplate emptyTemplate}.
+ * @description
+ * Позволяет передать дополнительные настройки в шаблон пустого представления, которые будут доступны в области видимости шаблона.
+ * Также позволяет задать параметр height для настройки растягивания пустого представления по высоте.
+ * @remark
+ * По умолчанию при пустом представлении таблица растягивается по высоте родительского контейнера. Пустое представление занимает максимальную высоту. При помощи параметра height можно изменить это поведение.
+ * @example
+ * <pre class="brush: html; highlight: [2]">
+ * <!-- WML -->
+ * <Controls/grid:View source="{{_viewSource}}">
+ *     <ws:emptyTemplateOptions height="auto"/>
+ *     <ws:emptyTemplate>
+ *         <ws:partial template="Controls/grid:EmptyTemplate">
+ *             <ws:contentTemplate>No data available!</ws:contentTemplate>
+ *          /ws:partial>
+ *     </ws:emptyTemplate>
+ * </Controls/grid:View>
+ * </pre>
+ * @default undefined
+ * @see itemEditorTemplate
+ */
+
+/**
  * @name Controls/_grid/display/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Видимость кнопки, которая отображается в первой колонке при наведении курсора.
  * @remark

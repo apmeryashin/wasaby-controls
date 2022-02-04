@@ -199,6 +199,11 @@ export abstract class AbstractObserversController {
     }
 
     checkTriggersVisibility(): void {
+        // если список скрыт, то не нужно проверять видимость триггеров
+        if (!this._listContainer || !this._listContainer.offsetParent) {
+            return;
+        }
+
         // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
         if (this._isTriggerVisible('forward')) {
             this._intersectionObserverHandler('bottomIn');

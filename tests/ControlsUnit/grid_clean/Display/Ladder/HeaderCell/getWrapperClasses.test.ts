@@ -20,7 +20,8 @@ describe('Controls/grid_clean/Display/Ladder/HeaderCell/getWrapperClasses', () =
                 getLeftPadding: () => 's',
                 getRightPadding: () => 's',
                 getColumnsCount: () => 1,
-                hasItemActionsSeparatedCell: () => false
+                hasItemActionsSeparatedCell: () => false,
+                isFullGridSupport: () => true
             } as any,
             column: headerColumn,
             isLadderCell: true

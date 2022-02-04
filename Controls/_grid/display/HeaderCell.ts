@@ -213,6 +213,14 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
 
         const isMultilineHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
+        const isFullGridSupport = this._$owner.isFullGridSupport();
+
+        // При полной поддержке Grid фон задаётся через StickyBlock, поэтому чтобы избежать установки двух
+        // классов фона, цвет фона в заголовках убирали: https://online.sbis.ru/doc/243e3789-f3f0-4aa9-a9d3-9c362703abd2
+        // Но в IE ячейки не врапятся в StickyBlock, поэтому специально для IE делаем фон ячеек.
+        if (isStickySupport && !isFullGridSupport) {
+            wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
+        }
 
         if (isMultilineHeader) {
             wrapperClasses += ' controls-Grid__multi-header-cell_min-height';

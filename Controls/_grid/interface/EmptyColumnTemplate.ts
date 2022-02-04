@@ -4,6 +4,7 @@
  * @class Controls/_grid/interface/EmptyColumnTemplate
  * @author Авраменко А.С.
  * @see Controls/grid:View#emptyTemplateColumns
+ * @see Controls/grid:View#emptyTemplateOptions
  * @see Controls/grid:View
  * @see Controls/grid:EmptyTemplate
  * @example

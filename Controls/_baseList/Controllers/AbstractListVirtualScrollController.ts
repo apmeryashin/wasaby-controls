@@ -70,6 +70,8 @@ export interface IEdgeItemCalculatingParams {
 
 export type IScrollParam = number | 'top' | 'bottom' | 'pageUp' | 'pageDown';
 
+export type IScrollOnReset = 'reset' | 'keep' | 'restore';
+
 export interface IDoScrollParams {
     scrollParam: IScrollParam;
 }
@@ -152,7 +154,7 @@ export abstract class AbstractListVirtualScrollController<
     private _activeElementKey: CrudEntityKey;
     private _initialScrollPosition: IInitialScrollPosition;
     private readonly _itemsContainerUniqueSelector: string;
-    private _keepScrollPosition: boolean = false;
+    private _scrollOnReset: IScrollOnReset = 'reset';
     protected _scrollPosition: number;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
@@ -243,6 +245,9 @@ export abstract class AbstractListVirtualScrollController<
 
     setCollection(collection: Collection): void {
         this._initCollection(collection);
+        if (this._scrollController && this._collection) {
+            this.resetItems();
+        }
     }
 
     setItemsContainer(itemsContainer: HTMLElement): void {
@@ -412,11 +417,23 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     enableKeepScrollPosition(): void {
-        this._keepScrollPosition = true;
+        this._scrollOnReset = 'keep';
     }
 
     disableKeepScrollPosition(): void {
-        this._keepScrollPosition = false;
+        if (this._scrollOnReset === 'keep') {
+            this._scrollOnReset = 'reset';
+        }
+    }
+
+    enableRestoreScrollPosition(): void {
+        this._scrollOnReset = 'restore';
+    }
+
+    disableRestoreScrollPosition(): void {
+        if (this._scrollOnReset === 'restore') {
+            this._scrollOnReset = 'reset';
+        }
     }
 
     contentResized(contentSize: number): void {
@@ -467,7 +484,7 @@ export abstract class AbstractListVirtualScrollController<
         // Не нужно сбрасывать скролл, если список не был проскроллен.
         // Т.к. из-за вызова скролла сжимается графическая шапка.
         // Не нужно сбрасывать скролл, если будем скроллить к активному элементу.
-        this._shouldResetScrollPosition = !this._keepScrollPosition
+        this._shouldResetScrollPosition = this._scrollOnReset === 'reset'
             && !!this._scrollPosition
             && !this._activeElementKey;
         const totalCount = this._collection.getCount();
@@ -478,7 +495,7 @@ export abstract class AbstractListVirtualScrollController<
         // с текущего startIndex, если собираемся оставить прежнюю позицию скролла,
         // с индекса активного элемента, если он задан
         // с нуля в остальных случаях
-        const startIndex = this._keepScrollPosition
+        const startIndex = this._scrollOnReset === 'keep'
             ? this._collection.getStartIndex()
             : (activeIndex !== -1 ? activeIndex : 0);
         this._scrollController.resetItems(totalCount, startIndex);
@@ -531,11 +548,9 @@ export abstract class AbstractListVirtualScrollController<
      */
     scrollToPage(direction: IDirection): Promise<CrudEntityKey> {
         const edgeItem = this._scrollController.getEdgeVisibleItem({direction});
-        if (edgeItem && this._scrollController.getScrollToPageMode(edgeItem.index) === 'edgeItem') {
-            const item = this._collection.at(edgeItem.index);
-            const itemKey = item.getContents().getKey();
+        if (edgeItem && this._scrollController.getScrollToPageMode(edgeItem.key) === 'edgeItem') {
             const scrollPosition = direction === 'forward' ? 'top' : 'bottom';
-            return this.scrollToItem(itemKey, scrollPosition, true).then(() => this._getFirstVisibleItemKey());
+            return this.scrollToItem(edgeItem.key, scrollPosition, true).then(() => this._getFirstVisibleItemKey());
         } else {
             const promise = new Promise<void>((resolver) => this._scrollCompletedCallback = resolver);
             this._doScrollUtil(direction === 'forward' ? 'pageDown' : 'pageUp');
@@ -610,9 +625,7 @@ export abstract class AbstractListVirtualScrollController<
         const scrollControllerOptions = this._getScrollControllerOptions(options);
         this._scrollController = new ScrollController(scrollControllerOptions);
 
-        const activeElementIndex = this._collection.getIndexByKey(this._activeElementKey);
-        const startIndex = activeElementIndex !== -1 ? activeElementIndex : 0;
-        this._scrollController.resetItems(scrollControllerOptions.totalCount, startIndex);
+        this.resetItems();
     }
 
     protected _getScrollControllerOptions(options: TOptions): IScrollControllerOptions {
@@ -674,8 +687,20 @@ export abstract class AbstractListVirtualScrollController<
         };
     }
 
-    private _indexesInitializedCallback(range: IItemsRange): void {
-        this._handleChangedIndexes(range, null);
+    private _indexesInitializedCallback(params: IIndexesChangedParams): void {
+        this._handleChangedIndexes(params.range, null, () => {
+            if (this._scrollOnReset === 'restore') {
+                this._scheduleScroll({
+                    type: 'calculateRestoreScrollParams',
+                    params: {
+                        range: params.oldRange,
+                        placeholders: params.oldPlaceholders,
+                        direction: 'backward'
+                    }
+                });
+                this.disableRestoreScrollPosition();
+            }
+        });
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
@@ -915,7 +940,8 @@ export abstract class AbstractListVirtualScrollController<
             .map((it) => {
                 const itemSize = {
                     size: it.getContents().get(this._itemSizeProperty),
-                    offset: 0
+                    offset: 0,
+                    key: it.itemKeyAttribute
                 };
 
                 if (!itemSize.size) {
@@ -934,11 +960,6 @@ export abstract class AbstractListVirtualScrollController<
 
         this._collection = collection;
         this._setCollectionIterator();
-
-        if (this._scrollController && this._collection) {
-            const startIndex = this._keepScrollPosition ? this._collection.getStartIndex() : 0;
-            this._scrollController.resetItems(this._collection.getCount(), startIndex);
-        }
     }
 
     protected _setCollectionIterator(): void {

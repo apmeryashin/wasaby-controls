@@ -1,3 +1,16 @@
+<ws:template name="CheckboxMarker">
+    <Controls._toggle.Checkbox.resources.CheckboxMarker
+            attr:class="controls-CheckboxMarker_inCheckbox"
+            value="{{_options.value}}"
+            triState="{{_options.triState}}"
+            contrastBackground="{{_options.contrastBackground}}"
+            checkboxStyle="{{_options.checkboxStyle}}"
+            resetValue="{{_options.resetValue}}"
+            horizontalPadding="{{_options.horizontalPadding}}"
+            size="{{_options.size}}"
+            on:keyup="_keyUpHandler()"/>
+</ws:template>
+
 <div class="controls_toggle_theme-{{_options.theme}} controls-Checkbox {{_highlightedOnFocus() ? 'controls-focused-item'}}">
     <div class="controls-invalid-container">
         <div on:click="_clickHandler()"
@@ -6,16 +19,9 @@
                     {{_options.value ? ' controls-Checked__checked'}}
                     {{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}"
              title="{{_options.tooltip}}">
-            <Controls._toggle.Checkbox.resources.CheckboxMarker
-                        attr:class="controls-CheckboxMarker_inCheckbox"
-                        value="{{_options.value}}"
-                        triState="{{_options.triState}}"
-                        contrastBackground="{{_options.contrastBackground}}"
-                        checkboxStyle="{{_options.checkboxStyle}}"
-                        resetValue="{{_options.resetValue}}"
-                        horizontalPadding="{{_options.horizontalPadding}}"
-                        size="{{_options.size}}"
-                        on:keyup="_keyUpHandler()"/>
+            <ws:if data="{{_options.captionPosition !== 'left'}}">
+                <ws:partial template="CheckboxMarker"/>
+            </ws:if>
             <ws:partial template="wml!Controls/_toggle/Checkbox/resources/CheckboxCaption"
                         readOnly="{{_options.value !== null && !_options.value ? _options.readOnly : false}}"
                         icon="{{_options.icon}}"
@@ -24,6 +30,9 @@
                         iconStyle="{{_options.iconStyle}}"
                         multiline="{{_options.multiline}}"
                         caption="{{_options.caption}}"/>
+            <ws:if data="{{_options.captionPosition === 'left'}}">
+                <ws:partial template="CheckboxMarker"/>
+            </ws:if>
         </div>
         <div class="{{_options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}"></div>
     </div>

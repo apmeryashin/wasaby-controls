@@ -71,6 +71,8 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 newItem.editorCaption = typeof item.caption !== undefined ? item.caption : item.group;
             }
             newItem.caption = '';
+            newItem.viewMode = isEqual(item.value, item.resetValue) && editorOptions?.extendedCaption ?
+                               'extended' : newItem.viewMode;
             newItem.editorOptions = {
                 ...editorOptions,
                 viewMode: item.viewMode,

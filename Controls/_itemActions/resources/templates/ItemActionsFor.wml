@@ -7,7 +7,9 @@
                      {{ actionMode === 'adaptive' ? 'controls-itemActionsV_action_adaptive' }}"
          on:mousedown="_onItemActionMouseDown(action, item)"
          on:mouseup="_onItemActionMouseUp(action, item)"
-         on:click="_onItemActionClick(action, item)">
+         on:click="_onItemActionClick(action, item)"
+         attr:tabindex="-1"
+         attr:ws-no-focus="true">
         <ws:partial
             template="Controls/buttons:ButtonTemplate"
             _viewMode="{{ action.viewMode }}"

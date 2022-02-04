@@ -174,6 +174,11 @@ export default abstract class Row<T extends Model = Model> {
         }
 
         classes += ' controls-GridView__checkbox';
+
+        if (!this.isSticked()) {
+            classes += ' controls-GridView__checkbox_relative';
+        }
+
         classes += ` controls-GridView__checkbox_position-${this.getOwner().getMultiSelectPosition()}`;
 
         classes += this.getFadedClass();

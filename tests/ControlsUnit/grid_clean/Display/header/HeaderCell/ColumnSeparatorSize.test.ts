@@ -30,7 +30,8 @@ describe('Controls/grid_clean/Display/header/HeaderCell/ColumnSeparatorSize', ()
             getEditingBackgroundStyle: () => 'default',
             isActive: () => false,
             getRowSeparatorSize: () => 's',
-            isStickyHeader: () => false
+            isStickyHeader: () => false,
+            isFullGridSupport: () => true
         } as undefined as GridCollection<Model>;
         return new GridHeader({
             columnsConfig: header,

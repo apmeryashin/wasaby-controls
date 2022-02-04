@@ -13,10 +13,11 @@
                                     on:drawItems="_onDrawItems()"
                                     itemsReadyCallback="{{_itemsReady}}"
                                     navigation="{{_options.navigation}}">
-                    <ws:virtualScrollConfig pageSize="{{100}}"/>
+                    <ws:virtualScrollConfig pageSize="{{100}}" mode="{{_virtualScrollMode}}"/>
                 </Controls.list:View>
             </Controls.scroll:Container>
         </ws:content>
     </Controls-demo.list_new.VirtualScroll.NavigationSwitcher.Index>
-    <a href="#" class="controls-text-link controlsDemo-addButton-virtual-scroll_autotest" on:click="_addItem()">Добавить запись в конец</a>
+    <a href="#" class="controls-text-link controlsDemo-addButton-virtual-scroll_autotest" on:click="_addItem()">Добавить запись в конец</a><br/>
+    <a href="#" class="controls-text-link controlsDemo-addButton-virtual-scroll_autotest" on:click="_toggleVirtualScrollMode()">Включить режим виртуального скролла {{_virtualScrollMode === 'hide' ? 'remove' : 'hide'}}</a>
 </div>

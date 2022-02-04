@@ -233,15 +233,13 @@ describe('Controls/filterPanel:ListEditor', () => {
 
         it('navigation is null', () => {
             const listEditor = getEditor();
-            const result = [
-                new Model({
-                    rawData: {
-                        id: 1,
-                        title: 'Test'
-                    },
-                    keyProperty: 'id'
-                })
-            ];
+            const result = new RecordSet({
+                rawData: [{
+                    id: 1,
+                    title: 'Test'
+                }],
+                keyProperty: 'id'
+            });
             listEditor._handleSelectorResult(result);
             assert.isNull(listEditor._navigation);
             assert.deepEqual(listEditor._filter, {id: [1]});
