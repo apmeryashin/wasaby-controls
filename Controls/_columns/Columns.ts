@@ -22,6 +22,7 @@ export default class Columns extends View { /** @lends Controls/_list/List.proto
     static getDefaultOptions(): object {
         return {
             disableVirtualScroll: true,
+            multiColumns: true,
             ...super.getDefaultOptions(),
             itemsContainerPadding: null
         };

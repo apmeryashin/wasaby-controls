@@ -14,7 +14,6 @@ import {Calculator, IActiveElementIndexChanged, ICalculatorBaseOptions, ICalcula
 import CalculatorWithoutVirtualization from 'Controls/_baseList/Controllers/ScrollController/CalculatorWithoutVirtualization';
 import {CrudEntityKey} from 'Types/source';
 import type {IEdgeItemCalculatingParams} from '../AbstractListVirtualScrollController';
-import ItemsSizeControllerWithoutVirtualization from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeControllerWithoutVirtualization';
 
 export interface IItemsRange {
     startIndex: number;
@@ -142,11 +141,8 @@ export class ScrollController {
         this._contentSize = options.contentSize;
 
         this._disableVirtualScroll = options.disableVirtualScroll;
-        const itemsSizeControllerConstructor = options.disableVirtualScroll ?
-            ItemsSizeControllerWithoutVirtualization :
-            options.itemsSizeControllerConstructor;
 
-        this._itemsSizesController = new itemsSizeControllerConstructor({
+        this._itemsSizesController = new options.itemsSizeControllerConstructor({
             itemsContainer: options.itemsContainer,
             itemsQuerySelector: options.itemsQuerySelector,
             totalCount: options.totalCount
