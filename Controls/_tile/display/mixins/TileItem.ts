@@ -103,6 +103,7 @@ interface ITileSize {
 
 /**
  * Миксин, который содержит логику отображения элемента в виде плитки.
+ * @public
  * @author Панихин К.А.
  */
 export default abstract class TileItem<T extends Model = Model> {
