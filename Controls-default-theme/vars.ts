@@ -56,6 +56,7 @@ export default {
     '--unaccented_background-color': '#f8f8f8',
     '--unaccented_hover_background-color': '#f5f5f5',
     '--unaccented_active_background-color': '#f2f2f2',
+    '--active_background-color': '#f2f2f2',
 
     '--pale_contrast_background-color': '#f2f3f3',
     '--pale_border-color': '#EBEDF0',
