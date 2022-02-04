@@ -2,16 +2,16 @@
     <Controls-demo.gridNew.DemoLayout.Index>
         <ws:content>
             <Controls.grid:View
-                    useTableInOldBrowsers="{{true}}"
+                    useTableInOldBrowsers="{{ true }}"
                     keyProperty="key"
-                    source="{{_viewSource}}"
-                    hoverBackgroundStyle="{{_hoverBackground}}"
-                    columns="{{_columns}}">
+                    source="{{ _viewSource }}"
+                    columns="{{ _columns }}"
+                    roundBorder="{{ _roundBorder }}">
                 <ws:itemTemplate>
                     <ws:partial template="Controls/grid:ItemTemplate"
                                 scope="{{ _options }}"
                                 hoverMode="{{ _hoverMode }}"
-                                hoverBackgroundStyle="{{itemTemplate.item.contents.get('population') > 1000000000 ? 'default'}}"/>
+                                hoverBackgroundStyle="{{itemTemplate.item.contents.get('population') > 1000000000 ? 'default' : _hoverBackground}}"/>
                 </ws:itemTemplate>
             </Controls.grid:View>
         </ws:content>
@@ -21,16 +21,26 @@
                     <ws:Object>
                         <ws:template>
                             <h4 class="controlsDemo__mb1">Переключатель основного фона при ховере. Сейчас={{ _hoverBackground }}</h4>
-                            <button on:click="_setHoverBackground('primary')" style="padding: 3px;">Фон "primary"</button>
+                            <button on:click="_setHoverBackground('primary')" class="controlsDemo__mr1" style="padding: 3px;">Фон "primary"</button>
                             <button on:click="_setHoverBackground('default')" style="padding: 3px;">Фон "default"</button>
                         </ws:template>
                     </ws:Object>
                     <ws:Object>
                         <ws:template>
                             <h4 class="controlsDemo__mb1">Переключатель опции hoverMode. Сейчас={{ _hoverMode }}</h4>
-                            <button on:click="_setHoverMode('background')" class="controlsDemo__mr1" style="padding: 3px;">background</button>
+                            <button on:click="_setHoverMode('highlight')" class="controlsDemo__mr1" style="padding: 3px;">highlight</button>
                             <button on:click="_setHoverMode('border')" class="controlsDemo__mr1" style="padding: 3px;">border</button>
                             <button on:click="_setHoverMode('shadow')" style="padding: 3px;">shadow</button>
+                        </ws:template>
+                    </ws:Object>
+                    <ws:Object>
+                        <ws:template>
+                            <h4 class="controlsDemo__mb1">Переключатель опции roundBorder. Сейчас={{ _roundBorder ? _roundBorder.tl : 'null' }}</h4>
+                            <ws:for data="index, variant in _roundBorderVariants">
+                                <button on:click="_setRoundBorder(variant)"
+                                        class="{{ index !== _roundBorderVariants.length - 1 ? 'controlsDemo__mr1' }}"
+                                        style="padding: 3px;">{{variant}}</button>
+                            </ws:for>
                         </ws:template>
                     </ws:Object>
                 </ws:Array>

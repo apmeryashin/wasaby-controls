@@ -151,8 +151,7 @@ export default abstract class Row<T extends Model = Model> {
                                    templateHighlightOnHover?: boolean): string {
         let classes = '';
         if (templateHighlightOnHover !== false && !this.isEditing()) {
-            const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
-            classes += ` controls-Grid__row_${hoverMode}OnHover_${hoverBackgroundStyle}`;
+            classes += ` controls-Grid__row_${hoverMode}OnHover_${this.getStyle()}`;
         }
         return classes;
     }

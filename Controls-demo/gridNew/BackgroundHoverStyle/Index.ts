@@ -2,7 +2,9 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/gridNew/BackgroundHoverStyle/BackgroundHoverStyle';
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
+import { SyntheticEvent } from 'Vdom/Vdom';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
+import {IRoundBorder, TRoundBorderSize} from 'Controls/interface';
 
 const MAXINDEX = 5;
 
@@ -10,8 +12,11 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _columns: IColumn[] = Countries.getColumnsWithFixedWidths();
-    protected _hoverBackground: string = 'default';
-    protected _hoverMode: string = 'background';
+    protected _hoverBackground: string = 'primary';
+    protected _hoverMode: string = 'highlight';
+    protected _roundBorder: IRoundBorder;
+
+    protected _roundBorderVariants = ['null', 'xs', 's', 'm', 'l', 'xl', '3xs', '2xs'];
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -25,11 +30,20 @@ export default class extends Control {
         'Controls-demo/gridNew/BackgroundHoverStyle/BackgroundHoverStyle'
     ];
 
-    protected _setHoverBackground(value: string): void {
+    protected _setHoverBackground(e: SyntheticEvent, value: string): void {
         this._hoverBackground = value;
     }
 
-    protected _setHoverMode(value: string): void {
+    protected _setHoverMode(e: SyntheticEvent, value: string): void {
         this._hoverMode = value;
+    }
+
+    protected _setRoundBorder(e: SyntheticEvent, value: TRoundBorderSize): void {
+        this._roundBorder = {
+            bl: value,
+            br: value,
+            tl: value,
+            tr: value
+        };
     }
 }
