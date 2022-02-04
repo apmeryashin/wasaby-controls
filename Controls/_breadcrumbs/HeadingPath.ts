@@ -91,7 +91,7 @@ class BreadCrumbsPath extends Control<IHeadingPath, IReceivedState> {
         } else {
             return loadFontWidthConstants().then((getTextWidth: Function) => {
                 this._initStatesBeforeMount(options, receivedState, getTextWidth);
-                if (this._items) {
+                if (this._breadCrumbsItems) {
                     return {
                         items: this._breadCrumbsItems,
                         breadCrumbsWidth: this._crumbsWidth,
