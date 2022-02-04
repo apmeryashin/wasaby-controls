@@ -87,7 +87,8 @@ export default class View extends List {
             actionAlignment: 'vertical',
             actionCaptionPosition: 'none',
             itemsContainerPadding: null,
-            disableVirtualScroll: true
+            disableVirtualScroll: true,
+            multiColumns: true
         };
     }
 }
