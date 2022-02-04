@@ -198,18 +198,18 @@ export abstract class AbstractObserversController {
         return this._triggersOffsets;
     }
 
-    checkTriggersVisibility(): void {
+    checkTriggersVisibility(contentSizeBeforeList: number): void {
         // если список скрыт, то не нужно проверять видимость триггеров
         if (!this._listContainer || !this._listContainer.offsetParent) {
             return;
         }
 
         // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
-        if (this._isTriggerVisible('forward')) {
-            this._intersectionObserverHandler('bottomIn');
+        if (this._isTriggerVisible('forward', contentSizeBeforeList)) {
+            this._intersectionObserverHandler('bottomIn', contentSizeBeforeList);
         }
-        if (this._isTriggerVisible('backward')) {
-            this._intersectionObserverHandler('topIn');
+        if (this._isTriggerVisible('backward', contentSizeBeforeList)) {
+            this._intersectionObserverHandler('topIn', contentSizeBeforeList);
         }
     }
 
@@ -266,7 +266,7 @@ export abstract class AbstractObserversController {
 
     // endregion OnCollectionChange
 
-    private _intersectionObserverHandler(eventName: TIntersectionEvent): void {
+    private _intersectionObserverHandler(eventName: TIntersectionEvent, contentSizeBeforeList: number = 0): void {
         if (eventName === 'bottomOut' || eventName === 'topOut') {
             return;
         }
@@ -282,7 +282,9 @@ export abstract class AbstractObserversController {
         // Если у нас и так виден триггер вниз, то вверх не нужно вызывать обсервер.
         // Это нужно, чтобы в первую очередь отображались записи вниз.
         const shouldHandleTrigger = direction === 'forward' ||
-            direction === 'backward' && (!this._hasItemsOutRange.forward || !this._isTriggerVisible('forward'));
+            direction === 'backward' && (
+                !this._hasItemsOutRange.forward || !this._isTriggerVisible('forward', contentSizeBeforeList)
+            );
         if (shouldHandleTrigger) {
             this._observersCallback(direction);
         }
@@ -358,18 +360,18 @@ export abstract class AbstractObserversController {
         return triggersOfThisList;
     }
 
-    private _isTriggerVisible(direction: IDirection): boolean {
+    private _isTriggerVisible(direction: IDirection, contentSizeBeforeList: number): boolean {
         const scrollPosition = this._scrollPosition;
         const contentSize = this._contentSize;
         const viewportSize = this._viewportSize;
 
         if (direction === 'backward') {
             const backwardViewportPosition = scrollPosition;
-            const backwardTriggerPosition = this._triggersOffsets.backward;
+            const backwardTriggerPosition = contentSizeBeforeList + this._triggersOffsets.backward;
             return this._triggersVisibility.backward && backwardTriggerPosition >= backwardViewportPosition;
         } else {
             const forwardViewportPosition = scrollPosition + viewportSize;
-            const forwardTriggerPosition = contentSize - this._triggersOffsets.forward;
+            const forwardTriggerPosition = contentSizeBeforeList + contentSize - this._triggersOffsets.forward;
             return this._triggersVisibility.forward && forwardTriggerPosition <= forwardViewportPosition;
         }
     }

@@ -1,0 +1,18 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">Multiline=true</div>
+        <Controls.toggle:Chips items="{{_items}}"
+                               direction="horizontal"
+                               bind:selectedKeys="_selectedKeys1"
+                               multiline="{{true}}"
+                               attr:class="ControlsDemo-ButtonGroup__multiline-true"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">Multiline=false</div>
+        <Controls.toggle:Chips items="{{_items}}"
+                               direction="horizontal"
+                               bind:selectedKeys="_selectedKeys2"
+                               multiline="{{false}}"
+                               attr:class="ControlsDemo-ButtonGroup__multiline-false"/>
+    </div>
+</div>

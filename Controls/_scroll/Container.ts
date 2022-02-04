@@ -747,6 +747,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
+    _canHorizontalScroll(): boolean {
+        return this._scrollContainerViewMode === 'custom' ? !!(this._scrollModel?.canHorizontalScroll) : false;
+    }
+
     /**
      * Включает логированние событий изменения положения скролла.
      * Можно включить логирование из консоли браузера выполнив команду

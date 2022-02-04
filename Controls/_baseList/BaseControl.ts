@@ -3189,7 +3189,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         endIndex: number,
         shiftDirection: IDirectionNew
     ): void {
-        if (shiftDirection) {
+        if (this._isMounted && shiftDirection) {
             // Если больше нет записей скрытых виртуальным скроллом, мы должны показать индикатор.
             // Проверяем это и если нужно показываем индикатор.
             if (shiftDirection === 'forward' && this._indicatorsController.shouldDisplayBottomIndicator()) {
@@ -3215,13 +3215,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._drawingIndicatorDirection
             );
         }
-        // В режиме 'remove' нужно обновлять itemActions, т.к.
-        // они обновляются только в видимом диапазоне виртуального скролла.
-        // В режиме 'hide' виртуальный скролл лишь скрывает через display записи,
-        // поэтому не надо делать лишние обновления.
+        // При смене индексов нужно всегда обновлять itemActions, т.к.
+        // они обновляются только в видимом диапазоне виртуального скролла независимо от режима.
         // Если этот метод сработал при инициализации виртуального скролла на beforeMount,
         // то в this._options ничего нет, поэтому проверяем на this._mounted.
-        if (this._mounted && !!this._itemActionsController && this._options.virtualScrollConfig?.mode !== 'hide') {
+        if (this._isMounted && !!this._itemActionsController) {
             _private.updateInitializedItemActions(this, this._options);
         }
     }
@@ -3426,6 +3424,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             collection: this._listViewModel,
             listControl: this,
             virtualScrollConfig: options.virtualScrollConfig || {},
+            multiColumns: options.multiColumns,
             activeElementKey: options.activeElement,
             initialScrollPosition: options.initialScrollPosition,
             disableVirtualScroll: options.disableVirtualScroll,
@@ -3597,7 +3596,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             scrolledToBackwardEdge: this._scrollTop === 0,
             scrolledToForwardEdge: this._viewportSize + this._scrollTop === this._viewSize,
             newItemsIndex,
-            itemsLoadedByTrigger: this._addItemsByLoadToDirection
+            itemsLoadedByTrigger: this._addItemsByLoadToDirection,
+            portionedLoading: _private.isPortionedLoad(this)
         };
 
         switch (action) {
@@ -4003,8 +4003,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     }
                 }
 
-                // Если прислали новый рекордсет, то сохраняем позицию скролла
-                if (newOptions.items && newOptions.items !== this._items) {
+                // Если прислали новый рекордсет, то сохраняем позицию скролла.
+                // Пока что от прикладников в ItemsView было желание только сохранять скролл.
+                // Видимо придется добавить опцию, когда потребуется другое поведение.
+                if (newOptions.items && newOptions.items !== this._items && !newOptions.source) {
                     this._listVirtualScrollController.enableKeepScrollPosition();
                 }
 
@@ -4758,6 +4760,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         navPageSize
                     );
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
+                }
+            } else {
+
+                // Если перезагружают на конкретной позиции, это значит, что нужно будет восстановить скролл.
+                if (this._options.navigation.source === 'position' &&
+                    this._options.navigation.sourceConfig.position !== sourceConfig.position) {
+                    this._listVirtualScrollController.enableRestoreScrollPosition();
                 }
             }
         } else {
@@ -7189,6 +7198,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             loadingIndicatorTemplate: 'Controls/baseList:LoadingIndicatorTemplate',
             continueSearchTemplate: 'Controls/baseList:ContinueSearchTemplate',
             virtualScrollConfig: {},
+            multiColumns: false,
             plainItemsContainer: true,
             filter: {},
             itemActionsVisibility: 'onhover',

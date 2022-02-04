@@ -1,0 +1,18 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell demo-RadioGroup__group1">
+        <div class="controls-text-label">captionPosition=right</div>
+        <Controls.toggle:Checkbox
+                caption="right position"
+                bind:value="_value1"
+                captionPosition="right"
+        />
+    </div>
+    <div class="controlsDemo__cell demo-RadioGroup__group2">
+        <div class="controls-text-label controlsDemo__cell">captionPosition=left</div>
+        <Controls.toggle:Checkbox
+                caption="left position"
+                bind:value="_value2"
+                captionPosition="left"
+        />
+    </div>
+</div>

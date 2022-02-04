@@ -59,6 +59,7 @@ export interface IGetModeParams {
     virtualPageSize: number;
     scrolledToBackwardEdge: boolean;
     scrolledToForwardEdge: boolean;
+    portionedLoading: boolean;
 }
 
 export function getCalcMode(params: IGetModeParams): ICalcMode {
@@ -67,7 +68,9 @@ export function getCalcMode(params: IGetModeParams): ICalcMode {
     const addToEnd = params.newItemsIndex >= params.range.endIndex;
 
     let calcMode: ICalcMode;
-    if (params.itemsLoadedByTrigger) {
+    if (params.portionedLoading) {
+        calcMode = virtualPageIsFilled ? 'nothing' : 'shift';
+    } else if (params.itemsLoadedByTrigger) {
         calcMode = 'shift';
     } else if (params.scrolledToBackwardEdge) {
         calcMode = virtualPageIsFilled ? 'nothing' : 'extend';
@@ -75,11 +78,14 @@ export function getCalcMode(params: IGetModeParams): ICalcMode {
         if (addToEnd) {
             calcMode = 'shift';
         } else {
-            calcMode = !virtualPageIsFilled ? 'extend' : 'nothing';
+            calcMode = virtualPageIsFilled ? 'nothing' : 'extend';
         }
     } else {
         // список проскроллен не в начало и не в конец
-        calcMode = 'shift';
+        // Если виртуальная страница заполнена, то не нужно смещать диапазон, добавленная запись должна:
+        // 1. Если добавлена в диапазон, то выместить собой запись в конце диапазона(не нужно пересчитывать диапазон)
+        // 2. Если добавлена вне диапазона, то ничего не делать
+        calcMode = virtualPageIsFilled ? 'nothing' : 'shift';
     }
 
     return calcMode;

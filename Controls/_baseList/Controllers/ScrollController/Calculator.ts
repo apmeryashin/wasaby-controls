@@ -192,7 +192,10 @@ export class Calculator {
     getScrollPositionToEdgeItem(edgeItem: IEdgeItem): number {
         let scrollPositionOffset = 0;
 
-        const item = this._itemsSizes[edgeItem.index];
+        const item = this._itemsSizes.find((item) => item.key === edgeItem.key );
+        if (!item) {
+            return this._scrollPosition;
+        }
         // https://jsfiddle.net/alex111089/oj8bL0mq/ нативная демка про восстановление скролла
         // Вычитаем scrollPosition, чтобы привести координаты в единую систему, до и после отрисовки.
         const itemOffset = item.offset - this._scrollPosition - this._placeholders.backward;
@@ -227,7 +230,7 @@ export class Calculator {
         }
 
         let edgeItem: IEdgeItem = null;
-        for (let index = range.startIndex; index < range.endIndex && index < this._totalCount; index++) {
+        for (let index = range.startIndex; index < range.endIndex && index < itemsSizes.length; index++) {
             const item = itemsSizes[index];
             const nextItem = itemsSizes[index + 1];
             const itemOffset = item.offset - placeholders.backward - scrollPosition;
@@ -269,7 +272,7 @@ export class Calculator {
                     }
                 }
                 edgeItem = {
-                    index,
+                    key: item.key,
                     direction,
                     border,
                     borderDistance
@@ -459,9 +462,14 @@ export class Calculator {
         const oldState = this._getState();
         this._totalCount += count;
         const direction = this._calcAddDirection(position, count);
+        let indexesChanged = false;
 
+        // если записи добавляют в начало и список не проскроллен, то не нужно пересчитывать range,
+        // т.к. добавленная запись должна сразу стать видна вверху и собой выместить последнюю запись в диапазоне
+        const shouldChangedRange = calcMode !== 'nothing' || !!this._scrollPosition;
         // Корректируем старый диапазон. Т.к. записи добавились  в начало, то все индексы сместятся на count
-        if (position === 0 && calcMode !== 'nothing') {
+        if (position === 0 && shouldChangedRange) {
+            indexesChanged = true;
             this._range.startIndex = Math.min(this._totalCount, this._range.startIndex + count);
             this._range.endIndex = Math.min(this._totalCount, this._range.endIndex + count);
         }
@@ -487,7 +495,7 @@ export class Calculator {
             itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
 
-        return this._getRangeChangeResult(oldState, direction);
+        return this._getRangeChangeResult(oldState, direction, indexesChanged);
     }
 
     protected _calcAddDirection(position: number, count: number): IDirection {
@@ -549,7 +557,8 @@ export class Calculator {
      * @param totalCount Новое кол-во элементов
      * @param startIndex Начальный индекс диапазона отображаемых записей
      */
-    resetItems(totalCount: number, startIndex: number): void {
+    resetItems(totalCount: number, startIndex: number): ICalculatorResult {
+        const oldState = this._getState();
         this._totalCount = totalCount;
 
         if (this._givenItemsSizes) {
@@ -573,13 +582,21 @@ export class Calculator {
             itemsSizes: this._itemsSizes,
             itemsRenderedOutsideRange: this._itemsRenderedOutsideRange
         });
+
+        return this._getRangeChangeResult(oldState, null);
     }
 
     // endregion HandleCollectionChanges
 
-    protected _getRangeChangeResult(oldState: ICalculatorState, shiftDirection: IDirection|null): ICalculatorResult {
+    protected _getRangeChangeResult(
+        oldState: ICalculatorState,
+        shiftDirection: IDirection|null,
+        forceIndexesChanged: boolean = false
+    ): ICalculatorResult {
+        // TODO избавиться от forceIndexesChanged по
+        //  https://online.sbis.ru/opendoc.html?guid=c6c7d72b-6808-4500-b857-7455d0520d53
         const indexesChanged = oldState.range.startIndex !== this._range.startIndex ||
-            oldState.range.endIndex !== this._range.endIndex;
+            oldState.range.endIndex !== this._range.endIndex || forceIndexesChanged;
 
         const hasItemsOutRangeBackward =
             Calculator._hasItemsOutRangeToDirection('backward', this._range, this._totalCount);

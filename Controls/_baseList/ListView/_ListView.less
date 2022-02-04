@@ -950,35 +950,8 @@
    border-bottom: var(--item-separator_l_thickness_list) solid var(--item_edge_separator_l_color_list);
 }
 
-.controls-List:before {
-   content: '';
-   display: inline-block;
-   position: absolute;
-   width: 100%;
-   z-index: 2; // Чтобы перекрывать строки таблицы и itemActions, у которых тоже стоит z-index
-}
-
 .controls-padding_top-listDefault {
-   padding-top: var(--list-content_air);
-}
-
-// В память предкам:
-// :before элемент, который закрывает дырку, образовавшуюся из-за padding-top'a
-// в противном случае в этой дырке просвечивают строки таблицы при скроле
-.controls-padding_top-listDefault:before {
-   height: var(--list-content_air);
-}
-
-.controls-List.controls-padding_top-s:before {
-   height: var(--offset_s);
-}
-
-.controls-List_style-master:before {
-   background-color: var(--master_item_background-color_list);
-}
-
-.controls-List_style-default:before {
-   background-color: var(--background-color);
+  // padding-top: var(--list-content_air);
 }
 
 .controls-ListView__item_roundBorder_bottomLeft {

@@ -103,6 +103,12 @@ Object.defineProperty(Header, 'defaultProps', {
  */
 
 /**
+ * @name Controls/_heading/Heading#fontWeight
+ * @cfg {TFontWeight}
+ * @demo Controls-demo/Heading/Title/FontWeight/Index
+ */
+
+/**
  * @name Controls/_heading/Heading#fontColorStyle
  * @cfg {Controls/interface:IFontColorStyle/TFontColorStyle.typedef}
  * @demo Controls-demo/Heading/Title/SizesAndStyles/Index

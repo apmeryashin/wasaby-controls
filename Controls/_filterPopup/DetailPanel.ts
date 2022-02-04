@@ -60,7 +60,7 @@ const setPropValue = Utils.object.setPropertyValue.bind(Utils);
  * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
  * @cssModifier controls-FilterPanel__width-xl Очень большая ширина панели.
  */
-class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IFilterItem[]>> {
+class FilterPanel extends Control<IFilterDetailPanelOptions, IFilterItem[] | List<IFilterItem[]>> {
    protected _template: TemplateFunction = template;
    protected _isChanged: boolean = false;
    protected _hasResetValue: boolean = false;
@@ -76,17 +76,17 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
       formController: Controller;
    };
 
-   protected _beforeMount(options: IFilterDetailPanelOptions): Promise<RecordSet | List<IFilterItem[]>> {
+   protected _beforeMount(options: IFilterDetailPanelOptions): Promise<IFilterItem[] | List<IFilterItem[]>> {
       this._resolveItems(options);
       this._hasAdditionalParams = this._hasAddParams(options);
       this._keyProperty = this._getKeyProperty(this._items);
       this._isChanged = this._isChangedValue(this._items);
       this._hasResetValue = FilterUtils.hasResetValue(this._items);
       this._historySaveMode = options.orientation === 'horizontal' || options.historySaveMode === 'favorite' ? 'favorite' : 'pinned';
-      return this._loadHistoryItems(options.historyId, this._historySaveMode);
+      return this._loadHistoryItems(options.historyId, this._historySaveMode, options.removeOutdatedFiltersFromHistory);
    }
 
-   protected _beforeUpdate(newOptions: IFilterDetailPanelOptions): void | Promise<RecordSet | List<IFilterItem[]>> {
+   protected _beforeUpdate(newOptions: IFilterDetailPanelOptions): void | Promise<IFilterItem[] | List<IFilterItem[]>> {
       if (!isEqual(this._options.items, newOptions.items)) {
          this._resolveItems(newOptions);
       }
@@ -95,7 +95,11 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
       this._hasAdditionalParams = this._hasAddParams(newOptions);
       this._hasResetValue = FilterUtils.hasResetValue(this._items);
       if (this._options.historyId !== newOptions.historyId) {
-         return this._loadHistoryItems(newOptions.historyId, this._historySaveMode);
+         return this._loadHistoryItems(
+             newOptions.historyId,
+             this._historySaveMode,
+             newOptions.removeOutdatedFiltersFromHistory
+         );
       }
    }
 
@@ -180,7 +184,11 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
       return item.name || item.id;
    }
 
-   private _loadHistoryItems(historyId: string, historySaveMode: THistorySaveMode) {
+   private _loadHistoryItems(
+       historyId: string,
+       historySaveMode: THistorySaveMode,
+       removeOutdatedFiltersFromHistory: boolean
+   ): Promise<IFilterItem[]> {
       const isFavoriteHistory = historySaveMode === 'favorite';
       if (historyId) {
          const config = {
@@ -198,7 +206,7 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
                } else {
                    historyItems = items;
                }
-               this._historyItems = this._filterHistoryItems(historyItems);
+               this._historyItems = this._filterHistoryItems(historyItems, removeOutdatedFiltersFromHistory);
                this._hasHistory = !!this._historyItems.getCount();
                return this._historyItems;
             }, () => {
@@ -207,7 +215,7 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
       }
    }
 
-   private _filterHistoryItems(items: RecordSet): RecordSet {
+   private _filterHistoryItems(items: RecordSet, removeOutdatedFiltersFromHistory: boolean = true): RecordSet {
       const getOriginalItem = (historyItem: IFilterItem): IFilterItem => {
          return find(this._items, (origItem) => {
             return this._getItemName(origItem) === this._getItemName(historyItem);
@@ -235,7 +243,10 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
                      originalItem = getOriginalItem(history[i]);
                      hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
 
-                     if (originalItem && (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue')))) {
+                     if (removeOutdatedFiltersFromHistory &&
+                         originalItem &&
+                         (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue')))
+                     ) {
                         validResult = true;
                         break;
                      }
@@ -329,7 +340,8 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
          headingFontSize: 'xl',
          orientation: 'vertical',
          applyButtonStyle: 'success',
-         additionalPanelTemplate: 'Controls/filterPopup:AdditionalPanelTemplate'
+         additionalPanelTemplate: 'Controls/filterPopup:AdditionalPanelTemplate',
+         removeOutdatedFiltersFromHistory: true
       };
    }
 }

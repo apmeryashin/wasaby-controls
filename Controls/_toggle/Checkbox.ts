@@ -34,6 +34,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
    horizontalPadding?: string;
    checkboxStyle?: 'primary' | 'default';
    size?: 's' | 'l';
+   captionPosition: 'left' | 'right';
 }
 
 const mapTriState = {false: true, true: null, null: false};
@@ -140,14 +141,19 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IFontColor
          multiline: true,
          horizontalPadding: 'default',
          checkboxStyle: 'primary',
-         size: 's'
+         size: 's',
+         captionPosition: 'right'
       };
    }
 
    static getOptionTypes(): object {
       return {
          triState: EntityDescriptor(Boolean),
-         tooltip: EntityDescriptor(String)
+         tooltip: EntityDescriptor(String),
+         captionPosition: EntityDescriptor(String).oneOf([
+            'left',
+            'right'
+         ])
       };
    }
 
@@ -190,7 +196,7 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  *       ...
  *    }
  * </pre>
- * @see option Value
+ * @see value
  */
 
 /*
@@ -256,7 +262,7 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  *       ...
  *    }
  * </pre>
- * @see option triState
+ * @see triState
  * @see event valueChanged()
  */
 
@@ -415,6 +421,14 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @name Controls/_toggle/Checkbox#fontColorStyle
  * @cfg {TFontColorStyle} Стиль цвета текста контрола.
  * @demo Controls-demo/toggle/Checkbox/FontColorStyle/Index
+ */
+/**
+ * @name Controls/_toggle/Checkbox#captionPosition
+ * @cfg {String} Определяет, с какой стороны расположен заголовок кнопки.
+ * @variant left Заголовок расположен перед чекбоксом.
+ * @variant right Заголовок расположен после чекбоксом.
+ * @default right
+ * @demo Controls-demo/toggle/Checkbox/CaptionPosition/Index
  */
 /**
  * @name Controls/_toggle/Checkbox#size

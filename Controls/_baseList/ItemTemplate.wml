@@ -61,10 +61,7 @@
     <Controls.scroll:StickyBlock
             attr:data-qa="{{ (item || itemData).listElementName }}"
             attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover, shadowVisibility, borderVisibility) }}"
-            position="{{item.getStickyHeaderPosition(stickyCallback)}}"
-            backgroundStyle="{{style + '_sticked'}}"
-            mode="replaceable"
-            offsetTop="{{_options.stickyElementsTopOffset}}">
+            position="{{item.getStickyHeaderPosition(stickyCallback)}}" backgroundStyle="{{style + '_sticked'}}" mode="replaceable">
         <ws:partial template="localItemTemplateContent"/>
     </Controls.scroll:StickyBlock>
 </ws:if>

@@ -94,7 +94,6 @@
 												 _isIosZIndexOptimized="{{ (item || itemData).isIosZIndexOptimized() }}"
 												 fixedZIndex="{{ column.getZIndex()}}"
 												 _subPixelArtifactFix="{{columnIndex !== 0}}"
-                                                 offsetTop="{{_options.stickyElementsTopOffset}}"
 												 attr:key="sticky_{{ column.getInstanceId() }}"
 												 attr:class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }} {{ column.isHidden() ? 'ws-hidden' }}"
 												 attr:style="{{ column.getWrapperStyles(containerSize) }}"

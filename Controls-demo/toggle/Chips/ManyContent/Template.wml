@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div class="controlsDemo__cell">
         <div class="controls-text-label">Many items</div>
-        <Controls.toggle:Chips items="{{_items}}" direction="horizontal" bind:selectedKeys="_selectedKeys1" attr:class="ControlsDemo-ButtonGroup__manyButtons"/>
+        <Controls.toggle:Chips items="{{_items}}" direction="horizontal" bind:selectedKeys="_selectedKeys" attr:class="ControlsDemo-ButtonGroup__manyButtons"/>
     </div>
 </div>

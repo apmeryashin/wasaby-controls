@@ -35,16 +35,16 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             contentSize: 500,
             scrollPosition: 0,
             itemsSizes: [
-                {size: 50, offset: 0},
-                {size: 50, offset: 50},
-                {size: 50, offset: 100},
-                {size: 50, offset: 150},
-                {size: 50, offset: 200},
-                {size: 50, offset: 250},
-                {size: 50, offset: 300},
-                {size: 50, offset: 350},
-                {size: 50, offset: 400},
-                {size: 50, offset: 450}
+                {size: 50, offset: 0, key: '1'},
+                {size: 50, offset: 50, key: '2'},
+                {size: 50, offset: 100, key: '3'},
+                {size: 50, offset: 150, key: '4'},
+                {size: 50, offset: 200, key: '5'},
+                {size: 50, offset: 250, key: '6'},
+                {size: 50, offset: 300, key: '7'},
+                {size: 50, offset: 350, key: '8'},
+                {size: 50, offset: 400, key: '9'},
+                {size: 50, offset: 450, key: '10'}
             ],
             virtualScrollConfig: {
                 pageSize: 10
@@ -78,16 +78,16 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
          it('has items out range to forward', () => {
             calculator.updateItemsSizes(
                 [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450},
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
@@ -107,16 +107,16 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450}
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'}
                 ]
             );
             calculator.addItems(0, 5, 'shift');
@@ -138,21 +138,21 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             calculator.scrollPositionChange(200, false);
             calculator.updateItemsSizes(
                 [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450},
-                    {size: 50, offset: 500},
-                    {size: 50, offset: 550},
-                    {size: 50, offset: 600},
-                    {size: 50, offset: 650},
-                    {size: 50, offset: 700}
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'},
+                    {size: 50, offset: 500, key: '11'},
+                    {size: 50, offset: 550, key: '12'},
+                    {size: 50, offset: 600, key: '13'},
+                    {size: 50, offset: 650, key: '14'},
+                    {size: 50, offset: 700, key: '15'}
                 ]
             );
             calculator.addItems(10, 5, 'shift');
@@ -166,7 +166,7 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             calculator.scrollPositionChange(130, false);
             const edgeItem = calculator.getEdgeVisibleItem({ direction: 'backward' });
             assert.deepEqual(edgeItem, {
-                index: 2,
+                key: '3',
                 direction: 'backward',
                 borderDistance: 20,
                 border: 'forward'
@@ -177,7 +177,7 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             calculator.scrollPositionChange(130, false);
             const edgeItem = calculator.getEdgeVisibleItem({ direction: 'forward' });
             assert.deepEqual(edgeItem, {
-                index: 8,
+                key: '9',
                 direction: 'forward',
                 borderDistance: 30,
                 border: 'backward'
@@ -192,7 +192,7 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
                 placeholders: {backward: 150, forward: 100}
             });
             assert.deepEqual(edgeItem, {
-                index: 5,
+                key: '6',
                 direction: 'backward',
                 borderDistance: 20,
                 border: 'forward'
@@ -207,7 +207,7 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
                 placeholders: {backward: 150, forward: 150}
             });
             assert.deepEqual(edgeItem, {
-                index: 7,
+                key: '8',
                 direction: 'forward',
                 borderDistance: 230,
                 border: 'backward'
@@ -220,15 +220,15 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
                 viewportSize: 500,
                 contentSize: 400,
                 itemsSizes: [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
@@ -244,7 +244,7 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
                 placeholders: {backward: 0, forward: 0}
             });
             assert.deepEqual(edgeItem, {
-                index: 8,
+                key: '9',
                 direction: 'forward',
                 border: 'backward',
                 borderDistance: 100
@@ -255,7 +255,7 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
     describe('getScrollPositionToEdgeItem', () => {
         it('backward edge item, backward border', () => {
             const scrollPosition = calculator.getScrollPositionToEdgeItem({
-                index: 3,
+                key: '4',
                 border: 'backward',
                 borderDistance: 30,
                 direction: 'backward'
@@ -265,7 +265,7 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
 
         it('backward edge item, forward border', () => {
             const scrollPosition = calculator.getScrollPositionToEdgeItem({
-                index: 3,
+                key: '4',
                 border: 'forward',
                 borderDistance: 30,
                 direction: 'backward'
@@ -275,7 +275,7 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
 
         it('forward edge item', () => {
             const scrollPosition = calculator.getScrollPositionToEdgeItem({
-                index: 8,
+                key: '9',
                 border: 'backward',
                 borderDistance: 30,
                 direction: 'forward'
@@ -286,7 +286,7 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
         it('backward edge item and list scrolled', () => {
             calculator.scrollPositionChange(100, false);
             const scrollPosition = calculator.getScrollPositionToEdgeItem({
-                index: 4,
+                key: '5',
                 border: 'backward',
                 borderDistance: 30,
                 direction: 'backward'
@@ -401,37 +401,37 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450}
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'}
                 ]
             );
             calculator.addItems(0, 5, 'shift');
             calculator.setContentSize(600);
             calculator.updateItemsSizes(
                 [
-                    {size: 0, offset: 0},
-                    {size: 0, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 550},
-                    {size: 50, offset: 600},
-                    {size: 50, offset: 650},
-                    {size: 50, offset: 700},
-                    {size: 50, offset: 750}
+                    {size: 0, offset: 0, key: '0'},
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 550, key: '10'},
+                    {size: 50, offset: 600, key: '11'},
+                    {size: 50, offset: 650, key: '12'},
+                    {size: 50, offset: 700, key: '13'},
+                    {size: 50, offset: 750, key: '14'}
                 ]
             );
             // якобы восстановился скролл
@@ -480,16 +480,16 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             calculator.scrollPositionChange(200, false);
             calculator.updateItemsSizes(
                 [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450},
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
@@ -501,19 +501,19 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             calculator.setContentSize(600);
             calculator.updateItemsSizes(
                 [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450},
-                    {size: 50, offset: 500},
-                    {size: 50, offset: 550},
-                    {size: 50, offset: 600},
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'},
+                    {size: 50, offset: 500, key: '11'},
+                    {size: 50, offset: 550, key: '12'},
+                    {size: 50, offset: 600, key: '13'},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0}
                 ]
@@ -560,16 +560,16 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             calculator.scrollPositionChange(200, false);
             calculator.updateItemsSizes(
                 [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450},
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
@@ -581,19 +581,19 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             calculator.setContentSize(600);
             calculator.updateItemsSizes(
                 [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450},
-                    {size: 50, offset: 500},
-                    {size: 50, offset: 550},
-                    {size: 50, offset: 600},
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'},
+                    {size: 50, offset: 500, key: '11'},
+                    {size: 50, offset: 550, key: '12'},
+                    {size: 50, offset: 600, key: '13'},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0}
                 ]
@@ -603,21 +603,21 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             calculator.shiftRangeToDirection('forward');
             calculator.updateItemsSizes(
                 [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450},
-                    {size: 50, offset: 500},
-                    {size: 50, offset: 550},
-                    {size: 50, offset: 600},
-                    {size: 50, offset: 650},
-                    {size: 50, offset: 700}
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'},
+                    {size: 50, offset: 500, key: '11'},
+                    {size: 50, offset: 550, key: '12'},
+                    {size: 50, offset: 600, key: '13'},
+                    {size: 50, offset: 650, key: '14'},
+                    {size: 50, offset: 700, key: '15'}
                 ]
             );
 
@@ -674,16 +674,16 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450}
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'}
                 ]
             );
             const result = calculator.addItems(0, 5, 'shift');
@@ -706,17 +706,17 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
         it('add to middle', () => {
             calculator.updateItemsSizes(
                 [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
                     {size: 0, offset: 0},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450}
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'}
                 ]
             );
             const result = calculator.addItems(5, 1, 'shift');
@@ -739,16 +739,16 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
         it('add to end', () => {
             calculator.updateItemsSizes(
                 [
-                    {size: 50, offset: 0},
-                    {size: 50, offset: 50},
-                    {size: 50, offset: 100},
-                    {size: 50, offset: 150},
-                    {size: 50, offset: 200},
-                    {size: 50, offset: 250},
-                    {size: 50, offset: 300},
-                    {size: 50, offset: 350},
-                    {size: 50, offset: 400},
-                    {size: 50, offset: 450},
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},
                     {size: 0, offset: 0},

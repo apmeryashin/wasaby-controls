@@ -10,13 +10,11 @@
 			itemContainerGetter="{{_itemContainerGetter}}"
 			viewModelConstructor="{{_viewModelConstructor}}"
 			useScrollContexts="{{ _useScrollContexts }}"
-			attr:class="controls-List
-			            controls-List_style-{{_options.style || _options.backgroundStyle || 'default'}}
-                        {{ _getItemsContainerPadding(_options) ?
-                        (' controls-padding_top-' + (_getItemsContainerPadding(_options).top === 'default' ? 'listDefault' : _getItemsContainerPadding(_options).top) +
-                         ' controls-padding_bottom-' + _getItemsContainerPadding(_options).bottom +
-                         ' controls-padding_left-' + _getItemsContainerPadding(_options).left +
-                         ' controls-padding_right-' + _getItemsContainerPadding(_options).right)}}">
+			attr:class="{{_getItemsContainerPadding(_options) ?
+						(' controls-padding_top-' + (_getItemsContainerPadding(_options).top === 'default' ? 'listDefault' : _getItemsContainerPadding(_options).top) +
+						 ' controls-padding_bottom-' + _getItemsContainerPadding(_options).bottom +
+						 ' controls-padding_left-' + _getItemsContainerPadding(_options).left +
+						 ' controls-padding_right-' + _getItemsContainerPadding(_options).right)}}">
 		</ws:partial>
 	</Controls._baseList.Data>
 </ws:template>
