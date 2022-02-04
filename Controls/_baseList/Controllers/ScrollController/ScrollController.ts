@@ -35,6 +35,7 @@ export interface IIndexesChangedParams {
     range: IItemsRange;
     oldRange: IItemsRange;
     oldPlaceholders: IPlaceholders;
+    oldItemsSizes?: IItemsSizes;
     scrollMode: IScrollMode;
 }
 
@@ -364,6 +365,13 @@ export class ScrollController {
         const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
+        // TODO oldItemsSizes по идее всегда нужно прокидывать, т.к. именно по ним нужно считать EdgeItem
+        //  сейчас написал только для reset из-за необходимости, дорабатывать будет по задаче
+        //  https://online.sbis.ru/opendoc.html?guid=c6c7d72b-6808-4500-b857-7455d0520d53
+        const oldItemsSizes = this._itemsSizesController.getItemsSizes();
+        const newItemsSizes = this._itemsSizesController.resetItems(totalCount);
+        this._calculator.updateItemsSizes(newItemsSizes);
+
         const result = this._calculator.resetItems(totalCount, startIndex);
 
         const hasItemsOutRange = {
@@ -381,7 +389,7 @@ export class ScrollController {
             this.setForwardTriggerPosition('offset');
         }
 
-        this._handleInitializingResult(result);
+        this._handleInitializingResult(result, oldItemsSizes);
     }
 
     // endregion Collection changes
@@ -539,12 +547,14 @@ export class ScrollController {
         }
     }
 
-    private _handleInitializingResult(result: ICalculatorResult): void {
+    private _handleInitializingResult(result: ICalculatorResult, oldItemsSizes: IItemsSizes): void {
         this._indexesInitializedCallback({
             range: result.range,
             oldRange: result.oldRange,
             oldPlaceholders: result.oldPlaceholders,
-            shiftDirection: result.shiftDirection
+            oldItemsSizes,
+            shiftDirection: result.shiftDirection,
+            scrollMode: null
         });
 
         const hasItemsOutRange: IHasItemsOutRange = {
