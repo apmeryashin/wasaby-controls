@@ -4,6 +4,7 @@ import 'css!Controls-demo/themes/ZenWrapper/resources/Style';
 import {Model} from 'Types/entity';
 import {HierarchicalMemory} from 'Types/source';
 import {Flat} from '../../../treeGridNew/DemoHelpers/Data/Flat';
+import {RecordSet} from 'Types/collection';
 
 class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
@@ -14,6 +15,8 @@ class Index extends Control<IControlOptions> {
             displayProperty: 'title'
         }
     ];
+    protected _tabsItems: RecordSet | null = null;
+    protected _tabsSelectedKey: string = '1';
 
     protected _beforeMount(): void {
         this._bcitems = [
@@ -57,6 +60,22 @@ class Index extends Control<IControlOptions> {
                 }
             ],
             parentProperty: 'parent'
+        });
+        this._tabsItems = new RecordSet({
+            keyProperty: 'id',
+            rawData: [
+                {
+                    id: '1',
+                    title: 'Document'
+                },
+                {
+                    id: '2',
+                    title: 'Files'
+                },
+                {
+                    id: '3',
+                    title: 'Orders'
+                }]
         });
     }
 
