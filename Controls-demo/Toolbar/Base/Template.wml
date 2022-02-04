@@ -5,14 +5,18 @@
                 source="{{_buttonsSource}}"
                 keyProperty="id"
                 on:itemClick="_itemClick()"
+                attr:data-qa="Controls-demo_Toolbar__buttons"
         />
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">Пример тулбара из кнопок toolButton</div>
         <Controls.toolbars:View
                 source="{{_toolButtonsSource}}"
+                parentProperty="parent"
+                nodeProperty="@parent"
                 keyProperty="id"
                 on:itemClick="_itemClick()"
+                attr:data-qa="Controls-demo_Toolbar__toolButtons"
         />
     </div>
     <div class="controlsDemo__cell">
@@ -21,6 +25,7 @@
                 items="{{_toolButtonsSource2}}"
                 keyProperty="id"
                 on:itemClick="_itemClick()"
+                attr:data-qa="Controls-demo_Toolbar__oneButton"
         />
     </div>
     <div class="controlsDemo__cell">
@@ -30,9 +35,10 @@
                 keyProperty="id"
                 readOnly="{{true}}"
                 on:itemClick="_itemClick()"
+                attr:data-qa="Controls-demo_Toolbar__readOnly"
         />
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell" data-qa="Controls-demo_Toolbar__event">
         {{_currentClick}}
     </div>
 </div>
