@@ -31,7 +31,7 @@
       on:tagClick="_proxyEvent('tagClick')"
       on:tagHover="_proxyEvent('tagHover')"
       on:selectionStartChanged="_proxyEvent('selectionStartChanged')"
-      on:selectionEndChanged="_proxyEvent('selectionStartChanged')">
+      on:selectionEndChanged="_proxyEvent('selectionEndChanged')">
    </Controls._date.BaseInput>
     <ws:if data="{{ _options.rightFieldTemplate }}">
         <ws:partial
