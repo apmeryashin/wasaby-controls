@@ -276,7 +276,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       // toDO Временный костыль, в .320 убрать, должно исправиться с этой ошибкой
       // https://online.sbis.ru/opendoc.html?guid=d0f7513f-7fc8-47f8-8147-8535d69b99d6
       if ((this._options.autoDropDown || this._options.historyId) && !this._options.readOnly
-         && !target.classList.contains('controls-Lookup__icon') && !target.closest('.controls-Render__beforeField')) {
+         && !target.classList.contains('controls-Lookup__icon')) {
 
          if (!this._options.suggestState &&
             this._options.source &&
