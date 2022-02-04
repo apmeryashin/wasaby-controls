@@ -20,6 +20,7 @@ describe('Controls/grid_clean/Display/header/HeaderCell/ColumnSeparatorSize', ()
             getGridColumnsConfig: () => columns,
             hasItemActionsSeparatedCell: () => hasItemActionsSeparatedCell,
             hasColumnScroll: () => hasColumnScroll,
+            hasNewColumnScroll: () => false,
             getHoverBackgroundStyle: () => 'default',
             getTopPadding: () => 'null',
             getBottomPadding: () => 'null',
