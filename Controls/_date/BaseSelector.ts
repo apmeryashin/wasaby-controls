@@ -7,6 +7,8 @@ import {IFontSizeOptions} from 'Controls/interface';
 import {IDatePopupTypeOptions} from 'Controls/_date/interface/IDatePopupType';
 import {IDateConstructorOptions} from 'Controls/interface';
 import IValueOptions from 'Controls/_date/interface/IValue';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {constants} from 'Env/Env';
 
 export interface IBaseSelectorOptions extends IControlOptions, IFontSizeOptions, IDatePopupTypeOptions,
     IDateConstructorOptions, IValueOptions {
@@ -122,6 +124,12 @@ export default class BaseSelector<T extends IBaseSelectorOptions> extends Contro
             return this._loadCalendarPopupPromise;
         } catch (e) {
             Logger.error(module, e);
+        }
+    }
+
+    protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
+        if (event.nativeEvent.keyCode === constants.key.space) {
+            this.openPopup();
         }
     }
 }
