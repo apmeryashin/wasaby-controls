@@ -186,7 +186,7 @@ class Base extends Control<IMasterDetail, string> {
 
     /**
      * @name Controls/_masterDetail/Base#restricted
-     * @cfg {Boolean} Флаг для ограничения отображения двухколоночного реестра.
+     * @cfg {Boolean} Флаг для ограничения отображения тени по бокам двухколоночного реестра.
      */
 
     /**

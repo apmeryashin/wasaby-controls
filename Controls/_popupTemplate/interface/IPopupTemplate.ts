@@ -21,5 +21,4 @@ export default interface IPopupTemplate {
  * @variant external Отображение полупрозрачной кнопки закрытия.
  * @default linkButton
  * @demo Controls-demo/PopupTemplate/Dialog/closeButtonViewMode/Index
- * @demo Controls-demo/PopupTemplate/Stack/CloseButtonViewMode/Index
  */
