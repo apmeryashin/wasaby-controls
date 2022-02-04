@@ -275,7 +275,7 @@ export default class View extends Control<IOptions, IReceivedState> {
             this._createTemplateControllers(newOptions.listConfiguration, newOptions);
         }
         if (this._userViewMode !== newOptions.userViewMode) {
-            this._setViewModeWithLoad(newOptions.userViewMode,
+            this._loadViewMode(newOptions.userViewMode,
                 this._detailExplorerOptions.useColumns, (viewMode: DetailViewMode) => {
                 this._userViewMode = viewMode;
                 if (this._newDetailOptions) {
@@ -329,12 +329,12 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._masterDataSource?.destroy();
     }
 
-    private _setViewModeWithLoad(viewMode: DetailViewMode, useColumns: boolean, afterChangedCallback: Function): void {
+    private _loadViewMode(viewMode: DetailViewMode, useColumns: boolean, loadCallback: Function): void {
         if (this._isViewModeLoaded(viewMode, useColumns)) {
-            afterChangedCallback(viewMode);
+            loadCallback(viewMode);
         } else {
             loadAsync(this._calculateViewByViewMode(viewMode, useColumns)).then(() => {
-                afterChangedCallback(viewMode);
+                loadCallback(viewMode);
             });
         }
     }
@@ -353,7 +353,7 @@ export default class View extends Control<IOptions, IReceivedState> {
             return;
         }
         if (this._isMounted) {
-            this._setViewModeWithLoad(result,
+            this._loadViewMode(result,
                 this._detailExplorerOptions.useColumns,
                 (viewMode: DetailViewMode) => {
                     this._viewMode = viewMode;
