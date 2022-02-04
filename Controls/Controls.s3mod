@@ -17,6 +17,7 @@
       <module id="832cda0a-e19c-4ffc-a1d1-47edbb6b7501" name="I18n"/>
       <module id="37e402f1-2fb0-4b73-81c5-113cf94dbf1c" name="WasabyLoader"/>
       <module id="e4bbd0f2-f7ce-404e-88b2-5130d105b770" name="ParametersWebAPI"/>
+      <module id="6ae4f1d6-9ecf-4805-a98c-65e47906eedd" name="Tailwind"/>
     </depends>
 
   <load_after/>
