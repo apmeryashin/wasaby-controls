@@ -21,7 +21,8 @@
         </ws:partial>
     </ws:template>
 
-    <div class="controls-ButtonGroup__wrapper controls-ButtonGroup__wrapper-{{_options.direction}}">
+    <div class="controls-ButtonGroup__wrapper controls-ButtonGroup__wrapper-{{_options.direction}}
+controls-ButtonGroup__wrapper-{{_options.direction}}_{{_options.multiline ? 'milti' : ''}}line">
         <ws:for data="index, itemData in _options.items">
             <div class="controls-ButtonGroup__button
             controls-ButtonGroup__button-{{_isSelectedItem(itemData) ? 'selected' : 'unselected'}}
