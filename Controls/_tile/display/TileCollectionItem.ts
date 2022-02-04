@@ -8,7 +8,10 @@ export interface ITileCollectionItemOptions extends ICollectionItemOptions, ITil
 
 /**
  * Элемент плиточной коллекции
- * @author Панихин К.А.
+ * @extends Controls/display:CollectionItem
+ * @mixes Controls/_tile/display/mixins/TileItem
+ * @public
+ * @author Колесов В.А.
  */
 export default class TileCollectionItem<T extends Model = Model>
     extends mixin<CollectionItem, TileItem>(CollectionItem, TileItem) {
