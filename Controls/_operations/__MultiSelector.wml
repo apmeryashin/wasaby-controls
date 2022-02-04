@@ -15,7 +15,9 @@
                 caption="{{_menuCaption}}"
                 fontSize="{{_options.fontSize}}"
                 on:menuItemActivate="_onMenuItemActivate()"
-                source="{{_menuSource}}"/>
+                closeButtonVisibility="{{false}}"
+                source="{{_menuSource}}">
+        </Controls.dropdown:Button>
     </ws:else>
     <Controls.LoadingIndicator
             name="countIndicator"
