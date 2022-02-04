@@ -10,6 +10,8 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _columns: IColumn[] = Countries.getColumnsWithFixedWidths();
+    protected _hoverBackground: string = 'default';
+    protected _hoverMode: string = 'background';
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -22,4 +24,12 @@ export default class extends Control {
         'Controls-demo/Controls-demo',
         'Controls-demo/gridNew/BackgroundHoverStyle/BackgroundHoverStyle'
     ];
+
+    protected _setHoverBackground(value: string): void {
+        this._hoverBackground = value;
+    }
+
+    protected _setHoverMode(value: string): void {
+        this._hoverMode = value;
+    }
 }

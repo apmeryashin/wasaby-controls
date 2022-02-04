@@ -25,6 +25,7 @@ export interface IItemTemplateParams {
     highlightOnHover?: boolean;
     cursor?: 'default' | 'pointer';
     showItemActionsOnHover?: boolean;
+    hoverMode?: 'highlight' | 'border' | 'shadow';
 
     // Deprecated, use cursor
     clickable?: boolean;
@@ -133,7 +134,7 @@ export default abstract class Row<T extends Model = Model> {
     getItemClasses(params: IItemTemplateParams): string {
         let itemClasses = `${this._getBaseItemClasses()} `
             + `${this._getCursorClasses(params.cursor, params.clickable)} `
-            + `${this._getItemHighlightClasses(params.highlightOnHover)}`;
+            + `${this._getHighlightClasses(params.hoverMode, params.highlightOnHover)}`;
 
         if (params.showItemActionsOnHover !== false) {
             itemClasses += ' controls-ListView__item_showActions';
@@ -146,11 +147,14 @@ export default abstract class Row<T extends Model = Model> {
         return `controls-ListView__itemV controls-Grid__row controls-Grid__row_${this.getStyle()}`;
     }
 
-    protected _getItemHighlightClasses(highlightOnHover?: boolean): string {
-        if (highlightOnHover !== false && !this.isEditing()) {
-            return `controls-Grid__row_highlightOnHover_${this.getStyle()}`;
+    protected _getHighlightClasses(hoverMode: 'highlight' | 'border' | 'shadow' = 'highlight',
+                                   templateHighlightOnHover?: boolean): string {
+        let classes = '';
+        if (templateHighlightOnHover !== false && !this.isEditing()) {
+            const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
+            classes += ` controls-Grid__row_${hoverMode}OnHover_${hoverBackgroundStyle}`;
         }
-        return '';
+        return classes;
     }
 
     getMultiSelectClasses(

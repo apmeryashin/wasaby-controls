@@ -909,19 +909,18 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента для корневого div'а.
      * @param templateHighlightOnHover - подсвечивать или нет запись по ховеру
-     * @param theme - используемая тема
      * @param cursor - курсор мыши
      * @param backgroundColorStyle - стиль background
-     * @param style - режим отображения списка (master/default)
      * @param showItemActionsOnHover - показывать или нет операции над записью по ховеру
+     * @param hoverMode стиль при наведении на запись
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
     getWrapperClasses(templateHighlightOnHover: boolean = true,
                       cursor: string = 'pointer',
                       backgroundColorStyle?: string,
-                      showItemActionsOnHover: boolean = true): string {
-        const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
+                      showItemActionsOnHover: boolean = true,
+                      hoverMode?: 'highlight' | 'border' | 'shadow'): string {
         const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
 
         let wrapperClasses = '';
@@ -937,9 +936,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         wrapperClasses += ' js-controls-ListView__measurableContainer';
         wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${this.getStyle()}`;
-        if (templateHighlightOnHover && !this.isEditing()) {
-            wrapperClasses += ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}`;
-        }
+
+        wrapperClasses += this._getHighlightClasses(hoverMode);
+
         if (this.isEditing()) {
             wrapperClasses += ` controls-ListView__item_editing controls-ListView__item_background-editing_${editingBackgroundStyle}`;
         }
@@ -958,6 +957,16 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
 
         return wrapperClasses;
+    }
+
+    protected _getHighlightClasses(hoverMode: 'highlight' | 'border' | 'shadow' = 'highlight',
+                                   templateHighlightOnHover?: string): string {
+        let classes = '';
+        if (templateHighlightOnHover && !this.isEditing()) {
+            const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
+            classes += ` controls-ListView__item_${hoverMode}OnHover_${hoverBackgroundStyle}`;
+        }
+        return classes;
     }
 
     /**

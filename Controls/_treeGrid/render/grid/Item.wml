@@ -111,7 +111,8 @@
            'highlightOnHover': highlightOnHover,
            'cursor': cursor,
            'clickable': clickable,
-           'showItemActionsOnHover': showItemActionsOnHover
+           'showItemActionsOnHover': showItemActionsOnHover,
+           'hoverMode': hoverMode
        }) }}">
          <ws:for data="column in (item || itemData).getColumns()">
 			 <ws:if data="{{ column.isStickied(isSticked) }}">
@@ -145,7 +146,8 @@
            'highlightOnHover': highlightOnHover,
            'cursor': cursor,
            'clickable': clickable,
-           'showItemActionsOnHover': showItemActionsOnHover
+           'showItemActionsOnHover': showItemActionsOnHover,
+           'hoverMode': hoverMode
        }) }}">
       <ws:for data="column in (item || itemData).getColumns()">
          <div class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }} {{ column.isHidden() ? 'ws-hidden' }}"

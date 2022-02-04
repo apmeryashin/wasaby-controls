@@ -1,14 +1,40 @@
 <div class="controlsDemo__wrapper controlsDemo__flex">
-    <Controls.grid:View
-            useTableInOldBrowsers="{{true}}"
-            keyProperty="key"
-            source="{{_viewSource}}"
-            hoverBackgroundStyle="primary"
-            columns="{{_columns}}">
-        <ws:itemTemplate>
-            <ws:partial template="Controls/grid:ItemTemplate"
-                        scope="{{ _options }}"
-                        hoverBackgroundStyle="{{itemTemplate.item.contents.get('population') > 1000000000 ? 'default'}}"/>
-        </ws:itemTemplate>
-    </Controls.grid:View>
+    <Controls-demo.gridNew.DemoLayout.Index>
+        <ws:content>
+            <Controls.grid:View
+                    useTableInOldBrowsers="{{true}}"
+                    keyProperty="key"
+                    source="{{_viewSource}}"
+                    hoverBackgroundStyle="{{_hoverBackground}}"
+                    columns="{{_columns}}">
+                <ws:itemTemplate>
+                    <ws:partial template="Controls/grid:ItemTemplate"
+                                scope="{{ _options }}"
+                                hoverMode="{{ _hoverMode }}"
+                                hoverBackgroundStyle="{{itemTemplate.item.contents.get('population') > 1000000000 ? 'default'}}"/>
+                </ws:itemTemplate>
+            </Controls.grid:View>
+        </ws:content>
+        <ws:rightSidebar isExpanded="{{ true }}">
+            <ws:items>
+                <ws:Array>
+                    <ws:Object>
+                        <ws:template>
+                            <h4 class="controlsDemo__mb1">Переключатель основного фона при ховере. Сейчас={{ _hoverBackground }}</h4>
+                            <button on:click="_setHoverBackground('primary')" style="padding: 3px;">Фон "primary"</button>
+                            <button on:click="_setHoverBackground('default')" style="padding: 3px;">Фон "default"</button>
+                        </ws:template>
+                    </ws:Object>
+                    <ws:Object>
+                        <ws:template>
+                            <h4 class="controlsDemo__mb1">Переключатель опции hoverMode. Сейчас={{ _hoverMode }}</h4>
+                            <button on:click="_setHoverMode('background')" class="controlsDemo__mr1" style="padding: 3px;">background</button>
+                            <button on:click="_setHoverMode('border')" class="controlsDemo__mr1" style="padding: 3px;">border</button>
+                            <button on:click="_setHoverMode('shadow')" style="padding: 3px;">shadow</button>
+                        </ws:template>
+                    </ws:Object>
+                </ws:Array>
+            </ws:items>
+        </ws:rightSidebar>
+    </Controls-demo.gridNew.DemoLayout.Index>
 </div>

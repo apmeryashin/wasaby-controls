@@ -409,6 +409,61 @@
       background-color: var(--item_hover_background-color_list);
    }
 
+   // border hover
+
+   .controls-BaseControl_hover_enabled .controls-Grid__row_borderOnHover_default:hover .controls-Grid__row-cell:not(.controls-Grid__row-ladder-cell) {
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+   }
+   .controls-BaseControl_hover_enabled .controls-Grid__row_borderOnHover_default:hover .controls-Grid__row-cell:first-child {
+      border-left: 1px solid var(--border-color);
+      // use border-radius option ???
+   }
+   .controls-BaseControl_hover_enabled .controls-Grid__row_borderOnHover_default:hover .controls-Grid__row-cell:last-child {
+      border-right: 1px solid var(--border-color);
+      // use border-radius option ???
+   }
+
+   // shadow hover
+
+   // for cell-content
+   .controls-BaseControl_hover_enabled .controls-Grid__row_shadowOnHover_default:hover .controls-Grid__row-cell:not(.controls-Grid__row-ladder-cell) .controls-Grid__row-cell__content {
+      background: var(--background-color);
+      width: 100%;
+      z-index: 1; // сохранить текущие z-index
+   }
+   // for cell-content // use border-radius option ???
+   .controls-BaseControl_hover_enabled .controls-Grid__row_shadowOnHover_default:hover .controls-Grid__row-cell:first-child .controls-Grid__row-cell__content {
+      border-bottom-left-radius: 8px;
+      border-top-left-radius: 8px;
+   }
+   // for cell-content // use border-radius option ???
+   .controls-BaseControl_hover_enabled .controls-Grid__row_shadowOnHover_default:hover .controls-Grid__row-cell:last-child .controls-Grid__row-cell__content {
+      border-bottom-right-radius: 8px;
+      border-top-right-radius: 8px;
+   }
+   .controls-BaseControl_hover_enabled .controls-Grid__row_shadowOnHover_default:hover .controls-Grid__row-cell:before {
+      content: '\200b';
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);
+      z-index: 0;
+   }
+   // use border-radius option ???
+   .controls-BaseControl_hover_enabled .controls-Grid__row_shadowOnHover_default:hover .controls-Grid__row-cell:first-child:before {
+      border-bottom-left-radius: 8px;
+      border-top-left-radius: 8px;
+   }
+   .controls-BaseControl_hover_enabled .controls-Grid__row_shadowOnHover_default:hover .controls-Grid__row-cell:last-child:before {
+      border-bottom-right-radius: 8px;
+      border-top-right-radius: 8px;
+   }
+
    .controls-Grid__row_highlightOnHover_default:hover {
       /** Общая проблема с background'ом у контролов, которые лежат в списке, решается через background: inherit **/
       .controls-SelectedCollection__InfoBox_fixed {
