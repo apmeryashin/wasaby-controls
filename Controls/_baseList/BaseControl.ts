@@ -5189,7 +5189,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }).then(() => {
             // Подскролл к редактору
             if (this._isMounted) {
-                return _private.scrollToItem(this, item.contents.getKey(), false, false);
+                return _private.scrollToItem(this, item.contents.getKey(), 'top', false);
             }
         });
     }
