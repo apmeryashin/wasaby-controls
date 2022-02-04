@@ -480,16 +480,19 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     resetItems(): void {
+        const activeIndex = this._collection.getIndexByKey(this._activeElementKey);
+        // скроллим к активному элементу только если он задан и он есть в списке
+        const shouldScrollToActiveItem = activeIndex !== -1;
+
         // смотри комментарий в beforeRenderListControl
         // Не нужно сбрасывать скролл, если список не был проскроллен.
         // Т.к. из-за вызова скролла сжимается графическая шапка.
         // Не нужно сбрасывать скролл, если будем скроллить к активному элементу.
         this._shouldResetScrollPosition = this._scrollOnReset === 'reset'
             && !!this._scrollPosition
-            && !this._activeElementKey;
+            && !shouldScrollToActiveItem;
         const totalCount = this._collection.getCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
-        const activeIndex = this._activeElementKey ? this._collection.getIndexByKey(this._activeElementKey) : 0;
 
         // Инициализируем диапазон, начиная:
         // с текущего startIndex, если собираемся оставить прежнюю позицию скролла,
@@ -499,7 +502,7 @@ export abstract class AbstractListVirtualScrollController<
             ? this._collection.getStartIndex()
             : (activeIndex !== -1 ? activeIndex : 0);
         this._scrollController.resetItems(totalCount, startIndex);
-        if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
+        if (shouldScrollToActiveItem) {
             if (this._renderInProgress) {
                 this._scheduleScroll({
                     type: 'scrollToElement',
