@@ -10,7 +10,7 @@
                     on:editingObjectChanged="_editingObjectChanged()"
                     on:groupClick="_groupClick()"
                     attr:class="controls-FilterViewPanel__propertyGrid">
-                <ws:itemsContainerPadding top="null" left="null" right="xl" bottom="l"/>
+                <ws:itemsContainerPadding top="null" left="null" right="xl" bottom="{{_viewModel.hasExtendedItems() ? 'null' : 'l'}}"/>
                 <ws:itemTemplate>
                     <ws:partial template="Controls/propertyGrid:ItemTemplate"
                                 attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
@@ -54,10 +54,10 @@
                                    attr:class="controls-FilterViewPanel__scroll
                                                controls-FilterViewPanel__scroll-{{_options.viewMode}}
                                                controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}">
-            <ws:partial template="propertyGrid"/>
             <ws:if data="{{_options.viewMode === 'default' && _viewModel.hasExtendedItems()}}">
                 <div class="controls_filterPanel-horizontal__separator"></div>
             </ws:if>
+            <ws:partial template="propertyGrid"/>
             <ws:partial template="extendedItems" attr:class="controls-FilterPanelPopup__extendedItems-vertical"/>
             <ws:partial template="historyItems"/>
         </Controls.scroll:Container>
