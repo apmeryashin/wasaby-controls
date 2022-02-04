@@ -206,10 +206,10 @@ export abstract class AbstractObserversController {
 
         // Сперва смотрим триггер в конце списка, т.к. в первую очередь должны в эту сторону отображать записи.
         if (this._isTriggerVisible('forward', contentSizeBeforeList)) {
-            this._intersectionObserverHandler('bottomIn');
+            this._intersectionObserverHandler('bottomIn', contentSizeBeforeList);
         }
         if (this._isTriggerVisible('backward', contentSizeBeforeList)) {
-            this._intersectionObserverHandler('topIn');
+            this._intersectionObserverHandler('topIn', contentSizeBeforeList);
         }
     }
 
@@ -266,7 +266,7 @@ export abstract class AbstractObserversController {
 
     // endregion OnCollectionChange
 
-    private _intersectionObserverHandler(eventName: TIntersectionEvent): void {
+    private _intersectionObserverHandler(eventName: TIntersectionEvent, contentSizeBeforeList: number = 0): void {
         if (eventName === 'bottomOut' || eventName === 'topOut') {
             return;
         }
@@ -282,7 +282,9 @@ export abstract class AbstractObserversController {
         // Если у нас и так виден триггер вниз, то вверх не нужно вызывать обсервер.
         // Это нужно, чтобы в первую очередь отображались записи вниз.
         const shouldHandleTrigger = direction === 'forward' ||
-            direction === 'backward' && (!this._hasItemsOutRange.forward || !this._isTriggerVisible('forward'));
+            direction === 'backward' && (
+                !this._hasItemsOutRange.forward || !this._isTriggerVisible('forward', contentSizeBeforeList)
+            );
         if (shouldHandleTrigger) {
             this._observersCallback(direction);
         }
