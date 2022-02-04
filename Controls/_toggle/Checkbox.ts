@@ -196,7 +196,7 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  *       ...
  *    }
  * </pre>
- * @see option Value
+ * @see value
  */
 
 /*
@@ -262,7 +262,7 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  *       ...
  *    }
  * </pre>
- * @see option triState
+ * @see triState
  * @see event valueChanged()
  */
 
