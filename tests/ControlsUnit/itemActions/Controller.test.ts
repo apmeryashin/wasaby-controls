@@ -392,6 +392,9 @@ describe('Controls/_itemActions/Controller', () => {
             editingItem.setEditing(true, editingItem.getContents());
             // @ts-ignore
             collection.setEditing(true);
+            const spySetActionsArray = collection.getItems()
+                .filter((it) => it !== editingItem)
+                .map((it) => sandbox.spy(it, 'setActions'));
             itemActionsController.update(initializeControllerOptions({
                 // @ts-ignore
                 editingItem,
@@ -401,6 +404,11 @@ describe('Controls/_itemActions/Controller', () => {
             }));
             assert.equal(editingItem.getActions().showed.length, 4,
                 'item 4 is editing and should contain 4 itemActions');
+            // При наличии редактируемой записи должны обновить itemActions только на ней
+            spySetActionsArray.forEach((spySetActions) => {
+                assert.isFalse(spySetActions.called);
+                spySetActions.restore();
+            });
         });
 
         // T1.17. Должны адекватно набираться ItemActions для breadcrumbs (когда getContents() возвращает массив
