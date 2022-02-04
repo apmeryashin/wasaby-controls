@@ -218,7 +218,7 @@ export class Calculator {
         const direction = params.direction;
         const range = params.range || this._range;
         const placeholders = params.placeholders || this._placeholders;
-        const itemsSizes = this._itemsSizes;
+        const itemsSizes = params.itemsSizes || this._itemsSizes;
 
         // Возможен кейс, что после resetItems записи не успели отрисоваться
         // и в этот же _beforeUpdate изменили коллекцию. Допустим свернули узлы.
