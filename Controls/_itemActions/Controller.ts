@@ -592,17 +592,21 @@ export class Controller {
         if (this._collection.isEventRaising()) {
             this._collection.setEventRaising(false, true);
         }
-        this._collection.getViewIterator().each((item) => {
-            const itemChanged = this._updateActionsOnParticularItem(item);
-            hasChanges = hasChanges || itemChanged;
-        });
+
+        // Если есть редактируемая запись, то itemActions нужно показать только на ней. Нет смысла обновлять все записи.
         if (editingItem) {
             this._updateActionsOnParticularItem(editingItem);
+        } else {
+            this._collection.getViewIterator().each((item) => {
+                const itemChanged = this._updateActionsOnParticularItem(item);
+                hasChanges = hasChanges || itemChanged;
+            });
+            this.setActionsAssigned(true);
         }
+
         if (!this._collection.isEventRaising()) {
             this._collection.setEventRaising(true, true);
         }
-        this.setActionsAssigned(true);
 
         if (hasChanges) {
             // Если поменялась видимость ItemActions через VisibilityCallback, то надо обновить конфиг свайпа
