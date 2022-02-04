@@ -222,6 +222,10 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         const arrWidth = this._getItemsWidth(items, options.displayProperty);
         const containerWidth = options.containerWidth;
         const clonedItems = items.clone().getRawData();
+        if (options.align === 'right') {
+            arrWidth.reverse();
+            clonedItems.reverse();
+        }
         const currentItemIndex =
                            clonedItems.findIndex((item) => item[this._keyProperty] === key);
         let currentContainerWidth = this._moreButtonWidth + PADDING_OF_MORE_BUTTON + arrWidth[currentItemIndex];
@@ -232,14 +236,18 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         for (let i = 0; i <= arrWidth.length - 1; i++) {
              if (containerWidth - currentContainerWidth > minWidth) {
                  if (i !== currentItemIndex) {
-                     const add = !afterMenuSelection || currentContainerWidth + arrWidth[i] < containerWidth;
-                     const leftPosition = afterMenuSelection ? options.align === 'left' : i < currentItemIndex;
+                     const add = !afterMenuSelection || currentContainerWidth + arrWidth[i] - containerWidth < minWidth;
+                     const leftPosition = afterMenuSelection || i < currentItemIndex;
                      if (add) {
                          currentContainerWidth += arrWidth[i];
                          if (leftPosition) {
                              aboutSelection.push(clonedItems[i]);
                          } else {
-                             rawData.push(clonedItems[i]);
+                             if (options.align === 'right') {
+                                 rawData.unshift(clonedItems[i]);
+                             } else {
+                                 rawData.push(clonedItems[i]);
+                             }
                          }
                      }
                  }
@@ -249,6 +257,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         }
         let concatPosition = 0;
         if (options.align === 'right') {
+            aboutSelection.reverse();
             concatPosition = rawData.length;
         }
         rawData.splice(concatPosition, 0, ...aboutSelection);
