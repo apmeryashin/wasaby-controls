@@ -1,18 +1,17 @@
 import IDateLinkView from 'Controls/_date/interface/ILinkView';
 import componentTmpl = require('wml!Controls/_date/LinkView/LinkView');
-import {Logger} from 'UI/Utils';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFontColorStyleOptions} from 'Controls/interface';
 import {isLeftMouseButton} from 'Controls/popup';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from 'Types/entity';
-import dateControlsUtils from '../_date/Utils';
 import {Range as dateRangeUtils} from 'Controls/dateUtils';
 import ICaptionOptions from 'Controls/_date/interface/ICaption';
 import IValueOptions from 'Controls/_date/interface/IValue';
 import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
 import 'css!Controls/dateRange';
 import 'css!Controls/CommonClasses';
+import {EventUtils} from 'UI/Events';
 
 export interface ILinkView extends IControlOptions, IFontColorStyleOptions, ICaptionOptions, IValueOptions {
 }
@@ -21,6 +20,7 @@ class LinkView<T extends ILinkView> extends Control<T> {
     protected _template: TemplateFunction = componentTmpl;
     protected _caption: string = '';
     protected _fontColorStyle: string = null;
+    protected _proxyEvent: Function = EventUtils.tmplNotify;
 
     protected _resetButtonVisible: boolean;
 
