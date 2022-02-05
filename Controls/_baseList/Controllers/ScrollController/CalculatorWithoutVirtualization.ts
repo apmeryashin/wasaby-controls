@@ -1,10 +1,6 @@
 import {Calculator, ICalculatorResult} from 'Controls/_baseList/Controllers/ScrollController/Calculator';
 import type { ICalcMode, IDirection } from './ScrollController';
-import {
-    getPlaceholdersByRange,
-    getRangeByIndex,
-    getRangeByItemsSizes
-} from 'Controls/_baseList/Controllers/ScrollController/CalculatorUtil';
+import { getRangeByIndex } from 'Controls/_baseList/Controllers/ScrollController/CalculatorUtil';
 
 export default class CalculatorWithoutVirtualization extends Calculator {
     shiftRangeToDirection(direction: IDirection): ICalculatorResult {
