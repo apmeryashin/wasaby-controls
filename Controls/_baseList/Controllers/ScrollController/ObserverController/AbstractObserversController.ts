@@ -112,6 +112,8 @@ export abstract class AbstractObserversController {
         if (options.additionalTriggersOffsets) {
             this._additionalTriggersOffsets = options.additionalTriggersOffsets;
         }
+
+        this._recalculateOffsets();
         if (this._listContainer) {
             this._updateTriggers();
         }
@@ -126,14 +128,6 @@ export abstract class AbstractObserversController {
 
     setListContainer(newListContainer: HTMLElement): void {
         this._listContainer = newListContainer;
-        if (this._observer) {
-            this._observer.destroy();
-        }
-        this._updateTriggers();
-    }
-
-    setTriggersQuerySelector(newTriggersQuerySelector: string): void {
-        this._triggersQuerySelector = newTriggersQuerySelector;
         if (this._observer) {
             this._observer.destroy();
         }
@@ -231,10 +225,6 @@ export abstract class AbstractObserversController {
 
     private _setTriggerVisible(direction: IDirection, visible: boolean): void {
         const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
-        if (!trigger) {
-            return;
-        }
-
         if (trigger.style.display !== 'none' && trigger.style.display !== '') {
             Logger.error(`${ERROR_PATH}::_setTriggerVisibility | ` +
                 'В стиле триггера невозможное значение display. ' +
@@ -253,7 +243,7 @@ export abstract class AbstractObserversController {
 
     // region OnCollectionChange
 
-    resetItems(totalCount: number): ITriggersOffsets {
+    resetItems(): ITriggersOffsets {
         // Прижимаем триггер к краю, чтобы после перезагрузки не было лишних подгрузок
         this.setBackwardTriggerPosition('null');
         this.setForwardTriggerPosition('null');
@@ -326,6 +316,10 @@ export abstract class AbstractObserversController {
         }
 
         this._triggers = this._getTriggers();
+
+        if (this._triggers.length !== COUNT_TRIGGERS) {
+            return;
+        }
 
         this._triggers[0].style.display = this._triggersVisibility.backward ? '' : 'none';
         this._triggers[1].style.display = this._triggersVisibility.forward ? '' : 'none';
