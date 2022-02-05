@@ -37,7 +37,11 @@ export function getItemsContainer(collection: Collection, customGetItemElement?:
     return itemsContainer;
 }
 
-export function getListContainer(collection: Collection, customGetItemElement?: TGetItemElement): HTMLElement {
+export function getListContainer(
+    collection: Collection,
+    customGetItemElement?: TGetItemElement,
+    withoutTriggers: boolean = false
+): HTMLElement {
     const dom = new JSDOM(`<div class="${ListContainerUniqueClass}"></div>`);
 
     const listContainer: HTMLElement = dom.window.document.querySelector(`.${ListContainerUniqueClass}`);
@@ -45,9 +49,13 @@ export function getListContainer(collection: Collection, customGetItemElement?: 
     if (collection.getTopIndicator().isDisplayed()) {
         listContainer.appendChild(getIndicatorElement());
     }
-    listContainer.appendChild(getTriggerElement());
+    if (!withoutTriggers) {
+        listContainer.appendChild(getTriggerElement());
+    }
     listContainer.appendChild(getItemsContainer(collection, customGetItemElement));
-    listContainer.appendChild(getTriggerElement());
+    if (!withoutTriggers) {
+        listContainer.appendChild(getTriggerElement());
+    }
     if (collection.getBottomIndicator().isDisplayed()) {
         listContainer.appendChild(getIndicatorElement());
     }

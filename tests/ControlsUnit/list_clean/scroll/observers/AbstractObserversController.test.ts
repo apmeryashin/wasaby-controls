@@ -1,6 +1,6 @@
 import jsdom = require('jsdom');
 import { assert } from 'chai';
-import {SinonSpy, spy } from 'sinon';
+import { SinonSpy, spy, createSandbox } from 'sinon';
 import {
     IObserversControllerOptions as ControllerOptions, ObserversController
 } from 'Controls/_baseList/Controllers/ScrollController/ObserverController/ObserversController';
@@ -11,6 +11,7 @@ import {
     getListControl, getScrollContainerWithList, ListContainerUniqueClass,
     TriggerClass
 } from 'ControlsUnit/list_clean/scroll/initUtils';
+import {Logger} from 'UI/Utils';
 
 const DEFAULT_TRIGGERS_OFFSET_COEFF = 1 / 3;
 
@@ -41,12 +42,17 @@ describe('Controls/_baseList/Controllers/AbstractObserversController', () => {
     let listContainer: HTMLElement;
     let triggers: HTMLElement[];
 
+    let sandbox;
+    let stubLoggerError;
+
     before(() => {
         window = new jsdom.JSDOM('').window;
         Object.defineProperty(window.HTMLElement.prototype, 'offsetParent', {
             get() { return this.parentNode; },
             set() { /* NEED */}
         });
+
+        sandbox = createSandbox();
     });
 
     after(() => {
@@ -65,13 +71,16 @@ describe('Controls/_baseList/Controllers/AbstractObserversController', () => {
             viewportSize: 300
         });
         triggers = Array.from(listContainer.querySelectorAll(`.${TriggerClass}`)) as HTMLElement[];
+
+        stubLoggerError = sandbox.stub(Logger, 'error').callsFake((message, errorPoint, errorInfo) => ({/* CALLED */}));
     });
 
     afterEach(() => {
-       listContainer = null;
-       controller = null;
-       triggers = null;
-       observersCallback = null;
+        listContainer = null;
+        controller = null;
+        triggers = null;
+        observersCallback = null;
+        sandbox.restore();
     });
 
     describe('constructor', () => {
@@ -95,6 +104,16 @@ describe('Controls/_baseList/Controllers/AbstractObserversController', () => {
             assert.equal(triggers[1].style.display, '');
             assert.equal(triggers[0].style.top, '100px');
             assert.equal(triggers[1].style.bottom, '100px');
+        });
+
+        it('not find triggers => should error', () => {
+            const collection = getCollection([{key: 1}]);
+            const listContainer = getListContainer(collection, null, true);
+            controller.setListContainer(listContainer);
+
+            const triggers = Array.from(listContainer.querySelectorAll(`.${TriggerClass}`)) as HTMLElement[];
+            assert.equal(triggers.length, 0);
+            assert.isTrue(stubLoggerError.called);
         });
 
         it('with nested lists, not should update triggers in nested list', () => {
@@ -199,6 +218,12 @@ describe('Controls/_baseList/Controllers/AbstractObserversController', () => {
             assert.equal(triggers[1].style.display, '');
             assert.equal(triggers[0].style.top, '100px');
             assert.equal(triggers[1].style.bottom, '100px');
+        });
+
+        it('trigger has invalid display style => should error', () => {
+            triggers[0].style.display = 'absolute';
+            controller.setBackwardTriggerVisible(false);
+            assert.isTrue(stubLoggerError.called);
         });
     });
 
