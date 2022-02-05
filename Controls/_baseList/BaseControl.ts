@@ -750,6 +750,7 @@ const _private = {
                     return;
                 }
 
+                self._addItemsByLoadToDirection = false;
                 self._handleLoadToDirection = false;
 
                 const hideIndicatorOnCancelQuery =
