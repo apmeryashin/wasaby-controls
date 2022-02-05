@@ -68,12 +68,13 @@ export default class History extends Control<IHistoryOptions> {
             const name = getPropValue(elem, 'name');
             const textValue = getPropValue(elem, 'textValue');
             const value = getPropValue(elem, 'value');
-            const editorValue = {
-                value,
-                textValue
-            };
-
-            this._notify('historyItemClick', [{editorValue, name}]);
+            if (value !== undefined) {
+                const editorValue = {
+                    value,
+                    textValue
+                };
+                this._notify('historyItemClick', [{editorValue, name}]);
+            }
         });
     }
 
