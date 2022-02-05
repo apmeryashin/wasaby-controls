@@ -112,6 +112,8 @@ export abstract class AbstractObserversController {
         if (options.additionalTriggersOffsets) {
             this._additionalTriggersOffsets = options.additionalTriggersOffsets;
         }
+
+        this._recalculateOffsets();
         if (this._listContainer) {
             this._updateTriggers();
         }
@@ -126,14 +128,6 @@ export abstract class AbstractObserversController {
 
     setListContainer(newListContainer: HTMLElement): void {
         this._listContainer = newListContainer;
-        if (this._observer) {
-            this._observer.destroy();
-        }
-        this._updateTriggers();
-    }
-
-    setTriggersQuerySelector(newTriggersQuerySelector: string): void {
-        this._triggersQuerySelector = newTriggersQuerySelector;
         if (this._observer) {
             this._observer.destroy();
         }
@@ -253,7 +247,7 @@ export abstract class AbstractObserversController {
 
     // region OnCollectionChange
 
-    resetItems(totalCount: number): ITriggersOffsets {
+    resetItems(): ITriggersOffsets {
         // Прижимаем триггер к краю, чтобы после перезагрузки не было лишних подгрузок
         this.setBackwardTriggerPosition('null');
         this.setForwardTriggerPosition('null');
