@@ -663,6 +663,61 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
                 activeElementIndexChanged: false
             });
         });
+
+        it('scroll position outside of max values', () => {
+            let result = calculator.scrollPositionChange(-20, true);
+            assert.deepEqual(result, {
+                activeElementIndex: 0,
+                activeElementIndexChanged: true
+            });
+
+            result = calculator.scrollPositionChange(2000, true);
+            assert.deepEqual(result, {
+                activeElementIndex: 9,
+                activeElementIndexChanged: true
+            });
+        });
+
+        it('not has items', () => {
+            calculator.resetItems(0, 0);
+            const result = calculator.scrollPositionChange(130, true);
+            assert.deepEqual(result, {
+                activeElementIndex: undefined,
+                activeElementIndexChanged: false
+            });
+        });
+
+        it('enabled feature for active element', () => {
+            const calculator = getCalculator({
+                totalCount: 10,
+                viewportSize: 300,
+                contentSize: 500,
+                scrollPosition: 0,
+                itemsSizes: [
+                    {size: 50, offset: 0, key: '1'},
+                    {size: 50, offset: 50, key: '2'},
+                    {size: 50, offset: 100, key: '3'},
+                    {size: 50, offset: 150, key: '4'},
+                    {size: 50, offset: 200, key: '5'},
+                    {size: 50, offset: 250, key: '6'},
+                    {size: 50, offset: 300, key: '7'},
+                    {size: 50, offset: 350, key: '8'},
+                    {size: 50, offset: 400, key: '9'},
+                    {size: 50, offset: 450, key: '10'}
+                ],
+                virtualScrollConfig: {
+                    pageSize: 10
+                },
+                feature1183225611: true
+            });
+            calculator.resetItems(10, 0);
+
+            const result = calculator.scrollPositionChange(130, true);
+            assert.deepEqual(result, {
+                activeElementIndex: 2,
+                activeElementIndexChanged: true
+            });
+        });
     });
 
     describe('addItems', () => {
@@ -841,6 +896,26 @@ describe('Controls/_baseList/Controllers/Calculator', () => {
             calculator.updateItemsSizes(Array(20).fill(EMPTY_SIZE));
             calculator.resetItems(20, 5);
             assert.deepEqual(calculator.getRange(), {startIndex: 5, endIndex: 15});
+        });
+
+        it('pass givenItemsSizes', () => {
+            calculator.updateGivenItemsSizes([
+                {size: 50, offset: 0, key: '1'},
+                {size: 50, offset: 50, key: '2'},
+                {size: 50, offset: 100, key: '3'},
+                {size: 50, offset: 150, key: '4'},
+                {size: 50, offset: 200, key: '5'},
+                {size: 50, offset: 250, key: '6'},
+                {size: 50, offset: 300, key: '7'},
+                {size: 50, offset: 350, key: '8'},
+                {size: 50, offset: 400, key: '9'},
+                {size: 50, offset: 450, key: '10'}
+            ]);
+            calculator.resetItems(10, 0);
+            assert.deepEqual(calculator.getRange(), {startIndex: 0, endIndex: 7});
+
+            calculator.resetItems(5, 2);
+            assert.deepEqual(calculator.getRange(), {startIndex: 2, endIndex: 5});
         });
     });
 });
