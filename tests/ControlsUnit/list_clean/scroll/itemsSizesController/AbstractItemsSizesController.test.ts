@@ -6,61 +6,13 @@ import { stub } from 'sinon';
 import {
     getCollection, getItemsContainer,
     getListContainer,
+    getScrollContainerWithList,
     ItemClass,
     ItemsContainerUniqueClass,
     ListContainerUniqueClass
 } from 'ControlsUnit/list_clean/scroll/initUtils';
 import { ItemsSizeController } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
 import { Collection } from 'Controls/display';
-
-function getScrollContainerWithList(collection: Collection, beforeListContent?: HTMLElement): HTMLElement {
-    const listContainer = getListContainer(collection);
-
-    const dom = new JSDOM('<div class="controls-Scroll-ContainerBase__content"></div>');
-    const scrollContainer: HTMLElement = dom.window.document.querySelector('.controls-Scroll-ContainerBase__content');
-    const itemsContainer = listContainer.querySelector(`.${ItemsContainerUniqueClass}`) as HTMLElement;
-
-    stub(scrollContainer, 'getBoundingClientRect').callsFake(() => {
-        return {
-            width: 300,
-            height: 0,
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0
-        } as DOMRect;
-    });
-    stub(itemsContainer, 'getBoundingClientRect').callsFake(() => {
-        const beforeListOffset = beforeListContent?.getBoundingClientRect().height || 0;
-        const indicatorOffset = collection.getTopIndicator().isDisplayed() ? 48 : 0;
-        return {
-            width: 300,
-            height: 0,
-            top: beforeListOffset + indicatorOffset,
-            left: 0,
-            right: 0,
-            bottom: 0
-        } as DOMRect;
-    });
-    stub(listContainer, 'getBoundingClientRect').callsFake(() => {
-        const beforeListOffset = beforeListContent?.getBoundingClientRect().height || 0;
-        return {
-            width: 300,
-            height: 0,
-            top: beforeListOffset,
-            left: 0,
-            right: 0,
-            bottom: 0
-        } as DOMRect;
-    });
-
-    if (beforeListContent) {
-        scrollContainer.appendChild(beforeListContent);
-    }
-    scrollContainer.appendChild(listContainer);
-
-    return scrollContainer;
-}
 
 function getBeforeListContent(): HTMLElement {
     const dom = new JSDOM('<div class="beforeListContent"></div>');
