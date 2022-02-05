@@ -281,14 +281,6 @@ export class ScrollController {
         this._itemsSizesController.setListContainer(newListContainer);
     }
 
-    /**
-     * Обновить селектор триггеров. Также производит реинициализацию observers.
-     * @param {string} newTriggersQuerySelector
-     */
-    setTriggersQuerySelector(newTriggersQuerySelector: string): void {
-        this._observersController.setTriggersQuerySelector(newTriggersQuerySelector);
-    }
-
     // endregion Update DOM elements
 
     // region Update items sizes
@@ -362,7 +354,7 @@ export class ScrollController {
      * @param startIndex Начальный индекс диапазона отображаемых записей
      */
     resetItems(totalCount: number, startIndex: number): void {
-        const triggerOffsets = this._observersController.resetItems(totalCount);
+        const triggerOffsets = this._observersController.resetItems();
         this._calculator.setTriggerOffsets(triggerOffsets);
 
         // TODO oldItemsSizes по идее всегда нужно прокидывать, т.к. именно по ним нужно считать EdgeItem
