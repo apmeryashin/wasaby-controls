@@ -1,16 +1,18 @@
 import jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 import { assert } from 'chai';
-import { stub } from 'sinon';
+import { createSandbox, stub } from 'sinon';
 
 import {
-    getCollection, getItemsContainer,
+    getCollection,
+    getItemsContainer,
     getListContainer,
     ItemClass,
     ItemsContainerUniqueClass,
     ListContainerUniqueClass
 } from 'ControlsUnit/list_clean/scroll/initUtils';
 import { ItemsSizeController } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
+import {Logger} from 'UI/Utils';
 import { Collection } from 'Controls/display';
 
 function getScrollContainerWithList(collection: Collection, beforeListContent?: HTMLElement): HTMLElement {
@@ -89,8 +91,12 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
     let listContainer: HTMLElement;
     let itemsContainer: HTMLElement;
 
+    let sandbox;
+    let stubLoggerError;
+
     before(() => {
         window = new JSDOM('').window;
+        sandbox = createSandbox();
     });
 
     after(() => {
@@ -114,6 +120,8 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
             itemsQuerySelector: `.${ItemsContainerUniqueClass} > .${ItemClass}`,
             totalCount: collection.getCount()
         });
+
+        stubLoggerError = sandbox.stub(Logger, 'error').callsFake((message, errorPoint, errorInfo) => ({/* CALLED */}));
     });
 
     afterEach(() => {
@@ -122,6 +130,7 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
         scrollContainer = null;
         listContainer = null;
         itemsContainer = null;
+        sandbox.restore();
     });
 
     describe('constructor', () => {
@@ -145,6 +154,53 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
                 ]
             );
         });
+
+        it('update items sizes after shift range', () => {
+            let itemsSizes = controller.updateItemsSizes({startIndex: 0, endIndex: 3});
+            assert.equal(itemsSizes.length, 3);
+            assert.deepEqual(
+                itemsSizes,
+                [
+                    {size: 15, offset: 0, key: '1'},
+                    {size: 20, offset: 15, key: '2'},
+                    {size: 30, offset: 35, key: '3'}
+                ]
+            );
+
+            controller.addItems(3, 3);
+            const collection = getCollection([
+                {key: 4, height: 20},
+                {key: 5, height: 20},
+                {key: 6, height: 20}
+            ]);
+            const itemsContainer = getItemsContainer(collection);
+            controller.setItemsContainer(itemsContainer);
+
+            itemsSizes = controller.updateItemsSizes({startIndex: 3, endIndex: 6});
+            assert.equal(itemsSizes.length, 6);
+            assert.deepEqual(
+                itemsSizes,
+                [
+                    {size: 15, offset: 0, key: '1'},
+                    {size: 20, offset: 15, key: '2'},
+                    {size: 30, offset: 35, key: '3'},
+                    {size: 20, offset: 65, key: '4'},
+                    {size: 20, offset: 85, key: '5'},
+                    {size: 20, offset: 105, key: '6'}
+                ]
+            );
+        });
+
+        it('has not rendered items => should be error', () => {
+            controller.updateItemsSizes({startIndex: 0, endIndex: 4});
+            assert.isTrue(stubLoggerError.called);
+        });
+
+        it('error count items rendered outside range', () => {
+            controller.setCountItemsRenderedOutsideRange(1);
+            controller.updateItemsSizes({startIndex: 0, endIndex: 3});
+            assert.isTrue(stubLoggerError.called);
+        });
     });
 
     describe('getElement', () => {
@@ -156,14 +212,19 @@ describe('Controls/_baseList/Controllers/AbstractItemsSizesController', () => {
     });
 
     describe('getContentSizeBeforeItems', () => {
-       it('not has content', () => {
-           assert.equal(controller.getContentSizeBeforeItems(), 0);
-       });
+        it('not has items container', () => {
+            controller.setItemsContainer(null);
+            assert.isNull(controller.getContentSizeBeforeItems());
+        });
 
-       it('before items displayed indicator', () => {
-           collection.displayIndicator('top', 'loading');
-           assert.equal(controller.getContentSizeBeforeItems(), 48);
-       });
+        it('not has content', () => {
+            assert.equal(controller.getContentSizeBeforeItems(), 0);
+        });
+
+        it('before items displayed indicator', () => {
+            collection.displayIndicator('top', 'loading');
+            assert.equal(controller.getContentSizeBeforeItems(), 48);
+        });
     });
 
     describe('getContentSizeBeforeList', () => {
