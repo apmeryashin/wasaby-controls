@@ -6,7 +6,6 @@ import { createSandbox, stub } from 'sinon';
 import {
     getCollection,
     getItemsContainer,
-    getListContainer,
     getScrollContainerWithList,
     ItemClass,
     ItemsContainerUniqueClass,
@@ -14,7 +13,6 @@ import {
 } from 'ControlsUnit/list_clean/scroll/initUtils';
 import { ItemsSizeController } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController/ItemsSizeController';
 import {Logger} from 'UI/Utils';
-import { Collection } from 'Controls/display';
 
 function getBeforeListContent(): HTMLElement {
     const dom = new JSDOM('<div class="beforeListContent"></div>');

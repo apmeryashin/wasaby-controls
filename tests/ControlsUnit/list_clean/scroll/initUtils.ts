@@ -2,9 +2,10 @@ import jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 import { stub } from 'sinon';
 
-import {Collection, CollectionItem} from 'Controls/display';
-import {RecordSet} from 'Types/collection';
-import {BaseControl} from 'Controls/baseList';
+import { Collection, CollectionItem } from 'Controls/display';
+import { RecordSet } from 'Types/collection';
+import { BaseControl } from 'Controls/baseList';
+import { Control } from 'UI/Base';
 
 type TGetItemElement = (item: CollectionItem) => HTMLElement;
 
@@ -20,7 +21,9 @@ export function getCollection(items: object[]): Collection {
             rawData: items,
             keyProperty: 'key'
         }),
-        keyProperty: 'key'
+        keyProperty: 'key',
+        stickyMarkedItem: true,
+        style: 'master'
     });
 }
 
@@ -29,7 +32,7 @@ export function getItemsContainer(collection: Collection, customGetItemElement?:
 
     const itemsContainer: HTMLElement = dom.window.document.querySelector(`.${ItemsContainerUniqueClass}`);
 
-    collection.each((item) => {
+    collection.getViewIterator().each((item) => {
         const itemElement = customGetItemElement ? customGetItemElement(item) : getItemElement(item);
         itemsContainer.appendChild(itemElement);
     });
@@ -129,8 +132,17 @@ export function getListContainerWithNestedList(collection: Collection, nestedCol
     return getListContainer(collection, customGetItemElement);
 }
 
-export function getListControl(): BaseControl {
-    return new BaseControl({}, {});
+export function getListControl(): Control {
+    return new BaseControl({}, {}) as unknown as Control;
+}
+
+export function renderCollectionChanges(itemsContainer: HTMLElement, collection: Collection): void {
+    const childElements = Array.from(itemsContainer.children);
+    childElements.forEach((it) => it.remove());
+    collection.getViewIterator().each((item) => {
+        const itemElement = getItemElement(item);
+        itemsContainer.appendChild(itemElement);
+    });
 }
 
 function getItemElement(item: CollectionItem): HTMLElement {

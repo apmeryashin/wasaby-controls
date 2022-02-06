@@ -264,6 +264,13 @@ export abstract class AbstractListVirtualScrollController<
         this._scrollController.setListContainer(listContainer);
     }
 
+    endBeforeMountListControl(): void {
+        // Устанавливаем _renderInProgress именно после маунта списка, т.к. нужно дождаться завершения:
+        // - инициализации начальных индексов коллекции;
+        // - инициализации строки добавления по месту.
+        this._renderInProgress = true;
+    }
+
     afterMountListControl(): void {
         this._renderInProgress = false;
         this._renderNewIndexes = false;
@@ -288,13 +295,6 @@ export abstract class AbstractListVirtualScrollController<
                 endIndex: this._collection.getStopIndex()
             });
         }
-    }
-
-    endBeforeMountListControl(): void {
-        // Устанавливаем _renderInProgress именно после маунта списка, т.к. нужно дождаться завершения:
-        // - инициализации начальных индексов коллекции;
-        // - инициализации строки добавления по месту.
-        this._renderInProgress = true;
     }
 
     destroy(): void {
@@ -337,6 +337,12 @@ export abstract class AbstractListVirtualScrollController<
             if (!this._isScheduledScroll()) {
                 this.saveScrollPosition();
             }
+            if (!this._isScheduledUpdateItemsSizes()) {
+                this._scheduleUpdateItemsSizes({
+                    startIndex: this._collection.getStartIndex(),
+                    endIndex: this._collection.getStopIndex()
+                });
+            }
 
             this._scrollController.setItemsRenderedOutsideRange(itemsRenderedOutsideRange);
         }
@@ -367,6 +373,20 @@ export abstract class AbstractListVirtualScrollController<
             this._handleChangedIndexesAfterSynchronizationCallback = null;
         }
         this._renderInProgress = false;
+    }
+
+    beforeUnmountListControl(): void {
+        this._updatePlaceholdersUtil({
+            forward: 0,
+            backward: 0
+        });
+        if (this._updateVirtualNavigationUtil) {
+            this._updateVirtualNavigationUtil({
+                forward: false,
+                backward: false
+            });
+        }
+        this._scrollController.destroy();
     }
 
     setPredicatedRestoreDirection(restoreDirection: IDirection): void {
@@ -786,6 +806,13 @@ export abstract class AbstractListVirtualScrollController<
         return !!this._itemsRangeScheduledSizeUpdate || !!this._handleChangedIndexesAfterSynchronizationCallback;
     }
 
+    private _handleScheduledUpdateItemsSizes(): void {
+        if (this._itemsRangeScheduledSizeUpdate) {
+            this._scrollController.updateItemsSizes(this._itemsRangeScheduledSizeUpdate);
+            this._itemsRangeScheduledSizeUpdate = null;
+        }
+    }
+
     private _scheduleUpdateHasItemsOutRange(hasItemsOutRange: IHasItemsOutRange): void {
         this._scheduledUpdateHasItemsOutRange = hasItemsOutRange;
     }
@@ -796,13 +823,7 @@ export abstract class AbstractListVirtualScrollController<
             if (this._updateShadowsUtil) {
                 this._updateShadowsUtil(hasItemsOutRange);
             }
-        }
-    }
-
-    private _handleScheduledUpdateItemsSizes(): void {
-        if (this._itemsRangeScheduledSizeUpdate) {
-            this._scrollController.updateItemsSizes(this._itemsRangeScheduledSizeUpdate);
-            this._itemsRangeScheduledSizeUpdate = null;
+            this._scheduledUpdateHasItemsOutRange = null;
         }
     }
 
