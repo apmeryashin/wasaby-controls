@@ -435,14 +435,14 @@ define(
                      {
                         ObjectData: JSON.stringify([
                            {
-                              id: 'Methods',
+                              name: 'anotherFilterName',
                               value: '1234',
                               resetValue: '',
                               visibility: true,
                               textValue: '123'
                            },
                            {
-                              id: 'Faces',
+                              id: 'anotherFilterName2',
                               value: false,
                               resetValue: true,
                               textValue: 'По лицам'
@@ -452,7 +452,7 @@ define(
                   ]
                });
                assert.equal(panel._filterHistoryItems(historyItems).getCount(), 1);
-               assert.equal(panel._filterHistoryItems(wrongHistoryItems).getCount(), 1);
+               assert.equal(panel._filterHistoryItems(wrongHistoryItems).getCount(), 0);
                assert.equal(panel._filterHistoryItems(wrongHistoryItems, false).getCount(), 1);
             });
 
