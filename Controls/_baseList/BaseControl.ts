@@ -4258,6 +4258,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._options.itemsSelector !== newOptions.itemsSelector) {
             this._listVirtualScrollController.setItemsQuerySelector(newOptions.itemsSelector);
         }
+        if (this._options.disableVirtualScroll !== newOptions.disableVirtualScroll ||
+            this._options.multiColumns !== newOptions.multiColumns) {
+            this._listVirtualScrollController?.destroy();
+            this._createListVirtualScrollController(newOptions);
+        }
 
         this._endBeforeUpdate(newOptions);
         this._listVirtualScrollController.endBeforeUpdateListControl();
@@ -4361,7 +4366,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         this._destroyIndicatorsController();
         if (this._listVirtualScrollController) {
-            this._listVirtualScrollController.beforeUnmountListControl();
+            this._listVirtualScrollController.destroy();
             this._listVirtualScrollController = null;
         }
         if (this._itemActionsController) {
