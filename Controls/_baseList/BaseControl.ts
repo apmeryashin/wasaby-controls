@@ -4817,7 +4817,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             this._resolveSourceLoadPromise(() => resolve(list as RecordSet));
                         }
                     })
-                    .catch((error) => error);
+                    .catch((error) => {
+                        this._updateShadowModeHandler(this._shadowVisibility);
+                        return error;
+                    });
             } else {
                 resolve(void 0);
                 Logger.error('BaseControl: Source option is undefined. Can\'t load data', this);
