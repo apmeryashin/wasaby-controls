@@ -375,20 +375,6 @@ export abstract class AbstractListVirtualScrollController<
         this._renderInProgress = false;
     }
 
-    beforeUnmountListControl(): void {
-        this._updatePlaceholdersUtil({
-            forward: 0,
-            backward: 0
-        });
-        if (this._updateVirtualNavigationUtil) {
-            this._updateVirtualNavigationUtil({
-                forward: false,
-                backward: false
-            });
-        }
-        this._scrollController.destroy();
-    }
-
     setPredicatedRestoreDirection(restoreDirection: IDirection): void {
         this._predicatedRestoreDirection = restoreDirection;
     }

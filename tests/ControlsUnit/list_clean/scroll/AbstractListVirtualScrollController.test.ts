@@ -302,9 +302,9 @@ describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', (
         });
     });
 
-    describe('beforeUnmountListControl', () => {
+    describe('destroy', () => {
         it('should reset scrollContainer state', () => {
-            controller.beforeUnmountListControl();
+            controller.destroy();
             assert.isTrue(updateVirtualNavigationUtilSpy.withArgs({backward: false, forward: false}).called);
             assert.isTrue(updatePlaceholdersUtilSpy.withArgs({backward: 0, forward: 0}).called);
         });
