@@ -297,7 +297,7 @@ export abstract class AbstractListVirtualScrollController<
         this._renderInProgress = true;
     }
 
-    beforeUnmountListControl(): void {
+    destroy(): void {
         this._updatePlaceholdersUtil({
             forward: 0,
             backward: 0
