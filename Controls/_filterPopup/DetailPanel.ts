@@ -243,8 +243,7 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, IFilterItem[] | Lis
                      originalItem = getOriginalItem(history[i]);
                      hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
 
-                     if (removeOutdatedFiltersFromHistory &&
-                         originalItem &&
+                     if ((!removeOutdatedFiltersFromHistory || originalItem) &&
                          (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue')))
                      ) {
                         validResult = true;
