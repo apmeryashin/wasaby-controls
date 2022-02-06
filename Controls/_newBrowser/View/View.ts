@@ -10,7 +10,8 @@ import {MasterVisibilityEnum} from 'Controls/_newBrowser/interfaces/IMasterOptio
 import {IBrowserViewConfig, NodesPosition} from 'Controls/_newBrowser/interfaces/IBrowserViewConfig';
 import {isEqual} from 'Types/object';
 import {EventUtils} from 'UI/Events';
-import {View as ExplorerView} from 'Controls/explorer';
+import {TExplorerViewMode, View as ExplorerView} from 'Controls/explorer';
+import {loadAsync, isLoaded} from 'WasabyLoader/ModulesLoader';
 import {getListConfiguration} from 'Controls/_newBrowser/utils';
 import * as ViewTemplate from 'wml!Controls/_newBrowser/View/View';
 import {TColumns} from 'Controls/grid';
@@ -131,6 +132,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     protected _detailLoading: boolean = false;
     protected _detailRootChanged: boolean = false;
     protected _masterDataLoadResolver: Function = null;
+    protected _newDetailOptions: IExplorerOptions = null;
 
     /**
      * Опции для Controls/explorer:View в master-колонке
@@ -181,6 +183,23 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._isMounted = true;
     }
 
+    protected _calculateViewByViewMode(viewMode: DetailViewMode, useColumns: boolean = false): string {
+        if (viewMode === DetailViewMode.list) {
+            return useColumns ? 'Controls/columns' : 'Controls/list';
+        }
+        if (viewMode === DetailViewMode.tile) {
+            return 'Controls/treeTile';
+        }
+        if (viewMode === DetailViewMode.table) {
+            return 'Controls/treeGrid';
+        }
+    }
+
+    protected _isViewModeLoaded(viewMode: DetailViewMode, useColumns: boolean): boolean {
+        const viewModule = this._calculateViewByViewMode(viewMode, useColumns);
+        return isLoaded(viewModule);
+    }
+
     //region ⇑ events handlers
     private _onDetailDataLoadCallback(event: SyntheticEvent, items: RecordSet, direction: string): void {
         const searchController = this._dataContext.listsConfigs.detail.searchController;
@@ -209,23 +228,35 @@ export default class View extends Control<IOptions, IReceivedState> {
         return currentVersion !== contextVersion;
     }
 
+    protected _setDetailOptions(options: IExplorerOptions) {
+        const oldColumns = this._detailExplorerOptions.columns;
+        this._detailExplorerOptions = options;
+        if (!isEqual(oldColumns, this._detailExplorerOptions.columns)) {
+            this._columns = this._getPatchedColumns(this._detailExplorerOptions.columns);
+        }
+    }
+
     protected _beforeUpdate(newOptions?: IOptions, contexts?: unknown): void {
         this._dataContext = contexts.dataContext;
         const contextVersionChanged = this._updateContextVersion(this._dataContext);
         const detailOptionsChanged = !isEqual(newOptions.detail, this._options.detail);
         const masterOptionsChanged = !isEqual(newOptions.master, this._options.master);
         const isDetailRootChanged = this._dataContext.listsConfigs.detail.root !== this._detailDataSource.getRoot();
+        const viewModeChanged = this._userViewMode !== newOptions.userViewMode;
+        const newViewModeLoaded = this._isViewModeLoaded(newOptions.userViewMode,
+            this._detailExplorerOptions.useColumns);
         if (isDetailRootChanged) {
             this._detailRootChanged = true;
         }
         if (detailOptionsChanged || contextVersionChanged) {
-            const oldColumns = this._detailExplorerOptions.columns;
-            this._detailExplorerOptions = this._getListOptions(
+            const newDetailOptions = this._getListOptions(
                 this._dataContext.listsConfigs.detail,
                 newOptions.detail
             );
-            if (!isEqual(oldColumns, this._detailExplorerOptions.columns)) {
-                this._columns = this._getPatchedColumns(this._detailExplorerOptions.columns);
+            if ((viewModeChanged && newViewModeLoaded) || !viewModeChanged) {
+                this._setDetailOptions(newDetailOptions);
+            } else {
+                this._newDetailOptions = newDetailOptions;
             }
         }
         if (masterOptionsChanged || contextVersionChanged) {
@@ -244,7 +275,16 @@ export default class View extends Control<IOptions, IReceivedState> {
             this._createTemplateControllers(newOptions.listConfiguration, newOptions);
         }
         if (this._userViewMode !== newOptions.userViewMode) {
-            this._userViewMode = newOptions.userViewMode;
+            this._loadViewMode(newOptions.userViewMode,
+                this._detailExplorerOptions.useColumns, (viewMode: DetailViewMode) => {
+                this._userViewMode = viewMode;
+                if (this._newDetailOptions) {
+                    this._setDetailOptions(this._newDetailOptions);
+                    this._newDetailOptions = null;
+                }
+                this._forceUpdate();
+                this._updateDetailBgColor();
+            });
             // Если поменялся вьюмод вне списка и вьюха еще не загружена, то ждем события от explorer'a о смене вьюмода
             if (this.viewMode === DetailViewMode.list && this._listLoaded ||
                 this.viewMode === DetailViewMode.tile && this._tileLoaded ||
@@ -289,6 +329,16 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._masterDataSource?.destroy();
     }
 
+    private _loadViewMode(viewMode: DetailViewMode, useColumns: boolean, loadCallback: Function): void {
+        if (this._isViewModeLoaded(viewMode, useColumns)) {
+            loadCallback(viewMode);
+        } else {
+            loadAsync(this._calculateViewByViewMode(viewMode, useColumns)).then(() => {
+                loadCallback(viewMode);
+            });
+        }
+    }
+
     private _setViewMode(value: DetailViewMode): void {
         let result = value;
 
@@ -302,8 +352,20 @@ export default class View extends Control<IOptions, IReceivedState> {
         if (this._viewMode === result) {
             return;
         }
-
-        this._viewMode = result;
+        if (this._isMounted) {
+            this._loadViewMode(result,
+                this._detailExplorerOptions.useColumns,
+                (viewMode: DetailViewMode) => {
+                    this._viewMode = viewMode;
+                    if (this._newDetailOptions) {
+                        this._setDetailOptions(this._newDetailOptions);
+                        this._newDetailOptions = null;
+                    }
+                    this._forceUpdate();
+                });
+        } else {
+            this._viewMode = result;
+        }
     }
 
     /**
@@ -355,13 +417,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     }
 
     protected _getViewModeForItemTemplate(): string {
-        const isSelectedViewModeUnloaded = !this._tileLoaded && this.viewMode === DetailViewMode.tile ||
-            !this._listLoaded && this.viewMode === DetailViewMode.list;
-        if (isSelectedViewModeUnloaded) {
-            return this._appliedViewMode;
-        } else {
-            return this.viewMode;
-        }
+        return this.viewMode;
     }
 
     protected _getListOptions(
