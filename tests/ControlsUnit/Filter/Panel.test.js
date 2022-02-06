@@ -430,7 +430,30 @@ define(
             });
 
             it('filterHistoryItems', function() {
+               const wrongHistoryItems = new collection.RecordSet({
+                  rawData: [
+                     {
+                        ObjectData: JSON.stringify([
+                           {
+                              name: 'anotherFilterName',
+                              value: '1234',
+                              resetValue: '',
+                              visibility: true,
+                              textValue: '123'
+                           },
+                           {
+                              id: 'anotherFilterName2',
+                              value: false,
+                              resetValue: true,
+                              textValue: 'По лицам'
+                           }
+                        ])
+                     }
+                  ]
+               });
                assert.equal(panel._filterHistoryItems(historyItems).getCount(), 1);
+               assert.equal(panel._filterHistoryItems(wrongHistoryItems).getCount(), 0);
+               assert.equal(panel._filterHistoryItems(wrongHistoryItems, false).getCount(), 1);
             });
 
             it('getFilter', () => {
