@@ -3,10 +3,6 @@
    position: relative;
 }
 
-.controls-ListView__itemV-relative {
-   position: relative;
-}
-
 .controls-ListViewV__loading_all,
 .controls-ListViewV__loading_up {
    min-height: calc(var(--spinner_l_size_loadingIndicator) + var(--content_l_padding_loadingIndicator) * 2);
@@ -327,6 +323,11 @@
 
 .controls-itemActionsV {
    z-index: 1;
+}
+
+.controls-ListView__item {
+   // для корректного позиционирования маркера
+   position: relative;
 }
 
 .controls-ListView__item_active {
@@ -812,6 +813,48 @@
 .controls-ListView__item_master {
    margin-bottom: var(--master_item_separator_thickness_list);
 }
+
+//region items spacing
+.controls-ListView__itemV-spacing_3xs {
+   padding-top: var(--offset_3xs);
+}
+
+.controls-ListView__itemV-spacing_2xs {
+   padding-top: var(--offset_2xs);
+}
+
+.controls-ListView__itemV-spacing_xs {
+   padding-top: var(--offset_xs);
+}
+
+.controls-ListView__itemV-spacing_s {
+   padding-top: var(--offset_s);
+}
+
+.controls-ListView__itemV-spacing_st {
+   padding-top: var(--offset_st);
+}
+
+.controls-ListView__itemV-spacing_m {
+   padding-top: var(--offset_m);
+}
+
+.controls-ListView__itemV-spacing_l {
+   padding-top: var(--offset_l);
+}
+
+.controls-ListView__itemV-spacing_xl {
+   padding-top: var(--offset_xl);
+}
+
+.controls-ListView__itemV-spacing_2xl {
+   padding-top: var(--offset_2xl);
+}
+
+.controls-ListView__itemV-spacing_3xl {
+   padding-top: var(--offset_3xl);
+}
+//endregion
 
 //Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
 //TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da

@@ -1,13 +1,27 @@
+<!--
+   Params:
+      * fixed - true если запись в данный момент является закрепленной
+-->
+
 <ws:template name="localItemTemplateContent">
-    <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && multiSelectPosition !== 'custom' }}">
-        <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" itemPadding="{{itemPadding}}"  baseline="{{baseline}}"/>
-    </ws:if>
-    <ws:if data="{{ (item || itemData).shouldDisplayMarker(marker) }}">
-        <div attr:data-qa="marker" class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
-    </ws:if>
-    <ws:if data="{{ contentTemplate }}">
-        <div attr:class="{{ (item || itemData).getContentClasses() }}
-                         {{ (item || itemData).getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight) }}">
+   <div class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover) }}">
+      <!-- Checkbox -->
+      <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && multiSelectPosition !== 'custom' }}">
+         <ws:partial
+            template="{{ (item || itemData).getMultiSelectTemplate() }}"
+            item="{{ (item || itemData) }}"
+            itemPadding="{{itemPadding}}"
+            baseline="{{baseline}}"
+        />
+      </ws:if>
+      <!-- Marker -->
+      <ws:if data="{{ (item || itemData).shouldDisplayMarker(marker) }}">
+         <div data-qa="marker" class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
+      </ws:if>
+      <!-- Custom content -->
+      <ws:if data="{{ contentTemplate }}">
+         <div class="{{ (item || itemData).getContentClasses() }}
+                    {{ (item || itemData).getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight) }}">
             <ws:partial
                     template="{{ contentTemplate }}"
                     item="{{ item }}"
@@ -16,58 +30,73 @@
                     searchValue="{{ searchValue }}"
                     highlightOnHover="{{ highlightOnHover }}"
                     itemActionsTemplate="{{ itemActionsTemplate }}"
-                    swipeTemplate="{{ swipeTemplate }}">
-                <ws:multiSelectTemplate>
-                    <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" itemPadding="{{itemPadding}}" baseline="{{baseline}}"/>
-                </ws:multiSelectTemplate>
+                    swipeTemplate="{{ swipeTemplate }}"
+            >
+               <ws:multiSelectTemplate>
+                  <ws:partial
+                     template="{{ (item || itemData).getMultiSelectTemplate() }}"
+                     item="{{ (item || itemData) }}"
+                     itemPadding="{{itemPadding}}"
+                     baseline="{{baseline}}"
+                  />
+               </ws:multiSelectTemplate>
             </ws:partial>
-        </div>
-    </ws:if>
-    <ws:else>
-        <div attr:class="{{ (item || itemData).getContentClasses(fontColorStyle) }}">
+         </div>
+      </ws:if>
+      <!-- Default content -->
+      <ws:else>
+         <div class="{{ (item || itemData).getContentClasses(fontColorStyle) }}">
             <ws:if data="{{ (item || itemData).getSearchValue() }}">
-                <Controls.decorator:Highlight highlightedValue="{{ (item || itemData).getSearchValue() }}">
-                    <ws:value>
-                        <ws:String>{{ (item || itemData).getContents()[displayProperty || 'title'] }}</ws:String>
-                    </ws:value>
-                </Controls.decorator:Highlight>
-
+               <Controls.decorator:Highlight highlightedValue="{{ (item || itemData).getSearchValue() }}">
+                  <ws:value>
+                     <ws:String>{{ (item || itemData).getContents()[displayProperty || 'title'] }}</ws:String>
+                  </ws:value>
+               </Controls.decorator:Highlight>
             </ws:if>
             <ws:else>
-                {{ (item || itemData).getContents()[displayProperty || 'title'] }}
+               {{ (item || itemData).getContents()[displayProperty || 'title'] }}
             </ws:else>
-        </div>
-    </ws:else>
-    <ws:if data="{{ (item || itemData).shouldDisplayActions() }}">
-        <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
+         </div>
+      </ws:else>
+      <!-- Item action -->
+      <ws:if data="{{ (item || itemData).shouldDisplayActions() }}">
+         <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
             <ws:partial template="{{ swipeTemplate }}"
                         itemData="{{itemData}}"
                         highlightOnHover="{{ highlightOnHover }}" />
-        </ws:if>
-        <ws:else data="{{ itemActionsPosition !== 'custom' }}">
+         </ws:if>
+         <ws:else data="{{ itemActionsPosition !== 'custom' }}">
             <ws:partial template="{{ itemActionsTemplate }}"
                         itemData="{{itemData}}"
                         itemActionsClass="{{ itemActionsClass }}"
                         highlightOnHover="{{ highlightOnHover }}"/>
-        </ws:else>
-    </ws:if>
-    <ws:if data="{{ (item || itemData).shouldDisplayDraggingCounter() }}">
-        <span class="controls-ListView__item-dragging-counter">{{(item || itemData).getDraggedItemsCountString()}}</span>
-    </ws:if>
+         </ws:else>
+      </ws:if>
+      <!-- Drag items counter -->
+      <ws:if data="{{ (item || itemData).shouldDisplayDraggingCounter() }}">
+         <span class="controls-ListView__item-dragging-counter">{{(item || itemData).getDraggedItemsCountString()}}</span>
+      </ws:if>
+   </div>
 </ws:template>
 
 <ws:if data="{{(item || itemData).isSticked(stickyCallback, item)}}">
     <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
     <Controls.scroll:StickyBlock
-            attr:data-qa="{{ (item || itemData).listElementName }}"
-            attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover) }}"
-            position="{{item.getStickyHeaderPosition(stickyCallback)}}" backgroundStyle="{{style + '_sticked'}}" mode="replaceable">
-        <ws:partial template="localItemTemplateContent"/>
+       mode="replaceable"
+       backgroundStyle="{{style + '_sticked'}}"
+       position="{{item.getStickyHeaderPosition(stickyCallback)}}"
+
+       attr:data-qa="{{ (item || itemData).listElementName }}"
+       attr:class="{{(item || itemData).getItemContainerClasses(fixed)}}"
+    >
+       <ws:partial template="localItemTemplateContent"/>
     </Controls.scroll:StickyBlock>
 </ws:if>
 <ws:else>
-    <div attr:data-qa="{{ (item || itemData).listElementName }}"
-         attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover) }}">
+    <div
+       data-qa="{{ (item || itemData).listElementName }}"
+       class="{{(item || itemData).getItemContainerClasses(fixed)}}"
+    >
         <ws:partial template="localItemTemplateContent"/>
     </div>
 </ws:else>

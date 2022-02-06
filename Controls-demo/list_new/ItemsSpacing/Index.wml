@@ -1,0 +1,24 @@
+<div class="controlsDemo__wrapper">
+   <Controls.toggle:Tumbler
+      keyProperty="id"
+      displayProperty="id"
+      items="{{_itemsSpacingSource}}"
+      bind:selectedKey="_itemsSpacing"
+   />
+   <Controls.scroll:Container attr:style="height: 400px; width: 400px;">
+      <Controls.list:View
+         style="master"
+         source="{{_viewSource}}"
+         stickyMarkedItem="{{true}}"
+         itemsSpacing="{{_itemsSpacing}}"
+      >
+         <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate" attr:style="background-color: white"/>
+         </ws:itemTemplate>
+         <ws:navigation source="page" view="infinity">
+            <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
+            <ws:viewConfig pagingMode="basic"/>
+         </ws:navigation>
+      </Controls.list:View>
+   </Controls.scroll:Container>
+</div>

@@ -74,11 +74,32 @@ define([
          lv._notify = function(e, args) {
             notifyResult = args[0];
          };
-         lv._onItemClick({ target: { closest: () => null } }, dispItem);
+         lv._onItemClick(
+            {
+               target: {
+                  closest: () => null,
+                  classList: {
+                     contains: () => false
+                  }
+               }
+            },
+            dispItem
+         );
          assert.equal(notifyResult, dispItem.getContents(), 'Incorrect selected item before updating');
 
          notifyResult = null;
-         lv._onItemClick({ target: { closest: () => null }, preventItemEvent: true }, dispItem);
+         lv._onItemClick(
+            {
+               preventItemEvent: true,
+               target: {
+                  closest: () => null,
+                  classList: {
+                     contains: () => false
+                  }
+               }
+            },
+            dispItem
+         );
          assert.isNull(notifyResult, '_onItemClick should ignore preventItemEvent events');
       });
 
@@ -98,16 +119,16 @@ define([
                getId: function() {
                   return this['id'];
                }
-            }
-         }
+            };
+         };
          testData2.at = function(key) {
             return {
                ...(testData2[key]),
                getId: function() {
                   return this['id'];
                }
-            }
-         }
+            };
+         };
          let itemPaddingChanged = false;
 
          var model = new controlsDisplay.Collection({
@@ -293,7 +314,17 @@ define([
          lv._notify = function(e, args) {
             notifyResult = args[0];
          };
-         lv._onItemMouseDown({ preventItemEvent: true }, dispItem);
+         lv._onItemMouseDown(
+            {
+               preventItemEvent: true,
+               target: {
+                  classList: {
+                     contains: () => false
+                  }
+               }
+            },
+            dispItem
+         );
          assert.isNull(notifyResult, '_onItemMouseDown should ignore preventItemEvent events');
       });
       describe('_onItemContextMenu', function() {

@@ -14,7 +14,12 @@
  */
 export interface ICollectionItemStyled {
     getMultiSelectClasses(): string;
-    getWrapperClasses(templateHighlightOnHover?: boolean, marker?: boolean): string;
+    getWrapperClasses(
+        templateHighlightOnHover: boolean,
+        cursor: string,
+        backgroundColorStyle?: string,
+        showItemActionsOnHover?: boolean
+    ): string;
     getContentClasses(): string;
 
     /**

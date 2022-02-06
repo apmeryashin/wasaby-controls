@@ -11,6 +11,7 @@ import 'css!Controls/baseList';
 import { Collection, CollectionItem } from 'Controls/display';
 import {IRoundBorder} from 'Controls/interface';
 import { Model } from 'Types/entity';
+import {IFixedEventData} from 'Controls/scroll';
 
 export interface IListViewOptions {
     listModel: Collection;
@@ -74,6 +75,7 @@ const ListView = Control.extend(
         _callbackAfterUpdate: null,
         _forTemplate: null,
         _modelChanged: false,
+        _fixedItems: [],
 
         constructor() {
             ListView.superclass.constructor.apply(this, arguments);
@@ -183,6 +185,7 @@ const ListView = Control.extend(
                 this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
                 this._listModel.unsubscribe('indexesChanged', this._onIndexesChanged);
             }
+            this._fixedItems = [];
         },
 
         _beforeUpdate(newOptions) {
@@ -290,30 +293,42 @@ const ListView = Control.extend(
             }
         },
 
-        getItemsContainer() {
+        getItemsContainer(): HTMLElement {
             return this._children.itemsContainer;
         },
 
-        _onItemClick(e, dispItem) {
+        _onItemClick(e: SyntheticEvent & {preventItemEvent: boolean}, dispItem: CollectionItem): void {
             // Флаг preventItemEvent выставлен, если нужно предотвратить возникновение
             // событий itemClick, itemMouseDown по нативному клику, но по какой-то причине
             // невозможно остановить всплытие события через stopPropagation
             // TODO: Убрать, preventItemEvent когда это больше не понадобится
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
-            if (!e.preventItemEvent) {
-                if (dispItem['[Controls/_display/GroupItem]']) {
-                    const groupItem = dispItem.getContents();
-                    this._notify('groupClick', [groupItem, e, dispItem]);
-                    return;
-                }
-                if (e.target.closest('.js-controls-ListView__checkbox')) {
-                    this._notify('checkBoxClick', [dispItem, e]);
-                    return;
-                }
-
-                const item = dispItem.getContents();
-                this._notify('itemClick', [item, e]);
+            if (e.preventItemEvent) {
+                return;
             }
+
+            // Если взаимодействие идет непосредственно с внешней оберткой,
+            // то нужно заглушить такое событие, т.к. это значит что настроен
+            // межстрочный интервал и взаимодействие идет непосредственно с ним,
+            // а не со строкой.
+            if (this._targetIsRootItemContainer(e.target as HTMLElement)) {
+                e.stopImmediatePropagation();
+                return;
+            }
+
+            if (dispItem['[Controls/_display/GroupItem]']) {
+                const groupItem = dispItem.getContents();
+                this._notify('groupClick', [groupItem, e, dispItem]);
+                return;
+            }
+
+            if (e.target.closest('.js-controls-ListView__checkbox')) {
+                this._notify('checkBoxClick', [dispItem, e]);
+                return;
+            }
+
+            const item = dispItem.getContents();
+            this._notify('itemClick', [item, e]);
         },
 
         _onGroupClick(e, dispItem) {
@@ -359,7 +374,16 @@ const ListView = Control.extend(
             this._notify('rowDeactivated', [eventOptions]);
         },
 
-        _onItemMouseDown(event, itemData) {
+        _onItemMouseDown(event: SyntheticEvent, itemData: CollectionItem): void {
+            // Если взаимодействие идет непосредственно с внешней оберткой,
+            // то нужно заглушить такое событие, т.к. это значит что настроен
+            // межстрочный интервал и взаимодействие идет непосредственно с ним,
+            // а не со строкой.
+            if (this._targetIsRootItemContainer(event.target as HTMLElement)) {
+                event.stopImmediatePropagation();
+                return;
+            }
+
             if (itemData['[Controls/_display/GroupItem]']) {
                 event.stopPropagation();
                 return;
@@ -380,11 +404,21 @@ const ListView = Control.extend(
             }
         },
 
-        _onItemMouseUp(e, itemData) {
+        _onItemMouseUp(e: SyntheticEvent, itemData: CollectionItem): void {
+            // Если взаимодействие идет непосредственно с внешней оберткой,
+            // то нужно заглушить такое событие, т.к. это значит что настроен
+            // межстрочный интервал и взаимодействие идет непосредственно с ним,
+            // а не со строкой.
+            if (this._targetIsRootItemContainer(e.target as HTMLElement)) {
+                e.stopImmediatePropagation();
+                return;
+            }
+
             if (itemData['[Controls/_display/GroupItem]']) {
                 e.stopPropagation();
                 return;
             }
+
             this._notify('itemMouseUp', [itemData, e]);
         },
 
@@ -446,9 +480,23 @@ const ListView = Control.extend(
             return this._listModel.getHoveredItem();
         },
 
-        _onFixedItemChanged(event: SyntheticEvent,
-                            item: CollectionItem<Model>,
-                            information: { fixedPosition: string }): void {
+        _onFixedItemChanged(
+            event: SyntheticEvent,
+            item: CollectionItem<Model>,
+            information: IFixedEventData
+        ): void {
+            // Обновляем данные по зафиксированным итемам.
+            // Далее на основании этой информации будут проставляться CSS классы
+            if (information.fixedPosition) {
+                this._fixedItems.push(item);
+            } else {
+                const index = this._fixedItems.indexOf(item);
+
+                if (index >= 0) {
+                    this._fixedItems.splice(index, 1);
+                }
+            }
+
             this._notify('fixedItemChanged', [item, information]);
         },
 
@@ -487,6 +535,14 @@ const ListView = Control.extend(
                 this._notify('checkBoxClick', [dispItem, nativeEvent]);
                 return;
             }
+        },
+
+        /**
+         * Вернет true, если переданный элемент это внешняя обертка итема,
+         * котора организует отступы.
+         */
+        _targetIsRootItemContainer(target: HTMLElement): boolean {
+            return target.classList.contains('controls-ListView__itemV');
         }
     });
 

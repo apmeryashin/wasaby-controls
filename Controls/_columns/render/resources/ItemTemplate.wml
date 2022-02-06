@@ -1,4 +1,4 @@
-<div attr:class="{{ item.getWrapperClasses(highlightOnHover, cursor || clickable, shadowVisibility) }}">
+<div class="{{ item.getWrapperClasses(highlightOnHover, cursor || clickable, shadowVisibility) }}">
    <ws:if data="{{item.shouldDisplayMarker(marker)}}">
       <div class="controls-ColumnsView__item_marker" attr:data-qa="marker"></div>
    </ws:if>
@@ -6,7 +6,7 @@
       <ws:partial template="{{ item.getMultiSelectTemplate() }}" item="{{ item }}" />
    </ws:if>
    <ws:if data="{{ contentTemplate }}">
-      <div attr:class="{{ item.getContentClasses() }}">
+      <div class="{{ item.getContentClasses() }}">
          <ws:partial
             template="{{ contentTemplate }}"
             item="{{ item }}"
@@ -16,7 +16,7 @@
       </div>
    </ws:if>
    <ws:else>
-      <div attr:class="{{ item.getContentClasses() }}">
+      <div class="{{ item.getContentClasses() }}">
          {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
       </div>
    </ws:else>

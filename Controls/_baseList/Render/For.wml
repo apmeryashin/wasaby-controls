@@ -17,6 +17,7 @@
            tagTemplate="{{ tagTemplate }}"
            editArrowTemplate="{{ editArrowTemplate }}"
            stickyCallback="{{_options.stickyCallback}}"
+           fixed="{{fixedItems && fixedItems.indexOf(item) >= 0}}"
 
            attr:key="{{ keyPrefix }}-{{ item.key }}"
            attr:item-key="{{ item.itemKeyAttribute }}"

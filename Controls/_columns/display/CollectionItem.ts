@@ -52,6 +52,7 @@ export default class CollectionItem<T extends Model = Model> extends TreeItem<T>
                       cursor: string | boolean = 'pointer',
                       shadowVisibility: 'visible'|'hidden'): string {
         let result: string = super.getWrapperClasses.apply(this, arguments);
+        result += this.getItemContainerClasses(false);
         result += ' controls-ColumnsView__itemV';
 
         result += ` ${this.getItemPaddingClasses()}`;

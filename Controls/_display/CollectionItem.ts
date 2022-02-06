@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder, TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
+import {IRoundBorder, TFontColorStyle, TFontSize, TFontWeight, TOffsetSize} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -47,6 +47,7 @@ export interface IOptions<T extends Model = Model> {
     rightPadding?: string;
     topPadding?: string;
     bottomPadding?: string;
+    itemsSpacing?: TOffsetSize;
     markerPosition?: string;
     isLastItem?: boolean;
     isFirstItem?: boolean;
@@ -201,6 +202,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     protected _$topPadding: string;
 
     protected _$bottomPadding: string;
+
+    protected _$itemsSpacing: TOffsetSize;
 
     protected _$markerPosition: 'left' | 'right';
 
@@ -907,48 +910,65 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     /**
+     * Возвращает CSS классы для корневого контейнера итема.
+     * @param {Boolean} fixed - true если в данный момент запись является зафиксированной
+     */
+    getItemContainerClasses(fixed: boolean = false): string {
+        let result = 'js-controls-ListView__measurableContainer controls-ListView__itemV';
+
+        // Нужен класс для отступов между записями если
+        // отступы заданы и запись не первая и не зафиксирована
+        if (this._$itemsSpacing && !this.isFirstItem() && !fixed) {
+            result += ` controls-ListView__itemV-spacing_${this._$itemsSpacing.toLowerCase()}`;
+        }
+
+        return result;
+    }
+
+    /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента для корневого div'а.
      * @param templateHighlightOnHover - подсвечивать или нет запись по ховеру
-     * @param theme - используемая тема
      * @param cursor - курсор мыши
      * @param backgroundColorStyle - стиль background
-     * @param style - режим отображения списка (master/default)
      * @param showItemActionsOnHover - показывать или нет операции над записью по ховеру
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
-    getWrapperClasses(templateHighlightOnHover: boolean = true,
-                      cursor: string = 'pointer',
-                      backgroundColorStyle?: string,
-                      showItemActionsOnHover: boolean = true): string {
-        const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
-        const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
+    getWrapperClasses(
+        templateHighlightOnHover: boolean = true,
+        cursor: string = 'pointer',
+        backgroundColorStyle?: string,
+        showItemActionsOnHover: boolean = true
+    ): string {
+        let wrapperClasses = `controls-ListView__item controls-ListView__item_${this.getStyle()} ${this._getCursorClasses(cursor)}`;
+        wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${this.getStyle()}`;
 
-        let wrapperClasses = '';
-        if (!this.isSticked(null, this)) {
-            wrapperClasses = 'controls-ListView__itemV-relative ';
-        }
         // TODO: Убрать js-controls-ListView__editingTarget' по задаче
         //  https://online.sbis.ru/opendoc.html?guid=deef0d24-dd6a-4e24-8782-5092e949a3d9
-        wrapperClasses += `controls-ListView__itemV js-controls-ListView__editingTarget ${this._getCursorClasses(cursor)}`;
-        wrapperClasses += ` controls-ListView__item_${this.getStyle()}`;
+        wrapperClasses += ' js-controls-ListView__editingTarget';
+
         if (showItemActionsOnHover !== false) {
             wrapperClasses += ' controls-ListView__item_showActions';
         }
-        wrapperClasses += ' js-controls-ListView__measurableContainer';
-        wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${this.getStyle()}`;
+
         if (templateHighlightOnHover && !this.isEditing()) {
+            const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
             wrapperClasses += ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}`;
         }
+
         if (this.isEditing()) {
+            const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
             wrapperClasses += ` controls-ListView__item_editing controls-ListView__item_background-editing_${editingBackgroundStyle}`;
         }
+
         if (this.isDragged()) {
             wrapperClasses += ' controls-ListView__item_dragging';
         }
+
         if (backgroundColorStyle) {
             wrapperClasses += ` controls-ListView__item_background_${backgroundColorStyle}`;
         }
+
         if (templateHighlightOnHover && this.isActive()) {
             wrapperClasses += ' controls-ListView__item_active';
         }
@@ -1253,6 +1273,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     // endregion ItemPadding
 
+    setItemsSpacing(itemsSpacing: TOffsetSize, silent?: boolean): void {
+        this._$itemsSpacing = itemsSpacing;
+        if (!silent) {
+            this._nextVersion();
+        }
+    }
+
     protected _getSpacingClasses(): string {
         let classes = '';
 
@@ -1398,6 +1425,7 @@ Object.assign(CollectionItem.prototype, {
     _$rightPadding: 'default',
     _$topPadding: 'default',
     _$bottomPadding: 'default',
+    _$itemsSpacing: null,
     _$markerPosition: undefined,
     _$hasMoreDataUp: false,
     _$isFirstStickedItem: false,

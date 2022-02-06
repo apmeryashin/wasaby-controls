@@ -478,10 +478,8 @@ describe('Controls/_display/CollectionItem', () => {
         };
 
         const defaultClasses = [
-            'controls-ListView__itemV',
             'controls-ListView__item_default',
-            'controls-ListView__item_showActions',
-            'js-controls-ListView__measurableContainer'
+            'controls-ListView__item_showActions'
         ];
         const editingClasses = [
             'controls-ListView__item_background-editing'
