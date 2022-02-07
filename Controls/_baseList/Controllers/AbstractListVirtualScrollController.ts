@@ -269,14 +269,6 @@ export abstract class AbstractListVirtualScrollController<
         this._renderNewIndexes = false;
         this._handleScheduledUpdateItemsSizes();
         this._handleScheduledUpdateHasItemsOutRange();
-        if (this._activeElementKey !== undefined && this._activeElementKey !== null) {
-            const activeElementIndex = this._collection.getIndexByKey(this._activeElementKey);
-            // Если активный элемент находится в начале, то на маунт он и так виден, поэтому не скроллим к нему.
-            // Если вызвать скролл, то ничего не произойдет, но при наличии графической шапки она сожмется.
-            if (activeElementIndex !== 0) {
-                this.scrollToItem(this._activeElementKey, 'top', true);
-            }
-        }
 
         // Если изначальная позиция ScrollContainer-а была задана end,
         // то contentSizeBeforeItems будет посчитан неправильно.
@@ -483,7 +475,9 @@ export abstract class AbstractListVirtualScrollController<
     resetItems(): void {
         const activeIndex = this._collection.getIndexByKey(this._activeElementKey);
         // скроллим к активному элементу только если он задан и он есть в списке
-        const shouldScrollToActiveItem = activeIndex !== -1;
+        // Если активный элемент находится в начале, то на маунт он и так виден, поэтому не скроллим к нему.
+        // Если вызвать скролл, то ничего не произойдет, но при наличии графической шапки она сожмется.
+        const shouldScrollToActiveItem = activeIndex !== -1 && activeIndex !== 0;
 
         // смотри комментарий в beforeRenderListControl
         // Не нужно сбрасывать скролл, если список не был проскроллен.
