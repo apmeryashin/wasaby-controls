@@ -59,7 +59,7 @@ const DEFAULT_DATA = [{
 }];
 
 function createTreeControl(
-    data: object[] = DEFAULT_DATA, cfg: ITreeControlOptions = {} as ITreeControlOptions
+    data: object[] = DEFAULT_DATA, cfg: Partial<ITreeControlOptions> = {} as ITreeControlOptions
 ): TreeControl {
     let treeControl;
     const cfgTreeControl: ITreeControlOptions = {
@@ -147,6 +147,14 @@ describe('Controls/tree/TreeControl', () => {
             it('marker not setted, root=1 => default add position = current root(1)', () => {
                 const treeControl = createTreeControl(DEFAULT_DATA, { root: 1 });
                 assert.equal(treeControl.getMarkedNodeKey(), 1);
+            });
+
+            it('for search grid collection', () => {
+                const treeControl = createTreeControl(DEFAULT_DATA, {
+                    viewModelConstructor: 'Controls/searchBreadcrumbsGrid:SearchGridCollection'
+                });
+                treeControl.setMarkedKey(4);
+                assert.equal(treeControl.getMarkedNodeKey(), 3);
             });
         });
 
