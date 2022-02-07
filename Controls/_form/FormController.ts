@@ -1,5 +1,6 @@
 import tmpl = require('wml!Controls/_form/FormController/FormController');
 import { TemplateFunction, Control } from 'UI/Base';
+import { constants } from 'Env/Env';
 import { readWithAdditionalFields } from './crudProgression';
 import * as Deferred from 'Core/Deferred';
 import {error as dataSourceError} from 'Controls/dataSource';
@@ -295,6 +296,16 @@ class FormController extends ControllerBase<IFormController> {
     }
 
     private _updateErrorRepeatConfig(): void {
+        /**
+         * Отключаем кнопку повтора действия, если ошибка строится на сервисе представления,
+         * потому что это значит, что панель открыли в отдельной вкладке/окне.
+         * Кнопка повтора призвана повторять действие без перезагрузки страницы и в ней нет смысла,
+         * если вся страница - это панель.
+         */
+        if (constants.isServerSide) {
+            return;
+        }
+
         this._errorController.updateOnProcess((viewConfig) => {
             const display = viewConfig.mode !== ErrorViewMode.dialog;
 
