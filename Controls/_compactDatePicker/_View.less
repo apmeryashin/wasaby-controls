@@ -4,8 +4,7 @@
 
 .controls-CompactDatePicker {
    box-shadow: var(--box-shadow_dialog);
-   width: var(--width_compactDatePicker);
-   max-height: var(--max-height_compactDatePicker);
+   width: calc(7 * (var(--calendar_item-size_compactDatePicker) + 2 * var(--border-thickness)) + 2 * var(--offset_l));
    display: flex;
    flex-direction: column;
    border-radius: var(--border-radius_s);
@@ -16,7 +15,7 @@
 .controls-CompactDatePicker__header {
    position: relative;
    background: var(--background-color);
-   min-height: var(--header_height_compactDatePicker);
+   height: calc(2 * var(--inline_height_m) + var(--offset_m) + var(--offset_s) + var(--offset_2xs));
    box-sizing: border-box;
 }
 
@@ -27,7 +26,7 @@
 .controls-CompactDatePicker__header__top-layer {
    margin-top: var(--offset_m);
    margin-bottom: var(--offset_s);
-   height: var(--header_layer_height_compactDatePicker);
+   height: var(--inline_height_m);
    display: flex;
    justify-content: center;
    align-items: center;
@@ -71,7 +70,7 @@
 }
 
 .controls-CompactDatePicker__header__weekdays {
-   height: var(--header_layer_height_compactDatePicker);
+   height: var(--inline_height_m);
    margin-left: var(--offset_2xl);
    margin-right: var(--offset_2xl);
    display: flex;
@@ -91,9 +90,10 @@
 .controls-CompactDatePicker__month-list {
    width: 100%;
    height: 100%;
+   max-height: calc(9 * (var(--calendar_item-size_compactDatePicker) + 2 * var(--border-thickness)) + 2 * var(--offset_s));
+   margin-bottom: var(--offset_xs);
    background: var(--background-color);
    border-radius: var(--border-radius_s);
-   max-height: inherit;
 }
 
 .controls-CompactDatePicker__month-list__item {
@@ -230,5 +230,5 @@
 
 .controls-CompactDatePicker__selector-margin {
    margin-top: calc(-1 * var(--offset_s));
-   margin-left: calc(-1 * var(--width_compactDatePicker) / 3);
+   margin-left: calc(-1 * (7 * (var(--calendar_item-size_compactDatePicker) + 2 * var(--border-thickness)) + 2 * var(--offset_l)) / 3);
 }
