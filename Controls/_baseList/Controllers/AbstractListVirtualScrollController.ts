@@ -66,6 +66,7 @@ export interface IEdgeItemCalculatingParams {
     direction: IDirection;
     range?: IItemsRange;
     placeholders?: IPlaceholders;
+    itemsSizes?: IItemsSizes;
 }
 
 export type IScrollParam = number | 'top' | 'bottom' | 'pageUp' | 'pageDown';
@@ -698,6 +699,7 @@ export abstract class AbstractListVirtualScrollController<
                     params: {
                         range: params.oldRange,
                         placeholders: params.oldPlaceholders,
+                        itemsSizes: params.oldItemsSizes,
                         direction: 'backward'
                     }
                 });
