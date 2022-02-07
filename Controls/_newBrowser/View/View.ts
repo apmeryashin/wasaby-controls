@@ -567,6 +567,13 @@ export default class View extends Control<IOptions, IReceivedState> {
         return this._children.detailList.reloadItem(key, options);
     }
 
+    moveMasterItemsWithDialog(): unknown {
+        if (this._masterVisibility === MasterVisibilityEnum.visible) {
+            const masterList = this._children.masterList;
+            return masterList.moveItemsWithDialog.apply(masterList, arguments);
+        }
+    }
+
     moveItemsWithDialog(): unknown {
         const detailExplorer = this._children.detailList;
         return detailExplorer.moveItemsWithDialog.apply(detailExplorer, arguments);
