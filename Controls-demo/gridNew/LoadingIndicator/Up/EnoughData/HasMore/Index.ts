@@ -8,6 +8,9 @@ export default class extends Control {
     protected _viewSource: Memory;
     protected _columns: [] = [{ displayProperty: 'title' }];
     private _dataArray: unknown = generateData({count: 60, entityTemplate: {title: 'lorem'}});
+    protected _initialScrollPosition: object = {
+        vertical: 'end'
+    };
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
