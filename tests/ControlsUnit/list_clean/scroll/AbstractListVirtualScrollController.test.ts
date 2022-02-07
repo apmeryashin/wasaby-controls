@@ -86,16 +86,19 @@ describe('Controls/_baseList/Controllers/AbstractListVirtualScrollController', (
         });
 
         it('on reset items', () => {
-            const collection = getCollection([{key: 1}]);
+            const collection = getCollection([{key: 1}, {key: 2}]);
             const itemsContainer = getItemsContainer(collection);
             const scrollToElementUtil = spy(() => null);
             const controller = getController({
                 collection,
                 scrollToElementUtil,
                 itemsContainer,
-                activeElementKey: 1
+                activeElementKey: 2
             });
             controller.resetItems();
+            controller.endBeforeUpdateListControl();
+            controller.afterMountListControl();
+            controller.beforeRenderListControl();
             controller.afterRenderListControl();
             assert.isTrue(scrollToElementUtil.calledOnce);
         });
