@@ -229,6 +229,8 @@ export default class Explorer extends Control<IExplorerOptions> {
     protected _itemActionsPosition: string;
     protected _searchInitialBreadCrumbsMode: 'row' | 'cell';
 
+    private _useScrollContexts: boolean = false;
+
     protected _children: {
         treeControl: TreeControl,
         pathController: PathController
@@ -271,6 +273,8 @@ export default class Explorer extends Control<IExplorerOptions> {
     //endregion
 
     protected _beforeMount(cfg: IExplorerOptions): Promise<void> | void {
+        this._useScrollContexts = !!cfg.newColumnScroll;
+
         if (cfg.itemPadding) {
             this._itemPadding = cfg.itemPadding;
         }

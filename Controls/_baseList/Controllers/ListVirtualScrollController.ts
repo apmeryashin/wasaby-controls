@@ -42,4 +42,8 @@ export class ListVirtualScrollController extends AbstractListVirtualScrollContro
     protected _applyIndexes(startIndex: number, endIndex: number, shiftDirection: IDirection): void {
         this._collection.setIndexes(startIndex, endIndex, shiftDirection);
     }
+
+    protected _getCollectionItemsCount(): number {
+        return this._collection.getCount();
+    }
 }

@@ -250,6 +250,10 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         }
     }
 
+    getColumnsCount(): number {
+        return this._$columns ? this._$columns.length : 0;
+    }
+
     setEmptyTemplateOptions(options: object): void {
         this.getEmptyGridRow()?.setRowTemplateOptions(options);
     }

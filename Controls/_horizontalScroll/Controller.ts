@@ -63,6 +63,10 @@ export class Controller extends AbstractListVirtualScrollController<IControllerO
         this._collection.getColumnsEnumerator().setIndexes(startIndex, endIndex);
     }
 
+    protected _getCollectionItemsCount(): number {
+        return this._collection.getColumnsCount();
+    }
+
     scrollPositionChange(position: number): void {
         super.scrollPositionChange(position);
         this._scrollBar?.setScrollPosition(position);

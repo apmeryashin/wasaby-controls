@@ -69,9 +69,12 @@ import TreeGridHeaderCell from 'Controls/_treeGrid/display/TreeGridHeaderCell';
 import TreeGridTableHeaderRow from 'Controls/_treeGrid/display/TreeGridTableHeaderRow';
 import TreeGridHeader from 'Controls/_treeGrid/display/TreeGridHeader';
 import TreeGridTableHeader from 'Controls/_treeGrid/display/TreeGridTableHeader';
+import {TreeGridControl, ITreeGridControlOptions} from 'Controls/_treeGrid/TreeGridControl';
 
 export {
     ITreeGrid,
+    TreeGridControl,
+    ITreeGridControlOptions,
     IColumn,
     TreeGridFooterCell,
     TreeGridCollection,

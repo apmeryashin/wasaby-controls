@@ -9,7 +9,7 @@
 			<div style="width: {{_options.scrollableWidth}}px;">
 				<Controls.scroll:_Scrollbar attr:style="position: absolute; top: 0; left: 0; right: 0; z-index: 6; width: inherit;"
 											bind:position="_position"
-											contentSize="{{_options.contentWidth}}"
+											contentSize="{{_options.contentWidth - _options.fixedWidth}}"
 											direction="horizontal"
 											shouldSetMarginTop="{{ true }}"
 											trackVisible="{{ true }}"

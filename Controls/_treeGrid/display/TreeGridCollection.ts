@@ -191,7 +191,7 @@ export default class TreeGridCollection<
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();
         }
-        this._updateItemsProperty('setColumnsConfig', this._$columns);
+        this._updateItemsProperty('setColumnsConfig', this.getColumnsEnumerator().getColumns());
     }
 
     isLastItem(item: CollectionItem): boolean {
@@ -327,7 +327,7 @@ export default class TreeGridCollection<
     // region itemsFactoryResolver
 
     protected _itemsFactoryResolver(superFactory: ItemsFactory<T>, options?: ITreeGridRowOptions<S>): ItemsFactory<T> {
-        options.columnsConfig = this._$columns;
+        options.columnsConfig = this.getColumnsEnumerator().getColumns();
         options.gridColumnsConfig = this._$columns;
         options.colspanCallback = this._$colspanCallback;
         options.columnSeparatorSize = this._$columnSeparatorSize;

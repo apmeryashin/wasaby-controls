@@ -99,7 +99,7 @@ export default class Collection<S extends Model = Model, T extends Row<S> = Row<
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();
         }
-        this._updateItemsProperty('setColumnsConfig', this._$columns);
+        this._updateItemsProperty('setColumnsConfig', this.getColumnsEnumerator().getColumns());
     }
 
     protected _handleAfterCollectionChange(changedItems: T[] = [], changeAction?: string): void {

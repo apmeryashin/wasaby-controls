@@ -492,7 +492,7 @@ export abstract class AbstractListVirtualScrollController<
         this._shouldResetScrollPosition = this._scrollOnReset === 'reset'
             && !!this._scrollPosition
             && !shouldScrollToActiveItem;
-        const totalCount = this._collection.getCount();
+        const totalCount = this._getCollectionItemsCount();
         this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
 
         // Инициализируем диапазон, начиная:
@@ -569,7 +569,7 @@ export abstract class AbstractListVirtualScrollController<
      * @private
      */
     scrollToEdge(edge: IDirection): Promise<CrudEntityKey> {
-        const itemIndex = edge === 'backward' ? 0 : this._collection.getCount() - 1;
+        const itemIndex = edge === 'backward' ? 0 : this._getCollectionItemsCount() - 1;
         const item = this._collection.at(itemIndex);
         const itemKey = item.key;
         const scrollPosition = edge === 'forward' ? 'top' : 'bottom';
@@ -590,7 +590,7 @@ export abstract class AbstractListVirtualScrollController<
     }
 
     protected _getFirstVisibleItemKey(): CrudEntityKey {
-        if (!this._collection || !this._collection.getCount()) {
+        if (!this._collection || !this._getCollectionItemsCount()) {
             return null;
         }
 
@@ -657,7 +657,7 @@ export abstract class AbstractListVirtualScrollController<
             scrollPosition: 0,
             viewportSize: options.virtualScrollConfig.viewportHeight || 0,
             contentSize: 0,
-            totalCount: this._collection.getCount(),
+            totalCount: this._getCollectionItemsCount(),
             givenItemsSizes: this._getGivenItemsSizes(),
             feature1183225611: options.feature1183225611,
             disableVirtualScroll: options.disableVirtualScroll,
@@ -982,6 +982,7 @@ export abstract class AbstractListVirtualScrollController<
         }
     }
 
+    protected abstract _getCollectionItemsCount(): number;
     protected abstract _applyIndexes(startIndex: number, endIndex: number, shiftDirection: IDirection): void;
 }
 
