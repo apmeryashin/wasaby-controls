@@ -115,7 +115,7 @@ import IndicatorsController, {
     INDICATOR_HEIGHT
 } from './Controllers/IndicatorsController';
 import {selectionToRecord} from './resources/utils/getItemsBySelection';
-import {checkReloadItemArgs} from 'Controls/_baseList/resources/utils/helpers';
+import {checkReloadItemArgs, getPlainItemContents} from 'Controls/_baseList/resources/utils/helpers';
 import {
     DEFAULT_TRIGGER_OFFSET,
     IAdditionalTriggersOffsets
@@ -1389,13 +1389,13 @@ const _private = {
         const activeItem = self._itemActionsController.getActiveItem();
         let activeItemContents;
         if (activeItem) {
-            activeItemContents = _private.getPlainItemContents(activeItem);
+            activeItemContents = getPlainItemContents(activeItem);
         }
         if (activeItemContents && items && items.find((item) => {
             if (!item.ItemActionsItem) {
                 return false;
             }
-            const itemContents = _private.getPlainItemContents(item);
+            const itemContents = getPlainItemContents(item);
             return itemContents?.getKey() === activeItemContents.getKey();
         })) {
             _private.closeActionsMenu(self);
@@ -1637,7 +1637,7 @@ const _private = {
         // TODO нужно заменить на item.getContents() при переписывании моделей.
         //  item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        const contents = _private.getPlainItemContents(item);
+        const contents = getPlainItemContents(item);
         const itemContainer = _private.resolveItemContainer(self, item, clickEvent, isMenuClick);
         const result = self._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
         if (action.handler) {
@@ -1726,7 +1726,7 @@ const _private = {
         // TODO нужно заменить на item.getContents() при переписывании моделей.
         //  item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        const contents = _private.getPlainItemContents(itemData);
+        const contents = getPlainItemContents(itemData);
         const key = contents ? contents.getKey() : itemData.key;
         self.setMarkedKey(key);
 
@@ -1739,19 +1739,6 @@ const _private = {
                 _private.openItemActionsMenu(self, event, item, menuConfig);
             }
         }
-    },
-
-    /**
-     * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
-     *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-     * @param item
-     */
-    getPlainItemContents(item: CollectionItem<Model>) {
-        let contents = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
-            contents = contents[(contents as any).length - 1];
-        }
-        return contents;
     },
 
     /**
@@ -4724,7 +4711,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>, originalEvent: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
 
-        const contents = _private.getPlainItemContents(item);
+        const contents = getPlainItemContents(item);
         const key = contents.getKey();
         const readOnly = item.isReadonlyCheckbox();
 
@@ -5681,7 +5668,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать
         //  Record https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        const contents = _private.getPlainItemContents(itemData);
+        const contents = getPlainItemContents(itemData);
         const key = contents ? contents.getKey() : itemData.key;
         const item = this._listViewModel.getItemBySourceKey(key) || itemData;
         this.setMarkedKey(key);
@@ -5781,7 +5768,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         let hasDragScrolling = false;
-        const contents = _private.getPlainItemContents(itemData);
+        const contents = getPlainItemContents(itemData);
         this._mouseDownItemKey = contents.getKey();
         if (!this._options.newColumnScroll && this._options.columnScroll) {
             // Не должно быть завязки на горизонтальный скролл.
@@ -5810,7 +5797,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _itemMouseUp(e, itemData, domEvent): void {
         let key;
-        const contents = _private.getPlainItemContents(itemData);
+        const contents = getPlainItemContents(itemData);
         key = contents.getKey();
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
         // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.
@@ -6061,7 +6048,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.isAllowedHoverFreeze(this) &&
             itemData.ItemActionsItem &&
             !this._itemActionsMenuId) {
-            const itemKey = _private.getPlainItemContents(itemData).getKey();
+            const itemKey = getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
             this._hoverFreezeController.startFreezeHoverTimeout(
                 itemKey, event, itemIndex, this._listViewModel.getStartIndex()
@@ -6071,7 +6058,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (itemData.ItemActionsItem) {
-            const itemKey = _private.getPlainItemContents(itemData).getKey();
+            const itemKey = getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
             const actions = itemData.getActions();
             // Не надо делать фриз, если ItemActions пустые (например, их отрезали по visibilityCallback)
@@ -6102,7 +6089,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._draggingItemMouseMove(item, nativeEvent);
         }
         if (hoverFreezeController && item.ItemActionsItem) {
-            const itemKey = _private.getPlainItemContents(item).getKey();
+            const itemKey = getPlainItemContents(item).getKey();
             const itemIndex = this._listViewModel.getIndex(item.dispItem || item);
             hoverFreezeController.setDelayedHoverItem(
                 itemKey, nativeEvent, itemIndex, this._listViewModel.getStartIndex()
@@ -6331,7 +6318,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return;
         }
         swipeEvent.stopPropagation();
-        const key = _private.getPlainItemContents(item).getKey();
+        const key = getPlainItemContents(item).getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = ItemActionsController.
             getSwipeContainerSize(itemContainer as HTMLElement, LIST_MEASURABLE_CONTAINER_SELECTOR);
@@ -6374,7 +6361,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         // Событие свайпа должно стрелять всегда. Прикладники используют его для кастомных действий.
         // Раньше событие останавливалось если оно обработано платформой, но прикладники сами могут это контролировать.
-        this._notify('itemSwipe', [_private.getPlainItemContents(item), swipeEvent, swipeContainer?.clientHeight]);
+        this._notify('itemSwipe', [getPlainItemContents(item), swipeEvent, swipeContainer?.clientHeight]);
     }
 
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
