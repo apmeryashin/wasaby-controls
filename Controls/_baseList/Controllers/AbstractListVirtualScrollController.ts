@@ -940,12 +940,12 @@ export abstract class AbstractListVirtualScrollController<
         if (!this._itemSizeProperty) {
             return null;
         }
-
+        let offset = 0;
         return this._collection.getItems()
             .map((it) => {
                 const itemSize = {
                     size: it.getContents().get(this._itemSizeProperty),
-                    offset: 0,
+                    offset,
                     key: it.itemKeyAttribute
                 };
 
@@ -953,7 +953,7 @@ export abstract class AbstractListVirtualScrollController<
                     Logger.error('Controls/baseList:BaseControl | Задана опция itemHeightProperty, ' +
                         `но для записи с ключом "${it.getContents().getKey()}" высота не определена!`);
                 }
-
+                offset += itemSize.size;
                 return itemSize;
             });
     }

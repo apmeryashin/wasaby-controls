@@ -144,12 +144,19 @@ export class Calculator {
      */
     updateItemsSizes(itemsSizes: IItemsSizes): void {
         if (!isEqual(this._itemsSizes, itemsSizes)) {
-            this._itemsSizes = itemsSizes;
+            if (!this._itemsSizes || this._itemsSizes.length !== itemsSizes.length) {
+                this._itemsSizes = itemsSizes;
+            } else {
+                for (let i = this._range.startIndex; i < this._range.endIndex; i++) {
+                    this._itemsSizes[i] = itemsSizes[i];
+                }
+            }
         }
     }
 
     updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
         this._givenItemsSizes = itemsSizes;
+        this._itemsSizes = itemsSizes;
     }
 
     /**
