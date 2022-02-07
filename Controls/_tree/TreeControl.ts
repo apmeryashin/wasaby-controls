@@ -18,7 +18,7 @@ import {
 } from 'Controls/interface';
 import {
     BaseControl,
-    checkReloadItemArgs,
+    checkReloadItemArgs, getPlainItemContents,
     IDirection,
     IReloadItemOptions,
     ISiblingStrategy
@@ -1279,23 +1279,25 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
      * @return {TKey} Ключ розительского узла для добавления по-умолчанию.
      */
     getMarkedNodeKey(): TKey {
+        const viewModel = this.getViewModel() as Tree;
         const markedKey = this.getMarkerController().getMarkedKey();
 
         if (typeof markedKey !== 'undefined') {
-            const markedRecord = this.getViewModel().getItemBySourceKey(markedKey);
+            const markedRecord = viewModel.getItemBySourceKey(markedKey);
 
             if (markedRecord) {
                 if (markedRecord.isExpanded && markedRecord.isExpanded()) {
                     // Узел раскрыт.
                     return markedRecord.contents.getKey();
                 } else if (!markedRecord.getParent().isRoot()) {
+                    const contents = getPlainItemContents(markedRecord.getParent());
                     // Если запись вложена, то добавлять нужно в родителя, т.к. он - развернутый узел.
-                    return markedRecord.getParent().contents.getKey();
+                    return contents.getKey();
                 }
             }
         }
 
-        const currentRoot = this.getViewModel().getRoot();
+        const currentRoot = viewModel.getRoot();
         return currentRoot.isRoot() ? currentRoot.contents : currentRoot.contents.getKey();
     }
 
