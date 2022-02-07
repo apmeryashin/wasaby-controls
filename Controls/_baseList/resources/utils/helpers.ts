@@ -1,4 +1,6 @@
+import {Model} from 'Types/entity';
 import {isEmpty} from 'Types/object';
+import {CollectionItem} from 'Controls/display';
 import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
 
 const RELOAD_ITEM_WARN = 'Вы используете устаревшую сигнатуру метода reloadItem. Пожалуйста ознакомьтесь с новой сигнатурой https://wi.sbis.ru/docs/js/Controls/list/View/methods/reloadItem и поправьте код вызова.';
@@ -24,4 +26,17 @@ export function checkReloadItemArgs(...args: unknown[]): void {
     if (!isEmpty(secondAgr) && !hasReloadItemsProp) {
         throw new Error(RELOAD_ITEM_WARN);
     }
+}
+
+/**
+ * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+ *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+ * @param item
+ */
+export function getPlainItemContents(item: CollectionItem<Model>): Model {
+    let contents = item.getContents();
+    if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+        contents = contents[(contents as any).length - 1];
+    }
+    return contents;
 }
