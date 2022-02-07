@@ -156,7 +156,13 @@ export class Calculator {
 
     updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
         this._givenItemsSizes = itemsSizes;
-        this._itemsSizes = itemsSizes;
+        if (itemsSizes) {
+            // Инициализируем _itemsSizes по размерам из itemHeightProperty.
+            // Так мы до маунта и получения размеров из DOM делать вычисления для работы с диапазоном.
+            // Это нужно для оптимизации рендера тяжелых списков, например, в карточке контрагента,
+            // где построить даже одну лишнюю запись дорого для производительности.
+            this._itemsSizes = itemsSizes;
+        }
     }
 
     /**
