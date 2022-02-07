@@ -105,7 +105,7 @@ export default class FilterControllerClass extends mixin<
     }
 
     setFilterItems(historyItems: THistoryData): void {
-        const filterFromUrl = getFilterFromUrl();
+        const filterFromUrl = this._getFilterFromUrl(this._options.filterButtonSource);
         // TODO: storefix207100
         if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
@@ -328,10 +328,17 @@ export default class FilterControllerClass extends mixin<
         }
     }
 
+    private _getFilterFromUrl(filterButtonItems: IFilterItem[]): void | IFilterItem[] {
+        const filterItems = FilterControllerClass._getFilterButtonItems(filterButtonItems);
+        if (filterItems && this._getSaveToUrlItems(filterItems).length) {
+            return getFilterFromUrl();
+        }
+    }
+
     private _resolveItemsWithHistory(options: Partial<IFilterControllerOptions>,
                                      filter: object): Promise<THistoryData> {
         return this._resolveHistoryItems(options).then((history) => {
-            const filterFromUrl = getFilterFromUrl();
+            const filterFromUrl = this._getFilterFromUrl(options.filterButtonSource);
             this._setFilterItems(options.filterButtonSource, options.fastFilterSource, history, filterFromUrl);
             this._applyItemsToFilter(
                 Prefetch.applyPrefetchFromHistory(filter, history),
@@ -560,13 +567,17 @@ export default class FilterControllerClass extends mixin<
             return;
         }
 
-        const items: IFilterItem[] = filterButtonItems.filter((item) => {
-            return item.saveToUrl || (this._options.saveToUrl && !item.hasOwnProperty('saveToUrl'));
-        });
+        const items: IFilterItem[] = this._getSaveToUrlItems(filterButtonItems);
 
         if (items.length) {
             updateUrlByFilter(items);
         }
+    }
+
+    private _getSaveToUrlItems(filterButtonItems: IFilterItem[]): IFilterItem[] {
+        return filterButtonItems.filter((item) => {
+            return item.saveToUrl || (this._options.saveToUrl && !item.hasOwnProperty('saveToUrl'));
+        });
     }
 
     private _getHistoryData(filterButtonItems: IFilterItem[],
@@ -754,8 +765,7 @@ export default class FilterControllerClass extends mixin<
     private static _getFilterButtonItems(filterSource: IFilterItem[]): IFilterItem[] {
         return FilterControllerClass._getItemsByOption(
             filterSource,
-            [],
-            getFilterFromUrl()
+            []
         );
     }
 
@@ -870,7 +880,7 @@ export default class FilterControllerClass extends mixin<
 function getCalculatedFilter(config) {
     const def = new Deferred();
     this._resolveHistoryItems(config).then((items) => {
-        const filterFromUrl = getFilterFromUrl();
+        const filterFromUrl = this._getFilterFromUrl(config.filterButtonSource);
         this._setFilterItems(clone(config.filterButtonSource), clone(config.fastFilterSource), items, filterFromUrl);
         let calculatedFilter;
         try {
